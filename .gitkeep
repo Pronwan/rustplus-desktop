@@ -1,0 +1,43 @@
+# --- Visual Studio / .NET ---
+**/bin/
+**/obj/
+**/.vs/
+**/*.user
+**/*.suo
+*.cache
+*.log
+
+# Publish-Output (dotnet publish)
+**/publish/
+
+# NuGet / Paketmanager
+*.nupkg
+**/packages/
+*.snupkg
+
+# Build Artefakte / Temp
+*.tmp
+*.tmp.*
+*.pid
+*.DS_Store
+Thumbs.db
+
+# Inno Setup: .iss im Repo behalten? (optional)
+# Falls du das Skript nicht versionieren willst, einkommentieren:
+# *.iss
+
+# Binärdateien nicht versionieren
+*.exe
+*.msi
+*.dll
+
+# Installer-Output-Ordner: Ordner behalten, Dateien ignorieren
+installer/Output/*
+!installer/Output/.gitkeep
+
+# Doku/Assets explizit erlauben (normal nicht nötig, aber klar)
+!README.md
+!LICENSE
+!docs/
+!RustPlusDesktop/*.png
+!RustPlusDesktop/*.jpg

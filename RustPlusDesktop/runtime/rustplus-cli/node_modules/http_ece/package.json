@@ -1,0 +1,27 @@
+{
+  "name": "http_ece",
+  "version": "1.2.1",
+  "description": "Encrypted Content-Encoding for HTTP",
+  "homepage": "https://github.com/martinthomson/encrypted-content-encoding",
+  "bugs": "https://github.com/martinthomson/encrypted-content-encoding/issues",
+  "author": {
+    "name": "Martin Thomson",
+    "email": "martin.thomson@gmail.com"
+  },
+  "contributors": [{
+    "name": "Marco Castelluccio",
+    "email": "mcastelluccio@mozilla.com"
+  }],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/martinthomson/encrypted-content-encoding.git"
+  },
+  "license": "MIT",
+  "main": "./ece.js",
+  "scripts": {
+    "test": "node ./test.js"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}

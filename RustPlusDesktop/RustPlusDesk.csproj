@@ -1,0 +1,198 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<ApplicationIcon>1-76fc6c7e.ico</ApplicationIcon>
+	</PropertyGroup>
+	<ItemGroup>
+	  
+	  <Compile Remove="RustPlusClientStub.cs" />
+	</ItemGroup>
+
+	<!-- Den dicken Ordner NICHT mehr kopieren -->
+	<ItemGroup>
+		<None Remove="runtime\rustplus-cli\**\*" />
+		<Content Remove="runtime\rustplus-cli\**\*" />
+	</ItemGroup>
+
+	<!-- Debug: (optional) Ordner als None lassen, damit du lokal damit arbeiten kannst -->
+	<ItemGroup Condition="'$(Configuration)'=='Debug'">
+		<None Include="runtime\rustplus-cli\**\*" />
+		<None Include="runtime\node-win-x64\**\*" />
+	</ItemGroup>
+
+	<!-- Release/Publish: nur die schlanken Assets -->
+	<ItemGroup Condition="'$(Configuration)'=='Release'">
+		<!-- portable Node -->
+		<Content Include="runtime\node-win-x64\**\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<!-- CLI-Archiv -->
+		<Content Include="runtime\rustplus-cli.zip">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Remove="icons\airfield.png" />
+	  <None Remove="icons\arcticresearch.png" />
+	  <None Remove="icons\banditcamp.png" />
+	  <None Remove="icons\barn.png" />
+	  <None Remove="icons\blocked.png" />
+	  <None Remove="icons\cabins.png" />
+	  <None Remove="icons\cargo.png" />
+	  <None Remove="icons\cave.png" />
+	  <None Remove="icons\ch47.png" />
+	  <None Remove="icons\crate.png" />
+	  <None Remove="icons\dome.png" />
+	  <None Remove="icons\excavator.png" />
+	  <None Remove="icons\explosion.png" />
+	  <None Remove="icons\ferryterminal.png" />
+	  <None Remove="icons\fishingvillage.png" />
+	  <None Remove="icons\fishingvillagelarge.png" />
+	  <None Remove="icons\gasstation.png" />
+	  <None Remove="icons\harbour.png" />
+	  <None Remove="icons\harbour2.png" />
+	  <None Remove="icons\hqmquarry.png" />
+	  <None Remove="icons\jungle.png" />
+	  <None Remove="icons\junkyard.png" />
+	  <None Remove="icons\largeoilrig.png" />
+	  <None Remove="icons\launchsite.png" />
+	  <None Remove="icons\lighthouse.png" />
+	  <None Remove="icons\militarybase.png" />
+	  <None Remove="icons\militarytunnel.png" />
+	  <None Remove="icons\miningoutpost.png" />
+	  <None Remove="icons\miningoutpost2.png" />
+	  <None Remove="icons\missilesilo.png" />
+	  <None Remove="icons\oilrig.png" />
+	  <None Remove="icons\outpost.png" />
+	  <None Remove="icons\patrol.png" />
+	  <None Remove="icons\powerplant.png" />
+	  <None Remove="icons\powerstation.png" />
+	  <None Remove="icons\radtown.png" />
+	  <None Remove="icons\satellitedish.png" />
+	  <None Remove="icons\sewerbranch.png" />
+	  <None Remove="icons\stable.png" />
+	  <None Remove="icons\stonequarry.png" />
+	  <None Remove="icons\sulfurquarry.png" />
+	  <None Remove="icons\supermarket.png" />
+	  <None Remove="icons\swamp.png" />
+	  <None Remove="icons\traintunnel.png" />
+	  <None Remove="icons\traintunnel2.png" />
+	  <None Remove="icons\trainyard.png" />
+	  <None Remove="icons\underwater.png" />
+	  <None Remove="icons\vending.png" />
+	  <None Remove="icons\vending2.png" />
+	  <None Remove="icons\vendor.png" />
+	  <None Remove="icons\watertreatment.png" />
+	  <None Remove="icons\waterwell.png" />
+	  <None Remove="rust-item-list.json" />
+	  <None Remove="rust_items.json" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="1-76fc6c7e.ico">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
+    <PackageReference Include="RustPlusApi" Version="1.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="icons\airfield.png" />
+    <Resource Include="icons\arcticresearch.png" />
+    <Resource Include="icons\banditcamp.png" />
+    <Resource Include="icons\barn.png" />
+    <Resource Include="icons\blocked.png" />
+    <Resource Include="icons\cabins.png" />
+    <Resource Include="icons\cargo.png" />
+    <Resource Include="icons\cave.png" />
+    <Resource Include="icons\ch47.png" />
+    <Resource Include="icons\crate.png" />
+    <Resource Include="icons\dome.png" />
+    <Resource Include="icons\excavator.png" />
+    <Resource Include="icons\explosion.png" />
+    <Resource Include="icons\ferryterminal.png" />
+    <Resource Include="icons\fishingvillage.png" />
+    <Resource Include="icons\fishingvillagelarge.png" />
+    <Resource Include="icons\gasstation.png" />
+    <Resource Include="icons\harbour.png" />
+    <Resource Include="icons\harbour2.png" />
+    <Resource Include="icons\hqmquarry.png" />
+    <Resource Include="icons\jungle.png" />
+    <Resource Include="icons\junkyard.png" />
+    <Resource Include="icons\largeoilrig.png" />
+    <Resource Include="icons\launchsite.png" />
+    <Resource Include="icons\lighthouse.png" />
+    <Resource Include="icons\militarybase.png" />
+    <Resource Include="icons\militarytunnel.png" />
+    <Resource Include="icons\miningoutpost.png" />
+    <Resource Include="icons\miningoutpost2.png" />
+    <Resource Include="icons\missilesilo.png" />
+    <Resource Include="icons\oilrig.png" />
+    <Resource Include="icons\outpost.png" />
+    <Resource Include="icons\patrol.png" />
+    <Resource Include="icons\powerplant.png" />
+    <Resource Include="icons\powerstation.png" />
+    <Resource Include="icons\radtown.png" />
+    <Resource Include="icons\satellitedish.png" />
+    <Resource Include="icons\sewerbranch.png" />
+    <Resource Include="icons\stable.png" />
+    <Resource Include="icons\stonequarry.png" />
+    <Resource Include="icons\sulfurquarry.png" />
+    <Resource Include="icons\supermarket.png" />
+    <Resource Include="icons\swamp.png" />
+    <Resource Include="icons\traintunnel.png" />
+    <Resource Include="icons\traintunnel2.png" />
+    <Resource Include="icons\trainyard.png" />
+    <Resource Include="icons\underwater.png" />
+    <Resource Include="icons\vending.png" />
+    <Resource Include="icons\vending2.png" />
+    <Resource Include="icons\vendor.png" />
+    <Resource Include="icons\watertreatment.png" />
+    <Resource Include="icons\waterwell.png" />
+    <Resource Include="rust-item-list.json" />
+    <Content Include="rust_items.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="AlarmNotification.cs">
+      <CustomToolNamespace></CustomToolNamespace>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="AlarmPopupWindow.xaml">
+      <CustomToolNamespace>RustPlusDeskt.Views</CustomToolNamespace>
+    </Page>
+  </ItemGroup>
+
+	<!-- 2) DEBUG: nichts Großes kopieren (wir lesen direkt aus dem Projektordner) -->
+	<ItemGroup Condition="'$(Configuration)'=='Debug'">
+		<None Include="runtime\rustplus-cli\**\*" />
+		<None Include="runtime\node-win-x64\**\*" />
+	</ItemGroup>
+
+	<!-- 3) RELEASE: nur die schlanken Assets kopieren -->
+	<ItemGroup Condition="'$(Configuration)'=='Release'">
+		<!-- portable Node mitgeben -->
+		<Content Include="runtime\node-win-x64\**\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<!-- CLI nur als ZIP mitgeben -->
+		<Content Include="runtime\rustplus-cli.zip">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	
+	<PropertyGroup>
+		<CopyRetryCount>60</CopyRetryCount>
+		<CopyRetryDelayMilliseconds>250</CopyRetryDelayMilliseconds>
+	</PropertyGroup>
+	
+</Project>
