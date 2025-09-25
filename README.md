@@ -1,4 +1,5 @@
 # Rust+ Desktop App (Unofficial)
+![Headline](./headlineGIT.jpg) 
 
 ⚠️ **Note**: This is an **unofficial** project and is not affiliated with Facepunch Studios or the game *Rust*.  
 It is open source so anyone can verify there is **no malware or hidden components**.
@@ -67,7 +68,7 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 ## 📸 Screenshots
 
-### Main Backgrounds
+### Main Screenshots
 ![Main Background](./RustPlusDesktop/rustplusbg.png)  
 ![Background 2](./RustPlusDesktop/rustplusbg2.png)  
 ![Background 3](./RustPlusDesktop/rustplusbg3.png)  
