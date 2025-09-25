@@ -86,13 +86,20 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 ## 📜 License
 
 This project is licensed under the [GNU GPLv3](./LICENSE).
-SPDX-License-Identifier: GPL-3.0-or-later
+SPDX-License-Identifier
+GPL-3.0-or-later
 
-Release Checksum:
-certutil -hashfile "RustPlusDesk-Setup.exe" SHA256
+## Release Checksum:
+SHA256-Hash von RustPlusDesk-Setup.exe:
+5991535374198c10a7e38748d5c698c5a69df8305ace397afc6d52fd479bf480
 ---
 
 ## 🙌 Contributing
 
 Found a bug or want to help?  
 Open an [Issue](../../issues) or create a Pull Request.
+
+## Support?
+
+Sure, why not :) 
+**https://streamelements.com/pronwan/tip**
