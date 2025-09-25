@@ -28,9 +28,10 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 - Pair Rust servers via Steam + Rust+ Companion
 - Auto-start listener when connecting to a server
-- Dynamic map (Cargo, Patrol Heli, Airdrops, Players, …)
+- Dynamic map (Cargo, Patrol Heli, Chinook, Travelling Vendor, Players, …)
 - Smart Devices (pair in-game while connected — shows up instantly)
 - Local storage of paired servers & devices
+- Vending Machine Search System for Buy and Sell orders
 - Open-source for transparency and trust
 - Team Chat support and event spawn posts to chat
 
