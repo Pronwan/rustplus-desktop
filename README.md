@@ -85,9 +85,11 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 ## 📜 License
 
-Licensed under the [MIT License](./LICENSE).  
-You may use, modify, and redistribute the software as long as the copyright notice is preserved.
+This project is licensed under the [GNU GPLv3](./LICENSE).
+SPDX-License-Identifier: GPL-3.0-or-later
 
+Release Checksum:
+certutil -hashfile "RustPlusDesk-Setup.exe" SHA256
 ---
 
 ## 🙌 Contributing
