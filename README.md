@@ -52,20 +52,22 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 1. **Download & install**  
    - Get the installer from **[Releases](../../releases/latest)** and run it
 
-2. **First run**  
-   - A browser popup will ask you to authorize your Steam account  
+2. **First run**
+   - A browser popup will ask you to **pair with Companion** (Facepunch)
+     let it run until it's set up (needed only once)
+   - Click on "**Login with Steam**" and authorize your local PC to Steam (localhost)  
    - Allow the connection → your Steam account is linked
 
-3. **Pair a server**  
+4. **Pair a server**  
    - In the app, click **Listening (Pairing)**  
    - In *Rust*, click the **Rust+ Pairing Link**  
    - The server will appear automatically in the app
 
-4. **Connect**  
+5. **Connect**  
    - Select the server and click **Connect**  
    - Future sessions won’t require another Steam login
 
-5. **Smart Devices**  
+6. **Smart Devices**  
    - While connected, pair a device in-game → it appears instantly in the app
 
 ---
