@@ -1,4 +1,4 @@
-# Rust+ Desktop App (Inofficial)
+# Rust+ Desktop App (Unofficial)
 
 ⚠️ **Note**: This is an **unofficial** project and is not affiliated with Facepunch Studios or the game *Rust*.  
 It is open source so anyone can verify there is **no malware or hidden components**.
