@@ -41,8 +41,10 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 - **Chat crash**: Opening the chat while not connected to a server will crash the app  
 - **Mixed languages**: Some UI texts may still show in German if a translation was missed  
+- **Grid Estimation**: Depending on map size, the grid can be slightly off by 1/2 grid max
+- **Server-Hopping:**: Hopping through servers too quickly can cause the Listener to crash
+- **Many shops**: Hovering 8+ shops at once can cause the Tooltip to flicker
 - Please report other issues in the [Issues section](../../issues)
-- Depending on map size, the grid can be slightly off by 1/2 grid max
 ---
 
 ## 🛠️ Installation & Setup
