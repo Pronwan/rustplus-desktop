@@ -1,5 +1,5 @@
 ![Headline](./headlineGIT.jpg) 
-![Donate](https://png.pngtree.com/png-clipart/20220601/ourmid/pngtree-yellow-donate-button-png-png-image_4744629.png)(https://streamelements.com/pronwan/tip)
+
 ---
 # Rust+ Desktop App (Unofficial)
 
