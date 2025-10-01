@@ -42,11 +42,22 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 ➡️ **[Download the latest RustPlusDesk-Setup.exe](../../releases/latest)**
 
 
-
 *(We publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
 
+## Update Notes 2.0 (October 1st 25)
+- Mini Map Overlay for ingame use
+- Crosshair Overlay
+- Team Management
+- Camera Support
+- Promoting Teammember to Leader
+- Death Markers
+- Grid Corrections
+- Notifications in Chat for Deaths, Spawns, Online, Offline
 
+![Update](./V2-1.png)  
+![Update](./V2-2.png) 
 
+Enjoy! :) 
 ---
 
 
@@ -71,7 +82,15 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 - Team Chat support and event spawn posts to chat
 
+- Camera Support (no pannable cams yet)
 
+- Mini Map and Crosshairs as Rust Overlay
+
+- Death Markers
+
+- Profile Icons
+
+- Chat-Notifications for spawns, deaths, events and more
 
 ---
 
