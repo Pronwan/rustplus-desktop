@@ -7,11 +7,13 @@ using RustPlusDesk.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -21,6 +23,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Text.RegularExpressions;
+
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -31,9 +35,12 @@ using System.Windows.Threading;
 using System.Xml.Linq;
 using static RustPlusDesk.Services.RustPlusClientReal;
 using IOPath = System.IO.Path;
+using System.Diagnostics.Eventing.Reader;
 
 
 namespace RustPlusDesk.Views;
+
+
 
 public partial class MainWindow : Window
 {
@@ -66,6 +73,794 @@ public partial class MainWindow : Window
     private static readonly Brush SearchCardBrd = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255));
     private static readonly Brush SearchText = Brushes.White;
     private static readonly Brush SearchSubtle = new SolidColorBrush(Color.FromArgb(180, 220, 220, 220));
+    // CROSSHAIR
+    private CrosshairWindow? _overlay;
+    private CrosshairStyle _currentStyle = CrosshairStyle.GreenDot;
+   
+    private bool _visible;
+    // CAMERA TAB
+
+    // Camera thumbs: Throttling & "in-flight"-Wächter
+    internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCase);
+    
+    private void BtnOpenCamera_Click(object sender, RoutedEventArgs e)
+    {
+        if (_rust is not RustPlusClientReal real) return;
+
+        // simpler Prompt statt TextBox:
+        var id = Microsoft.VisualBasic.Interaction.InputBox(
+            "Camera identifier:", "Open camera", "");
+        if (string.IsNullOrWhiteSpace(id)) return;
+
+        var w = new RustPlusDesk.Views.CameraWindow(real, id) { Owner = this };
+        w.Show();
+        real.DebugDumpAppRequestShape();
+    }
+
+
+
+
+    private ObservableCollection<string> _cameraIds = new();
+    private DispatcherTimer? _camThumbTimer;
+
+    private void InitCameraUi()
+    {
+        BtnAddCam.Click += (_, __) =>
+        {
+            var input = Microsoft.VisualBasic.Interaction.InputBox("Camera identifier:", "Add camera", "");
+            if (string.IsNullOrWhiteSpace(input)) return;
+            if (_cameraIds.Any(s => string.Equals(s, input, StringComparison.OrdinalIgnoreCase))) return;
+
+            _cameraIds.Add(input);   // _cameraIds == Selected.CameraIds
+            _vm.Save();              // sofort persistieren
+            RebuildCameraTiles();
+            EnsureCamThumbPolling();
+        };
+    }
+
+
+
+
+    private void RebuildCameraTiles()
+    {
+        CamItems.Items.Clear();
+        foreach (var id in _cameraIds)
+            CamItems.Items.Add(BuildCamTile(id));
+    }
+    // Wie „nah“ die Mini-Map um den Spieler herum zuschneidet (Anteil der Hauptkarte)
+    private const double MINI_VIEW_FRACTION = 0.30; // 40% des sichtbaren Bereichs
+
+   //>>
+    private void CenterMiniMapOnPlayer()
+    {
+        if (_miniMap == null || !_miniMap.IsVisible) return;
+        if (WebViewHost == null || Overlay == null) return;
+
+        // Spielerposition besorgen
+        var me = TeamMembers.FirstOrDefault(t => t.SteamId == _mySteamId) ?? TeamMembers.FirstOrDefault();
+        if (me == null || !me.X.HasValue || !me.Y.HasValue) return;
+
+        // Welt → Bild/Overlay-Koordinaten (so positionierst du auch deine Marker)
+        Point pOverlay = WorldToImagePx(me.X.Value, me.Y.Value);
+
+        // Overlay → Host-Koordinaten (inkl. ALLER Transforms/Letterboxing)
+        GeneralTransform t = Overlay.TransformToVisual(WebViewHost);
+        Point pHost = t.Transform(pOverlay);
+
+        double hostW = Math.Max(1, WebViewHost.ActualWidth);
+        double hostH = Math.Max(1, WebViewHost.ActualHeight);
+
+        // Quadratischen Ausschnitt wählen (keine Verzerrung im runden Fenster)
+        double side = Math.Min(hostW, hostH) * (MINI_VIEW_FRACTION * Math.Pow(GetEffectiveZoom(), 0.0025));
+
+        // Um den Spieler zentrieren …
+        double vx = pHost.X - side / 2.0;
+        double vy = pHost.Y - side / 4.0;
+
+        // … innerhalb des Hosts clampen
+        vx = Math.Max(0, Math.Min(vx, hostW - side));
+        vy = Math.Max(0, Math.Min(vy, hostH - side));
+
+        _miniMap.SetViewbox(new Rect(vx, vy, side, side));
+    }
+
+    private MiniMapWindow? _miniMap;
+    private VisualBrush? _miniMapBrush;
+    // z.B. Click-Handler deines „Mini-Map“-Buttons:
+    private void BtnToggleMiniMap_Click(object sender, RoutedEventArgs e)
+    {
+        if (_miniMap == null || !_miniMap.IsVisible)
+        {
+            // WICHTIG: mapRoot muss dein existierendes Karten-Root-Element sein!
+            // Beispiele: SceneGrid, MapRootGrid, OverlayHostGrid – je nach deinem x:Name.
+            var mapRoot = WebViewHost;
+            var vb = new VisualBrush(WebViewHost)
+            {
+                // Wir schneiden selbst zu, daher:
+                Stretch = Stretch.None,
+                ViewboxUnits = BrushMappingMode.Absolute
+            };
+            _miniMapBrush = vb;
+
+
+            _miniMap = new MiniMapWindow(mapRoot)
+            {
+                Owner = this,                         // optional
+                Left = SystemParameters.WorkArea.Right - 280,
+                Top = SystemParameters.WorkArea.Top + 20
+            };
+            
+            _miniMap.Show();
+            CenterMiniMapOnPlayer();
+
+        }
+        else
+        {
+            _miniMap.Close();
+            _miniMap = null;
+        }
+    }
+
+    private bool TryGetMyWorldPos(out double x, out double y)
+    {
+        x = y = 0;
+        var me = TeamMembers.FirstOrDefault(t => t.SteamId == _mySteamId);
+        if (me != null && me.X.HasValue && me.Y.HasValue)
+        { x = me.X.Value; y = me.Y.Value; return true; }
+
+        if (_lastPlayersBySid.TryGetValue(_mySteamId, out var p))
+        { x = p.Item1; y = p.Item2; return true; }
+
+        return false;
+    }
+
+    private FrameworkElement BuildCamTile(string id)
+    {
+        var root = new Border
+        {
+            Background = new SolidColorBrush(Color.FromRgb(34, 34, 34)),
+            CornerRadius = new CornerRadius(8),
+            Padding = new Thickness(8),
+            Margin = new Thickness(6)
+        };
+        var grid = new Grid();
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
+        // Header: Name + Buttons
+        var header = new DockPanel();
+        var name = new TextBlock { Text = id, FontWeight = FontWeights.SemiBold };
+        var spBtns = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
+        var btnOpen = new Button { Width = 16, Height = 16, Margin = new Thickness(4, 0, 0, 0), ToolTip = "Open" };
+        btnOpen.Content = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "\uE8A7" }; // E894
+        btnOpen.Click += (_, __) =>
+        {
+            if (_rust is RustPlusClientReal real)
+            {
+                var w = new RustPlusDesk.Views.CameraWindow(real, id) { Owner = this };
+                _camBusy.Add(id);
+                w.Closed += (_, __2) => _camBusy.Remove(id);
+                w.Show();
+            }
+        };
+
+        var btnDel = new Button { Width = 16, Height = 16, Margin = new Thickness(4, 0, 0, 0), ToolTip = "Delete" };
+        btnDel.Content = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "" }; // E74D
+        btnDel.Click += (_, __) =>
+        {
+            _cameraIds.Remove(id);
+            _vm.Save();
+            RebuildCameraTiles();
+        };
+
+        spBtns.Children.Add(btnOpen);
+        spBtns.Children.Add(btnDel);
+        DockPanel.SetDock(spBtns, Dock.Right);
+        header.Children.Add(spBtns);
+        header.Children.Add(name);
+        Grid.SetRow(header, 0);
+
+        // Thumb
+        var img = new Image { Stretch = Stretch.UniformToFill, SnapsToDevicePixels = true, UseLayoutRounding = true, Height = 110, ClipToBounds = true };
+        img.Tag = id; // damit der Thumb-Refresher weiß, wohin
+        Grid.SetRow(img, 1);
+
+        // Status-Zeile
+        var status = new TextBlock { Opacity = 0.7, Margin = new Thickness(0, 4, 0, 0) };
+        status.Tag = id + "|status";
+        Grid.SetRow(status, 2);
+
+        grid.Children.Add(header);
+        grid.Children.Add(img);
+        grid.Children.Add(status);
+        root.Child = grid;
+        return root;
+    }
+
+    private void EnsureCamThumbPolling()
+    {
+        _camThumbTimer ??= new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
+        _camThumbTimer.Tick -= CamThumbTimer_Tick;
+        _camThumbTimer.Tick += CamThumbTimer_Tick;
+        _camThumbTimer.Start();
+    }
+
+    private int _camThumbIndex = 0;
+    private int _camThumbBusy = 0;
+
+    private async void CamThumbTimer_Tick(object? sender, EventArgs e)
+    {
+        if (!CamItems.IsVisible || _cameraIds.Count == 0) return;
+        if (_rust is not RustPlusClientReal real) return;
+        if (System.Threading.Interlocked.Exchange(ref _camThumbBusy, 1) == 1) return;
+
+        try
+        {
+            if (_camThumbIndex >= CamItems.Items.Count) _camThumbIndex = 0;
+            if (_camThumbIndex < 0 || _camThumbIndex >= CamItems.Items.Count) return;
+
+            if (CamItems.Items[_camThumbIndex] is not FrameworkElement cont) return;
+            _camThumbIndex++;
+
+            var img = FindDescImage(cont);
+            if (img == null) return;
+            var id = img.Tag as string;
+            if (string.IsNullOrWhiteSpace(id)) return;
+            if (_camBusy.Contains(id)) return;   // hier pausieren, wenn live
+            var status = FindStatus(cont, id);
+
+            // 1) Node-Fallback zuerst (liefert in der Praxis am zuverlässigsten)
+            var frame = await real.GetCameraFrameViaNodeAsync(id, timeoutMs: 6000);
+            // 2) optional: klassischer Pfad als Zweitversuch
+            if (frame?.Bytes == null)
+                frame = await real.GetCameraFrameAsync(id);
+
+            if (frame?.Bytes != null)
+            {
+                var bi = new BitmapImage();
+                using var ms = new MemoryStream(frame.Bytes);
+                bi.BeginInit(); bi.CacheOption = BitmapCacheOption.OnLoad; bi.StreamSource = ms; bi.EndInit(); bi.Freeze();
+                img.Source = bi;
+                if (status != null) status.Text = (frame.Width > 0 && frame.Height > 0) ? $"{frame.Width}×{frame.Height}" : "snapshot";
+            }
+           else
+            {
+                if (status != null) status.Text = "no frame";
+            }
+        }
+        catch (Exception ex)
+        {
+            // damit wir was sehen
+            AppendLog("[cam] " + ex.Message);
+        }
+        finally
+        {
+            System.Threading.Interlocked.Exchange(ref _camThumbBusy, 0);
+       }
+
+        static Image? FindDescImage(FrameworkElement root)
+        {
+            if (root is Image i) return i;
+            int n = VisualTreeHelper.GetChildrenCount(root);
+            for (int k = 0; k < n; k++)
+                if (VisualTreeHelper.GetChild(root, k) is FrameworkElement fe && FindDescImage(fe) is Image hit) return hit;
+            return null;
+        }
+        static TextBlock? FindStatus(FrameworkElement root, string id)
+        {
+            var q = new Queue<DependencyObject>();
+            q.Enqueue(root);
+            while (q.Count > 0)
+            {
+                var x = q.Dequeue();
+                if (x is TextBlock tb && (tb.Tag as string) == id + "|status") return tb;
+                int n = VisualTreeHelper.GetChildrenCount(x);
+                for (int i = 0; i < n; i++) q.Enqueue(VisualTreeHelper.GetChild(x, i));
+            }
+            return null;
+        }
+    }
+
+    // generischer BFS-Finder im VisualTree
+    private static T? FindDesc<T>(DependencyObject root, Func<T, bool>? predicate = null) where T : DependencyObject
+    {
+        var q = new Queue<DependencyObject>();
+        q.Enqueue(root);
+        while (q.Count > 0)
+        {
+            var x = q.Dequeue();
+            if (x is T t && (predicate == null || predicate(t))) return t;
+            int n = VisualTreeHelper.GetChildrenCount(x);
+            for (int i = 0; i < n; i++) q.Enqueue(VisualTreeHelper.GetChild(x, i));
+        }
+        return null;
+    }
+
+
+    // Dumper Button
+    private async void BtnDynCheck_Click(object sender, RoutedEventArgs e)
+    {
+        if (_rust is not RustPlusClientReal real)
+        {
+            AppendLog("dyn2: kein Client.");
+            return;
+        }
+
+        try
+        {
+            var list = await real.GetDynamicMapMarkersAsync2();
+            AppendLog($"dyn2: total={list.Count}");
+
+            // kleine Verteilung nach RawType
+            var groups = list.GroupBy(m => m.RawType).OrderBy(g => g.Key)
+                             .Select(g => $"{g.Key}×{g.Count()}");
+            AppendLog("dyn2 types: " + string.Join(", ", groups));
+
+            // zeig die ersten 6 Marker „roh“
+            foreach (var m in list.Take(6))
+                AppendLog("dyn2 sample: " + m.DebugLine);
+
+            // (optional) schnelle Heuristik für crate-verdächtige
+            var suspects = list.Where(m =>
+                (m.RawType == 7 || m.RawType == 0) &&
+                ((m.Label ?? "").IndexOf("crate", StringComparison.OrdinalIgnoreCase) >= 0
+               || (m.Label ?? "").IndexOf("hack", StringComparison.OrdinalIgnoreCase) >= 0
+               || (m.Label ?? "").IndexOf("lock", StringComparison.OrdinalIgnoreCase) >= 0))
+               .ToList();
+
+            if (suspects.Count > 0)
+            {
+                AppendLog($"dyn2 crate-like: {suspects.Count}");
+                foreach (var s in suspects.Take(3))
+                    AppendLog($"dyn2 crate-like: {s.DebugLine}");
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("dyn2 error: " + ex.Message);
+        }
+    }
+    private System.Windows.Threading.DispatcherTimer? _teamTimer;
+    public ObservableCollection<TeamMemberVM> TeamMembers { get; } = new();
+    
+    private int _teamBusy = 0;
+    //------------- TEAM UI --------------------------
+    private bool _iAmLeader = false;
+    
+    // optional: Avatar-Cache, damit wir nicht dauernd laden
+    private readonly Dictionary<ulong, ImageSource> _avatarCache = new();
+    // Zugriff auf die echte Client-Klasse
+    private RustPlusClientReal? _real => _rust as RustPlusClientReal;
+
+    // Liste, die das Team-Tab anzeigt
+
+    public sealed class TeamMemberVM : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void OnChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        // Schlüssel / Stammdaten
+        public ulong SteamId { get; init; }
+
+        private string _name = "(player)";
+        public string Name
+        {
+            get => _name;
+            set { if (_name == value) return; _name = value; OnChanged(nameof(Name)); }
+        }
+
+        private bool _isLeader;
+        public bool IsLeader
+        {
+            get => _isLeader;
+            set { if (_isLeader == value) return; _isLeader = value; OnChanged(nameof(IsLeader)); }
+        }
+
+        private bool _isOnline;
+        public bool IsOnline
+        {
+            get => _isOnline;
+            set
+            {
+                if (_isOnline == value) return;
+                _isOnline = value;
+                OnChanged(nameof(IsOnline));
+                OnChanged(nameof(IsOnlineAndAlive)); // abgeleitet
+            }
+        }
+
+        private bool _isDead;
+        public bool IsDead
+        {
+            get => _isDead;
+            set
+            {
+                if (_isDead == value) return;
+                _isDead = value;
+                OnChanged(nameof(IsDead));
+                OnChanged(nameof(IsOnlineAndAlive)); // abgeleitet
+            }
+        }
+
+        // Abgeleitet: nur dann grün, wenn online und nicht tot
+        public bool IsOnlineAndAlive => IsOnline && !IsDead;
+
+        public double? X { get; set; }
+        public double? Y { get; set; }
+
+        private ImageSource? _avatar;
+        public ImageSource? Avatar
+        {
+            get => _avatar;
+            set { if (_avatar == value) return; _avatar = value; OnChanged(nameof(Avatar)); }
+        }
+    }
+
+    // Letzte bekannten Player-Positionen (aus Dyn-Markern)
+    private readonly Dictionary<ulong, (double x, double y, string name)> _lastPlayersBySid = new();
+    // Merker für letzte Präsenz zum Melden von Änderungen
+    private readonly Dictionary<ulong, (bool online, bool dead)> _lastPresence = new();
+
+    // eigenes SteamId64 robust
+    private ulong _mySteamId => (ulong.TryParse(_vm?.SteamId64, out var v) ? v : 0UL);
+
+
+    private void StartTeamPolling()
+    {
+        if (_teamTimer != null) return; // schon aktiv
+        _teamTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(5)
+        };
+        _teamTimer.Tick += TeamTimer_Tick;
+        _teamTimer.Start();
+    }
+
+    private void StopTeamPolling()
+    {
+        var t = _teamTimer;
+        if (t == null) return;
+        t.Tick -= TeamTimer_Tick;
+        t.Stop();
+        _teamTimer = null;
+    }
+
+    private int _teamPollBusy = 0;
+    private async void TeamTimer_Tick(object? sender, EventArgs e)
+    {
+        if (System.Threading.Interlocked.Exchange(ref _teamPollBusy, 1) == 1) return;
+        try { await LoadTeamAsync(); }
+        finally { System.Threading.Interlocked.Exchange(ref _teamPollBusy, 0); }
+        CenterMiniMapOnPlayer();
+    }
+
+    public class BoolToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool b = value is bool bb && bb;
+            bool invert = (parameter as string)?.Equals("invert", StringComparison.OrdinalIgnoreCase) == true;
+            if (invert) b = !b;
+            return b ? Visibility.Visible : Visibility.Collapsed;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
+    }
+
+    private static object? P(object? o, string name) =>
+    o?.GetType().GetProperty(name,
+        BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase)?.GetValue(o);
+
+    private static T Get<T>(object? o, T def, params string[] names)
+    {
+        foreach (var n in names)
+        {
+            var v = P(o, n);
+            if (v is null) continue;
+            try
+            {
+                if (typeof(T) == typeof(string)) return (T)(object)(v.ToString() ?? "");
+                return (T)Convert.ChangeType(v, typeof(T), CultureInfo.InvariantCulture);
+            }
+            catch { }
+        }
+        return def;
+    }
+
+    // RAW Fallback for Team online info and Leader Info
+
+    private async Task EnsureAvatarAsync(TeamMemberVM vm)
+    {
+        if (!_avatarLoading.Add(vm.SteamId)) return;
+        try
+        {
+            // 1) Laden (nutzt DEINE vorhandene Methode)
+            await LoadAvatarAsync(vm).ConfigureAwait(false);
+
+            // 2) Wenn erfolgreich: Overlay sofort auf Avatar umschalten
+            if (vm.Avatar != null)
+            {
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    // Alle Marker dieses Spielers aktualisieren
+                    foreach (var kv in _dynEls.ToList())
+                    {
+                        if (kv.Value is FrameworkElement fe &&
+                            fe.Tag is PlayerMarkerTag t &&
+                            t.SteamId == vm.SteamId)
+                        {
+                            var el = fe; // ref-Arg
+                            UpdatePlayerMarker(ref el, kv.Key, vm.SteamId, vm.Name, vm.IsOnline, vm.IsDead);
+                            // Skalierung bleibt konsistent:
+                            ApplyCurrentOverlayScale(el);
+                        }
+                    }
+                });
+                // erfolgreicher Load -> Retry-Fenster löschen
+                _avatarNextTry.Remove(vm.SteamId);
+            }
+            else
+            {
+                // kein Bild bekommen -> später nochmal probieren
+                _avatarNextTry[vm.SteamId] = DateTime.UtcNow + AvatarRetryInterval;
+            }
+        }
+        catch
+        {
+            // Fehler -> später nochmal probieren
+            _avatarNextTry[vm.SteamId] = DateTime.UtcNow + AvatarRetryInterval;
+        }
+        finally
+        {
+            _avatarLoading.Remove(vm.SteamId);
+        }
+    }
+
+
+    private async Task LoadTeamAsync()
+    {
+        if (_real is null) return;
+
+        try
+        {
+            var team = await _real.GetTeamInfoAsync();
+            if (team is null) return;
+
+            var leaderId = team.LeaderSteamId;
+            var seen = new HashSet<ulong>();
+
+            foreach (var m in team.Members)
+            {
+                var sid = m.SteamId;
+                if (sid == 0) continue;
+                seen.Add(sid);
+
+                var vm = TeamMembers.FirstOrDefault(t => t.SteamId == sid);
+                if (vm == null)
+                {
+                    vm = new TeamMemberVM { SteamId = sid };
+                    TeamMembers.Add(vm);
+                    _ = LoadAvatarAsync(vm); // nutzt deine vorhandene Avatar-Funktion
+                    if (vm.Avatar == null && CanTryAvatar(sid))
+                    {
+                        _ = EnsureAvatarAsync(vm); // siehe unten
+                    }
+                }
+
+                // Vorheriger Zustand für Announcements
+                var hadPrev = _lastPresence.TryGetValue(sid, out var prev);
+
+                vm.Name = string.IsNullOrWhiteSpace(m.Name) ? "(player)" : m.Name!;
+                vm.IsLeader = (leaderId != 0 && sid == leaderId);
+                vm.IsOnline = m.Online;
+                vm.IsDead = m.Dead;
+                vm.X = m.X; vm.Y = m.Y;
+
+                var now = (m.Online, m.Dead);
+                _lastPresence[sid] = now;
+
+                if (hadPrev && prev != now)
+                    _ = AnnouncePresenceChangeAsync(vm, prev, now);
+
+            }
+
+            // Entferne nicht mehr vorhandene
+            for (int i = TeamMembers.Count - 1; i >= 0; i--)
+                if (!seen.Contains(TeamMembers[i].SteamId))
+                    TeamMembers.RemoveAt(i);
+
+            // Log hilft bei der Rechteprüfung LEADER etc.
+          //  var iAmLeader = TeamMembers.Any(t => t.SteamId == _mySteamId && t.IsLeader);
+           // AppendLog($"[team] leader={leaderId} me={_mySteamId} -> iAmLeader={iAmLeader} members={TeamMembers.Count}");
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[team] " + ex.Message);
+        }
+    }
+
+    private async Task AnnouncePresenceChangeAsync(TeamMemberVM vm, (bool online, bool dead) prev, (bool online, bool dead) now)
+    {
+        try
+        {
+            if (prev.online != now.online)
+            {
+                var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : "unknown";
+                var txt = now.online ? $"{vm.Name} came online @ {where}"
+                                     : $"{vm.Name} went offline";
+                await SendTeamChatSafeAsync(txt);
+            }
+
+           if (prev.dead != now.dead)
+        {
+            // --- NEW: Position robust bestimmen ---
+            double? px = vm.X, py = vm.Y;
+            if ((!px.HasValue || !py.HasValue) && TryResolvePosFromDynMarkers(vm.SteamId, out var dx, out var dy))
+            { px = dx; py = dy; }
+
+            var where = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : "unknown";
+            var txt = now.dead ? $"{vm.Name} died @ {where}" : $"{vm.Name} respawned @ {where}";
+            await SendTeamChatSafeAsync(txt);
+
+            // --- NEW: Death-Pin setzen/entfernen ---
+            if (_showDeathMarkers && now.dead && px.HasValue && py.HasValue)
+            {
+                PlaceOrMoveDeathPin(vm.SteamId, px.Value, py.Value, vm.Name);
+            }
+            else if (!now.dead)
+            {
+              //  RemoveDeathPins(vm.SteamId);
+            }
+        }
+    }
+    catch { }
+
+    }
+
+
+
+    // Avatar laden (ohne API-Key; via ?xml=1) + Cache
+    private static readonly HttpClient _http = new HttpClient(new HttpClientHandler
+    {
+        AutomaticDecompression = System.Net.DecompressionMethods.All
+    });
+
+
+   private static ImageSource? BytesToImage(byte[] bytes)
+{
+    try
+    {
+        var bi = new BitmapImage();
+        using var ms = new MemoryStream(bytes);
+        bi.BeginInit();
+        bi.CacheOption = BitmapCacheOption.OnLoad;
+        bi.StreamSource = ms;
+        bi.EndInit();
+        bi.Freeze();
+        return bi;
+    }
+    catch { return null; }
+}
+
+private static async Task<ImageSource?> FetchSteamAvatarAsync(ulong steamId)
+{
+    if (steamId == 0) return null;
+    try
+    {
+        using var http = new HttpClient();
+        // 1) Avatar-URL aus dem XML-Profil ziehen (braucht keinen API-Key)
+        var xml = await http.GetStringAsync($"https://steamcommunity.com/profiles/{steamId}?xml=1");
+        string url = "";
+        var mFull   = Regex.Match(xml, @"<avatarFull><!\[CDATA\[(.*?)\]\]></avatarFull>", RegexOptions.IgnoreCase);
+        var mMedium = Regex.Match(xml, @"<avatarMedium><!\[CDATA\[(.*?)\]\]></avatarMedium>", RegexOptions.IgnoreCase);
+        if (mFull.Success) url = mFull.Groups[1].Value;
+        else if (mMedium.Success) url = mMedium.Groups[1].Value;
+        if (string.IsNullOrWhiteSpace(url)) return null;
+
+        // 2) Bild laden
+        var bytes = await http.GetByteArrayAsync(url);
+        return BytesToImage(bytes);
+    }
+    catch { return null; }
+}
+
+private async Task LoadAvatarAsync(TeamMemberVM vm)
+{
+    try
+    {
+        if (vm.SteamId == 0 || vm.Avatar != null) return;
+
+        if (_avatarCache.TryGetValue(vm.SteamId, out var cached) && cached != null)
+        { vm.Avatar = cached; return; }
+
+        var img = await FetchSteamAvatarAsync(vm.SteamId);
+        if (img != null)
+        {
+            _avatarCache[vm.SteamId] = img;
+            vm.Avatar = img;
+        }
+    }
+    catch (Exception ex)
+        {
+            AppendLog($"[avatar] {vm.SteamId}: {ex.Message}");
+        }
+    }
+
+    // Linksklick: auf Karte zentrieren
+    private void TeamItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is TeamMemberVM vm)
+            CenterOnMember(vm);
+    }
+
+    // Kontextmenü – Zentrieren
+    private void Team_Center_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is TeamMemberVM vm)
+            CenterOnMember(vm);
+    }
+
+    private void Team_OpenProfile_Click(object sender, RoutedEventArgs e)
+    {
+        var vm = VMFromSender(sender); if (vm == null) return;
+        try
+        {
+            var url = $"https://steamcommunity.com/profiles/{vm.SteamId}";
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        catch { /* ignore */ }
+    }
+
+    // Kontextmenü – Promote
+    private bool IAmLeaderNow() => TeamMembers.Any(t => t.SteamId == _mySteamId && t.IsLeader);
+    private TeamMemberVM? VMFromSender(object sender)
+        => (sender as FrameworkElement)?.DataContext as TeamMemberVM ?? TeamList?.SelectedItem as TeamMemberVM;
+
+    private async void Team_Promote_Click(object sender, RoutedEventArgs e)
+    {
+        var vm = VMFromSender(sender); if (vm == null) return;
+        if (!IAmLeaderNow()) { AppendLog("Only Leader can promote."); return; }
+        if (vm.SteamId == _mySteamId) return;
+        try { await (_real as RustPlusClientReal)?.PromoteToLeaderAsync(vm.SteamId); }
+        catch (Exception ex) { AppendLog("[team] promote error: " + ex.Message); }
+    }
+
+
+
+    private void CenterOnMember(TeamMemberVM vm)
+    {
+        if (vm.X.HasValue && vm.Y.HasValue)
+        {
+            CenterMapOnWorld(vm.X.Value, vm.Y.Value);
+            return;
+        }
+        if (TryResolvePosFromDynMarkers(vm.SteamId, out var x, out var y))
+        {
+            CenterMapOnWorld(x, y);
+            return;
+        }
+        MessageBox.Show("Keine Position verfügbar (offline oder nicht gespawnt).");
+    }
+
+    private bool TryResolvePosFromDynMarkers(ulong sid, out double x, out double y)
+    {
+        if (_lastPlayersBySid.TryGetValue(sid, out var pos))
+        {
+            x = pos.x; y = pos.y; return true;
+        }
+        x = y = 0; return false;
+    }
+
+    // Kontextmenü – Kick
+    private async void Team_Kick_Click(object sender, RoutedEventArgs e)
+    {
+        var vm = VMFromSender(sender); if (vm == null) return;
+        if (!IAmLeaderNow()) { AppendLog("Only Leader can kick."); return; }
+        if (vm.SteamId == _mySteamId) return;
+        try { await (_real as RustPlusClientReal)?.KickTeamMemberAsync(vm.SteamId); }
+        catch (Exception ex) { AppendLog("[team] kick error: " + ex.Message); }
+    }
+
 
     private static string ChatKey(TeamChatMessage m)
         => $"{m.Timestamp.ToUniversalTime().Ticks}|{m.Author.Trim()}|{m.Text.Trim()}";
@@ -82,6 +877,9 @@ public partial class MainWindow : Window
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
         
         InitializeComponent();
+
+        InitCameraUi();
+        _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
         AppendLog($"[items-new] baseDir={baseDir}");
         EnsureNewItemDbLoaded();
         AppendLog($"[items-new] source={sNewDbSource} items={sItemsById.Count} byShort={sItemsByShort.Count}");
@@ -102,7 +900,17 @@ public partial class MainWindow : Window
         WebViewHost.MouseUp += WebViewHost_MouseUp;
         DataContext = _vm;
         _vm.Load();
-       // MapTransform.Changed += (_, __) => UpdateMarkerPositions();
+        // NEU: einmalig auf die aktuell ausgewählte Server-Instanz „umstecken“
+        SwitchCameraSourceTo(_vm.Selected);
+
+        // NEU: bei jedem späteren Serverwechsel Kameraliste umhängen
+        _vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(MainViewModel.Selected))
+                SwitchCameraSourceTo(_vm.Selected);
+        };
+
+        // MapTransform.Changed += (_, __) => UpdateMarkerPositions();
         HydrateSteamUiFromStorage();   // <= HIER
         _statusTimer.Tick += async (_, __) => await UpdateServerStatusAsync();
         ListServers.ItemsSource = _vm.Servers;
@@ -199,6 +1007,172 @@ public partial class MainWindow : Window
         this.Closed += MainWindow_Closed;
 
     }
+
+    // CROSSHAIR \\
+    private MonitorInfo? _selectedMonitor;
+    
+    private void BtnCrosshair_Click(object sender, RoutedEventArgs e)
+    {
+        if (_visible)
+            HideOverlay();
+        else
+            ShowOverlay();
+    }
+
+    private void ShowOverlay()
+    {
+        if (_overlay == null)
+            _overlay = new CrosshairWindow
+            {
+                Owner = this,             // <<< wichtig
+                ShowInTaskbar = false
+            };
+
+        _overlay.SetStyle(_currentStyle);
+        _overlay.Topmost = true;
+        if (_selectedMonitor != null)
+            PositionOverlayCentered(_overlay, _selectedMonitor);
+
+        _overlay.Show();
+        _visible = true;
+    }
+
+    private void HideOverlay()
+    {
+        if (_overlay != null)
+        {
+            _overlay.Close();    // statt Hide()
+            _overlay = null;
+        }
+        _visible = false;
+    }
+
+    private void PositionOverlayCentered(Window w, MonitorInfo mon)
+    {
+        var ps = PresentationSource.FromVisual(this);
+        double dpiX = 1.0, dpiY = 1.0;
+        if (ps?.CompositionTarget != null)
+        {
+            var m = ps.CompositionTarget.TransformFromDevice;
+            dpiX = m.M11; dpiY = m.M22;
+        }
+
+        double screenWidthDip = mon.Width * dpiX;
+        double screenHeightDip = mon.Height * dpiY;
+        double screenLeftDip = mon.Left * dpiX;
+        double screenTopDip = mon.Top * dpiY;
+
+        // w.Width / w.Height kommen jetzt aus dem CrosshairWindow je nach Stil
+        w.Left = screenLeftDip + (screenWidthDip - w.Width) / 2.0;
+        w.Top = screenTopDip + (screenHeightDip - w.Height) / 2.0;
+    }
+
+    // Kontextmenü: Rechtsklick abfangen, damit das Menü sicher aufgeht
+    private void BtnCrosshair_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+        var btn = (Button)sender;
+        if (btn.ContextMenu != null)
+        {
+            btn.ContextMenu.PlacementTarget = btn;
+            btn.ContextMenu.IsOpen = true;
+        }
+    }
+
+    // Menü beim Öffnen mit Monitoren füllen und Häkchen setzen
+    private void CrosshairContextMenu_Opened(object sender, RoutedEventArgs e)
+    {
+        BuildMonitorMenu();
+        UpdateStyleChecks();
+    }
+
+    // Menüaufbau
+    private void BuildMonitorMenu()
+    {
+        MonitorRoot.Items.Clear();
+        var screens = WinMonitors.All();
+
+        for (int i = 0; i < screens.Count; i++)
+        {
+            var s = screens[i];
+            var item = new MenuItem
+            {
+                Header = $"{i + 1}: {(s.Primary ? "Hauptmonitor" : "Monitor")} {s.Width}×{s.Height} @ {s.Left},{s.Top}",
+                IsCheckable = true,
+                IsChecked = _selectedMonitor != null &&
+                            s.Left == _selectedMonitor.Left &&
+                            s.Top == _selectedMonitor.Top &&
+                            s.Width == _selectedMonitor.Width &&
+                            s.Height == _selectedMonitor.Height,
+                Tag = s
+            };
+            item.Click += Monitor_Click;
+            MonitorRoot.Items.Add(item);
+        }
+    }
+
+
+    private void UpdateStyleChecks()
+    {
+        foreach (var t in new[] { "GreenDot", "MiniGreen", "OpenCrossRG", "ThinRedCircle" })
+        {
+            var mi = FindStyleItem(t);
+            if (mi != null) mi.IsChecked = false;
+        }
+        var currentTag = _currentStyle.ToString(); // nutzt die Enum-Namen
+        var cur = FindStyleItem(currentTag);
+        if (cur != null) cur.IsChecked = true;
+    }
+
+    private MenuItem? FindStyleItem(string tag) =>
+        (BtnCrosshair.ContextMenu.Items[0] as MenuItem)?
+            .Items
+            .OfType<MenuItem>()
+            .FirstOrDefault(mi => (string)mi.Tag == tag);
+
+    private void Style_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is string tag)
+        {
+            _currentStyle = tag switch
+            {
+                "GreenDot" => CrosshairStyle.GreenDot,
+                "MiniGreen" => CrosshairStyle.MiniGreen,
+                "OpenCrossRG" => CrosshairStyle.OpenCrossRG,
+                "ThinRedCircle" => CrosshairStyle.ThinRedCircle,
+                _ => _currentStyle
+            };
+
+            UpdateStyleChecks();
+
+            if (_visible && _overlay != null)
+            {
+                _overlay.SetStyle(_currentStyle);
+                // nach Größenänderung neu zentrieren
+                if (_selectedMonitor != null)
+                    PositionOverlayCentered(_overlay, _selectedMonitor);
+            }
+        }
+    }
+
+    private void Monitor_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is MonitorInfo s)
+        {
+            _selectedMonitor = s;
+
+            foreach (MenuItem it in MonitorRoot.Items)
+                it.IsChecked = ReferenceEquals(it.Tag, _selectedMonitor);
+
+            if (_visible && _overlay != null && _selectedMonitor != null)
+                PositionOverlayCentered(_overlay, _selectedMonitor);
+        }
+    }
+
+
+
+
+
     // === Map-Mapping-State ===
     private Rect _worldRectPx;      // zentriertes Welt-Quadrat in Bild-Pixeln
     private int _worldSizeS;       // WorldSize (S) der aktuellen Map
@@ -215,15 +1189,15 @@ public partial class MainWindow : Window
     private DispatcherTimer? _dynTimer;
     private bool _showPlayers = true;                                      // controlled by ChkPlayers
                                                                            // Wie stark Icons die Zoom-Stufe kompensieren (je kleiner der Exponent, desto GRÖSSER beim Rauszoomen)
-    private const double MON_SIZE_EXP = 0.05;  // Monumente: sehr präsent beim Rauszoomen
+    private const double MON_SIZE_EXP = 0.5;  // Monumente: sehr präsent beim Rauszoomen
  
 
     // Globale Grenzen, damit es nicht ausufert
     private const double ICON_SCALE_MIN = 0.6;  // kleiner als 60% nie
-    private const double ICON_SCALE_MAX = 10.5;  // größer als 350% nie
+    private const double ICON_SCALE_MAX = 4.5;  // größer als 350% nie
 
     // Optional: Baseline-Verstärker, um generell alles größer zu machen
-    private const double MON_BASE_MULT = 4.2;  // 20% größer als Basis
+    private const double MON_BASE_MULT = 2.2;  // 20% größer als Basis
     private const double SHOP_BASE_MULT = 1.3;  // 30% größer als Basis
 
     // tiny map from type → icon (pack URIs). Put your icons in /icons as Resource.
@@ -279,6 +1253,20 @@ public partial class MainWindow : Window
                 // Du kannst hier auch loggen, wenn du möchtest: Debug.WriteLine($"Konnte Prozess {p.Id} nicht beenden: {ex.Message}");
             }
         }
+        try
+        {
+            // falls noch offen/hidden → hart schließen
+            if (_overlay != null)
+            {
+                _overlay.Close();
+                _overlay = null;
+            }
+
+            // Kontextmenü sauber schließen (optional)
+            BtnCrosshair.ContextMenu?.IsOpen.Equals(false);
+        }
+        catch (Exception ex)
+        { }
     }
 
     private string ResolvePlayerName(RustPlusClientReal.DynMarker m)
@@ -297,7 +1285,20 @@ public partial class MainWindow : Window
 
         return "(player)";
     }
+    private void SwitchCameraSourceTo(ServerProfile? srv)
+    {
+        if (srv == null)
+        {
+            _cameraIds = new ObservableCollection<string>();
+            RebuildCameraTiles();
+            return;
+        }
 
+        srv.CameraIds ??= new ObservableCollection<string>();
+        _cameraIds = srv.CameraIds;          // gleiche Instanz → eine Wahrheit
+        RebuildCameraTiles();
+        EnsureCamThumbPolling();
+    }
     private async Task RefreshTeamNamesAsync()
     {
         _lastTeamRefresh = DateTime.UtcNow;
@@ -1428,11 +2429,12 @@ public partial class MainWindow : Window
 
         var env = await CoreWebView2Environment.CreateAsync(userDataFolder: dataFolder);
         _webView = new WebView2();
-        
+        WebViewHost.Background = (Brush)FindResource("SurfaceAlt");
         WebViewHost.Children.Add(_webView);
         Panel.SetZIndex(_webView, 0);           // WebView standardmäßig unten
 
         await _webView.EnsureCoreWebView2Async(env);
+        _webView.DefaultBackgroundColor = System.Drawing.Color.Transparent;
         _webView.CoreWebView2.Settings.AreDevToolsEnabled = true;
 
         // Optional: etwas „normaleren“ UA setzen
@@ -1584,6 +2586,13 @@ public partial class MainWindow : Window
         _shopTimer?.Stop();
         _shopTimer = null;
         StopDynPolling();
+        StopTeamPolling();
+        TeamMembers.Clear();
+        _avatarCache.Clear();
+        _lastPresence.Clear();
+        ClearAllDeathPins();
+
+
 
         //if (_shopTimer =  _shopTimer.Stop();
         // StopDynPolling();
@@ -1647,7 +2656,12 @@ public partial class MainWindow : Window
             // (3) Geräte in-place rehydrieren (Collection-Instanz behalten)
             RehydrateDevicesFromStorageInto(_vm.Selected);
             _vm.NotifyDevicesChanged();
-            AppendLog($"Geräte rehydriert: {_vm.Selected.Devices?.Count ?? 0}");
+            AppendLog($"Devices rehydrated: {_vm.Selected.Devices?.Count ?? 0}");
+
+            // (3b) Kameras rehydrieren und UI darauf umstecken
+            RehydrateCamerasFromStorageInto(_vm.Selected);
+            SwitchCameraSourceTo(_vm.Selected);
+            AppendLog($"Cams rehydrated: {_vm.Selected.CameraIds?.Count ?? 0}");
 
             // (4) Subscriptions GENAU EINMAL primen (nachdem Devices gesetzt sind)
             if (real != null && _vm.Selected?.Devices?.Any() == true)
@@ -1669,6 +2683,12 @@ public partial class MainWindow : Window
             _ = PollServerStatusLoopAsync(_statusCts.Token);
             await UpdateServerStatusAsync();
             _statusTimer.Start();
+
+            // (6) Team-Polling starten
+            StartTeamPolling();
+            await LoadTeamAsync();
+           
+           
         }
         catch (Exception ex)
         {
@@ -1679,7 +2699,15 @@ public partial class MainWindow : Window
         }
     }
 
+    // PLAYER DEATH MARKERS AVATAR IMAGE PLAYER DEATH
 
+    private bool _showProfileMarkers = true;
+    private bool _showDeathMarkers = false;
+
+    // death pins per player
+    private readonly Dictionary<ulong, FrameworkElement> _deathPins = new();
+
+   
 
 
     private async Task<bool> EnsureConnectedAsync()
@@ -1837,23 +2865,54 @@ public partial class MainWindow : Window
 
     private async void BtnOpenChat_Click(object sender, RoutedEventArgs e)
     {
-        if (_rust is not RustPlusClientReal real) { MessageBox.Show("Not connected."); return; }
+        // 1) _rust vorhanden?
+        if (_rust is not RustPlusClientReal real)
+        {
+            MessageBox.Show("Not connected.");
+            return;
+        }
 
+        // 2) Schneller UI-Check: ist im ViewModel ein Server verbunden?
+        if (!(_vm.Selected?.IsConnected ?? false))
+        {
+            MessageBox.Show("Please connect to a server first.");
+            return;
+        }
+
+        // 3) Bevor wir ein Fenster öffnen: Events anmelden + Chat „primen“ testen.
+        try
+        {
+            // doppelte Anmeldungen vermeiden
+            real.TeamChatReceived -= Real_TeamChatReceived;
+            real.TeamChatReceived += Real_TeamChatReceived;
+
+            // wirft InvalidOperationException, wenn _api==null → dann kein Fenster öffnen
+            await real.PrimeTeamChatAsync();
+        }
+        catch (InvalidOperationException) // "Nicht verbunden."
+        {
+            MessageBox.Show("Please connect to a server first.");
+            return; // kein Fenster öffnen
+        }
+        catch (Exception ex)
+        {
+            AppendLog("PrimeChat failed: " + ex.Message);
+            MessageBox.Show("Chat is not available right now.");
+            return; // sicherheitshalber auch hier abbrechen
+        }
+
+        // 4) Ab hier sind wir „chat-ready“ → Fenster öffnen (einmalig)
         if (_chatWin == null || !_chatWin.IsLoaded)
         {
-            _chatWin = new Views.ChatWindow(async msg => await real.SendTeamMessageAsync(msg)) { Owner = this };
+            _chatWin = new Views.ChatWindow(async msg => await real.SendTeamMessageAsync(msg))
+            {
+                Owner = this
+            };
             _chatWin.Closed += (_, __) => _chatWin = null;
             _chatWin.Show();
         }
 
-        // Live – doppelte Anmeldungen vermeiden
-        real.TeamChatReceived -= Real_TeamChatReceived;
-        real.TeamChatReceived += Real_TeamChatReceived;
-
-        // Events “primen”
-        await real.PrimeTeamChatAsync();
-
-        // History **einmalig** (seit letztem Marker)
+        // 5) History laden (tolerant)
         try
         {
             var history = await real.GetTeamChatHistoryAsync(_lastChatTsForCurrentServer, limit: 120);
@@ -1977,6 +3036,31 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             AppendLog("Info-Error: " + ex.Message);
+        }
+    }
+
+    private void RehydrateCamerasFromStorageInto(ServerProfile current)
+    {
+        try
+        {
+            var all = StorageService.LoadProfiles();
+            var saved = all.FirstOrDefault(p =>
+                p.Host.Equals(current.Host, StringComparison.OrdinalIgnoreCase) &&
+                p.Port == current.Port &&
+                p.SteamId64 == current.SteamId64);
+
+            current.CameraIds ??= new ObservableCollection<string>();
+
+            if (saved?.CameraIds is { Count: > 0 })
+            {
+                foreach (var id in saved.CameraIds)
+                    if (!current.CameraIds.Any(x => string.Equals(x, id, StringComparison.OrdinalIgnoreCase)))
+                        current.CameraIds.Add(id);
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("RehydrateCams-Error: " + ex.Message);
         }
     }
 
@@ -2159,8 +3243,9 @@ public partial class MainWindow : Window
         var m = MapTransform.Matrix;
         m.ScaleAt(zoom, zoom, pivot.X, pivot.Y);
         MapTransform.Matrix = m;
-        RefreshShopIconScales();
+        RefreshAllOverlayScales();
         RefreshMonumentOverlayPositions();
+        CenterMiniMapOnPlayer();
         e.Handled = true;
     }
 
@@ -2288,11 +3373,11 @@ public partial class MainWindow : Window
         if (_worldSizeS <= 0) return false;
 
         // Off-Grid (Oilrig, Labs) markieren wir als “off-grid”
-        if (x < 0 || y < 0 || x > _worldSizeS || y > _worldSizeS)
-        {
-            label = "off-grid";
-            return false;
-        }
+     //   if (x < 0 || y < 0 || x > _worldSizeS || y > _worldSizeS)
+      //  {
+      //      label = "off-grid";
+      //      return false;
+      //  }
 
         // Anzahl Zellen entlang einer Kante – so zeichnest du auch das Grid
         int cells = Math.Max(1, (int)Math.Round(_worldSizeS / 150.0));
@@ -2430,7 +3515,7 @@ public partial class MainWindow : Window
         var m = MapTransform.Matrix;
         m.Translate(dScene.X, dScene.Y);
         MapTransform.Matrix = m;
-
+        CenterMiniMapOnPlayer();
         e.Handled = true;
     }
 
@@ -2484,18 +3569,20 @@ public partial class MainWindow : Window
             if (fe.Tag is ValueTuple<double, double, string> m)
             {
                 var p = WorldToImagePx(m.Item1, m.Item2); // Item1 = X, Item2 = Y
+                ApplyMonumentScale(fe);
                 Canvas.SetLeft(fe, p.X - fe.RenderSize.Width / 2);
                 Canvas.SetTop(fe, p.Y - fe.RenderSize.Height / 2);
-                ApplyMonumentScale(fe);
+                
             }
             else if (fe.Tag != null)
             {
                 // fallback: dynamic oder anonyme Typen
                 dynamic d = fe.Tag;
                 var p = WorldToImagePx((double)d.X, (double)d.Y);
+                ApplyCurrentOverlayScale(fe);
                 Canvas.SetLeft(fe, p.X - 14);
                 Canvas.SetTop(fe, p.Y - 14);
-                ApplyCurrentOverlayScale(fe);
+                
             }
         }
     }
@@ -2736,6 +3823,11 @@ public partial class MainWindow : Window
             _worldSizeS = map.WorldSize;
             _worldRectPx = ComputeWorldRectFromWorldSize(map.PixelWidth, map.PixelHeight, _worldSizeS, /*padWorld:*/ 2000);
             RedrawGrid();
+            Dispatcher.InvokeAsync(() =>
+            {
+                RefreshAllOverlayScales();          // Spieler/Death/Shops skalieren
+                RefreshMonumentOverlayPositions();  // Monuments nach Layout korrekt setzen + skalieren
+            }, System.Windows.Threading.DispatcherPriority.Loaded); // oder Render
             StartDynPolling();
 
 
@@ -2783,7 +3875,7 @@ public partial class MainWindow : Window
                 // optional: show off-grid (oilrig/uw-lab) with a tiny outward nudge so it's visibly "outside"
                 if (off)
                 {
-                    const double nudge = 100;
+                    const double nudge = 150;
                     if (m.X < 0) u -= nudge; else if (m.X > S) u += nudge;
                     if (m.Y < 0) v += nudge; else if (m.Y > S) v -= nudge;
                 }
@@ -2862,6 +3954,41 @@ public partial class MainWindow : Window
         }
     }
 
+    private FrameworkElement BuildEventIconHost(FrameworkElement inner, string? tooltip, int size)
+    {
+        // Host bleibt unskaliert
+        var host = new Grid { Width = size, Height = size, IsHitTestVisible = true };
+        if (tooltip != null) ToolTipService.SetToolTip(host, tooltip);
+
+        host.Children.Add(inner);
+
+        // Inneres wird skaliert (Pivot = Mitte)
+        host.Tag = new PlayerMarkerTag
+        {
+            Radius = size * 0.5,          // für zentrierte Positionierung
+            ScaleExp = SHOP_SIZE_EXP,     // Reaktion wie Shops (passt gut für Events)
+            ScaleBaseMult = SHOP_BASE_MULT,
+            ScaleTarget = inner,
+            ScaleCenterX = size * 0.5,
+            ScaleCenterY = size * 0.5
+        };
+
+        return host;
+    }
+
+    private FrameworkElement BuildEventDot(string tooltip, int size = 14)
+    {
+        var dot = new Ellipse
+        {
+            Width = size,
+            Height = size,
+            Fill = Brushes.Orange,
+            Stroke = Brushes.Black,
+            StrokeThickness = 1.5
+        };
+        return BuildEventIconHost(dot, tooltip, size);
+    }
+
     private async Task PollDynMarkersOnceAsync()
     {
         if (_rust is not RustPlusClientReal real) return;
@@ -2884,6 +4011,8 @@ public partial class MainWindow : Window
             }
 
             UpdateDynUI(list);
+            Dispatcher.InvokeAsync(() => RefreshAllOverlayScales(),
+    System.Windows.Threading.DispatcherPriority.Loaded);
         }
         catch
         {
@@ -2929,25 +4058,29 @@ public partial class MainWindow : Window
     private void ChatAnnounce_Unchecked(object sender, RoutedEventArgs e) => _announceSpawns = false;
     private void UpdateDynUI(IReadOnlyList<RustPlusClientReal.DynMarker> markers)
     {
+
+
+
         if (Overlay == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0) return;
 
-        // Fallback-Key, wenn Id==0/instabil (z. B. mehrere Crates)
+        // ---- helper: stabiler Key für "Id==0" ----
         static uint DynFallbackKey(double x, double y, string? label, int type)
         {
             unchecked
             {
                 uint h = 2166136261;
                 void mix(ulong v) { for (int i = 0; i < 8; i++) { h ^= (byte)(v & 0xFF); h *= 16777619; v >>= 8; } }
-                double rx = Math.Round(x, 1), ry = Math.Round(y, 1); // Jitter entschärfen
+                double rx = Math.Round(x, 1), ry = Math.Round(y, 1);
                 mix(BitConverter.DoubleToUInt64Bits(rx));
                 mix(BitConverter.DoubleToUInt64Bits(ry));
                 h ^= (byte)type; h *= 16777619;
                 if (!string.IsNullOrEmpty(label)) foreach (char c in label) { h ^= (byte)c; h *= 16777619; }
-                if (h == 0) h = 1; return h;
+                if (h == 0) h = 1;
+                return h;
             }
         }
 
-        // kleiner Fallback „Icon“ (Ellipse) wenn PNG fehlt oder Typ unbekannt
+        // ---- helper: generischer Fallback-Dot (orange) ----
         static FrameworkElement MakeDot(string tooltip, int size = 14)
         {
             var dot = new Ellipse
@@ -2956,7 +4089,25 @@ public partial class MainWindow : Window
                 Height = size,
                 Fill = Brushes.Orange,
                 Stroke = Brushes.Black,
-                StrokeThickness = 1.5
+                StrokeThickness = 1.5,
+                
+            };
+            ToolTipService.SetToolTip(dot, tooltip);
+            return dot;
+        }
+
+        // ---- helper: Spieler-Dot (grün/grau) für ProfileMarkers=off ----
+        static FrameworkElement MakePlayerDot(string tooltip, bool online)
+        {
+            var dot = new Ellipse
+            {
+                Width = 10,
+                Height = 10,
+                Fill = online ? Brushes.LimeGreen : Brushes.LightGray,
+                Stroke = Brushes.Black,
+                StrokeThickness = 2,
+                Margin = new Thickness(0, 0, 4, 0),
+                
             };
             ToolTipService.SetToolTip(dot, tooltip);
             return dot;
@@ -2967,22 +4118,52 @@ public partial class MainWindow : Window
         foreach (var m in markers)
         {
             bool isPlayer = (m.Type == 1);
-            bool knownEventType = !isPlayer && sDynIconByType.ContainsKey(m.Type);
+            if (isPlayer && m.SteamId != 0)
+                _lastPlayersBySid[m.SteamId] = (m.X, m.Y, ResolvePlayerName(m));
 
-            // Spieler können global ausgeblendet werden
+            // Spieler komplett ausblenden, wenn global deaktiviert
             if (isPlayer && !_showPlayers) continue;
 
-            // Für Events: unbekannte Typen NICHT mehr wegfiltern → als Dot zeichnen
-            bool isRenderableEvent = !isPlayer; // alles Nicht-Spieler rendern (Icon oder Dot)
+            bool knownEventType = !isPlayer && sDynIconByType.ContainsKey(m.Type);
 
-            if (!isPlayer && !isRenderableEvent) continue;
-
-            // Stabiler Schlüssel
+            // stabiler Key
             uint key = m.Id != 0 ? m.Id : DynFallbackKey(m.X, m.Y, m.Label ?? m.Kind, m.Type);
             incoming.Add(key);
 
-            // Welt → Bildkoordinaten
-            var p = WorldToImagePx(m.X, m.Y);
+            // Präsenz (online/dead) aus letztem Poll
+            bool online = false, dead = false;
+            if (_lastPresence.TryGetValue(m.SteamId, out var pr))
+            {
+                online = pr.Item1;
+                dead = pr.Item2;
+            }
+            // --- Zusatz-Trigger für DeathPins aus Dyn-Updates ---
+            if (_showDeathMarkers)
+            {
+                if (_lastPresence.TryGetValue(m.SteamId, out var prevPresence))
+                {
+                    // Wenn wir eine Änderung auf "dead" erkennen, sofort Pin setzen
+                    if (!prevPresence.dead && dead) // prev false -> now true
+                    {
+                        // sichere vm holen (Name/Koords); falls keine, mit unmittelbaren m.X/m.Y arbeiten
+                        var vm = TeamMembers.FirstOrDefault(t => t.SteamId == m.SteamId);
+                        if (vm != null)
+                        {
+                            // Positions-Update aus Dyn-Stream (falls TeamPosition veraltet ist)
+                            vm.X = m.X; vm.Y = m.Y;
+                            Dispatcher.Invoke(() => PlaceDeathPin(vm));
+                        }
+                        else
+                        {
+                            // Fallback ohne VM (z.B. seltenes Timing)
+                            Dispatcher.Invoke(() =>
+                                PlaceOrMoveDeathPin(m.SteamId, m.X, m.Y, ResolvePlayerName(m)));
+                        }
+                    }
+                }
+            }
+
+            var nameNow = ResolvePlayerName(m);
 
             if (!_dynEls.TryGetValue(key, out var el))
             {
@@ -2990,94 +4171,99 @@ public partial class MainWindow : Window
                 {
                     if (isPlayer)
                     {
-                        var dot = new Ellipse
-                        {
-                            Width = 10,
-                            Height = 10,
-                            Fill = Brushes.LimeGreen,
-                            Stroke = Brushes.Black,
-                            StrokeThickness = 2,
-                            Margin = new Thickness(0, 0, 4, 0)
-                        };
-                        var name = new TextBlock
-                        {
-                            Text = ResolvePlayerName(m),
-                            Foreground = Brushes.LimeGreen,
-                            FontSize = 12,
-                            Margin = new Thickness(6, -2, 0, 0)
-                        };
-                        var sp = new StackPanel { Orientation = Orientation.Horizontal, Tag = m };
-                        sp.Children.Add(dot);
-                        sp.Children.Add(name);
+                        // Direkt korrektes Visual anlegen (Avatar-Marker ODER Dot)
+                        if (_showProfileMarkers)
+                            el = BuildPlayerMarker(m.SteamId, nameNow, online, dead); // your existing avatar pin (has name)
+                        else
+                            el = BuildPlayerDotMarker(m.SteamId, nameNow, online, dead); // <— show name with the dot
 
-                        _dynEls[key] = sp;
-                        Overlay.Children.Add(sp);
-                        Panel.SetZIndex(sp, 900);
-                        el = sp;
+                        _dynEls[key] = el;
+                        Overlay.Children.Add(el);
+                        Panel.SetZIndex(el, 900);
                         ApplyCurrentOverlayScale(el);
                     }
                     else
                     {
-                        FrameworkElement fe;
+                        FrameworkElement host;
                         if (knownEventType)
                         {
                             var uri = sDynIconByType[m.Type];
                             try
                             {
-                                fe = MakeIcon(uri, 64); // kann werfen, wenn PNG fehlt
+                                var img = MakeIcon(uri, 64);              // <- inner
+                                host = BuildEventIconHost(img, m.Label ?? m.Kind, 64);
                             }
                             catch
                             {
-                                fe = MakeDot($"{m.Kind} ({m.Type})"); // Fallback statt Komplettabbruch
+                                host = BuildEventDot($"{m.Kind} ({m.Type})", 14);
                             }
                         }
                         else
                         {
-                            // Unbekannter Event-Typ → neutraler Dot
-                            fe = MakeDot($"{m.Kind} ({m.Type})");
+                            host = BuildEventDot($"{m.Kind} ({m.Type})", 14);
                         }
 
-                        fe.Tag = m;
-                        _dynEls[key] = fe;
-                        Overlay.Children.Add(fe);
-                        Panel.SetZIndex(fe, 900);
-                        el = fe;
-                        ApplyCurrentOverlayScale(el);
+                        _dynEls[key] = host;
+                        Overlay.Children.Add(host);
+                        Panel.SetZIndex(host, 900);
+                        ApplyCurrentOverlayScale(host);
 
-                        // Spawn-Announcement nur einmal pro Key
+                        // einmaliges Spawn-Announcement
                         if (_announceSpawns && !_dynKnown.Contains(key))
-                            {
-                                _dynKnown.Add(key);
-                                var grid = GetGridLabel(m.X, m.Y);
-                                var kind = EventKindText(m.Type);
-                                _ = SendTeamChatSafeAsync($"{kind} spawned in at {grid}");
-                            }
-                        
+                        {
+                            _dynKnown.Add(key);
+                            var grid = GetGridLabel(m.X, m.Y);
+                            var kind = EventKindText(m.Type);
+                            _ = SendTeamChatSafeAsync($"{kind} spawned in at {grid}");
+                        }
+
+                        el = host;
                     }
                 }
                 catch
                 {
-                    // Marker-spezifische Fehler NICHT den gesamten Frame killen
+                    // Marker-spezifische Fehler nicht den gesamten Frame killen
                     continue;
                 }
             }
             else
             {
-                // Bestehendes Element updaten
-                el.Tag = m;
-                if (isPlayer && el is StackPanel sp && sp.Children.Count >= 2 && sp.Children[1] is TextBlock tb)
-                    tb.Text = ResolvePlayerName(m);
+                // bestehendes Element
+                if (isPlayer)
+                {
+                    // WICHTIG: Diese Methode schaltet selbst auf Dot um, falls _showProfileMarkers=false
+                    UpdatePlayerMarker(ref el, key, m.SteamId, nameNow, online, dead);
+                }
+                else
+                {
+                    // Nicht das Tag des Event-Hosts zerstören!
+                    if (el.Tag is not PlayerMarkerTag)
+                        el.Tag = m; // nur setzen, wenn es kein Host mit PlayerMarkerTag ist
+                }
             }
 
             // Position setzen
-            Canvas.SetLeft(el, p.X - 5);
-            Canvas.SetTop(el, p.Y - 5);
+            var p = WorldToImagePx(m.X, m.Y);
+
+            if (el.Tag is PlayerMarkerTag t && t.IsDeathPin)
+            {
+                // Death-Pins NICHT hier bewegen – die setzt PlaceOrMoveDeathPin().
+                // (Falls du sie doch hier setzen willst, nutze dein PinW/CircleTop/Circle.)
+            }
+            else
+            {
+                // normale Spieler/Events: zentriert mit Radius (falls gesetzt)
+                double off = (el.Tag is PlayerMarkerTag t2 && t2.Radius > 0) ? t2.Radius : 5.0;
+                Canvas.SetLeft(el, p.X - off);
+                Canvas.SetTop(el, p.Y - off);
+            }
 
             if (isPlayer)
                 el.Visibility = _showPlayers ? Visibility.Visible : Visibility.Collapsed;
         }
 
         // Nicht mehr vorhandene Marker entfernen
+        CenterMiniMapOnPlayer();
         var gone = _dynEls.Keys.Where(id => !incoming.Contains(id)).ToList();
         foreach (var id in gone)
         {
@@ -3088,6 +4274,458 @@ public partial class MainWindow : Window
             }
             _dynKnown.Remove(id);
         }
+    }
+
+    // avatar size on the map
+    private const double PlayerAvatarSize = 32;
+
+    private sealed class PlayerMarkerTag
+    {
+        public ulong SteamId;
+        public TextBlock NameText = null!;
+        public string? Name { get; set; }
+        public Ellipse? AvatarCircle;
+        public double Radius;
+        public bool IsDeathPin { get; set; }
+        public bool IsDot;
+
+        // Per-Element-Scaling:
+        public double ScaleExp { get; set; } = SHOP_SIZE_EXP; // stärker/schwächer je Typ
+        public double ScaleBaseMult { get; set; } = 1.0;      // Grundgröße
+        public FrameworkElement? ScaleTarget { get; set; }
+        public double ScaleCenterX { get; set; }  // Pivot X
+        public double ScaleCenterY { get; set; }  // Pivot Y
+    }
+
+
+
+
+
+    // quick lookup from your Team list (no extra web calls here)
+    private ImageSource? GetAvatar(ulong sid)
+        => TeamMembers.FirstOrDefault(t => t.SteamId == sid)?.Avatar;
+
+    private ImageSource? GetAvatarForMap(ulong sid)
+    => _showProfileMarkers ? GetTeamAvatar(sid) : null;
+
+    private ImageSource? GetTeamAvatar(ulong sid)
+    {
+        var vm = TeamMembers.FirstOrDefault(t => t.SteamId == sid);
+        if (vm?.Avatar != null) return vm.Avatar;
+
+        if (_avatarCache.TryGetValue(sid, out var img) && img != null)
+            return img;
+        return null;
+
+    }
+
+    // Small dot + name label (used when Profile markers is OFF)
+    private FrameworkElement BuildPlayerDotMarker(ulong sid, string name, bool online, bool dead)
+    {
+        var brush = dead ? Brushes.IndianRed : (online ? Brushes.LimeGreen : Brushes.LightGray);
+
+        var dot = new Ellipse
+        {
+            Width = 10,
+            Height = 10,
+            Fill = brush,
+            Stroke = Brushes.Black,
+            StrokeThickness = 2,
+            Margin = new Thickness(0, 0, 4, 0),
+            
+        };
+
+        var tb = new TextBlock
+        {
+            Text = name,
+            Foreground = brush,
+            FontSize = 12,
+            Margin = new Thickness(6, -2, 0, 0)
+        };
+
+        var sp = new StackPanel { Orientation = Orientation.Horizontal };
+        sp.Children.Add(dot);
+        sp.Children.Add(tb);
+        ToolTipService.SetToolTip(sp, name);
+
+        // keep Radius=5 so centering uses the dot’s radius, not the label width
+        sp.Tag = new PlayerMarkerTag
+        {
+            SteamId = sid,
+            Name = name,
+            NameText = tb,
+            AvatarCircle = null,
+            Radius = 5,
+            IsDeathPin = false,
+            IsDot = true, // <— new flag to distinguish dot vs avatar
+            ScaleExp = 1.05,
+            ScaleBaseMult = 1.0,
+            ScaleTarget = sp,          // << gesamten Inhalt skalieren (Dot + Name)
+            ScaleCenterX = 5.0,        // << Dot.Width / 2.0 (10/2)
+            ScaleCenterY = 5.0         // << Dot.Height / 2.0
+        };
+
+        return sp;
+    }
+
+    // build a player marker (avatar circle if available, dot otherwise)
+    private FrameworkElement BuildPlayerMarker(ulong sid, string name, bool online, bool dead)
+    {
+        var brush = dead ? Brushes.IndianRed : (online ? Brushes.LimeGreen : Brushes.Gray);
+        var avatar = GetAvatar(sid);
+
+        if (avatar == null)
+        {
+            var dot = new Ellipse
+            {
+                Width = 10,
+                Height = 10,
+                Fill = brush,
+                Stroke = Brushes.Black,
+                StrokeThickness = 2,
+                Margin = new Thickness(0, 0, 4, 0)
+            };
+            var tb = new TextBlock { Text = name, Foreground = brush, FontSize = 12, Margin = new Thickness(6, -2, 0, 0) };
+            var sp = new StackPanel { Orientation = Orientation.Horizontal };
+            sp.Children.Add(dot);
+            sp.Children.Add(tb);
+            sp.Tag = new PlayerMarkerTag
+            {
+                SteamId = sid,
+                NameText = tb,
+                AvatarCircle = null,
+                Radius = 5,
+                IsDot = true,
+                ScaleExp = 1.05,
+                ScaleBaseMult = 1.0
+            };
+            ApplyCurrentOverlayScale(sp);
+            return sp;
+        }
+        else
+        {
+            var tb = new TextBlock { Text = name, Foreground = brush, FontSize = 12, Margin = new Thickness(6, -2, 0, 0) };
+            var circle = new Ellipse
+            {
+                Width = PlayerAvatarSize,
+                Height = PlayerAvatarSize,
+                Stroke = Brushes.Black,
+                StrokeThickness = 2,
+                Fill = new ImageBrush(avatar) { Stretch = Stretch.UniformToFill }
+            };
+
+            var host = new Grid();
+            host.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            host.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+            var avatarHost = new Grid { Width = PlayerAvatarSize, Height = PlayerAvatarSize, Margin = new Thickness(0, 0, 4, 0) };
+            avatarHost.Children.Add(circle);
+
+            host.Children.Add(avatarHost);
+            Grid.SetColumn(avatarHost, 0);
+            host.Children.Add(tb);
+            Grid.SetColumn(tb, 1);
+
+            host.Tag = new PlayerMarkerTag
+            {
+                SteamId = sid,
+                NameText = tb,
+                AvatarCircle = circle,
+                Radius = PlayerAvatarSize * 0.5,
+                ScaleExp = 0.85,
+                ScaleBaseMult = 1.0,
+                ScaleTarget = host,              // << beide (Avatar + Name) skalieren
+                ScaleCenterX = PlayerAvatarSize * 0.5, // << Zentrum des Avatars (links)
+                ScaleCenterY = PlayerAvatarSize * 0.5,
+                
+            };
+            ToolTipService.SetToolTip(host, name);
+            ApplyCurrentOverlayScale(host);
+            return host;
+        }
+    }
+
+    private readonly HashSet<ulong> _avatarLoading = new();
+    private readonly Dictionary<ulong, DateTime> _avatarNextTry = new();
+    private static readonly TimeSpan AvatarRetryInterval = TimeSpan.FromSeconds(30);
+
+    private bool CanTryAvatar(ulong sid)
+    {
+        if (_avatarLoading.Contains(sid)) return false;
+        return !_avatarNextTry.TryGetValue(sid, out var next) || DateTime.UtcNow >= next;
+    }
+
+    private FrameworkElement MakePlayerDot(string tooltip, bool online)
+    {
+        var dot = new Ellipse
+        {
+            Width = 10,
+            Height = 10,
+            Fill = online ? Brushes.LimeGreen : Brushes.LightGray,
+            Stroke = Brushes.Black,
+            StrokeThickness = 2,
+            Margin = new Thickness(0, 0, 4, 0),
+            
+        };
+        ToolTipService.SetToolTip(dot, tooltip);
+        return dot;
+    }
+
+    // update existing marker (swap to avatar when it becomes available, recolor & rename)
+    private void UpdatePlayerMarker(ref FrameworkElement el, uint key, ulong sid, string name, bool online, bool dead)
+    {
+        if (sid == 0) return; // niemals Events o.ä. „umwandeln“
+        // Checkbox respektieren:
+        if (!_showProfileMarkers)
+        {
+            var brush = dead ? Brushes.IndianRed : (online ? Brushes.LimeGreen : Brushes.LightGray);
+
+            // Wenn noch kein "Dot+Name"-Marker existiert (oder ein Avatar aktiv war): neu bauen
+            if (el.Tag is not PlayerMarkerTag t || !t.IsDot)
+            {
+                var newEl = BuildPlayerDotMarker(sid, name, online, dead);
+                int idx = Overlay.Children.IndexOf(el);
+                if (idx >= 0) { Overlay.Children.RemoveAt(idx); Overlay.Children.Insert(idx, newEl); }
+                else Overlay.Children.Add(newEl);
+                _dynEls[key] = newEl; el = newEl;
+            }
+            else
+            {
+                // Bereits ein Dot-StackPanel vorhanden -> nur Name/Brush aktualisieren
+                t.NameText.Text = name;
+                t.NameText.Foreground = brush;
+
+                // Dot (erste Ellipse im StackPanel) umfärben
+                if (t.NameText.Parent is Panel sp)
+                {
+                    var dot = sp.Children.OfType<Ellipse>().FirstOrDefault();
+                    if (dot != null) dot.Fill = brush;
+                }
+            }
+
+            // Tooltip konsistent halten (optional)
+            ToolTipService.SetToolTip(el, name);
+            return; // <— wichtig
+        }
+
+        // (Rest: deine bisherige Logik für Avatar-/Name-Update)
+        var brush2 = dead ? Brushes.IndianRed : (online ? Brushes.LimeGreen : Brushes.LightGray);
+        var avatar = GetAvatarForMap(sid);
+
+        if (el.Tag is PlayerMarkerTag tag)
+        {
+            if (tag.NameText != null) tag.NameText.Text = name;
+            if (tag.NameText != null) tag.NameText.Foreground = brush2;
+
+            if (avatar != null && tag.AvatarCircle == null ||
+                avatar == null && tag.AvatarCircle != null)
+            {
+                var newEl = BuildPlayerMarker(sid, name, online, dead);
+                int idx = Overlay.Children.IndexOf(el);
+                if (idx >= 0) { Overlay.Children.RemoveAt(idx); Overlay.Children.Insert(idx, newEl); }
+                else Overlay.Children.Add(newEl);
+                _dynEls[key] = newEl; el = newEl;
+            }
+            else if (tag.AvatarCircle != null && avatar != null)
+            {
+                tag.AvatarCircle.Fill = new ImageBrush(avatar) { Stretch = Stretch.UniformToFill };
+            }
+        }
+        else
+        {
+            var newEl = BuildPlayerMarker(sid, name, online, dead);
+            int idx = Overlay.Children.IndexOf(el);
+            if (idx >= 0) { Overlay.Children.RemoveAt(idx); Overlay.Children.Insert(idx, newEl); }
+            else Overlay.Children.Add(newEl);
+            _dynEls[key] = newEl; el = newEl;
+        }
+    }
+
+    private void ChkProfileMarkers_Toggled(object? sender, RoutedEventArgs e)
+    {
+        _showProfileMarkers = ChkProfileMarkers.IsChecked == true;
+
+        // alle existierenden Player-Marker umschalten
+        foreach (var kv in _dynEls.ToList())
+        {
+            if (kv.Value is FrameworkElement el && el.Tag is PlayerMarkerTag tag)
+            {
+                if (tag.SteamId == 0 || tag.IsDeathPin) continue; // keine Events/DeathPins anfassen
+                var sid = tag.SteamId;
+                var name = TeamMembers.FirstOrDefault(t => t.SteamId == sid)?.Name ?? "player";
+                //var st = _lastPresence.TryGetValue(sid, out var p) ? p : (false, false);
+                if (_lastPresence.TryGetValue(sid, out var p))
+                {
+                    var online = p.Item1;
+                    var dead = p.Item2;
+                    UpdatePlayerMarker(ref el, kv.Key, sid, name, online, dead);
+                }
+                else
+                {
+                    UpdatePlayerMarker(ref el, kv.Key, sid, name, online: false, dead: false);
+                }
+            }
+        }
+    }
+
+    private void ChkDeathMarkers_Toggled(object? sender, RoutedEventArgs e)
+    {
+        _showDeathMarkers = ChkDeathMarkers.IsChecked == true;
+        if (!_showDeathMarkers) ClearAllDeathPins(); // „Deaktivieren cleart“
+    }
+
+    private const double PinW = 40;   // Gesamtbreite
+    private const double PinH = 56;   // Gesamthöhe (inkl. Spitze)
+    private const double Circle = 24; // Durchmesser der Kreisfläche im Kopf
+    private const double CircleTop = 6; // Abstand von oben bis Kreis-OBERKANTE
+
+
+    private void RefreshAllOverlayScales()
+    {
+        // Player & sonstige dynamische Elemente
+        foreach (var fe in _dynEls.Values)
+            ApplyCurrentOverlayScale(fe);
+
+        // DeathPins
+        foreach (var fe in _deathPins.Values)
+            ApplyCurrentOverlayScale(fe);
+
+        // Shops (falls du sie weiter separat halten willst)
+        RefreshShopIconScales();
+    }
+    private FrameworkElement BuildDeathPin(ulong sid, string name, ImageSource? avatarFromCaller = null)
+    {
+        var avatar = GetTeamAvatar(sid);
+
+        var root = new Grid
+        {
+            Width = PinW,
+            Height = PinH,
+            
+            Tag = new PlayerMarkerTag
+            {
+                SteamId = sid,
+                Name = name,
+                IsDeathPin = true,
+
+                // wichtig fürs Skalieren:
+                ScaleExp = 0.8,
+                ScaleBaseMult = 0.9,
+                ScaleTarget = null,                 // null => wir skalieren root selbst
+                ScaleCenterX = PinW * 0.5,          // Pivot X = Mitte unten (Spitze)
+                ScaleCenterY = PinH                 // Pivot Y = Unterkante (Spitze)
+            }
+        };
+
+        // rote Tropfenform (Path ist auf Containergröße gestretcht)
+        var pinPath = Geometry.Parse(
+            "M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z"
+        );
+
+        var fill = TryFindResource("DeathPinFill") as Brush ?? Brushes.IndianRed;
+
+        root.Children.Add(new System.Windows.Shapes.Path
+        {
+            Data = pinPath,
+            Fill = fill,
+            Stroke = Brushes.Black,
+            StrokeThickness = 2,
+            Stretch = Stretch.Fill,
+            Width = PinW,
+            Height = PinH
+        });
+
+        // schwarzer Ring um die Kreisfläche
+        root.Children.Add(new Ellipse
+        {
+            Width = Circle + 6,
+            Height = Circle + 6,
+            Stroke = Brushes.Black,
+            StrokeThickness = 2,
+            Fill = Brushes.Transparent,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness((PinW - (Circle + 6)) / 2.0, CircleTop - 3, 0, 0)
+        });
+
+        // Avatar (kreisförmig geclippt) – HORIZONTAL zentriert, TOP = CircleTop
+        FrameworkElement avatarEl;
+        if (avatar != null)
+        {
+            var holder = new Grid { Width = Circle, Height = Circle };
+            holder.Clip = new EllipseGeometry(new Point(Circle / 2.0, Circle / 2.0), Circle / 2.0, Circle / 2.0);
+            holder.Children.Add(new Image { Source = avatar, Stretch = Stretch.UniformToFill });
+            avatarEl = holder;
+        }
+        else
+        {
+            avatarEl = new Ellipse { Width = Circle, Height = Circle, Fill = Brushes.Gray };
+        }
+
+        avatarEl.HorizontalAlignment = HorizontalAlignment.Left;
+        avatarEl.VerticalAlignment = VerticalAlignment.Top;
+        avatarEl.Margin = new Thickness((PinW - Circle) / 2.0, CircleTop, 0, 0);
+        root.Children.Add(avatarEl);
+
+        // Tooltip
+        ToolTipService.SetToolTip(root, $"{name} (death)");
+        ApplyCurrentOverlayScale(root);
+        return root;
+    }
+
+    private void PlaceDeathPin(TeamMemberVM vm)
+    {
+        if (!_showDeathMarkers) return;
+        if (!(vm.X.HasValue && vm.Y.HasValue)) return;
+
+        var px = WorldToImagePx(vm.X.Value, vm.Y.Value);
+        var el = BuildDeathPin(vm.SteamId, vm.Name, GetTeamAvatar(vm.SteamId));
+
+        // ersetzen, falls derselbe Spieler erneut stirbt
+        if (_deathPins.TryGetValue(vm.SteamId, out var old))
+        {
+            Overlay.Children.Remove(old);
+            _deathPins.Remove(vm.SteamId);
+        }
+
+        Overlay.Children.Add(el);
+        Panel.SetZIndex(el, 901); // über Events, unter Namen
+        ApplyCurrentOverlayScale(el);
+
+        // Pinspitze auf Position
+        var cx = px.X - PinW / 2.0;
+        var cy = px.Y - (CircleTop + Circle / 2.0);
+        Canvas.SetLeft(el, cx);
+        Canvas.SetTop(el, cy);
+
+        _deathPins[vm.SteamId] = el;
+    }
+
+    private void PlaceOrMoveDeathPin(ulong sid, double worldX, double worldY, string name)
+    {
+        var px = WorldToImagePx(worldX, worldY);
+        var el = _deathPins.TryGetValue(sid, out var exist) ? exist : null;
+
+        if (el == null)
+        {
+            el = BuildDeathPin(sid, name);
+            _deathPins[sid] = el;
+            Overlay.Children.Add(el);
+            Panel.SetZIndex(el, 901);
+            ApplyCurrentOverlayScale(el);
+        }
+
+        // Spitze auf Position
+        var cx = px.X - (PinW / 2.0);
+        var cy = px.Y - PinH;
+        Canvas.SetLeft(el, cx);
+        Canvas.SetTop(el, cy);
+    }
+
+    private void ClearAllDeathPins()
+    {
+        foreach (var kv in _deathPins) Overlay.Children.Remove(kv.Value);
+        _deathPins.Clear();
     }
 
     private async Task SendTeamChatSafeAsync(string text)
@@ -3117,35 +4755,7 @@ public partial class MainWindow : Window
     private string GetGridLabel(RustPlusClientReal.DynMarker m) => GetGridLabel(m.X, m.Y);
 
     private string GetGridLabel(double x, double y)
-    {
-        // each cell = 150 world units (your convention)
-        // columns: A..Z, AA..AF (as you already do elsewhere)
-        int cols = Math.Max(1, (int)Math.Round(_worldSizeS / 150.0));
-        int rows = cols; // square grid
-
-        double cell = _worldSizeS / (double)cols;
-
-        int col = (int)Math.Floor(x / cell);
-        int row = (int)Math.Floor((_worldSizeS - y) / cell);
-        col = Math.Clamp(col, 0, cols - 1);
-        row = Math.Clamp(row, 0, rows - 1);
-
-        static string ColLabel(int idx)
-        {
-            // 0->A, 25->Z, 26->AA...
-            var s = "";
-            idx++;
-            while (idx > 0)
-            {
-                idx--;
-                s = (char)('A' + (idx % 26)) + s;
-                idx /= 26;
-            }
-            return s;
-        }
-
-        return $"{ColLabel(col)}{row + 1}";
-    }
+    => TryGetGridRef(x, y, out var g) ? g : "off-grid";
     private static string EventKindText(int type) => type switch
     {
         5 => "Cargo Ship",
@@ -3171,6 +4781,10 @@ public partial class MainWindow : Window
             //AppendLog("Shops: Polling an (20s).");
 
             await PollShopsOnceAsync(); // sofort einmal
+            await Dispatcher.InvokeAsync(() =>
+            {
+                RefreshShopIconScales(); // oder RefreshAllOverlayScales(), wenn du es einheitlich halten willst
+            }, System.Windows.Threading.DispatcherPriority.Loaded);
         }
         else
         {
@@ -3184,10 +4798,25 @@ public partial class MainWindow : Window
         }
     }
 
+    private bool _didInitialOverlayRefresh;
+
+    private async void EnsureInitialOverlayRefresh()
+    {
+        if (_didInitialOverlayRefresh || Overlay == null) return;
+        _didInitialOverlayRefresh = true;
+
+        // Einen Tick warten, bis Measure/Arrange/Render einmal durch sind
+        await Dispatcher.Yield(System.Windows.Threading.DispatcherPriority.Loaded);
+        // alternativ: DispatcherPriority.Render
+
+        RefreshAllOverlayScales();          // skaliert Spieler/Death/Shops
+        RefreshMonumentOverlayPositions();  // falls du Monumente separat setzt
+    }
+
     // wie stark du die Größe kompensierst:
     // 0.0 = gar nicht (verhält sich wie Map), 1.0 = am Bildschirm immer gleich groß,
     // 0.7–0.9 = "etwas" größer raus / etwas kleiner rein
-    private const double SHOP_SIZE_EXP = 0.3;
+    private const double SHOP_SIZE_EXP = 0.8;
 
     // Gesamtzoom (Viewbox * MapTransform)
     private double GetEffectiveZoom()
@@ -3202,10 +4831,45 @@ public partial class MainWindow : Window
     private void ApplyCurrentOverlayScale(FrameworkElement el)
     {
         if (el == null) return;
+
         double eff = GetEffectiveZoom();
-        double scale = Math.Pow(eff, -SHOP_SIZE_EXP); // Gegen-Skalierung
-        el.RenderTransformOrigin = new Point(0.5, 0.5);
-        el.RenderTransform = new ScaleTransform(scale, scale);
+        double exp = SHOP_SIZE_EXP, baseMult = SHOP_BASE_MULT;
+
+        FrameworkElement target = el;
+        double centerX = 0.0, centerY = 0.0;
+
+        if (el.Tag is PlayerMarkerTag pt)
+        {
+            if (pt.ScaleExp > 0) exp = pt.ScaleExp;
+            if (pt.ScaleBaseMult > 0) baseMult = pt.ScaleBaseMult;
+
+            // für DeathPins wollen wir root skalieren:
+            if (pt.IsDeathPin)
+            {
+                target = el;
+                centerX = pt.ScaleCenterX;   // = PinW/2
+                centerY = pt.ScaleCenterY;   // = PinH
+            }
+            else if (pt.ScaleTarget != null)
+            {
+                // (Spieler: Avatar/Dot+Name etc.)
+                target = pt.ScaleTarget;
+                centerX = pt.ScaleCenterX;
+                centerY = pt.ScaleCenterY;
+
+                if (!ReferenceEquals(target, el))
+                    el.RenderTransform = Transform.Identity; // Root nicht zusätzlich skalieren
+            }
+        }
+
+        double scale = CalcOverlayScale(eff, exp, baseMult);
+
+        // Pivot exakt setzen – kein RenderTransformOrigin nötig
+        target.RenderTransform = new ScaleTransform(scale, scale)
+        {
+            CenterX = centerX,
+            CenterY = centerY
+        };
     }
 
     // auf alle Shops anwenden (z.B. nach einem Zoom)
@@ -3688,7 +5352,7 @@ public partial class MainWindow : Window
             Fill = color ?? Brushes.OrangeRed,
             Stroke = Brushes.White,
             StrokeThickness = 2,
-            IsHitTestVisible = false,
+            
             RenderTransformOrigin = new Point(0.5, 0.5)
         };
 
@@ -3711,7 +5375,7 @@ public partial class MainWindow : Window
             Fill = color ?? Brushes.OrangeRed,
             Stroke = Brushes.White,
             StrokeThickness = 2,
-            IsHitTestVisible = false,
+            
             ToolTip = string.IsNullOrWhiteSpace(label) ? null : label
         };
         Canvas.SetLeft(dot, uDip - r);
@@ -3733,3 +5397,4 @@ public partial class MainWindow : Window
    
 
 }
+

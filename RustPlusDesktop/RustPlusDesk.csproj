@@ -3,7 +3,8 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
-		<ApplicationIcon>1-76fc6c7e.ico</ApplicationIcon>
+		
+		<ApplicationIcon>rustplus-desktop-icon.ico</ApplicationIcon>
 	</PropertyGroup>
 	<ItemGroup>
 	  
@@ -88,10 +89,12 @@
 	  <None Remove="icons\watertreatment.png" />
 	  <None Remove="icons\waterwell.png" />
 	  <None Remove="rust-item-list.json" />
+	  <None Remove="rustplus-desktop-icon.ico" />
 	  <None Remove="rust_items.json" />
+	  <None Remove="TitleScreen-rust-plus-desktop.png" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Content Include="1-76fc6c7e.ico">
+	  <Content Include="rustplus-desktop-icon.ico">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	</ItemGroup>
@@ -155,6 +158,8 @@
     <Resource Include="icons\watertreatment.png" />
     <Resource Include="icons\waterwell.png" />
     <Resource Include="rust-item-list.json" />
+    <Resource Include="rustplus-desktop-icon.ico" />
+    <Resource Include="TitleScreen-rust-plus-desktop.png" />
     <Content Include="rust_items.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

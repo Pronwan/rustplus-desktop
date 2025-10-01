@@ -6,7 +6,7 @@
         xmlns:views="clr-namespace:RustPlusDesk.Views"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Rust+ Desktop by Pronwan" Height="814" Width="1245"
+        Title="Rust+ Desktop by Pronwan" Height="814" Width="1400"
         Background="{DynamicResource AppBg}" Foreground="{DynamicResource TextPrimary}"
         UseLayoutRounding="True" SnapsToDevicePixels="True">
     <Window.Resources>
@@ -22,6 +22,367 @@
         <SolidColorBrush x:Key="TextPrimary"   Color="#ECEFF1"/>
         <SolidColorBrush x:Key="TextSubtle"    Color="#B0BEC5"/>
         <CornerRadius    x:Key="Radius">10</CornerRadius>
+
+        <!-- ========== TAB STYLES (einfügen in <Window.Resources>) ========== -->
+        <SolidColorBrush x:Key="CardBrush" Color="#171A21"/>
+        <SolidColorBrush x:Key="CardBorderBrush" Color="#222734"/>
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#4C8BF5"/>
+        <SolidColorBrush x:Key="PrimaryBrushMuted" Color="#375FA8"/>
+        <SolidColorBrush x:Key="TextBrush" Color="#E8ECF3"/>
+        <SolidColorBrush x:Key="TextBrushMuted" Color="#AAB6CF"/>
+
+        <Style x:Key="PrettyTabControl" TargetType="{x:Type TabControl}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabControl}">
+                        <Grid KeyboardNavigation.TabNavigation="Local" SnapsToDevicePixels="True">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Genau EIN ItemsHost (TabPanel), ohne Kinder -->
+                            <TabPanel x:Name="HeaderPanel"
+                    Panel.ZIndex="1"
+                    Grid.Row="0"
+                    IsItemsHost="True"
+                    Margin="8,8,8,0"/>
+
+                            <!-- Inhalt -->
+                            <Border Grid.Row="1"
+                  Background="{StaticResource CardBrush}"
+                  BorderBrush="{StaticResource CardBorderBrush}"
+                  BorderThickness="1"
+                  CornerRadius="14"
+                  Margin="8,0,8,8"
+                  Padding="12">
+                                <ContentPresenter x:Name="PART_SelectedContentHost"
+                              ContentSource="SelectedContent"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- HEADER-TEMPLATE: Border + Popup gemeinsam in einem Grid -->
+        <ControlTemplate x:Key="DarkMenuItem_Header" TargetType="MenuItem">
+            <Grid>
+                <!-- <<< ein gemeinsames Root -->
+                <Border x:Name="Bd"
+                Background="{TemplateBinding Background}"
+                CornerRadius="6"
+                SnapsToDevicePixels="True"
+                Padding="{TemplateBinding Padding}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="18"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ContentPresenter Grid.Column="0"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Center"
+                                  ContentSource="Icon"/>
+
+                        <ContentPresenter Grid.Column="1"
+                                  Margin="0,0,6,0"
+                                  VerticalAlignment="Center"
+                                  RecognizesAccessKey="True"
+                                  ContentSource="Header"/>
+
+                        <Path Grid.Column="2"
+                      Data="M 0 0 L 4 4 L 0 8"
+                      Stroke="{DynamicResource TextSubtle}"
+                      StrokeThickness="1.5"
+                      StrokeStartLineCap="Round"
+                      StrokeEndLineCap="Round"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- Submenu-Popup -->
+                <Popup x:Name="PART_Popup"
+               Placement="Right"
+               HorizontalOffset="0"
+               VerticalOffset="0"
+               IsOpen="{TemplateBinding IsSubmenuOpen}"
+               AllowsTransparency="True"
+               Focusable="False"
+               StaysOpen="False">
+                    <Border Background="{DynamicResource Surface}"
+                    BorderBrush="{DynamicResource CardBorder}"
+                    BorderThickness="1"
+                    CornerRadius="{DynamicResource Radius}"
+                    Padding="6"
+                    SnapsToDevicePixels="True">
+                        <ScrollViewer CanContentScroll="True">
+                            <StackPanel IsItemsHost="True"/>
+                        </ScrollViewer>
+                    </Border>
+                </Popup>
+            </Grid>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter TargetName="Bd" Property="Background" Value="#141A22"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="{DynamicResource TextSubtle}"/>
+                    <Setter TargetName="Bd" Property="Opacity" Value="0.6"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <!-- ITEM-TEMPLATE (Leaf) bleibt ein einzelnes Root-Element, alles gut) -->
+        <ControlTemplate x:Key="DarkMenuItem_Item" TargetType="MenuItem">
+            <Border x:Name="Bd"
+            Background="{TemplateBinding Background}"
+            CornerRadius="6"
+            SnapsToDevicePixels="True"
+            Padding="{TemplateBinding Padding}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="18"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ContentPresenter Grid.Column="0"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Center"
+                              ContentSource="Icon"/>
+
+                    <ContentPresenter Grid.Column="1"
+                              Margin="0,0,6,0"
+                              VerticalAlignment="Center"
+                              RecognizesAccessKey="True"
+                              ContentSource="Header"/>
+                </Grid>
+            </Border>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter TargetName="Bd" Property="Background" Value="#141A22"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="{DynamicResource TextSubtle}"/>
+                    <Setter TargetName="Bd" Property="Opacity" Value="0.6"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <!-- STYLE: wählt automatisch das passende Template per Role
+     + setzt Checked-Indikator als Accent-Punkt über Icon -->
+        <Style x:Key="DarkMenuItem" TargetType="MenuItem">
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template" Value="{StaticResource DarkMenuItem_Item}"/>
+            <Style.Triggers>
+                <Trigger Property="Role" Value="TopLevelHeader">
+                    <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}"/>
+                </Trigger>
+                <Trigger Property="Role" Value="SubmenuHeader">
+                    <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}"/>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Icon">
+                        <Setter.Value>
+                            <Ellipse Width="8" Height="8" Fill="{DynamicResource Accent}"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="False">
+                    <Setter Property="Icon" Value="{x:Null}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- dunkler Separator -->
+        <Style x:Key="DarkSeparator" TargetType="Separator">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Separator">
+                        <Border Height="1" Background="#22FFFFFF" Margin="6,6,6,6"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- dunkles ContextMenu-Gehäuse -->
+        <Style x:Key="DarkContextMenu" TargetType="ContextMenu">
+            <Setter Property="Background" Value="{DynamicResource Surface}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="HasDropShadow" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContextMenu">
+                        <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{DynamicResource CardBorder}"
+                        BorderThickness="1"
+                        CornerRadius="{DynamicResource Radius}"
+                        Padding="6"
+                        SnapsToDevicePixels="True">
+                            <StackPanel IsItemsHost="True"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- TabItem: echte „Reiter“-Optik mit eckigem Fuß, bündig zur Card -->
+        <Style x:Key="PrettyTabItem" TargetType="TabItem">
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="Padding" Value="14,8"/>
+            <Setter Property="Margin" Value="0"/>
+            <!-- kein Abstand zwischen Reitern -->
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="TabHeader"
+                        Background="#11151B"
+                        BorderBrush="{StaticResource CardBorderBrush}"
+                        BorderThickness="1,1,1,0"  
+                            CornerRadius="10,10,0,0"
+                            
+                            Padding="12,6"
+                        SnapsToDevicePixels="True">
+                            <ContentPresenter ContentSource="Header"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="TabHeader" Property="Background" Value="#151A22"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Panel.ZIndex" Value="1"/>
+                               
+                                <Setter TargetName="TabHeader" Property="Margin" Value="0,0,0,-1"/>
+                                <Setter TargetName="TabHeader" Property="Background" Value="{StaticResource CardBrush}"/>
+                                <Setter TargetName="TabHeader" Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Sekundär-Button (unten im Tab) -->
+        <Style x:Key="GhostButton" TargetType="Button">
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="Background" Value="#141821"/>
+            <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Margin" Value="8,0,0,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="BtnBg" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="BtnBg" Property="Background" Value="#1A2130"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="BtnBg" Property="Background" Value="#0F1320"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.55"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Primär-Button (CHAT) -->
+        <Style x:Key="PrimaryButton" BasedOn="{StaticResource GhostButton}" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrushMuted}"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <!-- ========= Ultra-Slim Scrollbars ========= -->
+        <SolidColorBrush x:Key="ScrollbarTrackBrush" Color="#141820"/>
+        <SolidColorBrush x:Key="ScrollbarThumbBrush" Color="#2C3548"/>
+        <SolidColorBrush x:Key="ScrollbarThumbBrushHover" Color="#3A4663"/>
+        <SolidColorBrush x:Key="ScrollbarThumbBrushActive" Color="#4C5A7A"/>
+
+        <Style x:Key="SlimThumb" TargetType="{x:Type Thumb}">
+            <Setter Property="Background" Value="{StaticResource ScrollbarThumbBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border x:Name="B" Background="{TemplateBinding Background}" CornerRadius="2"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="B" Property="Background" Value="{StaticResource ScrollbarThumbBrushHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="True">
+                                <Setter TargetName="B" Property="Background" Value="{StaticResource ScrollbarThumbBrushActive}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type ScrollBar}">
+            <Setter Property="Background" Value="Transparent"/>
+            <!-- wichtig, damit schmaler als Systembreite möglich -->
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid SnapsToDevicePixels="True">
+                            <Border Background="{StaticResource ScrollbarTrackBrush}" CornerRadius="2"/>
+                            <Track x:Name="PART_Track"
+                 Orientation="{TemplateBinding Orientation}"
+                 IsDirectionReversed="True" Focusable="False">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Opacity="0" IsHitTestVisible="False"/>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Opacity="0" IsHitTestVisible="False"/>
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource SlimThumb}"/>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <!-- Breite/Höhe hier anpassen: 4 => super schlank; 2 => „hairline“ -->
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Vertical">
+                    <Setter Property="Width" Value="4"/>
+                    <Setter Property="Margin" Value="0,2,2,2"/>
+                </Trigger>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="Height" Value="4"/>
+                    <Setter Property="Margin" Value="2,0,2,2"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
 
         <!-- Default-Text -->
         <Style TargetType="TextBlock">
@@ -310,242 +671,466 @@
 
         <!-- Linke Spalte: Account + Serverliste -->
         <Border Grid.Column="0" Style="{StaticResource Card}" Margin="0,0,12,0">
-        <StackPanel Grid.Column="0">
-                <TextBlock Text="Account" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,8"/>
+            <!-- WICHTIG: DockPanel statt StackPanel, damit die Mitte flexibel ist -->
+            <DockPanel LastChildFill="True">
 
-            <StackPanel Orientation="Horizontal">
-                <Button x:Name="BtnSteamLogin"
-            Content="Login with Steam"
-            Width="180"
-            Click="BtnSteamLogin_Click"
-            Margin="0,0,8,0"/>
-                <TextBlock Text="SteamID64:" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                <TextBlock x:Name="TxtSteamId" VerticalAlignment="Center" FontWeight="SemiBold"/>
-                <!-- Avatar -->
-                <Image x:Name="ImgSteam" Width="24" Height="24" Margin="8,0,0,0"
-           Stretch="UniformToFill" Visibility="Collapsed"/>
-            </StackPanel>
+                <!-- TOP: Account + Serverliste (bleibt unverändert) -->
+                <StackPanel DockPanel.Dock="Top">
+                    <TextBlock Text="Account" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,8"/>
 
-            <Separator Margin="0,8,0,8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="BtnSteamLogin"
+                        Content="Login with Steam"
+                        Width="180"
+                        Click="BtnSteamLogin_Click"
+                        Margin="0,0,8,0"/>
+                        <TextBlock Text="SteamID64:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock x:Name="TxtSteamId" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                        <!-- Avatar -->
+                        <Image x:Name="ImgSteam" Width="24" Height="24" Margin="8,0,0,0"
+                       Stretch="UniformToFill" Visibility="Collapsed"/>
+                    </StackPanel>
 
-                <TextBlock Text="Server" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,8"/>
-            <ListBox x:Name="ListServers"
-         ItemsSource="{Binding Servers}"
-         SelectedItem="{Binding Selected, Mode=TwoWay}"
-         DisplayMemberPath="Name"
+                    <Separator Margin="0,8,0,8"/>
+
+                    <TextBlock Text="Server" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,8"/>
+                    <ListBox x:Name="ListServers"
+                     ItemsSource="{Binding Servers}"
+                     SelectedItem="{Binding Selected, Mode=TwoWay}"
+                     DisplayMemberPath="Name"
                      Foreground="White"
-         Height="116"
-         SelectionChanged="ListServers_SelectionChanged">
+                     MinHeight="70"
+                     MaxHeight="110"
+                     SelectionChanged="ListServers_SelectionChanged">
 
-                <ListBox.Resources>
-                        <ContextMenu x:Key="ServerCtx" Foreground="White">
-                        <!-- Der Trick: den aktuellen Server ins Tag binden -->
-                        <MenuItem Header="Server löschen…"
+                        <ListBox.Resources>
+                            <ContextMenu x:Key="ServerCtx" Foreground="White">
+                                <!-- Der Trick: den aktuellen Server ins Tag binden -->
+                                <MenuItem Header="Server löschen…"
                                   Foreground="Black"
-                Click="Server_Delete_Click"
-                Tag="{Binding PlacementTarget.DataContext,
-                              RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-                    </ContextMenu>
-                </ListBox.Resources>
+                                  Click="Server_Delete_Click"
+                                  Tag="{Binding PlacementTarget.DataContext,
+                                        RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            </ContextMenu>
+                        </ListBox.Resources>
 
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="ContextMenu" Value="{StaticResource ServerCtx}"/>
-                    </Style>
-                </ListBox.ItemContainerStyle>
-            </ListBox>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="ContextMenu" Value="{StaticResource ServerCtx}"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
 
-            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                <Button Content="Listen (Pairing)" Width="150" Click="BtnListenPairing_Click" IsEnabled="{Binding CanStartPairing}" Margin="0,0,8,0"/>
-                <TextBlock x:Name="TxtPairingState" VerticalAlignment="Center" Text="Pairing: idle" Margin="0,0,30,0"/>
-                <Button Content="Connect"
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                        <Button Content="Listen (Pairing)" Width="150" Click="BtnListenPairing_Click" IsEnabled="{Binding CanStartPairing}" Margin="0,0,8,0"/>
+                        <TextBlock x:Name="TxtPairingState" VerticalAlignment="Center" Text="Pairing: idle" Margin="0,0,30,0"/>
+                        <Button Content="Connect"
                         Width="100"
                         Click="BtnConnect_Click"
                         Margin="0,0,8,0"
-                        
                         Background="{DynamicResource AccentDark}" BorderBrush="{DynamicResource Accent}"/>
+                    </StackPanel>
 
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-
-            </StackPanel>
-            <TextBlock Margin="0,8,0,0"
+                    <TextBlock Margin="0,8,0,0"
                        Text="Note: To add new server, simply click Listen (Pairing) and pair ingame."
                        FontStyle="Italic"/>
-            <!-- <Button Content="Rust+ Link einfügen…" Width="200" Margin="0,8,0,0" Click="BtnPasteRustPlusLink_Click"/> -->
 
-            <Separator Margin="0,12,0,12"/>
-            <TextBlock Text="Devices (paired)" FontWeight="Bold" FontSize="16" Margin="0,0,0,8"/>
+                    <Separator Margin="0,12,0,12"/>
+                </StackPanel>
 
-            <ListBox x:Name="ListDevices"
-         ItemsSource="{Binding CurrentDevices}"
-         SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
-         Height="336">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <!-- Dreispaltiges Grid -->
-                        <Grid Margin="0,2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="220" />
-                                <!-- Spalte 1: Display (Name+ID+Status) -->
-                                <ColumnDefinition Width="125" />
-                                <!-- Spalte 2: Alias (benutzerdefiniert) -->
-                                <ColumnDefinition Width="80" />
-                                <!-- Spalte 3: Toggle -->
-                            </Grid.ColumnDefinitions>
+                <!-- BOTTOM: Footer (Donate + Serverdaten) andocken -->
+                <Grid DockPanel.Dock="Bottom" Margin="0,8,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                            <!-- Zeilenweite „missing“-Optik -->
-                            <Grid.Style>
-                                <Style TargetType="Grid">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                            <Setter Property="Opacity" Value="0.6"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Grid.Style>
-
-                            <!-- Spalte 1: Display -->
-                            <TextBlock Grid.Column="0"
-                   Text="{Binding Display}"
-                                       Foreground="White"
-                   VerticalAlignment="Center" Cursor="">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                <Setter Property="Foreground" Value="Red"/>
-                                                <Setter Property="FontStyle" Value="Italic"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-
-                            <!-- Spalte 2: Alias (per Rechtsklick umbenennbar) -->
-                            <TextBlock Grid.Column="1"
-                   VerticalAlignment="Center"
-                   ToolTip="Rechtsklick zum Umbenennen">
-                                <TextBlock.Text>
-                                    <Binding Path="Alias" TargetNullValue="(no custom name)"/>
-                                </TextBlock.Text>
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                <Setter Property="Foreground" Value="Red"/>
-                                                <Setter Property="FontStyle" Value="Italic"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                                <TextBlock.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="Gerät umbenennen…"
-                        Click="Device_Rename_Click"/>
-                                    </ContextMenu>
-                                </TextBlock.ContextMenu>
-                            </TextBlock>
-
-                            <!-- Spalte 3: Toggle (unverändert) -->
-                            <ToggleButton Grid.Column="2"
-              x:Name="Tog"
-              Width="64" Height="26" Margin="8,0,0,0"
-              IsChecked="{Binding IsOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                <ToggleButton.Style>
-                                    <Style TargetType="ToggleButton">
-                                        <!-- Template sorgt dafür, dass Background/Content aus dem Style sichtbar sind -->
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="ToggleButton">
-                                                    <Border x:Name="Bd"
-                    Background="{TemplateBinding Background}"
-                    CornerRadius="13"
-                    BorderBrush="#66000000"
-                    BorderThickness="1"
-                    Padding="4">
-                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                    </Border>
-                                                    <ControlTemplate.Triggers>
-                                                        <Trigger Property="IsEnabled" Value="False">
-                                                            <Setter TargetName="Bd" Property="Opacity" Value="0.4"/>
-                                                        </Trigger>
-                                                    </ControlTemplate.Triggers>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-
-                                        <!-- Event-Handler gehören auf Style-Ebene (nicht in Style.Triggers) -->
-                                        <EventSetter Event="Checked"   Handler="DeviceToggle_Checked"/>
-                                        <EventSetter Event="Unchecked" Handler="DeviceToggle_Unchecked"/>
-
-                                        <!-- Defaults -->
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <Setter Property="Foreground" Value="White"/>
-                                        <Setter Property="Background" Value="IndianRed"/>
-                                        <Setter Property="Content" Value="OFF"/>
-                                        <Setter Property="FontWeight" Value="SemiBold"/>
-                                        <Setter Property="Cursor" Value="Hand"/>
-                                        <!-- Optional, falls ein Theme weiter reinfunkt -->
-                                        <!--<Setter Property="OverridesDefaultStyle" Value="True"/>-->
-
-                                        <!-- Trigger -->
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-
-                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                <Setter Property="IsEnabled" Value="False"/>
-                                                <Setter Property="Opacity" Value="0.4"/>
-                                            </DataTrigger>
-
-                                            <Trigger Property="IsChecked" Value="True">
-                                                <Setter Property="Background" Value="SeaGreen"/>
-                                                <Setter Property="Content" Value="ON"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ToggleButton.Style>
-                            </ToggleButton>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-
-            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                    <!-- Donate (links) -->
                     <Button x:Name="BtnDonate"
-            Style="{StaticResource DonateButton}"
-                           
-            Click="BtnDonate_Click"
-            ToolTip="Support (Opens in Browser)"
-            Margin="0,0,10,0">
+                    Grid.Column="0"
+                    Style="{StaticResource DonateButton}"
+                    Click="BtnDonate_Click"
+                    ToolTip="Support (Opens in Browser)"
+                    Margin="0,0,10,0">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="❤" Foreground="Red" FontSize="14" Margin="2,0,6,0"/>
                             <TextBlock Text="Donate" Foreground="Red" Margin="2,0,6,0"/>
                         </StackPanel>
                     </Button>
-                    <Button Content="Info"
-        Width="80"
-        Click="BtnDeviceInfo_Click"
-        IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem, Converter={StaticResource NotNull}}"/>
-                <Button Content="Refresh" Width="80" Margin="10,0,0,0" Click="BtnDeviceRefresh_Click"/>
-                <Button Content="Delete" Width="80" Margin="10,0,0,0" Click="BtnDeleteDevice_Click"
-          ToolTip="You can delete only missing devices"
-          IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem.IsMissing, Converter={StaticResource NotNull}}"/>
-                    <Button Content="CHAT" Width="80" Margin="10,0,0,0" Click="BtnOpenChat_Click" Background="{DynamicResource AccentDark}" BorderBrush="{DynamicResource Accent}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
-                <TextBlock Text="Players:"/>
-                <TextBlock Text="{Binding ServerPlayers}" FontWeight="SemiBold" Margin="4,0,0,0"/>
-                <TextBlock Text="  |  Queue:" Margin="6,0,0,0"/>
-                <TextBlock Text="{Binding ServerQueue}" FontWeight="SemiBold" Margin="4,0,0,0"/>
-                <TextBlock Text="  |  Server Time:" Margin="6,0,0,0"/>
-                <TextBlock Text="{Binding ServerTime}" FontWeight="SemiBold" Margin="4,0,0,0"/>
-                
-            </StackPanel>
-        </StackPanel>
+
+                    <!-- Spacer -->
+                    <Border Grid.Column="1"/>
+
+                    <!-- Serverdaten (rechtsbündig, gleiche Zeile) -->
+                    <StackPanel Grid.Column="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                        <TextBlock Text="Players:"/>
+                        <TextBlock Text="{Binding ServerPlayers}" FontWeight="SemiBold" Margin="4,0,0,0"/>
+                        <TextBlock Text="  |  Queue:" Margin="6,0,0,0"/>
+                        <TextBlock Text="{Binding ServerQueue}" FontWeight="SemiBold" Margin="4,0,0,0"/>
+                        <TextBlock Text="  |  Server Time:" Margin="6,0,0,0"/>
+                        <TextBlock Text="{Binding ServerTime}" FontWeight="SemiBold" Margin="4,0,0,0"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- CENTER: TabControl füllt den Rest, mit Mindesthöhe -->
+                <TabControl x:Name="MainTabs"
+                    Style="{StaticResource PrettyTabControl}"
+                    MinHeight="350"
+                    VerticalAlignment="Stretch">
+                    <!-- ===== DEVICES ===== -->
+                    <TabItem Header="Devices" Style="{StaticResource PrettyTabItem}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <ListBox x:Name="ListDevices"
+                             Grid.Row="0"
+                             Margin="0,0,0,0"
+                             ItemsSource="{Binding CurrentDevices}"
+                             SelectedItem="{Binding SelectedDevice, Mode=TwoWay}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <!-- Dreispaltiges Grid -->
+                                        <Grid Margin="0,2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="220" />
+                                                <!-- Spalte 1: Display (Name+ID+Status) -->
+                                                <ColumnDefinition Width="125" />
+                                                <!-- Spalte 2: Alias (benutzerdefiniert) -->
+                                                <ColumnDefinition Width="80" />
+                                                <!-- Spalte 3: Toggle -->
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Zeilenweite „missing“-Optik -->
+                                            <Grid.Style>
+                                                <Style TargetType="Grid">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                            <Setter Property="Opacity" Value="0.6"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Grid.Style>
+
+                                            <!-- Spalte 1: Display -->
+                                            <TextBlock Grid.Column="0"
+                                       Text="{Binding Display}"
+                                       Foreground="White"
+                                       VerticalAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                                <Setter Property="FontStyle" Value="Italic"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+
+                                            <!-- Spalte 2: Alias (per Rechtsklick umbenennbar) -->
+                                            <TextBlock Grid.Column="1"
+                                       VerticalAlignment="Center"
+                                       ToolTip="Right click to rename">
+                                                <TextBlock.Text>
+                                                    <Binding Path="Alias" TargetNullValue="(no custom name)"/>
+                                                </TextBlock.Text>
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                                <Setter Property="FontStyle" Value="Italic"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                                <TextBlock.ContextMenu>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="Gerät umbenennen…" Click="Device_Rename_Click"/>
+                                                    </ContextMenu>
+                                                </TextBlock.ContextMenu>
+                                            </TextBlock>
+
+                                            <!-- Spalte 3: Toggle (unverändert) -->
+                                            <ToggleButton Grid.Column="2"
+                                          x:Name="Tog"
+                                          Width="64" Height="26" Margin="8,0,0,0"
+                                          IsChecked="{Binding IsOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                                <ToggleButton.Style>
+                                                    <Style TargetType="ToggleButton">
+                                                        <!-- Template sorgt dafür, dass Background/Content aus dem Style sichtbar sind -->
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                    <Border x:Name="Bd"
+                                                            Background="{TemplateBinding Background}"
+                                                            CornerRadius="13"
+                                                            BorderBrush="#66000000"
+                                                            BorderThickness="1"
+                                                            Padding="4">
+                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                    </Border>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsEnabled" Value="False">
+                                                                            <Setter TargetName="Bd" Property="Opacity" Value="0.4"/>
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+
+                                                        <!-- Event-Handler -->
+                                                        <EventSetter Event="Checked"   Handler="DeviceToggle_Checked"/>
+                                                        <EventSetter Event="Unchecked" Handler="DeviceToggle_Unchecked"/>
+
+                                                        <!-- Defaults -->
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                        <Setter Property="Background" Value="IndianRed"/>
+                                                        <Setter Property="Content" Value="OFF"/>
+                                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                                        <Setter Property="Cursor" Value="Hand"/>
+
+                                                        <!-- Trigger -->
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                            </DataTrigger>
+
+                                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                <Setter Property="IsEnabled" Value="False"/>
+                                                                <Setter Property="Opacity" Value="0.4"/>
+                                                            </DataTrigger>
+
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Setter Property="Background" Value="SeaGreen"/>
+                                                                <Setter Property="Content" Value="ON"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ToggleButton.Style>
+                                            </ToggleButton>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <StackPanel Grid.Row="1"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Margin="0,10,0,0">
+                                <Button Content="Info"    Width="80"
+                                Style="{StaticResource GhostButton}"
+                                Click="BtnDeviceInfo_Click"
+                                IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem, Converter={StaticResource NotNull}}"/>
+                                <Button Content="Refresh" Width="80" Margin="10,0,0,0"
+                                Style="{StaticResource GhostButton}"
+                                Click="BtnDeviceRefresh_Click"/>
+                                <Button Content="Delete"  Width="80" Margin="10,0,0,0"
+                                Style="{StaticResource GhostButton}"
+                                Click="BtnDeleteDevice_Click"
+                                ToolTip="You can only delete missing devices"
+                                IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem.IsMissing, Converter={StaticResource NotNull}}"/>
+                            </StackPanel>
+                        </Grid>
+                    </TabItem>
+
+                    <!-- ===== TEAM ===== -->
+                    <TabItem Header="Team" x:Name="TabTeam" Style="{StaticResource PrettyTabItem}">
+                        <Grid Background="#181A1E">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.Resources>
+                                <conv:BoolToVisibilityConverter x:Key="Vis"/>
+                                <conv:BoolToVisibilityConverter x:Key="VisInv" Invert="True"/>
+                                <Style x:Key="Card" TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="10"/>
+                                    <Setter Property="Background" Value="#FF141F2D"/>
+                                    <Setter Property="Padding" Value="8"/>
+                                    <Setter Property="Margin" Value="6"/>
+                                </Style>
+                            </Grid.Resources>
+
+                            <!-- Liste oben -->
+                            <ListBox x:Name="TeamList"
+                 Grid.Row="0"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+         HorizontalContentAlignment="Stretch"
+         ItemsSource="{Binding TeamMembers, RelativeSource={RelativeSource AncestorType=Window}}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <!-- Kontextmenü -->
+                                <ListBox.Resources>
+                                    <ContextMenu x:Key="TeamContextMenu">
+                                        <MenuItem Header="Center on map" Click="Team_Center_Click"/>
+                                        <MenuItem Header="Open Steam profile" Click="Team_OpenProfile_Click"/>
+                                        <Separator/>
+                                        <MenuItem Header="Promote to Leader" Click="Team_Promote_Click"/>
+                                        <MenuItem Header="Kick from Team" Click="Team_Kick_Click"/> 
+                                    </ContextMenu>
+                                </ListBox.Resources>
+
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Width" Value="210"/>
+                                        <!-- an deine Fensterbreite anpassen -->
+                                        <Setter Property="Margin" Value="6"/>
+                                        <EventSetter Event="MouseLeftButtonUp" Handler="TeamItem_MouseLeftButtonUp"/>
+                                        <Setter Property="ContextMenu" Value="{StaticResource TeamContextMenu}"/>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource Card}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="56"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Avatar + Status -->
+                                                <Grid Width="44" Height="44">
+                                                    <Image Source="{Binding Avatar}" Stretch="UniformToFill" ClipToBounds="True"/>
+
+                                                    <!-- Online (grün) -->
+                                                    <Ellipse Width="12" Height="12" Stroke="Black"
+                   Fill="#4CAF50"
+                   HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                   Visibility="{Binding IsOnline, Converter={StaticResource Vis}}"/>
+
+                                                    <!-- Offline (grau) -->
+                                                    <Ellipse Width="12" Height="12" Stroke="Black"
+                   Fill="#666"
+                   HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                   Visibility="{Binding IsOnline, Converter={StaticResource VisInv}}"/>
+
+                                                    <!-- Leader-Stern -->
+                                                    <Path Data="M 10,1 12,7 19,7 13,11 15,18 10,14 5,18 7,11 1,7 8,7 z"
+                Fill="Gold" Width="20" Height="20" Stroke="Black"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                Visibility="{Binding IsLeader, Converter={StaticResource Vis}}"/>
+                                                </Grid>
+
+                                                <!-- Textseite -->
+                                                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                                    <!-- Name: Standard weiß, offline leicht ausgrauen, tot = rot -->
+                                                    <TextBlock FontSize="14" FontWeight="SemiBold">
+                                                        <TextBlock.Text>
+                                                            <Binding Path="Name"/>
+                                                        </TextBlock.Text>
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Foreground" Value="White"/>
+                                                                <Setter Property="Opacity"    Value="1"/>
+                                                                <Style.Triggers>
+                                                                    <!-- tot -> rot -->
+                                                                    <DataTrigger Binding="{Binding IsDead}" Value="True">
+                                                                        <Setter Property="Foreground" Value="#EF5350"/>
+                                                                    </DataTrigger>
+                                                                    <!-- offline -> etwas ausgegraut -->
+                                                                    <DataTrigger Binding="{Binding IsOnline}" Value="False">
+                                                                        <Setter Property="Opacity" Value="0.55"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+
+                                                    <TextBlock Text="{Binding SteamId}" FontSize="11" Opacity="0.65" Foreground="White"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <!-- Buttonleiste unten -->
+                            <!-- Buttonleiste unten -->
+                            <StackPanel Grid.Row="1"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right"
+            Margin="0,10,0,0"
+            >
+                                <!-- Profile marker toggle (default ON) -->
+                                <CheckBox x:Name="ChkProfileMarkers"
+              Content="Profile markers"
+              IsChecked="True"
+              Margin="0,0,12,0"
+              Checked="ChkProfileMarkers_Toggled"
+              Unchecked="ChkProfileMarkers_Toggled"/>
+
+                                <!-- Death markers toggle (default OFF) -->
+                                <CheckBox x:Name="ChkDeathMarkers"
+              Content="Death markers"
+              IsChecked="False"
+              Margin="0,0,12,0"
+              Checked="ChkDeathMarkers_Toggled"
+              Unchecked="ChkDeathMarkers_Toggled"/>
+
+                                <Button Content="CHAT"
+            Width="80"
+            Style="{StaticResource GhostButton}"
+            Click="BtnOpenChat_Click"/>
+                            </StackPanel>
+                        </Grid>
+                    </TabItem>
+
+                    <!-- ===== CAMERAS ===== -->
+                    <TabItem Header="Cameras" Style="{StaticResource PrettyTabItem}">
+                        <Grid Margin="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <!-- Previews oben -->
+                                <RowDefinition Height="Auto"/>
+                                <!-- Button unten -->
+                            </Grid.RowDefinitions>
+
+                            <!-- Kamera-Previews / Liste -->
+                            <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+                                <ItemsControl x:Name="CamItems">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel ItemWidth="220" ItemHeight="180"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </ScrollViewer>
+
+                            <!-- Add Camera unten rechts -->
+                            <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,10,0,0">
+                                
+
+                               <!--  Variante B (optional): Icon + Text – falls du den Plus-Glyph behalten willst -->
+            <Button x:Name="BtnAddCam"
+                    Style="{StaticResource PrimaryButton}">
+                <StackPanel Orientation="Horizontal" Margin="6,1">
+                                        <TextBlock Text="🎥 Add Camera"/>
+                </StackPanel>
+            </Button>
+           
+                            </StackPanel>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+
+            </DockPanel>
         </Border>
 
         <!-- Rechte Spalte: Login/Status + WebViewHost -->
@@ -578,21 +1163,66 @@ Margin="12,0,0,0"
                     <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChkShops" Content="Shops" Margin="12,0,0,0"
                       Checked="ChkShops_Checked" Unchecked="ChkShops_Checked"/>
                     <Button x:Name="BtnShopSearch" Style="{StaticResource IconButton}" Margin="12,0,0,0"
-                    ToolTip="Shop-Suche" Click="BtnShopSearch_Click">
+                    ToolTip="Shop Search" Click="BtnShopSearch_Click">
                         <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="16" Text="&#xE721;"/>
                     </Button>
-                    <TextBlock Width="80">     </TextBlock>
+                    <TextBlock Width="40">     </TextBlock>
                     <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChatAnnounce"
           Content="Event Spawns in Chat"
           IsChecked="True"
           Margin="8,0,0,0"
           Checked="ChatAnnounce_Checked"
           Unchecked="ChatAnnounce_Unchecked"/>
+                    <Button Content="Mini 🗺️"
+Width="80"
+Style="{StaticResource GhostButton}"
+Click="BtnToggleMiniMap_Click"/>
+
+                    <Button x:Name="BtnCrosshair"
+        Style="{StaticResource IconButton}"
+        ToolTip="Crosshair on/off (Right Click For Options)"
+        Click="BtnCrosshair_Click"
+        PreviewMouseRightButtonDown="BtnCrosshair_PreviewMouseRightButtonDown">
+                        <TextBlock Text="⌖" FontSize="18"/>
+                        <Button.ContextMenu>
+                            <ContextMenu x:Name="CrosshairContextMenu"
+                     Style="{StaticResource DarkContextMenu}"
+                     Opened="CrosshairContextMenu_Opened">
+                                <!-- sorge dafür, dass ALLE Items (auch Submenüs) dunkel sind -->
+                                <ContextMenu.Resources>
+                                    <Style TargetType="MenuItem" BasedOn="{StaticResource DarkMenuItem}"/>
+                                    <Style TargetType="Separator" BasedOn="{StaticResource DarkSeparator}"/>
+                                </ContextMenu.Resources>
+
+                                <MenuItem Header="Crosshair Style">
+                                    <MenuItem Header="Green Dot"  Tag="GreenDot"      IsCheckable="True" Click="Style_Click"/>
+                                    <MenuItem Header="Mini Green"     Tag="MiniGreen"     IsCheckable="True" Click="Style_Click"/>
+                                    <MenuItem Header="Open Crosshair (R/G)" Tag="OpenCrossRG" IsCheckable="True" Click="Style_Click"/>
+                                    <MenuItem Header="Thin Circle (bright red)" Tag="ThinRedCircle" IsCheckable="True" Click="Style_Click"/>
+                                </MenuItem>
+
+                                <Separator/>
+
+                                <MenuItem Header="Choose monitor" x:Name="MonitorRoot"/>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
+
                 </StackPanel>
 
                 <Grid x:Name="WebViewHost" Grid.Row="1" Margin="0,0,0,8" ClipToBounds="True"
               Background="{DynamicResource SurfaceAlt}">
-                    <Image x:Name="ImgMap" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Rectangle x:Name="SplashBgColor" Fill="{DynamicResource SurfaceAlt}" />
+
+                    <!-- 2) Titelbild als „contain“, zentriert, unverzerrt -->
+                    <Image x:Name="SplashBg"
+           Stretch="Uniform"          
+                        HorizontalAlignment="Center"
+           VerticalAlignment="Center"
+           IsHitTestVisible="False"
+           Opacity="0.95"
+           Source="pack://application:,,,/TitleScreen-rust-plus-desktop.png"/>
+                        <Image x:Name="ImgMap" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Canvas x:Name="GridLayer" IsHitTestVisible="False"/>
                     <Canvas x:Name="Overlay"   IsHitTestVisible="True"/>
                 </Grid>
