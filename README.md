@@ -1,9 +1,5 @@
 ![Headline](./headlineGIT.jpg) 
 
-
-![Donate(./donate.png)](https://streamelements.com/pronwan/tip)
-
-
 [![Donate](./donate.png)](https://streamelements.com/pronwan/tip)
 
 ---
