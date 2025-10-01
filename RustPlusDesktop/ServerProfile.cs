@@ -15,5 +15,6 @@ public class ServerProfile
     public bool UseFacepunchProxy { get; set; } = false;
 
     public ObservableCollection<SmartDevice> Devices { get; set; } = new();
+    public ObservableCollection<string> CameraIds { get; set; } = new();
 }
 

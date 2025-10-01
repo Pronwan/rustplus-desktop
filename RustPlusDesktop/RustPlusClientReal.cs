@@ -2,20 +2,25 @@
 using RustPlusApi;                 // NuGet: HandyS11.RustPlusApi
 using RustPlusApi.Data.Events;
 using RustPlusDesk.Models;
+using RustPlusDesk.Views;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq;
-using System.Text; // <— hinzufügen
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text; // <— hinzufügen
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Xml.Linq;
 using TeamMsgArg = RustPlusApi.Data.Events.TeamMessageEventArg;
 namespace RustPlusDesk.Services;
 
@@ -64,12 +69,1561 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         return default!;
     }
 
+
+    public async Task<bool> PromoteToLeaderAsync(ulong steamId, CancellationToken ct = default)
+    {
+        if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+
+        var asm = typeof(RustPlus).Assembly;
+        var reqType = asm.GetTypes().FirstOrDefault(t => t.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
+        if (reqType is null) return false;
+
+        var req = Activator.CreateInstance(reqType)!;
+
+        var promoteProp = reqType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .FirstOrDefault(p => {
+                var n = p.Name.ToLowerInvariant();
+                return n.Contains("promote") && n.Contains("leader");
+            });
+        if (promoteProp is null) return false;
+
+        var body = Activator.CreateInstance(promoteProp.PropertyType)!;
+        var idP = body.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .FirstOrDefault(pp => {
+                var n = pp.Name.ToLowerInvariant();
+                return n.Contains("steam") || n.Contains("player") || n.Contains("member");
+            });
+        if (idP is null) return false;
+
+        try
+        {
+            if (idP.PropertyType == typeof(ulong)) idP.SetValue(body, steamId);
+            else if (idP.PropertyType == typeof(long)) idP.SetValue(body, unchecked((long)steamId));
+            else if (idP.PropertyType == typeof(string)) idP.SetValue(body, steamId.ToString());
+            else idP.SetValue(body, Convert.ChangeType(steamId, idP.PropertyType));
+        }
+        catch { return false; }
+
+        promoteProp.SetValue(req, body);
+
+        var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
+        if (send is null) return false;
+
+        var taskObj = send.Invoke(_api, new object[] { req });
+        if (taskObj is Task t) await t.ConfigureAwait(false);
+        return true;
+    }
+
+    public async Task<bool> KickTeamMemberAsync(ulong steamId, CancellationToken ct = default)
+    {
+        if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+
+        var asm = typeof(RustPlus).Assembly;
+        var reqType = asm.GetTypes().FirstOrDefault(t => t.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
+        if (reqType is null) return false;
+
+        var req = Activator.CreateInstance(reqType)!;
+
+        var kickProp = reqType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .FirstOrDefault(p => {
+                var n = p.Name.ToLowerInvariant();
+                return (n.Contains("kick") || n.Contains("remove")) && (n.Contains("team") || n.Contains("member"));
+            });
+        if (kickProp is null) return false;
+
+        var body = Activator.CreateInstance(kickProp.PropertyType)!;
+        var idP = body.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .FirstOrDefault(pp => {
+                var n = pp.Name.ToLowerInvariant();
+                return n.Contains("steam") || n.Contains("player") || n.Contains("member");
+            });
+        if (idP is null) return false;
+
+        try
+        {
+            if (idP.PropertyType == typeof(ulong)) idP.SetValue(body, steamId);
+            else if (idP.PropertyType == typeof(long)) idP.SetValue(body, unchecked((long)steamId));
+            else if (idP.PropertyType == typeof(string)) idP.SetValue(body, steamId.ToString());
+            else idP.SetValue(body, Convert.ChangeType(steamId, idP.PropertyType));
+        }
+        catch { return false; }
+
+        kickProp.SetValue(req, body);
+
+        var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
+        if (send is null) return false;
+
+        var taskObj = send.Invoke(_api, new object[] { req });
+        if (taskObj is Task t) await t.ConfigureAwait(false);
+        return true;
+    }
+
+
     private static uint GetEntityId(object e) => ReadProp<uint>(e, "EntityId", "Id");
     private static bool GetIsActive(object e) => ReadProp<bool>(e, "IsActive", "Value", "On");
     private static int GetCapacity(object e) => ReadProp<int>(e, "Capacity");
     private static int GetItemsCount(object e) => ReadProp<int>(e, "ItemsCount", "Items", "ItemCount");
 
-    
+    // ---------- DUMP MAP INFO BUTTON -------------- //
+    public sealed record DynMarker2(
+     uint Id,
+     int RawType,
+     string TypeName,
+     double X,
+     double Y,
+     string? Label,
+     string? PlayerName,
+     ulong SteamId,
+     bool HasOrders,
+     string DebugLine
+ );
+
+    public async Task DumpMapMarkersDeepAsync(int maxPerList = 80, CancellationToken ct = default)
+    {
+        if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+        void L(string s) => _log?.Invoke("[dump] " + s);
+
+        // kleine Hilfen
+        static object? P(object? o, string n) => o?.GetType().GetProperty(n,
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase)?.GetValue(o);
+
+        static IEnumerable<object> AsEnum(object? o)
+            => (o is System.Collections.IEnumerable en && o is not string)
+               ? en.Cast<object?>().Where(x => x != null)!
+               : Array.Empty<object>();
+
+        // Reccy-Dumper (Properties + kindliche IEnumerables, begrenzt)
+        void DumpObject(object o, int depth, HashSet<object> seen)
+        {
+            if (!seen.Add(o)) return;
+            var t = o.GetType();
+            string pad = new string(' ', depth * 2);
+            L(pad + "⟶ " + t.Name);
+
+            foreach (var p in t.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            {
+                object? v = null;
+                try { v = p.GetValue(o); } catch { }
+                if (v == null) { L(pad + $"  {p.Name}=<null>"); continue; }
+
+                if (v is string s)
+                {
+                    L(pad + $"  {p.Name}=\"{s}\"");
+                }
+                else if (v.GetType().IsPrimitive || v is decimal || v is DateTime)
+                {
+                    L(pad + $"  {p.Name}={v}");
+                }
+                else if (v is System.Collections.IEnumerable en && v is not string)
+                {
+                    // Kinderlisten andeuten und ein paar Elemente tief dumpen
+                    int count = 0;
+                    var listHead = new List<object>();
+                    foreach (var it in en) { if (it == null) continue; listHead.Add(it); if (++count >= 5) break; }
+                    L(pad + $"  {p.Name}=[IEnumerable] head={listHead.Count}{(count >= 5 ? "+" : "")}");
+                    foreach (var child in listHead) DumpObject(child, depth + 1, seen);
+                }
+                else
+                {
+                    // verschachteltes Objekt
+                    L(pad + $"  {p.Name}:");
+                    DumpObject(v, depth + 1, seen);
+                }
+            }
+        }
+
+        try
+        {
+            // Roh-Request bauen (SendRequestAsync(AppRequest{GetMapMarkers}))
+            var asm = typeof(RustPlus).Assembly;
+            var reqType = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
+            var emptyType = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppEmpty", StringComparison.OrdinalIgnoreCase));
+            if (reqType == null || emptyType == null) { L("proto types not found"); return; }
+
+            var req = Activator.CreateInstance(reqType)!;
+            reqType.GetProperty("GetMapMarkers",
+                BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public)
+                   ?.SetValue(req, Activator.CreateInstance(emptyType)!);
+
+            var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
+            if (send == null) { L("SendRequestAsync not found"); return; }
+
+            var call = send.Invoke(_api, new object[] { req });
+            object? resp = call;
+            if (call is Task t) { await t.ConfigureAwait(false); resp = t.GetType().GetProperty("Result")?.GetValue(t); }
+
+            var r = P(resp, "Response") ?? resp;
+            var mm = P(r, "MapMarkers") ?? r;
+
+            var buckets = new (string name, object? list)[]
+            {
+            ("Markers",            P(mm,"Markers") ?? P(mm,"Marker")),
+            ("VendingMachines",    P(mm,"VendingMachines") ?? P(mm,"Vending")),
+            ("Crates",             P(mm,"Crates")),
+            ("HackableCrates",     P(mm,"HackableCrates")),
+            ("LockedCrates",       P(mm,"LockedCrates"))
+            };
+
+            var seen = new HashSet<object>(ReferenceEqualityComparer.Instance);
+
+            foreach (var (name, listObj) in buckets)
+            {
+                var items = AsEnum(listObj).Take(maxPerList).ToList();
+                L($"== {name}: {items.Count} (showing up to {maxPerList}) ==");
+                foreach (var it in items) DumpObject(it, 1, seen);
+            }
+
+            // Generischer Scan aller IEnumerable-Props (falls Server exotisch ist)
+            var skip = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        { "Markers","Marker","VendingMachines","Vending","Crates","HackableCrates","LockedCrates" };
+
+            foreach (var p in (mm ?? r)!.GetType().GetProperties())
+            {
+                if (skip.Contains(p.Name)) continue;
+                var v = p.GetValue(mm ?? r);
+                var items = AsEnum(v).Take(maxPerList).ToList();
+                if (items.Count > 0)
+                {
+                    L($"== {p.Name}: {items.Count} (head) ==");
+                    foreach (var it in items) DumpObject(it, 1, seen);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            L("deep-dump error: " + ex.Message);
+        }
+    }
+    public async Task<List<DynMarker2>> GetDynamicMapMarkersAsync2(CancellationToken ct = default)
+    {
+        if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+        void L(string s) => _log?.Invoke("[dyn2] " + s);
+
+        // --- Reflection-Shortcuts (eindeutige Namen, damit nix kollidiert) ---
+        static object? P(object? o, string name)
+            => o?.GetType().GetProperty(name,
+                System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.Public |
+                System.Reflection.BindingFlags.IgnoreCase)
+              ?.GetValue(o);
+
+        static string? S(object? o, params string[] names)
+        {
+            foreach (var n in names)
+            {
+                var v = P(o, n);
+                if (v is string s && !string.IsNullOrWhiteSpace(s)) return s;
+            }
+            return null;
+        }
+
+        static int I(object? o, params string[] names)
+        {
+            foreach (var n in names)
+            {
+                var v = P(o, n);
+                if (v is int i) return i;
+                if (v is uint u) return unchecked((int)u);
+                if (v is long l) return unchecked((int)l);
+                if (v is short sh) return sh;
+                if (v is byte b) return b;
+                if (v != null && v.GetType().IsEnum) return Convert.ToInt32(v);
+                if (int.TryParse(v?.ToString(), out var ii)) return ii;
+            }
+            return 0;
+        }
+
+        static uint UI(object? o, params string[] names)
+        {
+            foreach (var n in names)
+            {
+                var v = P(o, n);
+                if (v is uint u) return u;
+                if (v is int i && i >= 0) return (uint)i;
+                if (v is long l && l >= 0) return (uint)l;
+                if (uint.TryParse(v?.ToString(), out var uu)) return uu;
+            }
+            return 0u;
+        }
+
+        static ulong UL(object? o, params string[] names)
+        {
+            foreach (var n in names)
+            {
+                var v = P(o, n);
+                if (v is ulong u) return u;
+                if (v is long l && l >= 0) return (ulong)l;
+                if (v is uint ui) return ui;
+                if (ulong.TryParse(v?.ToString(), out var uu)) return uu;
+            }
+            return 0UL;
+        }
+
+        static double D(object? o, params string[] names)
+        {
+            foreach (var n in names)
+            {
+                var v = P(o, n);
+                if (v is double dd) return dd;
+                if (v is float f) return f;
+                if (v is int i) return i;
+                if (v is long l) return l;
+                if (double.TryParse(v?.ToString(), out var parsed)) return parsed;
+            }
+            return 0.0;
+        }
+
+        static bool TryXY(object it, out double x, out double y)
+        {
+            var pos = P(it, "Position") ?? P(it, "Pos");
+            x = D(pos ?? it, "X", "x", "Lon", "Longitude");
+            y = D(pos ?? it, "Y", "y", "Lat", "Latitude");
+            if (x == 0 && y == 0)
+            {
+                foreach (var pr in it.GetType().GetProperties())
+                {
+                    var v = pr.GetValue(it);
+                    if (v == null || v is string) continue;
+                    var px = v.GetType().GetProperty("X");
+                    var py = v.GetType().GetProperty("Y");
+                    if (px != null && py != null)
+                    {
+                        x = D(v, "X");
+                        y = D(v, "Y");
+                        break;
+                    }
+                }
+            }
+            return !(double.IsNaN(x) || double.IsNaN(y));
+        }
+
+        static int CountEnum(object? o)
+        {
+            if (o is System.Collections.IEnumerable en && o is not string)
+            {
+                int c = 0;
+                foreach (var _ in en) { c++; if (c > 999) break; }
+                return c;
+            }
+            return 0;
+        }
+
+        static bool HasOrdersOn(object it)
+        {
+            var so = P(it, "SellOrders") ?? P(it, "Orders") ?? P(it, "Items");
+            if (CountEnum(so) > 0) return true;
+
+            var vend = P(it, "Vending") ?? P(it, "Sales") ?? P(it, "Shop");
+            var so2 = P(vend, "SellOrders") ?? P(vend, "Orders") ?? P(vend, "Items");
+            return CountEnum(so2) > 0;
+        }
+
+        static string Trim(string? s, int max = 80)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return "";
+            s = s.Trim().Replace("\r", " ").Replace("\n", " ");
+            return (s.Length > max) ? s.Substring(0, max) + "…" : s;
+        }
+
+        static string DumpMarkerOneLine(object it)
+        {
+            var rawType = I(it, "Type", "MarkerType", "TypeId", "TypeID", "type");
+            var id = UI(it, "Id", "ID", "EntityId", "Identifier", "Uid", "UID", "MarkerId");
+            var label = S(it, "Name", "Label", "Alias", "Token", "Note");
+            var pname = S(it, "PlayerName", "DisplayName", "UserName", "SteamName");
+            var steamId = UL(it, "SteamId", "SteamID", "Steamid", "PlayerId", "UserId", "UserID");
+            TryXY(it, out var x, out var y);
+
+            // ein paar typische Zusatzfelder:
+            var radius = D(it, "Radius");
+            var rotation = D(it, "Rotation");
+            var alpha = D(it, "Alpha", "Opacity");
+            var c1 = P(it, "Colour1") ?? P(it, "Color1");
+            var c2 = P(it, "Colour2") ?? P(it, "Color2");
+            string C(object? c) => (c == null) ? "-" :
+                $"({D(c, "X"):0.##},{D(c, "Y"):0.##},{D(c, "Z"):0.##},{D(c, "W"):0.##})";
+
+            var ordersCnt = 0;
+            var so = P(it, "SellOrders") ?? P(it, "Orders") ?? P(it, "Items");
+            ordersCnt += CountEnum(so);
+            var vend = P(it, "Vending") ?? P(it, "Sales") ?? P(it, "Shop");
+            var so2 = P(vend, "SellOrders") ?? P(vend, "Orders") ?? P(vend, "Items");
+            ordersCnt += CountEnum(so2);
+
+            var tn = it.GetType().Name;
+
+            return $"id={id} type={rawType}({tn}) pos=({x:0},{y:0}) " +
+                   $"label='{Trim(label, 60)}' pname='{Trim(pname, 60)}' steam={steamId} " +
+                   $"radius={radius:0.##} rot={rotation:0.##} alpha={alpha:0.##} c1={C(c1)} c2={C(c2)} " +
+                   $"orders={ordersCnt}";
+        }
+        // -----------------------------------------------------------------------
+
+        var resultList = new List<DynMarker2>();
+
+        try
+        {
+            // Roh-PATH (SendRequestAsync(AppRequest{GetMapMarkers})) → enum-sicher
+            var asm = typeof(RustPlus).Assembly;
+            var reqType = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
+            var emptyTyp = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppEmpty", StringComparison.OrdinalIgnoreCase));
+            if (reqType == null || emptyTyp == null) return resultList;
+
+            var req = Activator.CreateInstance(reqType)!;
+            reqType.GetProperty("GetMapMarkers",
+                    System.Reflection.BindingFlags.IgnoreCase |
+                    System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.Public)
+                   ?.SetValue(req, Activator.CreateInstance(emptyTyp)!);
+
+            var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
+            if (send == null) return resultList;
+
+            var call = send.Invoke(_api, new object[] { req });
+            object? resp = call;
+            if (call is Task t)
+            {
+                await t.ConfigureAwait(false);
+                resp = t.GetType().GetProperty("Result")?.GetValue(t);
+            }
+
+            var r = P(resp, "Response") ?? resp;
+            var mm = P(r, "MapMarkers") ?? r;
+
+            // Hauptquelle
+            var markers = P(mm, "Markers") ?? P(mm, "Marker");
+
+            var pool = new List<object>();
+            void AddEnum(object? maybe)
+            {
+                if (maybe is System.Collections.IEnumerable en && maybe is not string)
+                    foreach (var it in en) if (it != null) pool.Add(it);
+            }
+
+            AddEnum(markers);
+            // probiere auch Crate-Container, falls vorhanden:
+            AddEnum(P(mm, "Crates"));
+            AddEnum(P(mm, "HackableCrates"));
+            AddEnum(P(mm, "LockedCrates"));
+
+            // Fallback: alle IEnumerable-Properties durchsuchen (alles aufs Tablett!)
+            foreach (var pr in (mm ?? r)!.GetType().GetProperties())
+            {
+                var v = pr.GetValue(mm ?? r);
+                AddEnum(v);
+            }
+
+            // Sammle alles, logge kompakt
+            int idx = 0;
+            foreach (var it in pool)
+            {
+                idx++;
+                // „One-liner“-Dump
+                var line = DumpMarkerOneLine(it);
+                L($"raw[{idx}]: {line}");
+
+                // in Record überführen (damit du optional auch UI draus machen kannst)
+                var rawType = I(it, "Type", "MarkerType", "TypeId", "TypeID", "type");
+                var typeNm = it.GetType().Name;
+                var id = UI(it, "Id", "ID", "EntityId", "Identifier", "Uid", "UID", "MarkerId");
+                var label = S(it, "Name", "Label", "Alias", "Token", "Note");
+                var pname = S(it, "PlayerName", "DisplayName", "UserName", "SteamName");
+                var steamId = UL(it, "SteamId", "SteamID", "Steamid", "PlayerId", "UserId", "UserID");
+
+                TryXY(it, out var x, out var y);
+                var hasOrders = HasOrdersOn(it);
+
+                resultList.Add(new DynMarker2(
+                    id, rawType, typeNm, x, y, label, pname, steamId, hasOrders, line
+                ));
+            }
+
+            L($"raw-total={resultList.Count}");
+        }
+        catch (Exception ex)
+        {
+            L("error: " + ex.Message);
+        }
+        try
+        {
+            var byType = resultList
+                .GroupBy(m => (m.RawType, m.TypeName))
+                .OrderBy(g => g.Key.RawType)
+                .Select(g => $"{g.Key.RawType}({g.Key.TypeName})×{g.Count()}");
+            L("raw-type-dist: " + string.Join(", ", byType));
+
+            // explizit nach crate/hack/lock in Label/TypeName suchen
+            bool Token(string? s) =>
+                !string.IsNullOrWhiteSpace(s) &&
+                (s.IndexOf("crate", StringComparison.OrdinalIgnoreCase) >= 0
+              || s.IndexOf("hack", StringComparison.OrdinalIgnoreCase) >= 0
+              || s.IndexOf("lock", StringComparison.OrdinalIgnoreCase) >= 0);
+
+            var crateLike = resultList.Where(m => Token(m.Label) || Token(m.TypeName)).ToList();
+            L($"raw-crateLike: {crateLike.Count}");
+            foreach (var c in crateLike.Take(6))
+                L("raw-crateLike sample: " + c.DebugLine);
+        }
+        catch { /* tolerate */ }
+        return resultList;
+    }
+
+
+    // CAMERA FEEDS
+
+    // === CAMERA FALLBACK (Node snapshot, robust) ===============================
+
+
+    // Hilfsreflektion (lokal)
+    static object? RProp(object? o, string name) =>
+        o?.GetType().GetProperty(name,
+            System.Reflection.BindingFlags.Instance |
+            System.Reflection.BindingFlags.Public |
+            System.Reflection.BindingFlags.IgnoreCase
+        )?.GetValue(o);
+
+    // Liefert Host/Port/PlayerId/Token – zuerst aus deinen Feldern, dann via Reflection vom _api
+    private void GetConnForCamera(out string host, out int port, out string playerId, out string token)
+    {
+        host = _host ?? "";
+        port = _port;
+        playerId = (_steamId != 0 ? _steamId.ToString() : "");
+        token = (_playerToken != 0 ? _playerToken.ToString() : "");
+
+        // falls etwas fehlt, versuche vom _api zu lesen
+        if (_api != null && (string.IsNullOrWhiteSpace(host) || port <= 0 ||
+                             string.IsNullOrWhiteSpace(playerId) || string.IsNullOrWhiteSpace(token)))
+        {
+            host = string.IsNullOrWhiteSpace(host)
+                     ? (RProp(_api, "Address") as string) ?? (RProp(_api, "Host") as string) ?? (RProp(_api, "Ip") as string) ?? host
+                     : host;
+
+            if (port <= 0)
+            {
+                try { port = Convert.ToInt32(RProp(_api, "Port") ?? 0); } catch { /* ignore */ }
+            }
+
+            playerId = string.IsNullOrWhiteSpace(playerId)
+                     ? (RProp(_api, "PlayerId") as string) ?? (RProp(_api, "SteamId") as string) ?? playerId
+                     : playerId;
+
+            token = string.IsNullOrWhiteSpace(token)
+                     ? (RProp(_api, "PlayerToken") as string) ?? (RProp(_api, "Token") as string) ?? token
+                     : token;
+        }
+    }
+
+    private static void PatchNearPlaneIfNeeded(string rustplusPkgDir, Action<string>? log = null)
+    {
+        try
+        {
+            // Wir suchen die generierten Protobuf-Dateien nach der "nearPlane"-Pflichtprüfung ab
+            var files = Directory.GetFiles(rustplusPkgDir, "*.js", SearchOption.AllDirectories);
+            foreach (var f in files)
+            {
+                var text = File.ReadAllText(f);
+                if (!text.Contains("missing required 'nearPlane'")) continue;
+                if (text.Contains("/*RPD_PATCH_NEARPLANE*/"))
+                {
+                    log?.Invoke("[cam-node] nearPlane patch already present: " + Path.GetFileName(f));
+                    return;
+                }
+
+                // harte, aber robuste Ersetzung: die Throw-Stelle durch Default ersetzen
+                var patched = text.Replace(
+                    "throw util.ProtocolError(\"missing required 'nearPlane'\",{instance:m})",
+                    "/*RPD_PATCH_NEARPLANE*/ if(m.nearPlane==null) m.nearPlane=0"
+                );
+
+                if (!ReferenceEquals(patched, text))
+                {
+                    File.WriteAllText(f, patched);
+                    log?.Invoke("[cam-node] patched nearPlane in: " + f);
+                    return;
+                }
+            }
+
+           // log?.Invoke("[cam-node] nearPlane check not found; no patch applied");
+        }
+        catch (Exception ex)
+        {
+            log?.Invoke("[cam-node] patch failed: " + ex.Message);
+        }
+    }
+
+    public event Action<string /*cameraId*/, double /*vFovDeg*/, int /*w*/, int /*h*/, List<CameraEntity> /*(x,y,z,name)*/>? CameraEntities;
+
+    private string? _currentCamId;  // setzen, wenn wir subscriben
+    private (int w, int h, double vfov) _lastCamInfo = (160, 90, 65);
+
+
+    public async Task<CameraFrame?> GetCameraFrameViaNodeAsync(string cameraId, int timeoutMs = 5000, CancellationToken ct = default)
+    {
+
+
+
+        if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+        void L(string s) => _log?.Invoke("[cam-node] " + s);
+
+        // --- statt der Reflection auf _api aus Helper ziehen:
+        GetConnForCamera(out var host, out var port, out var playerId, out var token);
+
+        // kurzes Debug ohne Geheimnisse:
+      //  _log?.Invoke($"[cam] conn host={(string.IsNullOrWhiteSpace(host) ? "-" : host)} port={(port > 0 ? port : 0)} pidLen={playerId?.Length ?? 0} tokLen={token?.Length ?? 0}");
+
+        if (string.IsNullOrWhiteSpace(host) || port <= 0 ||
+            string.IsNullOrWhiteSpace(playerId) || string.IsNullOrWhiteSpace(token))
+        {
+            throw new InvalidOperationException("Connection data for camera snapshot incomplete.");
+        }
+
+        // ---- Node + rustplus.js Verzeichnis finden ----
+        string? nodeExe = FindBundledNode();
+        if (nodeExe == null) throw new FileNotFoundException("Node Runtime not found (runtime/node-win-x64/node.exe).");
+
+        string? pkgRoot = FindRustplusJsPackageRoot(); // Ordner, der *node_modules* enthält
+        if (pkgRoot == null) throw new DirectoryNotFoundException("rustplus.js Package not found (runtime/rustplus-cli/node_modules).");
+
+
+
+        // One-shot JS: lädt Paket *aus dem Working-Dir* (pkgRoot) und schreibt Base64 auf STDOUT
+        var js = """
+// CLI-Args
+const host   = process.argv[2];
+const port   = parseInt(process.argv[3], 10);
+const pid    = process.argv[4];
+const tok    = process.argv[5];
+const cam    = process.argv[6];
+const tmo    = parseInt(process.argv[7], 10) || 5000;
+const pkgDir = process.argv[8]; // ...\node_modules\@liamcottle\rustplus.js
+// console.error("using pkg dir: " + pkgDir);
+
+function reqFrom(base, id){
+  return require(require.resolve(id, { paths: [base] }));
+}
+
+// === wir hooken *genau* die protobufjs-Instanz, die rustplus.js nutzen wird
+function hookProtobuf(pb){
+  if (!pb) return;
+  const RELAX_ALL = true;              // <- global alles ‚required‘ -> ‚optional‘
+  const RELAX = new Set([              // falls du einschränken willst: Felder hier benennen
+    "nearPlane","controlFlags","sampleOffset","sampleCount","horizontalFov","verticalFov","fov"
+  ]);
+
+  const shouldRelax = (fname) => RELAX_ALL || RELAX.has(fname);
+
+  function relaxFieldsObj(obj){
+    if (!obj || typeof obj !== "object") return;
+    if (obj.fields && typeof obj.fields === "object"){
+      for (const [fname, f] of Object.entries(obj.fields)){
+        if (!f) continue;
+        if ((f.rule === "required" || f.required === true) && shouldRelax(fname)){
+          f.rule = "optional";
+          f.required = false;
+        }
+      }
+    }
+    for (const k of Object.keys(obj)) relaxFieldsObj(obj[k]);
+  }
+
+  // Hook: Root.fromJSON
+  if (pb.Root && typeof pb.Root.fromJSON === "function"){
+    const orig = pb.Root.fromJSON;
+    pb.Root.fromJSON = function(json, root){
+      try{ relaxFieldsObj(json); }catch{}
+      return orig.call(this, json, root);
+    };
+  }
+  // Hook: Type.fromJSON
+  if (pb.Type && typeof pb.Type.fromJSON === "function"){
+    const orig = pb.Type.fromJSON;
+    pb.Type.fromJSON = function(name, json){
+      try{
+        if (json && json.fields){
+          for (const [fname, f] of Object.entries(json.fields)){
+            if ((f.rule === "required" || f.required === true) && shouldRelax(fname)){
+              f.rule = "optional";
+              f.required = false;
+            }
+          }
+        }
+      }catch{}
+      return orig.call(this, name, json);
+    };
+  }
+  // Hook: Type.prototype.add (für dynamisch erzeugte Felder)
+  if (pb.Type && pb.Type.prototype){
+    const origAdd = pb.Type.prototype.add;
+    pb.Type.prototype.add = function(field){
+      try{
+        if (field && (field.rule === "required" || field.required === true) && shouldRelax(field.name)){
+          field.rule = "optional";
+          field.required = false;
+        }
+      }catch{}
+      return origAdd.call(this, field);
+    };
+  }
+
+  // Safety-Net: bereits geladene Typen nachträglich entspannen
+  function relaxAlreadyBuilt(){
+    try{
+      const roots = pb.roots ? Object.values(pb.roots) : [];
+      for (const root of roots){
+        if (!root) continue;
+        try { root.resolveAll(); } catch {}
+        (function walk(ns){
+          if (!ns) return;
+          if (ns.fields && typeof ns.fields === "object"){
+            for (const [fname, f] of Object.entries(ns.fields)){
+              if ((f.rule === "required" || f.required === true) && shouldRelax(fname)){
+                f.rule = "optional";
+                f.required = false;
+              }
+            }
+          }
+          if (ns.nested){
+            for (const v of Object.values(ns.nested)) walk(v);
+          }
+        })(root);
+      }
+    }catch{}
+  }
+
+  // console.error(`protobufjs hook ready (global relax=${RELAX_ALL})`);
+  return { relaxAlreadyBuilt };
+}
+
+// 1) protobufjs laden & hooken
+let pb = null;
+try { pb = reqFrom(pkgDir, "protobufjs"); }
+catch { try { pb = reqFrom(pkgDir, "protobufjs/minimal"); } catch {} }
+const hook = hookProtobuf(pb);
+
+// 2) jetzt rustplus.js laden (damit unser Hook greift)
+const RustPlus = reqFrom(pkgDir, "@liamcottle/rustplus.js");
+
+// 3) Safety-Net: falls Types schon gebaut wurden, nochmals entschärfen
+try { hook && hook.relaxAlreadyBuilt && hook.relaxAlreadyBuilt(); } catch {}
+
+// 4) Kamera benutzen
+const rp = new RustPlus(host, port, pid, tok);
+let timer = null;
+
+rp.on("connected", async () => {
+ // console.error("CONNECTED");
+  try {
+    const c = rp.getCamera(cam);
+
+    // ---- Message-Handler (beide Ebenen) ----
+    const onMsg = (m) => {
+      try {
+        // Tolerant über mögliche Pfade gehen
+        const resp = (m && (m.response || m.appMessage || m.data)) || m || {};
+        const broadcast = resp.broadcast || resp.appBroadcast || {};
+        const rays = broadcast.cameraRays || broadcast.appCameraRays || resp.cameraRays || null;
+
+        if (rays && Array.isArray(rays.entities)) {
+          const ents = rays.entities.map(e => ({
+            id:  e.entityId || 0,
+            type: e.type || 0,
+            name: e.name || "",
+            x: (e.position && e.position.x) || 0,
+            y: (e.position && e.position.y) || 0,
+            z: (e.position && e.position.z) || 0,
+            sid:    (e.steamId || e.playerId || 0),
+            sidStr: (e.steamId || e.playerId) ? String(e.steamId || e.playerId) : ""
+          }));
+          const payload = { cam, ents, fov: rays.verticalFov || rays.fov || 65 };
+          process.stdout.write("ENTS:" + Buffer.from(JSON.stringify(payload), "utf8").toString("base64") + "\n");
+          // console.error(`RAYS n=${ents.length}`);
+        }
+
+        const info = resp.cameraInfo || resp.appCameraInfo || null;
+        if (info && (info.width || info.height)) {
+          const w = info.width || 0, h = info.height || 0;
+          process.stdout.write("INFO:" + Buffer.from(JSON.stringify({ cam, w, h }), "utf8").toString("base64") + "\n");
+        }
+      } catch { /* schlucken */ }
+    };
+
+    rp.on("message", onMsg);
+    c .on("message", onMsg);
+
+    // ---- Frame-Listener ----
+    c.on("render", async (frame) => {
+     // console.error("RENDER");
+      try {
+        process.stdout.write("FRAME:" + Buffer.from(frame).toString("base64") + "\n");
+      } finally {
+        // Gib Broadcasts Zeit anzukommen (fix 400ms)
+        setTimeout(async () => {
+          try { await c.unsubscribe(); } catch {}
+          try { rp.disconnect(); } catch {}
+        }, 400);
+      }
+    });
+
+    await c.subscribe();
+  //  console.error("SUBSCRIBED");
+
+    // Sicherheitsnetz
+    timer = setTimeout(() => { console.error("TIMEOUT"); try { rp.disconnect(); } catch {} }, Math.max(1000, tmo));
+  } catch (e) {
+    console.error("ERR:" + (e && e.message ? e.message : String(e)));
+    try { rp.disconnect(); } catch {}
+  }
+});
+
+rp.on("error", (e) => {
+  try {
+    const msg = (e && (e.message || e.code)) ? `${e.message||e.code}` : JSON.stringify(e);
+    console.error("ERR:" + msg);
+  } catch { console.error("ERR:unknown"); }
+});
+rp.connect();
+""";
+
+        var rustplusPkgDir = Path.Combine(pkgRoot, "node_modules", "@liamcottle", "rustplus.js");
+        PatchNearPlaneIfNeeded(rustplusPkgDir, _log);
+        if (!Directory.Exists(rustplusPkgDir))
+            throw new DirectoryNotFoundException("[cam-node] rustplus.js package not found at: " + rustplusPkgDir);
+        // _log?.Invoke("[cam-node] using pkg dir: " + rustplusPkgDir);
+
+        var tempDir = Path.Combine(Path.GetTempPath(), "RustPlusDesk");
+        Directory.CreateDirectory(tempDir);
+        var jsFile = Path.Combine(tempDir, "camera_once.js");
+        File.WriteAllText(jsFile, js);
+
+        var psi = new ProcessStartInfo(nodeExe,
+    $"\"{jsFile}\" {host} {port} {playerId} {token} {cameraId} {timeoutMs} \"{rustplusPkgDir}\"")
+        {
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true,
+            WorkingDirectory = pkgRoot
+        };
+
+        // optional: NODE_PATH setzen (hilft, falls WorkingDirectory doch mal nicht greift)
+       // psi.Environment["NODE_PATH"] = pkgRoot;
+
+        var tcs = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        using var p = new System.Diagnostics.Process { StartInfo = psi };
+        var lastEnts = new List<CameraEntity>();
+        int widthHint = 0, heightHint = 0;
+
+        p.OutputDataReceived += (_, e) =>
+        {
+            if (e.Data == null) return;
+
+            // FRAME:<b64>
+            if (e.Data.StartsWith("FRAME:"))
+            {
+                try
+                {
+                    var b64 = e.Data.Substring("FRAME:".Length);
+                    tcs.TrySetResult(Convert.FromBase64String(b64));
+                }
+                catch (Exception ex) { tcs.TrySetException(ex); }
+                return;
+            }
+
+            // ENTS:<b64 json>
+            if (e.Data.StartsWith("ENTS:"))
+            {
+                try
+                {
+                    var b = Convert.FromBase64String(e.Data.Substring(5));
+                    var json = System.Text.Encoding.UTF8.GetString(b);
+                    using var doc = System.Text.Json.JsonDocument.Parse(json);
+                    lastEnts.Clear();
+
+                    double vFov = 65.0;
+                    if (doc.RootElement.TryGetProperty("fov", out var vf) && vf.ValueKind == System.Text.Json.JsonValueKind.Number)
+                        vFov = vf.GetDouble();
+
+                    if (doc.RootElement.TryGetProperty("ents", out var arr) && arr.ValueKind == System.Text.Json.JsonValueKind.Array)
+                    {
+                        foreach (var it in arr.EnumerateArray())
+                        {
+                            double x = it.TryGetProperty("x", out var vx) ? vx.GetDouble() : 0;
+                            double y = it.TryGetProperty("y", out var vy) ? vy.GetDouble() : 0;
+                            double z = it.TryGetProperty("z", out var vz) ? vz.GetDouble() : 0;
+                            int entityId = it.TryGetProperty("id", out var vi) ? (vi.ValueKind == System.Text.Json.JsonValueKind.Number ? vi.GetInt32() : 0) : 0;
+                            int type = it.TryGetProperty("type", out var vt) ? (vt.ValueKind == System.Text.Json.JsonValueKind.Number ? vt.GetInt32() : 0) : 0;
+                            ulong sid = 0;
+
+                            // bevorzugt: String-sichere ID (falls im JS ausgegeben)
+                            if (it.TryGetProperty("sidStr", out var vss) && vss.ValueKind == System.Text.Json.JsonValueKind.String)
+                            {
+                                _ = ulong.TryParse(vss.GetString(), out sid);
+                            }
+                            else if (it.TryGetProperty("sid", out var vs) && vs.ValueKind == System.Text.Json.JsonValueKind.Number)
+                            {
+                                try { sid = vs.GetUInt64(); } catch { sid = 0; } // falls out of range / falsches Format
+                            }
+
+                            string name = it.TryGetProperty("name", out var vn) ? (vn.GetString() ?? "") : "";
+
+                            lastEnts.Add(new CameraEntity(x, y, z, name, entityId, type, sid));
+                            
+                        }
+                    }
+
+                    // kleines Histogramm zur Typ-Erkundung
+                    var byType = lastEnts.GroupBy(en => en.Type)
+                                         .Select(g => $"{g.Key}={g.Count()}");
+                    //_log?.Invoke($"[cam-node] ents={lastEnts.Count} vfov={vFov} wHint={widthHint} hHint={heightHint} types=[{string.Join(", ", byType)}]");
+
+                    // -> UI
+
+                    CameraEntities?.Invoke(cameraId, vFov, widthHint, heightHint, lastEnts.ToList());
+                }
+                catch { /* ignore */ }
+                return;
+            }
+
+            // INFO:<b64 json>
+            if (e.Data.StartsWith("INFO:"))
+            {
+                try
+                {
+                    var b = Convert.FromBase64String(e.Data.Substring(5));
+                    var json = System.Text.Encoding.UTF8.GetString(b);
+                    var doc = System.Text.Json.JsonDocument.Parse(json);
+                    widthHint = doc.RootElement.TryGetProperty("w", out var w) ? w.GetInt32() : 0;
+                    heightHint = doc.RootElement.TryGetProperty("h", out var h) ? h.GetInt32() : 0;
+                }
+                catch { /* ignore */ }
+                return;
+            }
+
+            // sonstiges Log wie gehabt
+            L(e.Data);
+        };
+        p.ErrorDataReceived += (_, e) =>
+        {
+            if (string.IsNullOrEmpty(e.Data)) return;
+            L(e.Data); // alles loggen
+            if (e.Data.StartsWith("ERR:"))
+                tcs.TrySetException(new Exception(e.Data));
+            if (e.Data.IndexOf("Cannot find module", StringComparison.OrdinalIgnoreCase) >= 0)
+                tcs.TrySetException(new FileNotFoundException(e.Data));
+            if (e.Data.StartsWith("TIMEOUT"))
+                tcs.TrySetCanceled();
+        };
+
+        p.Start();
+        p.BeginOutputReadLine();
+        p.BeginErrorReadLine();
+
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        cts.CancelAfter(timeoutMs + 2000);
+
+        try
+        {
+            var completed = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs + 1500, cts.Token));
+            if (completed != tcs.Task) return null;
+
+            try
+            {
+                var bytes = await tcs.Task.ConfigureAwait(false); // may throw
+                return new CameraFrame(bytes, null, widthHint, heightHint, lastEnts);
+            }
+            catch (OperationCanceledException)
+            {
+                _log?.Invoke("[cam-node] cancelled");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _log?.Invoke("[cam-node] exception: " + ex.Message);
+                return null;
+            }
+        }
+        finally
+        {
+            try { if (!p.HasExited) p.Kill(true); } catch { }
+        }
+
+        // --- lokale Finder ---
+        static string? FindBundledNode()
+        {
+            var p1 = Path.Combine(AppContext.BaseDirectory, "runtime", "node-win-x64", "node.exe");
+            if (File.Exists(p1)) return p1;
+            var p2 = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "runtime", "node-win-x64", "node.exe"));
+            return File.Exists(p2) ? p2 : null;
+        }
+
+        static string? FindRustplusJsPackageRoot()
+        {
+            // wir brauchen den Ordner, der die *node_modules* enthält
+            var candidates = new[]
+            {
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "RustPlusDesk","runtime","rustplus-cli"), // Release (ZIP entpackt)
+            Path.Combine(AppContext.BaseDirectory, "runtime","rustplus-cli"), // neben EXE
+            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..","..","..","runtime","rustplus-cli")) // Dev
+        };
+            foreach (var root in candidates)
+            {
+                if (Directory.Exists(Path.Combine(root, "node_modules", "@liamcottle", "rustplus.js")))
+                    return root;
+            }
+            return null;
+        }
+    }
+
+    // --- minimaler Node-Finder (kopie deiner Pairing-Helfer, gekürzt) ---
+    private static string? FindBundledNode()
+    {
+        var p1 = Path.Combine(AppContext.BaseDirectory, "runtime", "node-win-x64", "node.exe");
+        if (File.Exists(p1)) return p1;
+        var p2 = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "runtime", "node-win-x64", "node.exe"));
+        return File.Exists(p2) ? p2 : null;
+    }
+
+
+
+    private static Delegate BuildWildcardHandler(EventInfo ev, Action<object, object> onInvoke)
+    {
+        var handlerType = ev.EventHandlerType!;
+        var invoke = handlerType.GetMethod("Invoke")!;
+        var ps = invoke.GetParameters();
+        if (ps.Length != 2) throw new NotSupportedException("Only EventHandler-like delegates supported");
+
+        var senderParam = System.Linq.Expressions.Expression.Parameter(ps[0].ParameterType, "s");
+        var argsParam = System.Linq.Expressions.Expression.Parameter(ps[1].ParameterType, "e");
+
+        var call = System.Linq.Expressions.Expression.Call(
+            System.Linq.Expressions.Expression.Constant(onInvoke),
+            typeof(Action<object, object>).GetMethod(nameof(Action<object, object>.Invoke))!,
+            System.Linq.Expressions.Expression.Convert(senderParam, typeof(object)),
+            System.Linq.Expressions.Expression.Convert(argsParam, typeof(object))
+        );
+
+        var lambda = System.Linq.Expressions.Expression.Lambda(handlerType, call, senderParam, argsParam);
+        return lambda.Compile();
+    }
+
+    private static EventInfo? FindMessageEvent(object api)
+    {
+        // grab an event that *sounds* like "message"
+        foreach (var ev in api.GetType().GetEvents(BindingFlags.Instance | BindingFlags.Public))
+        {
+            var n = ev.Name.ToLowerInvariant();
+            if (n.Contains("message") || n.Contains("received") || n.Contains("app"))
+                return ev;
+        }
+        return null;
+    }
+
+    private static object? P(object? o, string name) =>
+        o?.GetType().GetProperty(name,
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase)?.GetValue(o);
+
+    private static byte[]? ReadBytesFlexible(object? obj)
+    {
+        if (obj is null) return null;
+        if (obj is byte[] b) return b;
+
+        foreach (var prop in obj.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        {
+            var n = prop.Name.ToLowerInvariant();
+            if (!(n.Contains("png") || n.Contains("jpg") || n.Contains("jpeg") ||
+                  n.Contains("image") || n.Contains("bytes") || n.Contains("data") || n.Contains("frame")))
+                continue;
+
+            var v = prop.GetValue(obj);
+            if (v is byte[] bb) return bb;
+            if (v is string s)
+            {
+                try { return Convert.FromBase64String(s); } catch { }
+            }
+            if (v != null)
+            {
+                // one more level deep
+                if (v is byte[] b2) return b2;
+                if (v is string s2) { try { return Convert.FromBase64String(s2); } catch { } }
+            }
+        }
+        return null;
+    }
+
+    private static (PropertyInfo reqProp, PropertyInfo idProp)? FindCameraReq(object appRequestInstance, string kind /*"subscribe"/"unsubscribe"*/)
+    {
+        var reqType = appRequestInstance.GetType();
+        // look for AppRequest.{CameraSubscribe}/{CameraUnsubscribe} or similar
+        foreach (var p in reqType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        {
+            var n = p.Name.ToLowerInvariant();
+            if (!(n.Contains("camera") || n.Contains("cctv"))) continue;
+            if (!(n.Contains("sub") == (kind == "subscribe") || n.Contains("unsub") == (kind == "unsubscribe")))
+                continue;
+
+            var child = Activator.CreateInstance(p.PropertyType)!;
+            // find string id/name prop on the child
+            var idProp = child.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .FirstOrDefault(pp =>
+                    pp.PropertyType == typeof(string) &&
+                    (pp.Name.Contains("identifier", StringComparison.OrdinalIgnoreCase) ||
+                     pp.Name.Equals("Id", StringComparison.OrdinalIgnoreCase) ||
+                     pp.Name.Contains("name", StringComparison.OrdinalIgnoreCase) ||
+                     pp.Name.Contains("camera", StringComparison.OrdinalIgnoreCase) ||
+                     pp.Name.Contains("cctv", StringComparison.OrdinalIgnoreCase)));
+
+            if (idProp != null) return (p, idProp);
+        }
+        return null;
+    }
+
+
+
+    public event Action<string, byte[]>? CameraFrame; // (cameraId, jpeg/png bytes)
+
+    private bool _camPushHooked;
+    private readonly Dictionary<string, TaskCompletionSource<byte[]>> _camAwaitOnce
+        = new(StringComparer.OrdinalIgnoreCase);
+
+   
+
+    private void EnsureCameraPushHooked()
+    {
+        if (_camPushHooked || _api is null) return;
+        _camPushHooked = true;
+
+        // Wir hängen uns "breit" an Events vom _api. Der Handler prüft dann auf CameraFrames.
+        foreach (var ev in _api.GetType().GetEvents(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public))
+        {
+            // Wir akzeptieren EventHandler oder EventHandler<T>
+            var ehType = ev.EventHandlerType;
+            if (ehType is null) continue;
+            var invoke = ehType.GetMethod("Invoke");
+            if (invoke is null) continue;
+            var pars = invoke.GetParameters();
+            if (pars.Length != 2) continue; // (sender, args)
+
+            // dynamisch: (object? s, object e) => OnAnyApiEvent(e);
+            var method = GetType().GetMethod(nameof(OnAnyApiEvent),
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            var d = Delegate.CreateDelegate(ehType, this, method!);
+            ev.AddEventHandler(_api, d);
+        }
+    }
+
+    private static object? RProp2(object? o, string name) =>
+    o?.GetType().GetProperty(name,
+        System.Reflection.BindingFlags.Instance |
+        System.Reflection.BindingFlags.Public |
+        System.Reflection.BindingFlags.IgnoreCase)?.GetValue(o);
+
+    private static string? RStr(object? o, params string[] names)
+    {
+        foreach (var n in names)
+        {
+            var v = RProp2(o, n);
+            if (v is string s && !string.IsNullOrWhiteSpace(s)) return s;
+        }
+        return null;
+    }
+
+    private static byte[]? RBytes(object? o, params string[] names)
+    {
+        foreach (var n in names)
+        {
+            var v = RProp2(o, n);
+            if (v is byte[] b && b.Length > 0) return b;
+            if (v is string s && s.Length > 0)
+            {
+                try { return Convert.FromBase64String(s); } catch { }
+            }
+        }
+        return null;
+    }
+
+    // universeller Event-Slot: wir versuchen, CameraFrames aus beliebigen EventArgs zu lesen
+    private int _anyEvCount;
+    private void OnAnyApiEvent(object? sender, object e)
+    {
+        try
+        {
+            // typische Kette: e -> Message/Response/AppMessage -> Camera/CCTV -> bytes
+            var msg = RProp2(e, "Message") ?? RProp2(e, "AppMessage") ?? e;
+            var resp = RProp2(msg, "Response") ?? RProp2(msg, "Data") ?? msg;
+
+            // Mögliche Containernamen für Camera-Frames
+            var cam = RProp2(resp, "CameraFrame") ??
+                      RProp2(resp, "CCTVFrame") ??
+                      RProp2(resp, "CCTV") ??
+                      RProp2(resp, "Camera");
+
+            // Kamera-Info (Breite/Höhe/FOV) mitnehmen, wenn vorhanden
+            var info = RProp2(resp, "CameraInfo") ?? RProp2(resp, "AppCameraInfo");
+            if (info != null)
+            {
+                int w = (int)(RProp2(info, "Width") ?? 160);
+                int h = (int)(RProp2(info, "Height") ?? 90);
+                double vf = 0;
+                double.TryParse(RProp2(info, "VerticalFov")?.ToString(), out vf);
+                if (vf <= 0) vf = _lastCamInfo.vfov;
+                _lastCamInfo = (w, h, vf);
+            }
+
+            // Rays/Entities
+            var rays = RProp2(resp, "CameraRays") ?? RProp2(resp, "AppCameraRays") ?? RProp2(resp, "Rays");
+            if (rays != null)
+            {
+                double vf = _lastCamInfo.vfov;
+                double.TryParse(RProp2(rays, "VerticalFov")?.ToString(), out vf);
+                if (vf <= 0) vf = _lastCamInfo.vfov;
+
+                var entsNode = RProp2(rays, "Entities") ?? RProp2(rays, "Entity");
+                var list = new List<CameraEntity>();
+                if (entsNode is System.Collections.IEnumerable en)
+                {
+                    foreach (var it in en)
+                    {
+                        var name = RStr(it, "Name", "Label", "UserName", "DisplayName") ?? "";
+                        var pos = RProp2(it, "Position") ?? it;
+                        double.TryParse(RProp2(pos, "X")?.ToString(), out var ex);
+                        double.TryParse(RProp2(pos, "Y")?.ToString(), out var ey);
+                        double.TryParse(RProp2(pos, "Z")?.ToString(), out var ez);
+                        // optional: id/type mitgeben, falls vorhanden
+                        int id2 = 0, type = 0;
+                        if (int.TryParse(RProp2(en, "entityId")?.ToString(), out var eid)) id2 = eid;
+                        if (int.TryParse(RProp2(en, "type")?.ToString(), out var et)) type = et;
+                    }
+                }
+                CameraEntities?.Invoke(_currentCamId ?? "", vf, _lastCamInfo.w, _lastCamInfo.h, list);
+            }
+
+            if (cam == null) return;
+
+            var id = RStr(cam, "CameraId", "Identifier", "Id", "Name") ?? "";
+            var bytes = RBytes(cam, "JpegImage", "PngImage", "Frame", "Image", "Bytes", "Data");
+            if (bytes is null || bytes.Length == 0) return;
+
+            // Event an UI weiterreichen
+            CameraFrame?.Invoke(id, bytes);
+
+            // Warten auf "einmaliges" Snapshot erfüllen?
+            if (!string.IsNullOrEmpty(id) && _camAwaitOnce.TryGetValue(id, out var tcs) && !tcs.Task.IsCompleted)
+            {
+                tcs.TrySetResult(bytes);
+            }
+        }
+        catch
+        {
+            // still – wir sniffen hier generisch
+        }
+    }
+
+    private (object? req, object? idProp) MakeCamSubscribeRequest(string cameraId)
+    {
+        var asm = typeof(RustPlus).Assembly;
+        var reqType = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
+        if (reqType == null) return (null, null);
+
+        // Kandidaten: CameraSubscribe / CCTVSubscribe / SubscribeCamera / GetCCTVStatic / GetCameraFrame
+        // Wir hier bauen explizit ein Subscribe – Frames kommen per Push.
+        var subProp = reqType.GetProperty("CameraSubscribe",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
+            ?? reqType.GetProperty("CCTVSubscribe",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
+            ?? reqType.GetProperty("SubscribeCamera",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase);
+
+        if (subProp == null) return (null, null);
+
+        var subType = subProp.PropertyType;
+        var subObj = Activator.CreateInstance(subType)!;
+
+        // Id-Feld finden
+        var idP = subType.GetProperty("CameraId", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
+                 ?? subType.GetProperty("Identifier", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
+                 ?? subType.GetProperty("Id", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
+                 ?? subType.GetProperty("Name", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase);
+        if (idP == null) return (null, null);
+
+        idP.SetValue(subObj, cameraId);
+
+        var req = Activator.CreateInstance(reqType)!;
+        subProp.SetValue(req, subObj);
+        return (req, idP);
+    }
+
+    private (object? req, System.Reflection.PropertyInfo? idProp) MakeCamUnsubscribeRequest(string cameraId)
+    {
+        var asm = typeof(RustPlus).Assembly;
+        var reqType = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
+        if (reqType == null) return (null, null);
+
+        var unsubProp = reqType.GetProperty("CameraUnsubscribe",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
+            ?? reqType.GetProperty("CCTVUnsubscribe",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
+            ?? reqType.GetProperty("UnsubscribeCamera",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase);
+        if (unsubProp == null) return (null, null);
+
+        var subType = unsubProp.PropertyType;
+        var subObj = Activator.CreateInstance(subType)!;
+
+        var idP = subType.GetProperty("CameraId", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
+                 ?? subType.GetProperty("Identifier", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
+                 ?? subType.GetProperty("Id", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
+                 ?? subType.GetProperty("Name", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase);
+        if (idP == null) return (null, null);
+
+        idP.SetValue(subObj, cameraId);
+
+        var req = Activator.CreateInstance(reqType)!;
+        unsubProp.SetValue(req, subObj);
+        return (req, idP);
+    }
+
+    /// <summary>Startet Streaming (Subscribe) und liefert optional direkt das erste Frame (Snapshot) innerhalb Timeout.</summary>
+    public async Task<byte[]?> StartCameraStreamAsync(string cameraId, int firstFrameTimeoutMs = 2000, CancellationToken ct = default)
+    {
+        _currentCamId = cameraId;
+        if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+
+        EnsureCameraPushHooked();
+
+        // First-frame TCS einrichten
+        var tcs = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
+        _camAwaitOnce[cameraId] = tcs;
+
+        var (req, _) = MakeCamSubscribeRequest(cameraId);
+        if (req == null)
+        {
+            _log?.Invoke("[cam] no subscribe property found on AppRequest");
+            _camAwaitOnce.Remove(cameraId);
+            return null;
+        }
+
+        try
+        {
+            var send = _api.GetType().GetMethod("SendRequestAsync", new[] { req.GetType() });
+            if (send == null) { _log?.Invoke("[cam] SendRequestAsync not found"); _camAwaitOnce.Remove(cameraId); return null; }
+
+            var taskObj = send.Invoke(_api, new object[] { req });
+            if (taskObj is Task t) await t.ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _log?.Invoke("[cam] subscribe error: " + ex.Message);
+            _camAwaitOnce.Remove(cameraId);
+            return null;
+        }
+
+        // Auf erstes Frame warten (optional)
+        try
+        {
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            cts.CancelAfter(firstFrameTimeoutMs);
+            var frame = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
+            return frame;
+        }
+        catch
+        {
+            _log?.Invoke("[cam] subscribed, but no pushed frame arrived in time");
+            _camAwaitOnce.Remove(cameraId);
+            return null; // UI kann trotzdem weiter auf CameraFrame-Event hören
+        }
+        finally
+        {
+            _camAwaitOnce.Remove(cameraId);
+        }
+    }
+
+    public async Task StopCameraStreamAsync(string cameraId)
+    {
+        if (_api is null) return;
+        var (req, _) = MakeCamUnsubscribeRequest(cameraId);
+        if (req == null) return;
+        try
+        {
+            var send = _api.GetType().GetMethod("SendRequestAsync", new[] { req.GetType() });
+            if (send == null) return;
+            var taskObj = send.Invoke(_api, new object[] { req });
+            if (taskObj is Task t) await t.ConfigureAwait(false);
+        }
+        catch { /* tolerant */ }
+    }
+
+    private readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCase);
+    private int _camThumbIndex = 0; // rotiert über die Tiles, damit alle mal dran kommen
+
+    public async Task<CameraFrame?> GetCameraFrameAsync(string identifier, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(identifier)) throw new ArgumentException("identifier required");
+        if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+        void L(string s) => _log?.Invoke("[cam] " + s);
+
+        // 1) build and send AppRequest.CameraSubscribe
+        var appReqType = typeof(RustPlus).Assembly
+            .GetTypes().FirstOrDefault(t => t.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
+        if (appReqType is null) { L("AppRequest type not found"); return null; }
+
+        var req = Activator.CreateInstance(appReqType)!;
+        var sub = FindCameraReq(req, "subscribe");
+        if (sub == null) { L("no camera subscribe property on AppRequest"); return null; }
+
+        var child = Activator.CreateInstance(sub.Value.reqProp.PropertyType)!;
+        sub.Value.idProp.SetValue(child, identifier);
+        sub.Value.reqProp.SetValue(req, child);
+
+        var send = _api.GetType().GetMethod("SendRequestAsync", new[] { appReqType });
+        if (send == null) { L("SendRequestAsync not found"); return null; }
+
+        // 2) attach a one-shot tap to the websocket "message" event
+        var ev = FindMessageEvent(_api);
+        if (ev == null) { L("no message event on api"); return null; }
+
+        var tcs = new TaskCompletionSource<CameraFrame?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        cts.CancelAfter(TimeSpan.FromSeconds(5));
+
+        void OnAny(object _, object argsObj)
+        {
+            try
+            {
+                // try common shapes:
+                // argsObj.Message.Response.CameraFrame.*  OR  argsObj.Response.CameraFrame.*  OR  argsObj.CameraFrame
+                object? root = argsObj;
+
+                var msg = P(root, "Message") ?? root;
+                var resp = P(msg, "Response") ?? msg;
+
+                object? cameraNode =
+                    P(resp, "CameraFrame") ??
+                    P(resp, "Camera") ??
+                    P(resp, "Cctv") ??
+                    P(resp, "Frame") ??
+                    resp;
+
+                var bytes = ReadBytesFlexible(cameraNode) ?? ReadBytesFlexible(P(cameraNode, "Data"));
+                if (bytes == null) return;
+
+                // optional dimensions
+                int w = 0, h = 0;
+                int TryInt(object? o, string n)
+                {
+                    var v = P(o, n);
+                    if (v is int i) return i;
+                    if (int.TryParse(v?.ToString(), out var ii)) return ii;
+                    return 0;
+                }
+                w = TryInt(cameraNode, "Width"); if (w == 0) w = TryInt(P(cameraNode, "Data"), "Width");
+                h = TryInt(cameraNode, "Height"); if (h == 0) h = TryInt(P(cameraNode, "Data"), "Height");
+
+                tcs.TrySetResult(new CameraFrame(bytes, null, w, h, new List<CameraEntity>()));
+            }
+            catch { /* ignore and keep waiting */ }
+        }
+
+        var handler = BuildWildcardHandler(ev, OnAny);
+        ev.AddEventHandler(_api, handler);
+
+        try
+        {
+            // send subscribe (push frames will follow)
+            var call = send.Invoke(_api, new object[] { req });
+            if (call is Task t) await t.ConfigureAwait(false);
+
+            using (cts.Token.Register(() => tcs.TrySetResult(null)))
+            {
+                var frame = await tcs.Task.ConfigureAwait(false);
+                if (frame == null) _log?.Invoke("[cam] subscribed, but no pushed frame arrived in time");
+                return frame;
+            }
+        }
+        finally
+        {
+            // detach handler
+            try { ev.RemoveEventHandler(_api, handler); } catch { }
+
+            // best-effort unsubscribe
+            try
+            {
+                var un = FindCameraReq(Activator.CreateInstance(appReqType)!, "unsubscribe");
+                if (un != null)
+                {
+                    var ch = Activator.CreateInstance(un.Value.reqProp.PropertyType)!;
+                    un.Value.idProp.SetValue(ch, identifier);
+                    un.Value.reqProp.SetValue(req, ch);
+                    var ucall = send.Invoke(_api, new object[] { req });
+                    if (ucall is Task ut) await ut.ConfigureAwait(false);
+                }
+            }
+            catch { /* ignore */ }
+        }
+    }
+
+    private static void DumpTree(object? o, Action<string> log, string prefix = "[cam-dump] ", int depth = 0, int maxDepth = 5)
+    {
+        if (o == null || depth > maxDepth) return;
+        var t = o.GetType();
+        string indent = new string(' ', depth * 2);
+        log($"{prefix}{indent}{t.Name}");
+
+        foreach (var p in t.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        {
+            object? v = null;
+            try { v = p.GetValue(o); } catch { }
+            var vt = v?.GetType();
+
+            if (v == null)
+            {
+                log($"{prefix}{indent}- {p.Name} = <null>");
+            }
+            else if (v is string s)
+            {
+                log($"{prefix}{indent}- {p.Name} (string) = \"{(s.Length > 80 ? s[..80] + "…" : s)}\"");
+            }
+            else if (v is System.Collections.IEnumerable en && v is not byte[] && v is not string)
+            {
+                int i = 0;
+                log($"{prefix}{indent}- {p.Name} = [IEnumerable] {vt?.Name}");
+                foreach (var it in en)
+                {
+                    if (i++ > 20) { log($"{prefix}{indent}  …"); break; }
+                    DumpTree(it, log, prefix, depth + 2, maxDepth);
+                }
+            }
+            else if (v is byte[] bb)
+            {
+                log($"{prefix}{indent}- {p.Name} (byte[]) len={bb.Length}");
+            }
+            else if (vt != null && vt.FullName!.StartsWith("System."))
+            {
+                log($"{prefix}{indent}- {p.Name} ({vt.Name}) = {v}");
+            }
+            else
+            {
+                log($"{prefix}{indent}- {p.Name} -> {vt?.Name}");
+                DumpTree(v, log, prefix, depth + 1, maxDepth);
+            }
+        }
+    }
+
+    // ----- END CAMERA STUFF -----
+
+
+    public void DebugDumpAppRequestShape()
+    {
+        var asm = typeof(RustPlus).Assembly;
+        var reqType = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
+        if (reqType == null) { _log?.Invoke("[cam] AppRequest type not found"); return; }
+        _log?.Invoke("[cam] AppRequest properties:");
+        foreach (var p in reqType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            _log?.Invoke("  - " + p.Name);
+    }
+
+    // ---------- END DUMP MAP INFO BUTTON -------------- //
 
     private bool _eventsHooked;
 
@@ -339,7 +1893,9 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                 }
             }
 
-            if (resObj is null) { _log("[chat-history] mapped=0 afterFilter=0 since=" + (sinceUtc?.ToString("u") ?? "null")); return result; }
+            if (resObj is null) { 
+                //_log("[chat-history] mapped=0 afterFilter=0 since=" + (sinceUtc?.ToString("u") ?? "null")); 
+                return result; }
 
             // 3) Response<T> → .Data entpacken
             var dataProp = resObj.GetType().GetProperty("Data");
@@ -1041,97 +2597,149 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
 
     public sealed class TeamInfo
     {
+        public ulong LeaderSteamId { get; set; }
+        public List<Member> Members { get; } = new();
+
         public sealed class Member
         {
             public ulong SteamId { get; set; }
             public string? Name { get; set; }
-        }
 
-        public List<Member> Members { get; } = new();
+            public bool Online { get; set; }   // neu
+            public bool Dead { get; set; }   // neu
+            public double? X { get; set; }   // neu
+            public double? Y { get; set; }   // neu
+        }
     }
 
     public async Task<TeamInfo?> GetTeamInfoAsync(CancellationToken ct = default)
+{
+    if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+
+    static object? P(object? o, string name) =>
+        o?.GetType().GetProperty(name,
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase)?.GetValue(o);
+
+    static ulong AsULong(object? v)
     {
-        if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
-
-        // lokale kleine Helfer (dupliziert für Unabhängigkeit)
-        static object? RProp(object? o, string name) =>
-            o?.GetType().GetProperty(name,
-                System.Reflection.BindingFlags.Instance |
-                System.Reflection.BindingFlags.Public |
-                System.Reflection.BindingFlags.IgnoreCase)
-              ?.GetValue(o);
-
-        static ulong RULong(object? o, params string[] names)
-        {
-            foreach (var n in names)
-            {
-                var v = RProp(o, n);
-                if (v is ulong u) return u;
-                if (v is long l && l >= 0) return (ulong)l;
-                if (v is uint ui) return ui;
-                if (ulong.TryParse(v?.ToString(), out var uu)) return uu;
-            }
-            return 0UL;
-        }
-
-        static string? RStr(object? o, params string[] names)
-        {
-            foreach (var n in names)
-            {
-                var v = RProp(o, n);
-                if (v is string s && !string.IsNullOrWhiteSpace(s)) return s;
-            }
-            return null;
-        }
-
-        try
-        {
-            var asm = typeof(RustPlus).Assembly;
-            var reqType = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
-            var emptyType = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppEmpty", StringComparison.OrdinalIgnoreCase));
-            if (reqType == null || emptyType == null) return null;
-
-            var req = Activator.CreateInstance(reqType)!;
-            reqType.GetProperty("GetTeamInfo",
-                    System.Reflection.BindingFlags.IgnoreCase |
-                    System.Reflection.BindingFlags.Instance |
-                    System.Reflection.BindingFlags.Public)
-                ?.SetValue(req, Activator.CreateInstance(emptyType)!);
-
-            var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
-            if (send == null) return null;
-
-            var taskObj = send.Invoke(_api, new object[] { req });
-            object? resp = taskObj;
-            if (taskObj is Task tsk)
-            {
-                await tsk.ConfigureAwait(false);
-                resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk);
-            }
-
-            var r = RProp(resp, "Response") ?? resp;
-            var ti = RProp(r, "TeamInfo") ?? r;
-            var members = RProp(ti, "TeamInfo") ?? ti; // einige Builds verschachteln dies
-
-            var list = (members as System.Collections.IEnumerable) ?? (RProp(members, "Members") as System.Collections.IEnumerable);
-            if (list == null) return new TeamInfo();
-
-            var result = new TeamInfo();
-            foreach (var m in list)
-            {
-                if (m == null) continue;
-                var sid = RULong(m, "SteamId", "SteamID", "UserId", "UserID");
-                var name = RStr(m, "Name", "DisplayName", "PlayerName");
-                result.Members.Add(new TeamInfo.Member { SteamId = sid, Name = name });
-            }
-            return result;
-        }
-        catch
-        {
-            return null;
-        }
+        if (v is ulong u) return u;
+        if (v is long  l && l >= 0) return (ulong)l;
+        if (v is uint  ui) return ui;
+        if (v is string s && ulong.TryParse(s, out var p)) return p;
+        try { return Convert.ToUInt64(v); } catch { return 0UL; }
     }
+
+    static bool AsBool(object? v)
+    {
+        if (v is bool b) return b;
+        if (v is string s && bool.TryParse(s, out var p)) return p;
+        try { return Convert.ToInt32(v) != 0; } catch { return false; }
+    }
+
+    static double? AsDouble(object? v)
+    {
+        if (v is null) return null;
+        if (v is double d) return d;
+        if (v is float  f) return f;
+        if (double.TryParse(v.ToString(), out var dd)) return dd;
+        try { return Convert.ToDouble(v); } catch { return null; }
+    }
+        static int AsInt(object? v) { try { return Convert.ToInt32(v); } catch { return 0; } }   // ← NEU
+        try
+    {
+        var asm = typeof(RustPlus).Assembly;
+        var reqType   = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
+        var emptyType = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppEmpty",   StringComparison.OrdinalIgnoreCase));
+        if (reqType == null || emptyType == null) return null;
+
+        var req = Activator.CreateInstance(reqType)!;
+        reqType.GetProperty("GetTeamInfo",
+                BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public)
+            ?.SetValue(req, Activator.CreateInstance(emptyType)!);
+
+        var send   = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
+        if (send == null) return null;
+
+        var taskObj = send.Invoke(_api, new object[] { req });
+        object? resp = taskObj;
+        if (taskObj is Task tsk)
+        {
+            await tsk.ConfigureAwait(false);
+            resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk);
+        }
+
+        var r  = P(resp, "Response") ?? resp;
+        var ti = P(r, "TeamInfo") ?? r;
+
+        // Leader aus verschiedenen Feldern versuchen
+        ulong leaderId =
+              AsULong(P(ti, "LeaderSteamId"))
+            | AsULong(P(ti, "LeaderId"))
+            | AsULong(P(ti, "TeamLeaderSteamId"))
+            | AsULong(P(ti, "Leader"));
+
+        // Members-Container finden
+        object? members =
+              P(ti, "Members")
+           ?? P(ti, "TeamMembers")
+           ?? P(ti, "TeamInfo"); // manche Builds packen die Liste hier rein
+
+        var list = new TeamInfo { LeaderSteamId = leaderId };
+
+        if (members is System.Collections.IEnumerable en)
+        {
+            foreach (var m in en)
+            {
+                var sid = AsULong(P(m, "SteamId") ?? P(m, "UserId") ?? P(m, "PlayerId") ?? P(m, "Id"));
+                if (sid == 0) continue;
+
+                string? name =
+                     (P(m, "Name") ?? P(m, "DisplayName") ?? P(m, "PlayerName") ?? P(m, "Username"))?.ToString();
+
+                // online/dead
+                bool online = AsBool(P(m, "Online") ?? P(m, "IsOnline"));
+                    // a) direkte „Dead/IsDead“
+                    bool dead = AsBool(P(m, "Dead") ?? P(m, "IsDead") ?? P(m, "dead"));
+
+                    // b) Alive/IsAlive kehrt Dead ggf. um
+                    if (!dead)
+                    {
+                        object? aliveObj = P(m, "Alive") ?? P(m, "IsAlive");
+                        if (aliveObj != null)
+                            dead = !AsBool(aliveObj);
+                    }
+
+                    // c) LifeState Heuristik (häufig: 0=Alive, 1=Wounded, 2=Dead)
+                    int lifeState = AsInt(P(m, "LifeState") ?? P(m, "Lifestate"));
+                    if (!dead && (lifeState == 2 || lifeState == 1)) dead = true;
+
+                    // d) Wounded / IsWounded -> „als tot“ behandeln
+                    if (!dead && AsBool(P(m, "Wounded") ?? P(m, "IsWounded"))) dead = true;
+
+                    // Position: direkt X/Y oder in Position/Pos
+                    var pos = P(m, "Position") ?? P(m, "Pos");
+                double? x = AsDouble(P(m, "X") ?? P(pos, "X"));
+                double? y = AsDouble(P(m, "Y") ?? P(pos, "Y"));
+
+                list.Members.Add(new TeamInfo.Member
+                {
+                    SteamId = sid,
+                    Name = name,
+                    Online = online,
+                    Dead = dead,
+                    X = x,
+                    Y = y
+                });
+            }
+        }
+
+        return list;
+    }
+    catch
+    {
+        return null;
+    }
+}
 
     public async Task<List<DynMarker>> GetDynamicMapMarkersAsync(CancellationToken ct = default)
     {
@@ -1912,7 +3520,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         }
         catch (Exception ex)
         {
-            L("pathA ignored: " + ex.Message);
+           // L("pathA ignored: " + ex.Message);
         }
 
         // ---------- PATH B: Roh-Request (AppRequest.GetInfo / GetTime) ----------
@@ -2141,6 +3749,102 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         return (kind, null);
     }
 
+    public async Task<(ulong leaderId, List<(ulong sid, string name, bool? online, double? x, double? y)> members)?> GetTeamInfoRawAsync()
+    {
+        if (_api is null) return null;
+
+        static object? P(object? o, string n) =>
+            o?.GetType().GetProperty(n, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)?.GetValue(o);
+
+        static T Get<T>(object? o, T def, params string[] names)
+        {
+            foreach (var n in names)
+            {
+                var v = P(o, n);
+                if (v is null) continue;
+                try
+                {
+                    if (v is T t) return t;
+                    if (typeof(T) == typeof(string)) return (T)(object)Convert.ToString(v)!;
+                    if (typeof(T) == typeof(bool)) return (T)(object)Convert.ToBoolean(v);
+                    if (typeof(T) == typeof(int)) return (T)(object)Convert.ToInt32(v);
+                    if (typeof(T) == typeof(long)) return (T)(object)Convert.ToInt64(v);
+                    if (typeof(T) == typeof(ulong)) return (T)(object)Convert.ToUInt64(v);
+                    if (typeof(T) == typeof(double)) return (T)(object)Convert.ToDouble(v, System.Globalization.CultureInfo.InvariantCulture);
+                    if (typeof(T) == typeof(double?)) return (T)(object)Convert.ToDouble(v, System.Globalization.CultureInfo.InvariantCulture);
+                    if (typeof(T) == typeof(bool?)) return (T)(object)Convert.ToBoolean(v);
+                }
+                catch { }
+            }
+            return def;
+        }
+
+        try
+        {
+            var asm = typeof(RustPlus).Assembly;
+            var reqType = asm.GetTypes().FirstOrDefault(t => t.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
+            var empty = asm.GetTypes().FirstOrDefault(t => t.Name.Equals("AppEmpty", StringComparison.OrdinalIgnoreCase));
+            if (reqType is null || empty is null) return null;
+
+            var req = Activator.CreateInstance(reqType)!;
+
+            // Property auf AppRequest suchen, die nach "GetTeamInfo" klingt
+            var pGetTeam = reqType.GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
+                                  .FirstOrDefault(p => p.Name.Contains("Team", StringComparison.OrdinalIgnoreCase) &&
+                                                       (p.Name.Contains("Info", StringComparison.OrdinalIgnoreCase) || p.Name.Contains("Get", StringComparison.OrdinalIgnoreCase)));
+            if (pGetTeam is null) return null;
+
+            pGetTeam.SetValue(req, Activator.CreateInstance(empty)!);
+
+            var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
+            if (send is null) return null;
+
+            var taskObj = send.Invoke(_api, new object[] { req });
+            object? resp = taskObj;
+            if (taskObj is Task t) { await t.ConfigureAwait(false); resp = t.GetType().GetProperty("Result")?.GetValue(t); }
+
+            var r = P(resp, "Response") ?? resp;
+            var ti = P(r, "TeamInfo") ?? P(r, "Team") ?? r;
+
+            // Leader
+            ulong leader = Get<ulong>(ti, 0UL, "LeaderSteamId", "LeaderId", "TeamLeaderSteamId", "Leader");
+
+            // Members-Knoten
+            var membersNode = P(ti, "Members") ?? P(ti, "TeamMembers") ?? P(ti, "Players") ?? ti;
+            var list = new List<(ulong sid, string name, bool? online, double? x, double? y)>();
+
+            if (membersNode is System.Collections.IEnumerable en)
+            {
+                foreach (var m in en)
+                {
+                    // SteamId kann string/zahl sein
+                    ulong sid = Get<ulong>(m, 0UL, "SteamId", "PlayerId", "Id");
+                    if (sid == 0)
+                    {
+                        var s = Get<string>(m, "", "SteamId", "PlayerId", "Id");
+                        if (!string.IsNullOrWhiteSpace(s)) ulong.TryParse(s, out sid);
+                    }
+
+                    var name = Get<string>(m, "", "Name", "DisplayName", "Username");
+                    bool? on = Get<bool?>(m, null, "IsOnline", "Online", "Alive", "IsAlive");
+                    double? x = Get<double?>(m, null, "X", "PosX", "MapX", "PositionX");
+                    double? y = Get<double?>(m, null, "Y", "PosY", "MapY", "PositionY");
+
+                    if (sid != 0)
+                        list.Add((sid, name ?? "", on, x, y));
+                }
+            }
+
+            return (leader, list);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+
+
 
     // 2.3 Öffentliche Probe-API – nutzt erst "neu", dann Contracts
     // Bequeme Overload (optional, falls du an vielen Stellen ohne CT aufrufst)
@@ -2250,6 +3954,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
 
     public async Task ConnectAsync(ServerProfile profile, CancellationToken ct)
     {
+        
         if (profile is null) throw new ArgumentNullException(nameof(profile));
         if (!ulong.TryParse(profile.SteamId64, out var steamId))
             throw new ArgumentException("Ungültige SteamID64.", nameof(profile));
@@ -2414,7 +4119,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
             }
             SetMember(action, boolMember, on);
 
-            // Bonus: PlayerId/PlayerToken am Request setzen (falls vorhanden)
+            // Bonus:Id/PlayerToken am Request setzen (falls vorhanden)
             appRequestType.GetProperty("PlayerId")?.SetValue(req, _steamId);
             appRequestType.GetProperty("PlayerToken")?.SetValue(req, _playerToken);
 

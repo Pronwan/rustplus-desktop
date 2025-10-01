@@ -1,0 +1,15 @@
+﻿<Window x:Class="RustPlusDesk.CrosshairWindow"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        Topmost="True"
+        ResizeMode="NoResize"
+        Focusable="False">
+    <!-- Wir zeichnen in einem Grid und schalten per DataTrigger Templates um -->
+    <Grid x:Name="Root" SnapsToDevicePixels="True">
+        <ContentPresenter x:Name="Presenter"/>
+    </Grid>
+</Window>
