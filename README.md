@@ -56,6 +56,7 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 ![Update](./V2-1.png)  
 ![Update](./V2-2.png) 
+![Update](./V2-3.png) 
 
 Enjoy! :) 
 ---
