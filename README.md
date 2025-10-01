@@ -2,8 +2,7 @@
 
 [![Donate](./donate.png)](https://streamelements.com/pronwan/tip)
 
----
-[![Donate](./donate.png)]
+
 # Rust+ Desktop App (Unofficial)
 
 
