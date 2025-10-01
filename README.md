@@ -25,6 +25,7 @@ The **Rust+ Desktop App** is a Windows application built on the official Rust+ C
 
 It lets you pair Rust servers, monitor in-game events, control Smart Devices, and view dynamic map markers — all on your PC.
 By now it's more than 'just' Rust Plus. It's Rust² you could say... That's why this is our new icon ;) Was about time.
+![Update](./icon.png)  
 
 
 The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, RustPlusAPI, etc.), so you don’t have to install dependencies manually.
