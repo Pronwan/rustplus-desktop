@@ -158,7 +158,8 @@ Enjoy! :)
    - While connected, pair a device in-game → it appears instantly in the app
 
 ## 🛠️ Why initial NCM registration is required:
-
+<details> 
+   <summary> NCM Registration Explanation </summary>
 On first launch, the app needs to establish a connection to the Rust+ Companion API.
 For this, a bundled Node.js process (rustplus-cli) is started, which takes care of two things:
 
@@ -197,7 +198,7 @@ For this, a bundled Node.js process (rustplus-cli) is started, which takes care 
 **👉 After successful registration, the token is stored at**
 %APPDATA%\RustPlusDesk\rustplusjs-config.json.
 You only need to re-register if this file is missing or corrupted.
-
+  </details>
 <details>
 <summary>🔧 Troubleshooting Registration</summary>
 
