@@ -198,6 +198,38 @@ For this, a bundled Node.js process (rustplus-cli) is started, which takes care 
 %APPDATA%\RustPlusDesk\rustplusjs-config.json.
 You only need to re-register if this file is missing or corrupted.
 
+<details>
+<summary>🔧 Troubleshooting Registration</summary>
+
+If the initial pairing does not work (no browser window opens, or it keeps restarting):
+
+- **Check if Node is running**  
+  - Open *Task Manager* → *Details* → look for `node.exe`.  
+  - Or run:  
+    ```powershell
+    tasklist | findstr node.exe
+    ```
+
+- **Check if a local port is listening**  
+  - Run:  
+    ```powershell
+    netstat -ano | findstr LISTENING | findstr 127.0.0.1
+    ```
+  - You should see a `127.0.0.1:<port>` entry with the same PID as `node.exe`.  
+  - If not: Firewall or antivirus may be blocking the local callback server.  
+
+- **Check outbound connections**  
+  Test if the required ports are open:  
+  ```powershell
+  Test-NetConnection mtalk.google.com -Port 5228
+  Test-NetConnection companion-rust.facepunch.com -Port 443
+  Test-NetConnection steamcommunity.com -Port 443
+  All should return TcpTestSucceeded : True
+- **Config reset**
+If all else fails, close the app and delete:
+%APPDATA%\RustPlusDesk\rustplusjs-config.json
+On next launch the registration will run again.
+  </details>
 ---
 
 
