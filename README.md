@@ -157,7 +157,46 @@ Enjoy! :)
 
    - While connected, pair a device in-game → it appears instantly in the app
 
+## 🛠️ Why initial NCM registration is required:
 
+On first launch, the app needs to establish a connection to the Rust+ Companion API.
+For this, a bundled Node.js process (rustplus-cli) is started, which takes care of two things:
+
+**Registration with Facepunch/Steam**
+
+   - Opens a browser window to the official Rust+ Companion login page.
+
+   - After logging in with Steam, an auth token is generated and passed back to the app.
+
+   - This token is saved in the app’s config file so the process only needs to be done once per installation.
+
+**Local listener for callbacks and notifications**
+
+   - The Node process starts a small HTTP server on localhost:<random port> to receive the auth token.
+
+   - Afterwards, it continues running as a background listener to receive notifications (chat, alarms, events) via Google FCM and forward them to the app.
+
+**Requirements for successful registration**
+
+   - Node.js runtime and rustplus-cli are shipped with the app – no manual installation required.
+
+   - Firewall/Antivirus must not block the Node process:
+
+   - Local loopback (127.0.0.1) must be accessible for the callback port.
+
+**Outbound connections must be allowed on:**
+
+   - TCP 5228–5230 (Google FCM, mtalk.google.com)
+
+   - TCP 443 (HTTPS to Steam, Facepunch, Google)
+
+   - Browser redirect must be allowed (some security tools or proxies may block it).
+
+   - A valid Steam login is required to complete the auth flow.
+
+**👉 After successful registration, the token is stored at**
+%APPDATA%\RustPlusDesk\rustplusjs-config.json.
+You only need to re-register if this file is missing or corrupted.
 
 ---
 
