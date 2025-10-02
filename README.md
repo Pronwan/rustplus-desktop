@@ -10,8 +10,8 @@
 ⚠️ **Note**: This is an **unofficial** project and is not affiliated with Facepunch Studios or the game *Rust*.  
 
 It is open source so anyone can verify there is **no malware or hidden components**.
-
-
+⚠️ **Note**: If you used it for a while and can't pair new servers anymore, simply delete
+%APPDATA%\RustPlusDesk\rustplusjs-config.json and let it run through NCM registration again. 
 
 ---
 
@@ -199,6 +199,7 @@ For this, a bundled Node.js process (rustplus-cli) is started, which takes care 
 %APPDATA%\RustPlusDesk\rustplusjs-config.json.
 You only need to re-register if this file is missing or corrupted.
   </details>
+  
 <details>
 <summary>🔧 Troubleshooting Registration</summary>
 
