@@ -10,6 +10,7 @@
 ⚠️ **Note**: This is an **unofficial** project and is not affiliated with Facepunch Studios or the game *Rust*.  
 
 It is open source so anyone can verify there is **no malware or hidden components**.
+
 ⚠️ **Note**: If you used it for a while and can't pair new servers anymore, simply delete
 %APPDATA%\RustPlusDesk\rustplusjs-config.json and let it run through NCM registration again. 
 
@@ -124,6 +125,8 @@ Enjoy! :)
 
 
 2. **First run**
+   ⚠️ **IMPORTANT**: Apparently, for the initial listener Setup, rustplus.js-CLI tries to open Chrome Browser in order to finish initial registration. If you keep getting NCM problems, 
+   please try to install Chrome browser. It's only needed for initial setup. I will try to fix it in the future.
 
    - A browser popup will ask you to **pair with Companion** (Facepunch)
 
