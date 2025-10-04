@@ -158,7 +158,28 @@ Enjoy! :)
 
 6. **Smart Devices**  
 
-   - While connected, pair a device in-game → it appears instantly in the app
+   - While connected, pair a device or server in-game → it appears instantly in the app
+
+7. **If the FCM Listener won't start**
+
+   - you can do it manually through PowerShell. 
+   a) Open PowerShell, 
+   b) go to your installation folder (e.g. -> a: -> cd programs -> cd RustPlusDesk)
+   c) Then copy paste this Power Shell code to the console. This should pair manually and open a popup in browser:
+
+$node = ".\runtime\node-win-x64\node.exe"
+$cli  = "$env:LOCALAPPDATA\RustPlusDesk\runtime\rustplus-cli\node_modules\@liamcottle\rustplus.js\cli\index.js"
+$cfg  = "$env:APPDATA\RustPlusDesk\rustplusjs-config.json"
+
+if (!(Test-Path $cli)) {
+    $zip = ".\runtime\rustplus-cli.zip"
+    $dst = "$env:LOCALAPPDATA\RustPlusDesk\runtime\rustplus-cli"
+    New-Item -ItemType Directory -Force -Path $dst | Out-Null
+    Expand-Archive -Path $zip -DestinationPath $dst -Force
+}
+
+# Registering (Opens Browser)
+& $node $cli fcm-register --config-file "$cfg"
 
 ## 🛠️ Why initial NCM registration is required:
 <details> 
