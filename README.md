@@ -17,7 +17,6 @@ It is open source so anyone can verify there is **no malware or hidden component
 ---
 
 
-
 ## 🔍 What is this?
 
 
@@ -162,10 +161,11 @@ Enjoy! :)
 
 7. **If the FCM Listener won't start**
 
-   - you can do it manually through PowerShell. 
-   a) Open PowerShell, 
-   b) go to your installation folder (e.g. -> a: -> cd programs -> cd RustPlusDesk)
-   c) Then copy paste this Power Shell code to the console. This should pair manually and open a popup in browser:
+   - Do it manually through PowerShell. 
+
+   - Open PowerShell, 
+   - Go to your installation folder (e.g. -> a: -> cd programs -> cd RustPlusDesk)
+   - Then copy paste this Power Shell code to the console. (Press enter twice) This should pair manually and open a popup in browser:
 
 $node = ".\runtime\node-win-x64\node.exe"
 $cli  = "$env:LOCALAPPDATA\RustPlusDesk\runtime\rustplus-cli\node_modules\@liamcottle\rustplus.js\cli\index.js"
@@ -178,7 +178,6 @@ if (!(Test-Path $cli)) {
     Expand-Archive -Path $zip -DestinationPath $dst -Force
 }
 
-# Registering (Opens Browser)
 & $node $cli fcm-register --config-file "$cfg"
 
 ## 🛠️ Why initial NCM registration is required:
