@@ -45,7 +45,7 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 *(We publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
 
-## Update Notes 2.0 (October 1st 25)
+## Update Notes 2.2 (October 4th 25)
 - Mini Map Overlay for ingame use
 - Crosshair Overlay
 - Team Management
@@ -54,6 +54,7 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 - Death Markers
 - Grid Corrections
 - Notifications in Chat for Deaths, Spawns, Online, Offline
+- added fetching icon symbols from rusthelp.com (including Blueprint Fragments)
 
 ![Update](./V2-1.png)  
 ![Update](./V2-2.png) 
@@ -106,6 +107,7 @@ Enjoy! :)
 - **Server-Hopping:**: Hopping through servers too quickly can cause the Listener to crash
 
 - **Many shops**: Hovering 8+ shops at once can cause the Tooltip to flicker
+- **Mini Map outside grid**: Outside the grid the mini map can only follow along the grid border
 
 - Please report other issues in the [Issues section](../../issues)
 
