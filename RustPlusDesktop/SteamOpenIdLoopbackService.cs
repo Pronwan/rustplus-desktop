@@ -49,8 +49,8 @@ public class SteamOpenIdLoopbackService
 
         // Nutzerfreundliche Antwort im Browser
         var html = @"<html><body style='font-family:sans-serif'>
-                      <h2>Mit Steam verbunden. </h2>
-                      <p>Deine Steam ID steht in der RustPlus Desktop-App, du Hund. Schließe das Browser-Fenster!</p>
+                      <h2>Connected to Steam. </h2>
+                      <p>Your ID is paired to Rust Plus App, ma dawg. You can now safely close this browser window. This process was only required once. </p>
                      </body></html>";
         var buf = Encoding.UTF8.GetBytes(html);
         ctx.Response.ContentType = "text/html; charset=utf-8";
