@@ -85,6 +85,7 @@ public class MainViewModel : INotifyPropertyChanged
         foreach (var p in StorageService.LoadProfiles())
         {
             p.Devices ??= new ObservableCollection<SmartDevice>(); // niemals null
+            p.CameraIds ??= new ObservableCollection<string>();      // NEU: ebenso niemals null
             Servers.Add(p);
         }
 
@@ -92,7 +93,7 @@ public class MainViewModel : INotifyPropertyChanged
         if (Servers.Count > 0 && Selected == null)
             Selected = Servers[0];
     }
-
+    public void NotifyCamerasChanged() => OnPropertyChanged(nameof(Selected));
     public void Save() => StorageService.SaveProfiles(Servers);
 
     public event PropertyChangedEventHandler? PropertyChanged;

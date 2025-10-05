@@ -7726,5 +7726,19 @@
     "displayName": "Wooden Spear",
     "description": "Primitive weapon, perfect for hunting your foes. Can be upgraded to Stone Spear.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/spear.wooden.png"
+  },
+  {
+    "shortName": "basic-blueprint-fragment",
+    "id": -143481979,
+    "displayName": "Basic Blueprint Fragment",
+    "description": "Basic Fragments you need for crafting a T2 Workbench",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/basicblueprintfragment.png"
+  },
+  {
+    "shortName": "advanced-blueprint-fragment",
+    "id": -1896395719,
+    "displayName": "Advanced Blueprint Fragment",
+    "description": "Advanced Fragments you need for crafting a T3 Workbench",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/advancedblueprintfragment.png"
   }
 ]

@@ -12,11 +12,17 @@ namespace RustPlusDesk.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var b = value is bool v && v;
-            if (Invert) b = !b;
+
+            // Param-Unterstützung, ohne vorhandene Invert-Verwendungen zu brechen:
+            bool invert = Invert;
+            if (parameter is string s && s.Equals("invert", StringComparison.OrdinalIgnoreCase))
+                invert = !invert;
+
+            if (invert) b = !b;
             return b ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            => (value is Visibility v && v == Visibility.Visible) ^ Invert;
+            => (value is Visibility vis && vis == Visibility.Visible) ^ Invert;
     }
 }
