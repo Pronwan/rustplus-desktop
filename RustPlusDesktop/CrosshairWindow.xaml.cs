@@ -72,6 +72,7 @@ namespace RustPlusDesk
         {
             _style = style;
 
+            // Fenstergröße je Stil
             switch (_style)
             {
                 case CrosshairStyle.MiniGreen: Width = Height = 24; break;
