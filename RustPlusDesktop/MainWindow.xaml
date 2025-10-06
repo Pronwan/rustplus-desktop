@@ -974,21 +974,30 @@
                             </ListBox>
 
                             <StackPanel Grid.Row="1"
-                                Orientation="Horizontal"
-                                HorizontalAlignment="Right"
-                                Margin="0,10,0,0">
+            Orientation="Horizontal"
+            HorizontalAlignment="Right"
+            Margin="0,10,0,0">
+
+                                <!-- NEU -->
+                                <Button x:Name="BtnHotkeys"
+        Content="Hotkeys"
+        Width="90"
+        Style="{StaticResource GhostButton}"
+        Click="BtnHotkeys_Click"
+        Margin="0,0,10,0"/>
+
                                 <Button Content="Info"    Width="80"
-                                Style="{StaticResource GhostButton}"
-                                Click="BtnDeviceInfo_Click"
-                                IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem, Converter={StaticResource NotNull}}"/>
+            Style="{StaticResource GhostButton}"
+            Click="BtnDeviceInfo_Click"
+            IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem, Converter={StaticResource NotNull}}"/>
                                 <Button Content="Refresh" Width="80" Margin="10,0,0,0"
-                                Style="{StaticResource GhostButton}"
-                                Click="BtnDeviceRefresh_Click"/>
+            Style="{StaticResource GhostButton}"
+            Click="BtnDeviceRefresh_Click"/>
                                 <Button Content="Delete"  Width="80" Margin="10,0,0,0"
-                                Style="{StaticResource GhostButton}"
-                                Click="BtnDeleteDevice_Click"
-                                ToolTip="You can only delete missing devices"
-                                IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem.IsMissing, Converter={StaticResource NotNull}}"/>
+            Style="{StaticResource GhostButton}"
+            Click="BtnDeleteDevice_Click"
+            ToolTip="You can only delete missing devices"
+            IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem.IsMissing, Converter={StaticResource NotNull}}"/>
                             </StackPanel>
                         </Grid>
                     </TabItem>

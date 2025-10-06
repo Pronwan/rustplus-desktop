@@ -5,29 +5,32 @@ using RustPlusDesk.Services;
 using RustPlusDesk.ViewModels;
 using RustPlusDesk.Views;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Text.RegularExpressions;
-
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Resources; // für Application.GetResourceStream
@@ -36,7 +39,6 @@ using System.Windows.Threading;
 using System.Xml.Linq;
 using static RustPlusDesk.Services.RustPlusClientReal;
 using IOPath = System.IO.Path;
-using System.Diagnostics.Eventing.Reader;
 
 
 namespace RustPlusDesk.Views;
@@ -1025,7 +1027,9 @@ public partial class MainWindow : Window
                     }
 
                     // Standard-Geräte (Switch etc.): Eventwert reicht aus
+                    _suppressToggleHandler = true;
                     dev.IsOn = isOn;
+                    _suppressToggleHandler = false;
                 });
             };
         }
@@ -2617,6 +2621,8 @@ public partial class MainWindow : Window
         }
     }
 
+
+
     private void ListServers_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
 
@@ -2628,6 +2634,8 @@ public partial class MainWindow : Window
 
         HydrateSteamUiFromStorage();   // Label/Avatar aktualisieren
         // absichtlich leer – Binding Selected → CurrentDevices übernimmt das Umschalten
+        RegisterAllHotkeys();
+        ActivateHotkeysForCurrentServer();
     }
 
     static readonly JsonSerializerOptions JsonOpt = new()
@@ -2847,25 +2855,37 @@ public partial class MainWindow : Window
 
         if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev)
             return;
-
-        // nur echte SmartSwitches schalten
         if (!string.Equals(dev.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase))
             return;
 
-        if (!await EnsureConnectedAsync()) return;
+        // 👇 NEU: Reentrancy-Schutz pro Entity
+        if (!TryMarkToggleBusy(dev.EntityId))
+        {
+            AppendLog($"(skip) Toggle #{dev.EntityId} already in progress");
+            return;
+        }
 
-        AppendLog($"Sending {(on ? "ON" : "OFF")} to #{dev.EntityId} …");
         try
         {
-            await _rust.ToggleSmartSwitchAsync(dev.EntityId, on, CancellationToken.None);
+            if (!await EnsureConnectedAsync()) return;
 
-            // Status direkt für dieses Gerät neu laden
-            await RefreshDeviceStateAsync(dev);
+            AppendLog($"Sending {(on ? "ON" : "OFF")} to #{dev.EntityId} …");
+            try
+            {
+                await _rust.ToggleSmartSwitchAsync(dev.EntityId, on, CancellationToken.None);
+
+                // Status direkt für dieses Gerät neu laden
+                await RefreshDeviceStateAsync(dev);
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"{(on ? "ON" : "OFF")} Error: " + ex.Message);
+                await RefreshDeviceStateAsync(dev);
+            }
         }
-        catch (Exception ex)
+        finally
         {
-            AppendLog($"{(on ? "ON" : "OFF")} Error: " + ex.Message);
-            await RefreshDeviceStateAsync(dev);
+            UnmarkToggleBusy(dev.EntityId);   // 👈 immer freigeben
         }
     }
 
@@ -5783,7 +5803,304 @@ public partial class MainWindow : Window
         }
     }
 
-   
+    /// DEVICE HOTKEYS
+    /// 
+
+    private readonly SemaphoreSlim _hotkeySeqGate = new(1, 1);
+
+    private GlobalHotkeyManager? _hotkeyMgr;
+    private readonly Dictionary<string, Dictionary<string, List<long>>> _hotkeysByServer
+     = new(StringComparer.OrdinalIgnoreCase);
+    private static string HotkeyConfigPath =>
+        System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                               "RustPlusDesk", "hotkeys.json");
+
+    private string CurrentServerKey()
+    {
+        var sel = _vm?.Selected;
+        if (sel == null) return "default";
+        // Beispiel: wenn dein Serverobjekt Host/Port hat:
+        return $"{sel.Host}:{sel.Port}";
+    }
+
+    private Dictionary<string, List<long>> MapForCurrentServer()
+    {
+        var key = CurrentServerKey();
+        if (!_hotkeysByServer.TryGetValue(key, out var map))
+            _hotkeysByServer[key] = map = new(StringComparer.OrdinalIgnoreCase);
+        return map;
+    }
+
+
+
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+
+        var hwnd = new WindowInteropHelper(this).Handle;
+        _hotkeyMgr = new GlobalHotkeyManager(hwnd);
+        _hotkeyMgr.HotkeyPressed += OnHotkeyPressed;
+
+        HwndSource.FromHwnd(hwnd)!.AddHook(WndProc);
+
+        LoadHotkeys();
+        ActivateHotkeysForCurrentServer();   // statt RegisterAllHotkeys()
+    }
+
+    private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        const int WM_HOTKEY = 0x0312;
+        if (msg == WM_HOTKEY && _hotkeyMgr != null)
+        {
+            _hotkeyMgr.OnWmHotkey(wParam, lParam);
+            handled = true;
+        }
+        return IntPtr.Zero;
+    }
+
+    private void LoadHotkeys()
+    {
+        try
+        {
+            var p = HotkeyConfigPath;
+            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(p)!);
+            _hotkeysByServer.Clear();
+            if (!System.IO.File.Exists(p)) return;
+
+            var json = System.IO.File.ReadAllText(p);
+
+            // NEUE Struktur: { "host:port": { "Ctrl+Alt+K": [123,456] } }
+            try
+            {
+                var v = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<long>>>>(json);
+                if (v != null && v.Count > 0) { foreach (var kv in v) _hotkeysByServer[kv.Key] = kv.Value; return; }
+            }
+            catch { /* fall through */ }
+
+            // ALTE Struktur: { "Ctrl+Alt+K": [123,456] } -> nach "default" migrieren
+            try
+            {
+                var old = JsonSerializer.Deserialize<Dictionary<string, List<long>>>(json);
+                if (old != null) _hotkeysByServer["default"] = new(old, StringComparer.OrdinalIgnoreCase);
+            }
+            catch { }
+        }
+        catch (Exception ex) { AppendLog("Hotkeys load error: " + ex.Message); }
+    }
+
+    private void SaveHotkeys()
+    {
+        try
+        {
+            // ⬇︎ NEU
+            PruneEmptyGesturesAllServers();
+
+            var json = JsonSerializer.Serialize(_hotkeysByServer,
+                        new JsonSerializerOptions { WriteIndented = true });
+            System.IO.File.WriteAllText(HotkeyConfigPath, json);
+        }
+        catch (Exception ex) { AppendLog("Hotkeys save error: " + ex.Message); }
+    }
+
+    private void PruneEmptyGesturesForCurrentServer()
+    {
+        var map = MapForCurrentServer();
+        foreach (var key in map.Where(kv => kv.Value == null || kv.Value.Count == 0)
+                               .Select(kv => kv.Key).ToList())
+            map.Remove(key);
+    }
+
+ 
+
+    private void PruneEmptyGesturesAllServers()
+    {
+        foreach (var srv in _hotkeysByServer.Keys.ToList())
+        {
+            var map = _hotkeysByServer[srv];
+            foreach (var key in map.Where(kv => kv.Value == null || kv.Value.Count == 0)
+                                   .Select(kv => kv.Key).ToList())
+                map.Remove(key);
+        }
+    }
+
+    private void RegisterAllHotkeys()
+    {
+        if (_hotkeyMgr == null) return;
+
+        // ⬇︎ NEU: leere Keys entfernen (verhindert „blockierte“ Gesten)
+        PruneEmptyGesturesForCurrentServer();
+
+        _hotkeyMgr.UnregisterAll();
+        foreach (var gesture in MapForCurrentServer().Keys)
+        {
+            if (!_hotkeyMgr.Register(gesture))
+                AppendLog($"⚠️ Cannot register hotkey '{gesture}'.");
+        }
+    }
+
+    private DateTime _lastHotkeyAt = DateTime.MinValue;
+    private bool HotkeyThrottle(int ms = 400)
+    {
+        var now = DateTime.UtcNow;
+        if ((now - _lastHotkeyAt).TotalMilliseconds < ms) return true;
+        _lastHotkeyAt = now;
+        return false;
+    }
+
+
+
+    private readonly Dictionary<string, DateTime> _lastGestureAt = new(StringComparer.OrdinalIgnoreCase);
+
+
+    private void OnHotkeyPressed(string gesture)
+    {
+        // kleiner Debounce pro Geste (falls OS NOREPEAT ignoriert)
+        var now = DateTime.UtcNow;
+        if (_lastGestureAt.TryGetValue(gesture, out var last) &&
+            (now - last).TotalMilliseconds < 350)
+            return;
+        _lastGestureAt[gesture] = now;
+
+        var map = MapForCurrentServer();
+        if (!map.TryGetValue(gesture, out var ids) || ids.Count == 0) return;
+
+        _ = RunHotkeySequenceOnceAsync(ids);
+    }
+
+    private async Task RunHotkeySequenceOnceAsync(IReadOnlyCollection<long> ids)
+    {
+        if (!await _hotkeySeqGate.WaitAsync(0)) // schon eine Sequenz aktiv?
+        {
+            AppendLog("Hotkey sequence already running – ignored.");
+            return;
+        }
+        try
+        {
+            await ToggleSequenceAsync(ids.Distinct().ToList()); // doppelte IDs vermeiden
+        }
+        finally
+        {
+            _hotkeySeqGate.Release();
+        }
+    }
+
+    private SmartDevice? FindDevice(long entityId)
+    {
+        // 1) Versuche aus dem DataContext (VM)
+        var enumerable = (DataContext as dynamic)?.CurrentDevices as IEnumerable
+                         ?? ListDevices.ItemsSource as IEnumerable; // 2) Fallback: direkt aus der ListBox
+        if (enumerable == null) return null;
+
+        foreach (var obj in enumerable)
+            if (obj is SmartDevice sd && sd.EntityId == entityId)
+                return sd;
+
+        return null;
+    }
+
+    private async Task ToggleSequenceAsync(IEnumerable<long> entityIds)
+    {
+        foreach (var id in entityIds)
+        {
+            var dev = FindDevice(id);
+            if (dev == null) continue;
+            if (!string.Equals(dev.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase)) continue;
+            if (dev.IsMissing) continue;
+
+            bool current = dev.IsOn ?? false;
+            bool desired = !current; // „wie Klick” → invertieren
+
+            var fakeSender = new System.Windows.FrameworkElement { DataContext = dev };
+            await HandleDeviceToggleAsync(fakeSender, desired);
+
+            await Task.Delay(650); // etwas Luft zwischen Requests
+            if (_rust == null) break; // Verbindung weg? Abbrechen
+        }
+    }
+
+    private readonly HashSet<long> _toggleBusy = new();
+    private readonly object _toggleBusyLock = new();
+
+    private bool TryMarkToggleBusy(long id)
+    {
+        lock (_toggleBusyLock)
+        {
+            if (_toggleBusy.Contains(id)) return false;
+            _toggleBusy.Add(id);
+            return true;
+        }
+    }
+    private void UnmarkToggleBusy(long id)
+    {
+        lock (_toggleBusyLock) _toggleBusy.Remove(id);
+    }
+
+    private void BtnHotkeys_Click(object sender, RoutedEventArgs e)
+    {
+        // 1) während des Editierens immer pausieren
+        DeactivateHotkeys();
+
+        IEnumerable? src = (ListDevices.ItemsSource as IEnumerable) ?? (DataContext as IEnumerable);
+        if (src == null) { MessageBox.Show("No devices."); return; }
+        var smartDevices = src.OfType<SmartDevice>();
+
+        // 2) Dialog öffnen
+        var dlg = new HotkeysWindow(smartDevices, MapForCurrentServer()) { Owner = this };
+        bool? activate = dlg.ShowDialog();       // true = Activate, false/null = Deactivate
+
+        // 3) Änderungen speichern
+        SaveHotkeys();
+
+        // 4) je nach Wahl aktivieren/deaktivieren
+        if (activate == true) ActivateHotkeysForCurrentServer();
+        else DeactivateHotkeys();
+    }
+
+    private bool _hotkeysActive;
+
+    private void UpdateHotkeyButtonUi()
+    {
+        if (BtnHotkeys == null) return;
+
+        if (_hotkeysActive)
+        {
+            BtnHotkeys.Content = "Hotkeys active";
+            BtnHotkeys.Background = new SolidColorBrush(Color.FromRgb(255, 204, 0));   // gelb
+            BtnHotkeys.BorderBrush = new SolidColorBrush(Color.FromRgb(255, 224, 64));
+            BtnHotkeys.Foreground = Brushes.Black;
+        }
+        else
+        {
+            BtnHotkeys.Content = "Hotkeys";
+            BtnHotkeys.ClearValue(Button.BackgroundProperty);
+            BtnHotkeys.ClearValue(Button.BorderBrushProperty);
+            BtnHotkeys.ClearValue(Button.ForegroundProperty);
+        }
+    }
+
+    private void DeactivateHotkeys()
+    {
+        _hotkeyMgr?.UnregisterAll();
+        _hotkeysActive = false;
+        UpdateHotkeyButtonUi();
+    }
+
+    // pruned-Register + Flag setzen
+    private void ActivateHotkeysForCurrentServer()
+    {
+        if (_hotkeyMgr == null) return;
+
+        PruneEmptyGesturesForCurrentServer();
+
+        _hotkeyMgr.UnregisterAll();
+        var map = MapForCurrentServer();
+        bool any = false;
+        foreach (var gesture in map.Keys)
+            any |= _hotkeyMgr.Register(gesture);
+
+        _hotkeysActive = any;
+        UpdateHotkeyButtonUi();
+    }
 
 
 }
