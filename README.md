@@ -44,7 +44,8 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 *(We publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
 
-## Update Notes 2.0.4 (October 6th 25)
+## Update Notes 2.0.5 (October 6th 25)
+- Global Device Hotkeys are here! Assign one key to multiple devices to group them together.
 - new Update Button (Bug: reads current version as 0.0.0 so it will always find an update - will be fixed in the future)
 - new Pairing possibility through Edge Browser + better Logs
 - Mini Map Overlay for ingame use
