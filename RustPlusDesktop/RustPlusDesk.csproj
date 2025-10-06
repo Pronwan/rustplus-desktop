@@ -16,10 +16,11 @@
 		<Version>2.0.4</Version>
 
 		<!-- EXE-Eigenschaften im Windows-Dateidialog -->
-		<AssemblyVersion>2.0.4.0</AssemblyVersion>
-		<FileVersion>2.0.4.0</FileVersion>
+		<AssemblyVersion>2.0.4</AssemblyVersion>
+		<FileVersion>2.0.4</FileVersion>
 		<InformationalVersion>2.0.4</InformationalVersion>
-
+		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
 		<AssemblyTitle>RustPlusDesk</AssemblyTitle>
 		<Product>RustPlusDesk</Product>
