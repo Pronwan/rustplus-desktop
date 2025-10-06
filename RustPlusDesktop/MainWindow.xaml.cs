@@ -871,10 +871,14 @@ public partial class MainWindow : Window
         public static string VersionRaw =>
             Assembly.GetExecutingAssembly()
                     .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
-            ?? Assembly.GetExecutingAssembly().GetName().Version?.ToString(3)
+            ?? FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion
+            ?? Assembly.GetExecutingAssembly().GetName().Version?.ToString()      // 4-teilig
             ?? "0.0.0";
 
         public static string VersionShort => Normalize(VersionRaw);
+
+        public static Version VersionForCompare =>
+            Version.TryParse(VersionShort, out var v) ? v : new Version(0, 0, 0);
 
         private static string Normalize(string s)
         {
@@ -5710,7 +5714,7 @@ public partial class MainWindow : Window
             _vm.IsBusy = true;
             _vm.BusyText = "Checking GitHub release …";
 
-            var curr = GetCurrentVersion();
+            var curr = AppInfo.VersionForCompare;
             var latestInfo = await GetLatestReleaseAsync();
             if (latestInfo is null)
             {
@@ -5722,7 +5726,7 @@ public partial class MainWindow : Window
             }
 
             var (latest, tag, dlUrl) = latestInfo.Value;
-            AppendLog($"Current: {curr} | Latest: {latest} ({tag})");
+            AppendLog($"Current: {AppInfo.VersionShort} | Latest: {latest} ({tag})");
 
             if (latest <= curr)
             {
