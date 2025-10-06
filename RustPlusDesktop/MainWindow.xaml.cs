@@ -13,6 +13,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -76,13 +77,13 @@ public partial class MainWindow : Window
     // CROSSHAIR
     private CrosshairWindow? _overlay;
     private CrosshairStyle _currentStyle = CrosshairStyle.GreenDot;
-   
+
     private bool _visible;
     // CAMERA TAB
 
     // Camera thumbs: Throttling & "in-flight"-Wächter
     internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCase);
-    
+
     private void BtnOpenCamera_Click(object sender, RoutedEventArgs e)
     {
         if (_rust is not RustPlusClientReal real) return;
@@ -130,7 +131,7 @@ public partial class MainWindow : Window
     // Wie „nah“ die Mini-Map um den Spieler herum zuschneidet (Anteil der Hauptkarte)
     private const double MINI_VIEW_FRACTION = 0.30; // 40% des sichtbaren Bereichs
 
-   //>>
+    //>>
     private void CenterMiniMapOnPlayer()
     {
         if (_miniMap == null || !_miniMap.IsVisible) return;
@@ -189,7 +190,7 @@ public partial class MainWindow : Window
                 Left = SystemParameters.WorkArea.Right - 280,
                 Top = SystemParameters.WorkArea.Top + 20
             };
-            
+
             _miniMap.Show();
             CenterMiniMapOnPlayer();
 
@@ -324,7 +325,7 @@ public partial class MainWindow : Window
                 img.Source = bi;
                 if (status != null) status.Text = (frame.Width > 0 && frame.Height > 0) ? $"{frame.Width}×{frame.Height}" : "snapshot";
             }
-           else
+            else
             {
                 if (status != null) status.Text = "no frame";
             }
@@ -337,7 +338,7 @@ public partial class MainWindow : Window
         finally
         {
             System.Threading.Interlocked.Exchange(ref _camThumbBusy, 0);
-       }
+        }
 
         static Image? FindDescImage(FrameworkElement root)
         {
@@ -423,11 +424,11 @@ public partial class MainWindow : Window
     }
     private System.Windows.Threading.DispatcherTimer? _teamTimer;
     public ObservableCollection<TeamMemberVM> TeamMembers { get; } = new();
-    
+
     private int _teamBusy = 0;
     //------------- TEAM UI --------------------------
     private bool _iAmLeader = false;
-    
+
     // optional: Avatar-Cache, damit wir nicht dauernd laden
     private readonly Dictionary<ulong, ImageSource> _avatarCache = new();
     // Zugriff auf die echte Client-Klasse
@@ -670,8 +671,8 @@ public partial class MainWindow : Window
                     TeamMembers.RemoveAt(i);
 
             // Log hilft bei der Rechteprüfung LEADER etc.
-          //  var iAmLeader = TeamMembers.Any(t => t.SteamId == _mySteamId && t.IsLeader);
-           // AppendLog($"[team] leader={leaderId} me={_mySteamId} -> iAmLeader={iAmLeader} members={TeamMembers.Count}");
+            //  var iAmLeader = TeamMembers.Any(t => t.SteamId == _mySteamId && t.IsLeader);
+            // AppendLog($"[team] leader={leaderId} me={_mySteamId} -> iAmLeader={iAmLeader} members={TeamMembers.Count}");
         }
         catch (Exception ex)
         {
@@ -731,61 +732,61 @@ public partial class MainWindow : Window
     });
 
 
-   private static ImageSource? BytesToImage(byte[] bytes)
-{
-    try
+    private static ImageSource? BytesToImage(byte[] bytes)
     {
-        var bi = new BitmapImage();
-        using var ms = new MemoryStream(bytes);
-        bi.BeginInit();
-        bi.CacheOption = BitmapCacheOption.OnLoad;
-        bi.StreamSource = ms;
-        bi.EndInit();
-        bi.Freeze();
-        return bi;
-    }
-    catch { return null; }
-}
-
-private static async Task<ImageSource?> FetchSteamAvatarAsync(ulong steamId)
-{
-    if (steamId == 0) return null;
-    try
-    {
-        using var http = new HttpClient();
-        // 1) Avatar-URL aus dem XML-Profil ziehen (braucht keinen API-Key)
-        var xml = await http.GetStringAsync($"https://steamcommunity.com/profiles/{steamId}?xml=1");
-        string url = "";
-        var mFull   = Regex.Match(xml, @"<avatarFull><!\[CDATA\[(.*?)\]\]></avatarFull>", RegexOptions.IgnoreCase);
-        var mMedium = Regex.Match(xml, @"<avatarMedium><!\[CDATA\[(.*?)\]\]></avatarMedium>", RegexOptions.IgnoreCase);
-        if (mFull.Success) url = mFull.Groups[1].Value;
-        else if (mMedium.Success) url = mMedium.Groups[1].Value;
-        if (string.IsNullOrWhiteSpace(url)) return null;
-
-        // 2) Bild laden
-        var bytes = await http.GetByteArrayAsync(url);
-        return BytesToImage(bytes);
-    }
-    catch { return null; }
-}
-
-private async Task LoadAvatarAsync(TeamMemberVM vm)
-{
-    try
-    {
-        if (vm.SteamId == 0 || vm.Avatar != null) return;
-
-        if (_avatarCache.TryGetValue(vm.SteamId, out var cached) && cached != null)
-        { vm.Avatar = cached; return; }
-
-        var img = await FetchSteamAvatarAsync(vm.SteamId);
-        if (img != null)
+        try
         {
-            _avatarCache[vm.SteamId] = img;
-            vm.Avatar = img;
+            var bi = new BitmapImage();
+            using var ms = new MemoryStream(bytes);
+            bi.BeginInit();
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.StreamSource = ms;
+            bi.EndInit();
+            bi.Freeze();
+            return bi;
         }
+        catch { return null; }
     }
-    catch (Exception ex)
+
+    private static async Task<ImageSource?> FetchSteamAvatarAsync(ulong steamId)
+    {
+        if (steamId == 0) return null;
+        try
+        {
+            using var http = new HttpClient();
+            // 1) Avatar-URL aus dem XML-Profil ziehen (braucht keinen API-Key)
+            var xml = await http.GetStringAsync($"https://steamcommunity.com/profiles/{steamId}?xml=1");
+            string url = "";
+            var mFull = Regex.Match(xml, @"<avatarFull><!\[CDATA\[(.*?)\]\]></avatarFull>", RegexOptions.IgnoreCase);
+            var mMedium = Regex.Match(xml, @"<avatarMedium><!\[CDATA\[(.*?)\]\]></avatarMedium>", RegexOptions.IgnoreCase);
+            if (mFull.Success) url = mFull.Groups[1].Value;
+            else if (mMedium.Success) url = mMedium.Groups[1].Value;
+            if (string.IsNullOrWhiteSpace(url)) return null;
+
+            // 2) Bild laden
+            var bytes = await http.GetByteArrayAsync(url);
+            return BytesToImage(bytes);
+        }
+        catch { return null; }
+    }
+
+    private async Task LoadAvatarAsync(TeamMemberVM vm)
+    {
+        try
+        {
+            if (vm.SteamId == 0 || vm.Avatar != null) return;
+
+            if (_avatarCache.TryGetValue(vm.SteamId, out var cached) && cached != null)
+            { vm.Avatar = cached; return; }
+
+            var img = await FetchSteamAvatarAsync(vm.SteamId);
+            if (img != null)
+            {
+                _avatarCache[vm.SteamId] = img;
+                vm.Avatar = img;
+            }
+        }
+        catch (Exception ex)
         {
             AppendLog($"[avatar] {vm.SteamId}: {ex.Message}");
         }
@@ -865,7 +866,25 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         try { await (_real as RustPlusClientReal)?.KickTeamMemberAsync(vm.SteamId); }
         catch (Exception ex) { AppendLog("[team] kick error: " + ex.Message); }
     }
+    public static class AppInfo
+    {
+        public static string VersionRaw =>
+            Assembly.GetExecutingAssembly()
+                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+            ?? Assembly.GetExecutingAssembly().GetName().Version?.ToString(3)
+            ?? "0.0.0";
 
+        public static string VersionShort => Normalize(VersionRaw);
+
+        private static string Normalize(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return "0.0.0";
+            s = s.Trim();
+            if (s.StartsWith("v", StringComparison.OrdinalIgnoreCase)) s = s[1..];
+            int cut = s.IndexOfAny(new[] { '-', '+' }); // "-rc1" oder "+commit"
+            return cut > 0 ? s[..cut] : s;
+        }
+    }
 
     private static string ChatKey(TeamChatMessage m)
         => $"{m.Timestamp.ToUniversalTime().Ticks}|{m.Author.Trim()}|{m.Text.Trim()}";
@@ -880,9 +899,12 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
     {
         // Nur freiwillig zum Diagnostizieren:
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-        
-        InitializeComponent();
 
+        InitializeComponent();
+        this.Title = $"RustPlusDesk v{AppInfo.VersionShort}";
+
+        if (FindName("TxtVersion") is TextBlock txt)
+            txt.Text = $"v{AppInfo.VersionShort}";
         InitCameraUi();
         _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
         AppendLog($"[items-new] baseDir={baseDir}");
@@ -892,12 +914,13 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         // Overlay.RenderTransform   = MapTransform;
         // bei Host-Resize: nur Markerpositionen neu berechnen
 
+
         WebViewHost.SizeChanged += (_, __) =>
         {
-         // FitMapToHost();
+            // FitMapToHost();
             // <<< NEU: Basis an neue Hostgröße anpassen
 
-           // UpdateMarkerPositions();
+            // UpdateMarkerPositions();
         };
         WebViewHost.MouseWheel += WebViewHost_MouseWheel;
         WebViewHost.MouseDown += WebViewHost_MouseDown;
@@ -1002,9 +1025,9 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
                 });
             };
         }
-       // AppendLog($"DEBUG: Selected={_vm.Selected?.Name ?? "(null)"}  Devices={_vm.Selected?.Devices?.Count.ToString() ?? "(null)"}");
+        // AppendLog($"DEBUG: Selected={_vm.Selected?.Name ?? "(null)"}  Devices={_vm.Selected?.Devices?.Count.ToString() ?? "(null)"}");
 
-        
+
         TxtSteamId.Text = string.IsNullOrEmpty(_vm.SteamId64) ? "(nicht angemeldet)" : _vm.SteamId64;
 
         this.Closing += MainWindow_Closing;
@@ -1015,7 +1038,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
 
     // CROSSHAIR \\
     private MonitorInfo? _selectedMonitor;
-    
+
     private void BtnCrosshair_Click(object sender, RoutedEventArgs e)
     {
         if (_visible)
@@ -1199,7 +1222,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
     private bool _showPlayers = true;                                      // controlled by ChkPlayers
                                                                            // Wie stark Icons die Zoom-Stufe kompensieren (je kleiner der Exponent, desto GRÖSSER beim Rauszoomen)
     private const double MON_SIZE_EXP = 0.5;  // Monumente: sehr präsent beim Rauszoomen
- 
+
 
     // Globale Grenzen, damit es nicht ausufert
     private const double ICON_SCALE_MIN = 0.6;  // kleiner als 60% nie
@@ -1644,7 +1667,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
     private List<(double X, double Y, string Name)> _monData = new();
 
     // Icon-Zuordnung (key = normalisierte Kennung)
-   
+
     private static readonly Dictionary<string, string> sMonIconByKeyRaw = new(StringComparer.OrdinalIgnoreCase)
 {
     // nur Beispiele – ergänze frei:
@@ -1779,8 +1802,8 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
              .Replace("launch site", "launchsite")
              .Replace("missile silo monument", "missile silo")
              .Replace("military tunnels display name", "military tunnel")
-             .Replace("oil rig small", "small oil rig");
-
+             .Replace("oil rig small", "small oil rig")
+            .Replace("module 900x900 2way moonpool", "Moon Pool");
 
         return s;
     }
@@ -2018,7 +2041,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         }
         catch { return false; }
     }
-   
+
 
     /// <summary>gibt einen schönen Anzeigenamen zurück (Shortname bevorzugt, sonst ID-Fallback)</summary>
     private static string ResolveItemName(int itemId, string? shortName)
@@ -2049,7 +2072,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         var right = $"{o.CurrencyAmount} {ResolveItemName(o.CurrencyItemId, o.CurrencyShortName)}";
         var stock = o.Stock > 0 ? $" (stock {o.Stock})" : "";
         var bp = o.IsBlueprint ? " [BP]" : "";
-       
+
         return $"{left} → {right}{stock}{bp}";
     }
 
@@ -2125,7 +2148,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
 
         return new Vector(
             dHost.X / s,
-            dHost.Y / s );
+            dHost.Y / s);
     }
     // erkennt "zusammengeklebte" Orders-Zeilen, die kein echter Shop-Name sind
     private static bool LooksLikeOrdersLabel(string? s)
@@ -2207,7 +2230,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         }
     }
 
-  
+
 
     private (string host, int port, ulong playerId, int playerToken, string? name) ParseRustPlusLink(string link)
     {
@@ -2355,6 +2378,53 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
             _listenerStarting = false;
         }
     }
+
+    // TRY PAIRING WITH EDGE METHOD (Right Click on Listener)
+
+    private async void BtnListenWithEdge_Click(object sender, RoutedEventArgs e)
+    {
+        if (_listenerStarting || _pairing.IsRunning) { AppendLog("Listener läuft bereits."); return; }
+        await StartPairingListenerUiWithEdgeAsync();
+    }
+
+    private async Task StartPairingListenerUiWithEdgeAsync()
+    {
+        if (_pairing.IsRunning)
+        {
+            _vm.IsBusy = false; _vm.BusyText = "";
+            TxtPairingState.Text = "Pairing: listening…";
+            AppendLog("Listener already running.");
+            return;
+        }
+        if (_listenerStarting) return;
+
+        try
+        {
+            _listenerStarting = true;
+            _vm.IsBusy = true;
+            _vm.BusyText = "Starting Pairing-Listener (Edge) …";
+
+            var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            EventHandler onListen = (_, __) => tcs.TrySetResult(true);
+            EventHandler<string> onFail = (_, __) => tcs.TrySetResult(false);
+
+            _pairing.Listening += onListen;
+            _pairing.Failed += onFail;
+
+            await _pairing.StartAsyncUsingEdge();   // <— NEU: eigene Methode (siehe unten)
+
+            var completed = await Task.WhenAny(tcs.Task, Task.Delay(8000));
+            bool ok = (completed == tcs.Task) && tcs.Task.Result;
+
+            _pairing.Listening -= onListen;
+            _pairing.Failed -= onFail;
+
+            _vm.IsBusy = false; _vm.BusyText = "";
+            if (ok) TxtPairingState.Text = "Pairing: listening…";
+        }
+        finally { _listenerStarting = false; }
+    }
+
 
     private void Real_Status(object? s, string st)
     {
@@ -2563,7 +2633,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never
     };
 
-    
+
     private async Task PollServerStatusLoopAsync(CancellationToken ct)
     {
         while (!ct.IsCancellationRequested)
@@ -2696,8 +2766,8 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
             // (6) Team-Polling starten
             StartTeamPolling();
             await LoadTeamAsync();
-           
-           
+
+
         }
         catch (Exception ex)
         {
@@ -2716,7 +2786,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
     // death pins per player
     private readonly Dictionary<ulong, FrameworkElement> _deathPins = new();
 
-   
+
 
 
     private async Task<bool> EnsureConnectedAsync()
@@ -3004,7 +3074,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
                 var r = await _rust.ProbeEntityAsync(d.EntityId);
 
                 d.Kind = r.Kind ?? d.Kind;
-                
+
                 d.IsMissing = !r.Exists;
                 if ((d.Kind ?? r.Kind)?.Equals("SmartAlarm", StringComparison.OrdinalIgnoreCase) == true)
                 {
@@ -3104,7 +3174,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
                         if (string.Equals(ex.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase))
                             ex.IsOn = false;
                         ex.IsMissing = s.IsMissing;
-                        ex.Alias = s.Alias;  
+                        ex.Alias = s.Alias;
                     }
                 }
 
@@ -3382,11 +3452,11 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         if (_worldSizeS <= 0) return false;
 
         // Off-Grid (Oilrig, Labs) markieren wir als “off-grid”
-     //   if (x < 0 || y < 0 || x > _worldSizeS || y > _worldSizeS)
-      //  {
-      //      label = "off-grid";
-      //      return false;
-      //  }
+        //   if (x < 0 || y < 0 || x > _worldSizeS || y > _worldSizeS)
+        //  {
+        //      label = "off-grid";
+        //      return false;
+        //  }
 
         // Anzahl Zellen entlang einer Kante – so zeichnest du auch das Grid
         int cells = Math.Max(1, (int)Math.Round(_worldSizeS / 150.0));
@@ -3402,7 +3472,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
     private string GetGridLabel(RustPlusClientReal.ShopMarker s)
         => TryGetGridRef(s.X, s.Y, out var g) ? g : "off-grid";
 
-    private static string FormatItemName(int id) => /* deine vorhandene Map-Funktion */ ResolveItemName(id,null);
+    private static string FormatItemName(int id) => /* deine vorhandene Map-Funktion */ ResolveItemName(id, null);
     private static ImageSource? ResolveItemIcon(int itemId, string? shortName, int decodePx = 32)
     {
         EnsureNewItemDbLoaded();
@@ -3499,16 +3569,16 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
     }
     private Point _panLastHost;
     private Point _lastHost;
-   private void WebViewHost_MouseDown(object? sender, MouseButtonEventArgs e)
-{
-    if (e.ChangedButton == MouseButton.Middle || e.ChangedButton == MouseButton.Right)
+    private void WebViewHost_MouseDown(object? sender, MouseButtonEventArgs e)
     {
-        _isPanning = true;
-        _panLastHost = e.GetPosition(WebViewHost);
-        WebViewHost.CaptureMouse();
-        e.Handled = true;
+        if (e.ChangedButton == MouseButton.Middle || e.ChangedButton == MouseButton.Right)
+        {
+            _isPanning = true;
+            _panLastHost = e.GetPosition(WebViewHost);
+            WebViewHost.CaptureMouse();
+            e.Handled = true;
+        }
     }
-}
     private Point _panLastWorld; // Maus in "Welt"/Scene-Koordinaten (vor der Transform)
     private void WebViewHost_MouseMove(object? sender, MouseEventArgs e)
     {
@@ -3560,7 +3630,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
             fe.Tag = m;
 
             Overlay.Children.Add(fe);
-            Panel.SetZIndex(fe, 500); // unter Dyn-Events (900), aber über Map
+            Panel.SetZIndex(fe, 800); // unter Dyn-Events (900), aber über Map
             _monEls[key + "@" + p.X.ToString("0") + "," + p.Y.ToString("0")] = fe;
 
             ApplyCurrentOverlayScale(fe);
@@ -3581,7 +3651,8 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
                 ApplyMonumentScale(fe);
                 Canvas.SetLeft(fe, p.X - fe.RenderSize.Width / 2);
                 Canvas.SetTop(fe, p.Y - fe.RenderSize.Height / 2);
-                
+                Panel.SetZIndex(fe, 800);
+
             }
             else if (fe.Tag != null)
             {
@@ -3591,7 +3662,8 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
                 ApplyCurrentOverlayScale(fe);
                 Canvas.SetLeft(fe, p.X - 14);
                 Canvas.SetTop(fe, p.Y - 14);
-                
+                Panel.SetZIndex(fe, 800);
+
             }
         }
     }
@@ -3639,7 +3711,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         _mapView.Child = _scene;
 
         // WICHTIG: Transform NUR am gemeinsamen Parent
-       
+
 
         // NICHT mehr:
         // ImgMap.RenderTransform = ...
@@ -3668,7 +3740,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         return token.Replace(".prefab", "").Replace('_', ' ');
     }
 
-   
+
 
     // From worldSize and image size compute the centered playable square in IMAGE PIXELS.
     // The "2000" is the UI canvas padding used by Rust's own Map code (1000 per side).
@@ -3730,7 +3802,8 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         };
 
         Overlay.MouseMove += Overlay_MouseMove_ShowMultiShopCards;
-        Overlay.MouseLeave += (_, __) => {
+        Overlay.MouseLeave += (_, __) =>
+        {
             if (_shopsHoverPopup != null) _shopsHoverPopup.IsOpen = false;
             EnableSingleShopTooltips(true);
         };
@@ -3842,12 +3915,12 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
 
             // Layer-Größen & gleiche Transform wie Bild
             Overlay.Width = ImgMap.Width;
-           Overlay.Height = ImgMap.Height;
-           GridLayer.Width = ImgMap.Width;
-           GridLayer.Height = ImgMap.Height;
-          //  _scene.RenderTransform = MapTransform;
+            Overlay.Height = ImgMap.Height;
+            GridLayer.Width = ImgMap.Width;
+            GridLayer.Height = ImgMap.Height;
+            //  _scene.RenderTransform = MapTransform;
             //Overlay.RenderTransform = MapTransform;
-           // GridLayer.RenderTransform = MapTransform;
+            // GridLayer.RenderTransform = MapTransform;
 
             // Grid initial zeichnen, je nach Checkbox
             RedrawGrid();
@@ -3867,7 +3940,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
             // 3) Monuments (no heuristics, no trimming)
             var mons = map.Monuments.Where(m => !string.IsNullOrWhiteSpace(m.Name)).ToList();
 
-           // _staticMarkers.Clear();
+            // _staticMarkers.Clear();
 
             foreach (var m in mons)
             {
@@ -3889,11 +3962,11 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
                     if (m.Y < 0) v += nudge; else if (m.Y > S) v -= nudge;
                 }
 
-              //  _staticMarkers.Add((u, v, Beautify(m.Name)));
+                //  _staticMarkers.Add((u, v, Beautify(m.Name)));
             }
 
             // 4) Einmal rendern
-           // ImgMap.Source = ComposeMapWithMarkers(_mapBaseBmp!);
+            // ImgMap.Source = ComposeMapWithMarkers(_mapBaseBmp!);
         });
     }
 
@@ -4009,7 +4082,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
             if (list.Count > 0)
             {
                 var d0 = list[0];
-               // AppendLog($"dyn[0]: type={d0.Type} kind={d0.Kind} xy=({d0.X:0},{d0.Y:0}) label={d0.Label ?? "-"}");
+                // AppendLog($"dyn[0]: type={d0.Type} kind={d0.Kind} xy=({d0.X:0},{d0.Y:0}) label={d0.Label ?? "-"}");
                 // Verteilung
                 var cPlayers = list.Count(m => m.Type == 1);
                 var cCargo = list.Count(m => m.Type == 5);
@@ -4099,7 +4172,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
                 Fill = Brushes.Orange,
                 Stroke = Brushes.Black,
                 StrokeThickness = 1.5,
-                
+
             };
             ToolTipService.SetToolTip(dot, tooltip);
             return dot;
@@ -4116,7 +4189,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
                 Stroke = Brushes.Black,
                 StrokeThickness = 2,
                 Margin = new Thickness(0, 0, 4, 0),
-                
+
             };
             ToolTipService.SetToolTip(dot, tooltip);
             return dot;
@@ -4188,7 +4261,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
 
                         _dynEls[key] = el;
                         Overlay.Children.Add(el);
-                        Panel.SetZIndex(el, 900);
+                        Panel.SetZIndex(el, 950);
                         ApplyCurrentOverlayScale(el);
                     }
                     else
@@ -4214,7 +4287,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
 
                         _dynEls[key] = host;
                         Overlay.Children.Add(host);
-                        Panel.SetZIndex(host, 900);
+                        Panel.SetZIndex(host, 920);
                         ApplyCurrentOverlayScale(host);
 
                         // einmaliges Spawn-Announcement
@@ -4341,7 +4414,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
             Stroke = Brushes.Black,
             StrokeThickness = 2,
             Margin = new Thickness(0, 0, 4, 0),
-            
+
         };
 
         var tb = new TextBlock
@@ -4408,6 +4481,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
                 ScaleExp = 1.05,
                 ScaleBaseMult = 1.0
             };
+            Panel.SetZIndex(sp, 905);
             ApplyCurrentOverlayScale(sp);
             return sp;
         }
@@ -4446,10 +4520,12 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
                 ScaleTarget = host,              // << beide (Avatar + Name) skalieren
                 ScaleCenterX = PlayerAvatarSize * 0.5, // << Zentrum des Avatars (links)
                 ScaleCenterY = PlayerAvatarSize * 0.5,
-                
+
             };
+            Panel.SetZIndex(host, 905);
             ToolTipService.SetToolTip(host, name);
             ApplyCurrentOverlayScale(host);
+
             return host;
         }
     }
@@ -4474,9 +4550,10 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
             Stroke = Brushes.Black,
             StrokeThickness = 2,
             Margin = new Thickness(0, 0, 4, 0),
-            
+
         };
         ToolTipService.SetToolTip(dot, tooltip);
+        Panel.SetZIndex(dot, 905);
         return dot;
     }
 
@@ -4497,6 +4574,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
                 if (idx >= 0) { Overlay.Children.RemoveAt(idx); Overlay.Children.Insert(idx, newEl); }
                 else Overlay.Children.Add(newEl);
                 _dynEls[key] = newEl; el = newEl;
+                Panel.SetZIndex(newEl, 905);
             }
             else
             {
@@ -4508,6 +4586,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
                 if (t.NameText.Parent is Panel sp)
                 {
                     var dot = sp.Children.OfType<Ellipse>().FirstOrDefault();
+                    Panel.SetZIndex(dot, 905);
                     if (dot != null) dot.Fill = brush;
                 }
             }
@@ -4610,7 +4689,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         {
             Width = PinW,
             Height = PinH,
-            
+
             Tag = new PlayerMarkerTag
             {
                 SteamId = sid,
@@ -4698,7 +4777,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         }
 
         Overlay.Children.Add(el);
-        Panel.SetZIndex(el, 901); // über Events, unter Namen
+        Panel.SetZIndex(el, 805); // über Events, unter Namen
         ApplyCurrentOverlayScale(el);
 
         // Pinspitze auf Position
@@ -4720,7 +4799,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
             el = BuildDeathPin(sid, name);
             _deathPins[sid] = el;
             Overlay.Children.Add(el);
-            Panel.SetZIndex(el, 901);
+            Panel.SetZIndex(el, 805);
             ApplyCurrentOverlayScale(el);
         }
 
@@ -4922,8 +5001,8 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         }
     }
 
-   
-   
+
+
 
     private void StopShopPolling()
     {
@@ -4939,7 +5018,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         _shopEls.Clear();
     }
 
-   
+
 
     private void UpdateShopsUI(IReadOnlyList<RustPlusClientReal.ShopMarker> shops)
     {
@@ -4960,17 +5039,17 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
                 //  { 
                 var icon = MakeIcon("pack://application:,,,/icons/vending.png", 18);
                 //    Width = 10,
-                 //   Height = 10,
+                //   Height = 10,
                 //    Fill = Brushes.OrangeRed,
                 //    Stroke = Brushes.White,
                 //    StrokeThickness = 2,
                 //    Margin = new Thickness(0, 0, 4, 0)
-              //  };
+                //  };
 
                 var txt = new TextBlock
                 {
-                   // Text = string.IsNullOrWhiteSpace(s.Label) ? "(shop)" : s.Label,
-                   Text = "",
+                    // Text = string.IsNullOrWhiteSpace(s.Label) ? "(shop)" : s.Label,
+                    Text = "",
                     Foreground = Brushes.White,
                     FontSize = 12,
                     Margin = new Thickness(6, -2, 0, 0)
@@ -4979,7 +5058,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
                 var sp = new StackPanel { Orientation = Orientation.Horizontal, Tag = s, Cursor = Cursors.Hand };
                 sp.Children.Add(icon);
                 sp.Children.Add(txt);
-               
+
                 // Tooltip mit Angeboten
                 sp.ToolTip = BuildShopTooltip(s);
 
@@ -4988,7 +5067,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
 
                 _shopEls[s.Id] = sp;
                 Overlay.Children.Add(sp);
-                Panel.SetZIndex(sp, 1000);
+                Panel.SetZIndex(sp, 850);
                 el = sp;
                 _shopIconSet.Add(sp);
                 ApplyCurrentOverlayScale(el);
@@ -5027,7 +5106,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
 
     private object BuildShopTooltip(RustPlusClientReal.ShopMarker s)
     {
-       
+
         // Container (dunkel, rund, Shadow)
         var card = new Border
         {
@@ -5202,7 +5281,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
 
             if (offers.Count == 0) continue;
 
-            _searchList.Items.Add(BuildShopSearchCard(s, offers, compact:false));
+            _searchList.Items.Add(BuildShopSearchCard(s, offers, compact: false));
         }
     }
 
@@ -5253,7 +5332,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         border.MouseLeftButtonUp += (_, __) =>
         {
             CenterMapOnWorld(shop.X, shop.Y);   // ← hier wird zentriert
-           // __?.Handled = true;
+                                                // __?.Handled = true;
         };
 
         return border;
@@ -5361,7 +5440,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
             Fill = color ?? Brushes.OrangeRed,
             Stroke = Brushes.White,
             StrokeThickness = 2,
-            
+
             RenderTransformOrigin = new Point(0.5, 0.5)
         };
 
@@ -5384,7 +5463,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
             Fill = color ?? Brushes.OrangeRed,
             Stroke = Brushes.White,
             StrokeThickness = 2,
-            
+
             ToolTip = string.IsNullOrWhiteSpace(label) ? null : label
         };
         Canvas.SetLeft(dot, uDip - r);
@@ -5392,7 +5471,7 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
         Overlay.Children.Add(dot);
         // NEU: im Registry merken + gleich korrekt positionieren
         _markers.Add(new MarkerRef(dot, uDip, vDip, r));
-       // UpdateMarkerPositions();
+        // UpdateMarkerPositions();
     }
 
     private void RescaleMarkersForCurrentZoom() // optional – nur für konstante Markergröße
@@ -5402,8 +5481,306 @@ private async Task LoadAvatarAsync(TeamMemberVM vm)
             el.RenderTransform = new ScaleTransform(k, k, el.Width / 2.0, el.Height / 2.0);
     }
 
+    // NEW CLICK HANDLERS TO DELETE JSON CONFIG
+
+    private static string PairingConfigPath =>
+    System.IO.Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "RustPlusDesk", "rustplusjs-config.json");
+
+    private async Task<bool> ResetPairingConfigAsync(bool stopListenerFirst = true)
+    {
+        try
+        {
+            if (stopListenerFirst && _pairing.IsRunning)
+            {
+                AppendLog("Stopping pairing listener …");
+                await _pairing.StopAsync();
+                await Task.Delay(200); // kleine Atempause
+            }
+
+            if (File.Exists(PairingConfigPath))
+            {
+                File.Delete(PairingConfigPath);
+                AppendLog($"🗑️ Deleted pairing config: {PairingConfigPath}");
+                TxtPairingState.Text = "Pairing: config deleted";
+                return true;
+            }
+            else
+            {
+                AppendLog("ℹ️ No pairing config found to delete.");
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("❌ Failed to delete pairing config: " + ex.Message);
+            return false;
+        }
+    }
+
+    private async void BtnResetPairing_Click(object sender, RoutedEventArgs e)
+    {
+        var ask = MessageBox.Show(
+            "Delete existing pairing config?\nYou will need to pair again on next start.",
+            "Reset pairing", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+        if (ask != MessageBoxResult.Yes) return;
+
+        await ResetPairingConfigAsync(stopListenerFirst: true);
+    }
+
+    private async void BtnResetAndListen_Click(object sender, RoutedEventArgs e)
+    {
+        var ask = MessageBox.Show(
+            "Delete pairing config and immediately re-pair/listen?",
+            "Reset + Listen", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+        if (ask != MessageBoxResult.Yes) return;
+
+        if (await ResetPairingConfigAsync(stopListenerFirst: true))
+            await StartPairingListenerUiAsync(); // dein bestehender Standard-Flow
+    }
+
+    private async void BtnResetAndListenEdge_Click(object sender, RoutedEventArgs e)
+    {
+        var ask = MessageBox.Show(
+            "Delete pairing config and immediately re-pair/listen using Edge?",
+            "Reset + Listen (Edge)", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+        if (ask != MessageBoxResult.Yes) return;
+
+        if (await ResetPairingConfigAsync(stopListenerFirst: true))
+            await StartPairingListenerUiWithEdgeAsync(); // der Edge-Flow aus voriger Antwort
+    }
+
     private CancellationTokenSource? _statusCts;
+
+
+    // CHECK FOR UPDATES
+
+    // --- Konfiguration ---
+    private const string RepoOwner = "Pronwan";
+    private const string RepoName = "rustplus-desktop";
+    private const string InstallerAssetName = "RustPlusDesk-Setup.exe";
+
+    // aktuelle App-Version ermitteln (fallback auf 0.0.0 wenn nicht gesetzt)
+    private static Version GetCurrentVersion()
+    {
+        try
+        {
+            // zuerst Produktversion aus Datei
+            var fvi = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+            if (!string.IsNullOrWhiteSpace(fvi.ProductVersion) && Version.TryParse(NormalizeVer(fvi.ProductVersion), out var v1))
+                return v1;
+
+            // dann AssemblyVersion
+            var v2 = Assembly.GetExecutingAssembly().GetName().Version;
+            if (v2 != null) return v2;
+
+            return new Version(0, 0, 0);
+        }
+        catch { return new Version(0, 0, 0); }
+    }
+
+    private static string NormalizeVer(string s)
+    {
+        // entfernt leading 'v' und schneidet evtl. Suffixe (z.B. "-beta") ab
+        if (string.IsNullOrWhiteSpace(s)) return "0.0.0";
+        s = s.Trim();
+        if (s.StartsWith("v", StringComparison.OrdinalIgnoreCase)) s = s[1..];
+        // „1.2.3-beta+build“ -> „1.2.3“
+        int dash = s.IndexOfAny(new[] { '-', '+' });
+        if (dash > 0) s = s[..dash];
+        return s;
+    }
+
+    private sealed record GitHubRelease(string TagName, string? Name, string? Body, List<GitHubAsset> Assets);
+    private sealed record GitHubAsset(string Name, string BrowserDownloadUrl);
+
+    private async Task<(Version latest, string tag, string? downloadUrl)?> GetLatestReleaseAsync()
+    {
+        using var http = new HttpClient();
+        http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("RustPlusDesk", GetCurrentVersion().ToString()));
+        http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
+        http.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
+
+        var url = $"https://api.github.com/repos/{RepoOwner}/{RepoName}/releases/latest";
+        using var resp = await http.GetAsync(url);
+        if (!resp.IsSuccessStatusCode)
+        {
+            AppendLog($"❌ GitHub API error: {(int)resp.StatusCode} {resp.ReasonPhrase}");
+            return null;
+        }
+
+        using var stream = await resp.Content.ReadAsStreamAsync();
+        using var doc = await JsonDocument.ParseAsync(stream);
+        var root = doc.RootElement;
+
+        var tag = root.GetProperty("tag_name").GetString() ?? "";
+        var assets = root.GetProperty("assets").EnumerateArray();
+
+        string? dl = null;
+        foreach (var a in assets)
+        {
+            var name = a.GetProperty("name").GetString() ?? "";
+            if (string.Equals(name, InstallerAssetName, StringComparison.OrdinalIgnoreCase))
+            {
+                dl = a.GetProperty("browser_download_url").GetString();
+                break;
+            }
+        }
+
+        var v = NormalizeVer(tag);
+        if (!Version.TryParse(v, out var latest))
+        {
+            AppendLog($"⚠️ Could not parse version from tag “{tag}”.");
+            return null;
+        }
+        return (latest, tag, dl);
+    }
+
+    private async Task<string?> DownloadInstallerAsync(string url, IProgress<double>? progress = null)
+    {
+        var target = System.IO.Path.Combine(System.IO.Path.GetTempPath(), InstallerAssetName);
+        try
+        {
+            using var http = new HttpClient();
+            http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("RustPlusDesk", GetCurrentVersion().ToString()));
+
+            using var resp = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+            resp.EnsureSuccessStatusCode();
+
+            var total = resp.Content.Headers.ContentLength;
+            using var input = await resp.Content.ReadAsStreamAsync();
+            using var file = new FileStream(target, FileMode.Create, FileAccess.Write, FileShare.None);
+
+            var buffer = new byte[81920];
+            long readTotal = 0;
+            int read;
+            while ((read = await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
+            {
+                await file.WriteAsync(buffer, 0, read);
+                readTotal += read;
+                if (total.HasValue) progress?.Report(readTotal / (double)total.Value);
+            }
+            return target;
+        }
+        catch (Exception ex)
+        {
+            AppendLog("❌ Download failed: " + ex.Message);
+            return null;
+        }
+    }
+
+    private async Task<bool> StartInstallerAndExitAsync(string installerPath)
+    {
+        try
+        {
+            AppendLog("Starting installer …");
+            var psi = new ProcessStartInfo
+            {
+                FileName = installerPath,
+                UseShellExecute = true,
+                Verb = "runas" // UAC prompt, falls nötig
+            };
+            Process.Start(psi);
+
+            // optional: Listener ordentlich stoppen
+            try { if (_pairing?.IsRunning == true) await _pairing.StopAsync(); } catch { }
+
+            // kleines Delay, dann App schließen
+            await Task.Delay(500);
+            System.Windows.Application.Current.Shutdown();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            AppendLog("❌ Could not start installer: " + ex.Message);
+            return false;
+        }
+    }
+
+    private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
+    {
+        if (_listenerStarting) return;
+
+        try
+        {
+            _vm.IsBusy = true;
+            _vm.BusyText = "Checking GitHub release …";
+
+            var curr = GetCurrentVersion();
+            var latestInfo = await GetLatestReleaseAsync();
+            if (latestInfo is null)
+            {
+                _vm.IsBusy = false; _vm.BusyText = "";
+                System.Windows.MessageBox.Show(
+                    "Could not query latest release. Please try again or open Releases page.",
+                    "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var (latest, tag, dlUrl) = latestInfo.Value;
+            AppendLog($"Current: {curr} | Latest: {latest} ({tag})");
+
+            if (latest <= curr)
+            {
+                _vm.IsBusy = false; _vm.BusyText = "";
+                System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            // neuere Version vorhanden
+            if (string.IsNullOrWhiteSpace(dlUrl))
+            {
+                _vm.IsBusy = false; _vm.BusyText = "";
+                var open = System.Windows.MessageBox.Show(
+                    $"New version available: {tag}\nOpen Releases page?",
+                    "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (open == MessageBoxResult.Yes)
+                    Process.Start(new ProcessStartInfo($"https://github.com/{RepoOwner}/{RepoName}/releases/latest") { UseShellExecute = true });
+                return;
+            }
+
+            var ask = System.Windows.MessageBox.Show(
+                $"New version available: {tag}\nDownload and install now?",
+                "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (ask != MessageBoxResult.Yes)
+            {
+                _vm.IsBusy = false; _vm.BusyText = "";
+                return;
+            }
+
+            // Download mit einfachem Progress in BusyText
+            var prog = new Progress<double>(p =>
+            {
+                _vm.BusyText = $"Downloading installer … {(int)(p * 100)}%";
+            });
+            var path = await DownloadInstallerAsync(dlUrl!, prog);
+
+            _vm.IsBusy = false; _vm.BusyText = "";
+
+            if (path == null)
+            {
+                System.Windows.MessageBox.Show("Download failed.", "Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            await StartInstallerAndExitAsync(path);
+        }
+        catch (Exception ex)
+        {
+            _vm.IsBusy = false;
+            _vm.BusyText = "";
+            AppendLog("❌ Update check failed: " + ex.Message);
+            System.Windows.MessageBox.Show("Update check failed.\n" + ex.Message, "Update", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
    
+
 
 }
 

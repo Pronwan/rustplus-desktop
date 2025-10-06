@@ -18,4 +18,6 @@ public interface IPairingListener
     bool IsRunning { get; }
     Task StartAsync(CancellationToken ct = default);
     Task StopAsync();
+    // NEU: optional – Standard fällt auf normalen Start zurück
+    Task StartAsyncUsingEdge(CancellationToken ct = default) => StartAsync(ct);
 }

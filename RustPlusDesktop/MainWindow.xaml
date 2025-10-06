@@ -676,7 +676,43 @@
 
                 <!-- TOP: Account + Serverliste (bleibt unverändert) -->
                 <StackPanel DockPanel.Dock="Top">
-                    <TextBlock Text="Account" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,8"/>
+                    <!-- TOP: Account + Serverliste (bleibt unverändert) -->
+                    <StackPanel DockPanel.Dock="Top">
+
+                        <!-- Account-Zeile + Update-Button rechts -->
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <!-- links: Text -->
+                                <ColumnDefinition Width="Auto"/>
+                                <!-- rechts: Button -->
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="Account"
+                   Foreground="White"
+                   FontWeight="Bold"
+                   FontSize="16"/>
+
+                            <Button Grid.Column="1"
+                x:Name="BtnCheckUpdates"
+                Content=" Check for Updates "
+                Click="BtnCheckUpdates_Click"
+                Background="{DynamicResource AccentDark}" BorderBrush="{DynamicResource Accent}"
+                Margin="8,0,0,0"
+                ToolTip="Check GitHub for a newer version"
+                HorizontalAlignment="Right"/>
+                        </Grid>
+
+                        <!-- (Rest bleibt wie bei dir) -->
+                        <StackPanel Orientation="Horizontal">
+                            <!-- Steam Login usw. -->
+                        </StackPanel>
+
+                        <Separator Margin="0,8,0,8"/>
+
+                        <!-- ... -->
+                    </StackPanel>
+
 
                     <StackPanel Orientation="Horizontal">
                         <Button x:Name="BtnSteamLogin"
@@ -722,7 +758,22 @@
                     </ListBox>
 
                     <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                        <Button Content="Listen (Pairing)" Width="150" Click="BtnListenPairing_Click" IsEnabled="{Binding CanStartPairing}" Margin="0,0,8,0"/>
+                        <Button x:Name="BtnListenPairing"
+        Content="Listen (Pairing)"
+        Width="150"
+        Click="BtnListenPairing_Click"
+        IsEnabled="{Binding CanStartPairing}"
+        Margin="0,0,8,0">
+                            <Button.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Try Pairing with Edge" Click="BtnListenWithEdge_Click"/>
+                                    <Separator/>
+                                    <MenuItem Header="Reset pairing (delete config)" Click="BtnResetPairing_Click"/>
+                                    <MenuItem Header="Reset + Listen (re-pair)" Click="BtnResetAndListen_Click"/>
+                                    <MenuItem Header="Reset + Listen with Edge" Click="BtnResetAndListenEdge_Click"/>
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                        </Button>
                         <TextBlock x:Name="TxtPairingState" VerticalAlignment="Center" Text="Pairing: idle" Margin="0,0,30,0"/>
                         <Button Content="Connect"
                         Width="100"
@@ -853,7 +904,7 @@
                                                 </TextBlock.Style>
                                                 <TextBlock.ContextMenu>
                                                     <ContextMenu>
-                                                        <MenuItem Header="Gerät umbenennen…" Click="Device_Rename_Click"/>
+                                                        <MenuItem Header="Rename device" Click="Device_Rename_Click"/>
                                                     </ContextMenu>
                                                 </TextBlock.ContextMenu>
                                             </TextBlock>
