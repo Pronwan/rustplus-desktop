@@ -22,8 +22,8 @@ namespace RustPlusDesk.Services
         public event EventHandler<PairingPayload>? Paired;
         private static readonly Regex Ansi = new(@"\x1B\[[0-9;]*[A-Za-z]", RegexOptions.Compiled);
         private static readonly Regex RustUrl = new(@"rustplus://[^\s'\"">]+", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-       
-       
+
+
         // key/value-Zeilen (z.B. { key: 'gcm.notification.body', value: 'Your base is under attack!' })
         private static readonly Regex KvLine = new(@"\{\s*key:\s*'(?<k>[^']+)'\s*,\s*value:\s*'(?<v>.*)'\s*\}", RegexOptions.Compiled);
         public event EventHandler<AlarmNotification>? AlarmReceived;
@@ -37,11 +37,11 @@ namespace RustPlusDesk.Services
         private CancellationTokenSource? _cts;
         private Process? _listenProc;
         // Zusatz-Regex: fängt sowohl { key: 'message', ... } als auch { key: 'gcm.notification.body', ... }
-       
+
 
         // Kontext für eine anstehende Alarm-Zeile
-        
-       private (string? server, string? entityName, uint? entityId)? _pendingAlarm;
+
+        private (string? server, string? entityName, uint? entityId)? _pendingAlarm;
         private string? _pendingAlarmMsg;
         private DateTime? _pendingAlarmMsgTs;
 
@@ -55,13 +55,13 @@ namespace RustPlusDesk.Services
         public event EventHandler? Listening;                 // wenn "Listening for FCM Notifications" erscheint
         public event EventHandler? Stopped;
         public event EventHandler<string>? Failed;            // bei erkennbaren Fehlerzeilen
-     
+
         public event EventHandler<string>? Status;            // optional, für UI-Text
         private volatile bool _running;
         public bool IsRunning => _running;
-        
 
-      
+
+
         private string ConfigPath => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "RustPlusDesk", "rustplusjs-config.json");
@@ -87,41 +87,49 @@ namespace RustPlusDesk.Services
 
             if (_running && _listenProc != null && !_listenProc.HasExited)
             {
-                _log("Listener läuft bereits.");
+                _log("Listener already running.");
                 return;
             }
 
             var node = FindBundledNode()
-                ?? throw new InvalidOperationException("Node.js Laufzeit nicht gefunden (runtime/node-win-x64/node.exe).");
+                ?? throw new InvalidOperationException("Node.js Runtime not found (runtime/node-win-x64/node.exe).");
 
             var cli = ResolveRustplusCliEntry(out var wd)
-                ?? throw new InvalidOperationException("rustplus-cli nicht gefunden (rustplus-cli.zip entpackt?).");
+                ?? throw new InvalidOperationException("rustplus-cli not found (rustplus-cli.zip entpackt?).");
 
             Directory.CreateDirectory(Path.GetDirectoryName(ConfigPath)!);
 
             // 1) Registrierung nur, wenn keine/zu kleine Config
             if (!File.Exists(ConfigPath) || new FileInfo(ConfigPath).Length < 50)
             {
-                _log("Starte einmalige Registrierung (fcm-register) …");
-                await RunProcessDirectAsync(
-                    node,
-                    $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
-                    workingDir: wd,
-                    waitForExit: true,
-                    redirect: true,
-                    token: _cts.Token
-                );
-                _log("Registrierung abgeschlossen (Login im Browser ggf. bestätigen).");
+                _log("Starting one time registration (fcm-register) …");
+                await RunCliWithLoggingAsync(
+    node,
+    $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
+    wd,
+    "fcm-register",
+    _cts.Token
+);
+                // old version without logging:    
+                //             await RunProcessDirectAsync(
+                //                 node,
+                //                  $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
+                //                  workingDir: wd,
+                //                 waitForExit: true,
+                //                redirect: true,
+                //                 token: _cts.Token
+                //            );
+                _log("Registering completed (Confirm login in browser if applicable).");
             }
 
             // 2) Listener starten
-            _log("Starte Listener (fcm-listen) …");
+            _log("Starting Listener (fcm-listen) …");
             _listenProc = StartProcessDirect(
                 node,
                 $"\"{cli}\" fcm-listen --config-file=\"{ConfigPath}\"",
                 workingDir: wd,
                 onOut: HandleListenOutput,
-                onErr: s => _log("[fcm-listen:err] " + s),
+                onErr: s => _log("[fcm-listen:err] " + HumanizeCli(s)),
                 noWindow: true,
                 redirect: true
             );
@@ -133,7 +141,7 @@ namespace RustPlusDesk.Services
                 _running = false;
                 Stopped?.Invoke(this, EventArgs.Empty);
                 if (_cts is null || _cts.IsCancellationRequested) return;
-                _log("Pairing-Listener beendet – starte in 3s neu …");
+                _log("Pairing-Listener canceled – restarting in 3s…");
                 try
                 {
                     await Task.Delay(3000, _cts.Token);
@@ -171,7 +179,7 @@ namespace RustPlusDesk.Services
             _log("Pairing-Listener stopped.");
             return Task.CompletedTask;
         }
-       
+
         private static bool TryParseRustPlusUrl(string url, out PairingPayload? p)
         {
             p = null;
@@ -356,7 +364,7 @@ namespace RustPlusDesk.Services
             }
 
             // 1) ALARM: message-Zeilen (kommen manchmal vor/nach dem body)
-          
+
             if (mm.Success)
             {
                 _pendingAlarmMsg = mm.Groups["msg"].Value;
@@ -378,7 +386,7 @@ namespace RustPlusDesk.Services
             }
 
             // 2) appData-body: JSON in der Zeile "value: '...'" ODER "value: `...`"
-          
+
             if (m.Success)
             {
                 var json = m.Groups["json"].Value;
@@ -506,7 +514,7 @@ namespace RustPlusDesk.Services
                                                     "runtime", "rustplus-cli"));
             if (Directory.Exists(dev)) return dev;
 
-            throw new FileNotFoundException("rustplus-cli nicht gefunden (weder ZIP im Output noch Dev-Ordner).");
+            throw new FileNotFoundException("rustplus-cli not found gefunden (neither ZIP in output nor Dev Folder).");
         }
 
         // findet den eigentlichen CLI-Entry (cli/index.js o. ä.) & gibt workingDir zurück
@@ -581,7 +589,7 @@ namespace RustPlusDesk.Services
 
         private static string PathJoin(params string[] parts) => Path.Combine(parts);
 
-        
+
 
 
 
@@ -638,7 +646,201 @@ namespace RustPlusDesk.Services
                 return waitForExit ? await tcs.Task.ConfigureAwait(false) : 0;
         }
 
+        // CLI PROPER ERROR LOGGING
 
+        // macht typische CLI-/Node-/Puppeteer-Fehler für Nutzer verständlich
+        private static string HumanizeCli(string s)
+        {
+            var l = s?.ToLowerInvariant() ?? "";
+
+            if (l.Contains("fcm credentials missing"))
+                return "❌ FCM-Zugangsdaten fehlen. Bitte zuerst „fcm-register“ ausführen.";
+
+            if ((l.Contains("could not find") || l.Contains("not found") || l.Contains("enoent")) && l.Contains("chrome"))
+                return "❌ Kein Chrome/Chromium gefunden. Bitte Google Chrome installieren (oder Edge/Chromium verfügbar machen).";
+
+            if (l.Contains("failed to launch") && l.Contains("chrome"))
+                return "❌ Chrome/Chromium ließ sich nicht starten (Antivirus/Policy/fehlende Rechte?).";
+
+            if ((l.Contains("getaddrinfo") || l.Contains("enotfound") || l.Contains("eai_again")) && l.Contains("mtalk.google.com"))
+                return "⚠️ Keine Verbindung zu mtalk.google.com (Port 5228). Firewall/Proxy/DNS prüfen.";
+
+            if (l.Contains("err_proxy") || l.Contains("proxy"))
+                return "⚠️ Proxy-Problem beim Start. Proxy-Konfiguration prüfen oder deaktivieren.";
+
+            if (l.Contains("eacces") || l.Contains("eperm"))
+                return "⚠️ Zugriffsrechte-Problem. Als Benutzer mit ausreichenden Rechten starten.";
+
+            if (l.Contains("node:internal") && l.Contains("modules") && l.Contains("cannot find module"))
+                return "❌ CLI-Module fehlen oder sind beschädigt. Bitte „rustplus-cli.zip“ korrekt entpacken.";
+
+            // Fallback: Originalzeile beibehalten
+            return s;
+        }
+
+        private Task<int> RunCliWithLoggingAsync(
+    string fileName, string args, string? workingDir, string tag, CancellationToken token)
+        {
+            var tcs = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            var p = StartProcessDirect(
+                fileName, args, workingDir,
+                onOut: s => { if (!string.IsNullOrEmpty(s)) _log($"[{tag}] {HumanizeCli(s)}"); },
+                onErr: s => { if (!string.IsNullOrEmpty(s)) _log($"[{tag}:err] {HumanizeCli(s)}"); },
+                noWindow: false,           // wie zuvor beim Register: Browser darf aufgehen
+                redirect: true
+            );
+
+            p.EnableRaisingEvents = true;
+            p.Exited += (_, __) => tcs.TrySetResult(p.ExitCode);
+
+            using (token.Register(() => { try { if (!p.HasExited) p.Kill(entireProcessTree: true); } catch { } }))
+                return tcs.Task;
+        }
+
+
+        // TRY PAIRING WITH EDGE
+
+        private static string? FindEdge()
+        {
+            string p1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                                     "Microsoft", "Edge", "Application", "msedge.exe");
+            string p2 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                                     "Microsoft", "Edge", "Application", "msedge.exe");
+            return File.Exists(p1) ? p1 : (File.Exists(p2) ? p2 : null);
+        }
+
+        private static Process StartProcessDirectWithEnv(
+    string fileName, string args, string? workingDir = null,
+    Action<string>? onOut = null, Action<string>? onErr = null,
+    bool noWindow = true, bool redirect = true,
+    params (string key, string value)[] env)
+        {
+            var psi = new ProcessStartInfo(fileName, args)
+            {
+                UseShellExecute = false,
+                RedirectStandardOutput = redirect,
+                RedirectStandardError = redirect,
+                CreateNoWindow = noWindow,
+                WorkingDirectory = string.IsNullOrEmpty(workingDir) ? "" : workingDir
+            };
+            foreach (var (k, v) in env) psi.Environment[k] = v;
+
+            var p = new Process { StartInfo = psi, EnableRaisingEvents = true };
+            if (redirect)
+            {
+                p.OutputDataReceived += (_, e) => { if (e.Data != null) onOut?.Invoke(e.Data); };
+                p.ErrorDataReceived += (_, e) => { if (e.Data != null) onErr?.Invoke(e.Data); };
+            }
+            p.Start();
+            if (redirect) { p.BeginOutputReadLine(); p.BeginErrorReadLine(); }
+            return p;
+        }
+
+        private static async Task<int> RunProcessDirectAsyncWithEnv(
+            string fileName, string args, string? workingDir = null,
+            bool waitForExit = true, bool redirect = true, CancellationToken token = default,
+            params (string key, string value)[] env)
+        {
+            var tcs = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var psi = new ProcessStartInfo(fileName, args)
+            {
+                UseShellExecute = false,
+                RedirectStandardOutput = redirect,
+                RedirectStandardError = redirect,
+                CreateNoWindow = false,   // Register darf Browser öffnen
+                WorkingDirectory = string.IsNullOrEmpty(workingDir) ? "" : workingDir
+            };
+            foreach (var (k, v) in env) psi.Environment[k] = v;
+
+            var p = new Process { StartInfo = psi, EnableRaisingEvents = true };
+            if (redirect)
+            {
+                p.OutputDataReceived += (_, e) => { if (!string.IsNullOrEmpty(e.Data)) Debug.WriteLine("[out] " + e.Data); };
+                p.ErrorDataReceived += (_, e) => { if (!string.IsNullOrEmpty(e.Data)) Debug.WriteLine("[err] " + e.Data); };
+            }
+            p.Exited += (_, __) => tcs.TrySetResult(p.ExitCode);
+            p.Start();
+            if (redirect) { p.BeginOutputReadLine(); p.BeginErrorReadLine(); }
+
+            using (token.Register(() => { try { if (!p.HasExited) p.Kill(true); } catch { } }))
+                return waitForExit ? await tcs.Task.ConfigureAwait(false) : 0;
+        }
+
+        public async Task StartAsyncUsingEdge(CancellationToken ct = default)
+        {
+            Status?.Invoke(this, "starting");
+            _cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+
+            if (_running && _listenProc != null && !_listenProc.HasExited)
+            { _log("Listener already running."); return; }
+
+            var node = FindBundledNode()
+                ?? throw new InvalidOperationException("Node.js Runtime not found (runtime/node-win-x64/node.exe).");
+
+            var cli = ResolveRustplusCliEntry(out var wd)
+                ?? throw new InvalidOperationException("rustplus-cli not found (rustplus-cli.zip entpackt?).");
+
+            Directory.CreateDirectory(Path.GetDirectoryName(ConfigPath)!);
+
+            var edge = FindEdge();
+            if (edge == null)
+            {
+                _log("❌ Microsoft Edge wurde nicht gefunden. Bitte Edge installieren oder normalen Start verwenden.");
+                return;
+            }
+            var env = new (string key, string value)[] {
+        ("PUPPETEER_EXECUTABLE_PATH", edge),
+        ("CHROME_PATH", edge)
+    };
+            _log($"Using Edge for Puppeteer: {edge}");
+
+            // Registrierung (nur falls nötig), aber via Edge
+            if (!File.Exists(ConfigPath) || new FileInfo(ConfigPath).Length < 50)
+            {
+                _log("Starting one time registration (fcm-register) via Edge …");
+                await RunProcessDirectAsyncWithEnv(
+                    node,
+                    $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
+                    workingDir: wd,
+                    waitForExit: true,
+                    redirect: true,
+                    token: _cts.Token,
+                    env: env
+                );
+                _log("Registering completed (Confirm login in browser if applicable).");
+            }
+
+            // Listener via Edge (mit ENV)
+            _log("Starting Listener (fcm-listen) via Edge …");
+            _listenProc = StartProcessDirectWithEnv(
+                node,
+                $"\"{cli}\" fcm-listen --config-file=\"{ConfigPath}\"",
+                workingDir: wd,
+                onOut: HandleListenOutput,
+                onErr: s => _log("[fcm-listen:err] " + s),
+                noWindow: true,
+                redirect: true,
+                env: env
+            );
+
+            _running = true;
+            _listenProc.EnableRaisingEvents = true;
+            _listenProc.Exited += async (_, __) =>
+            {
+                _running = false;
+                Stopped?.Invoke(this, EventArgs.Empty);
+                if (_cts is null || _cts.IsCancellationRequested) return;
+                _log("Pairing-Listener canceled – restarting in 3s…");
+                try
+                {
+                    await Task.Delay(3000, _cts.Token);
+                    if (_cts is not null && !_cts.IsCancellationRequested)
+                        await StartAsyncUsingEdge(_cts.Token);
+                }
+                catch { /* ignore */ }
+            };
+        }
 
     }
 }
