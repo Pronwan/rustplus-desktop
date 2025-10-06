@@ -11,8 +11,7 @@
 
 It is open source so anyone can verify there is **no malware or hidden components**.
 
-⚠️ **Note**: If you used it for a while and can't pair new servers anymore, simply delete
-%APPDATA%\RustPlusDesk\rustplusjs-config.json and let it run through NCM registration again. 
+⚠️ **Note**: If you used it for a while and can't pair new servers anymore, simply click on the Pairing button with right mouse button and select to delete the config file.
 
 ---
 
