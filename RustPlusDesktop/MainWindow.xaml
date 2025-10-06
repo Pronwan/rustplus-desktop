@@ -783,7 +783,7 @@
                     </StackPanel>
 
                     <TextBlock Margin="0,8,0,0"
-                       Text="Click Listen (Pairing) to pair servers. If Listener fails, delete %APPDATA%\RustPlusDesk\rustplusjs-config.json manually. "
+                       Text="Click Listen (Pairing) to pair servers & devices. Rightclick for more options and config delete for Re-Pairing."
                        FontSize="9.5" FontStyle="Italic"/>
 
                     <Separator Margin="0,12,0,12"/>
