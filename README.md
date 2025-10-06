@@ -45,7 +45,9 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 *(We publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
 
-## Update Notes 2.2 (October 4th 25)
+## Update Notes 2.0.4 (October 6th 25)
+- new Update Button (Bug: reads current version as 0.0.0 so it will always find an update - will be fixed in the future)
+- new Pairing possibility through Edge Browser + better Logs
 - Mini Map Overlay for ingame use
 - Crosshair Overlay
 - Team Management
@@ -126,8 +128,9 @@ Enjoy! :)
 
 
 2. **First run**
-   ⚠️ **IMPORTANT**: Apparently, for the initial listener Setup, rustplus.js-CLI tries to open Chrome Browser in order to finish initial registration. If you keep getting NCM problems, 
-   please try to install Chrome browser. It's only needed for initial setup. I will try to fix it in the future.
+
+   - Click Pairing (Listening) to start the initial setup of the Listener.
+   ⚠️ **IMPORTANT**: IF error message pops up, please restart the app, rightclick on the button and click on "Try Pairing with Edge".
 
    - A browser popup will ask you to **pair with Companion** (Facepunch)
 
@@ -156,14 +159,17 @@ Enjoy! :)
    - Future sessions won’t require another Steam login
 
 
-
 6. **Smart Devices**  
 
    - While connected, pair a device or server in-game → it appears instantly in the app
 
-7. **If the FCM Listener won't start**
+7. **If the FCM Listener won't start after a while of using the app**
+   - you probably have to do the Pairing Process again.
+   - Rightclick the Pairing button and select "Delete Config + Pair".
+   - That's it.
 
-   - Do it manually through PowerShell. 
+8. **Alternative manuall pairing**
+   - You can do the pairing manually through PowerShell. 
 
    - Open PowerShell, 
    - Go to your installation folder (e.g. -> a: -> cd programs -> cd RustPlusDesk)
