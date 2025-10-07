@@ -22,7 +22,9 @@ namespace RustPlusDesk.Services
         public event EventHandler<PairingPayload>? Paired;
         private static readonly Regex Ansi = new(@"\x1B\[[0-9;]*[A-Za-z]", RegexOptions.Compiled);
         private static readonly Regex RustUrl = new(@"rustplus://[^\s'\"">]+", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-
+        // in PairingListenerRealProcess (Feldebene)
+        private string? _lastPairKey;
+        private DateTime _lastPairAt;
 
         // key/value-Zeilen (z.B. { key: 'gcm.notification.body', value: 'Your base is under attack!' })
         private static readonly Regex KvLine = new(@"\{\s*key:\s*'(?<k>[^']+)'\s*,\s*value:\s*'(?<v>.*)'\s*\}", RegexOptions.Compiled);
@@ -443,7 +445,18 @@ namespace RustPlusDesk.Services
                             EntityType = kind ?? type
                         };
 
+                        var key = $"{payload.Host}:{payload.Port}|{payload.SteamId64}|{payload.PlayerToken}|{payload.EntityId}";
+                        if (_lastPairKey == key && (DateTime.UtcNow - _lastPairAt).TotalSeconds < 20)
+                        {
+                            _log("[fcm] duplicate pairing ignored.");
+                            return; // ← denselben Pairing-Bounce innerhalb 20 s ignorieren
+                        }
+                        _lastPairKey = key;
+                        _lastPairAt = DateTime.UtcNow;
+
                         Paired?.Invoke(this, payload);
+
+                        
                         _log($"Pairing empfangen → {(payload.ServerName ?? payload.Host)}:{payload.Port}" +
                              (payload.EntityId.HasValue ? $"  // Entity {payload.EntityId}" : ""));
                         return;

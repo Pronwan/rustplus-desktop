@@ -49,10 +49,12 @@ public partial class MainWindow : Window
 {
     private readonly MainViewModel _vm = new();
     private readonly SteamLoginService _steam = new();
+    private DateTime _lastPairingPingAt = DateTime.MinValue;
     private readonly IRustPlusClient _rust;  // Interface statt fester Klasse
     private WebView2? _webView;
     private IPairingListener _pairing;
     private bool _pairingStarting;
+    private string? _lastPairSig;
     private bool _listenerWired; // damit Events nur einmal verdrahtet werden
     private bool _listenerStarting; // Schutz gegen Doppelklicks
     private readonly System.Windows.Threading.DispatcherTimer _statusTimer =
@@ -2269,7 +2271,18 @@ public partial class MainWindow : Window
     }
     private void Pairing_Paired(object? sender, PairingPayload e)
     {
+        var sig = $"{e.Host}:{e.Port}|{e.SteamId64}|{e.PlayerToken}";
+        if (string.Equals(sig, _lastPairSig, StringComparison.Ordinal))
+        {
+            AppendLog("[pairing] same server+token – ignoring keepalive.");
+            return; // nichts anfassen
+        }
+
+        _lastPairSig = sig;
+        _lastPairingPingAt = DateTime.UtcNow;     // 👈 NEU: Zeitmarke für Step 3
+
         AppendLog("Pairing_Paired fired");
+
         Dispatcher.Invoke(() =>
         {
             var keyHost = (e.Host ?? "").Trim();
@@ -2293,9 +2306,9 @@ public partial class MainWindow : Window
                     SteamId64 = keySteam,
                     PlayerToken = e.PlayerToken,
                     UseFacepunchProxy = false,
-                    Devices = new ObservableCollection<SmartDevice>() // <- nie null
+                    Devices = new ObservableCollection<SmartDevice>()
                 };
-                _vm.AddServer(prof);                     // ObservableCollection -> UI aktualisiert sich
+                _vm.AddServer(prof);
                 AppendLog($"Pairing received → {prof.Name} ({prof.Host}:{prof.Port})");
             }
             else
@@ -2307,7 +2320,7 @@ public partial class MainWindow : Window
                 AppendLog($"Pairing updated → {prof.Name}");
             }
 
-            // optionales Geräte-Pairing (falls entity dabei)
+            // Geräteinfo (nur Name/Kind), KEIN Status setzen
             if (e.EntityId.HasValue)
             {
                 var kind = string.IsNullOrWhiteSpace(e.EntityType) ||
@@ -2334,10 +2347,10 @@ public partial class MainWindow : Window
                 }
             }
 
-            _vm.Selected = prof;   // Auswahl umschalten → CurrentDevices aktualisiert sich
-            _vm.Save();            // speichert _vm.Servers
+            if (_vm.Selected != prof)               // unnötige Events vermeiden
+                _vm.Selected = prof;
 
-            // KEINE ItemsSource-Setzung, KEIN Refresh – Binding macht’s.
+            _vm.Save();
         });
     }
 
@@ -2858,7 +2871,7 @@ public partial class MainWindow : Window
         if (!string.Equals(dev.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase))
             return;
 
-        // 👇 NEU: Reentrancy-Schutz pro Entity
+        // Reentrancy-Schutz pro Entity (deine bestehende Logik)
         if (!TryMarkToggleBusy(dev.EntityId))
         {
             AppendLog($"(skip) Toggle #{dev.EntityId} already in progress");
@@ -2869,12 +2882,19 @@ public partial class MainWindow : Window
         {
             if (!await EnsureConnectedAsync()) return;
 
+            // 👇 NEU: wenn kurz zuvor ein Pairing-Ping kam, einmal kurz warten
+            if ((DateTime.UtcNow - _lastPairingPingAt).TotalMilliseconds < 1200)
+            {
+                AppendLog("Pairing ping just arrived – delaying toggle 1.2s …");
+                await Task.Delay(1200);
+            }
+
             AppendLog($"Sending {(on ? "ON" : "OFF")} to #{dev.EntityId} …");
             try
             {
                 await _rust.ToggleSmartSwitchAsync(dev.EntityId, on, CancellationToken.None);
 
-                // Status direkt für dieses Gerät neu laden
+                // Status direkt für dieses Gerät neu laden (wie gehabt)
                 await RefreshDeviceStateAsync(dev);
             }
             catch (Exception ex)
@@ -2885,7 +2905,7 @@ public partial class MainWindow : Window
         }
         finally
         {
-            UnmarkToggleBusy(dev.EntityId);   // 👈 immer freigeben
+            UnmarkToggleBusy(dev.EntityId);
         }
     }
 
