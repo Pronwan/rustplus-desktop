@@ -4192,32 +4192,29 @@ rp.connect();
     {
         if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
         var id = (uint)entityId;
-
-        // Sende EINEN Weg (mit Fallbacks), dann warte auf Bestätigung.
         bool sent = false;
 
-        // a) Explizite neue Methoden
-        if (await TryToggleExplicitAsync(id, on, ct)) { sent = true; }
+        if (await TryToggleExplicitAsync(id, on, ct)) { _log($"[toggle:{id}] path=explicit"); sent = true; }
         else
         {
-            // b) SetEntityValue*-Kompat
+            _log($"[toggle:{id}] path=explicit ✗");
             var compat = await TrySetEntityValueCompatAsync(id, on);
-            if (compat == true) sent = true;
+            if (compat == true) { _log($"[toggle:{id}] path=setEntityValue ✔"); sent = true; }
             else
             {
-                // c) Contracts (liefert oft kein ACK) – trotzdem probieren
-                var (ok3, _) = await TrySendContractsViaCurrentApiAsync(id, on, RequestTimeoutMs);
-                if (!ok3)
+                if (compat == false) _log($"[toggle:{id}] path=setEntityValue ✗");
+                var (ok3, e3) = await TrySendContractsViaCurrentApiAsync(id, on, RequestTimeoutMs);
+                if (ok3) { _log($"[toggle:{id}] path=contracts ✔"); sent = true; }
+                else
                 {
-                    // d) Legacy-Fallback
-                    var (okLegacy, _) = await TrySetViaLegacyWithResultAsync_Timeout(id, on, RequestTimeoutMs);
+                    _log($"[toggle:{id}] path=contracts ✗ ({e3})");
+                    var (okLegacy, e4) = await TrySetViaLegacyWithResultAsync_Timeout(id, on, RequestTimeoutMs);
+                    _log(okLegacy ? $"[toggle:{id}] path=legacy ✔" : $"[toggle:{id}] path=legacy ✗ ({e4})");
                     sent = okLegacy;
                 }
-                else sent = true;
             }
         }
 
-        // Egal ob ACK kam: per Event/Poll verifizieren
         var confirmed = await WaitForSwitchStateAsync(id, on, 3000, ct);
         if (confirmed)
             _log($"SmartSwitch {id}: State confirmed → {(on ? "ON" : "OFF")}.");
@@ -4504,38 +4501,50 @@ rp.connect();
         try
         {
             var asm = typeof(RustPlus).Assembly;
-
             var appRequestType = asm.GetTypes().FirstOrDefault(t => t.Name == "AppRequest");
+            if (appRequestType == null) return (false, "AppRequest not found");
+
             var appSetType = asm.GetTypes().FirstOrDefault(t => t.Name == "AppSetEntityValue");
-            if (appRequestType == null || appSetType == null)
-                return (false, "Contracts (AppRequest/AppSetEntityValue) nicht gefunden");
+            var appTurnType = asm.GetTypes().FirstOrDefault(t => t.Name == "AppTurnSmartSwitch");
 
-            // Instanzen
+            if (appSetType == null && appTurnType == null)
+                return (false, "Neither AppSetEntityValue nor AppTurnSmartSwitch found");
+
             var req = Activator.CreateInstance(appRequestType)!;
-            var set = Activator.CreateInstance(appSetType)!;
-
-            // WICHTIG: EntityId am *Request* setzen (nicht im Set-Objekt)
             appRequestType.GetProperty("EntityId")?.SetValue(req, entityId);
 
-            // Den Wert im Set-Objekt setzen und an Request anhängen
-            var pValue = appSetType.GetProperty("Value");
-            if (pValue == null) return (false, "AppSetEntityValue.Value fehlt");
-            pValue.SetValue(set, on);
-            appRequestType.GetProperty("SetEntityValue")?.SetValue(req, set);
+            if (appSetType != null)
+            {
+                var set = Activator.CreateInstance(appSetType)!;
+                var pValue = appSetType.GetProperty("Value")    // übliche Shape
+                          ?? appSetType.GetProperty("On")
+                          ?? appSetType.GetProperty("TurnOn");
+                if (pValue == null) return (false, "AppSetEntityValue.Value missing");
+                pValue.SetValue(set, on);
+                appRequestType.GetProperty("SetEntityValue")?.SetValue(req, set);
+            }
+            else
+            {
+                var turn = Activator.CreateInstance(appTurnType!)!;
+                var pOn = appTurnType!.GetProperty("TurnOn")
+                       ?? appTurnType.GetProperty("On")
+                       ?? appTurnType.GetProperty("Value");
+                if (pOn == null) return (false, "AppTurnSmartSwitch.TurnOn missing");
+                pOn.SetValue(turn, on);
+                appRequestType.GetProperty("TurnSmartSwitch")?.SetValue(req, turn);
+            }
 
-            // Senden über die aktuelle RustPlus-Instanz
             var send = _api!.GetType().GetMethod("SendRequestAsync", new[] { appRequestType });
-            if (send == null) return (false, "SendRequestAsync nicht vorhanden");
+            if (send == null) return (false, "SendRequestAsync not found");
 
             var taskObj = send.Invoke(_api, new object[] { req });
-            if (taskObj is not Task task) return (false, "SendRequestAsync lieferte keinen Task");
+            if (taskObj is not Task task) return (false, "SendRequestAsync returned no Task");
 
             var done = await Task.WhenAny(task, Task.Delay(timeoutMs));
             if (done != task) return (false, "timeout");
 
-            // Falls das Resultat ein IsSuccess hat, auswerten; sonst „unklar“ (null)
-            var ok = TryGetTaskResultSuccess(task);
-            return (ok ?? false, ok is null ? "keine Success-Info" : null);
+            var ok = TryGetTaskResultSuccess(task); // wertet IsSuccess/Fehlertext aus, falls vorhanden
+            return (ok ?? true, ok is null ? "no success info" : null);
         }
         catch (Exception ex)
         {
@@ -4553,14 +4562,14 @@ rp.connect();
     public async Task<bool?> GetSmartSwitchStateAsync(uint entityId)
     {
         if (_api is null) return null;
+
+        // 1) Fast-Path
         try
         {
-            var res = await _api.GetSmartSwitchInfoAsync(entityId);
+            var res = await _api.GetSmartSwitchInfoAsync(entityId).ConfigureAwait(false);
             if (res != null)
             {
-                // Response<T> oder direktes Objekt tolerieren
-                var rt = res.GetType();
-                var data = rt.GetProperty("Data")?.GetValue(res) ?? res;
+                var data = res.GetType().GetProperty("Data")?.GetValue(res) ?? res;
                 if (data != null)
                 {
                     var dt = data.GetType();
@@ -4568,26 +4577,84 @@ rp.connect();
                           ?? dt.GetProperty("IsOn")
                           ?? dt.GetProperty("Active")
                           ?? dt.GetProperty("value");
-
-                    if (p != null && p.PropertyType == typeof(bool))
+                    if (p?.PropertyType == typeof(bool))
                         return (bool)p.GetValue(data)!;
                 }
             }
         }
+        catch (NullReferenceException)
+        {
+            // bekannte NRE aus der Lib -> ruhig auf Fallback gehen
+        }
         catch (Exception ex)
         {
             var msg = ex.Message ?? string.Empty;
-
-            // Häufige Nicht-Switch-Muster → stillschweigend ignorieren
             if (msg.IndexOf("not a SmartSwitch", StringComparison.OrdinalIgnoreCase) >= 0) return null;
-            if (msg.IndexOf("SmartSwitchInfo", StringComparison.OrdinalIgnoreCase) >= 0 &&
-                msg.IndexOf("does not contain a definition", StringComparison.OrdinalIgnoreCase) >= 0) return null;
-            if (msg.IndexOf("IsActive", StringComparison.OrdinalIgnoreCase) >= 0 &&
-                msg.IndexOf("does not contain a definition", StringComparison.OrdinalIgnoreCase) >= 0) return null;
-
-            // Unbekanntes Problem -> einmal loggen
-            _log("GetSmartSwitchStateAsync: " + msg);
+            // sonst still auf Fallback
         }
+
+        // 2) Fallback A: GetEntityInfoAsync (wenn vorhanden)
+        try
+        {
+            var t = _api.GetType();
+            var m = t.GetMethod("GetEntityInfoAsync", new[] { typeof(uint) })
+                  ?? t.GetMethod("GetEntityInfoAsync", new[] { typeof(uint), typeof(CancellationToken) });
+            if (m != null)
+            {
+                object? call = (m.GetParameters().Length == 2)
+                    ? m.Invoke(_api, new object[] { entityId, CancellationToken.None })
+                    : m.Invoke(_api, new object[] { entityId });
+
+                if (call is Task task)
+                {
+                    await task.ConfigureAwait(false);
+                    var result = task.GetType().GetProperty("Result")?.GetValue(task);
+                    var data = result?.GetType().GetProperty("Data")?.GetValue(result);
+                    if (data != null)
+                    {
+                        var (kind, on) = DecodeEntityInfo(data);
+                        if (string.Equals(kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase) && on is bool b) return b;
+                    }
+                }
+            }
+        }
+        catch { /* weiter zu Fallback B */ }
+
+        // 3) Fallback B: Contracts GetEntityInfo
+        try
+        {
+            var asm = typeof(RustPlus).Assembly;
+            var reqType = asm.GetTypes().FirstOrDefault(x => x.Name == "AppRequest");
+            var emptyType = asm.GetTypes().FirstOrDefault(x => x.Name == "AppEmpty");
+            if (reqType != null && emptyType != null)
+            {
+                var req = Activator.CreateInstance(reqType)!;
+                var empty = Activator.CreateInstance(emptyType)!;
+
+                reqType.GetProperty("EntityId")?.SetValue(req, entityId);
+                reqType.GetProperty("GetEntityInfo")?.SetValue(req, empty);
+
+                var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
+                if (send != null)
+                {
+                    var call = send.Invoke(_api, new object[] { req });
+                    if (call is Task task)
+                    {
+                        await task.ConfigureAwait(false);
+                        var result = task.GetType().GetProperty("Result")?.GetValue(task);
+                        var resp = result?.GetType().GetProperty("Response")?.GetValue(result) ?? result;
+                        var ent = resp?.GetType().GetProperty("EntityInfo")?.GetValue(resp);
+                        if (ent != null)
+                        {
+                            var (kind, on) = DecodeEntityInfo(ent);
+                            if (string.Equals(kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase) && on is bool b) return b;
+                        }
+                    }
+                }
+            }
+        }
+        catch { }
+
         return null;
     }
 
