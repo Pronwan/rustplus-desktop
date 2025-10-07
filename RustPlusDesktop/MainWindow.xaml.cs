@@ -53,6 +53,7 @@ public partial class MainWindow : Window
     private readonly IRustPlusClient _rust;  // Interface statt fester Klasse
     private WebView2? _webView;
     private IPairingListener _pairing;
+    private readonly Dictionary<uint, DateTime> _entityPairSeen = new();
     private bool _pairingStarting;
     private string? _lastPairSig;
     private bool _listenerWired; // damit Events nur einmal verdrahtet werden
@@ -2271,15 +2272,34 @@ public partial class MainWindow : Window
     }
     private void Pairing_Paired(object? sender, PairingPayload e)
     {
+        // Key OHNE EntityId: dient nur für „Server-keepalive“-Erkennung
         var sig = $"{e.Host}:{e.Port}|{e.SteamId64}|{e.PlayerToken}";
-        if (string.Equals(sig, _lastPairSig, StringComparison.Ordinal))
+
+        // >>> NUR keepalives ohne EntityId ignorieren
+        if (!e.EntityId.HasValue && string.Equals(sig, _lastPairSig, StringComparison.Ordinal))
         {
-            AppendLog("[pairing] same server+token – ignoring keepalive.");
-            return; // nichts anfassen
+            AppendLog("[pairing] keepalive for same server+token – ignored.");
+            return;
         }
 
+        // Merker updaten (damit der nächste echte Server-Ping als keepalive erkannt wird)
         _lastPairSig = sig;
-        _lastPairingPingAt = DateTime.UtcNow;     // 👈 NEU: Zeitmarke für Step 3
+
+        // >>> Entity-Pairings NIE über server+token wegfiltern!
+        // Optional: sehr kurze Dedupe pro Entity (z.B. 5s), damit doppelte Toaster nicht doppelt adden
+        if (e.EntityId.HasValue)
+        {
+            var id = e.EntityId.Value;
+            if (_entityPairSeen.TryGetValue(id, out var last) &&
+                (DateTime.UtcNow - last).TotalSeconds < 5)
+            {
+                AppendLog($"[pairing] duplicate for entity #{id} ignored (5s).");
+                return;
+            }
+            _entityPairSeen[id] = DateTime.UtcNow;
+        }
+
+        _lastPairingPingAt = DateTime.UtcNow;
 
         AppendLog("Pairing_Paired fired");
 
@@ -2320,12 +2340,14 @@ public partial class MainWindow : Window
                 AppendLog($"Pairing updated → {prof.Name}");
             }
 
-            // Geräteinfo (nur Name/Kind), KEIN Status setzen
+            // >>> Geräte zuverlässig hinzufügen/aktualisieren (Switch + Alarm)
             if (e.EntityId.HasValue)
             {
+                // Art ableiten – du setzt EntityType bereits im Listener (SmartSwitch/SmartAlarm)
                 var kind = string.IsNullOrWhiteSpace(e.EntityType) ||
                            e.EntityType!.Equals("server", StringComparison.OrdinalIgnoreCase)
-                           ? "SmartSwitch" : e.EntityType;
+                           ? (e.EntityName?.IndexOf("alarm", StringComparison.OrdinalIgnoreCase) >= 0 ? "SmartAlarm" : "SmartSwitch")
+                           : e.EntityType;
 
                 var dev = prof.Devices.FirstOrDefault(d => d.EntityId == e.EntityId.Value);
                 if (dev is null)
@@ -2333,7 +2355,7 @@ public partial class MainWindow : Window
                     dev = new SmartDevice
                     {
                         EntityId = e.EntityId.Value,
-                        Name = string.IsNullOrWhiteSpace(e.EntityName) ? e.ServerName : e.EntityName,
+                        Name = string.IsNullOrWhiteSpace(e.EntityName) ? (string.IsNullOrWhiteSpace(e.ServerName) ? "Smart Device" : e.ServerName) : e.EntityName,
                         Kind = kind
                     };
                     prof.Devices.Add(dev);
@@ -2347,12 +2369,13 @@ public partial class MainWindow : Window
                 }
             }
 
-            if (_vm.Selected != prof)               // unnötige Events vermeiden
+            if (_vm.Selected != prof)
                 _vm.Selected = prof;
 
             _vm.Save();
         });
     }
+
 
     private async Task StartPairingListenerUiAsync()
     {
