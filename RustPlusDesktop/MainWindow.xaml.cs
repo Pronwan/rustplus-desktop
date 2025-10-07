@@ -6021,18 +6021,25 @@ public partial class MainWindow : Window
     private readonly HashSet<long> _toggleBusy = new();
     private readonly object _toggleBusyLock = new();
 
+    private readonly Dictionary<long, DateTime> _toggleBusySince = new();
+
     private bool TryMarkToggleBusy(long id)
     {
         lock (_toggleBusyLock)
         {
             if (_toggleBusy.Contains(id)) return false;
             _toggleBusy.Add(id);
+            _toggleBusySince[id] = DateTime.UtcNow;
             return true;
         }
     }
     private void UnmarkToggleBusy(long id)
     {
-        lock (_toggleBusyLock) _toggleBusy.Remove(id);
+        lock (_toggleBusyLock)
+        {
+            _toggleBusy.Remove(id);
+            _toggleBusySince.Remove(id);
+        }
     }
 
     private void BtnHotkeys_Click(object sender, RoutedEventArgs e)
