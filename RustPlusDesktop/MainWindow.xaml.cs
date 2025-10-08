@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.WebSockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
@@ -1043,6 +1044,7 @@ public partial class MainWindow : Window
 
         this.Closing += MainWindow_Closing;
         _ = EnsureWebView2Async();
+        ClearAllToggleBusy();
         this.Closed += MainWindow_Closed;
 
     }
@@ -2718,7 +2720,7 @@ public partial class MainWindow : Window
         _avatarCache.Clear();
         _lastPresence.Clear();
         ClearAllDeathPins();
-
+        ClearAllToggleBusy();
 
 
         //if (_shopTimer =  _shopTimer.Stop();
@@ -2859,6 +2861,11 @@ public partial class MainWindow : Window
     }
     private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
     {
+        lock (_toggleBusy)
+        {
+            foreach (var id in _toggleBusy.Where(kv => DateTime.UtcNow - kv.Value > ToggleBusyTTL).Select(kv => kv.Key).ToList())
+                _toggleBusy.Remove(id);
+        }
         if ((sender as ToggleButton)?.DataContext is not SmartDevice d) return;
         if (!await EnsureConnectedAsync()) { ((ToggleButton)sender).IsChecked = d.IsOn; return; }
 
@@ -2885,16 +2892,27 @@ public partial class MainWindow : Window
         => await HandleDeviceToggleAsync(sender, false);
 
     // 1) Toggle-Handler bleibt so – ohne Refresh-Aufruf
+    private static bool LooksLikeNotConnected(Exception ex)
+    {
+        var s = ex.Message?.ToLowerInvariant() ?? "";
+        return ex is WebSocketException
+            || ex is IOException
+            || s.Contains("nicht verbunden")
+            || s.Contains("not connected")
+            || s.Contains("websocket")
+            || s.Contains("closed")
+            || s.Contains("aborted");
+    }
+
     private async Task HandleDeviceToggleAsync(object sender, bool on)
     {
         if (_suppressToggleHandler) return;
 
-        if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev)
-            return;
-        if (!string.Equals(dev.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase))
-            return;
+        if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev) return;
+        if (!string.Equals(dev.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase)) return;
 
-        // Reentrancy-Schutz pro Entity (deine bestehende Logik)
+        // Lock erst NACH erfolgreichem Connect setzen? → dein Flow kann bleiben,
+        // ABER ganz wichtig: Timeout um das Toggle, damit der Task nicht hängt.
         if (!TryMarkToggleBusy(dev.EntityId))
         {
             AppendLog($"(skip) Toggle #{dev.EntityId} already in progress");
@@ -2905,7 +2923,6 @@ public partial class MainWindow : Window
         {
             if (!await EnsureConnectedAsync()) return;
 
-            // 👇 NEU: wenn kurz zuvor ein Pairing-Ping kam, einmal kurz warten
             if ((DateTime.UtcNow - _lastPairingPingAt).TotalMilliseconds < 1200)
             {
                 AppendLog("Pairing ping just arrived – delaying toggle 1.2s …");
@@ -2913,22 +2930,37 @@ public partial class MainWindow : Window
             }
 
             AppendLog($"Sending {(on ? "ON" : "OFF")} to #{dev.EntityId} …");
+
             try
             {
-                await _rust.ToggleSmartSwitchAsync(dev.EntityId, on, CancellationToken.None);
-
-                // Status direkt für dieses Gerät neu laden (wie gehabt)
-                await RefreshDeviceStateAsync(dev);
+                // *** WICHTIG: immer mit Timeout aufrufen ***
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(8));
+                await _rust.ToggleSmartSwitchAsync(dev.EntityId, on, cts.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                AppendLog("Toggle timeout (8s).");
             }
             catch (Exception ex)
             {
                 AppendLog($"{(on ? "ON" : "OFF")} Error: " + ex.Message);
+
+                // Optional: einmaliger Reconnect-Retry bei „nicht verbunden“
+                if (LooksLikeNotConnected(ex) && await EnsureConnectedAsync())
+                {
+                    using var cts2 = new CancellationTokenSource(TimeSpan.FromSeconds(6));
+                    try { await _rust.ToggleSmartSwitchAsync(dev.EntityId, on, cts2.Token); }
+                    catch (Exception ex2) { AppendLog("Retry failed: " + ex2.Message); }
+                }
+            }
+            finally
+            {
                 await RefreshDeviceStateAsync(dev);
             }
         }
         finally
         {
-            UnmarkToggleBusy(dev.EntityId);
+            UnmarkToggleBusy(dev.EntityId); // <<< wird garantiert ausgeführt
         }
     }
 
@@ -6061,28 +6093,40 @@ public partial class MainWindow : Window
         }
     }
 
-    private readonly HashSet<long> _toggleBusy = new();
+    private readonly Dictionary<uint, DateTime> _toggleBusy = new();
     private readonly object _toggleBusyLock = new();
 
     private readonly Dictionary<long, DateTime> _toggleBusySince = new();
+    private static readonly TimeSpan ToggleBusyTTL = TimeSpan.FromSeconds(12);
 
-    private bool TryMarkToggleBusy(long id)
+    private bool TryMarkToggleBusy(uint id)
     {
-        lock (_toggleBusyLock)
+        lock (_toggleBusy)
         {
-            if (_toggleBusy.Contains(id)) return false;
-            _toggleBusy.Add(id);
-            _toggleBusySince[id] = DateTime.UtcNow;
+            if (_toggleBusy.TryGetValue(id, out var ts))
+            {
+                // Stale? -> übernehmen & weitermachen
+                if (DateTime.UtcNow - ts > ToggleBusyTTL)
+                {
+                    _toggleBusy[id] = DateTime.UtcNow;
+                    AppendLog($"(recovered) cleared stale toggle lock for #{id}");
+                    return true;
+                }
+                return false;
+            }
+            _toggleBusy[id] = DateTime.UtcNow;
             return true;
         }
     }
-    private void UnmarkToggleBusy(long id)
+
+    private void UnmarkToggleBusy(uint id)
     {
-        lock (_toggleBusyLock)
-        {
-            _toggleBusy.Remove(id);
-            _toggleBusySince.Remove(id);
-        }
+        lock (_toggleBusy) { _toggleBusy.Remove(id); }
+    }
+
+    private void ClearAllToggleBusy()
+    {
+        lock (_toggleBusy) { _toggleBusy.Clear(); }
     }
 
     private void BtnHotkeys_Click(object sender, RoutedEventArgs e)
