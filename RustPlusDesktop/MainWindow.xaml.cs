@@ -4,6 +4,7 @@ using RustPlusDesk.Models;
 using RustPlusDesk.Services;
 using RustPlusDesk.ViewModels;
 using RustPlusDesk.Views;
+using System.Windows.Markup;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.WebSockets;
@@ -30,6 +32,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -48,6 +51,7 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow : Window
 {
+
     private readonly MainViewModel _vm = new();
     private readonly SteamLoginService _steam = new();
     private DateTime _lastPairingPingAt = DateTime.MinValue;
@@ -83,13 +87,13 @@ public partial class MainWindow : Window
     // CROSSHAIR
     private CrosshairWindow? _overlay;
     private CrosshairStyle _currentStyle = CrosshairStyle.GreenDot;
-
+    private bool _alertsNeedRebaseline = false;
     private bool _visible;
     // CAMERA TAB
 
     // Camera thumbs: Throttling & "in-flight"-Wächter
     internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCase);
-
+    private Dictionary<OverlayToolMode, Button> _toolButtons;
     private void BtnOpenCamera_Click(object sender, RoutedEventArgs e)
     {
         if (_rust is not RustPlusClientReal real) return;
@@ -104,7 +108,7 @@ public partial class MainWindow : Window
         real.DebugDumpAppRequestShape();
     }
 
-
+   
 
 
     private ObservableCollection<string> _cameraIds = new();
@@ -135,7 +139,7 @@ public partial class MainWindow : Window
             CamItems.Items.Add(BuildCamTile(id));
     }
     // Wie „nah“ die Mini-Map um den Spieler herum zuschneidet (Anteil der Hauptkarte)
-    private const double MINI_VIEW_FRACTION = 0.30; // 40% des sichtbaren Bereichs
+    private const double MINI_VIEW_FRACTION = 0.3; // 40% des sichtbaren Bereichs
 
     //>>
     private void CenterMiniMapOnPlayer()
@@ -684,6 +688,16 @@ public partial class MainWindow : Window
         {
             AppendLog("[team] " + ex.Message);
         }
+
+        if (_overlayToolsVisible)
+        {
+            // UI muss auf UI-Thread aktualisiert werden
+            await Dispatcher.InvokeAsync(() =>
+            {
+                RebuildOverlayTeamBar();
+            });
+        }
+
     }
 
     private async Task AnnouncePresenceChangeAsync(TeamMemberVM vm, (bool online, bool dead) prev, (bool online, bool dead) now)
@@ -691,7 +705,7 @@ public partial class MainWindow : Window
         try
         {
             // Online/Offline (wenn dieser Part auch vom Button abhängen soll, ebenfalls mit _announceSpawns verknüpfen)
-            if (prev.online != now.online /* && _announceSpawns */)
+            if (prev.online != now.online  && _announceSpawns )
             {
                 var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : "unknown";
                 var txt = now.online ? $"{vm.Name} came online @ {where}"
@@ -1046,6 +1060,14 @@ public partial class MainWindow : Window
         _ = EnsureWebView2Async();
         ClearAllToggleBusy();
         this.Closed += MainWindow_Closed;
+
+        _toolButtons = new Dictionary<OverlayToolMode, Button>
+    {
+        { OverlayToolMode.Draw,  ToolDrawButton },
+        { OverlayToolMode.Text,  ToolTextButton },
+        { OverlayToolMode.Icon,  ToolIconButton },
+        { OverlayToolMode.Erase, ToolEraseButton }
+    };
 
     }
 
@@ -2721,7 +2743,21 @@ public partial class MainWindow : Window
         _lastPresence.Clear();
         ClearAllDeathPins();
         ClearAllToggleBusy();
+        // Shopspezifische State-Tracker leeren:
+        _lastShops.Clear();
+        _shopLifetimes.Clear();
+        _knownShopIds.Clear();
+        _initialShopSnapshotTimeUtc = DateTime.MinValue;
+        // Alerts rebaselinen beim nächsten Poll
+        _alertsNeedRebaseline = true;
+        // Rate-Limiter zurücksetzen
+        _lastChatSendUtc = DateTime.MinValue;
 
+        // Overlay auf der Map leeren, weil die alten Shop-UI-Elemente vom alten Server sind:
+        foreach (var el in _shopEls.Values)
+            Overlay.Children.Remove(el);
+        _shopEls.Clear();
+        
 
         //if (_shopTimer =  _shopTimer.Stop();
         // StopDynPolling();
@@ -2782,6 +2818,23 @@ public partial class MainWindow : Window
             await LoadMapAsync();
             await StartPairingListenerUiAsync();
 
+            // 3. altes User-Zeug aus vorherigem Server entfernen
+            ClearUserOverlayElements();
+
+            // 4. Team-Overlay-Layer auch leeren (optional aber sinnvoll,
+            //    damit du nicht die PNG vom alten Server siehst)
+            // _visibleOverlayOwners.Clear();
+            // foreach (var img in _playerOverlayElements.Values)
+            //  {
+            //     Overlay.Children.Remove(img);
+            //  }
+            //   _playerOverlayElements.Clear();
+            // 5. eigenes Overlay (falls vorhanden) aus JSON dieses Servers laden
+            // sicherstellen, dass ich sichtbar bin
+            _visibleOverlayOwners.Add(_mySteamId);
+            // von Disk lesen
+            LoadOverlayFromDiskForPlayer(_mySteamId);
+
             // (3) Geräte in-place rehydrieren (Collection-Instanz behalten)
             RehydrateDevicesFromStorageInto(_vm.Selected);
             _vm.NotifyDevicesChanged();
@@ -2816,7 +2869,10 @@ public partial class MainWindow : Window
             // (6) Team-Polling starten
             StartTeamPolling();
             await LoadTeamAsync();
-
+            if (_overlayToolsVisible)
+            {
+                RebuildOverlayTeamBar();
+            }
 
         }
         catch (Exception ex)
@@ -3670,6 +3726,16 @@ public partial class MainWindow : Window
     private Point _lastHost;
     private void WebViewHost_MouseDown(object? sender, MouseButtonEventArgs e)
     {
+
+        var hostPos = e.GetPosition(WebViewHost);
+        var mapPos = HostToScenePreTransform(hostPos); // du hast die Helperfunktion schon
+
+        if (_overlayToolsVisible && _currentTool != OverlayToolMode.None)
+        {
+            HandleOverlayMouseDown(e, mapPos);
+            e.Handled = true;
+            return;
+        }
         if (e.ChangedButton == MouseButton.Middle || e.ChangedButton == MouseButton.Right)
         {
             _isPanning = true;
@@ -3681,6 +3747,16 @@ public partial class MainWindow : Window
     private Point _panLastWorld; // Maus in "Welt"/Scene-Koordinaten (vor der Transform)
     private void WebViewHost_MouseMove(object? sender, MouseEventArgs e)
     {
+
+        var hostPos = e.GetPosition(WebViewHost);
+        var mapPos = HostToScenePreTransform(hostPos);
+
+        if (_overlayToolsVisible && _currentTool != OverlayToolMode.None)
+        {
+            HandleOverlayMouseMove(e, mapPos);
+            e.Handled = true;
+            return;
+        }
         if (!_isPanning) return;
 
         var hostNow = e.GetPosition(WebViewHost);
@@ -3699,6 +3775,16 @@ public partial class MainWindow : Window
 
     private void WebViewHost_MouseUp(object? sender, MouseButtonEventArgs e)
     {
+        var hostPos = e.GetPosition(WebViewHost);
+        var mapPos = HostToScenePreTransform(hostPos);
+
+        if (_overlayToolsVisible && _currentTool != OverlayToolMode.None)
+        {
+            HandleOverlayMouseUp(e, mapPos);
+            e.Handled = true;
+            return;
+        }
+
         if (_isPanning && (e.ChangedButton == MouseButton.Middle || e.ChangedButton == MouseButton.Right))
         {
             _isPanning = false;
@@ -4233,7 +4319,7 @@ public partial class MainWindow : Window
             AppendLog("Couldn't open Donate Link: " + ex.Message);
         }
     }
-    private bool _announceSpawns = true;
+    private bool _announceSpawns = false;
 
     private void ChatAnnounce_Checked(object sender, RoutedEventArgs e) => _announceSpawns = true;
     private void ChatAnnounce_Unchecked(object sender, RoutedEventArgs e) => _announceSpawns = false;
@@ -5078,21 +5164,37 @@ public partial class MainWindow : Window
 
         try
         {
-            var shops = await real.GetVendingShopsAsync(); // siehe Teil B unten
-            //AppendLog($"Shops: {shops.Count} Marker empfangen.");
-
-            // Debug erster Marker → prüfe Mapping
-            if (shops.Count > 0)
-            {
-                var s0 = shops[0];
-                var p0 = WorldToImagePx(s0.X, s0.Y);
-
-                //AppendLog($"Shops dbg: S={_worldSizeS} rect=({_worldRectPx.X:0},{_worldRectPx.Y:0},{_worldRectPx.Width:0}x{_worldRectPx.Height:0}) first=({s0.X:0},{s0.Y:0})->({p0.X:0},{p0.Y:0})");
-            }
+            var shops = await real.GetVendingShopsAsync();
 
             UpdateShopsUI(shops);
             _lastShops = shops;
-            if (_shopSearchWin?.IsVisible == true) RefreshShopSearchResults();
+
+            // Track lifetimes (für suspicious) und bekannte Shops:
+            UpdateShopLifetimes(shops);
+
+            // Falls wir frisch mit einem neuen Server verbunden haben:
+            if (_alertsNeedRebaseline)
+            {
+                RebaselineAllAlertRulesFromCurrentShops(shops);
+
+                // detect new shops: wir setzen die baseline für new-shops auch neu
+                _initialShopSnapshotTimeUtc = DateTime.UtcNow;
+                _knownShopIds.Clear();
+                foreach (var s in shops)
+                    _knownShopIds.Add(s.Id);
+
+                _alertsNeedRebaseline = false;
+            }
+
+            // Neue Shops melden:
+            await DetectNewShopsAsync(shops);
+
+            // Alerts prüfen:
+            await CheckAlerts(shops);
+
+            // Falls Fenster offen ist und sichtbar -> Liste refreshen
+            if (_shopSearchWin?.IsVisible == true)
+                RefreshShopSearchResults();
         }
         catch (Exception ex)
         {
@@ -5101,7 +5203,497 @@ public partial class MainWindow : Window
     }
 
 
+    private async Task DetectNewShopsAsync(IReadOnlyList<RustPlusClientReal.ShopMarker> shops)
+    {
+        // Erster erfolgreicher Snapshot?
+        if (_initialShopSnapshotTimeUtc == DateTime.MinValue)
+        {
+            _initialShopSnapshotTimeUtc = DateTime.UtcNow;
+            foreach (var s in shops)
+                _knownShopIds.Add(s.Id);
+            return;
+        }
 
+        if (!_notifyNewShopsToChat)
+            return;
+
+        foreach (var s in shops)
+        {
+            if (_knownShopIds.Contains(s.Id))
+                continue; // schon bekannt
+
+            _knownShopIds.Add(s.Id);
+
+            // kurze Preview bauen (bis zu 2 Orders mit Stock > 0)
+            var preview = s.Orders?
+                .Where(o => o.Stock > 0)
+                .Take(3)
+                .Select(o =>
+                {
+                    var left = ResolveItemName(o.ItemId, o.ItemShortName);
+                    var right = ResolveItemName(o.CurrencyItemId, o.CurrencyShortName);
+                    return $"{left} for {o.CurrencyAmount} {right}";
+                })
+                .ToList();
+
+            string offersShort = (preview != null && preview.Count > 0)
+                ? string.Join(", ", preview)
+                : "no stock";
+
+            string msg =
+                $"New shop {(s.Label ?? "Shop")} [{GetGridLabel(s)}]: {offersShort}";
+            AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert [new shop] {(s.Label ?? "Shop")} [{GetGridLabel(s)}]: {offersShort}");
+            await SendTeamChatSafeAsync(msg);
+        }
+    }
+
+    private class TwoStepFlip
+    {
+        public RustPlusClientReal.ShopMarker ShopFirst;
+        public RustPlusClientReal.ShopMarker ShopSecond;
+        public RustPlusClientReal.ShopOrder OfferFirst;
+        public RustPlusClientReal.ShopOrder OfferSecond;
+
+        public string StartCurrencyName = "";  // Währung, mit der wir anfangen und am Ende wieder rauskommen
+        public string MidItemName = "";        // Zwischen-Item
+
+        public int RunsFirst;                  // wie oft wir Schritt1 ausgeführt haben
+        public int RunsSecond;                 // wie oft Schritt2
+
+        public int StartSpent;                 // wieviel StartCurrency wir investiert haben
+        public int StartBack;                  // wieviel StartCurrency wir zurückbekommen haben
+        public int Profit;                     // StartBack - StartSpent
+
+        public int MidProduced;                // wieviel MidItem nach Schritt1 insgesamt
+        public int MidConsumed;                // wieviel MidItem von Schritt2 verbraucht
+        public int MidLeftover;                // Rest MidItem danach
+    }
+
+    // Simuliert: erst (shop1,o1) mehrfach laufen lassen, dann (shop2,o2) benutzen.
+    // Gibt BESTE profitable Kombination zurück oder null.
+    private TwoStepFlip? SimulateSequence(
+    RustPlusClientReal.ShopMarker shop1, RustPlusClientReal.ShopOrder o1,
+    RustPlusClientReal.ShopMarker shop2, RustPlusClientReal.ShopOrder o2)
+    {
+        // Daten aus o1
+        int pay1Id = o1.CurrencyItemId;
+        string pay1Name = ResolveItemName(o1.CurrencyItemId, o1.CurrencyShortName ?? "");
+        int pay1Amt = (int)o1.CurrencyAmount;
+
+        int get1Id = o1.ItemId;
+        string get1Name = ResolveItemName(o1.ItemId, o1.ItemShortName ?? "");
+        int get1Amt = o1.Quantity;
+
+        int stock1 = o1.Stock;
+
+        // Daten aus o2
+        int pay2Id = o2.CurrencyItemId;
+        string pay2Name = ResolveItemName(o2.CurrencyItemId, o2.CurrencyShortName ?? "");
+        int pay2Amt = (int)o2.CurrencyAmount;
+
+        int get2Id = o2.ItemId;
+        string get2Name = ResolveItemName(o2.ItemId, o2.ItemShortName ?? "");
+        int get2Amt = o2.Quantity;
+
+        int stock2 = o2.Stock;
+
+        // Guards
+        if (pay1Amt <= 0 || get1Amt <= 0 || stock1 <= 0) return null;
+        if (pay2Amt <= 0 || get2Amt <= 0 || stock2 <= 0) return null;
+
+        // Loop-Bedingung jetzt über IDs, nicht Strings:
+        // Schritt1 produziert get1Id -> muss Schritt2 bezahlen pay2Id
+        if (get1Id != pay2Id) return null;
+        // Schritt2 produziert get2Id -> muss wieder der Ursprungs-Start pay1Id sein
+        if (get2Id != pay1Id) return null;
+
+        TwoStepFlip? best = null;
+
+        for (int runs1 = 1; runs1 <= stock1; runs1++)
+        {
+            int spentStart = runs1 * pay1Amt;   // wieviel Startwährung investiert
+            int midProduced = runs1 * get1Amt;   // wieviel Zwischen-Item bekommen
+
+            int maxByMid = midProduced / pay2Amt;
+            int runs2 = Math.Min(maxByMid, stock2);
+            if (runs2 <= 0) continue;
+
+            int midConsumed = runs2 * pay2Amt;
+            int midLeft = midProduced - midConsumed;
+            int startBack = runs2 * get2Amt;
+
+            int profit = startBack - spentStart;
+            if (profit <= 0) continue;
+
+            if (best == null || profit > best.Profit)
+            {
+                best = new TwoStepFlip
+                {
+                    ShopFirst = shop1,
+                    ShopSecond = shop2,
+                    OfferFirst = o1,
+                    OfferSecond = o2,
+
+                    StartCurrencyName = pay1Name,
+                    MidItemName = get1Name,
+
+                    RunsFirst = runs1,
+                    RunsSecond = runs2,
+
+                    StartSpent = spentStart,
+                    StartBack = startBack,
+                    Profit = profit,
+
+                    MidProduced = midProduced,
+                    MidConsumed = midConsumed,
+                    MidLeftover = midLeft
+                };
+            }
+        }
+
+        return best;
+    }
+
+    private List<TwoStepFlip> FindTwoStepFlips(List<RustPlusClientReal.ShopMarker> shops)
+    {
+        var flips = new List<TwoStepFlip>();
+
+        // zum Deduplizieren
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        for (int i = 0; i < shops.Count; i++)
+        {
+            var s1 = shops[i];
+            if (s1.Orders == null) continue;
+
+            for (int j = 0; j < shops.Count; j++)
+            {
+                var s2 = shops[j];
+                if (s2.Orders == null) continue;
+
+                foreach (var o1 in s1.Orders)
+                {
+                    if (o1.Stock <= 0) continue;
+                    foreach (var o2 in s2.Orders)
+                    {
+                        if (o2.Stock <= 0) continue;
+
+                        // Versuch A->B->A
+                        var fwd = SimulateSequence(s1, o1, s2, o2);
+                        if (fwd != null)
+                        {
+                            string sig = MakeFlipSignature(fwd);
+                            if (seen.Add(sig))
+                                flips.Add(fwd);
+                        }
+
+                        // Versuch B->A->B (umgekehrt)
+                        var rev = SimulateSequence(s2, o2, s1, o1);
+                        if (rev != null)
+                        {
+                            string sig = MakeFlipSignature(rev);
+                            if (seen.Add(sig))
+                                flips.Add(rev);
+                        }
+                    }
+                }
+            }
+        }
+
+        // sortiere: höchster Profit zuerst
+        flips.Sort((a, b) => b.Profit.CompareTo(a.Profit));
+        return flips;
+    }
+
+    // Eindeutige Signatur, damit wir Duplikate filtern
+    private string MakeFlipSignature(TwoStepFlip f)
+    {
+        // Wir sortieren die Shop-IDs, damit A→B & B→A gleich behandelt werden
+        uint a = f.ShopFirst.Id;
+        uint b = f.ShopSecond.Id;
+        if (a > b) { var tmp = a; a = b; b = tmp; }
+
+        // Wir nehmen die ItemIds, nicht die hübschen Namen
+        int startId = f.OfferFirst.CurrencyItemId; // Startwährung
+        int midId = f.OfferFirst.ItemId;         // Zwischen-Item
+
+        return $"{startId}|{midId}|{a}|{b}";
+    }
+
+    private FrameworkElement BuildFlipCard(TwoStepFlip f)
+    {
+        // äußerer Rahmen des gesamten Flips
+        var outerBorder = new Border
+        {
+            CornerRadius = new CornerRadius(6),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(60, 255, 255, 255)),
+            BorderThickness = new Thickness(1),
+            Background = new SolidColorBrush(Color.FromRgb(28, 30, 33)), // dunkler statt halbtransparent
+            Padding = new Thickness(10),
+            Margin = new Thickness(0, 0, 0, 8)
+        };
+
+        var outerStack = new StackPanel
+        {
+            Orientation = Orientation.Vertical
+        };
+        outerBorder.Child = outerStack;
+
+        // === HEADER mit großem Icon + Profit-Text ===
+        var headerBorder = new Border
+        {
+            Background = new SolidColorBrush(Color.FromRgb(40, 44, 48)), // dunkler Streifen
+            BorderBrush = new SolidColorBrush(Color.FromArgb(60, 255, 255, 255)),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(4),
+            Padding = new Thickness(6),
+            Margin = new Thickness(0, 0, 0, 8)
+        };
+
+        var headerRow = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        headerBorder.Child = headerRow;
+
+        // Großes Icon für die Start-Ressource (das, wo du am Ende mehr davon hast)
+        var bigIcon = new Image
+        {
+            Width = 32,
+            Height = 32,
+            Margin = new Thickness(0, 0, 8, 0),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        // OfferFirst.Currency = das Start-Item
+        BindIcon(
+            bigIcon,
+            f.OfferFirst.CurrencyShortName,
+            f.OfferFirst.CurrencyItemId
+        );
+        headerRow.Children.Add(bigIcon);
+
+        // Rechts daneben Textblock(e)
+        var headerTextStack = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        // fette Profit-Zeile
+        headerTextStack.Children.Add(new TextBlock
+        {
+            Text = $"Profit: +{f.Profit} {f.StartCurrencyName}",
+            Foreground = new SolidColorBrush(Color.FromRgb(255, 220, 100)), // gold-ish
+            FontWeight = FontWeights.SemiBold,
+            FontSize = 14
+        });
+
+        // Kurze Zusammenfassung Start -> End
+        headerTextStack.Children.Add(new TextBlock
+        {
+            Text =
+        $"Start with {f.StartSpent} {f.StartCurrencyName} → end with {f.StartBack} {f.StartCurrencyName} " +
+        $"(Step1 x{f.RunsFirst}, Step2 x{f.RunsSecond})",
+            Foreground = Brushes.White,
+            Margin = new Thickness(0, 2, 0, 0),
+            FontSize = 12
+        });
+
+        headerRow.Children.Add(headerTextStack);
+
+        outerStack.Children.Add(headerBorder);
+
+        // === Info über die Zwischen-Ressource ===
+        // z.B. "Intermediate Crude Oil: made 100, used 15, leftover 85"
+        outerStack.Children.Add(new TextBlock
+        {
+            Text =
+                $"Intermediate {f.MidItemName}: made {f.MidProduced}, used {f.MidConsumed}, leftover {f.MidLeftover}",
+            Foreground = new SolidColorBrush(Color.FromArgb(200, 220, 220, 220)),
+            Margin = new Thickness(0, 0, 0, 8),
+            FontSize = 12
+        });
+
+        // === Zwei Spalten: Step 1 links, Step 2 rechts ===
+        var stepsGrid = new Grid
+        {
+            Margin = new Thickness(0, 0, 0, 0)
+        };
+        stepsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        stepsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        // Linke Spalte = Step1
+        var step1Panel = BuildFlipStepPanel(
+            stepLabel: $"Step 1 x{f.RunsFirst}",
+            shop: f.ShopFirst,
+            order: f.OfferFirst
+        );
+        Grid.SetColumn(step1Panel, 0);
+        stepsGrid.Children.Add(step1Panel);
+
+        // Rechte Spalte = Step2
+        var step2Panel = BuildFlipStepPanel(
+            stepLabel: $"Step 2 x{f.RunsSecond}",
+            shop: f.ShopSecond,
+            order: f.OfferSecond
+        );
+        Grid.SetColumn(step2Panel, 1);
+        stepsGrid.Children.Add(step2Panel);
+
+        outerStack.Children.Add(stepsGrid);
+
+        return outerBorder;
+    }
+
+    private FrameworkElement BuildFlipStepPanel(string stepLabel,
+    RustPlusClientReal.ShopMarker shop,
+    RustPlusClientReal.ShopOrder order)
+    {
+        var panel = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Margin = new Thickness(0, 0, 8, 0)
+        };
+
+        // Step headline
+        panel.Children.Add(new TextBlock
+        {
+            Text = stepLabel,
+            Foreground = SearchText,
+            FontWeight = FontWeights.SemiBold
+        });
+
+        // Shop row with [Go] button
+        var shopRow = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Margin = new Thickness(0, 2, 0, 4),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        shopRow.Children.Add(new TextBlock
+        {
+            Text = $"{(shop.Label ?? "Shop")} [{GetGridLabel(shop)}]",
+            Foreground = SearchText,
+            Margin = new Thickness(0, 0, 6, 0),
+            VerticalAlignment = VerticalAlignment.Center
+        });
+
+        var btnGo = new Button
+        {
+            Content = "Go",
+            Margin = new Thickness(0, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        btnGo.Click += (_, __) => CenterMapOnWorld(shop.X, shop.Y);
+
+        shopRow.Children.Add(btnGo);
+
+        panel.Children.Add(shopRow);
+
+        // Offer card itself (re-use BuildOfferRowUI so wir kriegen Icons/Stock/→ usw.)
+        var offerCard = BuildOfferRowUI(order);
+        // BuildOfferRowUI gibt dir schon einen Border mit Grid drin.
+        // Wir wollen es nur etwas einrücken:
+        if (offerCard is FrameworkElement fe)
+            fe.Margin = new Thickness(0, 0, 8, 8);
+
+        panel.Children.Add(offerCard);
+
+        return panel;
+    }
+
+
+    private void UpdateShopLifetimes(IReadOnlyList<RustPlusClientReal.ShopMarker> shops)
+    {
+        // Step 1: Markiere erstmal alle als "nicht gesehen in diesem Poll"
+        foreach (var kv in _shopLifetimes)
+        {
+            kv.Value.LastSeenUtc = null;
+        }
+
+        // Step 2: Gesehene aktualisieren / neu anlegen
+        foreach (var s in shops)
+        {
+            if (!_shopLifetimes.TryGetValue(s.Id, out var life))
+            {
+                life = new ShopLifetimeInfo
+                {
+                    FirstSeenUtc = DateTime.UtcNow,
+                    LastSnapshot = s
+                };
+                _shopLifetimes[s.Id] = life;
+            }
+
+            life.LastSeenUtc = DateTime.UtcNow;
+            life.LastSnapshot = s;
+        }
+
+        // Step 3: Jetzt checken wir auf "suspicious" für die, die NICHT gesehen wurden
+        if (_notifySuspiciousShops)
+        {
+            foreach (var kv in _shopLifetimes.ToList())
+            {
+                var id = kv.Key;
+                var life = kv.Value;
+
+                // War im letzten Poll da, jetzt nicht gesehen = offline gegangen
+                if (life.LastSeenUtc == null && !life.AnnouncedSuspicious)
+                {
+                    string grid = life.LastSnapshot != null ? GetGridLabel(life.LastSnapshot) : "unknown";
+                    AppendLog($"[dbg] Shop {life.LastSnapshot?.Label ?? "(no label)"} [{grid}] offline after {(DateTime.UtcNow - life.FirstSeenUtc).TotalSeconds:0}s");
+                    var lived = DateTime.UtcNow - life.FirstSeenUtc;
+                    if (lived.TotalSeconds <= 60.0)
+                    {
+                        // Alarm
+                        var snap = life.LastSnapshot;
+                        if (snap != null)
+                        {
+                            var preview = snap.Orders?
+                                .Where(o => o.Stock > 0)
+                                .Take(3)
+                                .Select(o =>
+                                {
+                                    var left = ResolveItemName(o.ItemId, o.ItemShortName);
+                                    var right = ResolveItemName(o.CurrencyItemId, o.CurrencyShortName);
+                                    return $"{left} for {o.CurrencyAmount} {right}";
+                                })
+                                .ToList();
+
+                            string firstFew = (preview != null && preview.Count > 0)
+                                ? string.Join(", ", preview)
+                                : "nothing in stock";
+
+                            string msg =
+                                $"Suspicious shop {(snap.Label ?? "Shop")} " +
+                                $"[{GetGridLabel(snap)}] was online {Math.Round(lived.TotalSeconds)}s, sold {firstFew}";
+
+                            // fire & forget, kein await hier weil wir in Loop sind
+                            _ = SendTeamChatSafeAsync(msg);
+                        }
+
+                        life.AnnouncedSuspicious = true;
+                    }
+                }
+            }
+        }
+    }
+
+    private void RunShopAnalysis()
+    {
+        if (_analysisList == null) return;
+
+        // TODO: tatsächliche Arbitrage-Logik bauen.
+        // Für jetzt nur ein Placeholder, damit's kompiliert.
+        _analysisList.Items.Clear();
+        _analysisList.Items.Add(new TextBlock
+        {
+            Text = "Analysis coming soon...",
+            Foreground = SearchText
+        });
+        _analysisList.Visibility = Visibility.Visible;
+    }
 
     private void StopShopPolling()
     {
@@ -5278,6 +5870,175 @@ public partial class MainWindow : Window
     private ListBox? _searchList;
     private List<RustPlusClientReal.ShopMarker> _lastShops = new(); // füllen wir beim Polling
 
+    private Style BuildNiceButtonStyle(
+    Color bgNormal,
+    Color bgHover,
+    Color bgPressed,
+    Color borderNormal,
+    Color borderPressed,
+    Color fgNormal,
+    Color fgPressed,
+    CornerRadius corner,
+    Thickness padding)
+    {
+        // Border im ControlTemplate
+        var borderFactory = new FrameworkElementFactory(typeof(Border));
+        borderFactory.Name = "Bd";
+        borderFactory.SetValue(Border.BackgroundProperty, new SolidColorBrush(bgNormal));
+        borderFactory.SetValue(Border.BorderBrushProperty, new SolidColorBrush(borderNormal));
+        borderFactory.SetValue(Border.BorderThicknessProperty, new Thickness(1));
+        borderFactory.SetValue(Border.CornerRadiusProperty, corner);
+
+        var contentFactory = new FrameworkElementFactory(typeof(ContentPresenter));
+        contentFactory.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+        contentFactory.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
+        contentFactory.SetValue(Control.PaddingProperty, padding);
+
+        borderFactory.AppendChild(contentFactory);
+
+        // ControlTemplate für Button
+        var template = new ControlTemplate(typeof(Button));
+        template.VisualTree = borderFactory;
+
+        // Trigger: Hover
+        {
+            var triggerHover = new Trigger
+            {
+                Property = Button.IsMouseOverProperty,
+                Value = true
+            };
+            triggerHover.Setters.Add(new Setter(Border.BackgroundProperty, new SolidColorBrush(bgHover), "Bd"));
+            template.Triggers.Add(triggerHover);
+        }
+        // Trigger: Pressed
+        {
+            var triggerPressed = new Trigger
+            {
+                Property = Button.IsPressedProperty,
+                Value = true
+            };
+            triggerPressed.Setters.Add(new Setter(Border.BackgroundProperty, new SolidColorBrush(bgPressed), "Bd"));
+            triggerPressed.Setters.Add(new Setter(Border.BorderBrushProperty, new SolidColorBrush(borderPressed), "Bd"));
+            triggerPressed.Setters.Add(new Setter(Control.ForegroundProperty, new SolidColorBrush(fgPressed)));
+            template.Triggers.Add(triggerPressed);
+        }
+        // Trigger: Disabled
+        {
+            var triggerDisabled = new Trigger
+            {
+                Property = UIElement.IsEnabledProperty,
+                Value = false
+            };
+            triggerDisabled.Setters.Add(new Setter(UIElement.OpacityProperty, 0.5, "Bd"));
+            template.Triggers.Add(triggerDisabled);
+        }
+
+        // Style-Objekt zusammenbauen
+        var style = new Style(typeof(Button));
+        style.Setters.Add(new Setter(Control.ForegroundProperty, new SolidColorBrush(fgNormal)));
+        style.Setters.Add(new Setter(Control.CursorProperty, Cursors.Hand));
+        style.Setters.Add(new Setter(Control.BorderThicknessProperty, new Thickness(0))); // Border machen wir im Template
+        style.Setters.Add(new Setter(Control.TemplateProperty, template));
+
+        return style;
+    }
+    private static void StyleHeaderCheckBox(CheckBox cb, string labelText, bool isInitiallyChecked)
+    {
+        cb.IsChecked = isInitiallyChecked;
+        cb.Cursor = Cursors.Hand;
+        cb.ToolTip = labelText;
+        cb.Margin = new Thickness(4, 0, 8, 0);
+        cb.VerticalAlignment = VerticalAlignment.Center;
+        cb.Foreground = Brushes.White;
+        cb.Background = Brushes.Transparent;
+        cb.BorderThickness = new Thickness(0);
+        cb.Focusable = false;
+
+        // Wir bauen das Template einmal hier inline:
+        var circleBorder = new FrameworkElementFactory(typeof(Border));
+        circleBorder.SetValue(Border.WidthProperty, 16.0);
+        circleBorder.SetValue(Border.HeightProperty, 16.0);
+        circleBorder.SetValue(Border.CornerRadiusProperty, new CornerRadius(8));
+        circleBorder.SetValue(Border.BorderThicknessProperty, new Thickness(1));
+        circleBorder.SetValue(Border.MarginProperty, new Thickness(0, 0, 4, 0));
+        circleBorder.SetValue(Border.HorizontalAlignmentProperty, HorizontalAlignment.Left);
+        circleBorder.SetValue(Border.VerticalAlignmentProperty, VerticalAlignment.Center);
+
+        // BorderBrush + Background kommen über Trigger
+        circleBorder.SetValue(Border.BorderBrushProperty,
+            new SolidColorBrush(Color.FromArgb(160, 255, 255, 255))); // default
+        circleBorder.SetValue(Border.BackgroundProperty,
+            new SolidColorBrush(Color.FromRgb(40, 44, 48))); // default dark bg
+
+        // innerer Punkt
+        var dot = new FrameworkElementFactory(typeof(Ellipse));
+        dot.SetValue(Ellipse.WidthProperty, 8.0);
+        dot.SetValue(Ellipse.HeightProperty, 8.0);
+        dot.SetValue(Ellipse.FillProperty,
+            new SolidColorBrush(Color.FromRgb(0, 200, 255))); // cyan-ish
+        dot.SetValue(Ellipse.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+        dot.SetValue(Ellipse.VerticalAlignmentProperty, VerticalAlignment.Center);
+
+        // dot ist nur sichtbar wenn checked -> Trigger unten
+        dot.SetValue(UIElement.VisibilityProperty, Visibility.Collapsed);
+
+        // Border enthält den Punkt
+        var borderPanel = new FrameworkElementFactory(typeof(Grid));
+        borderPanel.AppendChild(dot);
+        circleBorder.AppendChild(borderPanel);
+
+        // daneben der Text ("Sells", "Buys", etc.)
+        var text = new FrameworkElementFactory(typeof(TextBlock));
+        text.SetValue(TextBlock.TextProperty, labelText);
+        text.SetValue(TextBlock.ForegroundProperty, Brushes.White);
+        text.SetValue(TextBlock.FontSizeProperty, 12.0);
+        text.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
+
+        // horizontal zusammenbauen
+        var rootPanel = new FrameworkElementFactory(typeof(StackPanel));
+        rootPanel.SetValue(StackPanel.OrientationProperty, Orientation.Horizontal);
+        rootPanel.SetValue(StackPanel.VerticalAlignmentProperty, VerticalAlignment.Center);
+        rootPanel.AppendChild(circleBorder);
+        rootPanel.AppendChild(text);
+
+        // Template definieren
+        var tpl = new ControlTemplate(typeof(CheckBox));
+        tpl.VisualTree = rootPanel;
+
+        // Trigger: wenn Checked == true, dann Border in aktiv-Farbe und Punkt sichtbar
+        var tIsChecked = new Trigger
+        {
+            Property = ToggleButton.IsCheckedProperty,
+            Value = true
+        };
+        tIsChecked.Setters.Add(new Setter(Border.BorderBrushProperty,
+            new SolidColorBrush(Color.FromRgb(0, 200, 255)), "circle"));
+        tIsChecked.Setters.Add(new Setter(Ellipse.VisibilityProperty,
+            Visibility.Visible, dot.Name ?? ""));
+        // Trick: wir müssen den Childs Namen geben, damit wir sie im Setter ansprechen können
+
+        // => wir geben denen Namen:
+        circleBorder.Name = "circle";
+        dot.Name = "dot";
+
+        // jetzt nochmal Trigger definieren MIT Names:
+        tIsChecked = new Trigger
+        {
+            Property = ToggleButton.IsCheckedProperty,
+            Value = true
+        };
+        tIsChecked.Setters.Add(new Setter(Border.BorderBrushProperty,
+            new SolidColorBrush(Color.FromRgb(0, 200, 255)), "circle"));
+        tIsChecked.Setters.Add(new Setter(Border.BackgroundProperty,
+            new SolidColorBrush(Color.FromRgb(20, 30, 36)), "circle")); // leicht blauer bg
+        tIsChecked.Setters.Add(new Setter(UIElement.VisibilityProperty,
+            Visibility.Visible, "dot"));
+
+        tpl.Triggers.Add(tIsChecked);
+
+        cb.Template = tpl;
+    }
+
     private void BtnShopSearch_Click(object sender, RoutedEventArgs e)
     {
         if (_shopSearchWin == null) CreateShopSearchWindow();
@@ -5291,6 +6052,31 @@ public partial class MainWindow : Window
 
     private void CreateShopSearchWindow()
     {
+
+        // Farb-Palette ähnlich deinem globalen Theme
+        Color colBgNormal = Color.FromRgb(30, 87, 111);   // SurfaceAlt
+        Color colBgHover = Color.FromRgb(42, 48, 52);   // Surface
+        Color colBgPressed = Color.FromRgb(10, 58, 74);   // AccentDark-ish (leicht blaugrün)
+        Color colBorderNorm = Color.FromRgb(79, 195, 247); // helle dünne Linie
+        Color colBorderDown = Color.FromRgb(10, 58, 74);   // gleich wie Pressed BG = "eingedrückt"
+        Color colFgNormal = Colors.White;                // TextPrimary
+        Color colFgPressed = Colors.White;
+
+        var corner = new CornerRadius(10); // dein Radius
+        var pad = new Thickness(8, 4, 8, 4);
+
+        Style niceBtnStyle = BuildNiceButtonStyle(
+            colBgNormal,
+            colBgHover,
+            colBgPressed,
+            colBorderNorm,
+            colBorderDown,
+            colFgNormal,
+            colFgPressed,
+            corner,
+            pad
+        );
+
         var w = new Window
         {
             Title = "Shop Search",
@@ -5301,38 +6087,217 @@ public partial class MainWindow : Window
             Foreground = SearchText
         };
 
-        var root = new DockPanel { Margin = new Thickness(10) };
+        // Root -> vertikal
+        var root = new DockPanel
+        {
+            Margin = new Thickness(10)
+        };
 
-        // Top-Bar
-        var top = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
-        _searchTb = new TextBox { Width = 300, Margin = new Thickness(0, 0, 8, 0) };
-        _chkSell = new CheckBox { Content = "Sells", IsChecked = true, Margin = new Thickness(0, 0, 8, 0), Foreground = SearchText };
-        _chkBuy = new CheckBox { Content = "Buys", IsChecked = true, Foreground = SearchText };
-        var btnGo = new Button { Content = "Search", Margin = new Thickness(8, 0, 0, 0) };
+        // ========== OBERER BLOCK (Suchleiste, Buttons) ==========
+        // Wir machen hier einen StackPanel vertical, damit wir 2 Zeilen + Alerts + Filterzeile etc. haben
+        var headerWrap = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Margin = new Thickness(0, 0, 0, 8)
+        };
 
-        btnGo.Click += (_, __) => RefreshShopSearchResults();
+        // --- Zeile 1: [TextBox][Search][Analyze] ---
+        var row1 = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Margin = new Thickness(0, 0, 0, 4)
+        };
+
+      
+
+        // Icon links
+        // Farben im Stil deiner UI
+        var colOuterBg = Color.FromRgb(24, 26, 28);        // Gesamtfeld-Hintergrund (dunkel)
+        var colIconBg = Color.FromRgb(18, 20, 22);        // extra dunkler Block hinter dem Icon
+        var colBorder = Color.FromArgb(160, 0, 173, 239); // dein Cyan-ish Border (kannst du anpassen)
+        var colText = Colors.White;
+
+        // Äußere Border = komplette Suchleiste mit runden Ecken
+        var searchOuter = new Border
+        {
+            Background = new SolidColorBrush(colOuterBg),
+            BorderBrush = new SolidColorBrush(colBorder),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(6),
+            Margin = new Thickness(0, 0, 8, 0), // Abstand rechts zu "Profit Trades"
+            VerticalAlignment = VerticalAlignment.Center,
+            SnapsToDevicePixels = true
+        };
+
+        // Innenlayout: 2 Spalten (Icon | TextBox)
+        var innerGrid = new Grid
+        {
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        innerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        innerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        // Icon-Panel links
+        var iconHost = new Border
+        {
+            Background = new SolidColorBrush(colIconBg),
+            BorderBrush = Brushes.Transparent,
+            BorderThickness = new Thickness(0),
+            Padding = new Thickness(6, 4, 6, 4),
+            VerticalAlignment = VerticalAlignment.Center,
+            Child = new TextBlock
+            {
+                Text = "🔍",
+                Foreground = new SolidColorBrush(colText),
+                FontSize = 12,
+                VerticalAlignment = VerticalAlignment.Center
+            }
+        };
+        Grid.SetColumn(iconHost, 0);
+        innerGrid.Children.Add(iconHost);
+
+        // TextBox rechts – ohne eigenen Border, damit’s wie ein Control wirkt
+        _searchTb = new TextBox
+        {
+            Width = 260,
+            Background = Brushes.Transparent, // Wichtig!
+            BorderThickness = new Thickness(0),     // kein eigener Rand
+            Foreground = new SolidColorBrush(colText),
+            Padding = new Thickness(4, 4, 6, 4),
+            VerticalContentAlignment = VerticalAlignment.Center
+        };
         _searchTb.TextChanged += (_, __) => RefreshShopSearchResults();
+        Grid.SetColumn(_searchTb, 1);
+        innerGrid.Children.Add(_searchTb);
+
+        // pack Grid in die äußere Border
+        searchOuter.Child = innerGrid;
+
+        _btnAnalyze = new Button
+        {
+            Content = " 💰 Profit Trades ",
+            Margin = new Thickness(4, 2, 4, 2),
+            Style = niceBtnStyle
+        };
+
+        _btnPathFinder = new Button
+        {
+            Content = " 🔍 Buy X for Y ",
+            Margin = new Thickness(4, 2, 4, 2),
+            Style = niceBtnStyle
+        };
+
+        //btnGo.Click += (_, __) => RefreshShopSearchResults();
+        _searchTb.TextChanged += (_, __) => RefreshShopSearchResults();
+
+        _btnAnalyze.Click += (_, __) => OpenAnalysisWindow();
+        _btnPathFinder.Click += (_, __) => OpenPathFinderWindow();
+
+
+        row1.Children.Add(searchOuter);
+      //  row1.Children.Add(btnGo);
+        row1.Children.Add(_btnAnalyze);
+        row1.Children.Add(_btnPathFinder);
+        headerWrap.Children.Add(row1);
+
+        // --- Zeile 2: Filter-Checkboxen ---
+        var row2 = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Margin = new Thickness(0, 0, 0, 4)
+        };
+
+        _chkSell = new CheckBox();
+        StyleHeaderCheckBox(_chkSell, "Sells💰", true);
+        
+
+        _chkBuy = new CheckBox();
+        StyleHeaderCheckBox(_chkBuy, "Buys🛒", true);
+       
+
+        _chkHideEmpty = new CheckBox();
+        StyleHeaderCheckBox(_chkHideEmpty, "Hide 0-stock", false);
+        
+        
+        _chkNewShopAlerts = new CheckBox();
+        StyleHeaderCheckBox(_chkNewShopAlerts, "New Shops → chat", false);
+       
+
+        _chkSuspiciousAlerts = new CheckBox();
+        StyleHeaderCheckBox(_chkSuspiciousAlerts, "Suspicious → chat", false);
+        
+
+        // Events für Filter/Aktionen
         _chkSell.Checked += (_, __) => RefreshShopSearchResults();
         _chkSell.Unchecked += (_, __) => RefreshShopSearchResults();
         _chkBuy.Checked += (_, __) => RefreshShopSearchResults();
         _chkBuy.Unchecked += (_, __) => RefreshShopSearchResults();
+        _chkHideEmpty.Checked += (_, __) => RefreshShopSearchResults();
+        _chkHideEmpty.Unchecked += (_, __) => RefreshShopSearchResults();
 
-        top.Children.Add(_searchTb);
-        top.Children.Add(btnGo);
-        top.Children.Add(_chkSell);
-        top.Children.Add(_chkBuy);
+        // Events für globale Chat-Alarm-Flags
+        _chkNewShopAlerts.Checked += (_, __) => { _notifyNewShopsToChat = true; };
+        _chkNewShopAlerts.Unchecked += (_, __) => { _notifyNewShopsToChat = false; };
 
-        DockPanel.SetDock(top, Dock.Top);
-        root.Children.Add(top);
+        _chkSuspiciousAlerts.Checked += (_, __) => { _notifySuspiciousShops = true; };
+        _chkSuspiciousAlerts.Unchecked += (_, __) => { _notifySuspiciousShops = false; };
 
-        // List
+        row2.Children.Add(_chkSell);
+        row2.Children.Add(_chkBuy);
+        row2.Children.Add(_chkHideEmpty);
+        row2.Children.Add(_chkNewShopAlerts);
+        row2.Children.Add(_chkSuspiciousAlerts);
+
+        headerWrap.Children.Add(row2);
+
+        // --- Zeile 3: Alerts / "+ Alert" Button + Alert-Liste ---
+        var row3 = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Margin = new Thickness(0, 0, 0, 4)
+        };
+
+        // Add-Alert Button
+        _btnAddAlert = new Button
+        {
+            Content = "＋ Alert (watch this)",
+            Margin = new Thickness(0, 0, 0, 4)
+        };
+
+        _btnAddAlert.Click += (_, __) => AddAlertFromCurrentSearch();
+
+        // Alert-Liste
+        _alertList = new ListBox
+        {
+            Background = SearchWinBg,
+            BorderThickness = new Thickness(1),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(60, 255, 255, 255)),
+            Foreground = SearchText,
+            Height = 70
+        };
+
+        row3.Children.Add(_btnAddAlert);
+        row3.Children.Add(_alertList);
+
+        headerWrap.Children.Add(row3);
+
+        // Dock das oben rein
+        DockPanel.SetDock(headerWrap, Dock.Top);
+        root.Children.Add(headerWrap);
+
+        // PATH FINDER WINDOW
+
+
+
+        // ========== MAIN SEARCH RESULT LIST ==========
         _searchList = new ListBox
         {
             Background = SearchWinBg,
             BorderThickness = new Thickness(0),
             Foreground = SearchText
         };
-        // dezente Auswahl
+
+        // dezente Auswahl wie vorher
         _searchList.ItemContainerStyle = new Style(typeof(ListBoxItem))
         {
             Setters =
@@ -5343,11 +6308,1719 @@ public partial class MainWindow : Window
         }
         };
 
-        root.Children.Add(_searchList);
-        w.Content = root;
+        // wir packen unten drunter noch eine Analyse-Liste (erstmal collapsed)
+        var resultWrap = new StackPanel
+        {
+            Orientation = Orientation.Vertical
+        };
 
+        resultWrap.Children.Add(_searchList);
+
+        // Separator
+        resultWrap.Children.Add(new Border
+        {
+            Height = 1,
+            Margin = new Thickness(0, 8, 0, 8),
+            Background = new SolidColorBrush(Color.FromArgb(60, 255, 255, 255))
+        });
+
+        _analysisList = new ListBox
+        {
+            Background = SearchWinBg,
+            BorderThickness = new Thickness(0),
+            Foreground = SearchText,
+            Visibility = Visibility.Collapsed // erst sichtbar machen, wenn Analyze geklickt
+        };
+
+        resultWrap.Children.Add(_analysisList);
+
+        var scroll = new ScrollViewer
+        {
+            Content = resultWrap,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
+        };
+        ApplyThinScrollbar(scroll);
+
+        // Wichtig: kein eigenes Scroll-Handling mehr hier!
+        root.Children.Add(scroll);
+
+        // Jetzt sorgen wir dafür, dass das Fenster-Mausrad an den ScrollViewer geht:
+        w.PreviewMouseWheel += (snd, e) =>
+        {
+            // nur eingreifen, wenn der Cursor irgendwo im Scroll-Bereich ist
+            // (damit du oben in den Controls nicht plötzlich scrollst, wenn du eigentlich Text selektierst)
+            if (!scroll.IsMouseOver) return;
+
+            // standardmäßiges Verhalten: 1 "Wheel-Delta" (120) = ~3-4 Zeilen
+            // Wir machen kleine Schritte, nicht riesige Sprünge.
+            const double step = 30.0; // Pixel pro Wheel Tick, fühlt sich meist gut an
+            double direction = e.Delta > 0 ? -1 : 1;
+
+            double newOffset = scroll.VerticalOffset + direction * step;
+            if (newOffset < 0) newOffset = 0;
+            if (newOffset > scroll.ScrollableHeight) newOffset = scroll.ScrollableHeight;
+
+            scroll.ScrollToVerticalOffset(newOffset);
+            e.Handled = true;
+        };
+
+        w.Content = root;
         _shopSearchWin = w;
+
+        // wenn Fenster geschlossen wird, Referenz löschen
         _shopSearchWin.Closed += (_, __) => _shopSearchWin = null;
+
+        // ganz am Ende: initial einmal UI auffüllen
+        // nur laden, wenn wir noch keine saved alerts drin haben
+        if (_alertRules.All(r => !r.IsSaved))
+        {
+            LoadPersistentAlerts();
+        }
+        RefreshAlertListUI();
+        RefreshShopSearchResults();
+    }
+
+    // PATH FINDER WINDOW LOGIK
+
+    private Window? _pathFinderWin;
+    private TextBox? _wantTb;   // linke Suche (Ziel-Item das du haben willst)
+    private TextBox? _payTb;    // rechte Suche (Währung / Item das du zahlen willst)
+   // private ComboBox? _depthCb; // max Tiefe
+    private Button? _runPathBtn;
+    private ListBox? _pathResultList;
+    private ListBox? _wantPreviewList;
+    private ListBox? _payPreviewList;
+    private void OpenPathFinderWindow()
+    {
+
+
+        if (_pathFinderWin != null)
+        {
+            _pathFinderWin.Activate();
+            return;
+        }
+
+        var w = new Window
+        {
+            Title = "Buy X for Y",
+            Width = 900,
+            Height = 600,
+            Owner = this,
+            Background = SearchWinBg,
+            Foreground = SearchText
+        };
+
+        // Root dock
+        var root = new DockPanel { Margin = new Thickness(10) };
+
+        // === Kopfbereich: zwei Suchfelder nebeneinander + Tiefe + Analyze ===
+        var header = new Grid
+        {
+            Margin = new Thickness(0, 0, 0, 8)
+        };
+        header.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // left want
+        header.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // right pay
+        header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });                      // depth
+        header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });                      // analyze btn
+        DockPanel.SetDock(header, Dock.Top);
+
+        // SUCHFELD LINKS ("I want to GET ...")
+        var wantControl = BuildRoundedSearchField(out _wantTb, "🎯", "I want to GET (e.g. Crude Oil)");
+        Grid.SetColumn(wantControl, 0);
+        header.Children.Add(wantControl);
+
+        // SUCHFELD RECHTS ("...pay WITH ...")
+        var payControl = BuildRoundedSearchField(out _payTb, "💰", "I want to PAY WITH (e.g. Scrap)");
+        Grid.SetColumn(payControl, 1);
+        header.Children.Add(payControl);
+
+        _wantTb.TextChanged += (_, __) => RefreshPathfinderPreviews();
+        _payTb.TextChanged += (_, __) => RefreshPathfinderPreviews();
+
+        // Tiefe-Auswahl
+     //   _depthCb = new ComboBox
+     //   {
+
+     //       ItemsSource = new[] { "max 2 steps", "max 3 steps", "max 4 steps" },
+     //       SelectedIndex = 1, // default 3 steps
+     //       Margin = new Thickness(8, 0, 8, 0),
+      //      Background = SearchWinBg,
+      //      Foreground = SearchText,
+      //      BorderBrush = new SolidColorBrush(Color.FromArgb(160, 0, 173, 239)),
+     //       BorderThickness = new Thickness(1),
+     //       Padding = new Thickness(6, 4, 6, 4),
+      //      Width = 80
+     //   };
+     //   _depthCb.Resources.Add(SystemColors.WindowBrushKey, new SolidColorBrush(Color.FromRgb(24, 26, 28)));
+    //    _depthCb.Resources.Add(SystemColors.ControlTextBrushKey, Brushes.White);
+     //   _depthCb.Resources.Add(SystemColors.HighlightBrushKey, new SolidColorBrush(Color.FromRgb(0, 173, 239)));
+    //    _depthCb.Resources.Add(SystemColors.HighlightTextBrushKey, Brushes.Black);
+    //    Grid.SetColumn(_depthCb, 2);
+   //     header.Children.Add(_depthCb);
+
+        // Analyze Button
+        _runPathBtn = MakeHeaderPillButton(" Analyze ");
+        Grid.SetColumn(_runPathBtn, 3);
+        _runPathBtn.Click += (_, __) => RunPathAnalysis();
+        header.Children.Add(_runPathBtn);
+
+        root.Children.Add(header);
+
+        // Preview-Zweispalter unter den Suchfeldern
+        var previewGrid = new Grid
+        {
+            Margin = new Thickness(0, 0, 0, 8)
+        };
+        previewGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        previewGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        DockPanel.SetDock(previewGrid, Dock.Top);
+
+        // left preview: what you WANT
+        _wantPreviewList = new ListBox
+        {
+            Background = SearchWinBg,
+            BorderThickness = new Thickness(0),
+            Foreground = SearchText,
+            HorizontalContentAlignment = HorizontalAlignment.Stretch,
+            Height = 120 // nicht riesig, nur Vorschau
+        };
+        Grid.SetColumn(_wantPreviewList, 0);
+        previewGrid.Children.Add(_wantPreviewList);
+        // Die beiden Preview-Listen oben (optional auch weich scrollen)
+        _wantPreviewList.SetValue(VirtualizingStackPanel.IsVirtualizingProperty, true);
+        _wantPreviewList.SetValue(VirtualizingStackPanel.ScrollUnitProperty, ScrollUnit.Pixel);
+        ApplyThinScrollbar(_wantPreviewList);
+
+
+        // right preview: what you can PAY
+        _payPreviewList = new ListBox
+        {
+            Background = SearchWinBg,
+            BorderThickness = new Thickness(0),
+            Foreground = SearchText,
+            HorizontalContentAlignment = HorizontalAlignment.Stretch,
+            Height = 120
+        };
+        Grid.SetColumn(_payPreviewList, 1);
+        previewGrid.Children.Add(_payPreviewList);
+        // Die beiden Preview-Listen oben (optional auch weich scrollen)
+        _payPreviewList.SetValue(VirtualizingStackPanel.IsVirtualizingProperty, true);
+        _payPreviewList.SetValue(VirtualizingStackPanel.ScrollUnitProperty, ScrollUnit.Pixel);
+        ApplyThinScrollbar(_payPreviewList);
+        root.Children.Add(previewGrid);
+
+        // === Ergebnisliste unten ===
+        _pathResultList = new ListBox
+        {
+            Background = SearchWinBg,
+            BorderThickness = new Thickness(0),
+            Foreground = SearchText,
+            HorizontalContentAlignment = HorizontalAlignment.Stretch
+        };
+        // weiches Pixel-Scrolling + Virtualisierung
+        _pathResultList.SetValue(VirtualizingStackPanel.IsVirtualizingProperty, true);
+        _pathResultList.SetValue(VirtualizingStackPanel.VirtualizationModeProperty, VirtualizationMode.Recycling);
+        _pathResultList.SetValue(VirtualizingStackPanel.ScrollUnitProperty, ScrollUnit.Pixel);
+        _pathResultList.SetValue(ScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Auto);
+
+        ApplyThinScrollbar(_pathResultList);
+
+        root.Children.Add(_pathResultList);
+
+       
+
+        w.Content = root;
+        _pathFinderWin = w;
+        w.Closed += (_, __) =>
+        {
+            _pathFinderWin = null;
+            _wantTb = null;
+            _payTb = null;
+          //  _depthCb = null;
+            _runPathBtn = null;
+            _pathResultList = null;
+        };
+
+        w.Show();
+        w.Activate();
+    }
+    // Style for Scroll bars
+   
+    private static void ApplyThinScrollbar(FrameworkElement target)
+    {
+        const string xaml = @"
+<ResourceDictionary
+    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
+
+    <!-- ========= Ultra-Slim Scrollbars ========= -->
+    <SolidColorBrush x:Key=""ScrollbarTrackBrush"" Color=""#141820""/>
+    <SolidColorBrush x:Key=""ScrollbarThumbBrush"" Color=""#2C3548""/>
+    <SolidColorBrush x:Key=""ScrollbarThumbBrushHover"" Color=""#3A4663""/>
+    <SolidColorBrush x:Key=""ScrollbarThumbBrushActive"" Color=""#4C5A7A""/>
+
+    <Style x:Key=""SlimThumb"" TargetType=""{x:Type Thumb}"">
+        <Setter Property=""Background"" Value=""{StaticResource ScrollbarThumbBrush}""/>
+        <Setter Property=""Template"">
+            <Setter.Value>
+                <ControlTemplate TargetType=""{x:Type Thumb}"">
+                    <Border x:Name=""B"" Background=""{TemplateBinding Background}"" CornerRadius=""2""/>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property=""IsMouseOver"" Value=""True"">
+                            <Setter TargetName=""B"" Property=""Background"" Value=""{StaticResource ScrollbarThumbBrushHover}""/>
+                        </Trigger>
+                        <Trigger Property=""IsDragging"" Value=""True"">
+                            <Setter TargetName=""B"" Property=""Background"" Value=""{StaticResource ScrollbarThumbBrushActive}""/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType=""{x:Type ScrollBar}"">
+        <Setter Property=""Background"" Value=""Transparent""/>
+        <Setter Property=""MinWidth"" Value=""0""/>
+        <Setter Property=""MinHeight"" Value=""0""/>
+        <Setter Property=""Template"">
+            <Setter.Value>
+                <ControlTemplate TargetType=""{x:Type ScrollBar}"">
+                    <Grid SnapsToDevicePixels=""True"">
+                        <Border Background=""{StaticResource ScrollbarTrackBrush}"" CornerRadius=""2""/>
+                        <Track x:Name=""PART_Track""
+                               Orientation=""{TemplateBinding Orientation}""
+                               IsDirectionReversed=""True""
+                               Focusable=""False"">
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Opacity=""0"" IsHitTestVisible=""False""/>
+                            </Track.DecreaseRepeatButton>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Opacity=""0"" IsHitTestVisible=""False""/>
+                            </Track.IncreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb Style=""{StaticResource SlimThumb}""/>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property=""Orientation"" Value=""Vertical"">
+                <Setter Property=""Width"" Value=""4""/>
+                <Setter Property=""Margin"" Value=""0,2,2,2""/>
+            </Trigger>
+            <Trigger Property=""Orientation"" Value=""Horizontal"">
+                <Setter Property=""Height"" Value=""4""/>
+                <Setter Property=""Margin"" Value=""2,0,2,2""/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>";
+
+        // Dictionary aus XAML parsen
+        var dict = (ResourceDictionary)XamlReader.Parse(xaml);
+
+        // ScrollBar-Style aus dem Dictionary holen
+        var sbStyle = (Style)dict[typeof(ScrollBar)];
+        var thumbStyle = (Style)dict["SlimThumb"];
+
+        // ins lokale Resource-Dict des Elements kippen
+        target.Resources[typeof(ScrollBar)] = sbStyle;
+        target.Resources["SlimThumb"] = thumbStyle;
+
+        // sicherheitshalber Auto
+        ScrollViewer.SetVerticalScrollBarVisibility(target, ScrollBarVisibility.Auto);
+    }
+
+    private void RefreshPathfinderPreviews()
+    {
+        if (_lastShops == null) return;
+        if (_wantPreviewList == null || _payPreviewList == null) return;
+
+        string wantTxt = _wantTb?.Text?.Trim() ?? "";
+        string payTxt = _payTb?.Text?.Trim() ?? "";
+
+        _wantPreviewList.Items.Clear();
+        _payPreviewList.Items.Clear();
+
+        // helper wie in RefreshShopSearchResults
+        bool MatchGets(RustPlusClientReal.ShopOrder o, string q)
+        {
+            if (string.IsNullOrWhiteSpace(q)) return false;
+            var pretty = ResolveItemName(o.ItemId, o.ItemShortName);
+            return pretty.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        bool MatchPays(RustPlusClientReal.ShopOrder o, string q)
+        {
+            if (string.IsNullOrWhiteSpace(q)) return false;
+            var pretty = ResolveItemName(o.CurrencyItemId, o.CurrencyShortName);
+            return pretty.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        // LEFT LIST: shops that SELL my wanted item
+        if (!string.IsNullOrWhiteSpace(wantTxt))
+        {
+            foreach (var shop in _lastShops)
+            {
+                if (shop.Orders == null) continue;
+
+                var matchingOffers = shop.Orders
+                    .Where(o => o.Stock > 0 && MatchGets(o, wantTxt))
+                    .ToList();
+
+                if (matchingOffers.Count == 0) continue;
+
+                _wantPreviewList.Items.Add(
+                    BuildShopSearchCard(shop, matchingOffers, compact: true) // compact für Vorschau
+                );
+            }
+
+            if (_wantPreviewList.Items.Count == 0)
+            {
+                _wantPreviewList.Items.Add(new TextBlock
+                {
+                    Text = "No direct seller for that item.",
+                    Foreground = SearchText,
+                    Opacity = 0.6
+                });
+            }
+        }
+        else
+        {
+            _wantPreviewList.Items.Add(new TextBlock
+            {
+                Text = "Type what you WANT to get.",
+                Foreground = SearchText,
+                Opacity = 0.4
+            });
+        }
+
+        // RIGHT LIST: shops that ACCEPT what I can PAY
+        if (!string.IsNullOrWhiteSpace(payTxt))
+        {
+            foreach (var shop in _lastShops)
+            {
+                if (shop.Orders == null) continue;
+
+                var matchingOffers = shop.Orders
+                    .Where(o => o.Stock > 0 && MatchPays(o, payTxt))
+                    .ToList();
+
+                if (matchingOffers.Count == 0) continue;
+
+                _payPreviewList.Items.Add(
+                    BuildShopSearchCard(shop, matchingOffers, compact: true)
+                );
+            }
+
+            if (_payPreviewList.Items.Count == 0)
+            {
+                _payPreviewList.Items.Add(new TextBlock
+                {
+                    Text = "Nobody trades for that (as currency).",
+                    Foreground = SearchText,
+                    Opacity = 0.6
+                });
+            }
+        }
+        else
+        {
+            _payPreviewList.Items.Add(new TextBlock
+            {
+                Text = "Type what you CAN pay with.",
+                Foreground = SearchText,
+                Opacity = 0.4
+            });
+        }
+    }
+
+    // wir benutzen denselben Trick wie bei der Search-Leiste im ShopWindow:
+    // eine gemeinsame Border mit Icon links + textbox rechts
+    private FrameworkElement BuildRoundedSearchField(out TextBox tb, string iconEmoji, string placeholder)
+    {
+        var colOuterBg = Color.FromRgb(24, 26, 28);
+        var colIconBg = Color.FromRgb(18, 20, 22);
+        var colBorder = Color.FromArgb(160, 0, 173, 239);
+
+        var outer = new Border
+        {
+            Background = new SolidColorBrush(colOuterBg),
+            BorderBrush = new SolidColorBrush(colBorder),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(6),
+            Margin = new Thickness(0, 0, 8, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            Cursor = Cursors.IBeam
+        };
+
+        var grid = new Grid { VerticalAlignment = VerticalAlignment.Center };
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        var iconHost = new Border
+        {
+            Background = new SolidColorBrush(colIconBg),
+            Padding = new Thickness(6, 4, 6, 4),
+            IsHitTestVisible = false, // Klicks gehen durch
+            Child = new TextBlock
+            {
+                Text = iconEmoji,
+                Foreground = Brushes.White,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, -1, 0, 0)
+            }
+        };
+        Grid.SetColumn(iconHost, 0);
+        grid.Children.Add(iconHost);
+
+        tb = new TextBox
+        {
+            Background = Brushes.Transparent,
+            BorderThickness = new Thickness(0),
+            Foreground = Brushes.White,
+            CaretBrush = Brushes.White,
+            SelectionBrush = new SolidColorBrush(Color.FromArgb(160, 0, 173, 239)),
+            Padding = new Thickness(2, 4, 6, 4),
+            VerticalContentAlignment = VerticalAlignment.Center,
+            MinWidth = 250,
+            ToolTip = placeholder
+        };
+        Grid.SetColumn(tb, 1);
+        grid.Children.Add(tb);
+
+        // <<< WICHTIG: lokale Kopie für die Lambdas
+        var tbLocal = tb;
+        outer.MouseLeftButtonDown += (_, __) => tbLocal.Focus();
+        grid.MouseLeftButtonDown += (_, __) => tbLocal.Focus();
+
+        outer.Child = grid;
+        return outer;
+    }
+
+    // gleicher Style wie dein Profit-Trades Button-Knopf
+    private Button MakeHeaderPillButton(string text)
+    {
+        return new Button
+        {
+            Content = text,
+            Margin = new Thickness(0, 0, 0, 0),
+            Padding = new Thickness(10, 4, 10, 4),
+            Cursor = Cursors.Hand,
+            Background = new SolidColorBrush(Color.FromRgb(24, 26, 28)),
+            Foreground = Brushes.White,
+            BorderBrush = new SolidColorBrush(Color.FromArgb(160, 0, 173, 239)),
+            BorderThickness = new Thickness(1),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Template = BuildRoundedButtonTemplate()
+        };
+    }
+
+    private ControlTemplate BuildRoundedButtonTemplate()
+    {
+        // abgerundet wie deine Accent-Buttons
+        var template = new ControlTemplate(typeof(Button));
+        var borderFactory = new FrameworkElementFactory(typeof(Border));
+        borderFactory.Name = "Bd";
+        borderFactory.SetValue(Border.CornerRadiusProperty, new CornerRadius(8));
+        borderFactory.SetBinding(Border.BackgroundProperty, new System.Windows.Data.Binding("Background") { RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent) });
+        borderFactory.SetBinding(Border.BorderBrushProperty, new System.Windows.Data.Binding("BorderBrush") { RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent) });
+        borderFactory.SetBinding(Border.BorderThicknessProperty, new System.Windows.Data.Binding("BorderThickness") { RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent) });
+
+        var cp = new FrameworkElementFactory(typeof(ContentPresenter));
+        cp.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+        cp.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
+
+        borderFactory.AppendChild(cp);
+        template.VisualTree = borderFactory;
+
+        // simple Hover Trigger
+        var hover = new Trigger { Property = Button.IsMouseOverProperty, Value = true };
+        hover.Setters.Add(new Setter(Border.BackgroundProperty, new SolidColorBrush(Color.FromRgb(32, 34, 38)), "Bd"));
+
+        // Pressed Trigger
+        var pressed = new Trigger { Property = Button.IsPressedProperty, Value = true };
+        pressed.Setters.Add(new Setter(Border.BackgroundProperty, new SolidColorBrush(Color.FromRgb(0, 173, 239)), "Bd"));
+        pressed.Setters.Add(new Setter(Control.ForegroundProperty, Brushes.Black));
+
+        template.Triggers.Add(hover);
+        template.Triggers.Add(pressed);
+
+        return template;
+    }
+
+    private class PathStep
+    {
+        public RustPlusClientReal.ShopMarker Shop;
+        public RustPlusClientReal.ShopOrder Order;
+
+        public string FromItem = "";
+        public string ToItem = "";
+
+        public double PayAmount;
+        public string PayPrettyName;
+        public double GetAmount;
+        public string GetPrettyName;
+
+        public string FromKey;
+        public string ToKey;
+        public int PayItemId;
+        public string PayShortName;
+        public string GetShortName;
+        public int GetItemId;
+    }
+
+    private class TradePathResult
+    {
+        public string OriginKey = "";       // der Startnode dieser Route
+        public List<PathStep> Steps = new(); // in Reihenfolge
+    }
+    // Repräsentiert eine Handels-Kante: du gibst etwas, bekommst etwas.
+    private class TradeEdge
+    {
+        public string PayShortNameRaw = ""; // o.CurrencyShortName
+        public string GetShortNameRaw = ""; // o.ItemShortName
+        // Graph-Knoten Keys (stabil, zum Routen)
+        public string FromKey = "";   // "was du zahlst"-Knoten
+        public string ToKey = "";   // "was du bekommst"-Knoten
+
+        // Für die UI / Mengenanzeige
+        public double PayAmount;         // CurrencyAmount
+        public double GetAmount;         // Quantity
+        public string PayPrettyName = "";
+        public string GetPrettyName = "";
+
+        public RustPlusClientReal.ShopMarker Shop;
+        public RustPlusClientReal.ShopOrder Order;
+    }
+
+
+
+
+    private string NormalizePrettyForKey(string pretty)
+    {
+        // defensiv
+        if (string.IsNullOrWhiteSpace(pretty))
+            return "";
+
+        // Beispiel:
+        // "x1000 Cloth" -> "x1000_cloth"
+        // "Sulfur Ore 400" -> "sulfur_ore_400"
+        // "Metal Fragments" -> "metal_fragments"
+        var s = pretty.Trim().ToLowerInvariant();
+
+        // ersetze Whitespaces durch underscore
+        s = System.Text.RegularExpressions.Regex.Replace(s, "\\s+", "_");
+
+        // optional kannst du Sonderzeichen killen, damit Keys stabiler werden:
+        s = System.Text.RegularExpressions.Regex.Replace(s, "[^a-z0-9_]+", "");
+
+        return s;
+    }
+
+    private string? MakeItemKey(
+        int itemId,
+        string? shortName,
+        string prettyName // <- NEU: wir geben jetzt den ResolveItemName()-Wert mit rein
+    )
+    {
+        // 1. Echte ItemID (beste Variante, garantiert eindeutig)
+        if (itemId > 0)
+            return "id:" + itemId.ToString();
+
+        // 2. ShortName aus Rust (zweitbeste Variante)
+        if (!string.IsNullOrWhiteSpace(shortName))
+            return "sn:" + shortName.Trim().ToLowerInvariant();
+
+        // 3. Fallback auf den hübschen Anzeigenamen (damit Wood/Stone/etc. nicht verschwinden)
+        if (!string.IsNullOrWhiteSpace(prettyName))
+        {
+            var norm = NormalizePrettyForKey(prettyName);
+            if (!string.IsNullOrWhiteSpace(norm))
+                return "pretty:" + norm;
+        }
+
+        // 4. gar nix brauchbares -> wir können keinen stabilen Knoten bauen
+        return null;
+    }
+    private List<TradeEdge> BuildTradeGraphSnapshot()
+    {
+        var edges = new List<TradeEdge>();
+
+        foreach (var shop in _lastShops)
+        {
+            if (shop.Orders == null) continue;
+
+            foreach (var o in shop.Orders)
+            {
+                if (o.Stock <= 0) continue;
+                if (o.CurrencyAmount <= 0 || o.Quantity <= 0) continue;
+
+                string payPretty = ResolveItemName(o.CurrencyItemId, o.CurrencyShortName); // was man ZAHLT
+                string getPretty = ResolveItemName(o.ItemId, o.ItemShortName);        // was man BEKOMMT
+
+                if (string.IsNullOrWhiteSpace(payPretty)) continue;
+                if (string.IsNullOrWhiteSpace(getPretty)) continue;
+
+                // WICHTIG: wir geben jetzt payPretty/getPretty an MakeItemKey weiter
+                string? fromKey = MakeItemKey(
+                    o.CurrencyItemId,
+                    o.CurrencyShortName,
+                    payPretty
+                );
+
+                string? toKey = MakeItemKey(
+                    o.ItemId,
+                    o.ItemShortName,
+                    getPretty
+                );
+
+                if (string.IsNullOrWhiteSpace(fromKey)) continue;
+                if (string.IsNullOrWhiteSpace(toKey)) continue;
+                if (string.Equals(fromKey, toKey, StringComparison.OrdinalIgnoreCase)) continue;
+
+                edges.Add(new TradeEdge
+                {
+                    FromKey = fromKey,
+                    ToKey = toKey,
+
+                    PayShortNameRaw = o.CurrencyShortName ?? "",
+                    GetShortNameRaw = o.ItemShortName ?? "",
+
+                    PayPrettyName = payPretty,
+                    GetPrettyName = getPretty,
+
+                    PayAmount = o.CurrencyAmount,
+                    GetAmount = o.Quantity,
+
+                    Shop = shop,
+                    Order = o
+                });
+            }
+        }
+
+        return edges;
+    }
+
+
+    // 1. helper für string matching
+    private bool StrongMatch(string pretty, string raw, string user)
+    {
+        if (string.IsNullOrWhiteSpace(user)) return false;
+        if (!string.IsNullOrWhiteSpace(pretty))
+        {
+            if (pretty.Equals(user, StringComparison.OrdinalIgnoreCase)) return true;
+            if (pretty.StartsWith(user, StringComparison.OrdinalIgnoreCase)) return true;
+        }
+        if (!string.IsNullOrWhiteSpace(raw))
+        {
+            if (raw.Equals(user, StringComparison.OrdinalIgnoreCase)) return true;
+            if (raw.StartsWith(user, StringComparison.OrdinalIgnoreCase)) return true;
+        }
+        return false;
+    }
+
+    private bool FuzzyMatch(string pretty, string raw, string user)
+    {
+        if (string.IsNullOrWhiteSpace(user)) return false;
+        if (!string.IsNullOrWhiteSpace(pretty) &&
+            pretty.IndexOf(user, StringComparison.OrdinalIgnoreCase) >= 0) return true;
+        if (!string.IsNullOrWhiteSpace(raw) &&
+            raw.IndexOf(user, StringComparison.OrdinalIgnoreCase) >= 0) return true;
+        return false;
+    }
+
+    // akzeptiert auch "x1000 Stones", "Sulfur Ore", "Wood 500", etc.
+    private bool LooseMatchName(string itemPretty, string itemAlt, string userQuery)
+    {
+        if (string.IsNullOrWhiteSpace(userQuery)) return false;
+
+        // normalize
+        string uq = userQuery.Trim().ToLowerInvariant();
+
+        // pretty check
+        if (!string.IsNullOrWhiteSpace(itemPretty))
+        {
+            var p = itemPretty.Trim().ToLowerInvariant();
+            if (p.Contains(uq)) return true;
+        }
+
+        // alt/fallback check
+        if (!string.IsNullOrWhiteSpace(itemAlt))
+        {
+            var a = itemAlt.Trim().ToLowerInvariant();
+            if (a.Contains(uq)) return true;
+        }
+
+        return false;
+    }
+
+    private bool FirstStepMatchesUser(List<PathStep> steps, string haveQ)
+    {
+        if (steps.Count == 0) return false;
+        var first = steps[0];
+
+        // wichtig: Wir schauen NICHT auf "FromItem" vs. "PayPrettyName" separat,
+        // sondern matchen "was wir zahlen" locker gegen die User-Eingabe
+        return LooseMatchName(first.PayPrettyName, first.FromItem, haveQ);
+    }
+
+    private bool LastStepMatchesUser(List<PathStep> steps, string wantQ)
+    {
+        if (steps.Count == 0) return false;
+        var last = steps[steps.Count - 1];
+
+        // gleiches Prinzip: was wir am Ende bekommen
+        return LooseMatchName(last.GetPrettyName, last.ToItem, wantQ);
+    }
+
+
+    private List<TradePathResult> FindPathsItemToItem(
+    string payItemQuery,   // RIGHT box: what I HAVE / will pay with
+    string wantItemQuery,  // LEFT box: what I WANT to end up with
+    int maxDepth)
+    {
+        var edges = BuildTradeGraphSnapshot();
+        string haveQ = payItemQuery?.Trim() ?? "";
+        string wantQ = wantItemQuery?.Trim() ?? "";
+
+        AppendLog($"=== PATHFINDER RUN === haveQ='{haveQ}' wantQ='{wantQ}'");
+
+        foreach (var e in edges)
+        {
+            bool payHit =
+                StrongMatch(e.PayPrettyName, e.PayShortNameRaw, haveQ) ||
+                FuzzyMatch(e.PayPrettyName, e.PayShortNameRaw, haveQ);
+
+            bool getHit =
+                StrongMatch(e.GetPrettyName, e.GetShortNameRaw, wantQ) ||
+                FuzzyMatch(e.GetPrettyName, e.GetShortNameRaw, wantQ);
+
+            if (payHit)
+            {
+              //  AppendLog($"START-CANDIDATE MATCH: haveQ='{haveQ}' matches Pay='{e.PayPrettyName}' raw='{e.PayShortNameRaw}' => FromKey={e.FromKey}");
+            }
+
+            if (getHit)
+            {
+              //  AppendLog($"TARGET-CANDIDATE MATCH: wantQ='{wantQ}' matches Get='{e.GetPrettyName}' raw='{e.GetShortNameRaw}' => ToKey={e.ToKey}");
+            }
+        }
+
+       
+
+        if (string.IsNullOrWhiteSpace(haveQ) || string.IsNullOrWhiteSpace(wantQ))
+            return new List<TradePathResult>();
+
+        // 1) mögliche Start-Knoten = Dinge, die du bezahlen kannst
+        // helper wie unten beim finalen Filter, aber hier lokal ohne Order:
+        bool LoosePayMatch(TradeEdge e, string userQ)
+        {
+            return LooseMatchName(e.PayPrettyName, e.PayShortNameRaw, userQ);
+        }
+
+        bool LooseGetMatch(TradeEdge e, string userQ)
+        {
+            return LooseMatchName(e.GetPrettyName, e.GetShortNameRaw, userQ);
+        }
+
+        // 1) mögliche Start-Knoten = Dinge, die du zahlen KANNST (RIGHT box)
+        var startKeys = edges
+            .Where(e => LoosePayMatch(e, haveQ))
+            .Select(e => e.FromKey)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (startKeys.Count == 0)
+            return new List<TradePathResult>();
+
+        // 2) mögliche Ziel-Knoten = Dinge, die du HABEN WILLST (LEFT box)
+        var targetKeys = edges
+            .Where(e => LooseGetMatch(e, wantQ))
+            .Select(e => e.ToKey)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        if (targetKeys.Count == 0)
+            return new List<TradePathResult>();
+
+        // --- 3) BFS ab JEDEM startKey (der Rest bleibt wie du ihn jetzt hast)
+        var rawResults = new List<TradePathResult>();
+       // AppendLog("startKeys:");
+        foreach (var startKey in startKeys)
+        {
+         //   AppendLog("  " + startKey);
+            var q = new Queue<(string curKey, List<PathStep> path)>();
+            q.Enqueue((startKey, new List<PathStep>()));
+
+            var visited = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+            {
+                [startKey] = 0
+            };
+
+            while (q.Count > 0)
+            {
+                var (curKey, curPath) = q.Dequeue();
+                int depth = curPath.Count;
+                if (depth >= maxDepth) continue;
+
+                foreach (var edge in edges)
+                {
+                    // defensive guard
+                    if (string.IsNullOrWhiteSpace(edge.FromKey)) continue;
+                    if (!edge.FromKey.Equals(curKey, StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    var step = new PathStep
+                    {
+                        Shop = edge.Shop,
+                        Order = edge.Order,
+
+                        FromItem = edge.PayPrettyName,   // what we PAY this step
+                        ToItem = edge.GetPrettyName,   // what we GET this step
+
+                        PayAmount = edge.PayAmount,
+                        PayPrettyName = edge.PayPrettyName,
+                        GetAmount = edge.GetAmount,
+                        GetPrettyName = edge.GetPrettyName,
+
+                        FromKey = edge.FromKey,
+                        ToKey = edge.ToKey
+                    };
+
+                    var newPath = new List<PathStep>(curPath) { step };
+                    var newKey = edge.ToKey;
+                    int newDepth = newPath.Count;
+
+                    // haben wir Ziel getroffen?
+                    if (targetKeys.Contains(newKey))
+                    {
+                        rawResults.Add(new TradePathResult
+                        {
+                            OriginKey = startKey,
+                            Steps = newPath
+                        });
+                    }
+
+                    if (!visited.TryGetValue(newKey, out var oldDepth) || newDepth < oldDepth)
+                    {
+                        visited[newKey] = newDepth;
+                        q.Enqueue((newKey, newPath));
+                    }
+                }
+            }
+        }
+
+        // --- 4) Final filtern & deduplizieren -----------------------------
+
+        // Hilfsfunktionen: prüft, ob der erste Step wirklich mit dem zahlt,
+        // was der User rechts eingegeben hat (haveQ),
+        // und ob der letzte Step wirklich das ausliefert,
+        // was der User links eingegeben hat (wantQ).
+
+        bool FirstStepMatchesUser(List<PathStep> steps, string have)
+        {
+            if (steps.Count == 0) return false;
+            var first = steps[0];
+
+            // was du im ersten Schritt BEZAHLST soll ungefähr dem entsprechen,
+            // was du rechts eingetippt hast
+            return LooseMatchName(first.PayPrettyName, first.Order?.CurrencyShortName ?? "", have);
+        }
+
+        bool LastStepMatchesUser(List<PathStep> steps, string want)
+        {
+            if (steps.Count == 0) return false;
+            var last = steps[steps.Count - 1];
+
+            // was du am Ende BEKOMMST soll ungefähr dem entsprechen,
+            // was du links eingetippt hast
+            return LooseMatchName(last.GetPrettyName, last.Order?.ItemShortName ?? "", want);
+        }
+
+        // echte Filterung
+        var filtered = rawResults
+            .Where(r => FirstStepMatchesUser(r.Steps, haveQ)
+                     && LastStepMatchesUser(r.Steps, wantQ))
+            .ToList();
+
+        // Dedup nach (OriginKey -> letzter Node + Länge)
+        var dedup = new Dictionary<string, TradePathResult>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var r in filtered)
+        {
+            if (r.Steps.Count == 0) continue;
+            var lastStep = r.Steps[r.Steps.Count - 1];
+
+            string sig = $"{r.OriginKey}->{lastStep.ToKey}#{r.Steps.Count}";
+            if (!dedup.ContainsKey(sig))
+            {
+                dedup[sig] = r;
+            }
+        }
+
+        // Optionaler Mini-Filter gegen Frankenstein-Pfade:
+        // Kill Pfade, in denen ein Mittelschritt zahlt mit etwas,
+        // was er gar nicht direkt vorher bekommen hat ODER was nicht die Startwährung war.
+        // (Das unterbindet "kaufe L96 Rifle nur damit du sie NIE einsetzt".)
+        bool LooksCoherent(TradePathResult p)
+        {
+            if (p.Steps.Count == 0) return false;
+
+            // wir tracken "was habe ich nach jedem Schritt im Inventar"
+            // Start: wir haben nur die erste Währung
+            var haveSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            haveSet.Add(p.Steps[0].PayPrettyName); // Startwährung
+
+            foreach (var st in p.Steps)
+            {
+                // um st zu bezahlen musst du st.PayPrettyName besitzen
+                if (!haveSet.Contains(st.PayPrettyName))
+                    return false;
+
+                // nach dem Kauf besitzt du außerdem st.GetPrettyName
+                haveSet.Add(st.GetPrettyName);
+            }
+
+            return true;
+        }
+
+        var coherent = dedup.Values
+            .Where(LooksCoherent)
+            .ToList();
+
+        return coherent;
+
+
+    }
+
+
+
+
+    private class ItemInfo2
+    {
+        public string Pretty = "";
+        public string Raw = "";
+    }
+
+    private Dictionary<string, ItemInfo2> BuildItemDictionary(List<TradeEdge> edges)
+    {
+        var dict = new Dictionary<string, ItemInfo2>(StringComparer.OrdinalIgnoreCase);
+        void Add(string key, string pretty, string raw)
+        {
+            if (!dict.ContainsKey(key))
+            {
+                dict[key] = new ItemInfo2 { Pretty = pretty, Raw = raw };
+            }
+        }
+
+        foreach (var e in edges)
+        {
+            Add(e.FromKey, e.PayPrettyName, e.PayShortNameRaw);
+            Add(e.ToKey, e.GetPrettyName, e.GetShortNameRaw);
+        }
+
+        return dict;
+    }
+
+    //BERECHNUNG DER MIN- / MAX:
+
+    private class PathRunSummary
+    {
+        public string StartName = "";
+        public string FinalName = "";
+        public double[] MinRuns = Array.Empty<double>(); // length = steps
+        public double MinStartCost;   // Kosten für die kleinste sinnvolle Kette (mind. 1x Final)
+        public double MinFinalGain;   // Output der kleinsten Kette
+        public double[] MaxRuns = Array.Empty<double>();
+        public double MaxStartCost;   // Kosten bei Bottleneck-Max
+        public double MaxFinalGain;   // Output bei Bottleneck-Max
+        public double DroneCost;      // Steps * 20
+        public double DroneCostMin;   // Steps * 20
+        public double DroneCostMax;   // Steps * 20
+
+        public List<(int stepIndex, double runs)> RunsByStep = new();
+        public List<(int stepIndex, double runs)> MinRunsByStep = new(); // <-- NEU
+        public Dictionary<string, double> Leftovers = new(StringComparer.OrdinalIgnoreCase);
+        public bool MinChainFeasible;
+        public List<string> Blockers = new();
+    }
+
+    // nimmt deinen fertigen Pfad (Steps in Reihenfolge) und rechnet min/max
+    private PathRunSummary? ComputePathRunSummaryStrict(TradePathResult path)
+    {
+        var steps = path.Steps;
+        if (steps.Count == 0) return null;
+
+        var sum = new PathRunSummary();
+        var first = steps[0];
+        var last = steps[^1];
+
+        sum.StartName = first.PayPrettyName ?? "";
+        sum.FinalName = last.GetPrettyName ?? "";
+
+        int n = steps.Count;
+
+        // convenient arrays
+        var stock = new double[n];
+        var payAmt = new double[n];
+        var getAmt = new double[n];
+        var payNam = new string[n];
+        var getNam = new string[n];
+
+        for (int i = 0; i < n; i++)
+        {
+            var st = steps[i];
+            stock[i] = st.Order?.Stock ?? 0;
+            payAmt[i] = st.PayAmount;
+            getAmt[i] = st.GetAmount;
+            payNam[i] = st.PayPrettyName ?? "";
+            getNam[i] = st.GetPrettyName ?? "";
+        }
+
+        // --- MIN CHAIN ---
+        // Force 1 run of the LAST step (buy exactly one final order).
+        // Then back-propagate required runs for previous steps via ceil().
+        var minRuns = new double[n];
+        minRuns[^1] = 1;
+
+        for (int i = n - 2; i >= 0; i--)
+        {
+            if (getAmt[i] <= 0) return null; // broken offer
+                                             // produce enough output for the next step’s total pay
+            double needOutNext = minRuns[i + 1] * payAmt[i + 1];
+            double req = Math.Ceiling(needOutNext / getAmt[i]);
+
+            // must be positive and within stock
+            if (req <= 0 || req > stock[i]) return null; // bottleneck => reject entire path
+            minRuns[i] = req;
+        }
+
+        // Forward sanity: each step i must have enough input from i-1
+        for (int i = 1; i < n; i++)
+        {
+            double producedPrev = minRuns[i - 1] * getAmt[i - 1];
+            double needForThis = minRuns[i] * payAmt[i];
+            if (needForThis > producedPrev) return null; // inconsistency => reject
+        }
+
+        // MIN numbers are valid
+        sum.MinRuns = minRuns;
+        sum.MinStartCost = minRuns[0] * payAmt[0];
+        sum.MinFinalGain = minRuns[^1] * getAmt[^1];
+
+        // --- MAX CHAIN ---
+        // Start optimistic: each step could run at its stock,
+        // then iteratively clamp to keep producer/consumer consistent.
+        var runs = new double[n];
+        for (int i = 0; i < n; i++) runs[i] = stock[i];
+
+        for (int iter = 0; iter < 12; iter++)
+        {
+            bool changed = false;
+
+            // backward: earlier steps must produce enough for later steps
+            for (int i = n - 2; i >= 0; i--)
+            {
+                double needOutNext = runs[i + 1] * payAmt[i + 1];
+                double canPerRun = getAmt[i];
+                double reqRunsI = canPerRun > 0 ? Math.Ceiling(needOutNext / canPerRun) : 0;
+
+                if (reqRunsI < 0) reqRunsI = 0;
+                if (reqRunsI > stock[i]) reqRunsI = stock[i];
+
+                if (Math.Abs(runs[i] - reqRunsI) > 0.0001)
+                {
+                    runs[i] = reqRunsI;
+                    changed = true;
+                }
+            }
+
+            // forward: later steps cannot consume more than previous produce
+            for (int i = 1; i < n; i++)
+            {
+                double producedPrev = runs[i - 1] * getAmt[i - 1];
+                double maxRunsI = payAmt[i] > 0 ? Math.Floor(producedPrev / payAmt[i]) : 0;
+                if (maxRunsI < 0) maxRunsI = 0;
+                if (maxRunsI > stock[i]) maxRunsI = stock[i];
+
+                if (runs[i] > maxRunsI + 0.0001)
+                {
+                    runs[i] = maxRunsI;
+                    changed = true;
+                }
+            }
+
+            if (!changed) break;
+        }
+
+        sum.MaxRuns = runs;
+        sum.MaxStartCost = runs[0] * payAmt[0];
+        sum.MaxFinalGain = runs[^1] * getAmt[^1];
+
+        // Drone costs are PER STEP, not per trade
+        sum.DroneCostMin = n * 20.0;
+        sum.DroneCostMax = n * 20.0;
+
+        // Leftovers for MAX case (nice to show)
+        var leftovers = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
+        for (int i = 0; i < n - 1; i++)
+        {
+            double produced = runs[i] * getAmt[i];
+            double consumed = runs[i + 1] * payAmt[i + 1];
+            double lf = produced - consumed;
+            if (lf > 0.0001)
+            {
+                string key = getNam[i];
+                leftovers[key] = leftovers.TryGetValue(key, out var v) ? v + lf : lf;
+            }
+        }
+        foreach (var kv in leftovers)
+            if (!kv.Key.Equals(sum.FinalName, StringComparison.OrdinalIgnoreCase))
+                sum.Leftovers[kv.Key] = kv.Value;
+
+        return sum;
+    }
+
+
+
+    private FrameworkElement? BuildPathCard(TradePathResult path)
+    {
+
+        var summary = ComputePathRunSummaryStrict(path);
+        if (summary == null) return null; // reject whole path (true bottleneck)
+
+        var outer = new Border
+        {
+            Background = new SolidColorBrush(Color.FromRgb(24, 26, 28)),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(6),
+            Padding = new Thickness(8),
+            Margin = new Thickness(0, 0, 0, 8)
+        };
+
+        var grid = new Grid();
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        outer.Child = grid;
+
+        // LEFT
+        var left = new StackPanel { Orientation = Orientation.Vertical };
+        left.Children.Add(new TextBlock
+        {
+            Text = $"Get {summary.FinalName} starting from {summary.StartName} in {path.Steps.Count} step(s)",
+            Foreground = SearchText,
+            FontWeight = FontWeights.SemiBold,
+            FontSize = 14,
+            Margin = new Thickness(0, 0, 0, 4)
+        });
+
+        // Steps with "Current stock" and "Min to reach goal: xN"
+        for (int i = 0; i < path.Steps.Count; i++)
+            left.Children.Add(BuildStepRowWithMin(i + 1, path.Steps[i], summary.MinRuns[i]));
+
+        Grid.SetColumn(left, 0);
+        grid.Children.Add(left);
+
+
+        // RIGHT
+        var summaryBox = BuildSummaryBoxStrict(summary, path);
+        grid.Children.Add(summaryBox);
+        Grid.SetColumn(summaryBox, 1);
+
+        return outer;
+    }
+
+    // helper to keep earlier style
+    private FrameworkElement BuildStepRowWithMin(int idx, PathStep step, double minRunsForStep)
+    {
+        var rowOuter = new Border
+        {
+            Background = new SolidColorBrush(Color.FromArgb(32, 255, 255, 255)),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(64, 255, 255, 255)),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(4),
+            Padding = new Thickness(8, 6, 8, 6),
+            Margin = new Thickness(0, 4, 0, 0)
+        };
+
+        var row = new Grid();
+        row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        rowOuter.Child = row;
+
+        var left = new StackPanel { Orientation = Orientation.Vertical};
+
+        // Zeile mit Icons „pay → get“
+        left.Children.Add(new TextBlock
+        {
+            Text = $"Step {idx}:",
+            Foreground = SearchText,
+            FontWeight = FontWeights.SemiBold,
+            Margin = new Thickness(0, 0, 0, 2)
+        });
+        left.Children.Add(BuildPayGetRow(step));  // <- deine vorhandene Icon-Zeile
+
+        // Zusatzinfos
+        left.Children.Add(new TextBlock { Text = $"Current stock: {step.Order?.Stock ?? 0}", Foreground = SearchText, FontSize = 11, Opacity = 0.85 });
+        left.Children.Add(new TextBlock { Text = $"Min to reach goal: x{Math.Max(1, Math.Floor(minRunsForStep))}", Foreground = SearchText, FontSize = 11, Opacity = 0.85 });
+        left.Children.Add(new TextBlock { Text = $"{(step.Shop.Label ?? "Shop")} [{GetGridLabel(step.Shop)}]", Foreground = SearchText, FontSize = 11, Opacity = 0.8 });
+
+        Grid.SetColumn(left, 0);
+        row.Children.Add(left);
+
+        var goBtn = MakeHeaderPillButton("Go");
+        goBtn.Margin = new Thickness(8, 0, 0, 0);
+        goBtn.Click += (_, __) => CenterMapOnWorld(step.Shop.X, step.Shop.Y);
+        Grid.SetColumn(goBtn, 1);
+        row.Children.Add(goBtn);
+
+        return rowOuter;
+    }
+
+    private static Border UiSeparator(double top = 6, double bottom = 6)
+    {
+        return new Border
+        {
+            Height = 1,
+            Background = new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)),
+            Margin = new Thickness(0, top, 0, bottom)
+        };
+    }
+
+    // "Icon + xMenge" – nutzt DEIN bestehendes BindIcon.
+    private FrameworkElement IconWithQty(string? shortName, int itemId, double qty,
+                                     double iconSize = 24, double fontSize = 13, bool bold = true)
+    {
+        var row = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+
+        var img = new Image { Width = iconSize, Height = iconSize, Margin = new Thickness(0, 0, 6, 0) };
+        BindIcon(img, shortName, itemId); // <- deine vorhandene Funktion
+
+        var txt = new TextBlock
+        {
+            Text = $"x{Math.Floor(qty)}",
+            Foreground = SearchText,
+            FontSize = fontSize,
+            FontWeight = bold ? FontWeights.SemiBold : FontWeights.Normal,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        row.Children.Add(img);
+        row.Children.Add(txt);
+        return row;
+    }
+
+    private FrameworkElement BuildSummaryBoxStrict(PathRunSummary sum, TradePathResult path)
+    {
+        var first = path.Steps.First();
+        var last = path.Steps.Last();
+
+        // Fallbacks falls Order null sein sollte
+        string? startShort = first.Order?.CurrencyShortName ?? first.PayPrettyName;
+        int startId = first.Order?.CurrencyItemId ?? 0;
+
+        string? finalShort = last.Order?.ItemShortName ?? last.GetPrettyName;
+        int finalId = last.Order?.ItemId ?? 0;
+
+        var box = new Border
+        {
+            Background = new SolidColorBrush(Color.FromRgb(40, 44, 48)),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(4),
+            Padding = new Thickness(8),
+            Margin = new Thickness(8, 0, 0, 0),
+            MinWidth = 260
+        };
+
+        var st = new StackPanel { Orientation = Orientation.Vertical };
+        box.Child = st;
+
+        // Titel
+        st.Children.Add(new TextBlock
+        {
+            Text = "Max @ current stock:",
+            Foreground = SearchText,
+            FontWeight = FontWeights.SemiBold,
+            FontSize = 12
+        });
+
+        // Große Symbolzeile: [Pay xN] -> [Get xN]
+        var big = new Grid { Margin = new Thickness(0, 4, 0, 6) };
+        big.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        big.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        big.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+        var payIcon = IconWithQty(startShort, startId, sum.MaxStartCost, 24, 13, true);
+        Grid.SetColumn(payIcon, 0); big.Children.Add(payIcon);
+
+        var arrow = new TextBlock { Text = "  →  ", Foreground = SearchText, FontSize = 14, VerticalAlignment = VerticalAlignment.Center };
+        Grid.SetColumn(arrow, 1); big.Children.Add(arrow);
+
+        var getIcon = IconWithQty(finalShort, finalId, sum.MaxFinalGain, 24, 13, true);
+        Grid.SetColumn(getIcon, 2); big.Children.Add(getIcon);
+
+        st.Children.Add(big);
+
+        // Klartext-Zeile
+        st.Children.Add(new TextBlock
+        {
+            Text = $"Get {Math.Floor(sum.MaxFinalGain)} {sum.FinalName} for {Math.Floor(sum.MaxStartCost)} {sum.StartName}",
+            Foreground = SearchText,
+            FontSize = 12
+        });
+
+        // Leftovers
+        if (sum.Leftovers.Count > 0)
+        {
+            var leftStr = string.Join(", ", sum.Leftovers.Select(k => $"{Math.Floor(k.Value)} {k.Key}"));
+            st.Children.Add(new TextBlock
+            {
+                Text = $"Leftovers: {leftStr}",
+                Foreground = SearchText,
+                FontSize = 11,
+                Margin = new Thickness(0, 2, 0, 0)
+            });
+        }
+
+        // Drone costs – nimm DroneCostMax, sonst auf DroneCost/n*20 zurückfallen
+        double drone = sum.DroneCostMax > 0 ? sum.DroneCostMax : (sum.DroneCost > 0 ? sum.DroneCost : path.Steps.Count * 20);
+        st.Children.Add(new TextBlock
+        {
+            Text = $"Drone costs: {Math.Floor(drone)} Scrap",
+            Foreground = SearchText,
+            FontSize = 11,
+            Margin = new Thickness(0, 2, 0, 2)
+        });
+
+        st.Children.Add(UiSeparator());
+
+        // Aggregierte Step-Totals für MAX-Plan
+        for (int i = 0; i < path.Steps.Count; i++)
+        {
+            var step = path.Steps[i];
+            double r = (sum.MaxRuns != null && i < sum.MaxRuns.Length) ? sum.MaxRuns[i] : 0.0;
+            if (r <= 0) continue;
+
+            double totalPay = r * step.PayAmount;
+            double totalGet = r * step.GetAmount;
+
+            st.Children.Add(new TextBlock
+            {
+                Text = $"Step {i + 1}: Pay {Math.Floor(totalPay)} {step.PayPrettyName} → Get {Math.Floor(totalGet)} {step.GetPrettyName}",
+                Foreground = SearchText,
+                FontSize = 11
+            });
+        }
+
+        st.Children.Add(UiSeparator());
+
+        // Min-Chain ganz unten
+        var minLine = $"Min chain: Pay {Math.Floor(sum.MinStartCost)} {sum.StartName} → Get {Math.Floor(sum.MinFinalGain)} {sum.FinalName}";
+        if (!sum.MinChainFeasible && (sum.Blockers?.Count > 0))
+            minLine += "  (not feasible at current stock)";
+
+        st.Children.Add(new TextBlock { Text = minLine, Foreground = SearchText, FontSize = 11 });
+
+        if (!sum.MinChainFeasible && (sum.Blockers?.Count > 0))
+        {
+            st.Children.Add(new TextBlock
+            {
+                Text = "Bottleneck: " + sum.Blockers[0],
+                Foreground = SearchText,
+                FontSize = 11,
+                Opacity = 0.9
+            });
+        }
+
+        return box;
+    }
+
+
+
+    private FrameworkElement BuildSummaryBox(PathRunSummary sum, TradePathResult path)
+    {
+        var box = new Border
+        {
+            Background = new SolidColorBrush(Color.FromRgb(40, 44, 48)),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(4),
+            Padding = new Thickness(6),
+            Margin = new Thickness(8, 0, 0, 0),
+            MinWidth = 220
+        };
+
+        var st = new StackPanel { Orientation = Orientation.Vertical };
+        box.Child = st;
+
+        st.Children.Add(new TextBlock
+        {
+            Text = "Max @ current stock:",
+            Foreground = SearchText,
+            FontWeight = FontWeights.SemiBold,
+            FontSize = 12
+        });
+       
+
+        st.Children.Add(new TextBlock
+        {
+            Text = $"Get {Math.Floor(sum.MaxFinalGain)} {sum.FinalName} for {Math.Floor(sum.MaxStartCost)} {sum.StartName}",
+            Foreground = SearchText,
+            FontSize = 12,
+            Margin = new Thickness(0, 2, 0, 4)
+        });
+
+        st.Children.Add(new TextBlock
+        {
+            Text = $"Drone costs: {Math.Floor(sum.DroneCost)} Scrap",
+            Foreground = SearchText,
+            FontSize = 11
+        });
+
+        if (sum.Leftovers.Count > 0)
+        {
+            var leftoverStrs = sum.Leftovers
+                .Select(kvp => $"{Math.Floor(kvp.Value)} {kvp.Key}");
+
+            st.Children.Add(new TextBlock
+            {
+                Text = "Leftovers: " + string.Join(", ", leftoverStrs),
+                Foreground = SearchText,
+                FontSize = 11,
+                Margin = new Thickness(0, 2, 0, 4)
+            });
+        }
+        else
+        {
+            st.Children.Add(new TextBlock
+            {
+                Text = "",
+                FontSize = 4
+            });
+        }
+
+        // Detail-Zeilen pro Step mit aggregierten Mengen
+        var steps = path.Steps;
+        for (int i = 0; i < steps.Count; i++)
+        {
+            var step = steps[i];
+            var (idx, r) = sum.RunsByStep[i]; // idx == i, r == runs[i]
+
+            if (r <= 0) continue; // wenn wir den Step wirklich gar nicht fahren, skippen
+
+            double totalPay = r * step.PayAmount;
+            double totalGet = r * step.GetAmount;
+
+            st.Children.Add(new TextBlock
+            {
+                Text = $"Step {i + 1}: Pay {Math.Floor(totalPay)} {step.PayPrettyName} → Get {Math.Floor(totalGet)} {step.GetPrettyName}",
+                Foreground = SearchText,
+                FontSize = 11
+            });
+            if (sum.MinFinalGain > 0)
+            {
+                var minLine = $"Min chain: Pay {Math.Floor(sum.MinStartCost)} {sum.StartName} → Get {Math.Floor(sum.MinFinalGain)} {sum.FinalName}";
+                if (!sum.MinChainFeasible && sum.Blockers.Count > 0)
+                    minLine += "  (not feasible at current stock)";
+
+                
+
+                if (!sum.MinChainFeasible && sum.Blockers.Count > 0)
+                {
+                    st.Children.Add(new TextBlock
+                    {
+                        Text = "Bottleneck: " + sum.Blockers[0],
+                        Foreground = SearchText,
+                        FontSize = 11,
+                        Opacity = 0.9
+                    });
+                }
+            }
+        }
+        var minLine2 = $"Min chain: Pay {Math.Floor(sum.MinStartCost)} {sum.StartName} → Get {Math.Floor(sum.MinFinalGain)} {sum.FinalName}";
+        st.Children.Add(new TextBlock
+        {
+            Text = minLine2,
+            Foreground = SearchText,
+            FontSize = 11,
+            Margin = new Thickness(0, 2, 0, 2)
+        });
+
+        return box;
+    }
+
+    private FrameworkElement BuildStepRow(int idx, PathStep step, PathRunSummary summary)
+    {
+        var rowOuter = new Border
+        {
+            Background = new SolidColorBrush(Color.FromArgb(32, 255, 255, 255)),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(64, 255, 255, 255)),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(4),
+            Padding = new Thickness(6),
+            Margin = new Thickness(0, 4, 0, 0)
+        };
+
+        var row = new Grid();
+        row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        rowOuter.Child = row;
+
+        // LEFT
+        var leftStack = new StackPanel { Orientation = Orientation.Vertical };
+
+        // Zeile mit Icons „pay → get“
+        leftStack.Children.Add(BuildPayGetRow(step));
+
+        // Current stock
+        leftStack.Children.Add(new TextBlock
+        {
+            Text = $"Current stock: {step.Order?.Stock ?? 0}",
+            Foreground = SearchText,
+            FontSize = 11,
+            Opacity = 0.85
+        });
+
+        // Min xN (aus MIN-Summary)
+        var minPair = summary.MinRunsByStep.FirstOrDefault(t => t.stepIndex == (idx - 1));
+        if (minPair.runs > 0)
+        {
+            leftStack.Children.Add(new TextBlock
+            {
+                Text = $"Min to reach goal: x{minPair.runs}",
+                Foreground = new SolidColorBrush(Color.FromArgb(210, 255, 255, 255)),
+                FontSize = 11
+            });
+        }
+
+        // Shop Info
+        leftStack.Children.Add(new TextBlock
+        {
+            Text = $"{(step.Shop.Label ?? "Shop")} [{GetGridLabel(step.Shop)}]",
+            Foreground = SearchText,
+            FontSize = 12,
+            Opacity = 0.8
+        });
+
+        Grid.SetColumn(leftStack, 0);
+        row.Children.Add(leftStack);
+
+        // RIGHT: Go
+        var goBtn = MakeHeaderPillButton("Go");
+        goBtn.Margin = new Thickness(8, 0, 0, 0);
+        goBtn.Click += (_, __) => CenterMapOnWorld(step.Shop.X, step.Shop.Y);
+
+        Grid.SetColumn(goBtn, 1);
+        row.Children.Add(goBtn);
+
+        return rowOuter;
+    }
+
+    private FrameworkElement BuildPayGetRow(PathStep st)
+    {
+        var g = new Grid { Margin = new Thickness(0, 0, 0, 4) };
+        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        g.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        var payIcon = new Image { Width = 18, Height = 18, Margin = new Thickness(0, 0, 6, 0) };
+        BindIcon(payIcon, st.Order?.CurrencyShortName, st.Order?.CurrencyItemId ?? 0);
+        g.Children.Add(payIcon);
+
+        var payTxt = new TextBlock
+        {
+            Text = $"Pay {st.PayAmount} {st.PayPrettyName}",
+            Foreground = SearchText,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        Grid.SetColumn(payTxt, 1);
+        g.Children.Add(payTxt);
+
+        var arrow = new TextBlock
+        {
+            Text = "  →  ",
+            Margin = new Thickness(6, 0, 6, 0),
+            Foreground = SearchText,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        Grid.SetColumn(arrow, 2);
+        g.Children.Add(arrow);
+
+        var getIcon = new Image { Width = 18, Height = 18, Margin = new Thickness(0, 0, 6, 0) };
+        BindIcon(getIcon, st.Order?.ItemShortName, st.Order?.ItemId ?? 0);
+        Grid.SetColumn(getIcon, 3);
+        g.Children.Add(getIcon);
+
+        var getTxt = new TextBlock
+        {
+            Text = $"Get {st.GetAmount} {st.GetPrettyName}",
+            Foreground = SearchText,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        Grid.SetColumn(getTxt, 4);
+        g.Children.Add(getTxt);
+
+        return g;
+    }
+
+    private void RunPathAnalysis()
+    {
+        if (_pathFinderWin == null || _pathResultList == null) return;
+
+        string wantTxt = _wantTb?.Text ?? "";
+        string payTxt = _payTb?.Text ?? "";
+
+        int depth = 4;
+       // if (_depthCb?.SelectedIndex == 0) depth = 2;
+      //  else if (_depthCb?.SelectedIndex == 1) depth = 3;
+      //  else if (_depthCb?.SelectedIndex == 2) depth = 4;
+
+        _pathResultList.Items.Clear();
+        _pathResultList.Items.Add(new TextBlock
+        {
+            Text = "Searching...",
+            Foreground = SearchText
+        });
+
+        // aktuell synchron, was bei deiner Scale noch okay ist
+        var paths = FindPathsItemToItem(payTxt, wantTxt, depth);
+
+        _pathResultList.Items.Clear();
+
+        if (paths.Count == 0)
+        {
+            _pathResultList.Items.Add(new TextBlock
+            {
+                Text = "No route found.",
+                Foreground = SearchText
+            });
+            return;
+        }
+
+        // Sort shortest first, keep up to 30, but only those that pass strict summary
+        int shown = 0;
+        foreach (var p in paths.OrderBy(p => p.Steps.Count))
+        {
+            var card = BuildPathCard(p);
+            if (card != null)
+            {
+                _pathResultList.Items.Add(card);
+                if (++shown >= 30) break;
+            }
+        }
+        if (shown == 0)
+        {
+            _pathResultList.Items.Add(new TextBlock { Text = "No valid route (bottlenecks).", Foreground = SearchText });
+        }
     }
 
     private void RefreshShopSearchResults()
@@ -5355,17 +8028,22 @@ public partial class MainWindow : Window
         if (_shopSearchWin == null || _searchList == null) return;
 
         string q = _searchTb?.Text?.Trim() ?? "";
+
         bool wantSell = _chkSell?.IsChecked != false;
         bool wantBuy = _chkBuy?.IsChecked != false;
 
-        // Hilfsfilter
+        bool hideEmpty = _chkHideEmpty?.IsChecked == true;
+
+        // Helper zum Text-Match
         bool MatchesLeft(RustPlusClientReal.ShopOrder o)
             => string.IsNullOrEmpty(q)
-               || ResolveItemName(o.ItemId, o.ItemShortName).Contains(q, StringComparison.OrdinalIgnoreCase);
+               || ResolveItemName(o.ItemId, o.ItemShortName)
+                  .Contains(q, StringComparison.OrdinalIgnoreCase);
 
         bool MatchesRight(RustPlusClientReal.ShopOrder o)
             => string.IsNullOrEmpty(q)
-               || ResolveItemName(o.CurrencyItemId, o.CurrencyShortName).Contains(q, StringComparison.OrdinalIgnoreCase);
+               || ResolveItemName(o.CurrencyItemId, o.CurrencyShortName)
+                  .Contains(q, StringComparison.OrdinalIgnoreCase);
 
         _searchList.Items.Clear();
 
@@ -5373,13 +8051,21 @@ public partial class MainWindow : Window
         {
             if (s.Orders == null || s.Orders.Count == 0) continue;
 
-            // Angebote filtern: “Sells” = linke Seite matcht; “Buys” = rechte Seite matcht.
-            var offers = s.Orders.Where(o =>
-                ((wantSell && MatchesLeft(o)) || (wantBuy && MatchesRight(o)))
-            ).ToList();
+            // Deine angepasste Filter-Logik:
+            var offers = s.Orders
+                .Where(o =>
+                    ((wantSell && MatchesLeft(o)) || (wantBuy && MatchesRight(o))) &&
+                    (!hideEmpty || o.Stock > 0)
+                )
+                .ToList();
 
-            if (offers.Count == 0) continue;
+            if (hideEmpty && offers.Count == 0)
+                continue; // ganzer Shop raus, weil nur 0-stock
 
+            if (offers.Count == 0)
+                continue;
+
+            // Karte bauen und hinzufügen
             _searchList.Items.Add(BuildShopSearchCard(s, offers, compact: false));
         }
     }
@@ -5472,6 +8158,823 @@ public partial class MainWindow : Window
             AppendLog($"Shop clicked: {s.Label ?? "(no Label)"} @ ({s.X:0},{s.Y:0}) | offers={s.Orders?.Count ?? 0}");
             // hier könntest du später ein richtiges Popup öffnen
         }
+    }
+
+    // SHOP ANALYTICS AND ALARM MECHANICS
+
+   
+
+    private Window? _analysisWin;
+    private ListBox? _analysisListBox;
+    private void OpenAnalysisWindow()
+    {
+        if (_analysisWin != null)
+        {
+            _analysisWin.Activate();
+            RefreshAnalysisWindow();
+            return;
+        }
+
+        var w = new Window
+        {
+            Title = "Profit Trades",
+            Width = 900,
+            Height = 600,
+            Owner = this,
+            Background = SearchWinBg,
+            Foreground = SearchText,
+            WindowStyle = WindowStyle.SingleBorderWindow,
+            ResizeMode = ResizeMode.CanResizeWithGrip
+        };
+
+        // Root Dock
+        var root = new DockPanel
+        {
+            LastChildFill = true,
+            Margin = new Thickness(0)
+        };
+        w.Content = root;
+
+        // ===== HEADER BAR (oben dunkel, mit Icon links + Titel + Refresh-Button rechts) =====
+        var headerBar = new Grid
+        {
+            Background = new SolidColorBrush(Color.FromRgb(20, 22, 25)),
+            Height = 32,
+        };
+        headerBar.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        headerBar.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+        // Linker Teil vom Header: kleines Icon + "Profit Trades"
+        var headerLeft = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(8, 0, 0, 0),
+        };
+
+        // Du kannst hier ein echtes Bild/Icon nehmen – ich nehme erstmal ein Emoji
+        var headerIcon = new TextBlock
+        {
+            Text = "💰",
+            Foreground = Brushes.Gold,
+            FontSize = 14,
+            Margin = new Thickness(0, -1, 6, 0),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        var headerTitle = new TextBlock
+        {
+            Text = "Profit Trades",
+            Foreground = Brushes.White,
+            FontSize = 13,
+            FontWeight = FontWeights.SemiBold,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        headerLeft.Children.Add(headerIcon);
+        headerLeft.Children.Add(headerTitle);
+
+        Grid.SetColumn(headerLeft, 0);
+        headerBar.Children.Add(headerLeft);
+
+        // Rechts im Header: der "runde Refresh"-Button
+        var btnRefresh = new Button
+        {
+            Width = 24,
+            Height = 24,
+            Margin = new Thickness(0, 0, 8, 0),
+            Padding = new Thickness(0),
+            Background = new SolidColorBrush(Color.FromRgb(40, 44, 48)),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+            BorderThickness = new Thickness(1),
+            Cursor = Cursors.Hand,
+            ToolTip = "Refresh profit scan",
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Center,
+            Content = new TextBlock
+            {
+                Text = "⟳", // kannst auch ein eigenes Icon-Bild einsetzen
+                Foreground = Brushes.White,
+                FontWeight = FontWeights.Bold,
+                FontSize = 16,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextAlignment = TextAlignment.Center
+            }
+        };
+
+       
+
+        btnRefresh.Click += (_, __) => RefreshAnalysisWindow();
+
+        Grid.SetColumn(btnRefresh, 1);
+        headerBar.Children.Add(btnRefresh);
+
+        DockPanel.SetDock(headerBar, Dock.Top);
+        root.Children.Add(headerBar);
+
+        // ===== INFO BAR direkt unter Header =====
+        var infoBar = new Border
+        {
+            Background = new SolidColorBrush(Color.FromRgb(28, 30, 33)),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)),
+            BorderThickness = new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(10, 8, 10, 8)
+        };
+
+        var infoText = new TextBlock
+        {
+            Foreground = new SolidColorBrush(Color.FromArgb(220, 220, 220, 220)),
+            FontSize = 12,
+            Text =
+                "Direct arbitrage opportunities | buy low → sell high." +
+                
+                " (Click Go to center shop.)"
+        };
+
+        infoBar.Child = infoText;
+
+        DockPanel.SetDock(infoBar, Dock.Top);
+        root.Children.Add(infoBar);
+
+        // ===== MAIN SCROLL AREA =====
+        _analysisListBox = new ListBox
+        {
+            Background = SearchWinBg,
+            BorderThickness = new Thickness(0),
+            Foreground = SearchText,
+            HorizontalContentAlignment = HorizontalAlignment.Stretch,
+            Padding = new Thickness(10),
+        };
+
+        // dünnere Scrollbar für diese ListBox
+        var thinScrollStyle = new Style(typeof(ScrollBar));
+        thinScrollStyle.Setters.Add(new Setter(ScrollBar.WidthProperty, 6.0));
+        thinScrollStyle.Setters.Add(new Setter(Control.BackgroundProperty,
+            new SolidColorBrush(Color.FromArgb(40, 255, 255, 255))));
+        thinScrollStyle.Setters.Add(new Setter(Control.ForegroundProperty,
+            new SolidColorBrush(Color.FromArgb(160, 255, 255, 255))));
+        _analysisListBox.Resources.Add(typeof(ScrollBar), thinScrollStyle);
+
+        var scrollHost = new ScrollViewer
+        {
+            Content = _analysisListBox,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            Background = SearchWinBg,
+        };
+        ApplyThinScrollbar(scrollHost);
+
+        w.PreviewMouseWheel += (s, e) =>
+        {
+            // nur scrollen, wenn Maus auch über dem Scrollbereich ist
+            if (!scrollHost.IsMouseOver) return;
+
+            const double step = 30;               // 30px pro Tick, kannst du ändern
+            double dir = e.Delta > 0 ? -1 : 1;    // nach oben / nach unten
+            double target = scrollHost.VerticalOffset + dir * step;
+
+            if (target < 0) target = 0;
+            if (target > scrollHost.ScrollableHeight) target = scrollHost.ScrollableHeight;
+
+            scrollHost.ScrollToVerticalOffset(target);
+            e.Handled = true;
+        };
+
+        root.Children.Add(scrollHost);
+
+        // Fenster events
+        _analysisWin = w;
+
+        w.Closed += (_, __) =>
+        {
+            _analysisWin = null;
+            _analysisListBox = null;
+        };
+
+        RefreshAnalysisWindow();
+
+        w.Show();
+        w.Activate();
+    }
+    private void RefreshAnalysisWindow()
+    {
+        if (_analysisWin == null || _analysisListBox == null) return;
+
+        _analysisListBox.Items.Clear();
+
+        if (_lastShops == null || _lastShops.Count == 0)
+        {
+            _analysisListBox.Items.Add(new TextBlock
+            {
+                Text = "No shop data yet.",
+                Foreground = SearchText
+            });
+            return;
+        }
+
+        var flips = FindTwoStepFlips(_lastShops);
+
+        _analysisListBox.Items.Add(new TextBlock
+        {
+            Text = "Possible 2-step profit loops",
+            Foreground = SearchText,
+            Margin = new Thickness(0, 0, 0, 8)
+        });
+
+        if (flips.Count == 0)
+        {
+            _analysisListBox.Items.Add(new TextBlock
+            {
+                Text = "No profitable flips found.",
+                Foreground = SearchText
+            });
+            return;
+        }
+
+        int shown = 0;
+        foreach (var flip in flips)
+        {
+            _analysisListBox.Items.Add(BuildFlipCard(flip));
+            if (++shown >= 20) break;
+        }
+    }
+
+    
+
+   
+
+    private class ShopAlertRule
+    {
+        public Guid Id { get; } = Guid.NewGuid();
+
+        public string QueryText { get; set; } = "";
+        public bool MatchSellSide { get; set; } = true;
+        public bool MatchBuySide { get; set; } = false;
+
+        public bool NotifyChat { get; set; } = true;
+        public bool NotifySound { get; set; } = true;
+
+        // vom User “gespeichert”? Dann über Neustart hinweg laden
+        public bool IsSaved { get; set; } = false;
+
+        // Baseline der schon bekannten Orders beim Anlegen
+        public List<AlertSeenOrder> Baseline { get; } = new();
+
+        // Anti-Spam pro Order-Key
+        public Dictionary<string, DateTime> LastAnnouncements { get; } = new();
+    }
+    // Liste aller aktiven Alarmregeln
+    private readonly List<ShopAlertRule> _alertRules = new();
+
+    // ====== SHOP SEARCH WINDOW UI-Elemente ======
+    // Erweiterungen, die wir neu brauchen:
+    private CheckBox? _chkHideEmpty;            // "Hide 0-stock"
+    private CheckBox? _chkNewShopAlerts;        // "New shop alerts to chat"
+    private CheckBox? _chkSuspiciousAlerts;     // "Suspicious shop alerts"
+    private Button? _btnAddAlert;               // "+ Alert" Button
+    private ListBox? _alertList;                // Liste der aktiven Alerts im UI
+    private Button? _btnAnalyze;                // "Analyze" Button
+    private Button? _btnPathFinder;                // "PathFinder" Button
+    private ListBox? _analysisList;             // Ergebnisse der Analyse
+
+    private DateTime _initialShopSnapshotTime = DateTime.UtcNow; // set beim allerersten erfolgreichen Poll
+
+    private void AddAlertFromCurrentSearch()
+    {
+        string q = _searchTb?.Text?.Trim() ?? "";
+        bool wantSell = _chkSell?.IsChecked != false;
+        bool wantBuy = _chkBuy?.IsChecked != false;
+
+        if (string.IsNullOrWhiteSpace(q))
+            return;
+
+        var rule = new ShopAlertRule
+        {
+            QueryText = q,
+            MatchSellSide = wantSell,
+            MatchBuySide = wantBuy,
+            NotifyChat = true,
+            NotifySound = true
+        };
+
+        // Baseline aufnehmen: alles, was es JETZT schon gibt, gilt als "bekannt"
+        foreach (var shop in _lastShops)
+        {
+            if (shop.Orders == null) continue;
+            foreach (var o in shop.Orders)
+            {
+                bool matchesSide =
+                    (rule.MatchSellSide && MatchOrderLeft(o, rule.QueryText)) ||
+                    (rule.MatchBuySide && MatchOrderRight(o, rule.QueryText));
+
+                if (!matchesSide) continue;
+
+                rule.Baseline.Add(new AlertSeenOrder
+                {
+                    ShopId = shop.Id,
+                    ItemShort = o.ItemShortName,
+                    CurrencyShort = o.CurrencyShortName,
+                    Stock = o.Stock,
+                    Quantity = o.Quantity,
+                    CurrencyAmount = o.CurrencyAmount
+                });
+            }
+        }
+
+        _alertRules.Add(rule);
+
+        RefreshAlertListUI();
+    }
+
+    // Zeichnet die Alert-Liste (_alertList) neu
+    private void RefreshAlertListUI()
+    {
+        // "pill" style (runde kleine Buttons wie bei dir in der UI Leiste)
+        var pillButtonStyle = new Style(typeof(Button));
+        pillButtonStyle.Setters.Add(new Setter(Control.BackgroundProperty,
+            new SolidColorBrush(Color.FromRgb(40, 44, 48))));
+        pillButtonStyle.Setters.Add(new Setter(Control.ForegroundProperty, Brushes.White));
+        pillButtonStyle.Setters.Add(new Setter(Control.BorderBrushProperty,
+            new SolidColorBrush(Color.FromArgb(80, 255, 255, 255))));
+        pillButtonStyle.Setters.Add(new Setter(Control.BorderThicknessProperty, new Thickness(1)));
+        pillButtonStyle.Setters.Add(new Setter(Control.PaddingProperty, new Thickness(6, 2, 6, 2)));
+        pillButtonStyle.Setters.Add(new Setter(Control.FontSizeProperty, 11.0));
+        pillButtonStyle.Setters.Add(new Setter(Control.CursorProperty, Cursors.Hand));
+        // CornerRadius geht nur über ControlTemplate hacky;
+        // Quick&dirty ohne Template: wir lassen’s rechteckig mit 4er Radius über Border below:
+
+        if (_alertList == null) return;
+
+        _alertList.Items.Clear();
+
+        foreach (var rule in _alertRules.ToList())
+        {
+            var row = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Margin = new Thickness(0, 0, 0, 2),
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            // Textblock: "crude [sell/buy]"
+            var modeStr =
+                (rule.MatchSellSide && rule.MatchBuySide) ? "sell/buy" :
+                (rule.MatchSellSide ? "sell" :
+                (rule.MatchBuySide ? "buy" : ""));
+
+            var txt = new TextBlock
+            {
+                Text = $"{rule.QueryText} [{modeStr}]",
+                Foreground = SearchText,
+                Width = 160,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            
+            var chkChat = new ToggleButton
+            {
+                
+               
+                Width = 28,
+                Height = 22,
+                Margin = new Thickness(4, 0, 0, 0),
+                ToolTip = "Send to team chat",
+                IsChecked = rule.NotifyChat,
+                Background = new SolidColorBrush(Color.FromRgb(40, 44, 48)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+                BorderThickness = new Thickness(1),
+                Foreground = Brushes.Black,
+                Cursor = Cursors.Hand,
+                Content = new TextBlock
+                {
+                    Style = null,
+                    Text = "💬",
+                    FontSize = 14,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextAlignment = TextAlignment.Center
+                }
+            };
+            chkChat.Checked += (_, __) => { rule.NotifyChat = true; SavePersistentAlerts(); };
+            chkChat.Unchecked += (_, __) => { rule.NotifyChat = false; SavePersistentAlerts(); };
+
+            var chkSound = new ToggleButton
+            {
+                Width = 28,
+                
+                Height = 22,
+                Margin = new Thickness(4, 0, 0, 0),
+                ToolTip = "Play sound",
+                IsChecked = rule.NotifySound,
+                Background = new SolidColorBrush(Color.FromRgb(40, 44, 48)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+                BorderThickness = new Thickness(1),
+                Foreground = Brushes.Black,
+                Cursor = Cursors.Hand,
+                Content = new TextBlock
+                {Style = null,
+                    Text = "🔊",
+                    FontSize = 14,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextAlignment = TextAlignment.Center
+                }
+            };
+            chkSound.Checked += (_, __) => { rule.NotifySound = true; SavePersistentAlerts(); };
+            chkSound.Unchecked += (_, __) => { rule.NotifySound = false; SavePersistentAlerts(); };
+
+            // Save-Button (💾) - optisch "ausgegraut", wenn schon gespeichert
+            var btnSave = new Button
+            {
+                Width = 28,
+                
+                Height = 22,
+                Margin = new Thickness(4, 0, 0, 0),
+                Padding = new Thickness(0),
+                BorderThickness = new Thickness(1),
+                Cursor = Cursors.Hand,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center
+            };
+
+            // Farben je nach Saved-Status setzen:
+            if (rule.IsSaved)
+            {
+                // saved -> leicht grün getönt
+                btnSave.Background = new SolidColorBrush(Color.FromRgb(32, 48, 32));                // sehr dunkles Grün
+                btnSave.BorderBrush = new SolidColorBrush(Color.FromRgb(64, 160, 64));              // sattes Grün
+                btnSave.ToolTip = "Saved (click to unsave)";
+            }
+            else
+            {
+                // nicht saved -> neutral dunkel
+                btnSave.Background = new SolidColorBrush(Color.FromRgb(40, 44, 48));                // dein Dark-UI
+                btnSave.BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255));        // dezente helle Kontur
+                btnSave.ToolTip = "Save alert";
+            }
+
+            // Icon-Farbe (Diskette):
+            var saveIcon = new TextBlock
+            {
+                Style = null,
+                Text = "💾",
+                FontSize = 14,
+                FontWeight = FontWeights.SemiBold,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                // wenn saved -> grünliche Schrift, sonst weiß
+                Foreground = rule.IsSaved
+                    ? new SolidColorBrush(Color.FromRgb(120, 255, 120)) // hellgrün
+                    : Brushes.White
+            };
+
+            btnSave.Content = saveIcon;
+
+            // Click toggelt IsSaved, speichert, und baut UI neu auf
+            btnSave.Click += (_, __) =>
+            {
+                rule.IsSaved = !rule.IsSaved;
+                SavePersistentAlerts();
+                RefreshAlertListUI(); // UI neu zeichnen für neue Farben
+            };
+
+            var btnDel = new Button
+            {
+                
+                Width = 28,
+                
+                Height = 22,
+                Margin = new Thickness(4, 0, 0, 0),
+                Background = new SolidColorBrush(Color.FromRgb(40, 44, 48)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+                BorderThickness = new Thickness(1),
+                Foreground = Brushes.DarkRed,
+                Cursor = Cursors.Hand,
+                ToolTip = "Remove alert",
+                Content = new TextBlock
+                {
+                   Style=null,
+                    Text = "🗑",
+                    FontSize = 14,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                }
+            };
+            btnDel.Click += (_, __) => {
+                _alertRules.Remove(rule);
+                SavePersistentAlerts();
+                RefreshAlertListUI();
+            };
+
+            row.Children.Add(txt);
+            row.Children.Add(chkChat);
+            row.Children.Add(chkSound);
+            row.Children.Add(btnSave);
+            row.Children.Add(btnDel);
+
+            _alertList.Items.Add(row);
+        }
+        ApplyThinScrollbar(_alertList);
+    }
+
+    private void SavePersistentAlerts()
+    {
+        try
+        {
+            var list = _alertRules
+                .Where(r => r.IsSaved)
+                .Select(r => new PersistedAlertDTO
+                {
+                    QueryText = r.QueryText,
+                    MatchSellSide = r.MatchSellSide,
+                    MatchBuySide = r.MatchBuySide,
+                    NotifyChat = r.NotifyChat,
+                    NotifySound = r.NotifySound
+                })
+                .ToList();
+
+            string json = System.Text.Json.JsonSerializer.Serialize(
+                list,
+                new System.Text.Json.JsonSerializerOptions { WriteIndented = true }
+            );
+
+            System.IO.File.WriteAllText(GetAlertsSavePath(), json);
+        }
+        catch
+        {
+            // absichtlich schlucken - wir wollen hier nicht crashen
+        }
+    }
+
+    private void LoadPersistentAlerts()
+    {
+        try
+        {
+            string path = GetAlertsSavePath();
+            if (!System.IO.File.Exists(path)) return;
+
+            string json = System.IO.File.ReadAllText(path);
+            var list = System.Text.Json.JsonSerializer.Deserialize<List<PersistedAlertDTO>>(json);
+            if (list == null) return;
+
+            foreach (var dto in list)
+            {
+                var rule = new ShopAlertRule
+                {
+                    QueryText = dto.QueryText,
+                    MatchSellSide = dto.MatchSellSide,
+                    MatchBuySide = dto.MatchBuySide,
+                    NotifyChat = dto.NotifyChat,
+                    NotifySound = dto.NotifySound,
+                    IsSaved = true
+                };
+
+                // Baseline NICHT von Disk laden, sondern jetzt frisch setzen,
+                // damit vorhandene Angebote nicht sofort gespammt werden:
+                foreach (var shop in _lastShops)
+                {
+                    if (shop.Orders == null) continue;
+                    foreach (var o in shop.Orders)
+                    {
+                        bool matchesSide =
+                            (rule.MatchSellSide && MatchOrderLeft(o, rule.QueryText)) ||
+                            (rule.MatchBuySide && MatchOrderRight(o, rule.QueryText));
+
+                        if (!matchesSide) continue;
+
+                        rule.Baseline.Add(new AlertSeenOrder
+                        {
+                            ShopId = shop.Id,
+                            ItemShort = o.ItemShortName,
+                            CurrencyShort = o.CurrencyShortName,
+                            Stock = o.Stock,
+                            Quantity = o.Quantity,
+                            CurrencyAmount = o.CurrencyAmount
+                        });
+                    }
+                }
+
+                _alertRules.Add(rule);
+            }
+        }
+        catch
+        {
+            // wenn Laden fehlschlägt, egal – wir starten halt ohne gespeicherte Alerts
+        }
+    }
+
+    private DateTime _lastChatSendUtc = DateTime.MinValue; // Rate-Limit (1/sec)
+
+    // pro Alert merken wir, welche Angebote schon existierten beim Setzen
+    private class AlertSeenOrder
+    {
+        public uint ShopId;
+        public string ItemShort;
+        public string CurrencyShort;
+        public int Quantity;
+        public float CurrencyAmount;
+        public int Stock;
+    }
+
+    private class PersistedAlertDTO
+    {
+        public string QueryText { get; set; } = "";
+        public bool MatchSellSide { get; set; }
+        public bool MatchBuySide { get; set; }
+        public bool NotifyChat { get; set; }
+        public bool NotifySound { get; set; }
+    }
+
+    private string GetAlertsSavePath()
+    {
+        // simple Variante: im gleichen Ordner wie die EXE
+        return System.IO.Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory,
+            "shop_alerts.json"
+        );
+    }
+
+    private bool MatchOrderLeft(RustPlusClientReal.ShopOrder o, string q)
+    {
+        if (string.IsNullOrEmpty(q)) return true;
+        var name = ResolveItemName(o.ItemId, o.ItemShortName);
+        return name.Contains(q, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private bool MatchOrderRight(RustPlusClientReal.ShopOrder o, string q)
+    {
+        if (string.IsNullOrEmpty(q)) return true;
+        var name = ResolveItemName(o.CurrencyItemId, o.CurrencyShortName);
+        return name.Contains(q, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private async Task CheckAlerts(IReadOnlyList<RustPlusClientReal.ShopMarker> shops)
+    {
+        foreach (var rule in _alertRules)
+        {
+            foreach (var shop in shops)
+            {
+                if (shop.Orders == null) continue;
+
+                foreach (var order in shop.Orders)
+                {
+                    // 1. Passt überhaupt zur Regel?
+                    bool matchesSide =
+                        (rule.MatchSellSide && MatchOrderLeft(order, rule.QueryText)) ||
+                        (rule.MatchBuySide && MatchOrderRight(order, rule.QueryText));
+
+                    if (!matchesSide)
+                        continue;
+
+                    // 2. nix melden bei leerem Stock
+                    if (order.Stock <= 0)
+                        continue;
+
+                    // 3. Haben wir diesen Deal-Typ schon als bekannt markiert?
+                    //    "Deal-Typ" definieren wir als: Shop + Item + Währung + Menge pro Trade + Preis.
+                    //    (Stock lassen wir absichtlich raus, sonst spammt er bei jeder Stockänderung)
+                    bool alreadyKnown = rule.Baseline.Any(b =>
+                        b.ShopId == shop.Id &&
+                        b.ItemShort == order.ItemShortName &&
+                        b.CurrencyShort == order.CurrencyShortName &&
+                        b.Quantity == order.Quantity &&
+                        Math.Abs(b.CurrencyAmount - order.CurrencyAmount) < 0.001f
+                    );
+
+                    if (alreadyKnown)
+                        continue;
+
+                    // 4. Pro-Order Spam-Schutz: 1 Meldung pro 60s für exakt diese Kombi
+                    string sig = $"{shop.Id}:{order.ItemShortName}:{order.CurrencyShortName}:{order.Quantity}:{order.CurrencyAmount}";
+                    if (rule.LastAnnouncements.TryGetValue(sig, out var lastWhen) &&
+                        (DateTime.UtcNow - lastWhen).TotalSeconds < 60)
+                    {
+                        continue;
+                    }
+
+                    // 5. Globales Rate Limit: nur 1 Chat-Nachricht pro Sekunde
+                    if ((DateTime.UtcNow - _lastChatSendUtc).TotalSeconds < 1.0)
+                        continue;
+                    _lastChatSendUtc = DateTime.UtcNow;
+
+                    // 6. Chattext bauen
+                    string grid = GetGridLabel(shop);
+
+                    string itemName = ResolveItemName(order.ItemId, order.ItemShortName);
+                    string currencyName = ResolveItemName(order.CurrencyItemId, order.CurrencyShortName);
+
+                    string verb = rule.MatchSellSide ? "sells" : "buys";
+
+                    string msg =
+                        $"{(shop.Label ?? "Shop")} [{grid}] {verb} " +
+                        $"x{order.Quantity} {itemName} (Stock {order.Stock}) " +
+                        $"for {order.CurrencyAmount} {currencyName}";
+
+                    // Immer ins lokale Log schreiben – unabhängig von Chat/Sound
+                    AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert: {msg}");
+
+                    // 7. Ausspielen (Chat + optional Sound)
+                    if (rule.NotifyChat)
+                    {
+                        await SendTeamChatSafeAsync(msg);
+                    }
+
+                    if (rule.NotifySound)
+                    {
+                        PlayShopAlertSound();
+                    }
+
+                    // 8. Diesen Deal-Typ jetzt dauerhaft als bekannt markieren,
+                    //    damit er NICHT bei jedem Poll wieder als "neu" zählt.
+                    rule.Baseline.Add(new AlertSeenOrder
+                    {
+                        ShopId = shop.Id,
+                        ItemShort = order.ItemShortName,
+                        CurrencyShort = order.CurrencyShortName,
+                        Quantity = order.Quantity,
+                        CurrencyAmount = order.CurrencyAmount,
+                        Stock = order.Stock
+                    });
+
+                    // 9. Cooldown-Zeitpunkt merken
+                    rule.LastAnnouncements[sig] = DateTime.UtcNow;
+                }
+            }
+        }
+    }
+
+    private void RebaselineAllAlertRulesFromCurrentShops(IReadOnlyList<RustPlusClientReal.ShopMarker> shops)
+    {
+        foreach (var rule in _alertRules)
+        {
+            // alte bekannte Angebote verwerfen
+            rule.Baseline.Clear();
+            rule.LastAnnouncements.Clear();
+
+            foreach (var shop in shops)
+            {
+                if (shop.Orders == null) continue;
+
+                foreach (var o in shop.Orders)
+                {
+                    if (o.Stock <= 0) continue;
+
+                    bool matchesSide =
+                        (rule.MatchSellSide && MatchOrderLeft(o, rule.QueryText)) ||
+                        (rule.MatchBuySide && MatchOrderRight(o, rule.QueryText));
+
+                    if (!matchesSide)
+                        continue;
+
+                    rule.Baseline.Add(new AlertSeenOrder
+                    {
+                        ShopId = shop.Id,
+                        ItemShort = o.ItemShortName,
+                        CurrencyShort = o.CurrencyShortName,
+                        Quantity = o.Quantity,
+                        CurrencyAmount = o.CurrencyAmount,
+                        Stock = o.Stock
+                    });
+                }
+            }
+        }
+    }
+
+    // Flags, die wir aus den Checkboxes lesen:
+    private bool _notifyNewShopsToChat = false;
+    private bool _notifySuspiciousShops = false;
+
+
+    // ====== NEW SHOP TRACKING ======
+    // für "neue Shops" nach Initial-Poll:
+    private HashSet<uint> _knownShopIds = new();
+    private DateTime _initialShopSnapshotTimeUtc = DateTime.MinValue;
+
+    // ====== SUSPICIOUS TRACKING ======
+    private class ShopLifetimeInfo
+    {
+        public DateTime FirstSeenUtc;
+        public DateTime? LastSeenUtc;
+        public bool AnnouncedSuspicious = false;
+        public RustPlusClientReal.ShopMarker? LastSnapshot;
+    }
+
+    private readonly Dictionary<uint, ShopLifetimeInfo> _shopLifetimes = new();
+
+
+    // ====== HILFE-FUNKTION SOUND ======
+    private void PlayShopAlertSound()
+    {
+        try
+        {
+            string path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cash.wav");
+            if (System.IO.File.Exists(path))
+            {
+                var player = new System.Media.SoundPlayer(path);
+                player.Play();
+            }
+        }
+        catch { /* ignore */ }
     }
 
     private BitmapSource ComposeMapWithMarkers(BitmapSource baseBmp)
@@ -5799,7 +9302,15 @@ public partial class MainWindow : Window
             return false;
         }
     }
-
+    private void BtnPatchNotes_Click(object sender, RoutedEventArgs e)
+    {
+        var win = new Views.PatchNotesWindow
+        {
+            Owner = this
+        };
+        win.Show();
+        win.Activate();
+    }
     private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
     {
         if (_listenerStarting) return;
@@ -6195,6 +9706,1986 @@ public partial class MainWindow : Window
         _hotkeysActive = any;
         UpdateHotkeyButtonUi();
     }
+
+    // MAP DRAW OVERLAY
+
+    private bool _overlayToolsVisible = false;
+
+    // wer ist aktuell ausgewählt als Zeichenwerkzeug?
+    private enum OverlayToolMode { None, Draw, Text, Icon, Erase }
+    private OverlayToolMode _currentTool = OverlayToolMode.None;
+
+    // Color/Size Settings usw.:
+    private Color _drawColor = Colors.Red;
+    private double _drawThickness = 2.0;
+    private double _eraserSize = 10.0;
+    private Color _textColor = Colors.White;
+    private double _textSize = 16.0;
+    private string _currentIconPath = "pack://application:,,,/icons/map-icons/base1.png";
+
+    // Für Draggen von platzierten Icons/Text
+    private FrameworkElement? _draggingElement = null;
+    private Point _dragOffset;
+
+    // Stroke-Zeichnen
+    private bool _isDrawingStroke = false;
+    private Polyline? _currentStroke;
+
+    // Overlays der Teammitglieder
+    // wer ist aktuell "eingeblendet" (Avatar aktiv)
+    private readonly HashSet<ulong> _visibleOverlayOwners = new();
+
+    // pro Spieler: Liste ALLER FrameworkElements (Polylines, Icons, Text) aus seinem Overlay
+    private readonly Dictionary<ulong, List<FrameworkElement>> _playerOverlayElements = new();
+
+
+
+
+    private void RebuildOverlayTeamBar()
+    {
+        if (OverlayTeamStack == null) return;
+
+        OverlayTeamStack.Children.Clear();
+
+        foreach (var tm in TeamMembers)
+        {
+            // Wir wollen nur existierende Spieler mit valider SteamID
+            if (tm.SteamId == 0)
+                continue;
+
+            // Button mit Avatar als Inhalt
+            var btn = new Button
+            {
+                Width = 32,
+                Height = 32,
+                Margin = new Thickness(4, 0, 4, 0),
+                ToolTip = tm.Name,    // Steam-Name als Tooltip
+                Tag = tm.SteamId,
+                Padding = new Thickness(0),
+                BorderThickness = new Thickness(_visibleOverlayOwners.Contains(tm.SteamId) ? 2 : 1),
+                BorderBrush = _visibleOverlayOwners.Contains(tm.SteamId)
+                                ? Brushes.LimeGreen
+                                : Brushes.Gray,
+                Background = Brushes.Transparent
+            };
+
+            btn.Click += OverlayTeamButton_Click;
+
+            var img = new Image
+            {
+                Width = 32,
+                Height = 32,
+                Stretch = Stretch.UniformToFill,
+                Source = tm.Avatar ?? GetPlaceholderAvatar(), // falls Avatar noch lädt
+                SnapsToDevicePixels = true
+            };
+
+            btn.Content = img;
+            OverlayTeamStack.Children.Add(btn);
+        }
+    }
+
+    private ImageSource GetPlaceholderAvatar()
+    {
+        // Kannst du schöner machen (graues Quadrat, Fragezeichen, etc.)
+        var dv = new DrawingVisual();
+        using (var dc = dv.RenderOpen())
+        {
+            dc.DrawRectangle(Brushes.DimGray, null, new Rect(0, 0, 32, 32));
+        }
+        var bmp = new RenderTargetBitmap(32, 32, 96, 96, PixelFormats.Pbgra32);
+        bmp.Render(dv);
+        bmp.Freeze();
+        return bmp;
+    }
+
+    private async void OverlayTeamButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button b) return;
+        if (b.Tag is not ulong steamId) return;
+
+        AppendLog($"[overlay/ui] Click on {steamId} ({GetServerKey()})");
+
+        // ----- FALL 1: Spieler ist gerade sichtbar -> wir blenden ihn aus
+        if (_visibleOverlayOwners.Contains(steamId))
+        {
+            AppendLog($"[overlay/ui] {steamId} currently visible -> hiding");
+
+            _visibleOverlayOwners.Remove(steamId);
+
+            if (_playerOverlayElements.TryGetValue(steamId, out var listToHide))
+            {
+                foreach (var fe in listToHide)
+                    fe.Visibility = Visibility.Collapsed;
+            }
+
+            RebuildOverlayTeamBar();
+            return;
+        }
+
+        // ----- FALL 2: Spieler ist nicht sichtbar -> wir wollen ihn einblenden
+        AppendLog($"[overlay/ui] {steamId} currently NOT visible -> showing / (re)loading if needed");
+
+        _visibleOverlayOwners.Add(steamId);
+
+        var localPath = GetOverlayJsonPathForPlayerServer(steamId);
+        bool hadLocalBefore = File.Exists(localPath);
+        AppendLog($"[overlay/ui] local file {(hadLocalBefore ? "exists" : "does NOT exist")} at {localPath}");
+
+        // 1. Versuch: vom Server holen (kann 200, 404 oder Fehler sein)
+        bool serverGaveNewData = await TryFetchAndUpdateOverlayAsync(steamId);
+
+        AppendLog($"[overlay/ui] serverGaveNewData={serverGaveNewData}");
+
+        // 2. Schauen ob wir schon Canvas-Objekte im Speicher haben
+        bool alreadyBuiltInMemory =
+            _playerOverlayElements.TryGetValue(steamId, out var existingList)
+            && existingList != null
+            && existingList.Count > 0;
+
+        AppendLog($"[overlay/ui] alreadyBuiltInMemory={alreadyBuiltInMemory} " +
+                  $"(count={(existingList?.Count ?? 0)})");
+
+        // 3. Müssen wir neu bauen?
+        bool needRebuild = !alreadyBuiltInMemory || serverGaveNewData;
+        AppendLog($"[overlay/ui] needRebuild={needRebuild}");
+
+        if (needRebuild)
+        {
+            if (File.Exists(localPath))
+            {
+                // bevor rebuild: alte Elemente entfernen
+                if (alreadyBuiltInMemory && existingList != null)
+                {
+                    AppendLog($"[overlay/ui] Removing {existingList.Count} old canvas elements for {steamId} before rebuild");
+                    foreach (var fe in existingList)
+                        Overlay.Children.Remove(fe);
+                }
+
+                AppendLog($"[overlay/ui] Rebuilding overlay for {steamId} from disk {localPath}");
+                LoadOverlayForPlayerFromJson(steamId);
+            }
+            else
+            {
+                AppendLog($"[overlay/ui] No local JSON for {steamId} after fetch -> creating empty entry");
+                if (!_playerOverlayElements.ContainsKey(steamId))
+                    _playerOverlayElements[steamId] = new List<FrameworkElement>();
+            }
+        }
+
+        // 4. Sichtbar machen, was wir haben
+        if (_playerOverlayElements.TryGetValue(steamId, out var listNow))
+        {
+            AppendLog($"[overlay/ui] Final step: showing {listNow.Count} elements for {steamId}");
+            foreach (var fe in listNow)
+                fe.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            AppendLog($"[overlay/ui][warn] No entry in _playerOverlayElements for {steamId}, creating empty list");
+            _playerOverlayElements[steamId] = new List<FrameworkElement>();
+        }
+
+        RebuildOverlayTeamBar();
+    }
+
+    private void LoadOverlayForPlayerFromJson(ulong steamId)
+    {
+        var path = GetOverlayJsonPathForPlayerServer(steamId);
+
+        if (!File.Exists(path))
+        {
+            AppendLog($"[overlay/disk] {steamId}: no local file at {path}, registering empty");
+            if (!_playerOverlayElements.ContainsKey(steamId))
+                _playerOverlayElements[steamId] = new List<FrameworkElement>();
+            return;
+        }
+
+        OverlaySaveData? data = null;
+        try
+        {
+            var json = File.ReadAllText(path);
+            data = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(json);
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[overlay/disk][err] {steamId}: failed to parse {path}: {ex.Message}");
+            data = null;
+        }
+
+        if (data == null)
+        {
+            AppendLog($"[overlay/disk][warn] {steamId}: parsed data == null, registering empty");
+            _playerOverlayElements[steamId] = new List<FrameworkElement>();
+            return;
+        }
+
+        bool editable = (steamId == _mySteamId);
+
+        AppendLog($"[overlay/disk] {steamId}: materializing from {path} " +
+                  $"(strokes={data.Strokes.Count}, icons={data.Icons.Count}, texts={data.Texts.Count}, editable={editable})");
+
+        MaterializeOverlayForPlayer(steamId, data, editable);
+
+        // Nach MaterializeOverlayForPlayer weißt du,
+        // wie viele Elemente der Spieler jetzt wirklich auf dem Canvas hat:
+        if (_playerOverlayElements.TryGetValue(steamId, out var listBuilt))
+        {
+            AppendLog($"[overlay/disk] {steamId}: materialized {listBuilt.Count} canvas elements");
+        }
+    }
+
+    private async Task<bool> TryFetchAndUpdateOverlayAsync(ulong steamId)
+    {
+        try
+        {
+            var serverKey = GetServerKey();
+            var ts = UnixNow().ToString();
+
+            var msg = $"{steamId}|{serverKey}|{ts}";
+            var sig = HmacSha256Hex(OVERLAY_SYNC_SECRET_HEX, msg);
+
+            using (var http = new HttpClient())
+            {
+                http.Timeout = TimeSpan.FromSeconds(5);
+
+                var url = OVERLAY_SYNC_BASEURL
+                    + "/fetch"
+                    + "?steamId=" + WebUtility.UrlEncode(steamId.ToString())
+                    + "&serverKey=" + WebUtility.UrlEncode(serverKey)
+                    + "&ts=" + WebUtility.UrlEncode(ts)
+                    + "&sig=" + WebUtility.UrlEncode(sig);
+
+               // AppendLog($"[overlay/net] GET {url}");
+
+                var resp = await http.GetAsync(url);
+
+                if (resp.StatusCode == HttpStatusCode.NotFound)
+                {
+                    AppendLog($"[overlay/net] {steamId}: 404 (no remote overlay available)");
+                    return false;
+                }
+                if (!resp.IsSuccessStatusCode)
+                {
+                    AppendLog($"[overlay/net][warn] {steamId}: fetch failed HTTP {(int)resp.StatusCode}");
+                    return false;
+                }
+
+                var bodyJson = await resp.Content.ReadAsStringAsync();
+                var doc = System.Text.Json.JsonDocument.Parse(bodyJson);
+
+                if (!doc.RootElement.TryGetProperty("overlayJsonB64", out var b64El))
+                {
+                    AppendLog($"[overlay/net][warn] {steamId}: server response missing overlayJsonB64");
+                    return false;
+                }
+
+                var b64 = b64El.GetString();
+                if (string.IsNullOrEmpty(b64))
+                {
+                    AppendLog($"[overlay/net][warn] {steamId}: overlayJsonB64 empty");
+                    return false;
+                }
+
+                var raw = Convert.FromBase64String(b64);
+                var remoteJson = Encoding.UTF8.GetString(raw);
+
+                // remote parsed
+                OverlaySaveData? remoteData = null;
+                try
+                {
+                    remoteData = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(remoteJson);
+                }
+                catch
+                {
+                    remoteData = null;
+                }
+
+                if (remoteData == null)
+                {
+                    AppendLog($"[overlay/net][warn] {steamId}: remote json invalid");
+                    return false;
+                }
+
+                long remoteTs = remoteData.LastUpdatedUnix;
+                var path = GetOverlayJsonPathForPlayerServer(steamId);
+
+                long localTs = 0;
+                OverlaySaveData? localData = null;
+
+                if (File.Exists(path))
+                {
+                    try
+                    {
+                        var localJson = File.ReadAllText(path);
+                        localData = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(localJson);
+                    }
+                    catch { /* ignore */ }
+
+                    if (localData != null)
+                        localTs = localData.LastUpdatedUnix;
+                }
+
+                if (steamId == _mySteamId)
+                {
+                    // eigenes Overlay -> nur überschreiben, wenn remote neuer ist
+                    AppendLog($"[overlay/net] self {steamId}: remoteTs={remoteTs}, localTs={localTs}");
+
+                    if (remoteTs > localTs)
+                    {
+                        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
+                        File.WriteAllText(path, remoteJson);
+                        AppendLog($"[overlay/net] self {steamId}: wrote NEWER remote overlay to {path} (remote newer)");
+                        return true; // lokal geupdatet
+                    }
+                    else
+                    {
+                        AppendLog($"[overlay/net] self {steamId}: kept LOCAL overlay (local newer or same)");
+                        return false;
+                    }
+                }
+                else
+                {
+                    // fremdes Overlay -> immer remote Wahrheit
+                    Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
+                    File.WriteAllText(path, remoteJson);
+                    AppendLog($"[overlay/net] teammate {steamId}: wrote remote overlay to {path} (always trust remote)");
+                    return true;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[overlay/net][err] fetch error for " + steamId + ": " + ex.Message);
+            return false;
+        }
+    }
+
+    private Image BuildPlayerOverlayImageFor(ulong steamId)
+    {
+        string path = GetOverlayPngPathForPlayer(steamId);
+
+        BitmapImage? bi = null;
+        if (File.Exists(path))
+        {
+            using (var fs = File.OpenRead(path))
+            {
+                var tmp = new BitmapImage();
+                tmp.BeginInit();
+                tmp.CacheOption = BitmapCacheOption.OnLoad;
+                tmp.StreamSource = fs;
+                tmp.EndInit();
+                tmp.Freeze();
+                bi = tmp;
+            }
+        }
+
+        // Fallback: leeres transparentes "nichts", falls noch keine Datei existiert,
+        // damit unser Code nicht crasht, wenn jemand klickt ohne PNG zu haben.
+        int mapW = (int)(ImgMap?.Source?.Width ?? 2048);   // fallback
+        int mapH = (int)(ImgMap?.Source?.Height ?? 2048);  // fallback
+
+        var img = new Image
+        {
+            Source = bi,
+            Width = bi?.PixelWidth ?? mapW,
+            Height = bi?.PixelHeight ?? mapH,
+            Opacity = 0.8,
+            IsHitTestVisible = false,
+            Visibility = Visibility.Collapsed,
+
+            // wichtig: gleiche Transform wie Map, damit es mitzoomt/panned
+            RenderTransform = MapTransform
+        };
+
+        Canvas.SetLeft(img, 0);
+        Canvas.SetTop(img, 0);
+
+        return img;
+    }
+
+    private string GetOverlayPngPathForPlayer(ulong steamId)
+    {
+        var baseDir = System.IO.Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "RustPlusDesk",
+            "Overlays",
+            GetServerKey()
+        );
+        Directory.CreateDirectory(baseDir);
+        return System.IO.Path.Combine(baseDir, $"{steamId}.png");
+    }
+    // Folgende Methode ersetzt durch LoadOverlayFromDiskForPlayer --
+    private void LoadOwnOverlayFromJson()
+    {
+        // Falls wir für mich (_mySteamId) schon Elemente gebaut haben, nicht nochmal
+        if (_playerOverlayElements.ContainsKey(_mySteamId) &&
+            _playerOverlayElements[_mySteamId].Count > 0)
+        {
+            return;
+        }
+
+        var path = GetOverlayJsonPathForPlayerServer(_mySteamId);
+        if (!File.Exists(path))
+        {
+            // Stelle sicher, dass wir zumindest einen leeren Eintrag haben,
+            // damit spätere Checks nicht glauben "muss noch laden".
+            _playerOverlayElements[_mySteamId] = new List<FrameworkElement>();
+            return;
+        }
+
+        OverlaySaveData? data = null;
+        try
+        {
+            var json = File.ReadAllText(path);
+            data = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(json);
+        }
+        catch
+        {
+            // kaputte Datei? -> wir tun so, als gäbe es keine
+            data = null;
+        }
+
+        if (data == null)
+        {
+            _playerOverlayElements[_mySteamId] = new List<FrameworkElement>();
+            return;
+        }
+
+        // Wir bauen jetzt meine Shapes.
+        var myList = new List<FrameworkElement>();
+
+        // 1) Strokes
+        foreach (var stroke in data.Strokes)
+        {
+            var pl = new Polyline
+            {
+                StrokeThickness = stroke.Thickness,
+                StrokeLineJoin = PenLineJoin.Round,
+                StrokeEndLineCap = PenLineCap.Round,
+                StrokeStartLineCap = PenLineCap.Round,
+                IsHitTestVisible = false,
+                Opacity = 1.0,
+                Tag = new OverlayTag
+                {
+                    OwnerSteamId = _mySteamId,
+                    IsUserEditable = true
+                }
+            };
+
+            if (ColorConverter.ConvertFromString(stroke.Color) is Color c)
+                pl.Stroke = new SolidColorBrush(c);
+
+            foreach (var p in stroke.Points)
+                pl.Points.Add(p);
+
+            Overlay.Children.Add(pl);
+            myList.Add(pl);
+            RegisterElementForOwner(_mySteamId, pl);
+        }
+
+        // 2) Icons
+        foreach (var icon in data.Icons)
+        {
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.UriSource = new Uri(icon.IconPath, UriKind.RelativeOrAbsolute);
+            bi.EndInit();
+            bi.Freeze();
+
+            var img = new Image
+            {
+                Source = bi,
+                Width = icon.Width,
+                Height = icon.Height,
+                RenderTransformOrigin = new Point(0.5, 0.5),
+                IsHitTestVisible = true, // meine Icons/Text darf ich draggen und löschen
+                Opacity = 1.0,
+                Tag = new OverlayTag
+                {
+                    OwnerSteamId = _mySteamId,
+                    IsUserEditable = true
+                }
+            };
+
+            Canvas.SetLeft(img, icon.X);
+            Canvas.SetTop(img, icon.Y);
+
+            Overlay.Children.Add(img);
+            myList.Add(img);
+        }
+
+        // 3) Texts
+        foreach (var txt in data.Texts)
+        {
+            var tb = new TextBlock
+            {
+                Text = txt.Content,
+                FontSize = txt.FontSize,
+                FontWeight = txt.Bold ? FontWeights.Bold : FontWeights.Normal,
+                IsHitTestVisible = true,
+                Opacity = 1.0,
+                Tag = new OverlayTag
+                {
+                    OwnerSteamId = _mySteamId,
+                    IsUserEditable = true
+                }
+            };
+
+            if (ColorConverter.ConvertFromString(txt.Color) is Color tc)
+                tb.Foreground = new SolidColorBrush(tc);
+
+            Canvas.SetLeft(tb, txt.X);
+            Canvas.SetTop(tb, txt.Y);
+
+            Overlay.Children.Add(tb);
+            myList.Add(tb);
+        }
+
+        // Abschluss: registrieren
+        _playerOverlayElements[_mySteamId] = myList;
+
+        // Sichtbarkeit / Auswahl-Status:
+        // Wir wollen, dass mein Overlay direkt sichtbar und in der Auswahl aktiv ist,
+        // also packen wir mich in _visibleOverlayOwners.
+        _visibleOverlayOwners.Add(_mySteamId);
+    }
+
+    private void HandleOverlayMouseDown(MouseButtonEventArgs e, Point mapPos)
+    {
+        // 1) DRAW
+        if (_currentTool == OverlayToolMode.Draw &&
+            e.LeftButton == MouseButtonState.Pressed)
+        {
+            _isDrawingStroke = true;
+            _currentStroke = new Polyline
+            {
+                Stroke = new SolidColorBrush(_drawColor),
+                StrokeThickness = _drawThickness,
+                StrokeLineJoin = PenLineJoin.Round,
+                StrokeEndLineCap = PenLineCap.Round,
+                StrokeStartLineCap = PenLineCap.Round,
+                IsHitTestVisible = false,
+                Tag = new OverlayTag { OwnerSteamId = _mySteamId, IsUserEditable = true }
+            };
+            _currentStroke.Points.Add(mapPos);
+            Overlay.Children.Add(_currentStroke);
+
+            // registrieren
+            RegisterElementForOwner(_mySteamId, _currentStroke);
+            return;
+        }
+
+        // 2) ICON
+        if (_currentTool == OverlayToolMode.Icon &&
+            e.LeftButton == MouseButtonState.Pressed)
+        {
+            PlaceIconAt(mapPos);
+            return;
+        }
+
+        // 3) TEXT
+        if (_currentTool == OverlayToolMode.Text &&
+            e.LeftButton == MouseButtonState.Pressed)
+        {
+            PlaceTextAt(mapPos);
+            return;
+        }
+
+        // 4) ERASE
+        if (_currentTool == OverlayToolMode.Erase &&
+            e.LeftButton == MouseButtonState.Pressed)
+        {
+            EraseAt(mapPos);
+            return;
+        }
+
+        // 5) Drag bestehender Elemente (wenn kein spezielles Tool aktiv ist,
+        //    oder wir explizit Drag erlauben bei Icon/Text in anderen Tools außer Draw/Text/Icon/Erase)
+        if (e.LeftButton == MouseButtonState.Pressed &&
+            _currentTool == OverlayToolMode.None)
+        {
+            TryBeginDragExistingElement(mapPos);
+            return;
+        }
+
+        // 6) Rechtsklick zum Löschen von Icons/Text-Blöcken
+        if (e.ChangedButton == MouseButton.Right)
+        {
+            TryDeleteElementAt(mapPos);
+            return;
+        }
+    }
+
+    private void EraseAt(Point mapPos)
+    {
+        var toRemove = new List<Polyline>();
+
+        for (int i = 0; i < Overlay.Children.Count; i++)
+        {
+            if (Overlay.Children[i] is Polyline line)
+            {
+                // nur wenn mir gehörend, sonst Finger weg
+                if (line.Tag is OverlayTag meta && meta.OwnerSteamId == _mySteamId && meta.IsUserEditable)
+                {
+                    double dist = DistancePointToPolyline(mapPos, line);
+                    if (dist <= _eraserSize)
+                    {
+                        toRemove.Add(line);
+                    }
+                }
+            }
+        }
+
+        foreach (var line in toRemove)
+            Overlay.Children.Remove(line);
+
+        if (toRemove.Count > 0)
+            SaveOwnOverlayToJson();
+    }
+
+    private void HandleOverlayMouseMove(MouseEventArgs e, Point mapPos)
+    {
+        // Stroke weiterzeichnen
+        if (_currentTool == OverlayToolMode.Draw &&
+            _isDrawingStroke &&
+            _currentStroke != null)
+        {
+            _currentStroke.Points.Add(mapPos);
+            return;
+        }
+
+        if (_currentTool == OverlayToolMode.Erase &&
+    e.LeftButton == MouseButtonState.Pressed)
+        {
+            EraseAt(mapPos);
+            return;
+        }
+
+        // Drag laufend verschieben
+        if (_draggingElement != null &&
+            e.LeftButton == MouseButtonState.Pressed)
+        {
+            Canvas.SetLeft(_draggingElement, mapPos.X - _dragOffset.X);
+            Canvas.SetTop(_draggingElement, mapPos.Y - _dragOffset.Y);
+            return;
+        }
+    }
+
+    private void HandleOverlayMouseUp(MouseButtonEventArgs e, Point mapPos)
+    {
+        if (_currentTool == OverlayToolMode.Draw)
+        {
+            _isDrawingStroke = false;
+            _currentStroke = null;
+            SaveOwnOverlayToJson();
+        }
+
+        if (_currentTool == OverlayToolMode.Erase)
+        {
+            SaveOwnOverlayToJson();
+        }
+
+        if (_draggingElement != null)
+        {
+            _draggingElement = null;
+            SaveOwnOverlayToJson();
+        }
+    }
+
+    private void PlaceIconAt(Point mapPos)
+    {
+        var img = new Image
+        {
+            Source = new BitmapImage(new Uri(_currentIconPath, UriKind.RelativeOrAbsolute)),
+            Width = 64,
+            Height = 64,
+            RenderTransformOrigin = new Point(0.5, 0.5),
+            Tag = new OverlayTag { OwnerSteamId = _mySteamId, IsUserEditable = true }
+        };
+
+        Canvas.SetLeft(img, mapPos.X - 16);
+        Canvas.SetTop(img, mapPos.Y - 16);
+
+        Overlay.Children.Add(img);
+        RegisterElementForOwner(_mySteamId, img);
+
+        SaveOwnOverlayToJson();
+    }
+
+    private void PlaceTextAt(Point mapPos)
+    {
+        var input = PromptText("Enter description:", "Add Text", "");
+        if (string.IsNullOrWhiteSpace(input))
+            return;
+
+        var tb = new TextBlock
+        {
+            Text = input,
+            Foreground = new SolidColorBrush(_textColor),
+            FontSize = _textSize,
+            FontWeight = FontWeights.Bold,
+            Tag = new OverlayTag { OwnerSteamId = _mySteamId, IsUserEditable = true }
+        };
+
+        Canvas.SetLeft(tb, mapPos.X);
+        Canvas.SetTop(tb, mapPos.Y);
+
+        Overlay.Children.Add(tb);
+        RegisterElementForOwner(_mySteamId, tb);
+
+        SaveOwnOverlayToJson();
+    }
+
+    private void TryBeginDragExistingElement(Point mapPos)
+    {
+        for (int i = Overlay.Children.Count - 1; i >= 0; i--)
+        {
+            if (Overlay.Children[i] is FrameworkElement fe)
+            {
+                // nur meine editierbaren Elemente dürfen gezogen werden
+                if (fe.Tag is not OverlayTag meta) continue;
+                if (meta.OwnerSteamId != _mySteamId) continue;
+                if (!meta.IsUserEditable) continue;
+
+                double x = Canvas.GetLeft(fe);
+                double y = Canvas.GetTop(fe);
+
+                double w = fe is Image img ? img.Width :
+                           (fe.ActualWidth > 0 ? fe.ActualWidth : 32);
+                double h = fe is Image img2 ? img2.Height :
+                           (fe.ActualHeight > 0 ? fe.ActualHeight : 16);
+
+                if (mapPos.X >= x && mapPos.X <= x + w &&
+                    mapPos.Y >= y && mapPos.Y <= y + h)
+                {
+                    _draggingElement = fe;
+                    _dragOffset = new Point(mapPos.X - x, mapPos.Y - y);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void TryDeleteElementAt(Point mapPos)
+    {
+        // Lösche Icon/Text bei Rechtsklick, aber nur mein eigenes Zeug
+        for (int i = Overlay.Children.Count - 1; i >= 0; i--)
+        {
+            if (Overlay.Children[i] is FrameworkElement fe)
+            {
+                // Lines (Polyline) ignorieren wir hier weiter, die macht Eraser.
+                if (fe is Polyline) continue;
+
+                // Besitz prüfen
+                if (fe.Tag is not OverlayTag meta) continue;
+                if (meta.OwnerSteamId != _mySteamId) continue;
+                if (!meta.IsUserEditable) continue;
+
+                double x = Canvas.GetLeft(fe);
+                double y = Canvas.GetTop(fe);
+
+                // Wenn WPF noch kein ActualWidth/Height gemessen hat, fallback:
+                double w = fe is Image img ? img.Width : (fe.ActualWidth > 0 ? fe.ActualWidth : 32);
+                double h = fe is Image img2 ? img2.Height : (fe.ActualHeight > 0 ? fe.ActualHeight : 16);
+
+                if (mapPos.X >= x && mapPos.X <= x + w &&
+                    mapPos.Y >= y && mapPos.Y <= y + h)
+                {
+                    Overlay.Children.RemoveAt(i);
+
+                    // auch aus _playerOverlayElements[_mySteamId] rauswerfen
+                    if (_playerOverlayElements.TryGetValue(_mySteamId, out var mine))
+                    {
+                        mine.Remove(fe);
+                    }
+
+                    SaveOwnOverlayToJson();
+                    break;
+                }
+            }
+        }
+    }
+
+    private void RegisterElementForOwner(ulong owner, FrameworkElement fe)
+    {
+        if (!_playerOverlayElements.TryGetValue(owner, out var list))
+        {
+            list = new List<FrameworkElement>();
+            _playerOverlayElements[owner] = list;
+        }
+        list.Add(fe);
+    }
+
+    private void Icon_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is FrameworkElement fe)
+        {
+            _draggingElement = fe;
+            var mousePos = HostToScenePreTransform(e.GetPosition(WebViewHost));
+            _dragOffset = new Point(mousePos.X - Canvas.GetLeft(fe), mousePos.Y - Canvas.GetTop(fe));
+            e.Handled = true;
+        }
+    }
+
+    private void Icon_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        _draggingElement = null;
+        e.Handled = true;
+    }
+
+    // Doppelklick -> rename
+    private void Icon_MouseDoubleClickCheck(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ClickCount == 2 && sender is FrameworkElement fe)
+        {
+            // Popup InputBox -> setze fe.Tag = newName etc.
+            e.Handled = true;
+        }
+    }
+
+    // Rechtsklick -> löschen
+    private void Icon_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is FrameworkElement fe)
+        {
+            Overlay.Children.Remove(fe);
+            e.Handled = true;
+        }
+    }
+
+    private void BtnToggleOverlayTools_Click(object sender, RoutedEventArgs e)
+    {
+        _overlayToolsVisible = !_overlayToolsVisible;
+
+        OverlayToolbox.Visibility = _overlayToolsVisible ? Visibility.Visible : Visibility.Collapsed;
+        OverlayTeamBar.Visibility = _overlayToolsVisible ? Visibility.Visible : Visibility.Collapsed;
+
+        if (!_overlayToolsVisible)
+        {
+            _currentTool = OverlayToolMode.None;
+            _draggingElement = null;
+            UpdateToolButtonHighlights();
+        }
+        else
+        {
+            RebuildOverlayTeamBar();
+            UpdateToolButtonHighlights();
+        }
+    }
+
+    private void ToolDrawButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetCurrentTool(OverlayToolMode.Draw);
+    }
+
+    private void ToolDrawButton_RightClick(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+        ShowDrawSettingsContextMenu(sender as FrameworkElement);
+    }
+
+    private void ToolTextButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetCurrentTool(OverlayToolMode.Text);
+    }
+
+    private void ToolTextButton_RightClick(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+        ShowTextSettingsContextMenu(sender as FrameworkElement);
+    }
+
+    private void ToolIconButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetCurrentTool(OverlayToolMode.Icon);
+    }
+
+    private void ToolIconButton_RightClick(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+        ShowIconSelectContextMenu(sender as FrameworkElement);
+    }
+
+    private void ToolEraseButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetCurrentTool(OverlayToolMode.Erase);
+    }
+
+    private void ToolEraseButton_RightClick(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+        ShowEraserSettingsContextMenu(sender as FrameworkElement);
+    }
+
+    private void ToolTrashButton_Click(object sender, RoutedEventArgs e)
+    {
+        // 1. alle meine Elemente raus aus Overlay
+        if (_playerOverlayElements.TryGetValue(_mySteamId, out var mine))
+        {
+            foreach (var el in mine)
+                Overlay.Children.Remove(el);
+
+            mine.Clear();
+        }
+
+        // 2. auch sicherheitshalber wirklich physisch alle übriggebliebenen Ownerelemente killen:
+        var cleanup = new List<UIElement>();
+        foreach (var child in Overlay.Children)
+        {
+            if (child is FrameworkElement fe && fe.Tag is OverlayTag meta && meta.OwnerSteamId == _mySteamId)
+                cleanup.Add(fe);
+        }
+        foreach (var dead in cleanup)
+            Overlay.Children.Remove(dead);
+
+        // 3. Leeres JSON speichern
+        var empty = new OverlaySaveData();
+        var json = System.Text.Json.JsonSerializer.Serialize(
+            empty,
+            new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+
+        var path = GetOverlayJsonPathForPlayerServer(_mySteamId);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
+        File.WriteAllText(path, json);
+
+        // 4. und falls ich gerade sichtbar war -> sichtbar bleiben (ist dann eh leer)
+        SaveOwnOverlayToJson(); // optional redundant
+        UploadOwnOverlayToTeam();
+    }
+
+    private void ToolUploadButton_Click(object sender, RoutedEventArgs e)
+    {
+        UploadOwnOverlayToTeam();
+    }
+
+    // private void SaveOwnOverlayToPng()
+    // {
+    // 1. Zielgröße bestimmen
+    //     int pixelW = (int)ImgMap.Source.Width;
+    //int pixelH = (int)ImgMap.Source.Height;
+
+    //var exportCanvas = new Canvas
+    //    {
+    //Width = pixelW,
+    //Height = pixelH,
+    //Background = Brushes.Transparent
+    //};
+
+    // 2. Kinder kopieren
+    //      foreach (var child in Overlay.Children.OfType<UIElement>())
+    //    {
+    // Fremde Overlays (Team-Layer) sind Image mit RenderTransform = MapTransform etc.
+    // Erkennen wir grob so:
+    //       if (child is Image img && _playerOverlayImages.Values.Contains(img))
+    //      {
+    // Das ist ein fremdes Team-Overlay, nicht unser eigenes -> skip
+    //          continue;
+    //     }
+
+    // ansonsten klonen wir "oberflächlich":
+    //    UIElement clone = CloneOverlayElementForExport(child);
+    //          if (clone != null)
+    //exportCanvas.Children.Add(clone);
+    //}
+
+    // 3. Rendern
+    // exportCanvas.Measure(new Size(pixelW, pixelH));
+    //exportCanvas.Arrange(new Rect(0, 0, pixelW, pixelH));
+
+    //    var rtb = new RenderTargetBitmap(pixelW, pixelH, 96, 96, PixelFormats.Pbgra32);
+    //rtb.Render(exportCanvas);
+
+    // 4. PNG speichern
+    //   var encoder = new PngBitmapEncoder();
+    //encoder.Frames.Add(BitmapFrame.Create(rtb));
+
+    //var mySteamId = _mySteamId; // musst du definieren
+    //var path = GetOverlayPngPathForPlayer(mySteamId);
+    //    Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
+
+    //      using (var fs = File.Create(path))
+    //    {
+    //encoder.Save(fs);
+    //}
+    //  }
+
+    // sehr einfache, flache Kopie:
+    //private UIElement CloneOverlayElementForExport(UIElement element)
+    // {
+    //   if (element is Polyline pl)
+    //  {
+    //var clone = new Polyline
+    //        {
+    //Stroke = pl.Stroke,
+    //StrokeThickness = pl.StrokeThickness,
+    //StrokeLineJoin = pl.StrokeLineJoin,
+    //StrokeEndLineCap = pl.StrokeEndLineCap,
+    //StrokeStartLineCap = pl.StrokeStartLineCap
+    //};
+    //          foreach (var p in pl.Points)
+    //clone.Points.Add(p);
+
+    //    Canvas.SetLeft(clone, Canvas.GetLeft(pl));
+    //Canvas.SetTop(clone, Canvas.GetTop(pl));
+    //       return clone;
+    //}
+    //      else if (element is Image img && img.Source != null)
+    //     {
+    //var clone = new Image
+    //        {
+    //Source = img.Source,
+    //Width = img.Width,
+    //Height = img.Height,
+    //Stretch = img.Stretch
+    //};
+    //Canvas.SetLeft(clone, Canvas.GetLeft(img));
+    //Canvas.SetTop(clone, Canvas.GetTop(img));
+    //        return clone;
+    //}
+    //      else if (element is TextBlock tb)
+    //     {
+    //var clone = new TextBlock
+    //       {
+    //Text = tb.Text,
+    //Foreground = tb.Foreground,
+    //FontSize = tb.FontSize,
+    //FontWeight = tb.FontWeight
+    //};
+    //Canvas.SetLeft(clone, Canvas.GetLeft(tb));
+    //Canvas.SetTop(clone, Canvas.GetTop(tb));
+    //        return clone;
+    //}
+
+    //      return null;
+    // }
+
+    private void ShowDrawSettingsContextMenu(FrameworkElement? fe)
+    {
+        var m = new ContextMenu();
+
+        // Farbe ändern (nur ein Beispiel)
+        var miRed = new MenuItem { Header = "Red" };
+        miRed.Click += (_, __) => { _drawColor = Colors.Red; };
+        var miGreen = new MenuItem { Header = "Green" };
+        miGreen.Click += (_, __) => { _drawColor = Colors.Lime; };
+        var miBlue = new MenuItem { Header = "Blue" };
+        miBlue.Click += (_, __) => { _drawColor = Colors.DeepSkyBlue; };
+
+        // Stiftdicke
+        var miThin = new MenuItem { Header = "Thickness: 3px" };
+        miThin.Click += (_, __) => { _drawThickness = 3.0; };
+        var miThick = new MenuItem { Header = "Thickness: 10px" };
+        miThick.Click += (_, __) => { _drawThickness = 10.0; };
+
+        m.Items.Add(miRed);
+        m.Items.Add(miGreen);
+        m.Items.Add(miBlue);
+        m.Items.Add(new Separator());
+        m.Items.Add(miThin);
+        m.Items.Add(miThick);
+
+        fe!.ContextMenu = m;
+        m.IsOpen = true;
+    }
+
+    private void ShowTextSettingsContextMenu(FrameworkElement? fe)
+    {
+        var m = new ContextMenu();
+
+        var miWhite = new MenuItem { Header = "White" };
+        miWhite.Click += (_, __) => { _textColor = Colors.White; };
+        var miYellow = new MenuItem { Header = "Red" };
+        miYellow.Click += (_, __) => { _textColor = Colors.Red; };
+
+        var miSmall = new MenuItem { Header = "Size: 14" };
+        miSmall.Click += (_, __) => { _textSize = 14.0; };
+        var miBig = new MenuItem { Header = "Size: 40" };
+        miBig.Click += (_, __) => { _textSize = 40.0; };
+
+        m.Items.Add(miWhite);
+        m.Items.Add(miYellow);
+        m.Items.Add(new Separator());
+        m.Items.Add(miSmall);
+        m.Items.Add(miBig);
+
+        fe!.ContextMenu = m;
+        m.IsOpen = true;
+    }
+
+    private void ShowIconSelectContextMenu(FrameworkElement? fe)
+    {
+        var m = new ContextMenu();
+
+        // map-icons aus deinem Projekt
+        m.Items.Add(BuildIconMenuItem("Base #1", "pack://application:,,,/icons/map-icons/base1.png"));
+        m.Items.Add(BuildIconMenuItem("Base #2", "pack://application:,,,/icons/map-icons/base2.png"));
+        m.Items.Add(BuildIconMenuItem("SAM Site", "pack://application:,,,/icons/map-icons/sam-site.png"));
+        m.Items.Add(BuildIconMenuItem("Turret", "pack://application:,,,/icons/map-icons/turret.png"));
+
+        fe!.ContextMenu = m;
+        m.IsOpen = true;
+    }
+
+    private MenuItem BuildIconMenuItem(string label, string path)
+    {
+        var mi = new MenuItem { Header = label };
+        mi.Click += (_, __) => { _currentIconPath = path; };
+        return mi;
+    }
+
+    private void ShowEraserSettingsContextMenu(FrameworkElement? fe)
+    {
+        var m = new ContextMenu();
+
+        var miSmall = new MenuItem { Header = "Eraser small (5px)" };
+        miSmall.Click += (_, __) => { _eraserSize = 5.0; };
+        var miBig = new MenuItem { Header = "Eraser big (20px)" };
+        miBig.Click += (_, __) => { _eraserSize = 20.0; };
+
+        m.Items.Add(miSmall);
+        m.Items.Add(miBig);
+
+        fe!.ContextMenu = m;
+        m.IsOpen = true;
+    }
+
+    private async void UploadOwnOverlayToTeam()
+    {
+        try
+        {
+            // 1. mein aktuelles Overlay einsammeln
+            var data = BuildCurrentOverlaySaveDataForMe(); // <- gleich checken wir noch
+
+            // JSON bauen
+            var json = System.Text.Json.JsonSerializer.Serialize(
+                data,
+                new System.Text.Json.JsonSerializerOptions { WriteIndented = false });
+
+            // Größenlimit checken
+            var rawBytes = Encoding.UTF8.GetBytes(json);
+            if (rawBytes.Length > OVERLAY_MAX_BYTES)
+            {
+                AppendLog("[overlay] Upload too big (>350KB).");
+                return;
+            }
+
+            // Base64
+            var overlayB64 = Convert.ToBase64String(rawBytes);
+
+            // Signaturfelder
+            var serverKey = GetServerKey();           // muss exakt derselbe string wie beim Speichern sein
+            var ts = UnixNow().ToString();     // Sekunden
+            var sigInput = _mySteamId.ToString() + "|" + serverKey + "|" + ts + "|" + overlayB64;
+            var sig = HmacSha256Hex(OVERLAY_SYNC_SECRET_HEX, sigInput);
+
+            // Request body
+            var payloadObj = new
+            {
+                steamId = _mySteamId.ToString(),
+                serverKey = serverKey,
+                ts = ts,
+                overlayJsonB64 = overlayB64,
+                sig = sig
+            };
+
+            var payloadJson = System.Text.Json.JsonSerializer.Serialize(payloadObj);
+            var content = new StringContent(payloadJson, Encoding.UTF8, "application/json");
+
+            using (var http = new HttpClient())
+            {
+                var url = OVERLAY_SYNC_BASEURL + "/upload";
+                var resp = await http.PostAsync(url, content);
+                if (!resp.IsSuccessStatusCode)
+                {
+                    AppendLog("[overlay] Upload failed: HTTP " + (int)resp.StatusCode);
+                    return;
+                }
+            }
+
+            AppendLog("[overlay] Overlay uploaded.");
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[overlay] Upload Error: " + ex.Message);
+        }
+    }
+
+    private async Task<bool> TryFetchOverlayFromServerAsync(ulong steamId)
+    {
+        try
+        {
+            var serverKey = GetServerKey();
+            var ts = UnixNow().ToString();
+
+            // Wir signieren dieselbe Formel wie der Server in /fetch prüft:
+            // msg = "<steamId>|<serverKey>|<ts>|<overlayB64>"
+            // ABER: Wir kennen overlayB64 ja noch nicht vorm Request 🤔
+            //
+            // Lösung: Wir machen es wie folgt:
+            // - Server-Code oben hat overlay_b64 mit in die Signatur genommen.
+            //   Das bedeutet: Client muss erst overlay_b64 kennen. Das geht so natürlich nicht.
+            //
+            // Also müssen wir eine kleine Änderung machen:
+            // Variante A (einfach): wir ändern /fetch auf dem Server so, dass er
+            // NUR steamId|serverKey|ts signed, OHNE overlayB64.
+            //
+            // Mach das bitte gleich am Server (fetch-Teil ersetzen):
+
+            // (Wir nehmen jetzt an, du hast den Server so geändert wie unten beschrieben.)
+            // Dann bauen wir hier:
+            var msg = $"{steamId}|{serverKey}|{ts}";
+            var sig = HmacSha256Hex(OVERLAY_SYNC_SECRET_HEX, msg);
+
+            using (var http = new HttpClient())
+            {
+                http.Timeout = TimeSpan.FromSeconds(5);
+
+                var url = OVERLAY_SYNC_BASEURL
+                    + "/fetch"
+                    + "?steamId=" + WebUtility.UrlEncode(steamId.ToString())
+                    + "&serverKey=" + WebUtility.UrlEncode(serverKey)
+                    + "&ts=" + WebUtility.UrlEncode(ts)
+                    + "&sig=" + WebUtility.UrlEncode(sig);
+
+                var resp = await http.GetAsync(url);
+                if (!resp.IsSuccessStatusCode)
+                {
+                    AppendLog("[overlay] fetch failed HTTP " + (int)resp.StatusCode);
+                    return false;
+                }
+
+                var bodyJson = await resp.Content.ReadAsStringAsync();
+                // Erwartet: { "overlayJsonB64": "...." }
+                var doc = System.Text.Json.JsonDocument.Parse(bodyJson);
+                if (!doc.RootElement.TryGetProperty("overlayJsonB64", out var b64El))
+                    return false;
+
+                var b64 = b64El.GetString();
+                if (string.IsNullOrEmpty(b64))
+                    return false;
+
+                var raw = Convert.FromBase64String(b64);
+                var jsonOverlay = Encoding.UTF8.GetString(raw);
+
+                // Schreib's lokal so wie SaveOwnOverlayToJson das erwartet:
+                var path = GetOverlayJsonPathForPlayerServer(steamId);
+                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
+                File.WriteAllText(path, jsonOverlay);
+
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[overlay] fetch error: " + ex.Message);
+            return false;
+        }
+    }
+
+    private string? PromptText(string message, string title = "Enter Text", string defaultValue = "")
+    {
+        // kleines Dialogfenster on-the-fly bauen
+        var win = new Window
+        {
+            Title = title,
+            Width = 320,
+            Height = 160,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            ResizeMode = ResizeMode.NoResize,
+            WindowStyle = WindowStyle.ToolWindow,
+            Owner = this,
+            Background = new SolidColorBrush(Color.FromRgb(24, 26, 30)),
+            Foreground = Brushes.White,
+            ShowInTaskbar = false
+        };
+
+        var root = new Grid
+        {
+            Margin = new Thickness(12)
+        };
+        root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // label
+        root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // textbox
+        root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // buttons
+
+        var lbl = new TextBlock
+        {
+            Text = message,
+            Margin = new Thickness(0, 0, 0, 6),
+            Foreground = Brushes.White
+        };
+        Grid.SetRow(lbl, 0);
+        root.Children.Add(lbl);
+
+        var tb = new TextBox
+        {
+            Text = defaultValue,
+            Margin = new Thickness(0, 0, 0, 10)
+        };
+        Grid.SetRow(tb, 1);
+        root.Children.Add(tb);
+
+        var panelButtons = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right
+        };
+
+        var btnOk = new Button
+        {
+            Content = "OK",
+            Width = 60,
+            Margin = new Thickness(0, 0, 6, 0),
+            IsDefault = true
+        };
+        var btnCancel = new Button
+        {
+            Content = "Cancel",
+            Width = 80,
+            IsCancel = true
+        };
+
+        panelButtons.Children.Add(btnOk);
+        panelButtons.Children.Add(btnCancel);
+        Grid.SetRow(panelButtons, 2);
+        root.Children.Add(panelButtons);
+
+        string? result = null;
+
+        btnOk.Click += (_, __) =>
+        {
+            result = tb.Text;
+            win.DialogResult = true;
+            win.Close();
+        };
+        btnCancel.Click += (_, __) =>
+        {
+            result = null;
+            win.DialogResult = false;
+            win.Close();
+        };
+
+        win.Content = root;
+
+        // modal anzeigen
+        win.ShowDialog();
+
+        return result;
+    }
+
+    // euklidische Distanz Punkt -> Streckenabschnitt (A,B)
+    private static double DistancePointToSegmentSquared(Point p, Point a, Point b)
+    {
+        // Vektor AB
+        double vx = b.X - a.X;
+        double vy = b.Y - a.Y;
+
+        // Vektor AP
+        double wx = p.X - a.X;
+        double wy = p.Y - a.Y;
+
+        // Projektion t = (AP·AB)/|AB|² clamped [0..1]
+        double denom = (vx * vx + vy * vy);
+        double t = denom <= 0.000001 ? 0.0 : ((wx * vx + wy * vy) / denom);
+        if (t < 0.0) t = 0.0;
+        else if (t > 1.0) t = 1.0;
+
+        // Nächster Punkt auf AB
+        double cx = a.X + t * vx;
+        double cy = a.Y + t * vy;
+
+        // Distanz^2 zwischen P und C
+        double dx = p.X - cx;
+        double dy = p.Y - cy;
+        return dx * dx + dy * dy;
+    }
+
+    private static double DistancePointToPolyline(Point p, Polyline line)
+    {
+        var pts = line.Points;
+        if (pts.Count == 1)
+        {
+            // einzelne Punkt-Linie -> Distanz zu diesem Punkt
+            double dx = p.X - pts[0].X;
+            double dy = p.Y - pts[0].Y;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        double bestSq = double.MaxValue;
+        for (int i = 0; i < pts.Count - 1; i++)
+        {
+            double d2 = DistancePointToSegmentSquared(p, pts[i], pts[i + 1]);
+            if (d2 < bestSq) bestSq = d2;
+        }
+        return Math.Sqrt(bestSq);
+    }
+
+    private void SetCurrentTool(OverlayToolMode modeFromButton)
+    {
+        if (_currentTool == modeFromButton)
+        {
+            // toggle off -> zurück in Pan/Zoom Modus
+            _currentTool = OverlayToolMode.None;
+        }
+        else
+        {
+            _currentTool = modeFromButton;
+        }
+
+        // Wenn wir ein Tool aktivieren, abbrechen von evtl. Drag-State
+        if (_currentTool != OverlayToolMode.None)
+        {
+            _draggingElement = null;
+        }
+
+        UpdateToolButtonHighlights();
+    }
+    private void UpdateToolButtonHighlights()
+    {
+        // Erstmal alle zurücksetzen
+        foreach (var kv in _toolButtons)
+        {
+            var btn = kv.Value;
+            btn.Background = Brushes.Transparent;
+            btn.BorderBrush = new SolidColorBrush(Color.FromRgb(0x44, 0x44, 0x44));
+            btn.BorderThickness = new Thickness(1);
+        }
+
+        // Falls gar kein Tool aktiv ist (None) -> fertig
+        if (_currentTool == OverlayToolMode.None)
+            return;
+
+        // Aktiven Button highlighten
+        if (_toolButtons.TryGetValue(_currentTool, out var activeBtn))
+        {
+            activeBtn.Background = new SolidColorBrush(Color.FromArgb(0x33, 0x4C, 0x8D, 0xFF)); // halbtransparentes Blau
+            activeBtn.BorderBrush = new SolidColorBrush(Color.FromRgb(0x4C, 0x8D, 0xFF));
+            activeBtn.BorderThickness = new Thickness(2);
+        }
+    }
+
+    public class OverlaySaveData
+    {
+        public long LastUpdatedUnix { get; set; } = 0; // Unix seconds
+        public List<SavedStroke> Strokes { get; set; } = new();
+        public List<SavedIcon> Icons { get; set; } = new();
+        public List<SavedText> Texts { get; set; } = new();
+    }
+
+    public class SavedStroke
+    {
+        public List<Point> Points { get; set; } = new();
+        public string Color { get; set; } = "#FF0000"; // ARGB oder RGB als Hex
+        public double Thickness { get; set; } = 2.0;
+    }
+
+    public class SavedIcon
+    {
+        public string IconPath { get; set; } = ""; // z.B. "pack://application:,,,/Icons/map-icons/sam-site.png"
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Width { get; set; } = 32;
+        public double Height { get; set; } = 32;
+
+        public string? Label { get; set; } // fürs spätere Umbenennen
+    }
+
+    public class SavedText
+    {
+        public string Content { get; set; } = "";
+        public string Color { get; set; } = "#FFFFFFFF";
+        public double FontSize { get; set; } = 16.0;
+        public double X { get; set; }
+        public double Y { get; set; }
+        public bool Bold { get; set; } = true;
+    }
+
+    private void SaveOwnOverlayToJson()
+    {
+        var data = new OverlaySaveData();
+        data.LastUpdatedUnix = UnixNow(); // <--- NEU
+
+        foreach (var child in Overlay.Children)
+        {
+            if (child is not FrameworkElement fe) continue;
+            if (fe.Tag is not OverlayTag meta) continue;
+            if (meta.OwnerSteamId != _mySteamId) continue;
+
+            switch (child)
+            {
+                case Polyline pl:
+                    {
+                        var stroke = new SavedStroke
+                        {
+                            Thickness = pl.StrokeThickness,
+                            Color = (pl.Stroke as SolidColorBrush)?.Color.ToString() ?? "#FFFFFFFF"
+                        };
+                        foreach (var p in pl.Points)
+                            stroke.Points.Add(p);
+                        data.Strokes.Add(stroke);
+                    }
+                    break;
+
+                case Image img:
+                    {
+                        var x = Canvas.GetLeft(img);
+                        var y = Canvas.GetTop(img);
+
+                        var bi = img.Source as BitmapImage;
+
+                        var si = new SavedIcon
+                        {
+                            IconPath = bi?.UriSource?.ToString() ?? _currentIconPath,
+                            X = x,
+                            Y = y,
+                            Width = img.Width,
+                            Height = img.Height
+                        };
+                        data.Icons.Add(si);
+                    }
+                    break;
+
+                case TextBlock tb:
+                    {
+                        var x = Canvas.GetLeft(tb);
+                        var y = Canvas.GetTop(tb);
+
+                        var st = new SavedText
+                        {
+                            Content = tb.Text,
+                            X = x,
+                            Y = y,
+                            FontSize = tb.FontSize,
+                            Bold = (tb.FontWeight == FontWeights.Bold),
+                            Color = (tb.Foreground as SolidColorBrush)?.Color.ToString() ?? "#FFFFFFFF"
+                        };
+                        data.Texts.Add(st);
+                    }
+                    break;
+            }
+        }
+
+        var json = System.Text.Json.JsonSerializer.Serialize(
+            data,
+            new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+
+        var path = GetOverlayJsonPathForPlayerServer(_mySteamId);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
+        File.WriteAllText(path, json);
+    }
+
+    private string GetServerKey()
+    {
+        // simplest first pass: nimm Host-Port vom aktuell ausgewählten Server
+        var prof = _vm?.Selected;
+        if (prof == null) return "unknown-server";
+
+        // du hast im Connect-Code `_vm.Selected.Host` und `_vm.Selected.Port`
+        return $"{prof.Host}-{prof.Port}";
+    }
+
+    private string GetOverlayJsonPathForPlayerServer(ulong steamId)
+    {
+        var baseDir = System.IO.Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "RustPlusDesk",
+            "Overlays",
+            GetServerKey()
+        );
+        Directory.CreateDirectory(baseDir);
+        return System.IO.Path.Combine(baseDir, $"{steamId}.json");
+    }
+
+
+    private void ClearUserOverlayElements()
+    {
+        // 1) Sammeln, nicht während foreach löschen
+        var toRemove = new List<UIElement>();
+
+        foreach (var child in Overlay.Children)
+        {
+            if (child is FrameworkElement fe && fe.Tag is OverlayTag)
+            {
+                toRemove.Add(fe);
+            }
+        }
+
+        // 2) Rauswerfen
+        foreach (var el in toRemove)
+            Overlay.Children.Remove(el);
+
+        // 3) Auch unsere Index-Maps resetten
+        _playerOverlayElements.Clear();
+        _visibleOverlayOwners.Clear();
+    }
+
+    private class OverlayTag
+    {
+        public ulong OwnerSteamId;
+        public bool IsUserEditable; // true = mein eigener Layer
+    }
+
+    // --- Overlay Sync Config ---
+    private const string OVERLAY_SYNC_SECRET_HEX =
+    "23c5a7dbf02b63543da043ca7d6de1fbf706a080c899e334a8cd599206e13fde";
+
+    // dein Server (IP oder DNS + Port). Kein "/" am Ende.
+    private const string OVERLAY_SYNC_BASEURL = "http://85.214.193.250:5000";
+
+    // Hard-Limits müssen mit dem Python-Server matchen
+    private const int OVERLAY_MAX_BYTES = 350_000; // ~350 KB Limit roh
+
+    // ---- HMAC / Network Helpers ------------------------------------------
+
+
+
+    private static byte[] HexToBytes(string hex)
+    {
+        if (hex.Length % 2 != 0)
+            throw new ArgumentException("invalid hex length");
+
+        var bytes = new byte[hex.Length / 2];
+        for (int i = 0; i < hex.Length; i += 2)
+        {
+            bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+        }
+        return bytes;
+    }
+
+    private static string HmacSha256Hex(string hexKey, string dataUtf8)
+    {
+        // 1) Secret aus Hex in echte Bytes
+        var keyBytes = HexToBytes(hexKey);
+
+        // 2) Daten als UTF8-Bytes
+        var payloadBytes = Encoding.UTF8.GetBytes(dataUtf8);
+
+        // 3) HMAC-SHA256
+        using (var hmac = new System.Security.Cryptography.HMACSHA256(keyBytes))
+        {
+            var hash = hmac.ComputeHash(payloadBytes);
+
+            // 4) hex-lowercase string bauen wie Python .hexdigest()
+            var sb = new StringBuilder(hash.Length * 2);
+            foreach (var b in hash)
+                sb.Append(b.ToString("x2"));
+            return sb.ToString();
+        }
+    }
+
+    private static long UnixNow()
+    {
+        return DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    }
+
+    // Liest lokales Overlay (mich) als OverlaySaveData
+    private OverlaySaveData BuildCurrentOverlaySaveDataForMe()
+    {
+        var data = new OverlaySaveData();
+        data.LastUpdatedUnix = UnixNow(); // NEU: stamp jetzt
+
+        foreach (var child in Overlay.Children)
+        {
+            if (child is not FrameworkElement fe) continue;
+            if (fe.Tag is not OverlayTag meta) continue;
+            if (meta.OwnerSteamId != _mySteamId) continue;
+
+            switch (child)
+            {
+                case Polyline pl:
+                    {
+                        var stroke = new SavedStroke
+                        {
+                            Thickness = pl.StrokeThickness,
+                            Color = (pl.Stroke as SolidColorBrush)?.Color.ToString() ?? "#FFFFFFFF"
+                        };
+
+                        foreach (var p in pl.Points)
+                            stroke.Points.Add(p);
+
+                        data.Strokes.Add(stroke);
+                        break;
+                    }
+
+                case Image img:
+                    {
+                        var x = Canvas.GetLeft(img);
+                        var y = Canvas.GetTop(img);
+
+                        var bi = img.Source as BitmapImage;
+
+                        var si = new SavedIcon
+                        {
+                            IconPath = bi?.UriSource?.ToString() ?? _currentIconPath,
+                            X = x,
+                            Y = y,
+                            Width = img.Width,
+                            Height = img.Height
+                        };
+                        data.Icons.Add(si);
+                        break;
+                    }
+
+                case TextBlock tb:
+                    {
+                        var x = Canvas.GetLeft(tb);
+                        var y = Canvas.GetTop(tb);
+
+                        var st = new SavedText
+                        {
+                            Content = tb.Text,
+                            X = x,
+                            Y = y,
+                            FontSize = tb.FontSize,
+                            Bold = (tb.FontWeight == FontWeights.Bold),
+                            Color = (tb.Foreground as SolidColorBrush)?.Color.ToString() ?? "#FFFFFFFF"
+                        };
+                        data.Texts.Add(st);
+                        break;
+                    }
+            }
+        }
+
+        return data;
+    }
+
+    // speichert OverlaySaveData von steamId (z.B. teammate) lokal in %APPDATA%\RustPlusDesk\Overlays\<serverKey>\<steamId>.json
+    private void WriteOverlaySaveDataLocal(ulong steamId, OverlaySaveData data)
+    {
+        var json = System.Text.Json.JsonSerializer.Serialize(
+            data,
+            new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+
+        var path = GetOverlayJsonPathForPlayerServer(steamId);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
+        File.WriteAllText(path, json);
+    }
+
+    // baut aus einem OverlaySaveData echte UI-Elemente auf der Canvas für einen Spieler
+    // und cached sie in _playerOverlayElements[steamId]
+    private void MaterializeOverlayForPlayer(ulong steamId, OverlaySaveData data, bool editableIfMine)
+    {
+        // falls schon Elemente für den Spieler existieren -> erstmal killen
+        if (_playerOverlayElements.TryGetValue(steamId, out var existing))
+        {
+            foreach (var el in existing)
+                Overlay.Children.Remove(el);
+        }
+
+        var list = new List<FrameworkElement>();
+        _playerOverlayElements[steamId] = list;
+
+        foreach (var stroke in data.Strokes)
+        {
+            var pl = new Polyline
+            {
+                StrokeThickness = stroke.Thickness,
+                StrokeLineJoin = PenLineJoin.Round,
+                StrokeEndLineCap = PenLineCap.Round,
+                StrokeStartLineCap = PenLineCap.Round,
+                IsHitTestVisible = editableIfMine ? false : false, // Linien eh nicht direkt draggen
+                Opacity = editableIfMine ? 1.0 : 0.8,
+                Tag = new OverlayTag
+                {
+                    OwnerSteamId = steamId,
+                    IsUserEditable = editableIfMine
+                },
+                Visibility = _visibleOverlayOwners.Contains(steamId)
+                             ? Visibility.Visible
+                             : Visibility.Collapsed
+            };
+
+            if (ColorConverter.ConvertFromString(stroke.Color) is Color c)
+                pl.Stroke = new SolidColorBrush(c);
+
+            foreach (var p in stroke.Points)
+                pl.Points.Add(p);
+
+            Overlay.Children.Add(pl);
+            list.Add(pl);
+        }
+
+        foreach (var icon in data.Icons)
+        {
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.UriSource = new Uri(icon.IconPath, UriKind.RelativeOrAbsolute);
+            bi.EndInit();
+            bi.Freeze();
+
+            var img = new Image
+            {
+                Source = bi,
+                Width = icon.Width,
+                Height = icon.Height,
+                RenderTransformOrigin = new Point(0.5, 0.5),
+                IsHitTestVisible = editableIfMine, // meine Icons kann ich anfassen
+                Opacity = editableIfMine ? 1.0 : 0.8,
+                Tag = new OverlayTag
+                {
+                    OwnerSteamId = steamId,
+                    IsUserEditable = editableIfMine
+                },
+                Visibility = _visibleOverlayOwners.Contains(steamId)
+                             ? Visibility.Visible
+                             : Visibility.Collapsed
+            };
+
+            Canvas.SetLeft(img, icon.X);
+            Canvas.SetTop(img, icon.Y);
+
+            Overlay.Children.Add(img);
+            list.Add(img);
+        }
+
+        foreach (var txt in data.Texts)
+        {
+            var tb = new TextBlock
+            {
+                Text = txt.Content,
+                FontSize = txt.FontSize,
+                FontWeight = txt.Bold ? FontWeights.Bold : FontWeights.Normal,
+                IsHitTestVisible = editableIfMine,
+                Opacity = editableIfMine ? 1.0 : 0.8,
+                Tag = new OverlayTag
+                {
+                    OwnerSteamId = steamId,
+                    IsUserEditable = editableIfMine
+                },
+                Visibility = _visibleOverlayOwners.Contains(steamId)
+                             ? Visibility.Visible
+                             : Visibility.Collapsed
+            };
+
+            if (ColorConverter.ConvertFromString(txt.Color) is Color tc)
+                tb.Foreground = new SolidColorBrush(tc);
+
+            Canvas.SetLeft(tb, txt.X);
+            Canvas.SetTop(tb, txt.Y);
+
+            Overlay.Children.Add(tb);
+            list.Add(tb);
+        }
+    }
+
+    // holt OverlaySaveData aus JSON-Text
+    private static OverlaySaveData? ParseOverlayJson(string json)
+    {
+        try
+        {
+            return System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(json);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private async Task<bool> TryFetchOverlayForPlayerFromServerAsync(ulong steamId)
+    {
+        try
+        {
+            var serverKey = GetServerKey();
+            var ts = UnixNow().ToString();
+            // Signatur beim GET: steamId|serverKey|ts
+            var sigInput = steamId.ToString() + "|" + serverKey + "|" + ts;
+            var sig = HmacSha256Hex(OVERLAY_SYNC_SECRET_HEX, sigInput);
+
+            var url = $"{OVERLAY_SYNC_BASEURL}/fetch" +
+                      $"?steamId={Uri.EscapeDataString(steamId.ToString())}" +
+                      $"&serverKey={Uri.EscapeDataString(serverKey)}" +
+                      $"&ts={Uri.EscapeDataString(ts)}" +
+                      $"&sig={Uri.EscapeDataString(sig)}";
+
+            using (var http = new HttpClient())
+            {
+                var resp = await http.GetAsync(url);
+                if (!resp.IsSuccessStatusCode)
+                {
+                    // 404 ist einfach "hat nix hochgeladen" -> kein Fehler ins Log spammen
+                    if ((int)resp.StatusCode != 404)
+                        AppendLog("[overlay] Fetch HTTP " + (int)resp.StatusCode);
+                    return false;
+                }
+
+                var body = await resp.Content.ReadAsStringAsync();
+                // body hat {"overlayJsonB64": "..."}
+                using var doc = System.Text.Json.JsonDocument.Parse(body);
+                if (!doc.RootElement.TryGetProperty("overlayJsonB64", out var b64El))
+                    return false;
+
+                var b64 = b64El.GetString();
+                if (string.IsNullOrEmpty(b64)) return false;
+
+                byte[] decoded = Convert.FromBase64String(b64);
+                if (decoded.Length > OVERLAY_MAX_BYTES)
+                {
+                    AppendLog("[overlay] Remote Overlay too big.");
+                    return false;
+                }
+
+                var jsonOverlay = Encoding.UTF8.GetString(decoded);
+                var data = ParseOverlayJson(jsonOverlay);
+                if (data == null)
+                {
+                    AppendLog("[overlay] Remote Overlay broken.");
+                    return false;
+                }
+
+                // lokal speichern für diesen Spieler
+                WriteOverlaySaveDataLocal(steamId, data);
+
+                // Canvas-Objekte bauen / ersetzen
+                bool editable = (steamId == _mySteamId);
+                MaterializeOverlayForPlayer(steamId, data, editable);
+
+                AppendLog("[overlay] Overlay loaded from " + steamId + ".");
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[overlay] Fetch Error: " + ex.Message);
+            return false;
+        }
+    }
+
+    private void LoadOverlayFromDiskForPlayer(ulong steamId)
+    {
+        var path = GetOverlayJsonPathForPlayerServer(steamId);
+        if (!File.Exists(path))
+        {
+            // registriere leere Liste (damit wir nicht endlos neu versuchen)
+            if (!_playerOverlayElements.ContainsKey(steamId))
+                _playerOverlayElements[steamId] = new List<FrameworkElement>();
+            return;
+        }
+
+        try
+        {
+            var json = File.ReadAllText(path);
+            var data = ParseOverlayJson(json);
+            if (data == null)
+            {
+                if (!_playerOverlayElements.ContainsKey(steamId))
+                    _playerOverlayElements[steamId] = new List<FrameworkElement>();
+                return;
+            }
+
+            bool editable = (steamId == _mySteamId);
+            MaterializeOverlayForPlayer(steamId, data, editable);
+        }
+        catch
+        {
+            if (!_playerOverlayElements.ContainsKey(steamId))
+                _playerOverlayElements[steamId] = new List<FrameworkElement>();
+        }
+
+
+    }
+
 
 
 }

@@ -693,14 +693,28 @@
                    FontWeight="Bold"
                    FontSize="16"/>
 
-                            <Button Grid.Column="1"
-                x:Name="BtnCheckUpdates"
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Horizontal"
+                HorizontalAlignment="Right">
+                                    <Button x:Name="BtnCheckUpdates"
                 Content=" Check for Updates "
                 Click="BtnCheckUpdates_Click"
-                Background="{DynamicResource AccentDark}" BorderBrush="{DynamicResource Accent}"
+                Background="{DynamicResource AccentDark}"
+                BorderBrush="{DynamicResource Accent}"
                 Margin="8,0,0,0"
-                ToolTip="Check GitHub for a newer version"
-                HorizontalAlignment="Right"/>
+                ToolTip="Check GitHub for a newer version"/>
+                                    <Button x:Name="BtnPatchNotes"
+                Content=" Patch Notes "
+                Click="BtnPatchNotes_Click"
+                Background="{DynamicResource SurfaceAlt}"
+                BorderBrush="{DynamicResource CardBorder}"
+                Margin="8,0,0,0"
+                ToolTip="Show latest changes"/>
+                                </StackPanel>
+                            </Grid>
                         </Grid>
 
                         <!-- (Rest bleibt wie bei dir) -->
@@ -1226,10 +1240,10 @@ Margin="12,0,0,0"
                     ToolTip="Shop Search" Click="BtnShopSearch_Click">
                         <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="16" Text="&#xE721;"/>
                     </Button>
-                    <TextBlock Width="40">     </TextBlock>
+                    <TextBlock Width="20">     </TextBlock>
                     <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChatAnnounce"
           Content="Event Spawns in Chat"
-          IsChecked="True"
+          IsChecked="False"
           Margin="8,0,0,0"
           Checked="ChatAnnounce_Checked"
           Unchecked="ChatAnnounce_Unchecked"/>
@@ -1238,7 +1252,7 @@ Width="80"
 Style="{StaticResource GhostButton}"
 Click="BtnToggleMiniMap_Click"/>
 
-                    <Button x:Name="BtnCrosshair"
+                    <Button x:Name="BtnCrosshair" Margin="4,0,0,0"
         Style="{StaticResource IconButton}"
         ToolTip="Crosshair on/off (Right Click For Options)"
         Click="BtnCrosshair_Click"
@@ -1272,6 +1286,14 @@ Click="BtnToggleMiniMap_Click"/>
                         </Button.ContextMenu>
                     </Button>
 
+                    <Button x:Name="BtnToggleOverlayTools"
+        Width="32" Height="32"
+        Margin="4,0,0,0"
+        ToolTip="Map-Overlay Zeichnen / Team Overlays"
+        Click="BtnToggleOverlayTools_Click">
+                        <Image Source="pack://application:,,,/Icons/pencil.png"/>
+                    </Button>
+
                 </StackPanel>
 
                 <Grid x:Name="WebViewHost" Grid.Row="1" Margin="0,0,0,8" ClipToBounds="True"
@@ -1289,6 +1311,95 @@ Click="BtnToggleMiniMap_Click"/>
                         <Image x:Name="ImgMap" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Canvas x:Name="GridLayer" IsHitTestVisible="False"/>
                     <Canvas x:Name="Overlay"   IsHitTestVisible="True"/>
+
+                    <Border x:Name="OverlayToolbox"
+        Grid.Row="1"
+        Background="#CC1E1E1E"
+        CornerRadius="6"
+        Padding="6"
+        HorizontalAlignment="Right"
+        VerticalAlignment="Top"
+        Margin="8"
+        Visibility="Collapsed"
+        Panel.ZIndex="9000">
+                        <StackPanel>
+
+                            <!-- Zeichnen -->
+                            <Button x:Name="ToolDrawButton"
+                Width="32" Height="32"
+                ToolTip="Draw (Right Click: Size / Color)"
+                Click="ToolDrawButton_Click"
+                PreviewMouseRightButtonDown="ToolDrawButton_RightClick">
+                                <Image Source="pack://application:,,,/icons/pen.png"/>
+                            </Button>
+
+                            <!-- Text -->
+                            <Button x:Name="ToolTextButton"
+                Width="32" Height="32"
+                ToolTip="Place Text (Right Click: Color / Size)"
+                Click="ToolTextButton_Click"
+                PreviewMouseRightButtonDown="ToolTextButton_RightClick">
+                                <Image Source="pack://application:,,,/icons/text.png"/>
+                            </Button>
+
+                            <!-- Icons -->
+                            <Button x:Name="ToolIconButton"
+                Width="32" Height="32"
+                ToolTip="Place Icon (Right Click: Pick Icon)"
+                Click="ToolIconButton_Click"
+                PreviewMouseRightButtonDown="ToolIconButton_RightClick">
+                                <Image Source="pack://application:,,,/icons/pin.png"/>
+                            </Button>
+
+                            <!-- Radierer -->
+                            <Button x:Name="ToolEraseButton"
+                Width="32" Height="32"
+                ToolTip="Eraser (hold or click)"
+                Click="ToolEraseButton_Click"
+                PreviewMouseRightButtonDown="ToolEraseButton_RightClick">
+                                <Image Source="pack://application:,,,/icons/eraser.png"/>
+                            </Button>
+
+                            <Separator/>
+
+                            <!-- Löschen  -->
+                            <Button x:Name="ToolTrashButton"
+                Width="32" Height="32"
+                ToolTip="Delete own overlay"
+                Click="ToolTrashButton_Click">
+                                <Image Source="pack://application:,,,/icons/trash.png"/>
+                            </Button>
+
+                            <!-- Upload / Teilen -->
+                            <Button x:Name="ToolUploadButton"
+                Width="32" Height="32"
+                ToolTip="Upload own Overlay / share"
+                Click="ToolUploadButton_Click">
+                                <Image Source="pack://application:,,,/icons/upload.png"/>
+                            </Button>
+
+                        </StackPanel>
+                    </Border>
+
+                    <Border x:Name="OverlayTeamBar"
+        Grid.Row="1"
+        Background="#801E1E1E"
+        CornerRadius="6"
+        Padding="4"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Bottom"
+        Margin="0,0,0,8"
+        Visibility="Collapsed"
+        Panel.ZIndex="9000">
+                        <StackPanel x:Name="OverlayTeamStack"
+                Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Margin="4"
+                >
+                            <!-- Buttons für Team-Mitglieder werden dynamisch in CodeBehind eingefügt -->
+                        </StackPanel>
+                    </Border>
                 </Grid>
 
                 <TextBox x:Name="TxtLog" Grid.Row="2"

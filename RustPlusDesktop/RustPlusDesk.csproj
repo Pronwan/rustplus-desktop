@@ -13,12 +13,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>2.0.8</Version>
+		<Version>3.0.0</Version>
 
 		<!-- EXE-Eigenschaften im Windows-Dateidialog -->
-		<AssemblyVersion>2.0.8</AssemblyVersion>
-		<FileVersion>2.0.8</FileVersion>
-		<InformationalVersion>2.0.8</InformationalVersion>
+		<AssemblyVersion>3.0.0</AssemblyVersion>
+		<FileVersion>3.0.0</FileVersion>
+		<InformationalVersion>3.0.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -51,6 +51,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <None Remove="cash.wav" />
 	  <None Remove="icons\airfield.png" />
 	  <None Remove="icons\arcticresearch.png" />
 	  <None Remove="icons\banditcamp.png" />
@@ -62,6 +63,7 @@
 	  <None Remove="icons\ch47.png" />
 	  <None Remove="icons\crate.png" />
 	  <None Remove="icons\dome.png" />
+	  <None Remove="icons\eraser.png" />
 	  <None Remove="icons\excavator.png" />
 	  <None Remove="icons\explosion.png" />
 	  <None Remove="icons\ferryterminal.png" />
@@ -76,6 +78,10 @@
 	  <None Remove="icons\largeoilrig.png" />
 	  <None Remove="icons\launchsite.png" />
 	  <None Remove="icons\lighthouse.png" />
+	  <None Remove="icons\map-icons\base1.png" />
+	  <None Remove="icons\map-icons\base2.png" />
+	  <None Remove="icons\map-icons\sam-site.png" />
+	  <None Remove="icons\map-icons\turret.png" />
 	  <None Remove="icons\militarybase.png" />
 	  <None Remove="icons\militarytunnel.png" />
 	  <None Remove="icons\miningoutpost.png" />
@@ -84,20 +90,27 @@
 	  <None Remove="icons\oilrig.png" />
 	  <None Remove="icons\outpost.png" />
 	  <None Remove="icons\patrol.png" />
+	  <None Remove="icons\pen.png" />
+	  <None Remove="icons\pencil.png" />
+	  <None Remove="icons\pin.png" />
 	  <None Remove="icons\powerplant.png" />
 	  <None Remove="icons\powerstation.png" />
 	  <None Remove="icons\radtown.png" />
 	  <None Remove="icons\satellitedish.png" />
+	  <None Remove="icons\save.png" />
 	  <None Remove="icons\sewerbranch.png" />
 	  <None Remove="icons\stable.png" />
 	  <None Remove="icons\stonequarry.png" />
 	  <None Remove="icons\sulfurquarry.png" />
 	  <None Remove="icons\supermarket.png" />
 	  <None Remove="icons\swamp.png" />
+	  <None Remove="icons\text.png" />
 	  <None Remove="icons\traintunnel.png" />
 	  <None Remove="icons\traintunnel2.png" />
 	  <None Remove="icons\trainyard.png" />
+	  <None Remove="icons\trash.png" />
 	  <None Remove="icons\underwater.png" />
+	  <None Remove="icons\upload.png" />
 	  <None Remove="icons\vending.png" />
 	  <None Remove="icons\vending2.png" />
 	  <None Remove="icons\vendor.png" />
@@ -106,9 +119,36 @@
 	  <None Remove="rust-item-list.json" />
 	  <None Remove="rustplus-desktop-icon.ico" />
 	  <None Remove="rust_items.json" />
+	  <None Remove="Screenshots\3.0_1.png" />
+	  <None Remove="Screenshots\3.0_2.png" />
+	  <None Remove="Screenshots\3.0_3.png" />
+	  <None Remove="Screenshots\3.0_4.png" />
+	  <None Remove="Screenshots\3.0_5.png" />
+	  <None Remove="Screenshots\3.0_6.png" />
 	  <None Remove="TitleScreen-rust-plus-desktop.png" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Content Include="icons\eraser.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="icons\pen.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="icons\pin.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="icons\save.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="icons\text.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="icons\trash.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="icons\upload.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	  <Content Include="rustplus-desktop-icon.ico">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
@@ -120,6 +160,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="cash.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="icons\airfield.png" />
     <Resource Include="icons\arcticresearch.png" />
     <Resource Include="icons\banditcamp.png" />
@@ -145,6 +188,10 @@
     <Resource Include="icons\largeoilrig.png" />
     <Resource Include="icons\launchsite.png" />
     <Resource Include="icons\lighthouse.png" />
+    <Resource Include="icons\map-icons\base1.png" />
+    <Resource Include="icons\map-icons\base2.png" />
+    <Resource Include="icons\map-icons\sam-site.png" />
+    <Resource Include="icons\map-icons\turret.png" />
     <Resource Include="icons\militarybase.png" />
     <Resource Include="icons\militarytunnel.png" />
     <Resource Include="icons\miningoutpost.png" />
@@ -153,6 +200,9 @@
     <Resource Include="icons\oilrig.png" />
     <Resource Include="icons\outpost.png" />
     <Resource Include="icons\patrol.png" />
+    <Content Include="icons\pencil.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="icons\powerplant.png" />
     <Resource Include="icons\powerstation.png" />
     <Resource Include="icons\radtown.png" />
@@ -174,6 +224,12 @@
     <Resource Include="icons\waterwell.png" />
     <Resource Include="rust-item-list.json" />
     <Resource Include="rustplus-desktop-icon.ico" />
+    <Resource Include="Screenshots\3.0_1.png" />
+    <Resource Include="Screenshots\3.0_2.png" />
+    <Resource Include="Screenshots\3.0_3.png" />
+    <Resource Include="Screenshots\3.0_4.png" />
+    <Resource Include="Screenshots\3.0_5.png" />
+    <Resource Include="Screenshots\3.0_6.png" />
     <Resource Include="TitleScreen-rust-plus-desktop.png" />
     <Content Include="rust_items.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
