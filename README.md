@@ -42,7 +42,18 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 ➡️ **[Download the latest RustPlusDesk-Setup.exe](../../releases/latest)**
 
 
-*(We publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
+*(I publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
+## Update Notes 3.0.0 (October 30th 25)
+- FULL Shop Analytics Overhaul!
+  This comes with instant check for profit trades, trade route check (Buy X for Y) and more
+- Map Overlay
+  You can draw, set markers, share your map markers with team mates
+- Shop Alarm system
+  Get alerts (in chat or audio alerts) when a new shop pops up or when a suspicious shop disappeared or when your desired item is back in stock
+- new Patch Notes Button with all new features explained
+
+... and more
+
 
 ## Update Notes 2.0.5 (October 6th 25)
 - Global Device Hotkeys are here! Assign one key to multiple devices to group them together.
