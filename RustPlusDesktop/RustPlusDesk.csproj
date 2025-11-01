@@ -13,12 +13,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>3.0.0</Version>
+		<Version>3.0.1</Version>
 
 		<!-- EXE-Eigenschaften im Windows-Dateidialog -->
-		<AssemblyVersion>3.0.0</AssemblyVersion>
-		<FileVersion>3.0.0</FileVersion>
-		<InformationalVersion>3.0.0</InformationalVersion>
+		<AssemblyVersion>3.0.1</AssemblyVersion>
+		<FileVersion>3.0.1</FileVersion>
+		<InformationalVersion>3.0.1</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -128,27 +128,27 @@
 	  <None Remove="TitleScreen-rust-plus-desktop.png" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Content Include="icons\eraser.png">
+	  <Resource Include="icons\eraser.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="icons\pen.png">
+	  </Resource>
+	  <Resource Include="icons\pen.png">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="icons\pin.png">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="icons\save.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="icons\pin.png">
+	  </Resource>
+	  <Resource Include="icons\text.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="icons\save.png">
+	  </Resource>
+	  <Resource Include="icons\trash.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="icons\text.png">
+	  </Resource>
+	  <Resource Include="icons\upload.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="icons\trash.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="icons\upload.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
+	  </Resource>
 	  <Content Include="rustplus-desktop-icon.ico">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
@@ -161,7 +161,7 @@
 
   <ItemGroup>
     <Content Include="cash.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="icons\airfield.png" />
     <Resource Include="icons\arcticresearch.png" />
@@ -188,10 +188,18 @@
     <Resource Include="icons\largeoilrig.png" />
     <Resource Include="icons\launchsite.png" />
     <Resource Include="icons\lighthouse.png" />
-    <Resource Include="icons\map-icons\base1.png" />
-    <Resource Include="icons\map-icons\base2.png" />
-    <Resource Include="icons\map-icons\sam-site.png" />
-    <Resource Include="icons\map-icons\turret.png" />
+    <Resource Include="icons\map-icons\base1.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="icons\map-icons\base2.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="icons\map-icons\sam-site.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="icons\map-icons\turret.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="icons\militarybase.png" />
     <Resource Include="icons\militarytunnel.png" />
     <Resource Include="icons\miningoutpost.png" />
@@ -200,9 +208,9 @@
     <Resource Include="icons\oilrig.png" />
     <Resource Include="icons\outpost.png" />
     <Resource Include="icons\patrol.png" />
-    <Content Include="icons\pencil.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="icons\pencil.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="icons\powerplant.png" />
     <Resource Include="icons\powerstation.png" />
     <Resource Include="icons\radtown.png" />
