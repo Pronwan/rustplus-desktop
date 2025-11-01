@@ -181,7 +181,9 @@ public partial class MainWindow : Window
     private void BtnToggleMiniMap_Click(object sender, RoutedEventArgs e)
     {
         if (_miniMap == null || !_miniMap.IsVisible)
+
         {
+            
             // WICHTIG: mapRoot muss dein existierendes Karten-Root-Element sein!
             // Beispiele: SceneGrid, MapRootGrid, OverlayHostGrid – je nach deinem x:Name.
             var mapRoot = WebViewHost;
@@ -2731,6 +2733,92 @@ public partial class MainWindow : Window
         }
     }
 
+    private async Task HardResetAsync(bool reconnect = false)
+    {
+        // 1) Laufende Polls/Tokens abbrechen
+        try { StopDynPolling(); } catch { }
+        try { StopTeamPolling(); } catch { }
+
+        // Falls du eigene CTS für Status hast:
+        try
+        {
+            _statusCts?.Cancel();
+            _statusCts = null;
+        }
+        catch { }
+
+        // 2) Timer stoppen
+        try { _statusTimer?.Stop(); } catch { }
+        try { _shopTimer?.Stop(); _shopTimer = null; } catch { }
+
+        // 3) UI-/In-Memory-State leeren
+        try { TeamMembers.Clear(); } catch { }
+        try { _avatarCache.Clear(); } catch { }
+        try { _lastPresence.Clear(); } catch { }
+        try { ClearAllDeathPins(); } catch { }
+        try { ClearAllToggleBusy(); } catch { }
+
+        // Shopspezifisch, wie du es im Connect auch machst
+        try { _lastShops.Clear(); } catch { }
+        try { _shopLifetimes.Clear(); } catch { }
+        try { _knownShopIds.Clear(); } catch { }
+        _initialShopSnapshotTimeUtc = DateTime.MinValue;
+        _alertsNeedRebaseline = true;
+        _lastChatSendUtc = DateTime.MinValue;
+
+        // 4) Overlay-Elemente wirklich vom Canvas runternehmen
+        try
+        {
+            foreach (var el in _shopEls.Values)
+                Overlay.Children.Remove(el);
+            _shopEls.Clear();
+        }
+        catch { }
+
+        // Wenn du noch player-overlays / team-overlays hast:
+        try
+        {
+            ClearUserOverlayElements();   // du hast das im Connect schon – nutzen!
+        }
+        catch { }
+
+        // 5) WIRKLICH vom Rust-Server trennen
+        try
+        {
+            if (_rust != null)
+                await _rust.DisconnectAsync();   // RustPlusClientReal trennt hier sauber und setzt _api = null
+        }
+        catch { }
+
+        // 6) ViewModel „entkoppeln“
+        if (_vm?.Selected != null)
+        {
+            _vm.Selected.IsConnected = false;
+        }
+        if (_vm != null)
+        {
+            _vm.IsBusy = false;
+            _vm.BusyText = "";
+        }
+
+        AppendLog("Hard reset completed.");
+
+        // 7) Optional: direkt wieder verbinden
+        if (reconnect && _vm?.Selected != null)
+        {
+            await Dispatcher.InvokeAsync(async () =>
+            {
+                // wir rufen deine bestehende Logik wieder auf
+                BtnConnect_Click(this, new RoutedEventArgs());
+            });
+        }
+    }
+
+    private async void BtnHardReset_Click(object sender, RoutedEventArgs e)
+    {
+        await HardResetAsync(reconnect: false); // oder true, wenn er direkt wieder verbinden soll
+    }
+
     private async void BtnConnect_Click(object sender, RoutedEventArgs e)
     {
         // stop polls from previous server
@@ -3479,6 +3567,7 @@ public partial class MainWindow : Window
         MapTransform.Matrix = m;
         RefreshAllOverlayScales();
         RefreshMonumentOverlayPositions();
+        RefreshUserOverlayIcons();
         CenterMiniMapOnPlayer();
         e.Handled = true;
     }
@@ -3490,12 +3579,37 @@ public partial class MainWindow : Window
 
     private Point WorldToImagePx(double x, double y)
     {
-        // on-grid clamp – so wie bei den eingebrannten Monuments
-        x = Math.Clamp(x, 0, _worldSizeS);
-        y = Math.Clamp(y, 0, _worldSizeS);
+        if (_worldSizeS <= 0 || _worldRectPx.Width <= 0 || _worldRectPx.Height <= 0)
+            return new Point(0, 0);
 
-        double u = _worldRectPx.X + (x / _worldSizeS) * _worldRectPx.Width;
-        double v = _worldRectPx.Y + ((_worldSizeS - y) / _worldSizeS) * _worldRectPx.Height;
+        // das ist genau derselbe "virtuelle" Welt-Rand, den du oben beim Rect benutzt: 1000 pro Seite = 2000 gesamt
+        double totalWorld = _worldSizeS + PAD_WORLD;    // z.B. 4500 + 2000 = 6500
+        double halfPad = PAD_WORLD * 0.5;            // z.B. 1000
+
+        // Rust kann dir X/Y < 0 oder > worldSize schicken → wir kappen nur auf das *erweiterte* Intervall
+        double xx = Math.Clamp(x, -halfPad, _worldSizeS + halfPad);
+        double yy = Math.Clamp(y, -halfPad, _worldSizeS + halfPad);
+
+        // jetzt müssen wir auf das *gesamte* (Welt + Wasser) Quadrat im Bild normalisieren,
+        // nicht nur auf das innere _worldRectPx.
+        //
+        // Aus ComputeWorldRectFromWorldSize wissen wir:
+        // - das innere Weltquadrat hat die Breite _worldRectPx.Width
+        // - dieses innere Quadrat entspricht dem Anteil worldSize / (worldSize + PAD_WORLD)
+        // ⇒ daraus können wir die "volle" Seitenlänge im Bild wiederherleiten:
+        double fullSidePx = _worldRectPx.Width * (totalWorld / _worldSizeS);   // also: innerWidth * (6500 / 4500) z.B.
+
+        // dieses volle Quadrat ist wieder mittig im Bild
+        // (genau wie oben ox/oy berechnet wurden)
+        double imgW = _scene?.Width > 0 ? _scene.Width : ImgMap.Width;
+        double imgH = _scene?.Height > 0 ? _scene.Height : ImgMap.Height;
+        double fullOx = (imgW - fullSidePx) / 2.0;
+        double fullOy = (imgH - fullSidePx) / 2.0;
+
+        // und jetzt ganz normal: verschieben um halfPad, dann auf fullSidePx skalieren
+        double u = fullOx + ((xx + halfPad) / totalWorld) * fullSidePx;
+        double v = fullOy + (((_worldSizeS - yy) + halfPad) / totalWorld) * fullSidePx;
+
         return new Point(u, v);
     }
 
@@ -3857,6 +3971,8 @@ public partial class MainWindow : Window
         double wDip = bmp.PixelWidth * (96.0 / bmp.DpiX);
         double hDip = bmp.PixelHeight * (96.0 / bmp.DpiY);
 
+        const double padPx = 000; // Zeichen-Rand
+
         ImgMap.Stretch = Stretch.None;
         ImgMap.HorizontalAlignment = HorizontalAlignment.Left;
         ImgMap.VerticalAlignment = VerticalAlignment.Top;
@@ -3867,26 +3983,30 @@ public partial class MainWindow : Window
         GridLayer.Height = hDip;
         GridLayer.IsHitTestVisible = false;
 
-        Overlay.Width = wDip;
-        Overlay.Height = hDip;
+        // WICHTIG: Overlay größer machen, aber Map nicht anfassen
+        Overlay.Width = wDip + padPx * 2;
+        Overlay.Height = hDip + padPx * 2;
         Overlay.IsHitTestVisible = true;
         Overlay.Background = Brushes.Transparent;
         EnsureShopsHoverPopup();
 
-        // Szene aufbauen (wie bei dir)
         _scene ??= new Grid();
-        _scene.Width = wDip;
-        _scene.Height = hDip;
+        _scene.Width = wDip + padPx * 2;
+        _scene.Height = hDip + padPx * 2;
 
         (ImgMap.Parent as Panel)?.Children.Remove(ImgMap);
         (GridLayer.Parent as Panel)?.Children.Remove(GridLayer);
         (Overlay.Parent as Panel)?.Children.Remove(Overlay);
 
         _scene.Children.Clear();
+
+        // Map bei (padPx, padPx)? → NEIN, jetzt bei (0,0)!
         _scene.Children.Add(ImgMap); Panel.SetZIndex(ImgMap, 0);
         _scene.Children.Add(GridLayer); Panel.SetZIndex(GridLayer, 1);
         _scene.Children.Add(Overlay); Panel.SetZIndex(Overlay, 2);
+
         _scene.RenderTransform = MapTransform;
+
         if (_mapView == null)
         {
             _mapView = new Viewbox { Stretch = Stretch.Uniform, StretchDirection = StretchDirection.Both };
@@ -3894,14 +4014,6 @@ public partial class MainWindow : Window
             Panel.SetZIndex(_mapView, 0);
         }
         _mapView.Child = _scene;
-
-        // WICHTIG: Transform NUR am gemeinsamen Parent
-
-
-        // NICHT mehr:
-        // ImgMap.RenderTransform = ...
-        // GridLayer.RenderTransform = ...
-        // Overlay.RenderTransform = ...
     }
     private void ShowMapBasic(BitmapSource bmp)
     {
@@ -4142,7 +4254,7 @@ public partial class MainWindow : Window
                 // optional: show off-grid (oilrig/uw-lab) with a tiny outward nudge so it's visibly "outside"
                 if (off)
                 {
-                    const double nudge = 150;
+                    const double nudge = 0;
                     if (m.X < 0) u -= nudge; else if (m.X > S) u += nudge;
                     if (m.Y < 0) v += nudge; else if (m.Y > S) v -= nudge;
                 }
@@ -10394,24 +10506,87 @@ public partial class MainWindow : Window
         }
     }
 
+    private const double USER_ICON_BASE_SIZE = 24;   // hier stellst du “doppelt so groß” ein
+    private const double USER_ICON_MIN_SCALE = 0.2;  // nicht kleiner werden
+    private const double USER_ICON_MAX_SCALE = 2.0;   // nicht riesig werden
+
+
     private void PlaceIconAt(Point mapPos)
     {
+        // 1. aktuellen effektiven Zoom holen (das ist der gleiche wie bei Shops/Playern)
+        double eff = GetEffectiveZoom();
+
+        // 2. “wünschte” Skalierung aus Zoom ableiten
+        double scale = 1.0 / eff;
+
+        // 3. auf min / max clampen – GENAU wie im Refresh
+        if (scale < USER_ICON_MIN_SCALE)
+            scale = USER_ICON_MIN_SCALE;
+        if (scale > USER_ICON_MAX_SCALE)
+            scale = USER_ICON_MAX_SCALE;
+
+        // 4. Icon bauen
         var img = new Image
         {
             Source = new BitmapImage(new Uri(_currentIconPath, UriKind.RelativeOrAbsolute)),
-            Width = 64,
-            Height = 64,
+            Width = USER_ICON_BASE_SIZE,
+            Height = USER_ICON_BASE_SIZE,
             RenderTransformOrigin = new Point(0.5, 0.5),
-            Tag = new OverlayTag { OwnerSteamId = _mySteamId, IsUserEditable = true }
+            RenderTransform = new ScaleTransform(scale, scale),
+            Tag = new OverlayTag
+            {
+                OwnerSteamId = _mySteamId,
+                IsUserEditable = true,
+                BaseSize = USER_ICON_BASE_SIZE
+            }
         };
 
-        Canvas.SetLeft(img, mapPos.X - 16);
-        Canvas.SetTop(img, mapPos.Y - 16);
+        // 5. Canvas-Position IMMER aus der Basisgröße ableiten
+        Canvas.SetLeft(img, mapPos.X - USER_ICON_BASE_SIZE / 2);
+        Canvas.SetTop(img, mapPos.Y - USER_ICON_BASE_SIZE / 2);
 
+        // 6. ins Overlay
         Overlay.Children.Add(img);
         RegisterElementForOwner(_mySteamId, img);
 
+        // 7. speichern (nimmt BASIS-W/H, nicht die skalierten Pixel – das ist korrekt!)
         SaveOwnOverlayToJson();
+    }
+
+    private class UserIconTag
+    {
+        public double X;
+        public double Y;
+    }
+
+
+    private void RefreshUserOverlayIcons()
+    {
+        if (Overlay == null) return;
+
+        double eff = GetEffectiveZoom();
+        double scale = 1.0 / eff;
+
+        // Untergrenze
+        if (scale < USER_ICON_MIN_SCALE)
+            scale = USER_ICON_MIN_SCALE;
+
+        // OBERgrenze – hier kommt dein maxScale hin
+        if (scale > USER_ICON_MAX_SCALE)
+            scale = USER_ICON_MAX_SCALE;
+
+        foreach (var child in Overlay.Children)
+        {
+            if (child is Image img && img.Tag is OverlayTag meta)
+            {
+                // nur Icons anfassen – Strokes/Text bleiben wie sie sind
+                // wenn du GANZ sicher sein willst, dass es wirklich ein "Overlay-Icon" ist:
+                // if (meta.BaseSize is null) continue;
+
+                img.RenderTransformOrigin = new Point(0.5, 0.5);
+                img.RenderTransform = new ScaleTransform(scale, scale);
+            }
+        }
     }
 
     private void PlaceTextAt(Point mapPos)
@@ -10763,7 +10938,11 @@ public partial class MainWindow : Window
 
     private void ShowDrawSettingsContextMenu(FrameworkElement? fe)
     {
-        var m = new ContextMenu();
+        var m = new ContextMenu()
+        {
+            // wichtig: dein Style aus App.xaml anwenden
+            Style = (Style)FindResource("DarkContextMenu")
+        };
 
         // Farbe ändern (nur ein Beispiel)
         var miRed = new MenuItem { Header = "Red" };
@@ -10792,7 +10971,7 @@ public partial class MainWindow : Window
 
     private void ShowTextSettingsContextMenu(FrameworkElement? fe)
     {
-        var m = new ContextMenu();
+        var m = new ContextMenu() { Style = (Style)FindResource("DarkContextMenu") };
 
         var miWhite = new MenuItem { Header = "White" };
         miWhite.Click += (_, __) => { _textColor = Colors.White; };
@@ -10816,7 +10995,11 @@ public partial class MainWindow : Window
 
     private void ShowIconSelectContextMenu(FrameworkElement? fe)
     {
-        var m = new ContextMenu();
+        var m = new ContextMenu()
+        {
+            // wichtig: dein Style aus App.xaml anwenden
+            Style = (Style)FindResource("DarkContextMenu")
+        };
 
         // map-icons aus deinem Projekt
         m.Items.Add(BuildIconMenuItem("Base #1", "pack://application:,,,/icons/map-icons/base1.png"));
@@ -10837,7 +11020,7 @@ public partial class MainWindow : Window
 
     private void ShowEraserSettingsContextMenu(FrameworkElement? fe)
     {
-        var m = new ContextMenu();
+        var m = new ContextMenu() { Style = (Style)FindResource("DarkContextMenu") };
 
         var miSmall = new MenuItem { Header = "Eraser small (5px)" };
         miSmall.Click += (_, __) => { _eraserSize = 5.0; };
@@ -11323,7 +11506,8 @@ public partial class MainWindow : Window
     private class OverlayTag
     {
         public ulong OwnerSteamId;
-        public bool IsUserEditable; // true = mein eigener Layer
+        public bool IsUserEditable;
+        public double? BaseSize;   // nur für Icons, wird NICHT gespeichert
     }
 
     // --- Overlay Sync Config ---
