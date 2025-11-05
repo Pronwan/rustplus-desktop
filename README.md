@@ -43,6 +43,9 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 
 *(I publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
+[![YouTube Video](./RustPlusDesktop/App-Version3.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk](https://youtu.be/0H1DH4OLONQ)  
+*(click the image to watch on YouTube)*
+
 ## Update Notes 3.0.0 (October 30th 25)
 - FULL Shop Analytics Overhaul!
   This comes with instant check for profit trades, trade route check (Buy X for Y) and more
