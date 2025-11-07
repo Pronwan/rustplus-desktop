@@ -44,7 +44,7 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 *(I publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
 
-[![YouTube Video](./RustPlusDesktop/App-Version3.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)  
+[![YouTube Video](./App-Version3.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)  
 *(click the image to watch on YouTube)*
 
 ## Update Notes 3.0.0 (October 30th 25)
