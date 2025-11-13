@@ -6,10 +6,13 @@ using RustPlusDesk.Views;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using StorageSnap = RustPlusDesk.Models.StorageSnapshot;
+using StorageItemVM = RustPlusDesk.Models.StorageItemVM;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -39,8 +42,23 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
     public RustPlusClientReal(Action<string> log) => _log = log;
     public event Action<uint, bool, string?>? DeviceStateEvent;
 
-    // ---------- TEAM-CHAT ----------
     
+    // ---------- TEAM-CHAT ----------
+
+    public void EnsureEventsHooked() => HookEventsIfNeeded();
+    private readonly Dictionary<uint, RustPlusDesk.Models.StorageSnapshot> _storageCache
+    = new Dictionary<uint, RustPlusDesk.Models.StorageSnapshot>();
+    public bool TryGetCachedStorage(uint id, out RustPlusDesk.Models.StorageSnapshot snap)
+     => _storageCache.TryGetValue(id, out snap);
+    public event Action<uint, StorageSnap>? StorageSnapshotReceived;
+
+
+    private void CacheStorage(uint id, StorageSnapshot? snap)
+    {
+        if (snap == null) return;
+        _storageCache[id] = snap;
+    }
+
     private bool _chatHooked;
     public event EventHandler<TeamChatMessage>? TeamChatReceived;
     // Overload ohne Token (falls irgendwo so aufgerufen wird)
@@ -1683,27 +1701,317 @@ rp.connect();
         }
         return null;
     }
-
+    private readonly object _hookLock = new();
     private void HookEventsIfNeeded()
     {
-        if (_eventsHooked || _api is null) return;
+        if (_api is null) return;
+        lock (_hookLock)
+        {
+            if (_eventsHooked) return;
+            
+        }
+
+        // --- ab hier: Events/Sniffer VERDRAHTEN ---
+        _log?.Invoke("[stor/sniff] events: " + string.Join(", ", _api.GetType().GetEvents().Select(e => e.Name)));
+
+        AttachSniffer("OnStorageMonitorTriggered");
+        AttachSniffer("OnEntityChanged");
+        AttachSniffer("OnEntityInfo");
+        AttachSniffer("OnResponse");
+        AttachSniffer("OnProtobufMessage");
+
+        foreach (var ev in _api.GetType().GetEvents()
+                 .Where(e => e.Name.IndexOf("Storage", StringComparison.OrdinalIgnoreCase) >= 0
+                          || e.Name.IndexOf("Container", StringComparison.OrdinalIgnoreCase) >= 0
+                          || e.Name.IndexOf("Entity", StringComparison.OrdinalIgnoreCase) >= 0
+                          || e.Name.IndexOf("App", StringComparison.OrdinalIgnoreCase) >= 0))
+        {
+            AttachSniffer(ev.Name);
+        }
 
         _api.OnSmartSwitchTriggered += (_, sw) =>
         {
             var id = GetEntityId(sw);
             var on = GetIsActive(sw);
             DeviceStateEvent?.Invoke(id, on, "SmartSwitch");
-            _log($"[Gerät] {id} → {(on ? "AN" : "AUS")}");
-            
+            _log?.Invoke($"[Gerät] {id} → {(on ? "AN" : "AUS")}");
         };
 
         _api.OnStorageMonitorTriggered += (_, st) =>
-            _log($"[Storage] {st.Id} cap={st.Capacity} filled={st.Items}");
+        {
+            try
+            {
+                uint entityId = 0;
+                try
+                {
+                    var idObj = TryGetProp(st!, "Id") ?? TryGetProp(st!, "EntityId");
+                    entityId = Convert.ToUInt32(idObj ?? 0);
+                }
+                catch { }
 
-        _eventsHooked = true;
+                var root = UnpackAnyRecursive(st!) ?? (object)st!;
+                var payload = TryGetProp(root, "Payload") ?? root;
+                var info = TryGetProp(payload, "StorageMonitor", "storageMonitor", "Storage", "Container") ?? payload;
+                info = UnpackAnyRecursive(info!) ?? info;
+
+                int? upkeep = null;
+                if (!TryReadUpkeepSeconds(info!, out var secs))
+                {
+                    // Fallback via ProtectionExpiry
+                    var secs2 = SecondsUntil(info!, "ProtectionExpiry", "Expiry", "ProtectedUntil", "ProtectedExpiry");
+                    if (secs2.HasValue) upkeep = secs2.Value;
+                }
+                else upkeep = secs;
+
+                var items = FindItemsList(info!);
+
+                var snap = new StorageSnap { UpkeepSeconds = upkeep, IsToolCupboard = (upkeep ?? 0) > 0 };
+                if (items != null)
+                {
+                    foreach (var it in items)
+                    {
+                        if (it == null) continue;
+                        int id = ReadIntFlexible(it, "ItemId", "ItemID", "Id") ?? 0;
+                        int amt = ReadIntFlexible(it, "Amount", "Quantity", "Count", "Stack") ?? 0;
+                        int? mx = ReadIntFlexible(it, "MaxStack", "MaxStackSize", "StackSize");
+                        string? sn = ReadStringFlexible(it, "ShortName", "ItemShortName", "Short", "Name");
+                        snap.Items.Add(new StorageItemVM { ItemId = id, ShortName = sn, Amount = amt, MaxStack = mx });
+                    }
+                }
+
+                _storageCache[entityId] = snap;
+                StorageSnapshotReceived?.Invoke(entityId, snap);
+                _log?.Invoke($"[stor/event] {entityId} items={snap.Items.Count} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")}");
+            }
+            catch (Exception ex)
+            {
+                _log?.Invoke($"[stor/event] EX: {ex.Message}");
+            }
+        };
+
+        _api.RequestSent += (_, reqObj) =>
+        {
+            try
+            {
+                var root = UnpackAnyRecursive(reqObj!) ?? (object)reqObj!;
+                var envelope =
+                       TryGetProp(root, "Request")
+                    ?? TryGetProp(root, "AppRequest")
+                    ?? TryGetProp(root, "Message")
+                    ?? root;
+
+                // Seq nullable lesen
+                var seqN = TryReadIntN(envelope, "Seq", "Sequence", "SequenceId");
+                if (seqN is null) return;
+
+                // EntityId versuchen (direkt am Envelope)
+                uint entityId = TryReadUIntN(envelope, "EntityId", "Id") ?? 0u;
+
+                // Wenn nicht vorhanden: in Sub-Operationen nachsehen
+                if (entityId == 0u)
+                {
+                    foreach (var opName in new[] { "GetEntityInfo", "GetStorageMonitor", "GetStorage", "GetContainer", "GetEntityStorage" })
+                    {
+                        var op = TryGetProp(envelope, opName);
+                        if (op is null) continue;
+
+                        // zuerst am Sub-Objekt prüfen
+                        entityId = TryReadUIntN(op, "EntityId", "Id") ?? 0u;
+                        if (entityId != 0u) break;
+
+                        // manche Builds halten EntityId trotzdem am Envelope
+                        entityId = TryReadUIntN(envelope, "EntityId", "Id") ?? 0u;
+                        if (entityId != 0u) break;
+                    }
+                }
+
+                if (entityId != 0u)
+                {
+                    _seqToEntity[seqN.Value] = entityId;
+                    // _log?.Invoke($"[stor/seq] req seq={seqN.Value} → entity={entityId}");
+                }
+            }
+            catch { /* tolerant */ }
+        };
+
+
+        // ---- GENERISCHER RESPONSE-HANDLER: EntityInfo → Storage/Container herausparsen ----
+        _api.ResponseReceived += (_, respObj) =>
+        {
+            try
+            {
+                // 1) Envelope tolerant + Any auspacken
+                var root = UnpackAnyRecursive(respObj!) ?? (object)respObj!;
+                var envelope =
+                       TryGetProp(root, "Response")
+                    ?? TryGetProp(root, "AppResponse")
+                    ?? TryGetProp(root, "AppMessage")
+                    ?? TryGetProp(root, "Message")
+                    ?? root;
+
+                // 2) Seq → EntityId per Map
+                uint entityId = 0u;
+                var seqN = TryReadIntN(envelope, "Seq", "Sequence", "SequenceId");
+                if (seqN is not null && _seqToEntity.TryGetValue(seqN.Value, out var mapped))
+                    entityId = mapped;
+
+                // 3) EntityInfo / Info (Hüllenschicht) holen
+                var entityInfoOrInfo =
+                       TryGetProp(envelope, "EntityInfo")
+                    ?? TryGetProp(envelope, "Entity")
+                    ?? TryGetProp(envelope, "EntityInfoResponse")
+                    ?? TryGetProp(envelope, "Info");
+                if (entityInfoOrInfo is null) return;
+
+                // Payload/Info auspacken
+                var payload = TryGetProp(entityInfoOrInfo, "Payload");
+                payload = UnpackAnyRecursive(payload) ?? payload;
+
+                // Type check: nur Storage/Container/Cupboard
+                var typeStr =
+                       TryReadStringN(entityInfoOrInfo, "Type", "EntityType")
+                    ?? TryReadStringN(payload, "Type", "EntityType");
+                if (typeStr != null)
+                {
+                    var ts = typeStr.ToLowerInvariant();
+                    if (!(ts.Contains("storage") || ts.Contains("container") || ts.Contains("cupboard")))
+                        return; // nicht relevant
+                }
+
+                // EntityId ggf. aus Tiefen lesen (wenn Map nicht gegriffen hat)
+                if (entityId == 0u)
+                {
+                    entityId = TryReadUIntN(entityInfoOrInfo, "EntityId", "Id") ?? 0u;
+                    if (entityId == 0u) entityId = TryReadUIntN(payload, "EntityId", "Id") ?? 0u;
+                }
+
+                // 4) Info → Storage-Knoten tolerant
+                var info = TryGetProp(payload, "Info") ?? payload ?? entityInfoOrInfo;
+                info = UnpackAnyRecursive(info) ?? info;
+
+                var stor =
+                       TryGetProp(info, "StorageMonitor", "storageMonitor", "Storage", "Container", "Box", "ToolCupboard", "Cupboard")
+                    ?? info;
+                stor = UnpackAnyRecursive(stor) ?? stor;
+                if (stor is Type) return;
+
+                // 5) Upkeep & Items extrahieren
+                int? upkeep = null;
+                if (TryReadUpkeepSeconds(stor, out var secs)) upkeep = secs;
+
+                var seqItems = FindItemsList(stor) as IEnumerable;
+                if (seqItems is null && upkeep is null) return;
+
+                // Für Diagnose kurz loggen
+               // _log?.Invoke($"[stor/resp] hit entity={(entityId == 0 ? -1 : (int)entityId)}");
+
+                var snap = new StorageSnap
+                {
+                    UpkeepSeconds = upkeep,
+                    IsToolCupboard = (upkeep ?? 0) > 0
+                };
+
+                if (seqItems is not null)
+                {
+                    foreach (var it in seqItems)
+                    {
+                        if (it is null) continue;
+                        int id = TryReadIntN(it, "ItemId", "ItemID", "Id") ?? 0;
+                        int amt = TryReadIntN(it, "Amount", "Quantity", "Count", "Stack") ?? 0;
+                        int? mx = TryReadIntN(it, "MaxStack", "MaxStackSize", "StackSize");
+                        string? sn = TryReadStringN(it, "ShortName", "ItemShortName", "Short", "Name");
+                        snap.Items.Add(new StorageItemVM { ItemId = id, ShortName = sn, Amount = amt, MaxStack = mx });
+                       // _log?.Invoke($"[stor/item] #{entityId} [{sn}] id={id} sn='{sn ?? "-"}' amt={amt} max={mx.ToString() ?? "-"}");
+                    }
+                }
+
+                if (entityId != 0u)
+                {
+                    _storageCache[entityId] = snap;
+                    StorageSnapshotReceived?.Invoke(entityId, snap);
+                   // _log?.Invoke($"[stor/resp] {entityId} items={snap.Items.Count} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")}");
+                }
+                else
+                {
+                  //  _log?.Invoke($"[stor/resp] (no entity id) items={snap.Items.Count} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")}");
+                }
+            }
+            catch (Exception ex)
+            {
+                _log?.Invoke($"[stor/resp] EX: {ex.Message}");
+            }
+        };
+        // --- Diagnose: einmal Event-Namen loggen + gezielt anbinden ---
+        LogAllApiEventsOnce();
+        // gezielt die Transport-/Entity-Events anhängen (falls vorhanden)
+        AttachSniffer("ResponseReceived");
+        AttachSniffer("MessageReceived");
+        AttachSniffer("RequestSent");
+        AttachSniffer("SendingRequest");
+        AttachSniffer("NotificationReceived");
+
+        // zusätzlich die in deinem Build vorhandenen Entity/Storage-Events
+        AttachSniffer("OnStorageMonitorTriggered");
+        AttachSniffer("OnEntityInfo");
+        AttachSniffer("OnEntityChanged");
+
+        
+        lock (_hookLock) _eventsHooked = true;
     }
 
- 
+    private bool HasAnyProp(object? o, params string[] names)
+    {
+        if (o is null) return false;
+        foreach (var n in names)
+            if (TryGetProp(o, n) != null) return true;
+        return false;
+    }
+
+    private bool LooksLikeStorageEntityInfo(object respObj, out object? envelope, out object? entityInfoOrInfo, out uint entityId)
+    {
+        envelope = null; entityInfoOrInfo = null; entityId = 0;
+
+        var root = UnpackAnyRecursive(respObj) ?? (object)respObj;
+
+        envelope =
+            TryGetProp(root, "Response") ??
+            TryGetProp(root, "AppResponse") ??
+            TryGetProp(root, "AppMessage") ??
+            TryGetProp(root, "Message") ??
+            root;
+
+        // Muss mindestens eine EntityInfo-/Info-Hülle enthalten
+        entityInfoOrInfo =
+            TryGetProp(envelope, "EntityInfo") ??
+            TryGetProp(envelope, "Entity") ??
+            TryGetProp(envelope, "EntityInfoResponse") ??
+            TryGetProp(envelope, "Info");
+
+        if (entityInfoOrInfo is null) return false;
+
+        // Info-Knoten bestimmen
+        var info = TryGetProp(entityInfoOrInfo, "Info") ?? entityInfoOrInfo;
+        info = UnpackAnyRecursive(info) ?? info;
+
+        // Muss einen Storage-ähnlichen Node enthalten
+        if (!HasAnyProp(info, "StorageMonitor", "storageMonitor", "Storage", "Container", "Box", "Cupboard"))
+            return false;
+
+        // EntityId (optional, aber nützlich)
+        try
+        {
+            var idObj =
+                TryGetProp(entityInfoOrInfo, "EntityId") ??
+                TryGetProp(entityInfoOrInfo, "Id") ??
+                TryGetProp(envelope, "EntityId") ??
+                TryGetProp(envelope, "Id");
+            if (idObj != null) entityId = Convert.ToUInt32(idObj);
+        }
+        catch { /* tolerant */ }
+
+        return true;
+    }
+
 
 
     // Einmalige Anfrage senden, damit die Lib den Chat-Stream aktiviert
@@ -3692,26 +4000,36 @@ rp.connect();
 
     private static (string? kind, bool? val) DecodeEntityInfo(object ent)
     {
-        // Art bestimmen
         var typeStr = ReadProp<object>(ent, "Type", "EntityType", "EntType")?.ToString();
         string? kind = null;
         if (!string.IsNullOrWhiteSpace(typeStr))
         {
             if (typeStr.Contains("Alarm", StringComparison.OrdinalIgnoreCase)) kind = "SmartAlarm";
             else if (typeStr.Contains("Switch", StringComparison.OrdinalIgnoreCase)) kind = "SmartSwitch";
+            else if (typeStr.Contains("Storage", StringComparison.OrdinalIgnoreCase)) kind = "StorageMonitor"; // NEU
         }
 
-        // --- SMART ALARM: nur "Power"-Eigenschaften zulassen ----------------------
+        // Name-Heuristik, falls Type leer/„server“
+        if (string.IsNullOrWhiteSpace(kind))
+        {
+            var name = ReadProp<string>(ent, "Name", "DisplayName", "EntityName") ?? "";
+            if (name.IndexOf("alarm", StringComparison.OrdinalIgnoreCase) >= 0) kind = "SmartAlarm";
+            else if (name.IndexOf("stor", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                     name.IndexOf("mon", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                     name.IndexOf("cup", StringComparison.OrdinalIgnoreCase) >= 0) kind = "StorageMonitor";
+            else kind = "SmartSwitch";
+        }
+
+        // StorageMonitor hat KEINEN Schalterzustand
+        if (string.Equals(kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
+            return (kind, null);
+
+        // SmartAlarm: nur echte Power-Flags zulassen
         if (string.Equals(kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase))
         {
-            // Wichtig: KEIN "IsActive", "Enabled" oder "Value" – die sind häufig dauerhaft true.
             string[] powerNames = { "IsPowered", "HasPower", "PowerOn", "Powered", "HasElectricity", "IsOn", "On" };
-
-            // 1) direkt am Objekt
             var v = ReadBoolFlexible(ent, powerNames);
             if (v != null) return (kind, v);
-
-            // 2) in Subobjekten, aber ebenfalls nur die Power-Namen zulassen
             foreach (var p in ent.GetType().GetProperties())
             {
                 if (!p.PropertyType.IsValueType && p.PropertyType != typeof(string))
@@ -3721,20 +4039,13 @@ rp.connect();
                     if (sv != null) return (kind, sv);
                 }
             }
-
-            // Keine passende Info gefunden
             return (kind, null);
         }
 
-        // --- Standard-Fall (SmartSwitch & Co.): bisherige generische Logik -------
-        // bevorzugte Namen zuerst
+        // Standard (SmartSwitch)
         var preferred = new[] { "IsOn", "On", "Value", "Active", "Enabled", "IsActive", "PowerOn" };
-
-        // 1) direkt am Objekt
         var direct = ReadBoolFlexible(ent, preferred);
         if (direct != null) return (kind, direct);
-
-        // 2) in Unterobjekten (bevorzugte Namen zuerst)
         foreach (var p in ent.GetType().GetProperties())
         {
             if (p.PropertyType == typeof(bool)) return (kind, (bool?)p.GetValue(ent));
@@ -3745,7 +4056,6 @@ rp.connect();
                 if (sv != null) return (kind, sv);
             }
         }
-
         return (kind, null);
     }
 
@@ -3936,18 +4246,12 @@ rp.connect();
 
     public async Task PrimeSubscriptionsAsync(IEnumerable<uint> entityIds, CancellationToken ct = default)
     {
-        if (_api is null) return;
+        HookEventsIfNeeded();
+
         foreach (var id in entityIds.Distinct())
         {
-            try
-            {
-                // versuche "neue" API
-                var _ = await _api.GetSmartSwitchInfoAsync(id);
-            }
-            catch
-            {
-                // egal – Hauptsache einmal „kontakt“ gehabt
-            }
+            await EnsureSubOnceAsync(id);     // sorgt fürs Event
+           // await PokeEntityAsync(id, ct);      // triggert erstes Update
             await Task.Delay(50, ct);
         }
     }
@@ -4692,6 +4996,843 @@ rp.connect();
         var ok = await tcs.Task;
         DeviceStateEvent -= Handler;
         return ok;
+    }
+
+
+    // ---- helpers lokal
+    static object? GetProp(object? o, params string[] names)
+    {
+        if (o is null) return null;
+        var t = o.GetType();
+        foreach (var n in names)
+        {
+            var p = t.GetProperty(n,
+                System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.Public |
+                System.Reflection.BindingFlags.IgnoreCase);
+            if (p != null) return p.GetValue(o);
+        }
+        return null;
+    }
+
+    static int? RPReadInt(object? o, params string[] names)
+    {
+        if (o is null) return null;
+        foreach (var n in names)
+        {
+            var v = GetProp(o, n);
+            if (v is null) continue;
+            if (v is int i) return i;
+            if (v is uint u) return unchecked((int)u);
+            if (v is long l) return unchecked((int)l);
+            if (int.TryParse(v.ToString(), out var j)) return j;
+        }
+        return null;
+    }
+
+    static string? RPReadStr(object? o, params string[] names)
+    {
+        if (o is null) return null;
+        foreach (var n in names)
+        {
+            var v = GetProp(o, n);
+            if (v is string s && !string.IsNullOrWhiteSpace(s)) return s;
+        }
+        return null;
+    }
+
+    public async Task<StorageSnapshot?> GetStorageMonitorAsync(uint entityId, CancellationToken ct = default)
+    {
+        if (_api is null) return null;
+
+        object? result = null;
+        var t = _api.GetType();
+
+        // a) Primär: GetEntityInfoAsync(uint[,CT])
+        {
+            var m = t.GetMethod("GetEntityInfoAsync", new[] { typeof(uint), typeof(CancellationToken) })
+                  ?? t.GetMethod("GetEntityInfoAsync", new[] { typeof(uint) });
+            if (m != null)
+            {
+                object? call = (m.GetParameters().Length == 2)
+    ? m.Invoke(_api, new object[] { entityId, ct })
+    : m.Invoke(_api, new object[] { entityId });
+
+                if (call is Task task)
+                {
+                    try
+                    {
+                        await task.ConfigureAwait(false);
+                        if (!TryGetTaskResult(task, out result))
+                            _log?.Invoke("[stor/pull] GetEntityInfoAsync returned non-generic Task or no Result");
+                    }
+                    catch (Exception ex)
+                    {
+                        LogTaskException("stor/pull:GetEntityInfoAsync", ex);
+                        result = null;
+                    }
+                }
+                else
+                {
+                    _log?.Invoke("[stor/pull] GetEntityInfoAsync invoke returned non-Task");
+                }
+            }
+        }
+
+        if (result is null)
+        {
+            _log?.Invoke($"[stor/pull] #{entityId} returned null (will rely on ResponseReceived)");
+            return null;
+        }
+
+        // --- Sichtbar machen, was wir haben (kurz aktivieren) ---
+        DumpShapeLog(result, "pull.result");
+
+        var resp = TryGetProp(result, "Response") ?? TryGetProp(result, "AppResponse") ?? result;
+        DumpShapeLog(resp, "pull.response");
+
+        var ent = TryGetProp(resp, "EntityInfo") ?? TryGetProp(resp, "Entity") ?? resp;
+        DumpShapeLog(ent, "pull.entityInfo");
+
+        // ✳️ AppEntityInfo → Payload (Any) auspacken
+        var payload = TryGetProp(ent, "Payload");
+        payload = UnpackAnyRecursive(payload) ?? payload;
+        DumpShapeLog(payload, "pull.payload");
+
+        // Optional: Info-Feld tolerant
+        var info = TryGetProp(payload, "Info") ?? payload ?? ent;
+        info = UnpackAnyRecursive(info) ?? info;
+
+        // Storage tolerant finden
+        var stor = TryGetProp(info, "StorageMonitor", "storageMonitor", "Storage", "Container", "Box", "ToolCupboard", "Cupboard") ?? info;
+        stor = UnpackAnyRecursive(stor) ?? stor;
+        DumpShapeLog(stor, "pull.storage");
+
+        if (stor is Type)
+        {
+            _log?.Invoke("[stor/pull] storage node is Type – aborting this path");
+            return null;
+        }
+
+        // ---------- Upkeep & Items ----------
+        int? upkeep = null;
+        if (TryReadUpkeepSeconds(stor, out var seconds)) upkeep = seconds;
+        var itemsEnum = FindItemsList(stor) as IEnumerable;
+
+        var snap = new StorageSnapshot
+        {
+            UpkeepSeconds = upkeep,
+            IsToolCupboard = (upkeep ?? 0) > 0
+        };
+
+        if (itemsEnum != null)
+        {
+            foreach (var it in itemsEnum)
+            {
+                if (it is null) continue;
+                var id = ReadIntFlexible(it, "ItemId", "ItemID", "Id") ?? 0;
+                var amt = ReadIntFlexible(it, "Amount", "Quantity", "Count", "Stack") ?? 0;
+                var mstk = ReadIntFlexible(it, "MaxStack", "MaxStackSize", "StackSize");
+                var sn = ReadStringFlexible(it, "ShortName", "ItemShortName", "Short", "Name");
+                snap.Items.Add(new StorageItemVM { ItemId = id, ShortName = sn, Amount = amt, MaxStack = mstk });
+            }
+        }
+
+        // WICHTIG: NICHT mehr 'return null'! Cache + return.
+        if (snap.Items.Count == 0 && snap.UpkeepSeconds is null)
+            _log?.Invoke($"[stor/pull] #{entityId} had no items/upkeep in immediate response (waiting for event/resp)");
+
+        CacheStorage(entityId, snap);
+        return snap;
+    }
+
+    // Helpers (nutzen dein bestehendes ReadProp/ReadBoolFlexible-Schema)
+
+    static void DumpShape(object? o, string tag, int depth = 0, int maxDepth = 5)
+    {
+        if (o == null || depth > maxDepth) return;
+        var t = o.GetType();
+        Debug.WriteLine($"{new string(' ', depth * 2)}[{tag}] {t.FullName}");
+        foreach (var p in t.GetProperties().Take(20))
+        {
+            try
+            {
+                var v = p.GetValue(o);
+                var vt = v?.GetType().Name ?? "null";
+                Debug.WriteLine($"{new string(' ', depth * 2)}  - {p.Name}: {vt}");
+                if (v != null && !(v is string) && !p.PropertyType.IsValueType)
+                    DumpShape(v, p.Name, depth + 1, maxDepth);
+            }
+            catch { }
+        }
+    }
+
+    private static bool TryReadUpkeepSeconds(object? src, out int seconds)
+    {
+        seconds = 0;
+        if (src is null || src is Type) return false;
+
+        // 0) kleine Helper
+        static int? IntOf(object? o, params string[] names)
+        {
+            foreach (var n in names)
+            {
+                var v = TryGetProp(o!, n);
+                if (v == null) continue;
+                if (v is int i) return i;
+                if (v is long l) return unchecked((int)l);
+                if (v is double d) return (int)Math.Round(d);
+                if (int.TryParse(v.ToString(), out var ii)) return ii;
+                if (double.TryParse(v.ToString(), out var dd)) return (int)Math.Round(dd);
+            }
+            return null;
+        }
+        static string? StrOf(object? o, params string[] names)
+        {
+            foreach (var n in names)
+            {
+                var v = TryGetProp(o!, n);
+                if (v is string s && !string.IsNullOrWhiteSpace(s)) return s;
+            }
+            return null;
+        }
+
+        // 1) direkte Sekunden
+        var num = IntOf(src,
+            "UpkeepSeconds", "UpkeepSec", "ProtectionSeconds",
+            "SecondsRemaining", "TimeRemainingSeconds", "Seconds",
+            "ProtectedSeconds", "ProtectedTime", "ProtectedForSeconds");
+        if (num is > 0) { seconds = num.Value; return true; }
+
+        // 2) Minuten → Sekunden
+        var mins = IntOf(src, "ProtectedMinutes", "cachedProtectedMinutes", "MinutesRemaining", "TimeRemainingMinutes");
+        if (mins is > 0) { seconds = mins.Value * 60; return true; }
+
+        // 3) Unix-Expiry -> jetzt
+        var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var exp = IntOf(src, "ProtectionExpiry", "ExpireTime", "Expiration", "Expiry", "ExpiresAt", "ProtectionExpiresAt");
+        if (exp is > 0 && exp.Value > now)
+        {
+            seconds = (int)(exp.Value - now);
+            return true;
+        }
+
+        // 4) Stringformen ("1d","12h","45m","90s","1.5d","1 day")
+        var s = StrOf(src,
+            "Upkeep", "UpkeepTime", "ToolCupboardUpkeep", "TcUpkeep",
+            "Remaining", "TimeRemaining", "Protection", "ProtectionTime", "UpkeepString");
+        if (!string.IsNullOrWhiteSpace(s))
+        {
+            var v = s.Trim().ToLowerInvariant();
+            static bool TryNum(string txt, out double d) =>
+                double.TryParse(txt.Replace(",", "."), System.Globalization.NumberStyles.Float,
+                                System.Globalization.CultureInfo.InvariantCulture, out d);
+
+            if (v.EndsWith("days") || v.EndsWith("day")) v = v.Replace("days", "d").Replace("day", "d");
+            if (v.EndsWith("hours") || v.EndsWith("hour")) v = v.Replace("hours", "h").Replace("hour", "h");
+            if (v.EndsWith("minutes") || v.EndsWith("minute")) v = v.Replace("minutes", "m").Replace("minute", "m");
+            if (v.EndsWith("seconds") || v.EndsWith("second")) v = v.Replace("seconds", "s").Replace("second", "s");
+
+            if (v.EndsWith("d") && TryNum(v[..^1], out var dd)) { seconds = (int)(dd * 86400); return true; }
+            if (v.EndsWith("h") && TryNum(v[..^1], out var hh)) { seconds = (int)(hh * 3600); return true; }
+            if (v.EndsWith("m") && TryNum(v[..^1], out var mm)) { seconds = (int)(mm * 60); return true; }
+            if (v.EndsWith("s") && TryNum(v[..^1], out var ss)) { seconds = (int)ss; return true; }
+            if (int.TryParse(v, out var si)) { seconds = si; return true; }
+            if (double.TryParse(v, out var sd)) { seconds = (int)sd; return true; }
+        }
+
+        // 5) Tiefer suchen: Properties, deren Name upkeep/protect/priv enthält
+        var t = src.GetType();
+        foreach (var p in t.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        {
+            var name = p.Name.ToLowerInvariant();
+            if (!(name.Contains("upkeep") || name.Contains("protect") || name.Contains("priv")))
+                continue;
+
+            object? val = null; try { val = p.GetValue(src); } catch { }
+            val = UnpackAnyRecursive(val) ?? val;
+            if (val == null || val is string) continue;
+
+            if (TryReadUpkeepSeconds(val, out seconds)) return true;
+        }
+
+        return false;
+    }
+
+    private static IEnumerable? FindItemsList(object src)
+    {
+        if (src is null) return null;
+        static IEnumerable? AsEnum(object? o) => (o is IEnumerable e && o is not string) ? e : null;
+
+        // Direkt-Felder
+        foreach (var name in new[] { "Items", "items", "Slots", "slots", "Contents", "contents" })
+            if (AsEnum(TryGetProp(src, name)) is { } e) return e;
+
+        // Häufige Nester
+        foreach (var nest in new[] { "Inventory", "inventory", "Container", "container", "Storage", "storage", "Contents", "contents" })
+            if (FindItemsList(TryGetProp(src, nest)!) is { } en) return en;
+
+        // Heuristik: irgendeine IEnumerable, deren Elemente Item-ähnlich sind
+        foreach (var p in src.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        {
+            object? val = null; try { val = p.GetValue(src); } catch { }
+            if (AsEnum(val) is not IEnumerable e) continue;
+
+            foreach (var el in e)
+            {
+                if (el is null) continue;
+                var hasId = TryReadIntN(el, "ItemId", "ItemID", "Id") != null;
+                var hasAmt = TryReadIntN(el, "Amount", "Quantity", "Count", "Stack") != null;
+                if (hasId && hasAmt) return e;
+            }
+        }
+        return null;
+    }
+
+    private static int? ReadIntFlexible(object? o, params string[] names)
+    {
+        if (o == null) return null;
+        foreach (var n in names)
+        {
+            var p = o.GetType().GetProperty(n, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase);
+            if (p == null) continue;
+            var v = p.GetValue(o);
+            if (v == null) continue;
+            if (v is int i) return i;
+            if (v is long l) return unchecked((int)l);
+            if (v is uint u) return unchecked((int)u);
+            if (int.TryParse(v.ToString(), out var j)) return j;
+        }
+        return null;
+    }
+
+    private static string? ReadStringFlexible(object? o, params string[] names)
+    {
+        if (o == null) return null;
+        foreach (var n in names)
+        {
+            var p = o.GetType().GetProperty(n, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase);
+            if (p == null) continue;
+            var s = p.GetValue(o)?.ToString();
+            if (!string.IsNullOrWhiteSpace(s)) return s;
+        }
+        return null;
+    }
+
+    private static object? RPReadProp(object obj, params string[] names)
+    {
+        if (obj == null) return null;
+        var t = obj.GetType();
+        foreach (var n in names)
+        {
+            var p = t.GetProperty(n);
+            if (p != null) return p.GetValue(obj);
+            var f = t.GetField(n);
+            if (f != null) return f.GetValue(obj);
+        }
+        return null;
+    }
+
+    private static bool RPTryReadUpkeepSeconds(object data, out int value)
+    {
+        value = 0;
+        var u = RPReadProp(data, "UpkeepSeconds", "Upkeep", "ToolCupboardSeconds");
+        if (u == null) return false;
+        if (u is int i) { value = i; return true; }
+        if (int.TryParse(u.ToString(), out var p)) { value = p; return true; }
+        return false;
+    }
+
+    private static IEnumerable<object?>? RPFindItemsList(object data)
+    {
+        // häufige Pfade: Inventory.Items / Items / Content / Inventory
+        var cand = new[] { "Items", "Inventory", "Content", "Slots" };
+        foreach (var c in cand)
+        {
+            var v = RPReadProp(data, c);
+            if (v is System.Collections.IEnumerable en)
+                return en.Cast<object?>();
+        }
+        // verschachtelt: Inventory.Items
+        var inv = RPReadProp(data, "Inventory");
+        if (inv != null)
+        {
+            var v = RPReadProp(inv, "Items", "Slots");
+            if (v is System.Collections.IEnumerable en)
+                return en.Cast<object?>();
+        }
+        return null;
+    }
+
+    private static int? RPReadIntFlexible(object obj, params string[] names)
+    {
+        var v = RPReadProp(obj, names);
+        if (v == null) return null;
+        if (v is int i) return i;
+        if (int.TryParse(v.ToString(), out var p)) return p;
+        return null;
+    }
+
+    // ---------- Any/Reflection Helpers ----------
+    private static object? TryGetProp(object? o, params string[] names)
+    {
+        if (o == null) return null;
+        var t = o.GetType();
+        foreach (var n in names)
+        {
+            var p = t.GetProperty(n);
+            if (p != null) return p.GetValue(o);
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Entpackt google.protobuf.Any rekursiv:
+    /// nutzt Properties "TypeUrl"/"Type" + "Payload" (ByteString/byte[]),
+    /// sucht dann im selben Assembly eine Message mit Parser.ParseFrom(byte[]).
+    /// </summary>
+    private static object? UnpackAnyRecursive(object maybeAny, Action<string>? log = null, int depth = 0)
+    {
+        if (maybeAny == null) return null;
+
+        var typeUrl = (TryGetProp(maybeAny, "TypeUrl", "Type")?.ToString() ?? "").Trim();
+        var payload = TryGetProp(maybeAny, "Payload");
+        if (payload == null) { return maybeAny; }
+
+        // ByteString → byte[]
+        byte[]? bytes = null;
+        var pt = payload.GetType();
+        if (pt == typeof(byte[]))
+            bytes = (byte[])payload;
+        else
+            bytes = pt.GetMethod("ToByteArray")?.Invoke(payload, null) as byte[];
+
+        if (bytes == null || bytes.Length == 0)
+        {
+            log?.Invoke($"[stor] depth{depth}: payload empty");
+            return maybeAny;
+        }
+
+        // Typname aus TypeUrl herauslösen
+        string bareType = typeUrl;
+        var slash = bareType.LastIndexOf('/');
+        if (slash >= 0 && slash + 1 < bareType.Length) bareType = bareType[(slash + 1)..];
+
+        var asm = maybeAny.GetType().Assembly;
+        var types = asm.GetTypes();
+
+        // Kandidat finden
+        var target =
+            types.FirstOrDefault(t => string.Equals(t.FullName, bareType, StringComparison.Ordinal)) ??
+            types.FirstOrDefault(t => string.Equals(t.Name, bareType, StringComparison.Ordinal)) ??
+            types.FirstOrDefault(t => !string.IsNullOrEmpty(bareType) &&
+                                      t.Name.IndexOf(bareType, StringComparison.OrdinalIgnoreCase) >= 0);
+
+        // Wenn TypeUrl leer war → Brute-Force: alle mit Parser probieren
+        if (target == null)
+        {
+            foreach (var cand in types.Where(t => t.GetProperty("Parser") != null))
+            {
+                try
+                {
+                    var parser = cand.GetProperty("Parser")!.GetValue(null);
+                    var parseFrom = parser!.GetType().GetMethod("ParseFrom", new[] { typeof(byte[]) });
+                    if (parseFrom == null) continue;
+
+                    var msg = parseFrom.Invoke(parser, new object[] { bytes! });
+                    var props = msg!.GetType().GetProperties().Select(p => p.Name).ToArray();
+                    if (props.Any(n => n is not ("Parser" or "Descriptor")))
+                    {
+                        log?.Invoke($"[stor] depth{depth}: unpacked brute -> {msg.GetType().FullName}");
+                        // Falls erneut Any-ähnlich → rekursiv weiter
+                        if (props.Contains("Payload") && (props.Contains("Type") || props.Contains("TypeUrl")))
+                            return UnpackAnyRecursive(msg, log, depth + 1);
+                        return msg;
+                    }
+                }
+                catch { /* ignorieren */ }
+            }
+
+            log?.Invoke($"[stor] depth{depth}: no target type for '{bareType}', returning as-is");
+            return maybeAny;
+        }
+
+        try
+        {
+            var parser = target.GetProperty("Parser")?.GetValue(null);
+            var parseFrom = parser?.GetType().GetMethod("ParseFrom", new[] { typeof(byte[]) });
+            if (parser == null || parseFrom == null)
+            {
+                log?.Invoke($"[stor] depth{depth}: target '{target.FullName}' has no Parser.ParseFrom");
+                return maybeAny;
+            }
+
+            var msg = parseFrom.Invoke(parser, new object[] { bytes! });
+            log?.Invoke($"[stor] depth{depth}: unpack -> {target.FullName}");
+
+            var props = msg!.GetType().GetProperties().Select(p => p.Name).ToArray();
+            if (props.Contains("Payload") && (props.Contains("Type") || props.Contains("TypeUrl")))
+                return UnpackAnyRecursive(msg, log, depth + 1);
+
+            return msg;
+        }
+        catch (Exception ex)
+        {
+            log?.Invoke($"[stor] depth{depth}: unpack error: {ex.Message}");
+            return maybeAny;
+        }
+    }
+    
+
+    private readonly HashSet<uint> _subscribed = new();
+    private readonly HashSet<uint> _subOnce = new();
+
+    public async Task EnsureSubOnceAsync(uint entityId)
+    {
+        bool doWire;
+        lock (_subOnce) doWire = _subOnce.Add(entityId); // nur einmal pro Entity
+        if (!doWire) return;
+
+        await SubscribeEntityAsync(entityId);  // <-- kein _rust hier
+        await PokeEntityAsync(entityId);       // <-- direkt auf this
+        _log?.Invoke($"[stor/sub+poke] #{entityId} queued");
+    }
+
+    public async Task SubscribeEntityAsync(uint entityId)
+    {
+        HookEventsIfNeeded();
+        if (_api is null) return;
+        if (_subscribed.Contains(entityId)) return;
+
+        // 1) Try native AddEntitySubscriptionAsync (falls vorhanden)
+        var m = _api.GetType().GetMethod("AddEntitySubscriptionAsync", new[] { typeof(uint) });
+        if (m != null)
+        {
+            var call = m.Invoke(_api, new object[] { entityId });
+            if (call is Task t) await t;
+            _subscribed.Add(entityId);
+            _log?.Invoke($"[storage/sub] native subscribed {entityId}");
+            return;
+        }
+
+        // 2) Fallback über Contracts
+        var asm = typeof(RustPlus).Assembly;
+        var reqType = asm.GetTypes().FirstOrDefault(x => x.Name == "AppRequest");
+        var emptyType = asm.GetTypes().FirstOrDefault(x => x.Name == "AppEmpty");
+        if (reqType != null && emptyType != null)
+        {
+            var req = Activator.CreateInstance(reqType)!;
+            reqType.GetProperty("EntityId")?.SetValue(req, entityId);
+            // Kandidaten: AddEntitySubscription / AddEntitySub
+            var flag = reqType.GetProperty("AddEntitySubscription") ?? reqType.GetProperty("AddEntitySub");
+            if (flag != null)
+            {
+                flag.SetValue(req, Activator.CreateInstance(emptyType)!);
+                var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
+                if (send != null)
+                {
+                    var call = send.Invoke(_api, new object[] { req });
+                    if (call is Task t) await t;
+                    _subscribed.Add(entityId);
+                    _log?.Invoke($"[storage/sub] contract subscribed {entityId}");
+                }
+            }
+        }
+    }
+
+    public async Task PokeEntityAsync(uint entityId, CancellationToken ct = default)
+    {
+        if (_api is null) return;
+
+        // 1) Bestehender Pfad (GetEntityInfoAsync) — lassen wir drin
+        var m = _api.GetType().GetMethod("GetEntityInfoAsync", new[] { typeof(uint) })
+             ?? _api.GetType().GetMethod("GetEntityInfoAsync", new[] { typeof(uint), typeof(CancellationToken) });
+
+        if (m != null)
+        {
+            var args = m.GetParameters().Length == 2
+                ? new object[] { entityId, ct }
+                : new object[] { entityId };
+            if (m.Invoke(_api, args) is Task t) await t;
+        }
+
+        // 2) Zusatz: Contracts-Poke für Storage
+        try
+        {
+            var asm = typeof(RustPlus).Assembly;
+            var reqType = asm.GetTypes().FirstOrDefault(x => x.Name == "AppRequest");
+            var emptyType = asm.GetTypes().FirstOrDefault(x => x.Name == "AppEmpty");
+            if (reqType != null && emptyType != null)
+            {
+                var req = Activator.CreateInstance(reqType)!;
+                reqType.GetProperty("EntityId")?.SetValue(req, entityId);
+
+                // Kandidaten, die in der Praxis Storage-Events auslösen:
+                var flag =
+    reqType.GetProperty("GetEntityInfo") ??
+    reqType.GetProperty("GetStorageMonitor") ??
+    reqType.GetProperty("GetStorage") ??
+    reqType.GetProperty("GetContainer") ??
+    reqType.GetProperty("GetEntityStorage") ??
+    reqType.GetProperty("RequestEntityUpdate") ??
+    reqType.GetProperty("PollEntity");       // <— neu
+
+                if (flag != null)
+                {
+                    _log?.Invoke($"[poke/contracts] using {flag.Name} for {entityId}");
+                    flag.SetValue(req, Activator.CreateInstance(emptyType)!);
+                    var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
+                    if (send != null)
+                    {
+                        var call = send.Invoke(_api, new object[] { req });
+                        if (call is Task t) await t;
+                        return;
+                    }
+                }
+                else
+                {
+                    _log?.Invoke($"[poke/contracts] no suitable request flag found for {entityId}");
+                }
+            }
+        }
+        catch { /* tolerant */ }
+    }
+
+    private void LogAllApiEventsOnce()
+    {
+        try
+        {
+            var names = _api!.GetType().GetEvents().Select(e => e.Name).OrderBy(n => n).ToArray();
+            _log?.Invoke("[stor/sniff] events: " + string.Join(", ", names));
+        }
+        catch { }
+    }
+
+    // generisch: zur Laufzeit die richtige EventHandler<T>-Signatur schließen
+    private void AttachSniffer(string eventName)
+    {
+        try
+        {
+            var ev = _api!.GetType().GetEvent(eventName);
+            if (ev == null) return;
+
+            var tArgs = ev.EventHandlerType!.GetMethod("Invoke")!.GetParameters()[1].ParameterType;
+            var m = typeof(RustPlusClientReal).GetMethod(nameof(SniffGeneric),
+                     BindingFlags.NonPublic | BindingFlags.Instance)!
+                     .MakeGenericMethod(tArgs);
+
+            var del = Delegate.CreateDelegate(ev.EventHandlerType, this, m);
+            ev.AddEventHandler(_api, del);
+            _log?.Invoke($"[sniff] attached → {eventName}");
+        }
+        catch (Exception ex)
+        {
+            _log?.Invoke($"[sniff] attach failed for {eventName}: {ex.Message}");
+        }
+    }
+
+    private void SniffGeneric<T>(object? sender, T arg)
+{
+    var name = typeof(T).Name;
+    if (!(name.Contains("Response", StringComparison.OrdinalIgnoreCase) ||
+          name.Contains("Entity", StringComparison.OrdinalIgnoreCase) ||
+          name.Contains("Storage", StringComparison.OrdinalIgnoreCase)))
+        return;
+
+    _log?.Invoke($"[sniff/event] {name}");
+    DumpShapeLog(arg, $"evt:{name}");
+}
+
+    private void DumpShapeLog(object? o, string label, int maxProps = 20)
+    {
+        try
+        {
+            if (o is null) { _log?.Invoke($"[{label}] <null>"); return; }
+            var t = o.GetType();
+            var props = t.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            var take = props.Take(maxProps).Select(p =>
+            {
+                object? v = null;
+                try { v = p.GetValue(o); } catch { /* ignore */ }
+                string sv =
+                    (v is null) ? "null" :
+                    (v is string s && s.Length > 80 ? $"\"{s[..80]}…\"" :
+                    v is IEnumerable e && !(v is string) ? $"IEnumerable<{v.GetType().Name}>" :
+                    v.GetType().IsPrimitive || v is decimal ? v.ToString()! :
+                    v.GetType().Name);
+                return $"{p.Name}={sv}";
+            });
+            _log?.Invoke($"[{label}] {t.Name}: " + string.Join(", ", take));
+            if (props.Length > maxProps)
+                _log?.Invoke($"[{label}] … {props.Length - maxProps} more props");
+        }
+        catch (Exception ex)
+        {
+            _log?.Invoke($"[{label}] dump err: {ex.Message}");
+        }
+    }
+
+    private static bool TryGetTaskResult(Task task, out object? result)
+    {
+        result = null;
+        var tt = task.GetType();
+        if (!tt.IsGenericType) return false;               // Task (ohne T) → kein Result
+        var pi = tt.GetProperty("Result");
+        if (pi == null) return false;
+        try { result = pi.GetValue(task); return true; }
+        catch { return false; }                             // Getter wirft → false
+    }
+
+    private void LogTaskException(string tag, Exception ex)
+    {
+        if (ex is TargetInvocationException tie && tie.InnerException != null)
+            _log?.Invoke($"[{tag}] {tie.InnerException.GetType().Name}: {tie.InnerException.Message}\n{tie.InnerException}");
+        else
+            _log?.Invoke($"[{tag}] {ex.GetType().Name}: {ex.Message}\n{ex}");
+    }
+
+    private readonly Dictionary<int, uint> _seqToEntity = new();
+
+    // kleine Reader
+
+
+    static int? TryReadIntN(object? o, params string[] names)
+    {
+        if (o == null) return null;
+        foreach (var n in names)
+        {
+            var v = TryGetProp(o, n);
+            if (v == null) continue;
+            try
+            {
+                switch (v)
+                {
+                    case int i: return i;
+                    case short s: return (int)s;
+                    case byte b: return (int)b;
+                    case long l:
+                        if (l > int.MaxValue) return int.MaxValue;
+                        if (l < int.MinValue) return int.MinValue;
+                        return (int)l;
+                    case uint u:
+                        if (u > int.MaxValue) return int.MaxValue;
+                        return (int)u;
+                    case ulong ul:
+                        if (ul > (ulong)int.MaxValue) return int.MaxValue;
+                        return (int)ul;
+                    case double d:
+                        if (double.IsNaN(d) || double.IsInfinity(d)) continue;
+                        var rd = Math.Round(d);
+                        if (rd > int.MaxValue) return int.MaxValue;
+                        if (rd < int.MinValue) return int.MinValue;
+                        return (int)rd;
+                    case string s when int.TryParse(s, out var si): return si;
+                    case string s2 when long.TryParse(s2, out var sl):
+                        if (sl > int.MaxValue) return int.MaxValue;
+                        if (sl < int.MinValue) return int.MinValue;
+                        return (int)sl;
+                }
+            }
+            catch { /* tolerant */ }
+        }
+        return null;
+    }
+
+    static uint? TryReadUIntN(object? o, params string[] names)
+    {
+        if (o == null) return null;
+        foreach (var n in names)
+        {
+            var v = TryGetProp(o, n);
+            if (v == null) continue;
+            try
+            {
+                switch (v)
+                {
+                    case uint u: return u;
+                    case int i when i >= 0: return (uint)i;
+                    case long l when l >= 0: return l > uint.MaxValue ? uint.MaxValue : (uint)l;
+                    case ulong ul: return ul > uint.MaxValue ? uint.MaxValue : (uint)ul;
+                    case double d when d >= 0 && !double.IsNaN(d) && !double.IsInfinity(d):
+                        {
+                            var rd = Math.Round(d);
+                            if (rd < 0) continue;
+                            return rd > uint.MaxValue ? uint.MaxValue : (uint)rd;
+                        }
+                    case string s when ulong.TryParse(s, out var sul):
+                        return sul > uint.MaxValue ? uint.MaxValue : (uint)sul;
+                }
+            }
+            catch { /* tolerant */ }
+        }
+        return null;
+    }
+
+    // praktische 0-Defaults:
+    static int ReadIntDef(object? o, int def, params string[] names) => TryReadIntN(o, names) ?? def;
+    static uint ReadUIntDef(object? o, uint def, params string[] names) => TryReadUIntN(o, names) ?? def;
+
+    private static string? TryReadStringN(object? o, params string[] names)
+    {
+        if (o is null) return null;
+        foreach (var n in names)
+        {
+            var v = Prop(o, n);
+            if (v is string s && !string.IsNullOrWhiteSpace(s)) return s;
+        }
+        return null;
+    }
+
+    private static bool TryReadDateTimeUtc(object? o, params string[] names)
+    {
+        foreach (var n in names)
+        {
+            var v = TryGetProp(o, n);
+            if (v is DateTime dt) return true; // RustLib liefert meist UTC
+            if (v is string s && DateTime.TryParse(s, out var p)) return true;
+            if (v != null && DateTime.TryParse(v.ToString(), out var q)) return true;
+        }
+        return false;
+    }
+
+    private static int? SecondsUntil(object? src, params string[] names)
+    {
+        object? v = null;
+        foreach (var n in names)
+        {
+            v = TryGetProp(src, n);
+            if (v != null) break;
+        }
+        if (v == null) return null;
+
+        DateTime expiry;
+        if (v is DateTime dt) expiry = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+        else if (!DateTime.TryParse(v.ToString(), out expiry)) return null;
+
+        var now = DateTime.UtcNow;
+        var secs = (int)Math.Max(0, (expiry - now).TotalSeconds);
+        return secs;
+    }
+
+    private readonly Dictionary<uint, (int items, int sum, int? upkeep)> _lastSig = new();
+
+    private bool HasChanged(uint id, StorageSnap s)
+    {
+        var sum = s.Items?.Sum(x => (x?.ItemId ?? 0) ^ (x?.Amount ?? 0)) ?? 0;
+        var cur = (s.Items?.Count ?? 0, sum, s.UpkeepSeconds);
+        if (_lastSig.TryGetValue(id, out var prev) && prev.Equals(cur)) return false;
+        _lastSig[id] = cur;
+        return true;
+    }
+
+    public static string HumanizeUpkeep(int? secs)
+    {
+        if (secs is null) return "–";
+        var s = secs.Value;
+        if (s < 60) return $"{s}s";
+        if (s < 3600) return $"{s / 60}m";
+        if (s < 86400) return $"{s / 3600}h";
+        return $"{s / 86400}d";
     }
 
 }

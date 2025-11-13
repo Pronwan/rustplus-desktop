@@ -16,6 +16,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using RustPlusDesk.Converters;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.WebSockets;
@@ -29,6 +30,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using StorageSnap = RustPlusDesk.Models.StorageSnapshot;
+using StorageItemVM = RustPlusDesk.Models.StorageItemVM;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
@@ -928,7 +931,7 @@ public partial class MainWindow : Window
 
         InitializeComponent();
         this.Title = $"RustPlusDesk v{AppInfo.VersionShort}";
-
+        
         if (FindName("TxtVersion") is TextBlock txt)
             txt.Text = $"v{AppInfo.VersionShort}";
         InitCameraUi();
@@ -1005,7 +1008,7 @@ public partial class MainWindow : Window
 
         if (_rust is RustPlusClientReal real)
         {
-
+            real.EnsureEventsHooked();
             real.DeviceStateEvent += async (id, isOn, kindFromApi) =>
             {
                 await Dispatcher.InvokeAsync(async () =>
@@ -2081,7 +2084,7 @@ public partial class MainWindow : Window
 
 
     /// <summary>gibt einen schönen Anzeigenamen zurück (Shortname bevorzugt, sonst ID-Fallback)</summary>
-    private static string ResolveItemName(int itemId, string? shortName)
+    public static string ResolveItemName(int itemId, string? shortName)
     {
         // 1) neue DB bevorzugt
         EnsureNewItemDbLoaded();
@@ -2226,7 +2229,7 @@ public partial class MainWindow : Window
     private void BtnDeleteDevice_Click(object sender, RoutedEventArgs e)
     {
         if (ListDevices.SelectedItem is not SmartDevice d) return;
-        if (!d.IsMissing)
+        if (!d.IsMissing && !string.Equals(d.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
         {
             MessageBox.Show("Only missing devices can be deleted.");
             return;
@@ -2308,11 +2311,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        // Merker updaten (damit der nächste echte Server-Ping als keepalive erkannt wird)
         _lastPairSig = sig;
 
         // >>> Entity-Pairings NIE über server+token wegfiltern!
-        // Optional: sehr kurze Dedupe pro Entity (z.B. 5s), damit doppelte Toaster nicht doppelt adden
         if (e.EntityId.HasValue)
         {
             var id = e.EntityId.Value;
@@ -2326,7 +2327,6 @@ public partial class MainWindow : Window
         }
 
         _lastPairingPingAt = DateTime.UtcNow;
-
         AppendLog("Pairing_Paired fired");
 
         Dispatcher.Invoke(() =>
@@ -2366,14 +2366,46 @@ public partial class MainWindow : Window
                 AppendLog($"Pairing updated → {prof.Name}");
             }
 
-            // >>> Geräte zuverlässig hinzufügen/aktualisieren (Switch + Alarm)
+            // >>> Geräte zuverlässig hinzufügen/aktualisieren (Switch + Alarm + StorageMonitor)
+
+
             if (e.EntityId.HasValue)
             {
-                // Art ableiten – du setzt EntityType bereits im Listener (SmartSwitch/SmartAlarm)
-                var kind = string.IsNullOrWhiteSpace(e.EntityType) ||
-                           e.EntityType!.Equals("server", StringComparison.OrdinalIgnoreCase)
-                           ? (e.EntityName?.IndexOf("alarm", StringComparison.OrdinalIgnoreCase) >= 0 ? "SmartAlarm" : "SmartSwitch")
-                           : e.EntityType;
+                // ------- NEU: robuste Kind-Erkennung -------
+                string? kind = e.EntityType;
+                string rawType = (e.EntityType ?? "").Trim();
+                string rawName = (e.EntityName ?? "").Trim();
+
+                bool TypeHas(string s) =>
+                    rawType.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                bool NameHas(string s) =>
+                    rawName.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                // 1) direkte Typ-Matches
+                if (TypeHas("Alarm")) kind = "SmartAlarm";
+                else if (TypeHas("Switch")) kind = "SmartSwitch";
+                else if (TypeHas("Storage")) kind = "StorageMonitor";
+
+                // 2) Falls Typ leer/„server“/„entity“/unklar → nach Name mappen
+                if (string.IsNullOrWhiteSpace(kind) ||
+                    string.Equals(rawType, "server", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(rawType, "entity", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (NameHas("alarm"))
+                        kind = "SmartAlarm";
+                    else if (NameHas("storage") || NameHas("monitor") || NameHas("cupboard") || NameHas("tool cupboard") || NameHas("tc"))
+                        kind = "StorageMonitor";
+                    else
+                        kind = "SmartSwitch"; // Default
+                }
+
+                // DEBUG
+                AppendLog($"[pair] entityId={e.EntityId.Value} rawType='{(string.IsNullOrWhiteSpace(rawType) ? "(null)" : rawType)}' rawName='{(string.IsNullOrWhiteSpace(rawName) ? "(null)" : rawName)}'");
+                AppendLog($"[pair] inferred kind='{kind ?? "(null)"}' for entity #{e.EntityId.Value}");
+                // ------- /NEU -------
+
+                // ------- /NEU -------
 
                 var dev = prof.Devices.FirstOrDefault(d => d.EntityId == e.EntityId.Value);
                 if (dev is null)
@@ -2381,8 +2413,12 @@ public partial class MainWindow : Window
                     dev = new SmartDevice
                     {
                         EntityId = e.EntityId.Value,
-                        Name = string.IsNullOrWhiteSpace(e.EntityName) ? (string.IsNullOrWhiteSpace(e.ServerName) ? "Smart Device" : e.ServerName) : e.EntityName,
-                        Kind = kind
+                        Name = string.IsNullOrWhiteSpace(e.EntityName)
+                                   ? (string.IsNullOrWhiteSpace(e.ServerName) ? "Smart Device" : e.ServerName)
+                                   : e.EntityName,
+                        Kind = kind,
+                        IsOn = string.Equals(kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase) ? (bool?)null : false,
+                        IsMissing = false,
                     };
                     prof.Devices.Add(dev);
                     AppendLog($"Device added → {dev.Display}");
@@ -2390,15 +2426,77 @@ public partial class MainWindow : Window
                 else
                 {
                     if (!string.IsNullOrWhiteSpace(e.EntityName)) dev.Name = e.EntityName;
-                    if (!string.IsNullOrWhiteSpace(kind)) dev.Kind = kind;
+
+                    if (!string.IsNullOrWhiteSpace(kind))
+                    {
+                        if (!string.Equals(dev.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase))
+                            dev.Kind = kind;
+                        if (string.Equals(dev.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
+                            dev.IsOn = null;
+                    }
+
+                    dev.IsMissing = false;
                     AppendLog($"Device updated → {dev.Display}");
                 }
+
+                /* >>>>>>> HIER EINSETZEN (direkt nach dem add/update-Block) <<<<<<< */
+                // >>> Cache sofort ins UI + Einmal-Expand + Sub/Poke
+                if (string.Equals(dev.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
+                {
+                    // 1) Cache → UI (falls vorhanden), sonst Hülle
+                    if (_rust is RustPlusClientReal rpc && rpc.TryGetCachedStorage(dev.EntityId, out var cached))
+                    {
+                        dev.IsMissing = false;
+                        Dispatcher.Invoke(() =>
+                        {
+                            var uiSnap = new StorageSnapshot
+                            {
+                                UpkeepSeconds = cached.UpkeepSeconds,
+                                IsToolCupboard = cached.IsToolCupboard
+                            };
+                            foreach (var it in cached.Items) uiSnap.Items.Add(it);
+                            dev.Storage = uiSnap;
+                        });
+                       // AppendLog($"[stor/refresh] (cache on pair) #{dev.EntityId} items={cached.Items?.Count ?? 0} upkeep={(cached.UpkeepSeconds?.ToString() ?? "null")}");
+                    }
+                    else
+                    {
+                        dev.Storage ??= new StorageSnapshot();
+                       // AppendLog($"[stor/refresh] (no cache) #{dev.EntityId} → awaiting event");
+                    }
+
+                    // 2) Einmal automatisch aufklappen + abonnieren
+                    if (!dev.IsExpanded)
+                    {
+                        dev.IsExpanded = true;
+                        _ = Dispatcher.InvokeAsync(async () =>
+                        {
+                            try
+                            {
+                                if (_rust is RustPlusClientReal r2)
+                                {
+                                    await r2.SubscribeEntityAsync(dev.EntityId);
+                                    await r2.PokeEntityAsync(dev.EntityId);
+                                  //  AppendLog($"[stor/sub+poke] #{dev.EntityId} queued");
+                                }
+                            }
+                            catch (Exception subEx)
+                            {
+                                AppendLog($"[stor/sub+poke] #{dev.EntityId} on pair: {subEx.Message}");
+                            }
+                        });
+                    }
+                }
+                /* >>>>>>> /ENDE Einfügeblock <<<<<<< */
+
+                if (_vm.Selected != prof)
+                    _vm.Selected = prof;
+
+                _vm.Save();
             }
 
-            if (_vm.Selected != prof)
-                _vm.Selected = prof;
 
-            _vm.Save();
+
         });
     }
 
@@ -2732,9 +2830,10 @@ public partial class MainWindow : Window
             try { await Task.Delay(TimeSpan.FromSeconds(10), ct); } catch { }
         }
     }
-
+    private ServerProfile? _connectedProfile;
     private async Task HardResetAsync(bool reconnect = false)
     {
+        _connectedProfile = null;
         // 1) Laufende Polls/Tokens abbrechen
         try { StopDynPolling(); } catch { }
         try { StopTeamPolling(); } catch { }
@@ -2750,6 +2849,7 @@ public partial class MainWindow : Window
         // 2) Timer stoppen
         try { _statusTimer?.Stop(); } catch { }
         try { _shopTimer?.Stop(); _shopTimer = null; } catch { }
+        try { _storageTimer?.Stop(); _shopTimer = null; } catch { }
 
         // 3) UI-/In-Memory-State leeren
         try { TeamMembers.Clear(); } catch { }
@@ -2813,6 +2913,9 @@ public partial class MainWindow : Window
             });
         }
     }
+    private DispatcherTimer? _storageTimer;
+    private bool _storageTickBusy; // optionaler Reentrancy-Schutz
+
 
     private async void BtnHardReset_Click(object sender, RoutedEventArgs e)
     {
@@ -2841,6 +2944,9 @@ public partial class MainWindow : Window
         // Rate-Limiter zurücksetzen
         _lastChatSendUtc = DateTime.MinValue;
 
+        
+
+
         // Overlay auf der Map leeren, weil die alten Shop-UI-Elemente vom alten Server sind:
         foreach (var el in _shopEls.Values)
             Overlay.Children.Remove(el);
@@ -2864,10 +2970,16 @@ public partial class MainWindow : Window
             AppendLog($"Connecting to ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
             await _rust.ConnectAsync(_vm.Selected);
             _vm.Selected.IsConnected = true;
-            AppendLog("Verbunden.");
-
+            AppendLog("Connected.");
+            _connectedProfile = _vm.Selected;
             // EINMAL casten und überall dieselbe Variable verwenden
             var real = _rust as RustPlusClientReal;
+            if (real != null)
+            {
+                real.StorageSnapshotReceived -= OnStorageSnapshot;  // doppelte Hooks vermeiden
+                real.StorageSnapshotReceived += OnStorageSnapshot;
+                real.EnsureEventsHooked();
+            }
 
             // Chat-Marker reset
             _lastChatTsForCurrentServer = null;
@@ -2925,6 +3037,27 @@ public partial class MainWindow : Window
 
             // (3) Geräte in-place rehydrieren (Collection-Instanz behalten)
             RehydrateDevicesFromStorageInto(_vm.Selected);
+            if (real != null && _vm.Selected?.Devices?.Any() == true)
+            {
+                var storageIds = _vm.Selected.Devices
+                    .Where(d => string.Equals(d.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
+                    .Select(d => d.EntityId)
+                    .ToList();
+
+                if (storageIds.Count > 0)
+                {
+                    try
+                    {
+                        await real.PrimeSubscriptionsAsync(storageIds);
+                        AppendLog($"PrimeSubscriptions: {storageIds.Count} StorageMonitors.");
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog("PrimeSubscriptions Error: " + ex.Message);
+                    }
+                }
+            }
+            await PrimeDeviceKindsAsync(); // <<< add this line
             _vm.NotifyDevicesChanged();
             AppendLog($"Devices rehydrated: {_vm.Selected.Devices?.Count ?? 0}");
 
@@ -2970,6 +3103,36 @@ public partial class MainWindow : Window
             AppendLog("Fehler: " + ex.Message);
             MessageBox.Show($"Connection failed: {ex.Message}");
         }
+        _storageTimer?.Stop();
+        _storageTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(12) };
+        _storageTimer.Tick += async (_, __) =>
+        {
+            var sel = _connectedProfile ?? _vm?.Selected;
+            if (sel?.Devices == null || sel.Devices.Count == 0) return;
+
+           // AppendLog($"[stor/poll] sel='{sel.Name}' devices={sel.Devices.Count}");
+
+            foreach (var sd in sel.Devices)
+            {
+                // treat unknown kind optimistically so we can learn it on first refresh
+                var isStorage =
+                    string.Equals(sd.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase) ||
+                    string.IsNullOrWhiteSpace(sd.Kind);
+
+                if (!isStorage) continue;
+
+                try
+                {
+                    await RefreshDeviceStateAsync(sd, log: true);
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[stor/poll] #{sd.EntityId} err: {ex.Message}");
+                }
+            }
+        };
+        _storageTimer.Start();
+
     }
 
     // PLAYER DEATH MARKERS AVATAR IMAGE PLAYER DEATH
@@ -3108,42 +3271,109 @@ public partial class MainWindow : Window
         }
     }
 
+    private readonly Dictionary<uint, StorageSnap> _storageCache = new();
 
+    private void CacheStorage(uint id, StorageSnap? snap)
+    {
+        if (snap == null) return;
+        _storageCache[id] = snap;
+    }
+
+    private bool TryGetCachedStorage(uint id, out StorageSnap? snap)
+        => _storageCache.TryGetValue(id, out snap);
     // Ein Gerät *generisch* neu einlesen (wie der Info-Button).
     // - Für SmartSwitch: schneller Pfad über GetSmartSwitchStateAsync
     // - Für alle anderen (oder Fallback): ProbeEntityAsync (setzt auch Kind/IsMissing)
     private async Task RefreshDeviceStateAsync(SmartDevice dev, bool log = true)
     {
         if (_rust is not RustPlusClientReal real) return;
-
-        // Fast-Path nur für echte Switches
-        if (string.Equals(dev.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(dev.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
         {
             try
             {
-                var s = await real.GetSmartSwitchStateAsync(dev.EntityId);
-                if (s is bool b)
-                {
-                    _suppressToggleHandler = true;
-                    dev.IsOn = b;
-                    _suppressToggleHandler = false;
+                var probe = await _rust.ProbeEntityAsync(dev.EntityId);
+                if (!string.IsNullOrWhiteSpace(probe.Kind) &&
+                    !string.Equals(dev.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase))
+                    dev.Kind = probe.Kind;
 
-                    if (log) AppendLog($"State #{dev.EntityId}: {(b ? "ON" : "OFF")}");
+                dev.IsMissing = !probe.Exists;
+                if (!probe.Exists)
+                {
+                    dev.Storage = null;
+                    if (log) AppendLog($"[stor/refresh] #{dev.EntityId} → not found (offline)");
                     return;
                 }
+
+                // (1) Cache sofort ins UI
+                // (1) Cache sofort ins UI – aber als UI-Kopie!
+                if (_rust is RustPlusClientReal real2 && real.TryGetCachedStorage(dev.EntityId, out var cached))
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        var uiSnap = new StorageSnapshot
+                        {
+                            UpkeepSeconds = cached.UpkeepSeconds,
+                            IsToolCupboard = cached.IsToolCupboard
+                        };
+                        foreach (var it in cached.Items) uiSnap.Items.Add(it);
+                        dev.Storage = uiSnap;
+                    });
+                   // if (log) AppendLog($"[stor/refresh] (cache) #{dev.EntityId} items={cached.Items?.Count ?? 0} upkeep={(cached.UpkeepSeconds?.ToString() ?? "null")}");
+                }
+                else
+                {
+                    dev.Storage ??= new StorageSnapshot(); // sofort renderbar
+                  //  if (log) AppendLog($"[stor/refresh] (no cache) #{dev.EntityId} → awaiting event");
+                }
+
+                // (2) Sanft abonnieren & anstupsen (ohne harte Schleifen)
+                try
+                {
+                    if (_rust is RustPlusClientReal r)
+                    {
+                        await r.EnsureSubOnceAsync(dev.EntityId);
+                       // await r.PokeEntityAsync(dev.EntityId);
+                       // if (log) AppendLog($"[stor/sub+poke] #{dev.EntityId} queued");
+                    }
+                }
+                catch (Exception subEx)
+                {
+                    if (log) AppendLog($"[stor/sub+poke] #{dev.EntityId} failed: {subEx.Message}");
+                }
+
+                // (3) Optionaler Fallback: Einmalig leicht verzögert pullen, wenn noch immer nix kam
+                _ = Task.Run(async () =>
+                {
+                    await Task.Delay(500);
+                    if (real.TryGetCachedStorage(dev.EntityId, out _)) return; // Event kam bereits
+                    try
+                    {
+                        var snap = await real.GetStorageMonitorAsync(dev.EntityId);
+                        if (snap != null)
+                        {
+                            Dispatcher.Invoke(() => { dev.Storage = snap; _vm?.NotifyDevicesChanged(); });
+                            if (log) AppendLog($"[stor/pull] #{dev.EntityId} items={snap.Items?.Count ?? 0} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")}");
+                        }
+                    }
+                    catch (Exception ex2) { AppendLog($"[stor/pull] #{dev.EntityId} fallback: {ex2.Message}"); }
+                });
+
+                return;
             }
             catch (Exception ex)
             {
-                if (log) AppendLog("GetSmartSwitchStateAsync: " + ex.Message);
+                dev.Storage ??= new StorageSnap();
+                if (log) AppendLog($"[stor/refresh] #{dev.EntityId} EX: {ex.Message}");
+                return;
             }
         }
 
-        // Generisch (SmartAlarm & Co.)
+        // 3) Generisch (SmartAlarm & Co.)
         try
         {
             var r = await _rust.ProbeEntityAsync(dev.EntityId);
 
-            // Kind nur setzen, NIE SmartAlarm wegschreiben
+            // Kind nur setzen, NIE SmartAlarm überschreiben
             if (!string.IsNullOrWhiteSpace(r.Kind) &&
                 !string.Equals(dev.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase))
             {
@@ -3155,11 +3385,7 @@ public partial class MainWindow : Window
             _suppressToggleHandler = true;
             if ((dev.Kind ?? r.Kind)?.Equals("SmartAlarm", StringComparison.OrdinalIgnoreCase) == true)
             {
-                // ⚠️ Alarm: NICHT aus Probe übernehmen (liefert meist "armed=true")
-                // Variante 1 (empfohlen): Anzeige so lassen wie sie ist
-                // dev.IsOn = dev.IsOn;
-
-                // Variante 2: bewusst auf INAKTIV zurücknehmen, wenn keine Auslösung läuft:
+                // Alarmstatus nicht aus Probe übernehmen
                 dev.IsOn = false;
             }
             else
@@ -3171,10 +3397,11 @@ public partial class MainWindow : Window
             if (log)
             {
                 if (!r.Exists)
-                    AppendLog($"#{dev.EntityId}: not reachable / demoved");
+                    AppendLog($"#{dev.EntityId}: not reachable / demoted");
                 else
                     AppendLog($"State #{dev.EntityId}: {(r.IsOn is bool b ? (b ? "ON" : "OFF") : "–")} ({r.Kind ?? "?"})");
             }
+            _vm?.NotifyDevicesChanged();
         }
         catch (Exception ex)
         {
@@ -3742,7 +3969,7 @@ public partial class MainWindow : Window
         => TryGetGridRef(s.X, s.Y, out var g) ? g : "off-grid";
 
     private static string FormatItemName(int id) => /* deine vorhandene Map-Funktion */ ResolveItemName(id, null);
-    private static ImageSource? ResolveItemIcon(int itemId, string? shortName, int decodePx = 32)
+    public static System.Windows.Media.ImageSource? ResolveItemIcon(int itemId, string? shortName, int decodePx = 32)
     {
         EnsureNewItemDbLoaded();
 
@@ -11871,6 +12098,193 @@ public partial class MainWindow : Window
     }
 
 
+    private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is ListBoxItem lbi && lbi.DataContext is SmartDevice sd)
+        {
+            // Nur für StorageMonitor reagieren – SmartSwitches etc. bleiben unberührt
+            if (string.Equals(sd.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
+            {
+                sd.IsExpanded = !sd.IsExpanded;
+              //  AppendLog($"[ui] expand #{sd.EntityId} -> {sd.IsExpanded}");
+                e.Handled = true; // verhindert, dass noch andere Handler „verbrauchen“
+            }
+        }
+    }
+    private async void StorageRow_Toggle_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement fe && fe.DataContext is SmartDevice sd)
+        {
+            sd.IsExpanded = !sd.IsExpanded;
+            AppendLog($"[ui] expand #{sd.EntityId} -> {sd.IsExpanded}");
+
+            if (sd.IsExpanded)
+                await RefreshDeviceStateAsync(sd, log: true);
+        }
+        e.Handled = true;
+    }
+
+    private void Pill_PreviewMouseDown(object sender, MouseButtonEventArgs e) => e.Handled = true;
+    private void Pill_PreviewMouseUp(object sender, MouseButtonEventArgs e) => e.Handled = true;
+
+    private void StorageChip_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+
+        if (sender is not Button b) return;
+        if (b.DataContext is not SmartDevice dev || dev.Storage == null || dev.Storage.ItemsCount == 0)
+            return; // kein Flyout bei leeren Daten
+
+        var cm = b.ContextMenu;
+        if (cm == null) return;
+        cm.PlacementTarget = b;
+        cm.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+        cm.IsOpen = true;
+    }
+
+    private void CtxClosedReleaseCapture(object? sender, RoutedEventArgs e)
+    {
+        // 3) Falls die Maus noch „gecaptured“ ist, freigeben
+        try { Mouse.Capture(null); } catch { }
+    }
+
+
+
+
+    public sealed class SecondsToPrettyConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null) return "";
+            var sec = System.Convert.ToInt64(value);
+            if (sec <= 0) return "Upkeep: –";
+            var ts = TimeSpan.FromSeconds(sec);
+            if (ts.TotalDays >= 1)
+                return $" {(int)ts.TotalDays}d {ts.Hours}h";
+            if (ts.TotalHours >= 1)
+                return $"Upkeep: {(int)ts.TotalHours}h {ts.Minutes}m";
+            return $"Upkeep: {ts.Minutes}m {ts.Seconds}s";
+        }
+        public object ConvertBack(object v, Type t, object p, CultureInfo c) => Binding.DoNothing;
+    }
+
+    private async Task PrimeDeviceKindsAsync()
+    {
+        if (_vm?.Selected?.Devices == null || _vm.Selected.Devices.Count == 0) return;
+
+        AppendLog("[prime] probing device kinds …");
+        foreach (var d in _vm.Selected.Devices)
+        {
+            try
+            {
+                var r = await _rust.ProbeEntityAsync(d.EntityId);
+                if (!string.IsNullOrWhiteSpace(r.Kind))
+                    d.Kind = r.Kind;
+                d.IsMissing = !r.Exists;
+                AppendLog($"[prime] #{d.EntityId} kind={d.Kind ?? "?"} exists={r.Exists}");
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[prime] #{d.EntityId} err: {ex.Message}");
+            }
+        }
+        _vm?.NotifyDevicesChanged();
+    }
+
+    // kommt aus RustPlusClientReal.StorageSnapshotReceived
+    private void OnStorageSnapshot(uint entityId, StorageSnapshot snap)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            // WICHTIG: exakt die Collection, an die das ListBox-Template gebunden ist
+            var dev = _vm?.CurrentDevices?.FirstOrDefault(d => d.EntityId == entityId);
+            if (dev == null) return;
+
+            dev.IsMissing = false;
+
+            // Auf dem UI-Thread kannst du den Snapshot direkt setzen,
+            // oder – wie bisher – eine UI-Kopie bauen:
+            var uiSnap = new StorageSnapshot
+            {
+                UpkeepSeconds = snap.UpkeepSeconds,
+                IsToolCupboard = snap.IsToolCupboard,
+                SnapshotUtc = DateTime.UtcNow
+            };
+            foreach (var it in snap.Items)
+                uiSnap.Items.Add(it);
+
+            dev.Storage = uiSnap;
+
+            if (!dev.IsExpanded) dev.IsExpanded = true;
+
+            // Meist nicht nötig und kann Re-Templating auslösen:
+            // _vm?.NotifyDevicesChanged();
+        });
+    }
+
+   
+    
+
+    private void StorPill_ToolTipOpening(object sender, ToolTipEventArgs e)
+    {
+        // Tooltip nur zeigen, wenn Daten da sind
+        if (sender is FrameworkElement fe && fe.DataContext is SmartDevice dev)
+        {
+            if (dev.Storage == null || dev.Storage.ItemsCount == 0)
+            {
+                e.Handled = true;
+                return;
+            }
+
+            // ScrollViewer im ToolTip suchen und an der Pille "cachen"
+            if (fe.ToolTip is ToolTip tip)
+            {
+                // Suche nur einmal
+                if (fe.Tag is not ScrollViewer)
+                {
+                    var sv = FindDescendant<ScrollViewer>(tip);
+                    fe.Tag = sv; // kann null sein – dann versuchen wir's später nochmal
+                }
+            }
+        }
+    }
+
+    private void StorPill_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        if (sender is FrameworkElement fe)
+        {
+            // ScrollViewer aus dem Tag holen (oder on-the-fly suchen)
+            var sv = fe.Tag as ScrollViewer;
+            if (sv == null && fe.ToolTip is ToolTip tip)
+            {
+                sv = FindDescendant<ScrollViewer>(tip);
+                fe.Tag = sv;
+            }
+
+            if (sv != null)
+            {
+                // Delta ist typischerweise ±120 – wir scrollen zeilenweise
+                if (e.Delta < 0) sv.LineDown(); else sv.LineUp();
+                e.Handled = true; // verhindert, dass das Radereignis nach hinten "durchfällt"
+            }
+        }
+    }
+
+    /// <summary>Findet das erste Descendant-Element vom Typ T im VisualTree.</summary>
+    private static T? FindDescendant<T>(DependencyObject root) where T : DependencyObject
+    {
+        if (root == null) return null;
+        for (int i = 0, n = VisualTreeHelper.GetChildrenCount(root); i < n; i++)
+        {
+            var child = VisualTreeHelper.GetChild(root, i);
+            if (child is T t) return t;
+            var r = FindDescendant<T>(child);
+            if (r != null) return r;
+        }
+        return null;
+    }
+
+    
 
 }
 

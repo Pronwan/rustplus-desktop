@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:views="clr-namespace:RustPlusDesk.Views"
-        Title="Rust+ Desk – Patch Notes 3.0.1 – 31/10/25"
+        Title="Rust+ Desk – Patch Notes 3.1.0 – 13/11/25"
         Width="720"
         Height="620"
         Background="{DynamicResource AppBg}"
@@ -25,15 +25,15 @@
         <DockPanel LastChildFill="True">
             <!-- Header -->
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
-                <TextBlock Text="Patch Notes Halloween 2025"
+                <TextBlock Text="Patch Notes November 2025"
                            FontSize="20"
                            FontWeight="SemiBold"
                            Margin="0,0,0,2"/>
-                <TextBlock Text="Version 3.0.1"
+                <TextBlock Text="Version 3.1.0"
            Foreground="{DynamicResource Accent}"
            FontSize="11"
            Margin="0,0,0,4"/>
-                <TextBlock Text="31.10.2025"
+                <TextBlock Text="13.11.2025"
                            Foreground="{DynamicResource TextSubtle}"
                            FontSize="13"/>
             </StackPanel>
@@ -45,6 +45,37 @@
               ScrollViewer.PanningMode="VerticalOnly">
                 <StackPanel Margin="0,0,0,12" Orientation="Vertical" >
 
+                    <Border Background="{DynamicResource SurfaceAlt}"
+BorderBrush="{DynamicResource CardBorder}"
+BorderThickness="1"
+CornerRadius="10"
+Padding="10"
+Margin="0,0,0,10">
+
+
+                        <StackPanel>
+                            <TextBlock Text="v3.1.0  |  Storage Monitors and Smart Switch Optimization"
+           FontWeight="SemiBold"
+           FontSize="15"
+           Margin="0,0,0,6"/>
+
+                            <TextBlock Text="• Storage Monitoring + Upkeep Timer now work for Tool Cupboards and Boxes"
+           TextWrapping="Wrap"
+           Margin="0,0,0,6"/>
+
+                            <TextBlock Text="• Smart Device Polling / Synchronization and UX has been optimized"
+           TextWrapping="Wrap"
+           Margin="0,0,0,4"
+           FontWeight="SemiBold"/>
+                            <Image Source="pack://application:,,,/Screenshots/3.1.0.png"
+        Stretch="Uniform"
+        MaxHeight="400"
+        Margin="0,0,0,4"/>
+
+                        </StackPanel>
+                    </Border>
+
+
                     <!-- 1. Custom Map Overlays -->
                     <Border Background="{DynamicResource SurfaceAlt}"
         BorderBrush="{DynamicResource CardBorder}"
@@ -52,11 +83,19 @@
         CornerRadius="10"
         Padding="10"
         Margin="0,0,0,10">
+                        
+                        
                         <StackPanel>
                             <TextBlock Text="v3.0.1  |  Player Location Fix + Mini Map Customization"
                    FontWeight="SemiBold"
                    FontSize="15"
                    Margin="0,0,0,6"/>
+                            <TextBlock Text="31.10.2025"
+           Foreground="{DynamicResource TextSubtle}"
+           FontSize="13"/>
+                            <TextBlock Text=""
+           Foreground="{DynamicResource TextSubtle}"
+           FontSize="13"/>
 
                             <TextBlock Text="• Players and events outside the grid are now displayed at their correct positions on the map."
                    TextWrapping="Wrap"

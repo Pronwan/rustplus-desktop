@@ -13,7 +13,7 @@
             <Button Content="Close" Margin="6,0,0,0" Click="BtnClose_Click" />
         </StackPanel>
 
-        <ListBox x:Name="List" Background="LightYellow" >
+        <ListBox x:Name="List" Background="{DynamicResource CardBrush}" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border Padding="8" Margin="0,0,0,6" BorderBrush="#DDD" BorderThickness="1" CornerRadius="6">
