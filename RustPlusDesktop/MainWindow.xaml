@@ -2,15 +2,22 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:conv="clr-namespace:RustPlusDesk.Converters"
+       xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:views="clr-namespace:RustPlusDesk.Views"
+        xmlns:conv="clr-namespace:RustPlusDesk.Converters"
+        
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Rust+ Desktop by Pronwan" Height="814" Width="1400"
         Background="{DynamicResource AppBg}" Foreground="{DynamicResource TextPrimary}"
         UseLayoutRounding="True" SnapsToDevicePixels="True">
     <Window.Resources>
-
+        <conv:StorageChipConverter x:Key="StorageChipConverter"/>
+        <conv:KindToStorageVisibilityConverter x:Key="KindToStorageVisibility"/>
+        <BitmapImage x:Key="IconStorageMonitor" UriSource="pack://application:,,,/icons/storagemonitor.png"/>
+        <BitmapImage x:Key="IconSmartSwitch"    UriSource="pack://application:,,,/icons/smartswitch.png"/>
+        <BitmapImage x:Key="IconSmartAlarm"     UriSource="pack://application:,,,/icons/smartalarm.png"/>
         <!-- Palette -->
         <SolidColorBrush x:Key="AppBg"         Color="#121417"/>
         <SolidColorBrush x:Key="Surface"       Color="#1C1F24"/>
@@ -661,6 +668,7 @@
 
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
         <conv:NotNullToBoolConverter   x:Key="NotNull"/>
+        
     </Window.Resources>
 
     <Grid x:Name="Root" Margin="16">
@@ -862,165 +870,489 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                             </Grid.RowDefinitions>
 
                             <ListBox x:Name="ListDevices"
-                             Grid.Row="0"
-                             Margin="0,0,0,0"
-                             ItemsSource="{Binding CurrentDevices}"
-                             SelectedItem="{Binding SelectedDevice, Mode=TwoWay}">
+             Grid.Row="0"
+             ItemsSource="{Binding CurrentDevices}"
+             SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
+             ScrollViewer.CanContentScroll="False"
+             VirtualizingPanel.IsVirtualizing="False"
+             VirtualizingPanel.ScrollUnit="Pixel">
+
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                       <!-- <EventSetter Event="PreviewMouseLeftButtonUp" Handler="DeviceRow_Click"/> -->
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Style.Resources>
+                                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#3340A070"/>
+                                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White"/>
+                                            <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
+                                        </Style.Resources>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <!-- Dreispaltiges Grid -->
-                                        <Grid Margin="0,2">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="220" />
-                                                <!-- Spalte 1: Display (Name+ID+Status) -->
-                                                <ColumnDefinition Width="125" />
-                                                <!-- Spalte 2: Alias (benutzerdefiniert) -->
-                                                <ColumnDefinition Width="80" />
-                                                <!-- Spalte 3: Toggle -->
-                                            </Grid.ColumnDefinitions>
+                                        <!-- Row + Details teilen sich den gleichen DataContext (SmartDevice) -->
+                                        <StackPanel Margin="0,2,0,0">
 
-                                            <!-- Zeilenweite „missing“-Optik -->
-                                            <Grid.Style>
-                                                <Style TargetType="Grid">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                            <Setter Property="Opacity" Value="0.6"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Grid.Style>
+                                            <!-- ===== Zeile ===== -->
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200"/>
+                                                    <ColumnDefinition Width="145"/>
+                                                    <ColumnDefinition Width="80"/>
+                                                </Grid.ColumnDefinitions>
 
-                                            <!-- Spalte 1: Display -->
-                                            <TextBlock Grid.Column="0"
-                                       Text="{Binding Display}"
-                                       Foreground="White"
-                                       VerticalAlignment="Center">
-                                                <TextBlock.Style>
-                                                    <Style TargetType="TextBlock">
+                                                <Grid.Style>
+                                                    <Style TargetType="Grid">
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                <Setter Property="Foreground" Value="Red"/>
-                                                                <Setter Property="FontStyle" Value="Italic"/>
+                                                                <Setter Property="Opacity" Value="0.6"/>
+                                                                
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
-                                                </TextBlock.Style>
-                                            </TextBlock>
+                                                </Grid.Style>
 
-                                            <!-- Spalte 2: Alias (per Rechtsklick umbenennbar) -->
-                                            <TextBlock Grid.Column="1"
-                                       VerticalAlignment="Center"
-                                       ToolTip="Right click to rename">
-                                                <TextBlock.Text>
-                                                    <Binding Path="Alias" TargetNullValue="(no custom name)"/>
-                                                </TextBlock.Text>
-                                                <TextBlock.Style>
-                                                    <Style TargetType="TextBlock">
+                                                <!-- Spalte 1: Display -->
+                                                <!-- Spalte 1: Icon + (#id) [state] für bekannte Kinds; sonst: alter Display-Text -->
+                                                <Grid Grid.Column="0">
+                                                    <Grid.Resources>
+                                                        <!-- Sichtbar-Style für bekannte Kinds -->
+                                                        <Style x:Key="DeviceLineSmallText" TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="LightSkyBlue"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                    <Setter Property="Foreground" Value="Red"/>
+                                                                    <Setter Property="FontStyle"   Value="Italic"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+
+                                                        <!-- Verstecken-Style für den Fallback-Text, wenn bekanntes Kind -->
+                                                        <Style x:Key="UnknownFallback" TargetType="TextBlock">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Kind}" Value="Storage Monitor">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Kind}" Value="Smart Switch">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Grid.Resources>
+
+                                                    <!-- MODE A: bekannte Kinds -> Icon + (#id) [state] -->
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <StackPanel.Style>
+                                                            <Style TargetType="StackPanel">
+                                                                <!-- Standard: versteckt + Standardfarbe -->
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Setter Property="TextElement.Foreground" Value="LightSkyBlue"/>
+
+                                                                <Style.Triggers>
+                                                                    <!-- Sichtbar nur bei bekannten Kinds -->
+                                                                    <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Kind}" Value="Storage Monitor">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Kind}" Value="Smart Switch">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+
+                                                                    <!-- Missing: Rot + Kursiv -->
+                                                                    <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                        <Setter Property="TextElement.Foreground" Value="Red"/>
+                                                                        <Setter Property="TextElement.FontStyle"   Value="Italic"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </StackPanel.Style>
+                                                        <!-- Icon -->
+                                                        <Image Width="18" Height="18" Margin="0,0,6,0">
+                                                            <Image.Style>
+                                                                <Style TargetType="Image">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
+                                                                            <Setter Property="Source" Value="{StaticResource IconStorageMonitor}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Kind}" Value="Storage Monitor">
+                                                                            <Setter Property="Source" Value="{StaticResource IconStorageMonitor}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
+                                                                            <Setter Property="Source" Value="{StaticResource IconSmartSwitch}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Kind}" Value="Smart Switch">
+                                                                            <Setter Property="Source" Value="{StaticResource IconSmartSwitch}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
+                                                                            <Setter Property="Source" Value="{StaticResource IconSmartAlarm}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
+                                                                            <Setter Property="Source" Value="{StaticResource IconSmartAlarm}"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Image.Style>
+                                                        </Image>
+
+                                                        <!-- (#id) [state] -->
+                                                        <TextBlock VerticalAlignment="Center"
+           Style="{StaticResource DeviceLineSmallText}">
+      <Run Text="{Binding EntityId, StringFormat=#\{0\}}"/>
+      <Run Text=" [" />
+
+      <!-- Variante für SmartAlarm: ACTIVE/INACTIVE -->
+      <TextBlock>
+                                                                <TextBlock.Style>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
+                                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
+                                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsOn}"  Value="True">
+                                                                                <Setter Property="Text" Value="ACTIVE"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsOn}"  Value="False">
+                                                                                <Setter Property="Text" Value="INACTIVE"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+      </TextBlock>
+
+      <!-- Variante für alle anderen: ON/OFF -->
+      <TextBlock>
+                                                                <TextBlock.Style>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsOn}" Value="True">
+                                                                                <Setter Property="Text" Value="ON"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsOn}" Value="False">
+                                                                                <Setter Property="Text" Value="OFF"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+      </TextBlock>
+
+      <Run Text="]"/>
+    </TextBlock>
+                                                    </StackPanel>
+
+                                                    <!-- MODE B: unbekannter Typ -> alter kompletter Display-Text -->
+                                                    <!-- MODE B: unbekannter Typ -> alter kompletter Display-Text -->
+                                                    <TextBlock Text="{Binding Display}"
+           Foreground="White"
+           VerticalAlignment="Center"
+           ToolTip="{Binding Kind}">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                <Style.Triggers>
+                                                                    <!-- ausblenden bei bekannten Kinds -->
+                                                                    <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Kind}" Value="Storage Monitor">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Kind}" Value="Smart Switch">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+
+                                                                    <!-- Missing-Optik -->
+                                                                    <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                        <Setter Property="Foreground" Value="Red"/>
+                                                                        <Setter Property="FontStyle"   Value="Italic"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </Grid>
+
+                                                <!-- Spalte 2: Alias -->
+                                                <TextBlock Grid.Column="1"
+                         VerticalAlignment="Center"
+                         ToolTip="Right click to rename"
+                                                           Foreground="#4FC3F7">
+                                                    <TextBlock.Text>
+                                                        <Binding Path="Alias" TargetNullValue="(no custom name)"/>
+                                                    </TextBlock.Text>
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                    <Setter Property="Foreground" Value="Red"/>
+                                                                    <Setter Property="FontStyle" Value="Italic"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                    <TextBlock.ContextMenu>
+                                                        <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                                            <MenuItem Header="Rename device" Click="Device_Rename_Click"/>
+                                                        </ContextMenu>
+                                                    </TextBlock.ContextMenu>
+                                                </TextBlock>
+
+                                                <!-- Spalte 3: Toggle NUR für SmartSwitch -->
+                                                <ToggleButton Grid.Column="2"
+                            Width="64" Height="26" Margin="8,0,0,0"
+                            IsChecked="{Binding IsOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                                    <ToggleButton.Style>
+                                                        <Style TargetType="ToggleButton">
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="ToggleButton">
+                                                                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                  CornerRadius="13" BorderBrush="#66000000" BorderThickness="1" Padding="4">
+                                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                        </Border>
+                                                                        <ControlTemplate.Triggers>
+                                                                            <Trigger Property="IsEnabled" Value="False">
+                                                                                <Setter TargetName="Bd" Property="Opacity" Value="0.4"/>
+                                                                            </Trigger>
+                                                                        </ControlTemplate.Triggers>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <EventSetter Event="Checked"   Handler="DeviceToggle_Checked"/>
+                                                            <EventSetter Event="Unchecked" Handler="DeviceToggle_Unchecked"/>
+
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                            <Setter Property="Foreground" Value="White"/>
+                                                            <Setter Property="Background" Value="IndianRed"/>
+                                                            <Setter Property="Content" Value="OFF"/>
+                                                            <Setter Property="FontWeight" Value="SemiBold"/>
+                                                            <Setter Property="Cursor" Value="Hand"/>
+
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                                    <Setter Property="Opacity" Value="0.4"/>
+                                                                </DataTrigger>
+                                                                <Trigger Property="IsChecked" Value="True">
+                                                                    <Setter Property="Background" Value="SeaGreen"/>
+                                                                    <Setter Property="Content" Value="ON"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </ToggleButton.Style>
+                                                </ToggleButton>
+
+                                                <!-- Spalte 3: Pill NUR bei StorageMonitor -->
+                                                <Border Grid.Column="2"
+        Padding="6,3"
+        Margin="8,0,0,0"
+        CornerRadius="13"
+        Background="#3340A070"
+        BorderBrush="#55FFFFFF"
+        BorderThickness="1"
+        Visibility="{Binding Kind, Converter={StaticResource KindToStorageVisibility}}"
+        ToolTipService.Placement="Mouse"
+        ToolTipService.InitialShowDelay="250"
+        ToolTipService.ShowDuration="30000"
+        ToolTipOpening="StorPill_ToolTipOpening"
+        PreviewMouseWheel="StorPill_PreviewMouseWheel">
+
+                                                    <!-- sichtbarer Text -->
+                                                    <TextBlock Foreground="White" FontWeight="SemiBold" FontSize="10.5"
+               Text="{Binding Storage, Converter={StaticResource StorageChipConverter}, Mode=OneWay}"/>
+
+                                                    <!-- Hover-Tooltip (ohne StaysOpen) -->
+                                                    <Border.ToolTip>
+                                                        <ToolTip MaxWidth="520">
+                                                            <Border Background="#171A1F" BorderBrush="#2A2F37" BorderThickness="1" CornerRadius="10">
+                                                                <StackPanel Margin="8,8,8,6">
+
+                                                                    <!-- Header (no pencil / kebab) -->
+                                                                    <DockPanel LastChildFill="False" Margin="0,0,0,2">
+                                                                        <Image Width="20" Height="20" Margin="0,0,6,0"
+               Source="{StaticResource IconStorageMonitor}" Opacity="0.9"/>
+                                                                        <TextBlock DockPanel.Dock="Left"
+                   Text="{Binding Name, TargetNullValue=Storage Monitor}"
+                   Foreground="#EAECEE" FontWeight="SemiBold" FontSize="13"/>
+                                                                    </DockPanel>
+
+                                                                    <!-- Upkeep line (compact) -->
+                                                                    <TextBlock Margin="0,0,0,4" Foreground="#9AA3B2" FontSize="10.5"
+                 Text="{Binding Storage, Converter={StaticResource StorageChipConverter}}"/>
+
+                                                                    <!-- Dense grid -->
+                                                                    <ScrollViewer MaxHeight="390" VerticalScrollBarVisibility="Auto">
+                                                                        <ItemsControl ItemsSource="{Binding Storage.Items}">
+                                                                            <ItemsControl.ItemsPanel>
+                                                                                <ItemsPanelTemplate>
+                                                                                    <WrapPanel Orientation="Horizontal"
+                   ItemWidth="64" ItemHeight="64"
+                   SnapsToDevicePixels="True"
+                   UseLayoutRounding="True"/>
+                                                                                </ItemsPanelTemplate>
+                                                                            </ItemsControl.ItemsPanel>
+
+                                                                            <ItemsControl.ItemTemplate>
+                                                                                <DataTemplate>
+                                                                                    <Border Width="64" Height="64"
+                Background="#1F242B"
+                BorderBrush="#2A2F37"
+                BorderThickness="0"    
+                                                                                        SnapsToDevicePixels="True">
+                                                                                        <Grid>
+                                                                                            <!-- Icon groß & zentriert -->
+                                                                                            <Image Source="{Binding Icon}"
+                   Width="48" Height="48"   
+                                                                                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                   RenderOptions.BitmapScalingMode="Fant"/>
+
+                                                                                                <!-- Badge unten rechts -->
+                                                                                                <Border HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                    Background="#252B33" BorderBrush="#3B4756" BorderThickness="1"
+                    CornerRadius="5" Padding="4,1.5" Margin="1,1,1,1">
+                                                                                                    <TextBlock Foreground="#EAECEE" FontSize="10" FontWeight="SemiBold">
+                <Run Text="x"/><Run Text="{Binding Amount, StringFormat={}{0:N0}}"/>
+                                                                                                    </TextBlock>
+                                                                                                </Border>
+                                                                                        </Grid>
+                                                                                    </Border>
+                                                                                </DataTemplate>
+                                                                            </ItemsControl.ItemTemplate>
+
+                                                                            <!-- Container ohne Margin, damit wirklich null Spalt -->
+                                                                            <ItemsControl.ItemContainerStyle>
+                                                                                <Style TargetType="ContentPresenter">
+                                                                                    <Setter Property="Margin" Value="1"/>
+                                                                                </Style>
+                                                                            </ItemsControl.ItemContainerStyle>
+                                                                        </ItemsControl>
+                                                                    </ScrollViewer>
+
+                                                                    <!-- footer (compact) -->
+                                                                    <TextBlock Margin="0,2,0,0" HorizontalAlignment="Right"
+                 Foreground="#7F8A99" FontSize="9.5"
+                 Text="{Binding Storage.ItemsCount, StringFormat={}{0} items}"/>
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </ToolTip>
+                                                    </Border.ToolTip>
+                                                </Border>
+
+                                            </Grid>
+                                            <!-- ===== Ende Zeile ===== -->
+
+                                            <!-- ===== Klappbereich (hängt direkt an 
+                                            ) ===== 
+                                            <Grid Margin="0,4,0,8" Visibility="Collapsed">
+                                                <Grid.Style>
+                                                    <Style TargetType="Grid">
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                <Setter Property="Foreground" Value="Red"/>
-                                                                <Setter Property="FontStyle" Value="Italic"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </TextBlock.Style>
-                                                <TextBlock.ContextMenu>
-                                                    <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                                        
-                                                        <MenuItem Header="Rename device" Click="Device_Rename_Click"/>
-                                                    </ContextMenu>
-                                                </TextBlock.ContextMenu>
-                                            </TextBlock>
-
-                                            <!-- Spalte 3: Toggle (unverändert) -->
-                                            <ToggleButton Grid.Column="2"
-                                          x:Name="Tog"
-                                          Width="64" Height="26" Margin="8,0,0,0"
-                                          IsChecked="{Binding IsOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                                <ToggleButton.Style>
-                                                    <Style TargetType="ToggleButton">
-                                                        <!-- Template sorgt dafür, dass Background/Content aus dem Style sichtbar sind -->
-                                                        <Setter Property="Template">
-                                                            <Setter.Value>
-                                                                <ControlTemplate TargetType="ToggleButton">
-                                                                    <Border x:Name="Bd"
-                                                            Background="{TemplateBinding Background}"
-                                                            CornerRadius="13"
-                                                            BorderBrush="#66000000"
-                                                            BorderThickness="1"
-                                                            Padding="4">
-                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                                    </Border>
-                                                                    <ControlTemplate.Triggers>
-                                                                        <Trigger Property="IsEnabled" Value="False">
-                                                                            <Setter TargetName="Bd" Property="Opacity" Value="0.4"/>
-                                                                        </Trigger>
-                                                                    </ControlTemplate.Triggers>
-                                                                </ControlTemplate>
-                                                            </Setter.Value>
-                                                        </Setter>
-
-                                                        <!-- Event-Handler -->
-                                                        <EventSetter Event="Checked"   Handler="DeviceToggle_Checked"/>
-                                                        <EventSetter Event="Unchecked" Handler="DeviceToggle_Unchecked"/>
-
-                                                        <!-- Defaults -->
-                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                        <Setter Property="Foreground" Value="White"/>
-                                                        <Setter Property="Background" Value="IndianRed"/>
-                                                        <Setter Property="Content" Value="OFF"/>
-                                                        <Setter Property="FontWeight" Value="SemiBold"/>
-                                                        <Setter Property="Cursor" Value="Hand"/>
-
-                                                        <!-- Trigger -->
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
+                                                            <DataTrigger Binding="{Binding IsExpanded}" Value="True">
                                                                 <Setter Property="Visibility" Value="Visible"/>
                                                             </DataTrigger>
-
-                                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                <Setter Property="IsEnabled" Value="False"/>
-                                                                <Setter Property="Opacity" Value="0.4"/>
-                                                            </DataTrigger>
-
-                                                            <Trigger Property="IsChecked" Value="True">
-                                                                <Setter Property="Background" Value="SeaGreen"/>
-                                                                <Setter Property="Content" Value="ON"/>
-                                                            </Trigger>
                                                         </Style.Triggers>
                                                     </Style>
-                                                </ToggleButton.Style>
-                                            </ToggleButton>
-                                        </Grid>
+                                                </Grid.Style>
+
+                                                <Border Background="#22000000"
+                      BorderBrush="#33000000" BorderThickness="1"
+                      CornerRadius="8" Padding="6">
+                                                    <StackPanel>
+                                                        <TextBlock Foreground="#99FFFFFF" FontStyle="Italic" Margin="0,0,0,6">
+                    <Run Text="Snapshot: "/>
+                    <Run Text="{Binding Storage.ItemsCount, Mode=OneWay, FallbackValue=0}" />
+                    <Run Text=" Items, Upkeep="/>
+                    <Run Text="{Binding Storage.UpkeepSeconds, Mode=OneWay, TargetNullValue=–}"/>
+                                                        </TextBlock>
+
+                                                        <ItemsControl ItemsSource="{Binding Storage.Items, Mode=OneWay}">
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <WrapPanel Orientation="Horizontal" ItemWidth="210"/>
+                                                                </ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel Orientation="Horizontal" Margin="6">
+                                                                        <Image Width="24" Height="24" Source="{Binding Icon}" Stretch="Uniform"/>
+                                                                        <TextBlock Margin="8,0,0,0" Foreground="White">
+                            <Run Text="{Binding Display}"/>
+                            <Run Text=" × "/>
+                            <Run Text="{Binding Amount}"/>
+                            <Run Text="{Binding MaxStack, StringFormat={} (Stack {0})}"/>
+                                                                        </TextBlock>
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </StackPanel>
+                                                </Border>
+                                            </Grid> -->
+                                            <!-- ===== Ende Klappbereich ===== -->
+
+                                        </StackPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
 
-                            <StackPanel Grid.Row="1"
-            Orientation="Horizontal"
-            HorizontalAlignment="Right"
-            Margin="0,10,0,0">
-
-                                <!-- NEU -->
-                                <Button x:Name="BtnHotkeys"
-        Content="Hotkeys"
-        Width="90"
-        Style="{StaticResource GhostButton}"
-        Click="BtnHotkeys_Click"
-        Margin="0,0,10,0"/>
-
-                                <Button Content="Info"    Width="80"
-            Style="{StaticResource GhostButton}"
-            Click="BtnDeviceInfo_Click"
-            IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem, Converter={StaticResource NotNull}}"/>
-                                <Button Content="Refresh" Width="80" Margin="10,0,0,0"
-            Style="{StaticResource GhostButton}"
-            Click="BtnDeviceRefresh_Click"/>
-                                <Button Content="Delete"  Width="80" Margin="10,0,0,0"
-            Style="{StaticResource GhostButton}"
-            Click="BtnDeleteDevice_Click"
-            ToolTip="You can only delete missing devices"
-            IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem.IsMissing, Converter={StaticResource NotNull}}"/>
+                            <!-- Footer -->
+                            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                                <Button x:Name="BtnHotkeys" Content="Hotkeys" Width="90" Style="{StaticResource GhostButton}" Click="BtnHotkeys_Click" Margin="0,0,10,0"/>
+                                <Button Content="Info" Width="80" Style="{StaticResource GhostButton}" Click="BtnDeviceInfo_Click"
+              IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem, Converter={StaticResource NotNull}}"/>
+                                <Button Content="Refresh" Width="80" Margin="10,0,0,0" Style="{StaticResource GhostButton}" Click="BtnDeviceRefresh_Click"/>
+                                <Button Content="Delete" Width="80" Margin="10,0,0,0" Style="{StaticResource GhostButton}" Click="BtnDeleteDevice_Click"
+              ToolTip="You can only delete missing devices"
+              IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem.IsMissing, Converter={StaticResource NotNull}}"/>
                             </StackPanel>
                         </Grid>
                     </TabItem>
@@ -1137,6 +1469,10 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                 </StackPanel>
                                             </Grid>
                                         </Border>
+                                        
+                                        
+                                        
+                                        
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>

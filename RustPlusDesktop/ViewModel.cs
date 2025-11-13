@@ -1,8 +1,12 @@
 ﻿using RustPlusDesk.Models;
 using RustPlusDesk.Services;
+using RustPlusDesk.Views;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Media;
 
 namespace RustPlusDesk.ViewModels;
 
@@ -53,6 +57,26 @@ public class MainViewModel : INotifyPropertyChanged
         }
     }
 
+    public sealed class StorageSnapshot
+    {
+        public bool IsToolCupboard { get; init; }
+        public int? UpkeepSeconds { get; init; }        // nur TC
+        public DateTime SnapshotUtc { get; init; } = DateTime.UtcNow;
+        public List<StorageItemVM> Items { get; init; } = new();
+    }
+
+    public sealed class StorageItemVM : INotifyPropertyChanged
+    {
+        public int ItemId { get; init; }
+        public string? ShortName { get; init; }
+        public int Amount { get; init; }
+        public int? MaxStack { get; init; }
+
+        public string Display => MainWindow.ResolveItemName(ItemId, ShortName);
+        public ImageSource? Icon => MainWindow.ResolveItemIcon(ItemId, ShortName, 32);
+        public event PropertyChangedEventHandler? PropertyChanged;
+    }
+
     private string _serverPlayers = "-/-";
     public string ServerPlayers { get => _serverPlayers; set { _serverPlayers = value; OnPropertyChanged(); } }
 
@@ -93,6 +117,8 @@ public class MainViewModel : INotifyPropertyChanged
         if (Servers.Count > 0 && Selected == null)
             Selected = Servers[0];
     }
+
+
     public void NotifyCamerasChanged() => OnPropertyChanged(nameof(Selected));
     public void Save() => StorageService.SaveProfiles(Servers);
 

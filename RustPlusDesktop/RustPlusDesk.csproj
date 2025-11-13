@@ -13,12 +13,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>3.0.1</Version>
+		<Version>3.1.0</Version>
 
 		<!-- EXE-Eigenschaften im Windows-Dateidialog -->
-		<AssemblyVersion>3.0.1</AssemblyVersion>
-		<FileVersion>3.0.1</FileVersion>
-		<InformationalVersion>3.0.1</InformationalVersion>
+		<AssemblyVersion>3.1.0</AssemblyVersion>
+		<FileVersion>3.1.0</FileVersion>
+		<InformationalVersion>3.1.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -99,8 +99,11 @@
 	  <None Remove="icons\satellitedish.png" />
 	  <None Remove="icons\save.png" />
 	  <None Remove="icons\sewerbranch.png" />
+	  <None Remove="icons\smartalarm.png" />
+	  <None Remove="icons\smartswitch.png" />
 	  <None Remove="icons\stable.png" />
 	  <None Remove="icons\stonequarry.png" />
+	  <None Remove="icons\storagemonitor.png" />
 	  <None Remove="icons\sulfurquarry.png" />
 	  <None Remove="icons\supermarket.png" />
 	  <None Remove="icons\swamp.png" />
@@ -125,6 +128,7 @@
 	  <None Remove="Screenshots\3.0_4.png" />
 	  <None Remove="Screenshots\3.0_5.png" />
 	  <None Remove="Screenshots\3.0_6.png" />
+	  <None Remove="Screenshots\3.1.0.png" />
 	  <None Remove="TitleScreen-rust-plus-desktop.png" />
 	</ItemGroup>
 	<ItemGroup>
@@ -140,6 +144,9 @@
 	  <Resource Include="icons\save.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Resource>
+	  <Resource Include="icons\smartalarm.png" />
+	  <Resource Include="icons\smartswitch.png" />
+	  <Resource Include="icons\storagemonitor.png" />
 	  <Resource Include="icons\text.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Resource>
@@ -238,6 +245,7 @@
     <Resource Include="Screenshots\3.0_4.png" />
     <Resource Include="Screenshots\3.0_5.png" />
     <Resource Include="Screenshots\3.0_6.png" />
+    <Resource Include="Screenshots\3.1.0.png" />
     <Resource Include="TitleScreen-rust-plus-desktop.png" />
     <Content Include="rust_items.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
