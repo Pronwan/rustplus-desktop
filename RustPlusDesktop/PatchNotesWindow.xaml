@@ -24,16 +24,17 @@
             Margin="8">
         <DockPanel LastChildFill="True">
             <!-- Header -->
+            
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
                 <TextBlock Text="Patch Notes November 2025"
                            FontSize="20"
                            FontWeight="SemiBold"
                            Margin="0,0,0,2"/>
-                <TextBlock Text="Version 3.1.0"
+                <TextBlock Text="Version 3.1.2"
            Foreground="{DynamicResource Accent}"
            FontSize="11"
            Margin="0,0,0,4"/>
-                <TextBlock Text="13.11.2025"
+                <TextBlock Text="16.11.2025"
                            Foreground="{DynamicResource TextSubtle}"
                            FontSize="13"/>
             </StackPanel>
@@ -44,6 +45,36 @@
               CanContentScroll="False"
               ScrollViewer.PanningMode="VerticalOnly">
                 <StackPanel Margin="0,0,0,12" Orientation="Vertical" >
+
+                    <Border Background="{DynamicResource SurfaceAlt}"
+BorderBrush="{DynamicResource CardBorder}"
+BorderThickness="1"
+CornerRadius="10"
+Padding="10"
+Margin="0,0,0,10">
+
+
+                        <StackPanel>
+                            <TextBlock Text="v3.1.2  |  Storage Monitor + Chat Notification Optimization"
+           FontWeight="SemiBold"
+           FontSize="15"
+           Margin="0,0,0,6"/>
+
+                            <TextBlock Text="• Storage Monitors now update live and give traffic light indicators for low upkeep on TC."
+           TextWrapping="Wrap"
+           Margin="0,0,0,6"/>
+
+                            <TextBlock Text="• Chat will not be spammed with event spawns anymore due to short API interruptions."
+TextWrapping="Wrap"
+Margin="0,0,0,6"/>
+                            <TextBlock Text="• You can now zoom in/out the map with NUM +/- (for all of you with broken mouse wheels ;-)"
+TextWrapping="Wrap"
+Margin="0,0,0,6"/>
+
+                        </StackPanel>
+                    </Border>
+
+
 
                     <Border Background="{DynamicResource SurfaceAlt}"
 BorderBrush="{DynamicResource CardBorder}"

@@ -18,7 +18,7 @@ public class SmartDevice : INotifyPropertyChanged
 
    // public int? UpkeepSeconds => Storage?.UpkeepSeconds;
 
-    public string UpkeepText => HumanizeUpkeep(Storage?.UpkeepSeconds);
+    public string UpkeepText => HumanizeUpkeep(UpkeepSeconds);
 
     //public int ItemsCount => Storage?.Items?.Count ?? 0;
 
@@ -72,6 +72,7 @@ public class SmartDevice : INotifyPropertyChanged
                 OnProp(nameof(HasStorage));
                 OnProp(nameof(ItemsCount));      // Proxy: nützlich für XAML
                 OnProp(nameof(UpkeepSeconds));   // Proxy: nützlich für XAML
+                OnProp(nameof(UpkeepText));  
 
                 if (_storage != null)
                 {
@@ -85,10 +86,25 @@ public class SmartDevice : INotifyPropertyChanged
     private void StorageItemsChanged(object? s, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         OnProp(nameof(ItemsCount));
+        OnProp(nameof(UpkeepText));
     }
     // bequeme Proxy-Properties für’s Binding (OneWay):
     public int ItemsCount => Storage?.ItemsCount ?? 0;     // nutzt deine ItemsCount aus StorageSnapshot
-    public int? UpkeepSeconds => Storage?.UpkeepSeconds;
+    public int? UpkeepSeconds
+{
+    get
+    {
+        if (Storage?.UpkeepSeconds is not int baseSecs)
+            return null;
+
+        var elapsed = (int)Math.Max(0,
+            (DateTime.UtcNow - Storage.SnapshotUtc).TotalSeconds);
+
+        var remain = baseSecs - elapsed;
+        if (remain < 0) remain = 0;
+        return remain;
+    }
+}
     public bool HasStorage => Storage != null;
 
     private bool _isExpanded;
