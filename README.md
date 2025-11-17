@@ -47,6 +47,14 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./App-Version3.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)  
 *(click the image to watch on YouTube)*
 
+## Update Notes 3.1.2 (November 17th 25)
+Version 3.1.2 brings full Storage Monitor integration and the following optimizations:
+![Update](./3.1.0.png)  
+- Shop alerts now also trigger when item was sold out and then comes back online
+- Storage Monitor shows traffic light upkeep indicator (from 1 hr. and less)
+- Map can be zoomed with NUM +/-
+- No duplicate chat notifications when server had been desynced for a short amount of time
+
 ## Update Notes 3.0.0 (October 30th 25)
 - FULL Shop Analytics Overhaul!
   This comes with instant check for profit trades, trade route check (Buy X for Y) and more
