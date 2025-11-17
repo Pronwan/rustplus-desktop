@@ -955,6 +955,9 @@ public partial class MainWindow : Window
         WebViewHost.MouseDown += WebViewHost_MouseDown;
         WebViewHost.MouseMove += WebViewHost_MouseMove;
         WebViewHost.MouseUp += WebViewHost_MouseUp;
+
+        WebViewHost.KeyDown += WebViewHost_KeyDown;
+        WebViewHost.Focusable = true;
         DataContext = _vm;
         _vm.Load();
         // NEU: einmalig auf die aktuell ausgewählte Server-Instanz „umstecken“
@@ -2924,12 +2927,14 @@ public partial class MainWindow : Window
 
     private async void BtnConnect_Click(object sender, RoutedEventArgs e)
     {
+         await HardResetAsync(reconnect: false);
         // stop polls from previous server
         _shopTimer?.Stop();
         _shopTimer = null;
         StopDynPolling();
         StopTeamPolling();
         TeamMembers.Clear();
+        
         _avatarCache.Clear();
         _lastPresence.Clear();
         ClearAllDeathPins();
@@ -3104,35 +3109,43 @@ public partial class MainWindow : Window
             MessageBox.Show($"Connection failed: {ex.Message}");
         }
         _storageTimer?.Stop();
-        _storageTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(12) };
+        _storageTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(10) };
         _storageTimer.Tick += async (_, __) =>
         {
-            var sel = _connectedProfile ?? _vm?.Selected;
-            if (sel?.Devices == null || sel.Devices.Count == 0) return;
-
-           // AppendLog($"[stor/poll] sel='{sel.Name}' devices={sel.Devices.Count}");
-
-            foreach (var sd in sel.Devices)
+            if (_storageTickBusy) return;
+            _storageTickBusy = true;
+            try
             {
-                // treat unknown kind optimistically so we can learn it on first refresh
-                var isStorage =
-                    string.Equals(sd.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase) ||
-                    string.IsNullOrWhiteSpace(sd.Kind);
+               // AppendLog("[stor/poll] tick");
+                var sel = _connectedProfile ?? _vm?.Selected;
+                if (sel?.Devices == null || sel.Devices.Count == 0)
 
-                if (!isStorage) continue;
+                {
+              //      AppendLog("[stor/poll] no devices");
+                    return;
+                }
 
-                try
+                foreach (var sd in sel.Devices)
                 {
-                    await RefreshDeviceStateAsync(sd, log: true);
+                    if (!IsStorageDevice(sd)) continue;   // <<< hier!
+                  //  AppendLog($"[stor/poll] #{sd.EntityId} ({sd.Kind ?? "?"})");
+                    try
+                    {
+                        await RefreshDeviceStateAsync(sd, log: true, forcePull: true);
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog($"[stor/poll] #{sd.EntityId} err: {ex.Message}");
+                    }
                 }
-                catch (Exception ex)
-                {
-                    AppendLog($"[stor/poll] #{sd.EntityId} err: {ex.Message}");
-                }
+            }
+            finally
+            {
+                _storageTickBusy = false;
             }
         };
         _storageTimer.Start();
-
+       // AppendLog("[stor/poll] timer started (10s)");
     }
 
     // PLAYER DEATH MARKERS AVATAR IMAGE PLAYER DEATH
@@ -3284,91 +3297,98 @@ public partial class MainWindow : Window
     // Ein Gerät *generisch* neu einlesen (wie der Info-Button).
     // - Für SmartSwitch: schneller Pfad über GetSmartSwitchStateAsync
     // - Für alle anderen (oder Fallback): ProbeEntityAsync (setzt auch Kind/IsMissing)
-    private async Task RefreshDeviceStateAsync(SmartDevice dev, bool log = true)
+    private async Task RefreshDeviceStateAsync(SmartDevice dev, bool log = true, bool forcePull = false)
     {
         if (_rust is not RustPlusClientReal real) return;
-        if (string.Equals(dev.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
+
+        if (IsStorageDevice(dev))
         {
             try
             {
-                var probe = await _rust.ProbeEntityAsync(dev.EntityId);
-                if (!string.IsNullOrWhiteSpace(probe.Kind) &&
-                    !string.Equals(dev.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase))
-                    dev.Kind = probe.Kind;
-
-                dev.IsMissing = !probe.Exists;
-                if (!probe.Exists)
-                {
-                    dev.Storage = null;
-                    if (log) AppendLog($"[stor/refresh] #{dev.EntityId} → not found (offline)");
-                    return;
-                }
-
-                // (1) Cache sofort ins UI
-                // (1) Cache sofort ins UI – aber als UI-Kopie!
-                if (_rust is RustPlusClientReal real2 && real.TryGetCachedStorage(dev.EntityId, out var cached))
+                // (1) Cache → UI
+                if (real.TryGetCachedStorage(dev.EntityId, out var cached))
                 {
                     Dispatcher.Invoke(() =>
                     {
                         var uiSnap = new StorageSnapshot
                         {
                             UpkeepSeconds = cached.UpkeepSeconds,
-                            IsToolCupboard = cached.IsToolCupboard
+                            IsToolCupboard = cached.IsToolCupboard,
+                            SnapshotUtc = cached.SnapshotUtc
                         };
-                        foreach (var it in cached.Items) uiSnap.Items.Add(it);
+                        foreach (var it in cached.Items)
+                            uiSnap.Items.Add(it);
+
                         dev.Storage = uiSnap;
+                        dev.IsMissing = false;
                     });
-                   // if (log) AppendLog($"[stor/refresh] (cache) #{dev.EntityId} items={cached.Items?.Count ?? 0} upkeep={(cached.UpkeepSeconds?.ToString() ?? "null")}");
                 }
                 else
                 {
-                    dev.Storage ??= new StorageSnapshot(); // sofort renderbar
-                  //  if (log) AppendLog($"[stor/refresh] (no cache) #{dev.EntityId} → awaiting event");
+                    dev.Storage ??= new StorageSnapshot();
                 }
 
-                // (2) Sanft abonnieren & anstupsen (ohne harte Schleifen)
+                // (2) einmalig subscriben
                 try
                 {
-                    if (_rust is RustPlusClientReal r)
-                    {
-                        await r.EnsureSubOnceAsync(dev.EntityId);
-                       // await r.PokeEntityAsync(dev.EntityId);
-                       // if (log) AppendLog($"[stor/sub+poke] #{dev.EntityId} queued");
-                    }
+                    await real.EnsureSubOnceAsync(dev.EntityId);
                 }
                 catch (Exception subEx)
                 {
                     if (log) AppendLog($"[stor/sub+poke] #{dev.EntityId} failed: {subEx.Message}");
                 }
 
-                // (3) Optionaler Fallback: Einmalig leicht verzögert pullen, wenn noch immer nix kam
-                _ = Task.Run(async () =>
+                // (3) bei forcePull denselben Weg wie Refresh nutzen
+                if (forcePull)
                 {
-                    await Task.Delay(500);
-                    if (real.TryGetCachedStorage(dev.EntityId, out _)) return; // Event kam bereits
                     try
                     {
-                        var snap = await real.GetStorageMonitorAsync(dev.EntityId);
-                        if (snap != null)
-                        {
-                            Dispatcher.Invoke(() => { dev.Storage = snap; _vm?.NotifyDevicesChanged(); });
-                            if (log) AppendLog($"[stor/pull] #{dev.EntityId} items={snap.Items?.Count ?? 0} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")}");
-                        }
+                        // wir brauchen das Ergebnis nicht – wichtig ist der Side-Effekt:
+                        // DecodeEntityInfo / Events aktualisieren den Storage-Cache
+                        await _rust.ProbeEntityAsync(dev.EntityId);
+                       // if (log)
+                        //    AppendLog($"[stor/poll] probe #{dev.EntityId} queued");
                     }
-                    catch (Exception ex2) { AppendLog($"[stor/pull] #{dev.EntityId} fallback: {ex2.Message}"); }
-                });
+                    catch (Exception pullEx)
+                    {
+                        if (log) AppendLog($"[stor/poll] #{dev.EntityId} probe EX: {pullEx.Message}");
+                    }
+                }
+                else
+                {
+                    // optionaler Fallback nur, wenn noch kein Cache existiert
+                    _ = Task.Run(async () =>
+                    {
+                        await Task.Delay(500);
+                        if (real.TryGetCachedStorage(dev.EntityId, out _))
+                            return;
+
+                        try
+                        {
+                            // hier kannst du dein GetStorageMonitorAsync ruhig behalten,
+                            // falls es für den Erst-Snapshot funktioniert
+                            await real.GetStorageMonitorAsync(dev.EntityId);
+                            if (log)
+                                AppendLog($"[stor/pull] #{dev.EntityId} queued fallback pull");
+                        }
+                        catch (Exception ex2)
+                        {
+                            AppendLog($"[stor/pull] #{dev.EntityId} fallback EX: {ex2.Message}");
+                        }
+                    });
+                }
 
                 return;
             }
             catch (Exception ex)
             {
-                dev.Storage ??= new StorageSnap();
+                dev.Storage ??= new StorageSnapshot();
                 if (log) AppendLog($"[stor/refresh] #{dev.EntityId} EX: {ex.Message}");
                 return;
             }
         }
 
-        // 3) Generisch (SmartAlarm & Co.)
+        // ===== Generisch (SmartAlarm & Co.) =====
         try
         {
             var r = await _rust.ProbeEntityAsync(dev.EntityId);
@@ -3784,21 +3804,26 @@ public partial class MainWindow : Window
         if (_scene == null) return;
 
         double zoom = e.Delta > 0 ? 1.10 : (1.0 / 1.10);
-
-        // Pivot korrekt in Scene-VOR-Transform:
         var hostPos = e.GetPosition(WebViewHost);
+
+        ZoomAtHostPosition(hostPos, zoom);
+        e.Handled = true;
+    }
+    private void ZoomAtHostPosition(Point hostPos, double factor)
+    {
+        if (_scene == null) return;
+
         var pivot = HostToScenePreTransform(hostPos);
 
         var m = MapTransform.Matrix;
-        m.ScaleAt(zoom, zoom, pivot.X, pivot.Y);
+        m.ScaleAt(factor, factor, pivot.X, pivot.Y);
         MapTransform.Matrix = m;
+
         RefreshAllOverlayScales();
         RefreshMonumentOverlayPositions();
         RefreshUserOverlayIcons();
         CenterMiniMapOnPlayer();
-        e.Handled = true;
     }
-
 
 
     // Welt→Bild (Pixel im Bildkoordinatensystem – vor Zoom/Pan)
@@ -4067,7 +4092,7 @@ public partial class MainWindow : Window
     private Point _lastHost;
     private void WebViewHost_MouseDown(object? sender, MouseButtonEventArgs e)
     {
-
+        WebViewHost.Focus();
         var hostPos = e.GetPosition(WebViewHost);
         var mapPos = HostToScenePreTransform(hostPos); // du hast die Helperfunktion schon
 
@@ -4085,6 +4110,31 @@ public partial class MainWindow : Window
             e.Handled = true;
         }
     }
+
+    // Handler für Zoom mit NumPad +/-
+    private void WebViewHost_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (_scene == null) return;
+
+        bool zoomIn = e.Key == Key.Add || e.Key == Key.OemPlus;
+        bool zoomOut = e.Key == Key.Subtract || e.Key == Key.OemMinus;
+
+        if (!zoomIn && !zoomOut)
+            return;
+
+        // Nur zoomen, wenn die Maus wirklich über der Map liegt
+        var hostPos = Mouse.GetPosition(WebViewHost);
+        if (hostPos.X < 0 || hostPos.Y < 0 ||
+            hostPos.X > WebViewHost.ActualWidth ||
+            hostPos.Y > WebViewHost.ActualHeight)
+            return;
+
+        double factor = zoomIn ? 1.10 : (1.0 / 1.10);
+
+        ZoomAtHostPosition(hostPos, factor);
+        e.Handled = true;
+    }
+
     private Point _panLastWorld; // Maus in "Welt"/Scene-Koordinaten (vor der Transform)
     private void WebViewHost_MouseMove(object? sender, MouseEventArgs e)
     {
@@ -4878,7 +4928,7 @@ public partial class MainWindow : Window
                 Overlay.Children.Remove(el);
                 _dynEls.Remove(id);
             }
-            _dynKnown.Remove(id);
+           // _dynKnown.Remove(id);
         }
     }
 
@@ -8808,7 +8858,7 @@ public partial class MainWindow : Window
                     (rule.MatchBuySide && MatchOrderRight(o, rule.QueryText));
 
                 if (!matchesSide) continue;
-
+               
                 rule.Baseline.Add(new AlertSeenOrder
                 {
                     ShopId = shop.Id,
@@ -9156,91 +9206,99 @@ public partial class MainWindow : Window
                 if (shop.Orders == null) continue;
 
                 foreach (var order in shop.Orders)
+            {
+                // 1) Passt zur Regel?
+                bool matchesSide =
+                    (rule.MatchSellSide && MatchOrderLeft(order, rule.QueryText)) ||
+                    (rule.MatchBuySide && MatchOrderRight(order, rule.QueryText));
+
+                if (!matchesSide)
+                    continue;
+
+                // 2) Baseline-Eintrag für diese Kombo suchen
+                var baseline = rule.Baseline.FirstOrDefault(b =>
+                    b.ShopId        == shop.Id &&
+                    b.ItemShort     == order.ItemShortName &&
+                    b.CurrencyShort == order.CurrencyShortName &&
+                    b.Quantity      == order.Quantity &&
+                    Math.Abs(b.CurrencyAmount - order.CurrencyAmount) < 0.001f
+                );
+
+                int prevStock = baseline?.Stock ?? 0;
+                int curStock  = order.Stock;
+
+                // 3) Baseline updaten/erzeugen – wir wollen immer den letzten Stock dort haben
+                if (baseline == null)
                 {
-                    // 1. Passt überhaupt zur Regel?
-                    bool matchesSide =
-                        (rule.MatchSellSide && MatchOrderLeft(order, rule.QueryText)) ||
-                        (rule.MatchBuySide && MatchOrderRight(order, rule.QueryText));
-
-                    if (!matchesSide)
-                        continue;
-
-                    // 2. nix melden bei leerem Stock
-                    if (order.Stock <= 0)
-                        continue;
-
-                    // 3. Haben wir diesen Deal-Typ schon als bekannt markiert?
-                    //    "Deal-Typ" definieren wir als: Shop + Item + Währung + Menge pro Trade + Preis.
-                    //    (Stock lassen wir absichtlich raus, sonst spammt er bei jeder Stockänderung)
-                    bool alreadyKnown = rule.Baseline.Any(b =>
-                        b.ShopId == shop.Id &&
-                        b.ItemShort == order.ItemShortName &&
-                        b.CurrencyShort == order.CurrencyShortName &&
-                        b.Quantity == order.Quantity &&
-                        Math.Abs(b.CurrencyAmount - order.CurrencyAmount) < 0.001f
-                    );
-
-                    if (alreadyKnown)
-                        continue;
-
-                    // 4. Pro-Order Spam-Schutz: 1 Meldung pro 60s für exakt diese Kombi
-                    string sig = $"{shop.Id}:{order.ItemShortName}:{order.CurrencyShortName}:{order.Quantity}:{order.CurrencyAmount}";
-                    if (rule.LastAnnouncements.TryGetValue(sig, out var lastWhen) &&
-                        (DateTime.UtcNow - lastWhen).TotalSeconds < 60)
+                    baseline = new AlertSeenOrder
                     {
-                        continue;
-                    }
-
-                    // 5. Globales Rate Limit: nur 1 Chat-Nachricht pro Sekunde
-                    if ((DateTime.UtcNow - _lastChatSendUtc).TotalSeconds < 1.0)
-                        continue;
-                    _lastChatSendUtc = DateTime.UtcNow;
-
-                    // 6. Chattext bauen
-                    string grid = GetGridLabel(shop);
-
-                    string itemName = ResolveItemName(order.ItemId, order.ItemShortName);
-                    string currencyName = ResolveItemName(order.CurrencyItemId, order.CurrencyShortName);
-
-                    string verb = rule.MatchSellSide ? "sells" : "buys";
-
-                    string msg =
-                        $"{(shop.Label ?? "Shop")} [{grid}] {verb} " +
-                        $"x{order.Quantity} {itemName} (Stock {order.Stock}) " +
-                        $"for {order.CurrencyAmount} {currencyName}";
-
-                    // Immer ins lokale Log schreiben – unabhängig von Chat/Sound
-                    AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert: {msg}");
-
-                    // 7. Ausspielen (Chat + optional Sound)
-                    if (rule.NotifyChat)
-                    {
-                        await SendTeamChatSafeAsync(msg);
-                    }
-
-                    if (rule.NotifySound)
-                    {
-                        PlayShopAlertSound();
-                    }
-
-                    // 8. Diesen Deal-Typ jetzt dauerhaft als bekannt markieren,
-                    //    damit er NICHT bei jedem Poll wieder als "neu" zählt.
-                    rule.Baseline.Add(new AlertSeenOrder
-                    {
-                        ShopId = shop.Id,
-                        ItemShort = order.ItemShortName,
+                        ShopId        = shop.Id,
+                        ItemShort     = order.ItemShortName,
                         CurrencyShort = order.CurrencyShortName,
-                        Quantity = order.Quantity,
-                        CurrencyAmount = order.CurrencyAmount,
-                        Stock = order.Stock
-                    });
-
-                    // 9. Cooldown-Zeitpunkt merken
-                    rule.LastAnnouncements[sig] = DateTime.UtcNow;
+                        Quantity      = order.Quantity,
+                        CurrencyAmount= order.CurrencyAmount,
+                        Stock         = curStock
+                    };
+                    rule.Baseline.Add(baseline);
                 }
+                else
+                {
+                    baseline.Stock = curStock;
+                }
+
+                // 4) Wenn aktuell kein Stock → nie alerten, nur Zustand merken
+                if (curStock <= 0)
+                    continue;
+
+                // 5) Entscheiden, ob wir das als "neu" werten
+                bool isNewDeal   = (baseline != null && prevStock == 0); // entweder ganz neu oder aus 0 kommend
+                bool isRestock   = (prevStock <= 0 && curStock > 0);
+                bool alreadySeenWithStock = (prevStock > 0);
+
+                if (!isNewDeal && !isRestock && alreadySeenWithStock)
+                {
+                    // hatten wir schon mit Stock > 0, und es ist kein neuer Preis/Menge → nichts tun
+                    continue;
+                }
+
+                // 6) Pro-Order Spam-Schutz wie gehabt
+                string sig = $"{shop.Id}:{order.ItemShortName}:{order.CurrencyShortName}:{order.Quantity}:{order.CurrencyAmount}";
+                if (rule.LastAnnouncements.TryGetValue(sig, out var lastWhen) &&
+                    (DateTime.UtcNow - lastWhen).TotalSeconds < 60)
+                {
+                    continue;
+                }
+
+                // 7) Globales Rate Limit
+                if ((DateTime.UtcNow - _lastChatSendUtc).TotalSeconds < 1.0)
+                    continue;
+                _lastChatSendUtc = DateTime.UtcNow;
+
+                // 8) Nachricht bauen + loggen
+                string grid         = GetGridLabel(shop);
+                string itemName     = ResolveItemName(order.ItemId, order.ItemShortName);
+                string currencyName = ResolveItemName(order.CurrencyItemId, order.CurrencyShortName);
+                string verb         = rule.MatchSellSide ? "sells" : "buys";
+
+                string msg =
+                    $"{(shop.Label ?? "Shop")} [{grid}] {verb} " +
+                    $"x{order.Quantity} {itemName} (Stock {order.Stock}) " +
+                    $"for {order.CurrencyAmount} {currencyName}";
+
+                AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert: {msg}");
+
+                if (rule.NotifyChat)
+                    await SendTeamChatSafeAsync(msg);
+
+                if (rule.NotifySound)
+                    PlayShopAlertSound();
+
+                // 9) Zeitstempel für diese Kombo updaten
+                rule.LastAnnouncements[sig] = DateTime.UtcNow;
             }
         }
     }
+}
 
     private void RebaselineAllAlertRulesFromCurrentShops(IReadOnlyList<RustPlusClientReal.ShopMarker> shops)
     {
@@ -12193,34 +12251,39 @@ public partial class MainWindow : Window
 
     // kommt aus RustPlusClientReal.StorageSnapshotReceived
     private void OnStorageSnapshot(uint entityId, StorageSnapshot snap)
+{
+    Dispatcher.Invoke(() =>
     {
-        Dispatcher.Invoke(() =>
+        SmartDevice? dev = null;
+
+        // 1) Aktuelle Sicht (gefilterte Liste)
+        if (_vm?.CurrentDevices != null)
+            dev = _vm.CurrentDevices.FirstOrDefault(d => d.EntityId == entityId);
+
+        // 2) Fallback: alle Devices des ausgewählten Servers
+        if (dev == null)
+            dev = _vm?.Selected?.Devices?.FirstOrDefault(d => d.EntityId == entityId);
+
+        if (dev == null)
+            return;
+
+        dev.IsMissing = false;
+
+        var uiSnap = new StorageSnapshot
         {
-            // WICHTIG: exakt die Collection, an die das ListBox-Template gebunden ist
-            var dev = _vm?.CurrentDevices?.FirstOrDefault(d => d.EntityId == entityId);
-            if (dev == null) return;
+            UpkeepSeconds  = snap.UpkeepSeconds,
+            IsToolCupboard = snap.IsToolCupboard,
+            SnapshotUtc    = DateTime.UtcNow
+        };
+        foreach (var it in snap.Items)
+            uiSnap.Items.Add(it);
 
-            dev.IsMissing = false;
+        dev.Storage = uiSnap;
 
-            // Auf dem UI-Thread kannst du den Snapshot direkt setzen,
-            // oder – wie bisher – eine UI-Kopie bauen:
-            var uiSnap = new StorageSnapshot
-            {
-                UpkeepSeconds = snap.UpkeepSeconds,
-                IsToolCupboard = snap.IsToolCupboard,
-                SnapshotUtc = DateTime.UtcNow
-            };
-            foreach (var it in snap.Items)
-                uiSnap.Items.Add(it);
-
-            dev.Storage = uiSnap;
-
-            if (!dev.IsExpanded) dev.IsExpanded = true;
-
-            // Meist nicht nötig und kann Re-Templating auslösen:
-            // _vm?.NotifyDevicesChanged();
-        });
-    }
+        if (!dev.IsExpanded)
+            dev.IsExpanded = true;
+    });
+}
 
    
     

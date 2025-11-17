@@ -50,7 +50,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
     = new Dictionary<uint, RustPlusDesk.Models.StorageSnapshot>();
     public bool TryGetCachedStorage(uint id, out RustPlusDesk.Models.StorageSnapshot snap)
      => _storageCache.TryGetValue(id, out snap);
-    public event Action<uint, StorageSnap>? StorageSnapshotReceived;
+    public event Action<uint, StorageSnapshot>? StorageSnapshotReceived;
 
 
     private void CacheStorage(uint id, StorageSnapshot? snap)
@@ -1708,7 +1708,8 @@ rp.connect();
         lock (_hookLock)
         {
             if (_eventsHooked) return;
-            
+            _eventsHooked = true;
+
         }
 
         // --- ab hier: Events/Sniffer VERDRAHTEN ---
@@ -1719,6 +1720,7 @@ rp.connect();
         AttachSniffer("OnEntityInfo");
         AttachSniffer("OnResponse");
         AttachSniffer("OnProtobufMessage");
+        AttachSniffer("RequestSent");
 
         foreach (var ev in _api.GetType().GetEvents()
                  .Where(e => e.Name.IndexOf("Storage", StringComparison.OrdinalIgnoreCase) >= 0
@@ -1739,54 +1741,8 @@ rp.connect();
 
         _api.OnStorageMonitorTriggered += (_, st) =>
         {
-            try
-            {
-                uint entityId = 0;
-                try
-                {
-                    var idObj = TryGetProp(st!, "Id") ?? TryGetProp(st!, "EntityId");
-                    entityId = Convert.ToUInt32(idObj ?? 0);
-                }
-                catch { }
-
-                var root = UnpackAnyRecursive(st!) ?? (object)st!;
-                var payload = TryGetProp(root, "Payload") ?? root;
-                var info = TryGetProp(payload, "StorageMonitor", "storageMonitor", "Storage", "Container") ?? payload;
-                info = UnpackAnyRecursive(info!) ?? info;
-
-                int? upkeep = null;
-                if (!TryReadUpkeepSeconds(info!, out var secs))
-                {
-                    // Fallback via ProtectionExpiry
-                    var secs2 = SecondsUntil(info!, "ProtectionExpiry", "Expiry", "ProtectedUntil", "ProtectedExpiry");
-                    if (secs2.HasValue) upkeep = secs2.Value;
-                }
-                else upkeep = secs;
-
-                var items = FindItemsList(info!);
-
-                var snap = new StorageSnap { UpkeepSeconds = upkeep, IsToolCupboard = (upkeep ?? 0) > 0 };
-                if (items != null)
-                {
-                    foreach (var it in items)
-                    {
-                        if (it == null) continue;
-                        int id = ReadIntFlexible(it, "ItemId", "ItemID", "Id") ?? 0;
-                        int amt = ReadIntFlexible(it, "Amount", "Quantity", "Count", "Stack") ?? 0;
-                        int? mx = ReadIntFlexible(it, "MaxStack", "MaxStackSize", "StackSize");
-                        string? sn = ReadStringFlexible(it, "ShortName", "ItemShortName", "Short", "Name");
-                        snap.Items.Add(new StorageItemVM { ItemId = id, ShortName = sn, Amount = amt, MaxStack = mx });
-                    }
-                }
-
-                _storageCache[entityId] = snap;
-                StorageSnapshotReceived?.Invoke(entityId, snap);
-                _log?.Invoke($"[stor/event] {entityId} items={snap.Items.Count} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")}");
-            }
-            catch (Exception ex)
-            {
-                _log?.Invoke($"[stor/event] EX: {ex.Message}");
-            }
+            // kein Blockieren/Reflection im Event-Thread
+            _ = Task.Run(() => HandleStorageMonitorEvent(st));
         };
 
         _api.RequestSent += (_, reqObj) =>
@@ -1840,7 +1796,6 @@ rp.connect();
         {
             try
             {
-                // 1) Envelope tolerant + Any auspacken
                 var root = UnpackAnyRecursive(respObj!) ?? (object)respObj!;
                 var envelope =
                        TryGetProp(root, "Response")
@@ -1849,92 +1804,80 @@ rp.connect();
                     ?? TryGetProp(root, "Message")
                     ?? root;
 
-                // 2) Seq → EntityId per Map
+                // Seq → EntityId per Map
                 uint entityId = 0u;
                 var seqN = TryReadIntN(envelope, "Seq", "Sequence", "SequenceId");
                 if (seqN is not null && _seqToEntity.TryGetValue(seqN.Value, out var mapped))
                     entityId = mapped;
 
-                // 3) EntityInfo / Info (Hüllenschicht) holen
+                // === 1) Direkte Storage-/Container-Antwort (ohne EntityInfo-Hülle) ===
+                var storDirect =
+                       TryGetProp(envelope, "StorageMonitor", "storageMonitor",
+                                                "Storage", "Container", "Box",
+                                                "ToolCupboard", "Cupboard");
+                storDirect = UnpackAnyRecursive(storDirect) ?? storDirect;
+
+                if (storDirect != null)
+                {
+                    if (entityId == 0u)
+                    {
+                        entityId =
+                              TryReadUIntN(storDirect, "EntityId", "Id")
+                           ?? TryReadUIntN(envelope, "EntityId", "Id")
+                           ?? 0u;
+                    }
+
+                    BuildAndStoreSnapshotFromStorageNode(entityId, storDirect, sourceTag: "direct");
+                    return;
+                }
+
+                // === 2) Klassischer Weg über EntityInfo / Info ===
                 var entityInfoOrInfo =
                        TryGetProp(envelope, "EntityInfo")
                     ?? TryGetProp(envelope, "Entity")
                     ?? TryGetProp(envelope, "EntityInfoResponse")
                     ?? TryGetProp(envelope, "Info");
-                if (entityInfoOrInfo is null) return;
 
-                // Payload/Info auspacken
+                if (entityInfoOrInfo is null)
+                    return;
+
                 var payload = TryGetProp(entityInfoOrInfo, "Payload");
-                payload = UnpackAnyRecursive(payload) ?? payload;
+                payload = UnpackAnyRecursive(payload) ?? payload ?? entityInfoOrInfo;
 
-                // Type check: nur Storage/Container/Cupboard
                 var typeStr =
                        TryReadStringN(entityInfoOrInfo, "Type", "EntityType")
                     ?? TryReadStringN(payload, "Type", "EntityType");
+
                 if (typeStr != null)
                 {
                     var ts = typeStr.ToLowerInvariant();
                     if (!(ts.Contains("storage") || ts.Contains("container") || ts.Contains("cupboard")))
-                        return; // nicht relevant
+                        return; // uninteressant
                 }
 
-                // EntityId ggf. aus Tiefen lesen (wenn Map nicht gegriffen hat)
                 if (entityId == 0u)
                 {
-                    entityId = TryReadUIntN(entityInfoOrInfo, "EntityId", "Id") ?? 0u;
-                    if (entityId == 0u) entityId = TryReadUIntN(payload, "EntityId", "Id") ?? 0u;
+                    entityId =
+                          TryReadUIntN(entityInfoOrInfo, "EntityId", "Id")
+                       ?? TryReadUIntN(payload, "EntityId", "Id")
+                       ?? 0u;
                 }
 
-                // 4) Info → Storage-Knoten tolerant
-                var info = TryGetProp(payload, "Info") ?? payload ?? entityInfoOrInfo;
+                var info =
+                       TryGetProp(payload, "Info")
+                    ?? payload
+                    ?? entityInfoOrInfo;
                 info = UnpackAnyRecursive(info) ?? info;
 
                 var stor =
-                       TryGetProp(info, "StorageMonitor", "storageMonitor", "Storage", "Container", "Box", "ToolCupboard", "Cupboard")
+                       TryGetProp(info, "StorageMonitor", "storageMonitor",
+                                         "Storage", "Container", "Box",
+                                         "ToolCupboard", "Cupboard")
                     ?? info;
                 stor = UnpackAnyRecursive(stor) ?? stor;
                 if (stor is Type) return;
 
-                // 5) Upkeep & Items extrahieren
-                int? upkeep = null;
-                if (TryReadUpkeepSeconds(stor, out var secs)) upkeep = secs;
-
-                var seqItems = FindItemsList(stor) as IEnumerable;
-                if (seqItems is null && upkeep is null) return;
-
-                // Für Diagnose kurz loggen
-               // _log?.Invoke($"[stor/resp] hit entity={(entityId == 0 ? -1 : (int)entityId)}");
-
-                var snap = new StorageSnap
-                {
-                    UpkeepSeconds = upkeep,
-                    IsToolCupboard = (upkeep ?? 0) > 0
-                };
-
-                if (seqItems is not null)
-                {
-                    foreach (var it in seqItems)
-                    {
-                        if (it is null) continue;
-                        int id = TryReadIntN(it, "ItemId", "ItemID", "Id") ?? 0;
-                        int amt = TryReadIntN(it, "Amount", "Quantity", "Count", "Stack") ?? 0;
-                        int? mx = TryReadIntN(it, "MaxStack", "MaxStackSize", "StackSize");
-                        string? sn = TryReadStringN(it, "ShortName", "ItemShortName", "Short", "Name");
-                        snap.Items.Add(new StorageItemVM { ItemId = id, ShortName = sn, Amount = amt, MaxStack = mx });
-                       // _log?.Invoke($"[stor/item] #{entityId} [{sn}] id={id} sn='{sn ?? "-"}' amt={amt} max={mx.ToString() ?? "-"}");
-                    }
-                }
-
-                if (entityId != 0u)
-                {
-                    _storageCache[entityId] = snap;
-                    StorageSnapshotReceived?.Invoke(entityId, snap);
-                   // _log?.Invoke($"[stor/resp] {entityId} items={snap.Items.Count} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")}");
-                }
-                else
-                {
-                  //  _log?.Invoke($"[stor/resp] (no entity id) items={snap.Items.Count} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")}");
-                }
+                BuildAndStoreSnapshotFromStorageNode(entityId, stor, sourceTag: "entity");
             }
             catch (Exception ex)
             {
@@ -1944,19 +1887,311 @@ rp.connect();
         // --- Diagnose: einmal Event-Namen loggen + gezielt anbinden ---
         LogAllApiEventsOnce();
         // gezielt die Transport-/Entity-Events anhängen (falls vorhanden)
-        AttachSniffer("ResponseReceived");
-        AttachSniffer("MessageReceived");
-        AttachSniffer("RequestSent");
-        AttachSniffer("SendingRequest");
-        AttachSniffer("NotificationReceived");
+      //  AttachSniffer("ResponseReceived");
+      //  AttachSniffer("MessageReceived");
+      //  AttachSniffer("RequestSent");
+      //  AttachSniffer("SendingRequest");
+      //  AttachSniffer("NotificationReceived");
 
         // zusätzlich die in deinem Build vorhandenen Entity/Storage-Events
-        AttachSniffer("OnStorageMonitorTriggered");
-        AttachSniffer("OnEntityInfo");
-        AttachSniffer("OnEntityChanged");
+      //  AttachSniffer("OnStorageMonitorTriggered");
+      //  AttachSniffer("OnEntityInfo");
+      //  AttachSniffer("OnEntityChanged");
 
         
         lock (_hookLock) _eventsHooked = true;
+    }
+
+    private void HandleStorageMonitorEvent(object st)
+    {
+        try
+        {
+            uint entityId = 0;
+            try
+            {
+                var idObj = TryGetProp(st!, "Id") ?? TryGetProp(st!, "EntityId");
+                entityId = Convert.ToUInt32(idObj ?? 0);
+            }
+            catch { }
+
+            if (entityId == 0)
+            {
+                _log?.Invoke("[stor/event] entityId=0 – event ignored");
+                return;
+            }
+
+            var root = UnpackAnyRecursive(st!) ?? (object)st!;
+            var payload = TryGetProp(root, "Payload") ?? root;
+            var info = TryGetProp(payload, "StorageMonitor", "storageMonitor", "Storage", "Container") ?? payload;
+            info = UnpackAnyRecursive(info!) ?? info;
+
+            int? upkeep = null;
+            if (TryReadUpkeepSeconds(info!, out var secs))
+                upkeep = secs;
+
+            bool isTc = false;
+            var hp = TryReadBoolN(info!,
+                "HasProtection",
+                "IsProtected",
+                "IsBuildingPrivilege",
+                "BuildingPrivilege",
+                "HasBuildingPrivilege");
+
+            if (hp == true)
+                isTc = true;
+
+            if (!isTc)
+                upkeep = null; // Boxen: kein Upkeep
+
+            var items = FindItemsList(info!);
+
+            var snap = new StorageSnapshot
+            {
+                UpkeepSeconds = upkeep,
+                IsToolCupboard = isTc,
+                SnapshotUtc = DateTime.UtcNow
+            };
+
+            if (items != null)
+            {
+                foreach (var it in items)
+                {
+                    if (it == null) continue;
+                    int id = ReadIntFlexible(it, "ItemId", "ItemID", "Id") ?? 0;
+                    int amt = ReadIntFlexible(it, "Amount", "Quantity", "Count", "Stack") ?? 0;
+                    int? mx = ReadIntFlexible(it, "MaxStack", "MaxStackSize", "StackSize");
+                    string? sn = ReadStringFlexible(it, "ShortName", "ItemShortName", "Short", "Name");
+
+                    snap.Items.Add(new StorageItemVM
+                    {
+                        ItemId = id,
+                        ShortName = sn,
+                        Amount = amt,
+                        MaxStack = mx
+                    });
+                }
+            }
+
+            _storageCache[entityId] = snap;
+            StorageSnapshotReceived?.Invoke(entityId, snap);
+            _log?.Invoke($"[stor/event] {entityId} items={snap.Items.Count} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")} isTc={isTc}");
+
+            // Fallback nur dann, wenn wir wirklich KEIN Upkeep bekommen haben:
+            if (isTc && snap.UpkeepSeconds is null)
+            {
+                ScheduleEntityInfoPull(entityId, delayMs: 1200);
+            }
+        }
+        catch (Exception ex)
+        {
+            _log?.Invoke($"[stor/event] EX: {ex.Message}");
+        }
+    }
+
+
+    public static bool IsStorageDevice(SmartDevice d)
+    {
+        var k = d.Kind ?? string.Empty;
+
+        return
+            k.Equals("StorageMonitor", StringComparison.OrdinalIgnoreCase) ||
+            k.Equals("ToolCupboard", StringComparison.OrdinalIgnoreCase) ||
+            d.HasStorage; // wenn schon mal ein Snapshot dran hing
+    }
+
+    private void BuildAndStoreSnapshotFromStorageNode(uint entityId, object storNode, string sourceTag)
+    {
+        if (storNode == null) return;
+
+        int? upkeep = null;
+        if (TryReadUpkeepSeconds(storNode, out var secs))
+            upkeep = secs;
+
+        bool isTc = false;
+
+        var hp = TryReadBoolN(storNode,
+            "HasProtection",
+            "IsProtected",
+            "IsBuildingPrivilege",
+            "BuildingPrivilege",
+            "HasBuildingPrivilege");
+
+        if (hp == true)
+            isTc = true;
+
+        // Fallback: wenn wir es früher schon als TC gesehen haben, bleibt es TC
+        if (!isTc && entityId != 0u &&
+            _storageCache.TryGetValue(entityId, out var oldSnap) &&
+            oldSnap.IsToolCupboard)
+        {
+            isTc = true;
+        }
+
+        // Nur TCs bekommen Upkeep – sonst null, damit Boxen nicht 0d 0h 0m zeigen
+        if (!isTc)
+            upkeep = null;
+
+        var seqItems = FindItemsList(storNode);
+        var snap = new StorageSnapshot
+        {
+            UpkeepSeconds = upkeep,
+            IsToolCupboard = isTc,
+            SnapshotUtc = DateTime.UtcNow
+        };
+
+        if (seqItems != null)
+        {
+            foreach (var it in seqItems)
+            {
+                if (it == null) continue;
+                int id = TryReadIntN(it, "ItemId", "ItemID", "Id") ?? 0;
+                int amt = TryReadIntN(it, "Amount", "Quantity", "Count", "Stack") ?? 0;
+                int? mx = TryReadIntN(it, "MaxStack", "MaxStackSize", "StackSize");
+                string? sn = TryReadStringN(it, "ShortName", "ItemShortName", "Short", "Name");
+
+                snap.Items.Add(new StorageItemVM
+                {
+                    ItemId = id,
+                    ShortName = sn,
+                    Amount = amt,
+                    MaxStack = mx
+                });
+            }
+        }
+
+        if (entityId != 0u)
+        {
+            _storageCache[entityId] = snap;
+            StorageSnapshotReceived?.Invoke(entityId, snap);
+           // _log?.Invoke($"[stor/resp-{sourceTag}] {entityId} items={snap.Items.Count} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")} isTc={isTc}");
+        }
+        else
+        {
+          //  _log?.Invoke($"[stor/resp-{sourceTag}] (no entity id) items={snap.Items.Count} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")} isTc={isTc}");
+        }
+    }
+
+    private static bool? TryReadBoolN(object? o, params string[] names)
+    {
+        if (o == null) return null;
+        var t = o.GetType();
+
+        foreach (var n in names)
+        {
+            var p = t.GetProperty(n);
+            if (p == null) continue;
+
+            try
+            {
+                var v = p.GetValue(o);
+                if (v == null) continue;
+
+                // Direktes bool
+                if (v is bool b) return b;
+
+                // String "true"/"false"
+                if (v is string s && bool.TryParse(s, out var bs))
+                    return bs;
+
+                // Alles andere versuchen wir über Convert.ToBoolean
+                try
+                {
+                    return Convert.ToBoolean(v);
+                }
+                catch
+                {
+                    // ignorieren und nächste Property versuchen
+                }
+            }
+            catch
+            {
+                // Property-Leseproblem ignorieren
+            }
+        }
+
+        return null;
+    }
+
+    private readonly Dictionary<uint, CancellationTokenSource> _entityPullTimers = new();
+
+    public void ScheduleEntityInfoPull(uint entityId, int delayMs = 2500)
+    {
+        if (entityId == 0) return;
+
+        CancellationTokenSource cts;
+
+        lock (_entityPullTimers)
+        {
+            if (_entityPullTimers.TryGetValue(entityId, out var old))
+            {
+                try { old.Cancel(); old.Dispose(); } catch { /* egal */ }
+            }
+
+            cts = new CancellationTokenSource();
+            _entityPullTimers[entityId] = cts;
+        }
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await Task.Delay(delayMs, cts.Token);
+                if (cts.IsCancellationRequested) return;
+
+                // <<< WICHTIG: exakt der gleiche Call wie beim Refresh-Button
+                await ProbeEntityAsync(entityId);
+
+                _log?.Invoke($"[stor/pull-sched] #{entityId} delayed ProbeEntityAsync executed");
+            }
+            catch (TaskCanceledException)
+            {
+                // bewusst abgebrochen
+            }
+            catch (Exception ex)
+            {
+                _log?.Invoke($"[stor/pull-sched] #{entityId} EX: {ex.Message}");
+            }
+            finally
+            {
+                lock (_entityPullTimers)
+                {
+                    if (_entityPullTimers.TryGetValue(entityId, out var cur) && cur == cts)
+                        _entityPullTimers.Remove(entityId);
+                }
+                cts.Dispose();
+            }
+        });
+    }
+
+    private readonly Dictionary<uint, Task> _pendingUpkeepPulls = new();
+
+
+
+    private void QueueUpkeepPull(uint entityId)
+    {
+        lock (_pendingUpkeepPulls)
+        {
+            if (_pendingUpkeepPulls.TryGetValue(entityId, out var existing) &&
+                !existing.IsCompleted)
+                return; // schon einer unterwegs → nicht spammen
+
+            _pendingUpkeepPulls[entityId] = Task.Run(async () =>
+            {
+                try
+                {
+                    await Task.Delay(2000); // 0,5–1s je nach Gefühl
+
+                    var snap = await GetStorageMonitorAsync(entityId);
+                    // GetStorageMonitorAsync cached + feuert jetzt StorageSnapshotReceived
+                    if (snap != null)
+                        _log?.Invoke($"[stor/upkeep-pull] #{entityId} items={snap.Items.Count} upkeep={snap.UpkeepSeconds}");
+                }
+                catch (Exception ex)
+                {
+                    _log?.Invoke($"[stor/upkeep-pull] #{entityId} EX: {ex.Message}");
+                }
+            });
+        }
     }
 
     private bool HasAnyProp(object? o, params string[] names)
@@ -4337,14 +4572,14 @@ rp.connect();
     {
         try { if (_api is not null) await _api.DisconnectAsync(); }
         catch { }
-        finally { _api = null; _eventsHooked = false; }
-        _log("Verbindung getrennt.");
+        finally { _api = null; _eventsHooked = false; _subscribed.Clear(); _subOnce.Clear(); }
+        _log("Connection Closed.");
     }
 
     // Minimaler „Basics“-Abruf (wahlfrei; nur Log)
     public async Task FetchBasicsAsync()
     {
-        if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+        if (_api is null) throw new InvalidOperationException("Not connected.");
 
         var info = await _api.GetInfoAsync();
         _log(info?.IsSuccess == true ? "Serverinfo: OK" : $"Serverinfo: Fehler: {info?.Error?.Message}");
@@ -5119,11 +5354,34 @@ rp.connect();
         if (TryReadUpkeepSeconds(stor, out var seconds)) upkeep = seconds;
         var itemsEnum = FindItemsList(stor) as IEnumerable;
 
-        var snap = new StorageSnapshot
+        bool isTc = false;
+
+        var hp = TryReadBoolN(info!,
+            "HasProtection",
+            "IsProtected",
+            "IsBuildingPrivilege",
+            "BuildingPrivilege",
+            "HasBuildingPrivilege");
+
+        if (hp == true)
+        {
+            isTc = true;
+        }
+
+
+
+        var snap = new StorageSnap
         {
             UpkeepSeconds = upkeep,
-            IsToolCupboard = (upkeep ?? 0) > 0
+            IsToolCupboard = isTc
         };
+
+        if (!snap.IsToolCupboard &&
+            _storageCache.TryGetValue(entityId, out var old) &&
+            old.IsToolCupboard)
+        {
+            snap.IsToolCupboard = true;
+        }
 
         if (itemsEnum != null)
         {
@@ -5143,6 +5401,7 @@ rp.connect();
             _log?.Invoke($"[stor/pull] #{entityId} had no items/upkeep in immediate response (waiting for event/resp)");
 
         CacheStorage(entityId, snap);
+        StorageSnapshotReceived?.Invoke(entityId, snap);
         return snap;
     }
 
@@ -5202,7 +5461,10 @@ rp.connect();
             "UpkeepSeconds", "UpkeepSec", "ProtectionSeconds",
             "SecondsRemaining", "TimeRemainingSeconds", "Seconds",
             "ProtectedSeconds", "ProtectedTime", "ProtectedForSeconds");
-        if (num is > 0) { seconds = num.Value; return true; }
+        if (num is >= 0) 
+        
+        { seconds = num.Value; 
+            return true; }
 
         // 2) Minuten → Sekunden
         var mins = IntOf(src, "ProtectedMinutes", "cachedProtectedMinutes", "MinutesRemaining", "TimeRemainingMinutes");
@@ -5214,6 +5476,26 @@ rp.connect();
         if (exp is > 0 && exp.Value > now)
         {
             seconds = (int)(exp.Value - now);
+            return true;
+        }
+        // 3b) DateTime-Expiry direkt (ProtectionExpiry = DateTime)
+        var expObj = TryGetProp(src, "ProtectionExpiry", "ExpireTime", "Expiration", "Expiry", "ExpiresAt", "ProtectionExpiresAt");
+        if (expObj is DateTime dtExp)
+        {
+            var utcExp = dtExp.Kind == DateTimeKind.Utc ? dtExp : dtExp.ToUniversalTime();
+            var jetzt = DateTime.UtcNow;
+            var diff = (int)Math.Max(0, (utcExp - jetzt).TotalSeconds);
+            if (diff > 0)
+            {
+                seconds = diff;
+                return true;
+            }
+        }
+        var dtSecs = SecondsUntil(src,
+        "ProtectionExpiry", "Expiry", "ExpireTime", "Expiration", "ProtectionExpiresAt");
+        if (dtSecs is > 0)
+        {
+            seconds = dtSecs.Value;
             return true;
         }
 
@@ -5489,9 +5771,9 @@ rp.connect();
 
     public async Task EnsureSubOnceAsync(uint entityId)
     {
-        bool doWire;
-        lock (_subOnce) doWire = _subOnce.Add(entityId); // nur einmal pro Entity
-        if (!doWire) return;
+       bool doWire;
+      lock (_subOnce) doWire = _subOnce.Add(entityId); // nur einmal pro Entity
+      if (!doWire) return;
 
         await SubscribeEntityAsync(entityId);  // <-- kein _rust hier
         await PokeEntityAsync(entityId);       // <-- direkt auf this
@@ -5569,13 +5851,16 @@ rp.connect();
 
                 // Kandidaten, die in der Praxis Storage-Events auslösen:
                 var flag =
-    reqType.GetProperty("GetEntityInfo") ??
+    // 1) Storage-spezifische Requests bevorzugen
     reqType.GetProperty("GetStorageMonitor") ??
+    reqType.GetProperty("GetEntityStorage") ??
     reqType.GetProperty("GetStorage") ??
     reqType.GetProperty("GetContainer") ??
-    reqType.GetProperty("GetEntityStorage") ??
+    // 2) Generische Update-Requests
     reqType.GetProperty("RequestEntityUpdate") ??
-    reqType.GetProperty("PollEntity");       // <— neu
+    reqType.GetProperty("PollEntity") ??
+    // 3) Ganz am Ende noch der generische EntityInfo-Fallback
+    reqType.GetProperty("GetEntityInfo");       // <— neu
 
                 if (flag != null)
                 {

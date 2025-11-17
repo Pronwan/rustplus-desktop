@@ -10,15 +10,53 @@ namespace RustPlusDesk.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is not StorageSnapshot snap) return "–";
-            if (snap.UpkeepSeconds is int s && s >= 0)
+            if (value is not StorageSnapshot snap)
+                return string.Empty;
+
+            // TC: immer Upkeep – egal ob 0 oder >0
+            if (snap.IsToolCupboard)
             {
-                var ts = TimeSpan.FromSeconds(s);
-                return $" {ts.Days}d {ts.Hours}h {ts.Minutes}m";
+                var secs = snap.UpkeepSeconds ?? 0;
+
+                // Sonderfall: 0 → mit Prefix "Upkeep: 0s"
+                if (secs <= 0)
+                    return "Upkeep: 0s";
+
+                // Ab hier: nur noch kompakte Dauer ohne "Upkeep:"
+                int days = secs / 86400;
+                int rem = secs % 86400;
+                int hours = rem / 3600;
+                rem = rem % 3600;
+                int mins = rem / 60;
+                int secsLeft = rem % 60;
+
+                var parts = new List<string>();
+
+                if (days > 0)
+                    parts.Add($"{days}d");
+                if (hours > 0)
+                    parts.Add($"{hours}h");
+                if (mins > 0)
+                    parts.Add($"{mins}m");
+
+                // Falls alles auf 0, aber >0 Sekunden übrig, z. B. 45s
+                if (parts.Count == 0 && secsLeft > 0)
+                    parts.Add($"{secsLeft}s");
+
+                // Sicherstellen, dass wir überhaupt etwas anzeigen
+                if (parts.Count == 0)
+                    parts.Add("0s");
+
+                return string.Join(" ", parts);
             }
-            return $"{snap.Items?.Count ?? 0} Items";
+
+            // Alles andere: Boxen, Container → Items
+            var count = snap.ItemsCount;
+            return count == 1 ? "1 item" : $"{count} items";
         }
-        public object ConvertBack(object v, Type t, object p, CultureInfo c) => Binding.DoNothing;
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotSupportedException();
     }
 }
 

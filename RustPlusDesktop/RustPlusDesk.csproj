@@ -3,7 +3,7 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
-		
+		<UseWindowsForms>true</UseWindowsForms>
 		<ApplicationIcon>rustplus-desktop-icon.ico</ApplicationIcon>
 	</PropertyGroup>
 	<ItemGroup>
@@ -13,12 +13,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>3.1.0</Version>
+		<Version>3.1.2</Version>
 
 		<!-- EXE-Eigenschaften im Windows-Dateidialog -->
-		<AssemblyVersion>3.1.0</AssemblyVersion>
-		<FileVersion>3.1.0</FileVersion>
-		<InformationalVersion>3.1.0</InformationalVersion>
+		<AssemblyVersion>3.1.2</AssemblyVersion>
+		<FileVersion>3.1.2</FileVersion>
+		<InformationalVersion>3.1.2</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -51,6 +51,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <None Remove="1-76fc6c7e.ico" />
 	  <None Remove="cash.wav" />
 	  <None Remove="icons\airfield.png" />
 	  <None Remove="icons\arcticresearch.png" />
@@ -156,6 +157,9 @@
 	  <Resource Include="icons\upload.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Resource>
+	  <Content Include="1-76fc6c7e.ico">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	  <Content Include="rustplus-desktop-icon.ico">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
