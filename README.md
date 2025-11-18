@@ -132,7 +132,6 @@ Enjoy! :)
 - **Server-Hopping:**: Hopping through servers too quickly can cause the Listener to crash
 
 - **Many shops**: Hovering 8+ shops at once can cause the Tooltip to flicker
-- **Mini Map outside grid**: Outside the grid the mini map can only follow along the grid border
 
 - Please report other issues in the [Issues section](../../issues)
 
