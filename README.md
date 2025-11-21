@@ -47,6 +47,10 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./App-Version3.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)  
 *(click the image to watch on YouTube)*
 
+## Update Notes 3.2.1 (November 21st 25)
+- You can now share Smart Devices with your team! No more pairing in-game needed. 
+  One guy who pairs the devices is enough - rest of the team just imports with 1 click.
+
 ## Update Notes 3.1.2 (November 17th 25)
 Version 3.1.2 brings full Storage Monitor integration and the following optimizations:
 ![Update](./3.1.0.png)  
@@ -96,15 +100,21 @@ Enjoy! :)
 
 - Pair Rust servers via Steam + Rust+ Companion
 
+- Share Smart Devices with your Team
+
+- Track Storage Monitors and Upkeep Time 
+
 - Auto-start listener when connecting to a server
 
 - Dynamic map (Cargo, Patrol Heli, Chinook, Travelling Vendor, Players, …)
 
 - Smart Devices (pair in-game while connected — shows up instantly)
 
-- Local storage of paired servers & devices
+- Local storage of paired servers & devices, map overlays
 
 - Vending Machine Search System for Buy and Sell orders
+
+- Profit Trade analytics and deep trade route search (buy X for Y) 
 
 - Open-source for transparency and trust
 
@@ -118,7 +128,7 @@ Enjoy! :)
 
 - Profile Icons
 
-- Chat-Notifications for spawns, deaths, events and more
+- Chat-Notifications for spawns, shops, deaths, events and more
 
 ---
 
