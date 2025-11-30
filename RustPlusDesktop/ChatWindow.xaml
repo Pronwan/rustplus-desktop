@@ -1,7 +1,7 @@
 ﻿<Window x:Class="RustPlusDesk.Views.ChatWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Team-Chat"
+        Title="Чат команды"
         Height="420"
         Width="520"
         WindowStartupLocation="CenterOwner"
@@ -15,7 +15,7 @@
         </Grid.RowDefinitions>
         <!-- Header -->
         <Border Background="Transparent" Margin="0,0,0,8">
-            <TextBlock Text="Team Chat"
+            <TextBlock Text="Чат команды"
                        FontSize="16"
                        FontWeight="SemiBold"
                        Foreground="{DynamicResource TextPrimary}"/>
@@ -58,7 +58,7 @@
 
             <!-- Send-Button -->
             <Button x:Name="BtnSend"
-                    Content="Send"
+                    Content="Отправить"
                     Style="{StaticResource GhostButton}"
                     Width="90"
                     Margin="8,0,0,0"
