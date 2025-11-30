@@ -9,7 +9,7 @@
         
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Rust+ Desktop by Pronwan" Height="814" Width="1400"
+        Title="Rust+ fork Kirill_Safe" Height="814" Width="1400"
         Background="{DynamicResource AppBg}" Foreground="{DynamicResource TextPrimary}"
         UseLayoutRounding="True" SnapsToDevicePixels="True">
     <Window.Resources>

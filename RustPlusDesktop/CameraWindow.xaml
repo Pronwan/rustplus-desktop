@@ -20,7 +20,7 @@
                     <ComboBoxItem Content="4"/>
                     <ComboBoxItem Content="8"/>
                 </ComboBox>
-                <TextBlock Text="Note: 2 fps is recommended, higher FPS likely close your connection to server" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                <TextBlock Text="2 фпс рекомендуемо, иначе можете потерять связь с сервером" VerticalAlignment="Center" Margin="16,0,0,0"/>
             </StackPanel>
         </StackPanel>
 

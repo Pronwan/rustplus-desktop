@@ -121,7 +121,7 @@ public partial class MainWindow : Window
     {
         BtnAddCam.Click += (_, __) =>
         {
-            var input = Microsoft.VisualBasic.Interaction.InputBox("Camera identifier:", "Add camera", "");
+            var input = Microsoft.VisualBasic.Interaction.InputBox("Индификатор камеры:", "Добавить камеру", "");
             if (string.IsNullOrWhiteSpace(input)) return;
             if (_cameraIds.Any(s => string.Equals(s, input, StringComparison.OrdinalIgnoreCase))) return;
 
@@ -713,8 +713,8 @@ public partial class MainWindow : Window
             if (prev.online != now.online  && _announceSpawns )
             {
                 var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : "unknown";
-                var txt = now.online ? $"{vm.Name} came online @ {where}"
-                                     : $"{vm.Name} went offline";
+                var txt = now.online ? $"{vm.Name} зашел на сервер @ Квадрат {where}"
+                                     : $"{vm.Name} вышел с сервера @ Квадрат {where}";
                 await SendTeamChatSafeAsync(txt);
             }
 
@@ -730,7 +730,7 @@ public partial class MainWindow : Window
                 if (_announceSpawns)
                 {
                     var where = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : "unknown";
-                    var txt = now.dead ? $"{vm.Name} died @ {where}" : $"{vm.Name} respawned @ {where}";
+                    var txt = now.dead ? $"{vm.Name} died @ {where}" : $"{vm.Name} Заспавнился @ Квадрат {where}";
                     await SendTeamChatSafeAsync(txt);
                 }
 
@@ -850,10 +850,10 @@ public partial class MainWindow : Window
     private async void Team_Promote_Click(object sender, RoutedEventArgs e)
     {
         var vm = VMFromSender(sender); if (vm == null) return;
-        if (!IAmLeaderNow()) { AppendLog("Only Leader can promote."); return; }
+        if (!IAmLeaderNow()) { AppendLog("Только лидер может повысить."); return; }
         if (vm.SteamId == _mySteamId) return;
         try { await (_real as RustPlusClientReal)?.PromoteToLeaderAsync(vm.SteamId); }
-        catch (Exception ex) { AppendLog("[team] promote error: " + ex.Message); }
+        catch (Exception ex) { AppendLog("[team] Ошибка повышения: " + ex.Message); }
     }
 
 
@@ -886,10 +886,10 @@ public partial class MainWindow : Window
     private async void Team_Kick_Click(object sender, RoutedEventArgs e)
     {
         var vm = VMFromSender(sender); if (vm == null) return;
-        if (!IAmLeaderNow()) { AppendLog("Only Leader can kick."); return; }
+        if (!IAmLeaderNow()) { AppendLog("Только лидер может исключать."); return; }
         if (vm.SteamId == _mySteamId) return;
         try { await (_real as RustPlusClientReal)?.KickTeamMemberAsync(vm.SteamId); }
-        catch (Exception ex) { AppendLog("[team] kick error: " + ex.Message); }
+        catch (Exception ex) { AppendLog("[team] Ошибка исключения: " + ex.Message); }
     }
     public static class AppInfo
     {
@@ -991,18 +991,18 @@ public partial class MainWindow : Window
         {
             _vm.IsBusy = false; _vm.BusyText = "";
             _vm.IsPairingRunning = true;
-            TxtPairingState.Text = "Pairing: listening…";
+            TxtPairingState.Text = "Привязка: просмотр";
         });
         _pairing.Stopped += (_, __) => Dispatcher.Invoke(() =>
         {
             _vm.IsPairingRunning = false;
-            TxtPairingState.Text = "Pairing: stopped";
+            TxtPairingState.Text = "Привязка: остановлена";
         });
         _pairing.Failed += (_, msg) => Dispatcher.Invoke(() =>
         {
             _vm.IsBusy = false; _vm.BusyText = "";
             _vm.IsPairingRunning = false;
-            TxtPairingState.Text = "Pairing: error";
+            TxtPairingState.Text = "Привязка: ошибка";
             AppendLog("[listener] " + msg);
         });
 
@@ -2234,12 +2234,12 @@ public partial class MainWindow : Window
         if (ListDevices.SelectedItem is not SmartDevice d) return;
         if (!d.IsMissing && !string.Equals(d.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
         {
-            MessageBox.Show("Only missing devices can be deleted.");
+            MessageBox.Show("Только потерянные девайсы могут быть удалены.");
             return;
         }
         _vm.Selected?.Devices?.Remove(d);   // oder _vm.Devices.Remove(d) – je nach Variante
         _vm.Save();
-        AppendLog($"Device #{d.EntityId} removed.");
+        AppendLog($"Девайс #{d.EntityId} удален.");
     }
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
@@ -2439,7 +2439,7 @@ public partial class MainWindow : Window
                     }
 
                     dev.IsMissing = false;
-                    AppendLog($"Device updated → {dev.Display}");
+                    AppendLog($"Девайс обновлен → {dev.Display}");
                 }
 
                 /* >>>>>>> HIER EINSETZEN (direkt nach dem add/update-Block) <<<<<<< */
@@ -2963,7 +2963,7 @@ public partial class MainWindow : Window
 
         if (_vm.Selected is null)
         {
-            MessageBox.Show("Please chose a server.");
+            MessageBox.Show("Выберите сервер.");
             return;
         }
 
@@ -3008,12 +3008,12 @@ public partial class MainWindow : Window
                             added++;
                         }
                     }
-                    AppendLog($"[chat] history loaded: {added} items.");
+                    AppendLog($"[chat] История загружена: {added} предметов.");
                     await real.PrimeTeamChatAsync(); // Live-Events freischalten
                 }
                 catch (Exception ex)
                 {
-                    AppendLog("[chat] history error: " + ex.Message);
+                    AppendLog("[chat] Ошибка истории чата: " + ex.Message);
                 }
             }
 
@@ -3106,7 +3106,7 @@ public partial class MainWindow : Window
             _vm.IsBusy = false;
             _vm.BusyText = "";
             AppendLog("Fehler: " + ex.Message);
-            MessageBox.Show($"Connection failed: {ex.Message}");
+            MessageBox.Show($"Ошибка соединения: {ex.Message}");
         }
         _storageTimer?.Stop();
         _storageTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(10) };
@@ -3444,7 +3444,7 @@ public partial class MainWindow : Window
         // 2) Schneller UI-Check: ist im ViewModel ein Server verbunden?
         if (!(_vm.Selected?.IsConnected ?? false))
         {
-            MessageBox.Show("Please connect to a server first.");
+            MessageBox.Show("Подсоедините сервер для начала");
             return;
         }
 
@@ -3460,13 +3460,13 @@ public partial class MainWindow : Window
         }
         catch (InvalidOperationException) // "Nicht verbunden."
         {
-            MessageBox.Show("Please connect to a server first.");
+            MessageBox.Show("Подсоедините сервер для начала.");
             return; // kein Fenster öffnen
         }
         catch (Exception ex)
         {
             AppendLog("PrimeChat failed: " + ex.Message);
-            MessageBox.Show("Chat is not available right now.");
+            MessageBox.Show("Чат сейчас недоступен.");
             return; // sicherheitshalber auch hier abbrechen
         }
 
@@ -3545,18 +3545,18 @@ public partial class MainWindow : Window
 
     private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
     {
-        if (_vm.Selected is null) { AppendLog("No Server Selected."); return; }
+        if (_vm.Selected is null) { AppendLog("Сервер не выбран."); return; }
         if (!await EnsureConnectedAsync()) return;
 
         // NICHT ItemsSource im Code setzen – XAML-Binding soll aktiv bleiben!
         var list = _vm.Selected.Devices;
         if (list == null || list.Count == 0)
         {
-            AppendLog("No Devices Available.");
+            AppendLog("Нет доступных девайсов.");
             return;
         }
 
-        AppendLog("Updating Device Status…");
+        AppendLog("Обновляю статус девайсов");
         foreach (var d in list)
         {
             try
@@ -3595,7 +3595,7 @@ public partial class MainWindow : Window
 
     private async void BtnDeviceInfo_Click(object sender, RoutedEventArgs e)
     {
-        if (_vm.SelectedDevice is null) { AppendLog("No Device Selected."); return; }
+        if (_vm.SelectedDevice is null) { AppendLog("Девайс не выбран."); return; }
         if (!await EnsureConnectedAsync()) return;
 
         try
@@ -3750,8 +3750,8 @@ public partial class MainWindow : Window
         if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev) return;
 
         var preset = string.IsNullOrWhiteSpace(dev.Alias) ? (dev.Name ?? "") : dev.Alias!;
-        var input = PromptText(this, "Rename Device",
-                               $"New name for #{dev.EntityId}:", preset);
+        var input = PromptText(this, "Переименовать девайс",
+                               $"Новое имя для #{dev.EntityId}:", preset);
 
         if (input == null) return;                   // Abgebrochen
         dev.Alias = string.IsNullOrWhiteSpace(input) ? null : input.Trim();
@@ -4469,7 +4469,7 @@ public partial class MainWindow : Window
         if (_rust is not RustPlusClientReal real) return;
 
         var map = await real.GetMapWithMonumentsAsync();
-        if (map == null) { AppendLog("Map: no data received."); return; }
+        if (map == null) { AppendLog("Карта: информация не получена."); return; }
 
         await Dispatcher.InvokeAsync(() =>
         {
