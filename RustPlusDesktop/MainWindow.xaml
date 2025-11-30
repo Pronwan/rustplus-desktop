@@ -697,7 +697,7 @@
                                 <!-- rechts: Button -->
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="Account"
+                            <TextBlock Text="Аккаунт"
                    Foreground="White"
                    FontWeight="Bold"
                    FontSize="16"/>
@@ -709,14 +709,14 @@
                                 <StackPanel Orientation="Horizontal"
                 HorizontalAlignment="Right">
                                     <Button x:Name="BtnCheckUpdates"
-                Content=" Check for Updates "
+                Content=" Проверить обновление (Без русификатора) "
                 Click="BtnCheckUpdates_Click"
                 Background="{DynamicResource AccentDark}"
                 BorderBrush="{DynamicResource Accent}"
                 Margin="8,0,0,0"
                 ToolTip="Check GitHub for a newer version"/>
                                     <Button x:Name="BtnPatchNotes"
-                Content=" Patch Notes "
+                Content=" История обновлений "
                 Click="BtnPatchNotes_Click"
                 Background="{DynamicResource SurfaceAlt}"
                 BorderBrush="{DynamicResource CardBorder}"
@@ -739,7 +739,7 @@
 
                     <StackPanel Orientation="Horizontal">
                         <Button x:Name="BtnSteamLogin"
-                        Content="Login with Steam"
+                        Content="Войти через Steam"
                         Width="180"
                         Click="BtnSteamLogin_Click"
                         Margin="0,0,8,0"/>
@@ -752,7 +752,7 @@
 
                     <Separator Margin="0,8,0,8"/>
 
-                    <TextBlock Text="Server" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,8"/>
+                    <TextBlock Text="Сервера" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,8"/>
                     <ListBox x:Name="ListServers"
                      ItemsSource="{Binding Servers}"
                      SelectedItem="{Binding Selected, Mode=TwoWay}"
@@ -1563,19 +1563,19 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
-                    <TextBlock Text="Map Controls" Style="{StaticResource SectionTitle}" Margin="0,5,8,0"/>
-                    <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChkGrid"  Content="Grid"  Margin="8,0,0,0"
+                    <TextBlock Text="Настройки карты" Style="{StaticResource SectionTitle}" Margin="0,5,8,0"/>
+                    <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChkGrid"  Content="Сетка"  Margin="8,0,0,0"
                       Checked="ChkGrid_Checked" Unchecked="ChkGrid_Checked"/>
                     <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChkPlayers"
                               
-Content="Players"
+Content="Игроки"
                                IsChecked="True"
 Margin="12,0,0,0"
 Checked="ChkPlayers_Checked"
 Unchecked="ChkPlayers_Checked"/>
                     <CheckBox Style="{StaticResource DotCheckBox}" x:Name="Monuments"
                               
-Content="Monuments"
+Content="Монументы"
                                IsChecked="True"
 Margin="12,0,0,0"
  Checked="Monuments_Checked"
@@ -1588,7 +1588,7 @@ Margin="12,0,0,0"
                     </Button>
                     <TextBlock Width="20">     </TextBlock>
                     <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChatAnnounce"
-          Content="Event Spawns in Chat"
+          Content="Ивенты в чат"
           IsChecked="False"
           Margin="8,0,0,0"
           Checked="ChatAnnounce_Checked"
