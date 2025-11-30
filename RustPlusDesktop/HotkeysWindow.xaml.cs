@@ -105,7 +105,7 @@ namespace RustPlusDesk.Views
         public string? Gesture { get; private set; }
         public HotkeyCaptureDialog()
         {
-            Title = "Press hotkey…";
+            Title = "Нажмите клавишу";
             Width = 320; Height = 120;
             WindowStartupLocation = WindowStartupLocation.CenterOwner;
             Content = new System.Windows.Controls.TextBlock

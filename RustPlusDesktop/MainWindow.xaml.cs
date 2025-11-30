@@ -4870,7 +4870,7 @@ public partial class MainWindow : Window
                             _dynKnown.Add(key);
                             var grid = GetGridLabel(m.X, m.Y);
                             var kind = EventKindText(m.Type);
-                            _ = SendTeamChatSafeAsync($"{kind} spawned in at {grid}");
+                            _ = SendTeamChatSafeAsync($"{kind} Заспавнен в квадрате {grid}");
                         }
 
                         el = host;
