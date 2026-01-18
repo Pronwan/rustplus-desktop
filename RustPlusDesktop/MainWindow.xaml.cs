@@ -27,6 +27,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Text.RegularExpressions;
+
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -67,7 +68,7 @@ public partial class MainWindow : Window
     private bool _listenerWired; // damit Events nur einmal verdrahtet werden
     private bool _listenerStarting; // Schutz gegen Doppelklicks
     private readonly System.Windows.Threading.DispatcherTimer _statusTimer =
-    new() { Interval = TimeSpan.FromSeconds(10) };
+    new() { Interval = TimeSpan.FromSeconds(30) };
     // Chat-Inkrement-Marker pro Fenster
     private long _chatLastTicks = 0;          // zuletzt gesehener Timestamp (Ticks)
     private string? _chatLastKey = null;      // Fallback bei exakt gleichem Timestamp
@@ -75,6 +76,7 @@ public partial class MainWindow : Window
     private ChatWindow? _chatWin;
     private CancellationTokenSource? _chatCts;
     private readonly HashSet<string> _chatSeenKeys = new(); // Dedup-Cache pro Session
+    private readonly List<TeamChatMessage> _chatHistoryLog = new();
     private Viewbox? _mapView;     // skaliert Inhalt Uniform in den Host
     private Grid? _scene;       // enthält Image + Overlay in Bildgröße (DIPs)                                                    // Zoom/Pan-State
     private bool _isPanning;
@@ -93,6 +95,9 @@ public partial class MainWindow : Window
     private bool _alertsNeedRebaseline = false;
     private bool _visible;
     // CAMERA TAB
+
+    // Chinook Chekcer
+    private readonly MonumentWatcher _monumentWatcher = new MonumentWatcher();
 
     // Camera thumbs: Throttling & "in-flight"-Wächter
     internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCase);
@@ -916,7 +921,15 @@ public partial class MainWindow : Window
     }
 
     private static string ChatKey(TeamChatMessage m)
-        => $"{m.Timestamp.ToUniversalTime().Ticks}|{m.Author.Trim()}|{m.Text.Trim()}";
+    {
+        var author = (m.Author ?? "").Trim().ToLowerInvariant();
+        var text = (m.Text ?? "").Trim().ToLowerInvariant();
+
+        // 10-Sekunden-Slot anhand deines lokalen Empfangszeitpunkts
+        var slot = (m.Timestamp.ToUniversalTime().Ticks / TimeSpan.FromSeconds(10).Ticks);
+
+        return $"{m.SteamId}|{author}|{text}|{slot}";
+    }
     private BitmapSource? _mapBaseBmp; // Original-Map ohne Marker
     private readonly List<(double uPx, double vPx, string? label)> _staticMarkers = new();
     // SteamId -> Name Cache
@@ -1076,6 +1089,17 @@ public partial class MainWindow : Window
         { OverlayToolMode.Icon,  ToolIconButton },
         { OverlayToolMode.Erase, ToolEraseButton }
     };
+
+        _monumentWatcher.OnOilRigTriggered += async (s, monumentName) =>
+        {
+            await SendTeamChatSafeAsync($"[{monumentName}] triggered! Crate unlocks in ~15m.");
+        };
+
+        // NEU: Update Events (10m / 5m Warnungen)
+        _monumentWatcher.OnOilRigChatUpdate += async (s, message) =>
+        {
+            await SendTeamChatSafeAsync(message);
+        };
 
     }
 
@@ -2917,6 +2941,7 @@ public partial class MainWindow : Window
         }
     }
     private DispatcherTimer? _storageTimer;
+
     private bool _storageTickBusy; // optionaler Reentrancy-Schutz
 
 
@@ -3116,19 +3141,22 @@ public partial class MainWindow : Window
             _storageTickBusy = true;
             try
             {
-               // AppendLog("[stor/poll] tick");
                 var sel = _connectedProfile ?? _vm?.Selected;
-                if (sel?.Devices == null || sel.Devices.Count == 0)
+                var devs = sel?.Devices;
 
-                {
-              //      AppendLog("[stor/poll] no devices");
+                if (devs == null || devs.Count == 0)
                     return;
-                }
 
-                foreach (var sd in sel.Devices)
+                // *** HIER: Snapshot bauen ***
+                var snapshot = devs
+                    .Where(sd => IsStorageDevice(sd))
+                    .ToList();  // Liste von Referenzen, kein Deep Copy
+
+                if (snapshot.Count == 0)
+                    return;
+
+                foreach (var sd in snapshot)
                 {
-                    if (!IsStorageDevice(sd)) continue;   // <<< hier!
-                  //  AppendLog($"[stor/poll] #{sd.EntityId} ({sd.Kind ?? "?"})");
                     try
                     {
                         await RefreshDeviceStateAsync(sd, log: true, forcePull: true);
@@ -3145,7 +3173,7 @@ public partial class MainWindow : Window
             }
         };
         _storageTimer.Start();
-       // AppendLog("[stor/poll] timer started (10s)");
+        // AppendLog("[stor/poll] timer started (10s)");
     }
 
     // PLAYER DEATH MARKERS AVATAR IMAGE PLAYER DEATH
@@ -3434,43 +3462,37 @@ public partial class MainWindow : Window
 
     private async void BtnOpenChat_Click(object sender, RoutedEventArgs e)
     {
-        // 1) _rust vorhanden?
         if (_rust is not RustPlusClientReal real)
         {
             MessageBox.Show("Not connected.");
             return;
         }
 
-        // 2) Schneller UI-Check: ist im ViewModel ein Server verbunden?
         if (!(_vm.Selected?.IsConnected ?? false))
         {
             MessageBox.Show("Please connect to a server first.");
             return;
         }
 
-        // 3) Bevor wir ein Fenster öffnen: Events anmelden + Chat „primen“ testen.
         try
         {
-            // doppelte Anmeldungen vermeiden
             real.TeamChatReceived -= Real_TeamChatReceived;
             real.TeamChatReceived += Real_TeamChatReceived;
-
-            // wirft InvalidOperationException, wenn _api==null → dann kein Fenster öffnen
             await real.PrimeTeamChatAsync();
         }
-        catch (InvalidOperationException) // "Nicht verbunden."
+        catch (InvalidOperationException)
         {
             MessageBox.Show("Please connect to a server first.");
-            return; // kein Fenster öffnen
+            return;
         }
         catch (Exception ex)
         {
             AppendLog("PrimeChat failed: " + ex.Message);
             MessageBox.Show("Chat is not available right now.");
-            return; // sicherheitshalber auch hier abbrechen
+            return;
         }
 
-        // 4) Ab hier sind wir „chat-ready“ → Fenster öffnen (einmalig)
+        // Fenster öffnen
         if (_chatWin == null || !_chatWin.IsLoaded)
         {
             _chatWin = new Views.ChatWindow(async msg => await real.SendTeamMessageAsync(msg))
@@ -3478,10 +3500,25 @@ public partial class MainWindow : Window
                 Owner = this
             };
             _chatWin.Closed += (_, __) => _chatWin = null;
+
+            // WICHTIG: Hier spielen wir den alten Verlauf ab (Replay)
+            // Da wir die gespeicherten Messages nutzen, stimmen die Uhrzeiten (Timestamp)!
+            lock (_chatHistoryLog)
+            {
+                foreach (var m in _chatHistoryLog.OrderBy(x => x.Timestamp))
+                {
+                    _chatWin.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime());
+                }
+            }
+
             _chatWin.Show();
         }
+        else
+        {
+            _chatWin.Activate();
+        }
 
-        // 5) History laden (tolerant)
+        // Fehlende History vom Server nachladen
         try
         {
             var history = await real.GetTeamChatHistoryAsync(_lastChatTsForCurrentServer, limit: 120);
@@ -3498,20 +3535,44 @@ public partial class MainWindow : Window
     }
     private void Real_TeamChatReceived(object? sender, TeamChatMessage m)
     {
-        Dispatcher.Invoke(() => AppendChatIfNew(m));
+        Dispatcher.Invoke(() =>
+        {
+            var key = ChatKey(m);
+            if (_chatSeenKeys.Contains(key)) return;
+            _chatSeenKeys.Add(key);
+
+            // ab hier gilt sie als "neu"
+            if (m.Text.Trim().Equals("!leader", StringComparison.OrdinalIgnoreCase))
+            {
+                if (m.SteamId != 0 && _rust is RustPlusClientReal client)
+                {
+                    _ = client.PromoteToLeaderAsync(m.SteamId);
+                    AppendLog($"[Auto-Promote] {m.Author} ({m.SteamId}) requested promotion.");
+                }
+            }
+
+            // und dann speichern/anzeigen
+            lock (_chatHistoryLog) { _chatHistoryLog.Add(m); }
+            _chatWin?.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime());
+        });
     }
 
-    private void AppendChatIfNew(TeamChatMessage m)
+    private bool AppendChatIfNew(TeamChatMessage m)
     {
         var key = ChatKey(m);
-        if (_chatSeenKeys.Contains(key)) return;
+        if (_chatSeenKeys.Contains(key)) return false;
 
         _chatSeenKeys.Add(key);
+
+        lock (_chatHistoryLog)
+            _chatHistoryLog.Add(m);
+
         _lastChatTsForCurrentServer =
             !_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value
-            ? m.Timestamp : _lastChatTsForCurrentServer;
+                ? m.Timestamp : _lastChatTsForCurrentServer;
 
-        _chatWin?.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime()); // Anzeige in Lokalzeit
+        _chatWin?.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime());
+        return true;
     }
 
     private void OnTeamChatReceived(object? _, RustPlusDesk.Models.TeamChatMessage m)
@@ -3545,52 +3606,7 @@ public partial class MainWindow : Window
 
     private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
     {
-        if (_vm.Selected is null) { AppendLog("No Server Selected."); return; }
-        if (!await EnsureConnectedAsync()) return;
-
-        // NICHT ItemsSource im Code setzen – XAML-Binding soll aktiv bleiben!
-        var list = _vm.Selected.Devices;
-        if (list == null || list.Count == 0)
-        {
-            AppendLog("No Devices Available.");
-            return;
-        }
-
-        AppendLog("Updating Device Status…");
-        foreach (var d in list)
-        {
-            try
-            {
-                var r = await _rust.ProbeEntityAsync(d.EntityId);
-
-                d.Kind = r.Kind ?? d.Kind;
-
-                d.IsMissing = !r.Exists;
-                if ((d.Kind ?? r.Kind)?.Equals("SmartAlarm", StringComparison.OrdinalIgnoreCase) == true)
-                {
-                    // Alarm: null => inaktiv deuten
-                    d.IsOn = false;
-                }
-                else
-                {
-                    d.IsOn = r.IsOn;
-                }
-
-                if (!r.Exists)
-                    AppendLog($"#{d.EntityId}: not reachable / removed");
-                else
-                    AppendLog($"#{d.EntityId} ({d.Kind ?? "?"}): {(r.IsOn is bool b ? (b ? "ON" : "OFF") : "–")}");
-            }
-            catch (Exception ex)
-            {
-                d.IsMissing = true;
-                AppendLog($"#{d.EntityId}: Status Request Failed → {ex.Message}");
-            }
-        }
-
-        // Kein Items.Refresh nötig, wenn SmartDevice INotifyPropertyChanged feuert (inkl. Display).
-        _vm.Save();
-        AppendLog("Refresh completed.");
+        await RefreshAllDevicesStatusAsync();
     }
 
     private async void BtnDeviceInfo_Click(object sender, RoutedEventArgs e)
@@ -4652,23 +4668,59 @@ public partial class MainWindow : Window
 
         try
         {
+            // ---------------------------------------------------------
+            // 1. Statische Monumente laden (Lazy Loading)
+            // ---------------------------------------------------------
+            if (!_monumentWatcher.HasMonuments)
+            {
+                var staticMons = await real.GetStaticMonumentsAsync();
+                if (staticMons != null && staticMons.Count > 0)
+                {
+                    _monumentWatcher.SetMonuments(staticMons);
+                }
+            }
+
+            // ---------------------------------------------------------
+            // 2. Echte Marker holen
+            // ---------------------------------------------------------
             var list = await real.GetDynamicMapMarkersAsync();
+
+            // ---------------------------------------------------------
+            // 3. Watcher Logik ausführen
+            // ---------------------------------------------------------
+            var virtualMarkers = _monumentWatcher.UpdateAndGetVirtualMarkers(list, _dynKnown);
+
+            // ---------------------------------------------------------
+            // 4. Listen kombinieren
+            // ---------------------------------------------------------
+            var combinedList = new List<RustPlusClientReal.DynMarker>(list.Count + virtualMarkers.Count);
+            combinedList.AddRange(list);
+            combinedList.AddRange(virtualMarkers);
+
+            // --- WIEDERHERGESTELLT: Dein Statistik/Logging Block ---
             if (list.Count > 0)
             {
                 var d0 = list[0];
                 // AppendLog($"dyn[0]: type={d0.Type} kind={d0.Kind} xy=({d0.X:0},{d0.Y:0}) label={d0.Label ?? "-"}");
-                // Verteilung
+
+                // Verteilung zählen
                 var cPlayers = list.Count(m => m.Type == 1);
                 var cCargo = list.Count(m => m.Type == 5);
                 var cCrate = list.Count(m => m.Type == 6);
                 var cCH47 = list.Count(m => m.Type == 4);
                 var cPatrol = list.Count(m => m.Type == 8);
-                //AppendLog($"dyn: total={list.Count} players={cPlayers} ch47={cCH47} cargo={cCargo} crate={cCrate} patrol={cPatrol}");
-            }
 
-            UpdateDynUI(list);
-            Dispatcher.InvokeAsync(() => RefreshAllOverlayScales(),
-    System.Windows.Threading.DispatcherPriority.Loaded);
+                // Falls du das Loggen aktivieren willst:
+                // AppendLog($"dyn: total={list.Count} players={cPlayers} ch47={cCH47} cargo={cCargo} crate={cCrate} patrol={cPatrol}");
+            }
+            // --------------------------------------------------------
+
+            // ---------------------------------------------------------
+            // 5. UI aktualisieren
+            // ---------------------------------------------------------
+            UpdateDynUI(combinedList);
+
+            Dispatcher.InvokeAsync(() => RefreshAllOverlayScales(), System.Windows.Threading.DispatcherPriority.Loaded);
         }
         catch
         {
@@ -4699,7 +4751,7 @@ public partial class MainWindow : Window
         {
             Process.Start(new ProcessStartInfo
             {
-                FileName = "https://streamelements.com/pronwan/tip",
+                FileName = "https://www.patreon.com/cw/Pronwan",
                 UseShellExecute = true   // öffnet im Standard-Browser
             });
         }
@@ -4714,12 +4766,8 @@ public partial class MainWindow : Window
     private void ChatAnnounce_Unchecked(object sender, RoutedEventArgs e) => _announceSpawns = false;
     private void UpdateDynUI(IReadOnlyList<RustPlusClientReal.DynMarker> markers)
     {
-
-
-
         if (Overlay == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0) return;
 
-        // ---- helper: stabiler Key für "Id==0" ----
         static uint DynFallbackKey(double x, double y, string? label, int type)
         {
             unchecked
@@ -4736,102 +4784,75 @@ public partial class MainWindow : Window
             }
         }
 
-        // ---- helper: generischer Fallback-Dot (orange) ----
-        static FrameworkElement MakeDot(string tooltip, int size = 14)
-        {
-            var dot = new Ellipse
-            {
-                Width = size,
-                Height = size,
-                Fill = Brushes.Orange,
-                Stroke = Brushes.Black,
-                StrokeThickness = 1.5,
-
-            };
-            ToolTipService.SetToolTip(dot, tooltip);
-            return dot;
-        }
-
-        // ---- helper: Spieler-Dot (grün/grau) für ProfileMarkers=off ----
-        static FrameworkElement MakePlayerDot(string tooltip, bool online)
-        {
-            var dot = new Ellipse
-            {
-                Width = 10,
-                Height = 10,
-                Fill = online ? Brushes.LimeGreen : Brushes.LightGray,
-                Stroke = Brushes.Black,
-                StrokeThickness = 2,
-                Margin = new Thickness(0, 0, 4, 0),
-
-            };
-            ToolTipService.SetToolTip(dot, tooltip);
-            return dot;
-        }
-
         var incoming = new HashSet<uint>();
 
         foreach (var m in markers)
         {
+            // Statische Monumente ohne Daten filtern
+            if (m.Type == 0 && m.SteamId == 0) continue;
+
             bool isPlayer = (m.Type == 1);
             if (isPlayer && m.SteamId != 0)
                 _lastPlayersBySid[m.SteamId] = (m.X, m.Y, ResolvePlayerName(m));
 
-            // Spieler komplett ausblenden, wenn global deaktiviert
             if (isPlayer && !_showPlayers) continue;
 
             bool knownEventType = !isPlayer && sDynIconByType.ContainsKey(m.Type);
-
-            // stabiler Key
             uint key = m.Id != 0 ? m.Id : DynFallbackKey(m.X, m.Y, m.Label ?? m.Kind, m.Type);
             incoming.Add(key);
 
-            // Präsenz (online/dead) aus letztem Poll
             bool online = false, dead = false;
-            if (_lastPresence.TryGetValue(m.SteamId, out var pr))
-            {
-                online = pr.Item1;
-                dead = pr.Item2;
-            }
-            // --- Zusatz-Trigger für DeathPins aus Dyn-Updates ---
+            if (_lastPresence.TryGetValue(m.SteamId, out var pr)) { online = pr.Item1; dead = pr.Item2; }
+
+            // Death Marker Check
             if (_showDeathMarkers)
             {
                 if (_lastPresence.TryGetValue(m.SteamId, out var prevPresence))
                 {
-                    // Wenn wir eine Änderung auf "dead" erkennen, sofort Pin setzen
-                    if (!prevPresence.dead && dead) // prev false -> now true
+                    if (!prevPresence.dead && dead)
                     {
-                        // sichere vm holen (Name/Koords); falls keine, mit unmittelbaren m.X/m.Y arbeiten
                         var vm = TeamMembers.FirstOrDefault(t => t.SteamId == m.SteamId);
-                        if (vm != null)
-                        {
-                            // Positions-Update aus Dyn-Stream (falls TeamPosition veraltet ist)
-                            vm.X = m.X; vm.Y = m.Y;
-                            Dispatcher.Invoke(() => PlaceDeathPin(vm));
-                        }
-                        else
-                        {
-                            // Fallback ohne VM (z.B. seltenes Timing)
-                            Dispatcher.Invoke(() =>
-                                PlaceOrMoveDeathPin(m.SteamId, m.X, m.Y, ResolvePlayerName(m)));
-                        }
+                        if (vm != null) { vm.X = m.X; vm.Y = m.Y; Dispatcher.Invoke(() => PlaceDeathPin(vm)); }
+                        else { Dispatcher.Invoke(() => PlaceOrMoveDeathPin(m.SteamId, m.X, m.Y, ResolvePlayerName(m))); }
                     }
                 }
             }
 
             var nameNow = ResolvePlayerName(m);
 
+            // Prüfen, ob Element schon existiert
             if (!_dynEls.TryGetValue(key, out var el))
             {
+                // --- NEUES ELEMENT ERSTELLEN ---
                 try
                 {
-                    if (isPlayer)
+                    if (m.Type == 150) // *** CUSTOM CRATE (Mit Tooltip) ***
                     {
-                        // Direkt korrektes Visual anlegen (Avatar-Marker ODER Dot)
-                        if (_showProfileMarkers)
-                            el = BuildPlayerMarker(m.SteamId, nameNow, online, dead); // your existing avatar pin (has name)
-                        else
-                            el = BuildPlayerDotMarker(m.SteamId, nameNow, online, dead); // <— show name with the dot
+                        // 1. Icon laden (crate3.png oder Fallback auf crate.png)
+                        var img = MakeIcon("pack://application:,,,/icons/crate3.png", 48);
+
+                        // 2. Host erstellen
+                        // Wir nutzen m.Label (den Timer) direkt als Tooltip!
+                        var host = BuildEventIconHost(img, m.Label, 48);
+
+                        el = host;
+
+                        // 3. WICHTIG: Sofort registrieren, damit es nicht doppelt gemalt wird!
+                        _dynEls[key] = el;
+                        Overlay.Children.Add(el);
+                        Panel.SetZIndex(el, 2000); // Über allem anderen
+
+                        // 4. Initial Positionieren
+                        var pPos = WorldToImagePx(m.X, m.Y);
+                        Canvas.SetLeft(el, pPos.X - 24);
+                        Canvas.SetTop(el, pPos.Y - 24);
+
+                        ApplyCurrentOverlayScale(el);
+                    }
+                    else if (isPlayer)
+                    {
+                        if (_showProfileMarkers) el = BuildPlayerMarker(m.SteamId, nameNow, online, dead);
+                        else el = BuildPlayerDotMarker(m.SteamId, nameNow, online, dead);
 
                         _dynEls[key] = el;
                         Overlay.Children.Add(el);
@@ -4843,10 +4864,9 @@ public partial class MainWindow : Window
                         FrameworkElement host;
                         if (knownEventType)
                         {
-                            var uri = sDynIconByType[m.Type];
                             try
                             {
-                                var img = MakeIcon(uri, 64);              // <- inner
+                                var img = MakeIcon(sDynIconByType[m.Type], 64);
                                 host = BuildEventIconHost(img, m.Label ?? m.Kind, 64);
                             }
                             catch
@@ -4854,17 +4874,13 @@ public partial class MainWindow : Window
                                 host = BuildEventDot($"{m.Kind} ({m.Type})", 14);
                             }
                         }
-                        else
-                        {
-                            host = BuildEventDot($"{m.Kind} ({m.Type})", 14);
-                        }
+                        else host = BuildEventDot($"{m.Kind} ({m.Type})", 14);
 
                         _dynEls[key] = host;
                         Overlay.Children.Add(host);
                         Panel.SetZIndex(host, 920);
                         ApplyCurrentOverlayScale(host);
 
-                        // einmaliges Spawn-Announcement
                         if (_announceSpawns && !_dynKnown.Contains(key))
                         {
                             _dynKnown.Add(key);
@@ -4872,53 +4888,48 @@ public partial class MainWindow : Window
                             var kind = EventKindText(m.Type);
                             _ = SendTeamChatSafeAsync($"{kind} spawned in at {grid}");
                         }
-
                         el = host;
                     }
                 }
-                catch
-                {
-                    // Marker-spezifische Fehler nicht den gesamten Frame killen
-                    continue;
-                }
+                catch { continue; }
             }
             else
             {
-                // bestehendes Element
-                if (isPlayer)
+                // --- UPDATE VORHANDENES ELEMENT ---
+                if (m.Type == 150) // *** TIMER UPDATE (Tooltip) ***
                 {
-                    // WICHTIG: Diese Methode schaltet selbst auf Dot um, falls _showProfileMarkers=false
-                    UpdatePlayerMarker(ref el, key, m.SteamId, nameNow, online, dead);
+                    // Einfach den Tooltip am existierenden Element aktualisieren
+                    if (el is FrameworkElement fe)
+                    {
+                        fe.ToolTip = m.Label; // Setzt z.B. "14:59" als Mouseover-Text
+                    }
+
+                    // Position sicherstellen
+                    var pPos = WorldToImagePx(m.X, m.Y);
+                    Canvas.SetLeft(el, pPos.X - 24);
+                    Canvas.SetTop(el, pPos.Y - 24);
+                    continue; // Fertig mit Crate
                 }
-                else
+
+                if (isPlayer) UpdatePlayerMarker(ref el, key, m.SteamId, nameNow, online, dead);
+                else if (el.Tag is not PlayerMarkerTag) el.Tag = m;
+            }
+
+            // Standard Positionierung (für alle anderen)
+            if (m.Type != 150)
+            {
+                var p = WorldToImagePx(m.X, m.Y);
+                if (!(el.Tag is PlayerMarkerTag t && t.IsDeathPin))
                 {
-                    // Nicht das Tag des Event-Hosts zerstören!
-                    if (el.Tag is not PlayerMarkerTag)
-                        el.Tag = m; // nur setzen, wenn es kein Host mit PlayerMarkerTag ist
+                    double off = (el.Tag is PlayerMarkerTag t2 && t2.Radius > 0) ? t2.Radius : 5.0;
+                    Canvas.SetLeft(el, p.X - off);
+                    Canvas.SetTop(el, p.Y - off);
                 }
+                if (isPlayer) el.Visibility = _showPlayers ? Visibility.Visible : Visibility.Collapsed;
             }
-
-            // Position setzen
-            var p = WorldToImagePx(m.X, m.Y);
-
-            if (el.Tag is PlayerMarkerTag t && t.IsDeathPin)
-            {
-                // Death-Pins NICHT hier bewegen – die setzt PlaceOrMoveDeathPin().
-                // (Falls du sie doch hier setzen willst, nutze dein PinW/CircleTop/Circle.)
-            }
-            else
-            {
-                // normale Spieler/Events: zentriert mit Radius (falls gesetzt)
-                double off = (el.Tag is PlayerMarkerTag t2 && t2.Radius > 0) ? t2.Radius : 5.0;
-                Canvas.SetLeft(el, p.X - off);
-                Canvas.SetTop(el, p.Y - off);
-            }
-
-            if (isPlayer)
-                el.Visibility = _showPlayers ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        // Nicht mehr vorhandene Marker entfernen
+        // Aufräumen (Marker entfernen, die weg sind)
         CenterMiniMapOnPlayer();
         var gone = _dynEls.Keys.Where(id => !incoming.Contains(id)).ToList();
         foreach (var id in gone)
@@ -4928,7 +4939,6 @@ public partial class MainWindow : Window
                 Overlay.Children.Remove(el);
                 _dynEls.Remove(id);
             }
-           // _dynKnown.Remove(id);
         }
     }
 
@@ -11081,7 +11091,7 @@ public partial class MainWindow : Window
 
     private void ToolTrashButton_Click(object sender, RoutedEventArgs e)
     {
-        // 1. alle meine Elemente raus aus Overlay
+        // 1. Alle meine Elemente vom Overlay entfernen
         if (_playerOverlayElements.TryGetValue(_mySteamId, out var mine))
         {
             foreach (var el in mine)
@@ -11090,28 +11100,25 @@ public partial class MainWindow : Window
             mine.Clear();
         }
 
-        // 2. auch sicherheitshalber wirklich physisch alle übriggebliebenen Ownerelemente killen:
+        // 2. Sicherheits-Cleanup für evtl. übriggebliebene Ownerelemente
         var cleanup = new List<UIElement>();
         foreach (var child in Overlay.Children)
         {
-            if (child is FrameworkElement fe && fe.Tag is OverlayTag meta && meta.OwnerSteamId == _mySteamId)
+            if (child is FrameworkElement fe &&
+                fe.Tag is OverlayTag meta &&
+                meta.OwnerSteamId == _mySteamId)
+            {
                 cleanup.Add(fe);
+            }
         }
         foreach (var dead in cleanup)
             Overlay.Children.Remove(dead);
 
-        // 3. Leeres JSON speichern
-        var empty = new OverlaySaveData();
-        var json = System.Text.Json.JsonSerializer.Serialize(
-            empty,
-            new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+        // 3. Neues Overlay (jetzt leer) speichern,
+        //    dabei Devices aus der bestehenden Datei beibehalten
+        SaveOwnOverlayToJson();
 
-        var path = GetOverlayJsonPathForPlayerServer(_mySteamId);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
-        File.WriteAllText(path, json);
-
-        // 4. und falls ich gerade sichtbar war -> sichtbar bleiben (ist dann eh leer)
-        SaveOwnOverlayToJson(); // optional redundant
+        // 4. Leeres Overlay + Devices an Team hochladen
         UploadOwnOverlayToTeam();
     }
 
@@ -11323,15 +11330,48 @@ public partial class MainWindow : Window
     {
         try
         {
-            // 1. mein aktuelles Overlay einsammeln
-            var data = BuildCurrentOverlaySaveDataForMe(); // <- gleich checken wir noch
+            // optional, aber sinnvoll: sicherstellen, dass die lokale Datei "aktuell" ist
+            try
+            {
+                await TryFetchAndUpdateOverlayAsync(_mySteamId);
+            }
+            catch { /* nicht kritisch */ }
 
-            // JSON bauen
+            // 0) vorhandene JSON (für Devices) einlesen
+            OverlaySaveData? existing = null;
+            var localPath = GetOverlayJsonPathForPlayerServer(_mySteamId);
+
+            if (File.Exists(localPath))
+            {
+                try
+                {
+                    var oldJson = File.ReadAllText(localPath);
+                    existing = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(oldJson);
+                }
+                catch (Exception ex)
+                {
+                    AppendLog("[overlay] Couldn't read existing overlay for merge: " + ex.Message);
+                }
+            }
+
+            // 1) aktuelles Overlay aus dem Canvas bauen
+            var data = BuildCurrentOverlaySaveDataForMe();
+
+            // 2) Devices aus bestehender Datei übernehmen (falls vorhanden)
+            if (existing?.Devices != null && existing.Devices.Count > 0)
+            {
+                data.Devices.Clear(); // falls BuildCurrentOverlaySaveDataForMe() eine leere Liste angelegt hat
+                foreach (var dev in existing.Devices)
+                    data.Devices.Add(dev);
+            }
+
+            data.LastUpdatedUnix = UnixNow();
+
+            // 3) JSON bauen
             var json = System.Text.Json.JsonSerializer.Serialize(
                 data,
                 new System.Text.Json.JsonSerializerOptions { WriteIndented = false });
 
-            // Größenlimit checken
             var rawBytes = Encoding.UTF8.GetBytes(json);
             if (rawBytes.Length > OVERLAY_MAX_BYTES)
             {
@@ -11339,16 +11379,13 @@ public partial class MainWindow : Window
                 return;
             }
 
-            // Base64
             var overlayB64 = Convert.ToBase64String(rawBytes);
 
-            // Signaturfelder
-            var serverKey = GetServerKey();           // muss exakt derselbe string wie beim Speichern sein
-            var ts = UnixNow().ToString();     // Sekunden
+            var serverKey = GetServerKey();
+            var ts = UnixNow().ToString();
             var sigInput = _mySteamId.ToString() + "|" + serverKey + "|" + ts + "|" + overlayB64;
             var sig = HmacSha256Hex(OVERLAY_SYNC_SECRET_HEX, sigInput);
 
-            // Request body
             var payloadObj = new
             {
                 steamId = _mySteamId.ToString(),
@@ -11372,7 +11409,11 @@ public partial class MainWindow : Window
                 }
             }
 
-            AppendLog("[overlay] Overlay uploaded.");
+            // 4) gleiche JSON auch lokal speichern (damit Import sofort drauf zugreift)
+            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(localPath)!);
+            File.WriteAllText(localPath, json);
+
+            AppendLog($"[overlay] Overlay uploaded (devices preserved: {data.Devices.Count}).");
         }
         catch (Exception ex)
         {
@@ -11639,6 +11680,284 @@ public partial class MainWindow : Window
         public List<SavedStroke> Strokes { get; set; } = new();
         public List<SavedIcon> Icons { get; set; } = new();
         public List<SavedText> Texts { get; set; } = new();
+
+        public List<ExportedDeviceDto> Devices { get; set; } = new();
+    }
+
+    // DEVICE EXPORT LOGIK
+    public sealed class ExportedDeviceDto
+    {
+        public uint EntityId { get; set; }
+        public string? Kind { get; set; }
+        public string? Name { get; set; }
+        public string? Alias { get; set; }
+    }
+    public List<ExportedDeviceDto> Devices { get; set; } = new();
+
+    private async void BtnDevicesExport_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.Selected is null)
+        {
+            AppendLog("[dev/export] No server selected.");
+            return;
+        }
+
+        if (!await EnsureConnectedAsync())
+            return;
+
+        try
+        {
+            var count = await UploadDevicesSnapshotForCurrentServerAsync();
+            AppendLog($"[dev/export] Exported {count} devices for server '{_vm.Selected.Name}'.");
+            MessageBox.Show($"Exported {count} devices to your team share.", "Device Export",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[dev/export] Error: " + ex.Message);
+            MessageBox.Show("Device export failed:\n" + ex.Message, "Device Export",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private async Task<int> UploadDevicesSnapshotForCurrentServerAsync()
+    {
+        var profile = _vm.Selected;
+        if (profile?.Devices == null || profile.Devices.Count == 0)
+            throw new InvalidOperationException("No devices in current profile.");
+
+        // 1) aktuelles Overlay-JSON aufbauen (deine bestehende Methode)
+        var data = BuildCurrentOverlaySaveDataForMe(); // <- nutzt du bereits für Map-Overlay
+
+        // 2) Devices-Liste füllen
+        data.Devices.Clear();
+        foreach (var d in profile.Devices)
+        {
+            if (d.EntityId == 0) continue;
+
+            data.Devices.Add(new ExportedDeviceDto
+            {
+                EntityId = d.EntityId,
+                Kind = d.Kind,
+                Name = d.Name,
+                Alias = d.Alias
+            });
+        }
+
+        data.LastUpdatedUnix = UnixNow(); // damit remote/locally „neuer“ ist
+
+        // 3) JSON serialisieren, Größenlimit prüfen, Base64 wie beim Overlay
+        var json = System.Text.Json.JsonSerializer.Serialize(
+            data,
+            new System.Text.Json.JsonSerializerOptions { WriteIndented = false });
+
+        var rawBytes = Encoding.UTF8.GetBytes(json);
+        if (rawBytes.Length > OVERLAY_MAX_BYTES)
+            throw new InvalidOperationException("Device export is too big (>350KB).");
+
+        var overlayB64 = Convert.ToBase64String(rawBytes);
+
+        var serverKey = GetServerKey();
+        var ts = UnixNow().ToString();
+        var sigInput = _mySteamId.ToString() + "|" + serverKey + "|" + ts + "|" + overlayB64;
+        var sig = HmacSha256Hex(OVERLAY_SYNC_SECRET_HEX, sigInput);
+
+        var payloadObj = new
+        {
+            steamId = _mySteamId.ToString(),
+            serverKey = serverKey,
+            ts = ts,
+            overlayJsonB64 = overlayB64,
+            sig = sig
+        };
+
+        var payloadJson = System.Text.Json.JsonSerializer.Serialize(payloadObj);
+        var content = new StringContent(payloadJson, Encoding.UTF8, "application/json");
+
+        using (var http = new HttpClient())
+        {
+            var url = OVERLAY_SYNC_BASEURL + "/upload";
+            var resp = await http.PostAsync(url, content);
+            if (!resp.IsSuccessStatusCode)
+                throw new InvalidOperationException("Upload failed: HTTP " + (int)resp.StatusCode);
+        }
+
+        // 4) optional auch lokal die Datei aktualisieren, damit Import sofort darauf zugreifen kann
+        var localPath = GetOverlayJsonPathForPlayerServer(_mySteamId);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(localPath)!);
+        File.WriteAllText(localPath, json);
+
+        return data.Devices.Count;
+    }
+
+    private async void BtnDevicesImport_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.Selected is null)
+        {
+            AppendLog("[dev/import] No server selected.");
+            return;
+        }
+
+        if (!await EnsureConnectedAsync())
+            return;
+
+        try
+        {
+            // 1) Von allen Team-Mitgliedern den Overlay-JSON aktualisieren
+            var fetchTasks = TeamMembers
+                .Where(tm => tm.SteamId != 0)
+                .Select(tm => TryFetchAndUpdateOverlayAsync(tm.SteamId));
+            await Task.WhenAll(fetchTasks);
+
+            // 2) Import-Kandidaten aus lokalen Overlay-Dateien sammeln
+            var items = new List<DeviceImportItem>();
+
+            foreach (var tm in TeamMembers)
+            {
+                if (tm.SteamId == 0) continue;
+                var path = GetOverlayJsonPathForPlayerServer(tm.SteamId);
+                if (!File.Exists(path)) continue;
+
+                OverlaySaveData? data = null;
+                try
+                {
+                    var json = File.ReadAllText(path);
+                    data = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(json);
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[dev/import] Can't parse overlay for {tm.SteamId}: {ex.Message}");
+                    continue;
+                }
+
+                if (data?.Devices == null || data.Devices.Count == 0)
+                    continue;
+
+                foreach (var d in data.Devices)
+                {
+                    if (d.EntityId == 0) continue;
+
+                    bool already = _vm.Selected.Devices?.Any(x => x.EntityId == d.EntityId) == true;
+
+                    var item = new DeviceImportItem
+                    {
+                        OwnerSteamId = tm.SteamId,
+                        OwnerName = tm.Name ?? tm.SteamId.ToString(),
+                        EntityId = d.EntityId,
+                        Kind = d.Kind,
+                        Name = d.Name,
+                        Alias = d.Alias,
+                        AlreadyPresent = already,
+                        IsSelected = !already,
+                        ExistsState = already ? "local" : "?",
+                        ServerName = _vm.Selected.Name   // <— wichtig für das Binding
+                    };
+                    items.Add(item);
+                }
+            }
+
+            if (items.Count == 0)
+            {
+                MessageBox.Show("No device exports found for your team / server.",
+                    "Device Import", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var dlg = new DeviceImportWindow(
+    items,
+    id => _rust.ProbeEntityAsync(id));
+
+            dlg.Owner = this;
+            var ok = dlg.ShowDialog() == true;
+            if (!ok) return;
+
+            var toImport = dlg.SelectedItems;
+            if (toImport == null || toImport.Count == 0) return;
+
+            // 3) Ausgewählte Devices ins aktuelle Profile übernehmen
+            foreach (var it in toImport)
+            {
+                if (_vm.Selected.Devices.Any(d => d.EntityId == it.EntityId))
+                    continue;
+
+                var dev = new SmartDevice
+                {
+                    EntityId = it.EntityId,
+                    Kind = it.Kind,
+                    Name = it.Name,
+                    Alias = it.Alias,
+                    IsMissing = true  // bis Refresh / ProbeEntity gelaufen ist
+                };
+                _vm.Selected.Devices.Add(dev);
+            }
+
+            _vm.NotifyDevicesChanged();
+            _vm.Save();
+
+            AppendLog($"[dev/import] Imported {toImport.Count} devices.");
+
+            // 4) Direkt anschließender Status-Refresh
+            await RefreshAllDevicesStatusAsync();
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[dev/import] Error: " + ex.Message);
+            MessageBox.Show("Device import failed:\n" + ex.Message,
+                "Device Import", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private async Task RefreshAllDevicesStatusAsync()
+    {
+        if (_vm.Selected is null)
+        {
+            AppendLog("No Server Selected.");
+            return;
+        }
+
+        if (!await EnsureConnectedAsync())
+            return;
+
+        var list = _vm.Selected.Devices;
+        if (list == null || list.Count == 0)
+        {
+            AppendLog("No Devices Available.");
+            return;
+        }
+
+        AppendLog("Updating Device Status…");
+        foreach (var d in list)
+        {
+            try
+            {
+                var r = await _rust.ProbeEntityAsync(d.EntityId);
+
+                d.Kind = r.Kind ?? d.Kind;
+
+                d.IsMissing = !r.Exists;
+                if ((d.Kind ?? r.Kind)?.Equals("SmartAlarm", StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    d.IsOn = false; // Alarm → null als „aus“ deuten
+                }
+                else
+                {
+                    d.IsOn = r.IsOn;
+                }
+
+                if (!r.Exists)
+                    AppendLog($"#{d.EntityId}: not reachable / removed");
+                else
+                    AppendLog($"#{d.EntityId} ({d.Kind ?? "?"}): {(r.IsOn is bool b ? (b ? "ON" : "OFF") : "–")}");
+            }
+            catch (Exception ex)
+            {
+                d.IsMissing = true;
+                AppendLog($"#{d.EntityId}: Status Request Failed → {ex.Message}");
+            }
+        }
+
+        _vm.Save();
+        AppendLog("Refresh completed.");
     }
 
     public class SavedStroke
@@ -11671,76 +11990,52 @@ public partial class MainWindow : Window
 
     private void SaveOwnOverlayToJson()
     {
-        var data = new OverlaySaveData();
-        data.LastUpdatedUnix = UnixNow(); // <--- NEU
-
-        foreach (var child in Overlay.Children)
+        try
         {
-            if (child is not FrameworkElement fe) continue;
-            if (fe.Tag is not OverlayTag meta) continue;
-            if (meta.OwnerSteamId != _mySteamId) continue;
+            // 0) vorhandene Datei einlesen (falls vorhanden), um Devices zu retten
+            OverlaySaveData? existing = null;
+            var path = GetOverlayJsonPathForPlayerServer(_mySteamId);
 
-            switch (child)
+            if (File.Exists(path))
             {
-                case Polyline pl:
-                    {
-                        var stroke = new SavedStroke
-                        {
-                            Thickness = pl.StrokeThickness,
-                            Color = (pl.Stroke as SolidColorBrush)?.Color.ToString() ?? "#FFFFFFFF"
-                        };
-                        foreach (var p in pl.Points)
-                            stroke.Points.Add(p);
-                        data.Strokes.Add(stroke);
-                    }
-                    break;
-
-                case Image img:
-                    {
-                        var x = Canvas.GetLeft(img);
-                        var y = Canvas.GetTop(img);
-
-                        var bi = img.Source as BitmapImage;
-
-                        var si = new SavedIcon
-                        {
-                            IconPath = bi?.UriSource?.ToString() ?? _currentIconPath,
-                            X = x,
-                            Y = y,
-                            Width = img.Width,
-                            Height = img.Height
-                        };
-                        data.Icons.Add(si);
-                    }
-                    break;
-
-                case TextBlock tb:
-                    {
-                        var x = Canvas.GetLeft(tb);
-                        var y = Canvas.GetTop(tb);
-
-                        var st = new SavedText
-                        {
-                            Content = tb.Text,
-                            X = x,
-                            Y = y,
-                            FontSize = tb.FontSize,
-                            Bold = (tb.FontWeight == FontWeights.Bold),
-                            Color = (tb.Foreground as SolidColorBrush)?.Color.ToString() ?? "#FFFFFFFF"
-                        };
-                        data.Texts.Add(st);
-                    }
-                    break;
+                try
+                {
+                    var oldJson = File.ReadAllText(path);
+                    existing = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(oldJson);
+                }
+                catch (Exception ex)
+                {
+                    AppendLog("[overlay] Couldn't read existing overlay for merge (Save): " + ex.Message);
+                }
             }
+
+            // 1) aktuelles Overlay aus dem Canvas bauen (ohne Devices)
+            var data = BuildCurrentOverlaySaveDataForMe();
+
+            // 2) Devices aus bestehender Datei übernehmen (falls vorhanden)
+            if (existing?.Devices != null && existing.Devices.Count > 0)
+            {
+                data.Devices.Clear();
+                foreach (var dev in existing.Devices)
+                    data.Devices.Add(dev);
+            }
+
+            // 3) (optional) Timestamp aktualisieren – kannst du auch weglassen,
+            //    weil BuildCurrentOverlaySaveDataForMe() ihn schon setzt.
+            data.LastUpdatedUnix = UnixNow();
+
+            // 4) JSON schreiben
+            var json = System.Text.Json.JsonSerializer.Serialize(
+                data,
+                new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+
+            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
+            File.WriteAllText(path, json);
         }
-
-        var json = System.Text.Json.JsonSerializer.Serialize(
-            data,
-            new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
-
-        var path = GetOverlayJsonPathForPlayerServer(_mySteamId);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
-        File.WriteAllText(path, json);
+        catch (Exception ex)
+        {
+            AppendLog("[overlay] SaveOwnOverlayToJson error: " + ex.Message);
+        }
     }
 
     private string GetServerKey()

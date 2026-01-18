@@ -1350,6 +1350,29 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                 <Button x:Name="BtnHotkeys" Content="Hotkeys" Width="90" Style="{StaticResource GhostButton}" Click="BtnHotkeys_Click" Margin="0,0,10,0"/>
                               <!--  <Button Content="Info" Width="80" Style="{StaticResource GhostButton}" Click="BtnDeviceInfo_Click" 
               IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem, Converter={StaticResource NotNull}}"/> -->
+                                <!-- Import Devices (Cloud-Download) -->
+                                <Button x:Name="BtnDevicesImport"
+            Width="32"
+            Height="32"
+            Margin="0,0,8,0"
+            Padding="4" 
+            Style="{StaticResource GhostButton}"
+            ToolTip="Import devices from teammates"
+            Click="BtnDevicesImport_Click">
+                                    <Image Source="pack://application:,,,/icons/cloud-download.png" Width="24"/>
+                                </Button>
+
+                                <!-- Export Devices (Cloud-Upload) -->
+                                <Button x:Name="BtnDevicesExport"
+            Width="32"
+            Height="32"
+            Margin="0,0,16,0"
+                                        Padding="4" 
+            Style="{StaticResource GhostButton}"
+            ToolTip="Export devices to teammates"
+            Click="BtnDevicesExport_Click">
+                                    <Image Source="pack://application:,,,/icons/cloud-upload.png" Width="24"/>
+                                </Button>
                                 <Button Content="Refresh" Width="80" Margin="10,0,0,0" Style="{StaticResource GhostButton}" Click="BtnDeviceRefresh_Click"/>
                                 <Button Content="Delete" Width="80" Margin="10,0,0,0" Style="{StaticResource GhostButton}" Click="BtnDeleteDevice_Click"
               ToolTip="You can only delete missing devices"
