@@ -74,7 +74,7 @@ namespace RustPlusDesk.Services
             if (!_chatBundleOpen || string.IsNullOrEmpty(_pendingChatMsg)) return;
             var author = string.IsNullOrWhiteSpace(_pendingChatTitle) ? "Team" : _pendingChatTitle!;
             ChatReceived?.Invoke(this,
-                new TeamChatMessage(_pendingChatTs ?? DateTime.Now, author, _pendingChatMsg!));
+                 new TeamChatMessage(_pendingChatTs ?? DateTime.Now, author, 0, _pendingChatMsg!));
             _pendingChatMsg = null;
             _pendingChatTitle = null;
             _pendingChatTs = null;
@@ -353,7 +353,7 @@ namespace RustPlusDesk.Services
                         var author = J(root, "name") ?? J(root, "username") ?? "Team";
                         var text = J(root, "message") ?? _pendingChatMsg ?? "";
                         ChatReceived?.Invoke(this,
-                            new TeamChatMessage(DateTime.Now, author, text));
+                            new TeamChatMessage(DateTime.Now, author, 0, text));
                         // Chat-Bundle zurücksetzen
                         _pendingChatMsg = null; _pendingChatTitle = null; _pendingChatTs = null;
                         return;

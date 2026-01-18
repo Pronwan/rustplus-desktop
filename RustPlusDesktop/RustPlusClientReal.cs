@@ -98,6 +98,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
 
         var req = Activator.CreateInstance(reqType)!;
 
+        // Suche Property "PromoteToLeader"
         var promoteProp = reqType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .FirstOrDefault(p => {
                 var n = p.Name.ToLowerInvariant();
@@ -106,6 +107,8 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         if (promoteProp is null) return false;
 
         var body = Activator.CreateInstance(promoteProp.PropertyType)!;
+
+        // Suche Property für SteamId im Body (heißt oft SteamId, PlayerId etc.)
         var idP = body.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .FirstOrDefault(pp => {
                 var n = pp.Name.ToLowerInvariant();
@@ -1651,18 +1654,21 @@ rp.connect();
     {
         try
         {
-            // Deine Lib: Werte hängen direkt am EventArgs (Username/Name, Message, Time …).
-            // Andere Libs: könnten anders heißen. Wir lesen defensiv via Reflection.
             string author = TryGetStringProp(e, "Username", "Name", "User") ?? "Unbekannt";
             string text = TryGetStringProp(e, "Message", "Body", "Text") ?? string.Empty;
 
             long? unix = TryGetLongishProp(e, "Time", "Timestamp");
 
+            // NEU: SteamId holen
+            // TryGetLongishProp ist super dafür, wir casten einfach auf ulong
+            ulong steamId = (ulong)(TryGetLongishProp(e, "SteamId", "UserId", "PlayerId") ?? 0);
+
             var tsUtc = unix.HasValue
                 ? DateTimeOffset.FromUnixTimeSeconds(unix.Value).UtcDateTime
                 : DateTime.UtcNow;
 
-            TeamChatReceived?.Invoke(this, new TeamChatMessage(tsUtc, author, text));
+            // Hier übergeben wir jetzt die SteamId
+            TeamChatReceived?.Invoke(this, new TeamChatMessage(tsUtc, author, steamId, text));
         }
         catch
         {
@@ -1696,6 +1702,7 @@ rp.connect();
             if (v is long l) return l;
             if (v is int i) return i;
             if (v is double d) return (long)d;
+            if (v is ulong ul) return (long)ul; // fallback cast
             if (v is DateTime dt) return new DateTimeOffset(dt).ToUnixTimeSeconds();
             if (v is string s && long.TryParse(s, out var lp)) return lp;
         }
@@ -2295,36 +2302,9 @@ rp.connect();
         return default;
     }
 
-   
 
-    private void OnTeamChatReceivedGeneric<T>(object? _, T evArg)
-    {
-        // evArg enthält je nach Lib z.B. { Author/Username/Name, Message/Text, Timestamp/Time, ... }
-        object msg = evArg!;
 
-        // Zeitstempel
-        DateTime ts = DateTime.Now;
-        var dt = Read<DateTime?>(msg, "Timestamp", "Time", "Date", "CreatedAt");
-        if (dt.HasValue) ts = dt.Value;
-        else
-        {
-            var unix = Read<long?>(msg, "Timestamp", "Time", "Date", "CreatedAt", "Epoch");
-            if (unix.HasValue)
-            {
-                var v = unix.Value;
-                var dto = v > 10_000_000_000
-                    ? DateTimeOffset.FromUnixTimeMilliseconds(v)
-                    : DateTimeOffset.FromUnixTimeSeconds(v);
-                ts = dto.LocalDateTime;
-            }
-        }
 
-        string author = Read<string>(msg, "Author", "Username", "Name", "PlayerName") ?? "Team";
-        string text = Read<string>(msg, "Message", "Text", "Body", "Content") ?? "";
-
-        if (!string.IsNullOrWhiteSpace(text))
-            TeamChatReceived?.Invoke(this, new TeamChatMessage(ts, author, text));
-    }
 
     // ==== Helper: Chat-Mapping für beliebige Lib-Versionen ====
 
@@ -2333,34 +2313,104 @@ rp.connect();
         if (listObj is not System.Collections.IEnumerable en)
             yield break;
 
+        var flags = System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.Public |
+                    System.Reflection.BindingFlags.IgnoreCase;
+
         foreach (var it in en)
         {
             if (it is null) continue;
+
+            // Falls es ein Dictionary ist (kommt bei manchen Wrappers/JSON vor)
+            if (it is System.Collections.IDictionary dict)
+            {
+                string? dictText =
+                    dict["Message"] as string ??
+                    dict["Body"] as string ??
+                    dict["Text"] as string;
+
+                if (string.IsNullOrWhiteSpace(dictText))
+                    continue;
+
+                string dictAuthor =
+                    dict["Name"] as string ??
+                    dict["Username"] as string ??
+                    dict["User"] as string ??
+                    "Unbekannt";
+
+                long? dictUnix = null;
+                var dictTimeObj = dict["Time"] ?? dict["time"] ?? dict["Timestamp"] ?? dict["timestamp"];
+                if (dictTimeObj != null)
+                {
+                    try { dictUnix = Convert.ToInt64(dictTimeObj); } catch { }
+                }
+                if (dictUnix == 0) dictUnix = null;
+
+                ulong dictSteamId = 0;
+                var dictIdObj = dict["SteamId"] ?? dict["steamId"] ?? dict["UserId"] ?? dict["PlayerId"];
+                if (dictIdObj != null)
+                {
+                    try { dictSteamId = Convert.ToUInt64(dictIdObj); } catch { }
+                }
+
+                var dictTsLocal = dictUnix.HasValue
+                    ? DateTimeOffset.FromUnixTimeSeconds(dictUnix.Value).LocalDateTime
+                    : DateTime.Now;
+
+                yield return new TeamChatMessage(dictTsLocal, dictAuthor, dictSteamId, dictText);
+                continue;
+            }
+
             var t = it.GetType();
 
+            // Text
             string? text =
-                t.GetProperty("Message")?.GetValue(it) as string ??
-                t.GetProperty("Body")?.GetValue(it) as string ??
-                t.GetProperty("Text")?.GetValue(it) as string;
+                (t.GetProperty("Message", flags)?.GetValue(it) as string) ??
+                (t.GetProperty("Body", flags)?.GetValue(it) as string) ??
+                (t.GetProperty("Text", flags)?.GetValue(it) as string);
 
             if (string.IsNullOrWhiteSpace(text))
-                yield break; // das ist keine Chatliste
+                continue;
 
+            // Author
             string author =
-                t.GetProperty("Name")?.GetValue(it) as string ??
-                t.GetProperty("Username")?.GetValue(it) as string ??
-                t.GetProperty("User")?.GetValue(it) as string ??
+                (t.GetProperty("Name", flags)?.GetValue(it) as string) ??
+                (t.GetProperty("Username", flags)?.GetValue(it) as string) ??
+                (t.GetProperty("User", flags)?.GetValue(it) as string) ??
                 "Unbekannt";
 
-            long? unix =
-                t.GetProperty("Time")?.GetValue(it) as long? ??
-                t.GetProperty("Timestamp")?.GetValue(it) as long?;
+            // Zeitstempel (auch verschachtelt: it.Message.Time)
+            object? src = t.GetProperty("Message", flags)?.GetValue(it) ?? it;
+            var st = src.GetType();
+
+            object? timeObj =
+                st.GetProperty("Time", flags)?.GetValue(src) ??
+                st.GetProperty("Timestamp", flags)?.GetValue(src);
+
+            long? unix = null;
+            if (timeObj != null)
+            {
+                try { unix = Convert.ToInt64(timeObj); } catch { }
+            }
+            if (unix == 0) unix = null;
+
+            // SteamId
+            object? idVal =
+                t.GetProperty("SteamId", flags)?.GetValue(it) ??
+                t.GetProperty("UserId", flags)?.GetValue(it) ??
+                t.GetProperty("PlayerId", flags)?.GetValue(it);
+
+            ulong steamId = 0;
+            if (idVal != null)
+            {
+                try { steamId = Convert.ToUInt64(idVal); } catch { }
+            }
 
             var tsLocal = unix.HasValue
                 ? DateTimeOffset.FromUnixTimeSeconds(unix.Value).LocalDateTime
                 : DateTime.Now;
 
-            yield return new TeamChatMessage(tsLocal, author, text);
+            yield return new TeamChatMessage(tsLocal, author, steamId, text);
         }
     }
 
@@ -5094,6 +5144,95 @@ rp.connect();
     {
         _log("SubscribeRaidAlarms: wird über den FCM-Listener gehandhabt (kein zusätzlicher WS-Subscribe nötig).");
         return Task.CompletedTask;
+    }
+
+    public async Task<List<DynMarker>> GetStaticMonumentsAsync(CancellationToken ct = default)
+    {
+        var list = new List<DynMarker>();
+        if (_api == null) return list;
+
+        // --- Lokale Helper (da RProp/RDbl private locals in der anderen Methode waren) ---
+        static object? RProp(object? o, string name)
+            => o?.GetType().GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase)?.GetValue(o);
+
+        static string? RStr(object? o, params string[] names)
+        {
+            foreach (var n in names)
+            {
+                var v = RProp(o, n);
+                if (v is string s && !string.IsNullOrWhiteSpace(s)) return s;
+            }
+            return null;
+        }
+
+        static double RDbl(object? o, params string[] names)
+        {
+            foreach (var n in names)
+            {
+                var v = RProp(o, n);
+                if (v is double d) return d;
+                if (v is float f) return f;
+                if (v is int i) return i;
+                if (double.TryParse(v?.ToString(), out var dd)) return dd;
+            }
+            return 0.0;
+        }
+        // --------------------------------------------------------------------------------
+
+        try
+        {
+            var asm = typeof(RustPlus).Assembly;
+            var reqType = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
+            var emptyType = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppEmpty", StringComparison.OrdinalIgnoreCase));
+
+            if (reqType == null || emptyType == null) return list;
+
+            var req = Activator.CreateInstance(reqType)!;
+
+            // Setze req.GetMap = new AppEmpty();
+            reqType.GetProperty("GetMap", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public)
+                   ?.SetValue(req, Activator.CreateInstance(emptyType)!);
+
+            var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
+            if (send == null) return list;
+
+            var taskObj = send.Invoke(_api, new object[] { req });
+            object? resp = taskObj;
+            if (taskObj is Task tsk)
+            {
+                await tsk.ConfigureAwait(false);
+                resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk);
+            }
+
+            // Response -> Map -> Monuments
+            var r = RProp(resp, "Response") ?? resp;
+            var map = RProp(r, "Map");
+            if (map == null) return list;
+
+            var monuments = RProp(map, "Monuments") as System.Collections.IEnumerable;
+            if (monuments != null)
+            {
+                foreach (var m in monuments)
+                {
+                    var token = RStr(m, "Token", "Name"); // z.B. "oil_rig_small"
+                    var x = RDbl(m, "X");
+                    var y = RDbl(m, "Y");
+
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        // Wir nutzen DynMarker als Container (ID=0, Type=0 für statisch)
+                        // DynMarker(uint id, int type, string kind, double x, double y, string? label, string? name, ulong steamId)
+                        list.Add(new DynMarker(0, 0, "Monument", x, y, token, token, 0));
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _log?.Invoke("[GetStaticMonuments] Error: " + ex.Message);
+        }
+
+        return list;
     }
 
     public void Dispose() => _ = DisconnectAsync();

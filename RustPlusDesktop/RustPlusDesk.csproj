@@ -13,12 +13,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>3.1.2</Version>
+		<Version>3.3.0</Version>
 
 		<!-- EXE-Eigenschaften im Windows-Dateidialog -->
-		<AssemblyVersion>3.1.2</AssemblyVersion>
-		<FileVersion>3.1.2</FileVersion>
-		<InformationalVersion>3.1.2</InformationalVersion>
+		<AssemblyVersion>3.3.0</AssemblyVersion>
+		<FileVersion>3.3.0</FileVersion>
+		<InformationalVersion>3.3.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -62,7 +62,10 @@
 	  <None Remove="icons\cargo.png" />
 	  <None Remove="icons\cave.png" />
 	  <None Remove="icons\ch47.png" />
+	  <None Remove="icons\cloud-download.png" />
+	  <None Remove="icons\cloud-upload.png" />
 	  <None Remove="icons\crate.png" />
+	  <None Remove="icons\crate3.png" />
 	  <None Remove="icons\dome.png" />
 	  <None Remove="icons\eraser.png" />
 	  <None Remove="icons\excavator.png" />
@@ -130,9 +133,15 @@
 	  <None Remove="Screenshots\3.0_5.png" />
 	  <None Remove="Screenshots\3.0_6.png" />
 	  <None Remove="Screenshots\3.1.0.png" />
+	  <None Remove="Screenshots\3.2.0.png" />
+	  <None Remove="Screenshots\3.3.0_1.png" />
+	  <None Remove="Screenshots\3.3.0_2.png" />
 	  <None Remove="TitleScreen-rust-plus-desktop.png" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Resource Include="icons\cloud-download.png" />
+	  <Resource Include="icons\cloud-upload.png" />
+	  <Resource Include="icons\crate3.png" />
 	  <Resource Include="icons\eraser.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Resource>
@@ -184,6 +193,7 @@
     <Resource Include="icons\cave.png" />
     <Resource Include="icons\ch47.png" />
     <Resource Include="icons\crate.png" />
+	  
     <Resource Include="icons\dome.png" />
     <Resource Include="icons\excavator.png" />
     <Resource Include="icons\explosion.png" />
@@ -250,6 +260,9 @@
     <Resource Include="Screenshots\3.0_5.png" />
     <Resource Include="Screenshots\3.0_6.png" />
     <Resource Include="Screenshots\3.1.0.png" />
+    <Resource Include="Screenshots\3.2.0.png" />
+    <Resource Include="Screenshots\3.3.0_1.png" />
+    <Resource Include="Screenshots\3.3.0_2.png" />
     <Resource Include="TitleScreen-rust-plus-desktop.png" />
     <Content Include="rust_items.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
