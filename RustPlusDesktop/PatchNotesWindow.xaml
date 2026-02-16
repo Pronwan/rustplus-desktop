@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:views="clr-namespace:RustPlusDesk.Views"
-        Title="Rust+ Desk – Patch Notes 3.3.0 – 18/01/26"
+        Title="Rust+ Desk – Patch Notes 3.3.1 – 16/02/26"
         Width="720"
         Height="620"
         Background="{DynamicResource AppBg}"
@@ -22,15 +22,15 @@
             Margin="8">
         <DockPanel LastChildFill="True">
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
-                <TextBlock Text="Patch Notes January 2026 | Oilrig &amp; Auto-Promote"
+                <TextBlock Text="Patch Notes February 2026 | Stability &amp; Event Refinement"
                            FontSize="20"
                            FontWeight="SemiBold"
                            Margin="0,0,0,2"/>
-                <TextBlock Text="Version 3.3.0"
+                <TextBlock Text="Version 3.3.1"
                            Foreground="{DynamicResource Accent}"
                            FontSize="11"
                            Margin="0,0,0,4"/>
-                <TextBlock Text="18.01.2026"
+                <TextBlock Text="16.02.2026"
                            Foreground="{DynamicResource TextSubtle}"
                            FontSize="13"/>
             </StackPanel>
@@ -40,6 +40,49 @@
               CanContentScroll="False"
               ScrollViewer.PanningMode="VerticalOnly">
                 <StackPanel Margin="0,0,0,12" Orientation="Vertical" >
+                    <Border Background="{DynamicResource SurfaceAlt}"
+                            BorderBrush="{DynamicResource CardBorder}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Padding="10"
+                            Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v3.3.1  |  Stability, Deduplication &amp; Event Notifications"
+                                       FontWeight="SemiBold"
+                                       FontSize="15"
+                                       Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• Connection &amp; Announcement Stability" 
+                                       FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="Fixed an issue where silent reconnects would cause duplicate chat announcements for monuments and events. The app now preserves its announcement state during short connection drops."
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• Deep Sea Event Awareness" 
+                                       FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="The app now detects when a Deep Sea event starts and sends a team chat notification including the direction (e.g., North, East, etc.) so your team knows exactly where to look."
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• Advanced Chat Deduplication" 
+                                       FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="No more duplicate lines when clicking the Chat button! We've implemented a robust 100-message window check that ignores timestamps to filter out duplicates even when identity is slightly shifted."
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• Shop Icon Caching (Bandwidth Savings)" 
+                                       FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="To save bandwidth and improve loading times, item icons are now cached locally once downloaded. Subsequent views will load instantly from your disk."
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• Multi-Server Chat Persistence" 
+                                       FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="Chat history is now strictly separated per server (Host:Port). Switching servers will swap your chat logs and UI state, ensuring no crossover between different server contexts."
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,4"/>
+                        </StackPanel>
+                    </Border>
 
                     <Border Background="{DynamicResource SurfaceAlt}"
                             BorderBrush="{DynamicResource CardBorder}"

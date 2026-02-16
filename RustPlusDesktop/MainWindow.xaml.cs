@@ -75,10 +75,10 @@ public partial class MainWindow : Window
     private int _statusBusy = 0;
     private ChatWindow? _chatWin;
     private CancellationTokenSource? _chatCts;
-    private readonly HashSet<string> _chatSeenKeys = new(); // Dedup-Cache pro Session
     private readonly List<TeamChatMessage> _chatHistoryLog = new();
-    private Viewbox? _mapView;     // skaliert Inhalt Uniform in den Host
-    private Grid? _scene;       // enthält Image + Overlay in Bildgröße (DIPs)                                                    // Zoom/Pan-State
+    private DateTime? _lastChatTsForCurrentServer = null;
+    private Viewbox? _mapView;
+    private Grid? _scene;
     private bool _isPanning;
     private Point _panLast;
     private const double ZoomStep = 1.1;   // ~10% pro Wheel-Klick
@@ -920,16 +920,6 @@ public partial class MainWindow : Window
         }
     }
 
-    private static string ChatKey(TeamChatMessage m)
-    {
-        var author = (m.Author ?? "").Trim().ToLowerInvariant();
-        var text = (m.Text ?? "").Trim().ToLowerInvariant();
-
-        // 10-Sekunden-Slot anhand deines lokalen Empfangszeitpunkts
-        var slot = (m.Timestamp.ToUniversalTime().Ticks / TimeSpan.FromSeconds(10).Ticks);
-
-        return $"{m.SteamId}|{author}|{text}|{slot}";
-    }
     private BitmapSource? _mapBaseBmp; // Original-Map ohne Marker
     private readonly List<(double uPx, double vPx, string? label)> _staticMarkers = new();
     // SteamId -> Name Cache
@@ -1097,9 +1087,12 @@ public partial class MainWindow : Window
 
         // NEU: Update Events (10m / 5m Warnungen)
         _monumentWatcher.OnOilRigChatUpdate += async (s, message) =>
-        {
-            await SendTeamChatSafeAsync(message);
+        { 
+             await SendTeamChatSafeAsync(message);
         };
+        
+        _monumentWatcher.OnDebug += (s, msg) => AppendLog(msg);
+
 
     }
 
@@ -1384,20 +1377,130 @@ public partial class MainWindow : Window
 
         return "(player)";
     }
+
+    // --- Chat Persistence & Switching ---
+
+    private ServerProfile? _lastChatProfile;
+
+    private string GetChatCachePath(string serverId)
+    {
+        var dir = System.IO.Path.Combine(sIconCacheDir, "..", "chat"); // ../chat/
+        Directory.CreateDirectory(dir);
+        // Sanitize Filename
+        foreach (var c in System.IO.Path.GetInvalidFileNameChars()) serverId = serverId.Replace(c, '_');
+        return System.IO.Path.Combine(dir, $"{serverId}.json");
+    }
+
+    private void SaveChatHistory(ServerProfile? p)
+    {
+        if (p == null) return;
+        try
+        {
+            var serverKey = $"{p.Host}_{p.Port}";
+            var path = GetChatCachePath(serverKey); // Use Host_Port as filename
+            lock (_chatHistoryLog)
+            {
+                // Begrenzen auf z.B. 500
+                while (_chatHistoryLog.Count > 500) _chatHistoryLog.RemoveAt(0);
+
+                var json = JsonSerializer.Serialize(_chatHistoryLog);
+                System.IO.File.WriteAllText(path, json);
+            }
+        }
+        catch (Exception ex) { AppendLog($"[CHAT-SAVE] {ex.Message}"); }
+    }
+
+    private void LoadChatHistory(ServerProfile? p)
+    {
+        // 1. Clear old
+        lock (_chatHistoryLog) { _chatHistoryLog.Clear(); }
+
+        _lastChatTsForCurrentServer = null;
+
+        // UI leeren
+        if (_chatWin != null)
+        {
+             try { _chatWin.Close(); } catch { }
+             _chatWin = null;
+        }
+
+        if (p == null) return;
+
+        // 2. Load new server specific history
+        try
+        {
+            var serverKey = $"{p.Host}_{p.Port}";
+            var path = GetChatCachePath(serverKey);
+            if (System.IO.File.Exists(path))
+            {
+                var json = System.IO.File.ReadAllText(path);
+                var loaded = JsonSerializer.Deserialize<List<TeamChatMessage>>(json);
+                if (loaded != null)
+                {
+                    lock (_chatHistoryLog)
+                    {
+                        foreach (var m in loaded)
+                        {
+                            // In LoadChatHistory we don't deduplicate yet, just fill
+                            _chatHistoryLog.Add(m);
+                            
+                            // Max TS tracken
+                            if (!_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value)
+                                _lastChatTsForCurrentServer = m.Timestamp;
+                        }
+                    }
+                }
+            }
+            AppendLog($"[CHAT-LOAD] Loaded {_chatHistoryLog.Count} entries for {serverKey}");
+        }
+        catch (Exception ex) { AppendLog($"[CHAT-LOAD] {ex.Message}"); }
+    }
+
+    // Ersetzt deine bestehende SwitchCameraSourceTo Logic z.T.
     private void SwitchCameraSourceTo(ServerProfile? srv)
     {
         if (srv == null)
         {
+            // If srv is null, we are effectively disconnecting from a server.
+            // Save chat for the last profile, then clear camera IDs.
+            SaveChatHistory(_lastChatProfile);
+            _lastChatProfile = null; // No current server
             _cameraIds = new ObservableCollection<string>();
             RebuildCameraTiles();
             return;
         }
 
-        srv.CameraIds ??= new ObservableCollection<string>();
-        _cameraIds = srv.CameraIds;          // gleiche Instanz → eine Wahrheit
+        // 1. Chat speichern (alter Server)
+        SaveChatHistory(_lastChatProfile);
+        
+        // 2. Chat laden (neuer Server)
+        LoadChatHistory(srv);
+        
+        _lastChatProfile = srv;
+
+        // Reset state for specific server logic
+        _monumentWatcher.Reset();
+        _deepSeaActive = false;
+
+        if (_rust is RustPlusClientReal real)
+        {
+             // real.Disconnect(); // Nein, wir sharen die Instanz, wir reconnecten erst bei "Connect"
+        }
+        
+        srv.CameraIds ??= new ObservableCollection<string>(); // Ensure CameraIds is initialized
+        _cameraIds = srv.CameraIds;          
         RebuildCameraTiles();
         EnsureCamThumbPolling();
     }
+
+    // Verbesserter Key ohne Zeitstempel (nur Inhalt + Autor)
+    private static string ChatKey(TeamChatMessage m)
+    {
+        var author = (m.Author ?? "").Trim().ToLowerInvariant();
+        var text = (m.Text ?? "").Trim().ToLowerInvariant();
+        return $"{author}|{text}";
+    }
+
     private async Task RefreshTeamNamesAsync()
     {
         _lastTeamRefresh = DateTime.UtcNow;
@@ -2145,9 +2248,7 @@ public partial class MainWindow : Window
 
     private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP, double V_DIP, double Radius);
     private readonly List<MarkerRef> _markers = new();
-    private readonly Queue<string> _chatSeenOrder = new();
-    private const int ChatSeenCapacity = 600; // Ringpuffer-Größe (genug für lange Sessions)
-    private DateTime? _lastChatTsForCurrentServer;
+
     private AlarmWindow? _alarmWin; // nicht AlarmPopupWindow
     private readonly ObservableCollection<AlarmNotification> _alarmFeed = new();
     private void ShowAlarmPopup(AlarmNotification n)
@@ -2234,15 +2335,7 @@ public partial class MainWindow : Window
         return s;
     }
 
-    // Seen-Set pflegen (Ringpuffer)
-    private void RememberChatKey(string key)
-    {
-        if (_chatSeenKeys.Contains(key)) return;
-        _chatSeenKeys.Add(key);
-        _chatSeenOrder.Enqueue(key);
-        if (_chatSeenOrder.Count > ChatSeenCapacity)
-            _chatSeenKeys.Remove(_chatSeenOrder.Dequeue());
-    }
+
 
     private async void StatusTimer_Tick(object? sender, EventArgs e)
     {
@@ -2814,7 +2907,7 @@ public partial class MainWindow : Window
     {
 
         _lastChatTsForCurrentServer = null;
-        _chatSeenKeys.Clear();
+
         // Aus der aktuellen Auswahl im VM lesen
         if (_vm.Selected is { } prof && !string.IsNullOrWhiteSpace(prof.SteamId64))
             _vm.SteamId64 = prof.SteamId64;
@@ -2862,7 +2955,7 @@ public partial class MainWindow : Window
     {
         _connectedProfile = null;
         // 1) Laufende Polls/Tokens abbrechen
-        try { StopDynPolling(); } catch { }
+        try { StopDynPolling(clearKnown: !reconnect); } catch { }
         try { StopTeamPolling(); } catch { }
 
         // Falls du eigene CTS für Status hast:
@@ -2952,7 +3045,50 @@ public partial class MainWindow : Window
 
     private async void BtnConnect_Click(object sender, RoutedEventArgs e)
     {
-         await HardResetAsync(reconnect: false);
+         await PerformConnectAsync(false);
+    }
+
+    private bool _isReconnecting = false;
+    private async void OnConnectionLost()
+    {
+        if (_isReconnecting) return;
+        _isReconnecting = true;
+        
+        AppendLog("[auto-reconnect] Connection lost detected. Starting recovery...");
+        
+        int delay = 2000;
+        int maxDelay = 60000;
+
+        try 
+        {
+            while (_isReconnecting)
+            {
+               AppendLog($"[auto-reconnect] Retrying in {delay/1000}s...");
+               await Task.Delay(delay);
+
+               bool success = await PerformConnectAsync(true);
+               if (success)
+               {
+                   AppendLog("[auto-reconnect] Reconnected successfully!");
+                   _isReconnecting = false;
+                   return;
+               }
+
+               delay = Math.Min(delay * 2, maxDelay);
+            }
+        }
+        catch (Exception ex)
+        {
+             AppendLog("[auto-reconnect] Loop error: " + ex.Message);
+             _isReconnecting = false;
+        }
+    }
+
+    private async Task<bool> PerformConnectAsync(bool silent)
+    {
+        if (!silent)
+        {
+             await HardResetAsync(reconnect: false);
         // stop polls from previous server
         _shopTimer?.Stop();
         _shopTimer = null;
@@ -2977,10 +3113,19 @@ public partial class MainWindow : Window
         
 
 
-        // Overlay auf der Map leeren, weil die alten Shop-UI-Elemente vom alten Server sind:
-        foreach (var el in _shopEls.Values)
-            Overlay.Children.Remove(el);
-        _shopEls.Clear();
+            // Overlay auf der Map leeren, weil die alten Shop-UI-Elemente vom alten Server sind:
+            foreach (var el in _shopEls.Values)
+                Overlay.Children.Remove(el);
+            _shopEls.Clear();
+        }
+        else
+        {
+             // Silent reconnect: pause pollers but KEEP DATA
+            _shopTimer?.Stop();
+            StopDynPolling(clearKnown: false);
+            StopTeamPolling();
+            _alertsNeedRebaseline = true;
+        }
         
 
         //if (_shopTimer =  _shopTimer.Stop();
@@ -2988,8 +3133,8 @@ public partial class MainWindow : Window
 
         if (_vm.Selected is null)
         {
-            MessageBox.Show("Please chose a server.");
-            return;
+            if (!silent) MessageBox.Show("Please chose a server.");
+            return false;
         }
 
         try
@@ -3002,43 +3147,32 @@ public partial class MainWindow : Window
             _vm.Selected.IsConnected = true;
             AppendLog("Connected.");
             _connectedProfile = _vm.Selected;
+            // Allow socket to stabilize before firing requests
+            await Task.Delay(1000);
             // EINMAL casten und überall dieselbe Variable verwenden
             var real = _rust as RustPlusClientReal;
             if (real != null)
             {
                 real.StorageSnapshotReceived -= OnStorageSnapshot;  // doppelte Hooks vermeiden
                 real.StorageSnapshotReceived += OnStorageSnapshot;
+                real.ConnectionLost -= OnConnectionLost;
+                real.ConnectionLost += OnConnectionLost;
                 real.EnsureEventsHooked();
             }
 
-            // Chat-Marker reset
+            // Chat-Marker reset (Deduplication wird via _chatHistoryLog gehandhabt)
             _lastChatTsForCurrentServer = null;
-            _chatSeenKeys.Clear();
 
-            // (1) Chat-Historie einmalig + Live-Stream primen (keine Event-Hooks hier)
+            // (1) Live-Stream primen (Historie wird beim Öffnen des Chat-Fensters geladen)
             if (real != null)
             {
                 try
                 {
-                    var hist = await real.GetTeamChatHistoryAsync(null, 200);
-                    int added = 0;
-                    foreach (var m in hist.OrderBy(x => x.Timestamp))
-                    {
-                        var key = $"{m.Timestamp.Ticks}|{m.Author}|{m.Text}";
-                        if (_chatSeenKeys.Add(key))
-                        {
-                            _chatWin?.AddIncoming(m.Author, m.Text, m.Timestamp);
-                            if (!_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value)
-                                _lastChatTsForCurrentServer = m.Timestamp;
-                            added++;
-                        }
-                    }
-                    AppendLog($"[chat] history loaded: {added} items.");
-                    await real.PrimeTeamChatAsync(); // Live-Events freischalten
+                    await real.PrimeTeamChatAsync(); 
                 }
                 catch (Exception ex)
                 {
-                    AppendLog("[chat] history error: " + ex.Message);
+                    AppendLog("[chat] prime error: " + ex.Message);
                 }
             }
 
@@ -3126,12 +3260,14 @@ public partial class MainWindow : Window
             }
 
         }
+
         catch (Exception ex)
         {
             _vm.IsBusy = false;
             _vm.BusyText = "";
             AppendLog("Fehler: " + ex.Message);
-            MessageBox.Show($"Connection failed: {ex.Message}");
+            if (!silent) MessageBox.Show($"Connection failed: {ex.Message}");
+            return false;
         }
         _storageTimer?.Stop();
         _storageTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(10) };
@@ -3174,6 +3310,7 @@ public partial class MainWindow : Window
         };
         _storageTimer.Start();
         // AppendLog("[stor/poll] timer started (10s)");
+        return true;
     }
 
     // PLAYER DEATH MARKERS AVATAR IMAGE PLAYER DEATH
@@ -3537,9 +3674,22 @@ public partial class MainWindow : Window
     {
         Dispatcher.Invoke(() =>
         {
-            var key = ChatKey(m);
-            if (_chatSeenKeys.Contains(key)) return;
-            _chatSeenKeys.Add(key);
+            // Robust Check: Ist diese Nachricht (Inhalt + Autor) bereits in den letzten 100 Zeilen?
+            lock (_chatHistoryLog)
+            {
+                var normAuthor = (m.Author ?? "").Trim().ToLowerInvariant();
+                var normText = (m.Text ?? "").Trim().ToLowerInvariant();
+
+                int start = Math.Max(0, _chatHistoryLog.Count - 100);
+                for (int i = _chatHistoryLog.Count - 1; i >= start; i--)
+                {
+                    var existing = _chatHistoryLog[i];
+                    if (string.Equals(existing.Author, normAuthor, StringComparison.OrdinalIgnoreCase) && 
+                        string.Equals(existing.Text, normText, StringComparison.OrdinalIgnoreCase)) 
+                        return; // Duplikat ignorieren
+                }
+                _chatHistoryLog.Add(m);
+            }
 
             // ab hier gilt sie als "neu"
             if (m.Text.Trim().Equals("!leader", StringComparison.OrdinalIgnoreCase))
@@ -3551,25 +3701,35 @@ public partial class MainWindow : Window
                 }
             }
 
-            // und dann speichern/anzeigen
-            lock (_chatHistoryLog) { _chatHistoryLog.Add(m); }
             _chatWin?.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime());
+            
+            // Timestamp für History-Anfragen aktuell halten
+            if (!_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value)
+                _lastChatTsForCurrentServer = m.Timestamp;
         });
     }
 
     private bool AppendChatIfNew(TeamChatMessage m)
     {
-        var key = ChatKey(m);
-        if (_chatSeenKeys.Contains(key)) return false;
-
-        _chatSeenKeys.Add(key);
-
         lock (_chatHistoryLog)
-            _chatHistoryLog.Add(m);
+        {
+            var normAuthor = (m.Author ?? "").Trim().ToLowerInvariant();
+            var normText = (m.Text ?? "").Trim().ToLowerInvariant();
 
-        _lastChatTsForCurrentServer =
-            !_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value
-                ? m.Timestamp : _lastChatTsForCurrentServer;
+            // Robust Check: Ist diese Nachricht (Inhalt + Autor) bereits in den letzten 100 Zeilen?
+            int start = Math.Max(0, _chatHistoryLog.Count - 100);
+            for (int i = _chatHistoryLog.Count - 1; i >= start; i--)
+            {
+                var existing = _chatHistoryLog[i];
+                if (string.Equals(existing.Author, normAuthor, StringComparison.OrdinalIgnoreCase) && 
+                    string.Equals(existing.Text, normText, StringComparison.OrdinalIgnoreCase)) 
+                    return false; // Duplikat ignorieren
+            }
+            _chatHistoryLog.Add(m);
+        }
+
+        if (!_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value)
+            _lastChatTsForCurrentServer = m.Timestamp;
 
         _chatWin?.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime());
         return true;
@@ -4076,9 +4236,60 @@ public partial class MainWindow : Window
                 using var http = new HttpClient() { Timeout = TimeSpan.FromSeconds(5) };
                 var data = await http.GetByteArrayAsync(url);
                 await System.IO.File.WriteAllBytesAsync(targetPath, data);
+                // System.Diagnostics.Debug.WriteLine($"[ICON] Saved to {targetPath}");
             }
             catch { /* tolerant */ }
         });
+    }
+
+    private bool _deepSeaActive = false;
+    private void CheckDeepSeaEvent(IEnumerable<RustPlusClientReal.ShopMarker> shops)
+    {
+        // "Casino Bar Shopkeeper" detection for Deep Sea Event
+        var deepSeaShop = shops.FirstOrDefault(s => 
+            s.Label != null && s.Label.Contains("Casino Bar Shopkeeper")
+        );
+
+        if (deepSeaShop != null)
+        {
+            if (!_deepSeaActive)
+            {
+                _deepSeaActive = true;
+                string dir = GetDeepSeaDirection(deepSeaShop.X, deepSeaShop.Y);
+                // Fire and forget chat
+                _ = SendTeamChatSafeAsync($"Deep Sea Event started! (Direction: {dir})");
+                AppendLog($"[DEEPSEA] Event detected at {deepSeaShop.X:F0},{deepSeaShop.Y:F0} ({dir})");
+            }
+        }
+        else
+        {
+            if (_deepSeaActive)
+            {
+                _deepSeaActive = false;
+                AppendLog("[DEEPSEA] Event ended (shop disappeared).");
+            }
+        }
+    }
+
+    private string GetDeepSeaDirection(double x, double y)
+    {
+        // _worldSizeS is the map size (e.g. 4500)
+        double size = _worldSizeS > 0 ? _worldSizeS : 4500;
+        double margin = 200; // Edge margin
+
+        // Logic based on user request:
+        // Y < 100 (or close to 0) => North
+        // Y > Size - 100 => South
+        // X < 100 => West
+        // X > Size - 100 => East
+
+        if (y < margin) return "North";
+        if (y > size - margin) return "South";
+        if (x < margin) return "West";
+        if (x > size - margin) return "East";
+
+        // Fallback to Grid
+        return TryGetGridRef(x, y, out var g) ? g : "Unknown";
     }
 
     private static void PrefetchShopIcons(IEnumerable<RustPlusClientReal.ShopMarker> shops)
@@ -4602,14 +4813,14 @@ public partial class MainWindow : Window
 
     }
 
-    private void StopDynPolling()
+    private void StopDynPolling(bool clearKnown = true)
     {
         _dynTimer?.Stop();
         _dynTimer = null;
 
         foreach (var kv in _dynEls) Overlay.Children.Remove(kv.Value);
         _dynEls.Clear();
-        _dynKnown.Clear();
+        if (clearKnown) _dynKnown.Clear();
     }
 
     private void ChkPlayers_Checked(object sender, RoutedEventArgs e)
@@ -6191,6 +6402,7 @@ public partial class MainWindow : Window
                 if (el is FrameworkElement fe) _shopIconSet.Remove(fe);
             }
         }
+        CheckDeepSeaEvent(shops);
         PrefetchShopIcons(shops);
     }
 
@@ -12540,6 +12752,8 @@ public partial class MainWindow : Window
             {
                 AppendLog($"[prime] #{d.EntityId} err: {ex.Message}");
             }
+            // Throttle requests to avoid flooding/disconnects
+            await Task.Delay(250);
         }
         _vm?.NotifyDevicesChanged();
     }
