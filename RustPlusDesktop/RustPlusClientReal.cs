@@ -42,6 +42,77 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
     public RustPlusClientReal(Action<string> log) => _log = log;
     public event Action<uint, bool, string?>? DeviceStateEvent;
 
+    public event Action? ConnectionLost;
+    private readonly SemaphoreSlim _rateLimitLock = new(1, 1);
+    private int _tokens = 5;
+    private DateTime _lastRefill = DateTime.UtcNow;
+
+    private async Task AcquireTokenAsync(CancellationToken ct)
+    {
+        await _rateLimitLock.WaitAsync(ct);
+        try
+        {
+            RefillTokens();
+            while (_tokens <= 0)
+            {
+                _rateLimitLock.Release();
+                await Task.Delay(333, ct);
+                await _rateLimitLock.WaitAsync(ct);
+                RefillTokens();
+            }
+            _tokens--;
+        }
+        finally
+        {
+            _rateLimitLock.Release();
+        }
+    }
+
+    private void RefillTokens()
+    {
+        var now = DateTime.UtcNow;
+        var seconds = (now - _lastRefill).TotalSeconds;
+        var newTokens = (int)(seconds * 2.0);
+        if (newTokens > 0)
+        {
+            _tokens = Math.Min(5, _tokens + newTokens);
+            _lastRefill = now;
+        }
+    }
+
+    private void CheckConnectionLost(Exception ex)
+    {
+        var current = ex;
+        while (current != null)
+        {
+            var msg = current.Message;
+            if (msg.Contains("not connected", StringComparison.OrdinalIgnoreCase) ||
+                msg.Contains("connection closed", StringComparison.OrdinalIgnoreCase) ||
+                msg.Contains("socket", StringComparison.OrdinalIgnoreCase) ||
+                msg.Contains("eof", StringComparison.OrdinalIgnoreCase) || 
+                msg.Contains("unable to read", StringComparison.OrdinalIgnoreCase))
+            {
+                ConnectionLost?.Invoke();
+                return;
+            }
+            current = current.InnerException;
+        }
+    }
+
+    private void SaveToCache<T>(string suffix, T data)
+    {
+        if (string.IsNullOrEmpty(_host)) return;
+        var key = $"{_host}_{_port}_{suffix}";
+        StorageService.SaveCache(key, data);
+    }
+
+    private T? LoadFromCache<T>(string suffix)
+    {
+         if (string.IsNullOrEmpty(_host)) return default;
+         var key = $"{_host}_{_port}_{suffix}";
+         return StorageService.LoadCache<T>(key);
+    }
+
     
     // ---------- TEAM-CHAT ----------
 
@@ -1722,6 +1793,7 @@ rp.connect();
         // --- ab hier: Events/Sniffer VERDRAHTEN ---
         _log?.Invoke("[stor/sniff] events: " + string.Join(", ", _api.GetType().GetEvents().Select(e => e.Name)));
 
+        /*
         AttachSniffer("OnStorageMonitorTriggered");
         AttachSniffer("OnEntityChanged");
         AttachSniffer("OnEntityInfo");
@@ -1737,6 +1809,7 @@ rp.connect();
         {
             AttachSniffer(ev.Name);
         }
+        */
 
         _api.OnSmartSwitchTriggered += (_, sw) =>
         {
@@ -3207,7 +3280,7 @@ rp.connect();
 
     public async Task<TeamInfo?> GetTeamInfoAsync(CancellationToken ct = default)
 {
-    if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+    if (_api is null) return LoadFromCache<TeamInfo>("team");
 
     static object? P(object? o, string name) =>
         o?.GetType().GetProperty(name,
@@ -3253,6 +3326,7 @@ rp.connect();
         var send   = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
         if (send == null) return null;
 
+        await AcquireTokenAsync(ct);
         var taskObj = send.Invoke(_api, new object[] { req });
         object? resp = taskObj;
         if (taskObj is Task tsk)
@@ -3326,17 +3400,19 @@ rp.connect();
             }
         }
 
+        SaveToCache("team", list);
         return list;
     }
-    catch
+    catch (Exception ex)
     {
-        return null;
+        CheckConnectionLost(ex);
+        return LoadFromCache<TeamInfo>("team");
     }
 }
 
     public async Task<List<DynMarker>> GetDynamicMapMarkersAsync(CancellationToken ct = default)
     {
-        if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+        if (_api is null) return LoadFromCache<List<DynMarker>>("markers") ?? new List<DynMarker>();
         void L(string s) => _log?.Invoke("[dyn] " + s);
 
         // ---------- helpers (lokal, konfliktfrei benannt) ----------
@@ -3513,6 +3589,7 @@ rp.connect();
             var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
             if (send == null) return list;
 
+            await AcquireTokenAsync(CancellationToken.None);
             var taskObj = send.Invoke(_api, new object[] { req });
             object? resp = taskObj;
             if (taskObj is Task tsk)
@@ -3594,9 +3671,12 @@ rp.connect();
         }
         catch (Exception ex)
         {
+            CheckConnectionLost(ex);
             L("error: " + ex.Message);
+            return LoadFromCache<List<DynMarker>>("markers") ?? list;
         }
 
+        if (list.Count > 0) SaveToCache("markers", list);
         return list;
     }
 
@@ -3634,7 +3714,7 @@ rp.connect();
 
     public async Task<List<ShopMarker>> GetVendingShopsAsync(CancellationToken ct = default)
     {
-        if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+        if (_api is null) return LoadFromCache<List<ShopMarker>>("shops") ?? new List<ShopMarker>();
         void L(string s) => _log?.Invoke("[shops] " + s);
 
         // local helpers (you already have most of these in your file)
@@ -3800,6 +3880,7 @@ rp.connect();
                  ?? t.GetMethod("GetMapMarkersAsync", Type.EmptyTypes)
                  ?? t.GetMethod("GetMapMarkers", Type.EmptyTypes);
 
+            await AcquireTokenAsync(ct);
             object? call = m == null ? null :
                 (m.GetParameters().Length == 1 ? m.Invoke(_api, new object[] { ct }) : m.Invoke(_api, Array.Empty<object>()));
 
@@ -3827,7 +3908,7 @@ rp.connect();
                 }
             }
         }
-        catch { /* ignore, fallback next */ }
+        catch (Exception ex) { CheckConnectionLost(ex); /* ignore, fallback next */ }
 
         // PATH B – raw AppRequest (enum-agnostic)
         if (shops.Count == 0)
@@ -3849,6 +3930,7 @@ rp.connect();
                     var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
                     if (send != null)
                     {
+                        await AcquireTokenAsync(ct);
                         var taskObj = send.Invoke(_api, new object[] { req });
                         object? resp = taskObj;
                         if (taskObj is Task tsk)
@@ -3877,6 +3959,12 @@ rp.connect();
             catch { /* ignore */ }
         }
 
+        if (shops.Count > 0) SaveToCache("shops", shops);
+        else 
+        {
+             var cached = LoadFromCache<List<ShopMarker>>("shops");
+             if (cached != null && cached.Count > 0) return cached;
+        }
         return shops;
     }
 
@@ -4074,6 +4162,7 @@ rp.connect();
                       ?? t.GetMethod("GetInfoAsync", Type.EmptyTypes);
             if (mInfo != null)
             {
+                await AcquireTokenAsync(ct);
                 object? call = mInfo.GetParameters().Length == 1
                     ? mInfo.Invoke(_api, new object[] { ct })
                     : mInfo.Invoke(_api, Array.Empty<object>());
@@ -4097,6 +4186,7 @@ rp.connect();
                      ?? t.GetMethod("GetTimeAsync", Type.EmptyTypes);
             if (mTime != null)
             {
+                await AcquireTokenAsync(ct);
                 object? call = mTime.GetParameters().Length == 1
                     ? mTime.Invoke(_api, new object[] { ct })
                     : mTime.Invoke(_api, Array.Empty<object>());
@@ -4113,6 +4203,7 @@ rp.connect();
         }
         catch (Exception ex)
         {
+           CheckConnectionLost(ex);
            // L("pathA ignored: " + ex.Message);
         }
 
@@ -4140,6 +4231,7 @@ rp.connect();
                         var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
                         if (send != null)
                         {
+                            await AcquireTokenAsync(ct);
                             var taskObj = send.Invoke(_api, new object[] { reqInfo });
                             object? resp = taskObj;
                             if (taskObj is Task tsk) { await tsk.ConfigureAwait(false); resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk); }
@@ -4167,6 +4259,7 @@ rp.connect();
                         var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
                         if (send != null)
                         {
+                            await AcquireTokenAsync(ct);
                             var taskObj = send.Invoke(_api, new object[] { reqTime });
                             object? resp = taskObj;
                             if (taskObj is Task tsk) { await tsk.ConfigureAwait(false); resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk); }
@@ -4181,6 +4274,7 @@ rp.connect();
             }
             catch (Exception exB)
             {
+                CheckConnectionLost(exB);
                 L("pathB error: " + exB.Message);
             }
         }
@@ -4190,7 +4284,7 @@ rp.connect();
         return new ServerStatus(players, maxPlayers, queue, tStr);
     }
 
-    public Task SendTeamMessageAsync(string text, CancellationToken ct = default)
+    public async Task SendTeamMessageAsync(string text, CancellationToken ct = default)
     {
         if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
         var t = _api.GetType();
@@ -4201,9 +4295,14 @@ rp.connect();
 
         if (m is null) throw new NotSupportedException("SendTeamMessage* nicht gefunden.");
 
+        await AcquireTokenAsync(ct);
         var args = m.GetParameters().Length == 2 ? new object[] { text, ct } : new object[] { text };
         var taskObj = m.Invoke(_api, args);
-        return taskObj as Task ?? Task.CompletedTask;
+        if (taskObj is Task task)
+        {
+            try { await task; }
+            catch (Exception ex) { CheckConnectionLost(ex); throw; }
+        }
     }
 
     private static bool? ReadBoolFlexible(object? src, params string[] names)
@@ -4394,6 +4493,7 @@ rp.connect();
             var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
             if (send is null) return null;
 
+            await AcquireTokenAsync(CancellationToken.None);
             var taskObj = send.Invoke(_api, new object[] { req });
             object? resp = taskObj;
             if (taskObj is Task t) { await t.ConfigureAwait(false); resp = t.GetType().GetProperty("Result")?.GetValue(t); }
@@ -4432,8 +4532,9 @@ rp.connect();
 
             return (leader, list);
         }
-        catch
+        catch (Exception ex)
         {
+            CheckConnectionLost(ex);
             return null;
         }
     }
@@ -4470,6 +4571,7 @@ rp.connect();
                   ?? t.GetMethod("GetEntityInfoAsync", new[] { typeof(uint) });
             if (m != null)
             {
+                await AcquireTokenAsync(ct);
                 object? call = (m.GetParameters().Length == 2)
                     ? m.Invoke(_api, new object[] { entityId, ct })
                     : m.Invoke(_api, new object[] { entityId });
@@ -4508,6 +4610,7 @@ rp.connect();
             var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
             if (send == null) return new EntityProbeResult(false, null, null);
 
+            await AcquireTokenAsync(ct);
             var taskObj = send.Invoke(_api, new object[] { req });
             if (taskObj is not Task task) return new EntityProbeResult(false, null, null);
 
@@ -4524,7 +4627,7 @@ rp.connect();
             }
         }
         catch (OperationCanceledException) { throw; }
-        catch (Exception ex) { _log("ProbeEntity (contracts) Fehler: " + ex.Message); }
+        catch (Exception ex) { CheckConnectionLost(ex); _log("ProbeEntity (contracts) Fehler: " + ex.Message); }
 
         return new EntityProbeResult(false, null, null);
     }
@@ -4537,7 +4640,7 @@ rp.connect();
         {
             await EnsureSubOnceAsync(id);     // sorgt fürs Event
            // await PokeEntityAsync(id, ct);      // triggert erstes Update
-            await Task.Delay(50, ct);
+            await Task.Delay(150, ct);
         }
     }
 
@@ -4554,6 +4657,11 @@ rp.connect();
         _port = profile.Port;
         _steamId = steamId;
         _playerToken = playerToken;
+
+        // Reset subscription state for new connection
+        lock (_subOnce) _subOnce.Clear();
+        lock (_subscribed) _subscribed.Clear();
+        _eventsHooked = false;
 
         async Task<(bool ok, string? err)> TryAsync(bool useProxy)
         {
@@ -4781,6 +4889,7 @@ rp.connect();
     {
         if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
         var id = (uint)entityId;
+        await AcquireTokenAsync(ct);
         bool sent = false;
 
         if (await TryToggleExplicitAsync(id, on, ct)) { _log($"[toggle:{id}] path=explicit"); sent = true; }
@@ -5005,7 +5114,11 @@ rp.connect();
                     return true; // Task lief ohne Exception → vermutlich ok
                 }
             }
-            catch (Exception ex) { _log("ToggleSmartSwitch*-Aufruf fehlgeschlagen: " + ex.Message); }
+            catch (Exception ex)
+            {
+                CheckConnectionLost(ex);
+                _log("ToggleSmartSwitch*-Aufruf fehlgeschlagen: " + ex.Message);
+            }
         }
 
         _log("Pfad: ToggleSmartSwitch* (neu) ✗");
@@ -5074,6 +5187,7 @@ rp.connect();
             }
             catch (Exception ex)
             {
+                CheckConnectionLost(ex);
                 _log("SetEntityValue*-Aufruf fehlgeschlagen: " + ex.Message);
                 return false;
             }
@@ -5137,6 +5251,7 @@ rp.connect();
         }
         catch (Exception ex)
         {
+            CheckConnectionLost(ex);
             return (false, ex.Message);
         }
     }
@@ -5196,6 +5311,7 @@ rp.connect();
             var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
             if (send == null) return list;
 
+            await AcquireTokenAsync(ct);
             var taskObj = send.Invoke(_api, new object[] { req });
             object? resp = taskObj;
             if (taskObj is Task tsk)
@@ -5229,6 +5345,7 @@ rp.connect();
         }
         catch (Exception ex)
         {
+            CheckConnectionLost(ex);
             _log?.Invoke("[GetStaticMonuments] Error: " + ex.Message);
         }
 
@@ -5965,7 +6082,8 @@ rp.connect();
     {
         if (_api is null) return;
 
-        // 1) Bestehender Pfad (GetEntityInfoAsync) — lassen wir drin
+        // 1) REMOVED Native Call to prevent double-requests (Reflection block below handles it)
+        /*
         var m = _api.GetType().GetMethod("GetEntityInfoAsync", new[] { typeof(uint) })
              ?? _api.GetType().GetMethod("GetEntityInfoAsync", new[] { typeof(uint), typeof(CancellationToken) });
 
@@ -5976,6 +6094,7 @@ rp.connect();
                 : new object[] { entityId };
             if (m.Invoke(_api, args) is Task t) await t;
         }
+        */
 
         // 2) Zusatz: Contracts-Poke für Storage
         try

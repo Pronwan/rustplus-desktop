@@ -24,6 +24,7 @@ namespace RustPlusDesk.Services
 
             public double LastX { get; set; }       // Letzte Position (für Vektor)
             public double LastY { get; set; }
+            public bool DebugLogged { get; set; }
         }
 
         private (double X, double Y)? _smallOilPos;
@@ -38,23 +39,19 @@ namespace RustPlusDesk.Services
 
         // --- KONFIGURATION ---
 
-        // 1. Maximale Distanz des SPAWN-PUNKTS zum Rig. 
-        // Du sagtest "1,5 Grids" (ca. 225m). Wir nehmen sicherheitshalber 600m (~4 Grids),
-        // da Spawns manchmal etwas variieren. Alles darüber ist ein Roamer.
-        private const double MaxSpawnDistance = 600.0;
+        // 1. Maximale Distanz zum Rig für Trigger (Hover-Radius)
+        private const double TriggerRadius = 200.0;
 
-        // 2. Wie lange nach dem Spawn darf getriggert werden?
-        // Wenn er älter als 60 Sek ist, ist es kein direkter Call mehr.
-        private const double MaxSpawnAgeSeconds = 60.0;
+        // 2. Maximale Geschwindigkeit für "Hover" (Einheiten pro Tick)
+        // Chinooks fliegen schnell (>5-10u/tick). Wenn er < 2.0 ist, steht er fast.
+        private const double MaxHoverSpeed = 2.0;
 
-        // 3. Wie genau muss er drauf zufliegen? (0.9 = sehr genau)
-        private const double ApproachAngleThreshold = 0.9;
-
-        // Timer: 15 Min + 60s Anflug
-        private const int HackDurationSeconds = 900;
+        // Timer: 14 Min 15 Sek (855s)
+        private const int HackDurationSeconds = 855;
 
         public event EventHandler<string> OnOilRigTriggered;
         public event EventHandler<string> OnOilRigChatUpdate;
+        public event EventHandler<string>? OnDebug;
 
         public bool HasMonuments =>
             _smallOilPos.HasValue && _smallOilPos.Value.X > 1 &&
@@ -90,7 +87,7 @@ namespace RustPlusDesk.Services
                     // 1. Chinook State holen oder neu anlegen
                     if (!_chinookStates.TryGetValue(ch47.Id, out var state))
                     {
-                        // NEUER Chinook! (Spawn erkannt)
+                        // NEUER Chinook!
                         state = new ChinookState
                         {
                             FirstSeen = now,
@@ -102,24 +99,19 @@ namespace RustPlusDesk.Services
                         _chinookStates[ch47.Id] = state;
                     }
 
-                    // 2. Trigger prüfen
-                    // NUR wenn Chinook "jung" ist (< 60s seit wir ihn kennen)
-                    // Alte Chinooks werden ignoriert (selbst wenn sie später übers Rig fliegen).
-                    if ((now - state.FirstSeen).TotalSeconds < MaxSpawnAgeSeconds)
-                    {
-                        if (!_activeEvents.ContainsKey("Small Oil Rig"))
-                            CheckAndTrigger(ch47, state, _smallOilPos, "Small Oil Rig");
+                    // 2. Trigger prüfen (Hover Logic)
+                    if (!_activeEvents.ContainsKey("Small Oil Rig"))
+                        CheckAndTriggerHover(ch47, state, _smallOilPos, "Small Oil Rig");
 
-                        if (!_activeEvents.ContainsKey("Large Oil Rig"))
-                            CheckAndTrigger(ch47, state, _largeOilPos, "Large Oil Rig");
-                    }
+                    if (!_activeEvents.ContainsKey("Large Oil Rig"))
+                        CheckAndTriggerHover(ch47, state, _largeOilPos, "Large Oil Rig");
 
                     // Position für nächsten Tick merken
                     state.LastX = ch47.X;
                     state.LastY = ch47.Y;
                 }
 
-                // Veraltete States aufräumen (Chinook despawned / zerstört)
+                // Veraltete States aufräumen
                 var oldIds = _chinookStates.Keys.Where(k => !currentChinookIds.Contains(k)).ToList();
                 foreach (var id in oldIds) _chinookStates.Remove(id);
             }
@@ -182,43 +174,47 @@ namespace RustPlusDesk.Services
             return virtualMarkers;
         }
 
-        private void CheckAndTrigger(RustPlusClientReal.DynMarker chinook, ChinookState state, (double X, double Y)? rigPos, string rigName)
+        private void CheckAndTriggerHover(RustPlusClientReal.DynMarker chinook, ChinookState state, (double X, double Y)? rigPos, string rigName)
         {
             if (rigPos == null) return;
 
-            // A: Spawn-Distanz Check
-            // War der ORT, wo er gespawnt ist (FirstX/Y), nah am Rig?
-            double spawnDx = rigPos.Value.X - state.FirstX;
-            double spawnDy = rigPos.Value.Y - state.FirstY;
-            double spawnDist = Math.Sqrt(spawnDx * spawnDx + spawnDy * spawnDy);
+            // 1. Distanz zum Rig
+            double dx = rigPos.Value.X - chinook.X;
+            double dy = rigPos.Value.Y - chinook.Y;
+            double dist = Math.Sqrt(dx * dx + dy * dy);
 
-            // Wenn er weiter als MaxSpawnDistance (z.B. 600m) vom Rig entfernt GESPAWNT ist: Ignorieren.
-            // Das filtert Roamer aus, die am Airfield gespawnt sind.
-            if (spawnDist > MaxSpawnDistance) return;
-
-            // B: Bewegungs-Check (Richtung)
-            // Bewegt er sich JETZT auf das Rig zu?
-
-            // Vektor Bewegung (letzter Tick -> jetzt)
+            // 2. Geschwindigkeit (Weg seit letztem Tick)
             double moveX = chinook.X - state.LastX;
             double moveY = chinook.Y - state.LastY;
-            double moveLen = Math.Sqrt(moveX * moveX + moveY * moveY);
+            double speed = Math.Sqrt(moveX * moveX + moveY * moveY);
 
-            if (moveLen < 0.1) return; // Schwebt/Laggt noch
-
-            // Vektor zum Rig (von aktueller Pos)
-            double toRigX = rigPos.Value.X - chinook.X;
-            double toRigY = rigPos.Value.Y - chinook.Y;
-            double toRigLen = Math.Sqrt(toRigX * toRigX + toRigY * toRigY);
-
-            // Dot Product für Winkel
-            double dot = (moveX / moveLen) * (toRigX / toRigLen) + (moveY / moveLen) * (toRigY / toRigLen);
-
-            // Wenn er nah gespawnt ist (<600m) UND präzise drauf zufliegt (>0.9)
-            if (dot > ApproachAngleThreshold)
+            // LOGIK: Wenn er nah ist (<200m) UND langsam (<2.0)
+            if (dist < TriggerRadius && speed < MaxHoverSpeed)
             {
                 TriggerEvent(rigName);
+                OnDebug?.Invoke(this, $"[MON] Triggered {rigName}! Hovering: Dist={dist:F1} Speed={speed:F2}");
             }
+            else
+            {
+                // Debugging (nur wenn nah dran)
+                if (dist < 500 && !state.DebugLogged)
+                {
+                     // Wir loggen nur einmal, wenn er in die Nähe kommt, damit wir sehen, was passiert
+                    OnDebug?.Invoke(this, $"[MON] CH={chinook.Id} near {rigName} (Dist={dist:F0}), Speed={speed:F2} (Req < {MaxHoverSpeed})");
+                    // Wir resetten das Log flag, wenn er weit weg ist, aber hier speichern wir es, damit wir nicht spammen während er vorbeifliegt.
+                    // Bei Hover Logic ist "state.DebugLogged" etwas schwieriger zu managen.
+                    // Wir loggen es einfach alle paar Sekunden via Random oder Counter wäre besser, aber state.DebugLogged hilft für 'einmal pro Anflug'.
+                    state.DebugLogged = true; 
+                }
+            }
+        }
+
+        public void Reset()
+        {
+            _activeEvents.Clear();
+            _chinookStates.Clear();
+            _smallOilPos = null;
+            _largeOilPos = null;
         }
 
         private void TriggerEvent(string rigName)

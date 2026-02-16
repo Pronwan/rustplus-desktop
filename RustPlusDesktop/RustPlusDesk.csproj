@@ -13,12 +13,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>3.3.0</Version>
+		<Version>3.3.1</Version>
 
 		<!-- EXE-Eigenschaften im Windows-Dateidialog -->
-		<AssemblyVersion>3.3.0</AssemblyVersion>
-		<FileVersion>3.3.0</FileVersion>
-		<InformationalVersion>3.3.0</InformationalVersion>
+		<AssemblyVersion>3.3.1</AssemblyVersion>
+		<FileVersion>3.3.1</FileVersion>
+		<InformationalVersion>3.3.1</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->

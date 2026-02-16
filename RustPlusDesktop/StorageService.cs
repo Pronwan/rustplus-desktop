@@ -38,4 +38,37 @@ public static class StorageService
             return new List<ServerProfile>();
         }
     }
+
+    private static string CacheDir => Path.Combine(AppDir, "cache");
+
+    public static void SaveCache<T>(string key, T data)
+    {
+        try
+        {
+            Directory.CreateDirectory(CacheDir);
+            var path = Path.Combine(CacheDir, key + ".json");
+            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(path, json);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"SaveCache Error ({key}): {ex.Message}");
+        }
+    }
+
+    public static T? LoadCache<T>(string key)
+    {
+        try
+        {
+            var path = Path.Combine(CacheDir, key + ".json");
+            if (!File.Exists(path)) return default;
+            var json = File.ReadAllText(path);
+            return JsonSerializer.Deserialize<T>(json);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"LoadCache Error ({key}): {ex.Message}");
+            return default;
+        }
+    }
 }
