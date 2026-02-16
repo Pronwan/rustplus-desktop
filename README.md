@@ -46,6 +46,9 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 [![YouTube Video](./App-Version3.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)  
 *(click the image to watch on YouTube)*
+## Update Notes 3.3.1 (February 16th 26)
+- **New Deep Sea Notification:** When Deep Sea is triggered, you can get a notification + direction in you team chat. 
+- **Stability Patch:** Even on weak servers the connection should now be more stable and smart devices should work more reliably. Reduced duplicate chat fetches, made shop search and shops more stable with caching icons to local drive.
 
 ## Update Notes 3.3.0 (January 18th 26)
 - **New Oilrig Countdown:** When Oilrig is triggered, a crate icon with the remaining time appears on the map. Optional Team Chat notifications remind your team every 5 minutes until the crate unlocks.
