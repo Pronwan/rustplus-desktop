@@ -47,7 +47,7 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./App-Version3.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)  
 *(click the image to watch on YouTube)*
 ## Update Notes 3.3.1 (February 16th 26)
-- **New Deep Sea Notification:** When Deep Sea is triggered, you can get a notification + direction in you team chat. 
+- **New Pre Deep Sea Notification:** Before Deep Sea is triggered, you can get a notification in Team Chat (around 3 minutes ahead of actual spawn) -> note that the direction will always be shown in West - this is not the actual spawn location. It's just coming from the fact that Deep Sea shops have negative X-coordinates. 
 - **Stability Patch:** Even on weak servers the connection should now be more stable and smart devices should work more reliably. Reduced duplicate chat fetches, made shop search and shops more stable with caching icons to local drive.
 
 ## Update Notes 3.3.0 (January 18th 26)
