@@ -850,6 +850,84 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                         HorizontalAlignment="Right">
                         <TextBlock Text="Players:"/>
                         <TextBlock Text="{Binding ServerPlayers}" FontWeight="SemiBold" Margin="4,0,0,0"/>
+
+                        <Button x:Name="BtnServerBM" Content="BM" Width="24" Height="18" Padding="0" Margin="6,0,0,0"
+                                FontSize="9" FontWeight="Bold" Style="{StaticResource GhostButton}"
+                                ToolTip="Open Server on BattleMetrics" Click="BtnServerBM_Click" Visibility="Collapsed"/>
+
+                        <ToggleButton x:Name="BtnShowOnline" Content="▼" Margin="4,0,0,0" Width="18" Height="18" 
+                                      Background="Transparent" BorderThickness="0" Foreground="White" 
+                                      ToolTip="Show Online Players" Click="BtnShowOnline_Click" />
+                        
+                        <Popup x:Name="PopupOnlinePlayers" PlacementTarget="{Binding ElementName=BtnShowOnline}" 
+                               IsOpen="{Binding IsChecked, ElementName=BtnShowOnline}" StaysOpen="False" 
+                               AllowsTransparency="True" PopupAnimation="Fade" VerticalOffset="20">
+                            <Border Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="6" MaxHeight="350" Width="320">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Online Players" FontWeight="Bold" Margin="0,0,0,6" Grid.Row="0"/>
+                                    
+                                    <!-- Manual Add Section -->
+                                    <DockPanel Grid.Row="1" Margin="0,0,0,8">
+                                        <Button x:Name="BtnAddManual" DockPanel.Dock="Right" Content="Track ID" 
+                                                Style="{StaticResource GhostButton}" FontSize="10" Padding="4,0" 
+                                                Click="BtnAddManual_Click" Margin="4,0,0,0"/>
+                                        <TextBox x:Name="TxtManualBMId" Padding="4,1" FontSize="10" 
+                                                 Background="#25272a" Foreground="White" BorderThickness="1" 
+                                                 BorderBrush="#333" Tag="Manual BM ID..."/>
+                                    </DockPanel>
+
+                                    <!-- Online List Filter -->
+                                    <TextBox x:Name="TxtOnlineFilter" Grid.Row="1" Margin="0,0,0,6" Visibility="Collapsed" 
+                                             Padding="4,2" FontSize="10" Background="#1a1c1e" Foreground="White" 
+                                             BorderThickness="1" BorderBrush="#333" GotFocus="TxtOnlineFilter_GotFocus" 
+                                             LostFocus="TxtOnlineFilter_LostFocus" TextChanged="TxtOnlineFilter_TextChanged"/>
+
+                                    <TextBlock x:Name="TxtOnlinePlayersStatus" Text="Loading..." FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,6" Grid.Row="1" Visibility="Collapsed"/>
+                                    <ListBox x:Name="ListOnlinePlayers" Grid.Row="2" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="0,2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel Orientation="Horizontal" Grid.Column="0">
+                                                        <Ellipse Width="8" Height="8" Fill="{DynamicResource CbAccent}" Margin="0,0,6,0" VerticalAlignment="Center" x:Name="StatusDot"/>
+                                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Width="130" ToolTip="{Binding Name}"/>
+                                                    </StackPanel>
+                                                    <TextBlock Grid.Column="1" Text="{Binding PlayTimeStr}" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" Margin="0,0,8,0" FontSize="11" Width="50"/>
+                                                    <Button Grid.Column="2" x:Name="BtnPlayerBM" Content="BM" Click="BtnPlayerBM_Click" Style="{StaticResource GhostButton}" Padding="4,2" FontSize="10" Margin="0,0,4,0" Tag="{Binding}"/>
+                                                    <Button Grid.Column="3" x:Name="BtnAction" Content="Track" Click="BtnTrackPlayer_Click" Style="{StaticResource GhostButton}" Padding="6,2" FontSize="10" Margin="0" Tag="{Binding}" Width="50"/>
+                                                </Grid>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding IsTracked}" Value="True">
+                                                        <Setter TargetName="StatusDot" Property="Fill" Value="#FFD166"/>
+                                                        <Setter TargetName="BtnAction" Property="Content" Value="Details"/>
+                                                    </DataTrigger>
+                                                    <!-- Invisible button until hover -->
+                                                    <Trigger Property="IsMouseOver" Value="False">
+                                                        <Setter TargetName="BtnAction" Property="Opacity" Value="0.2"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="BtnAction" Property="Opacity" Value="1"/>
+                                                    </Trigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                    <Button x:Name="BtnViewTracking" Grid.Row="3" Content="View Tracking Analysis" Margin="0,6,0,0" Style="{StaticResource PrimaryButton}" Click="BtnViewTracking_Click" />
+                                </Grid>
+                            </Border>
+                        </Popup>
+
                         <TextBlock Text="  |  Queue:" Margin="6,0,0,0"/>
                         <TextBlock Text="{Binding ServerQueue}" FontWeight="SemiBold" Margin="4,0,0,0"/>
                         <TextBlock Text="  |  Server Time:" Margin="6,0,0,0"/>

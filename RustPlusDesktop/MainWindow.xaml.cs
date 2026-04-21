@@ -3556,6 +3556,12 @@ public partial class MainWindow : Window
             _vm.Selected.IsConnected = true;
             AppendLog("Connected.");
             _connectedProfile = _vm.Selected;
+
+            // Start Battlemetrics tracking polling for this server
+            TrackingService.OnOnlinePlayersUpdated -= OnOnlinePlayersUpdated;
+            TrackingService.OnOnlinePlayersUpdated += OnOnlinePlayersUpdated;
+            TrackingService.StartPolling(_vm.Selected.Host ?? "", _vm.Selected.Port, _vm.Selected.Name ?? "");
+
             // Allow socket to stabilize before firing requests
             await Task.Delay(1000);
             // EINMAL casten und überall dieselbe Variable verwenden
@@ -9927,10 +9933,333 @@ public partial class MainWindow : Window
 
                 // 9) Zeitstempel für diese Kombo updaten
                 rule.LastAnnouncements[sig] = DateTime.UtcNow;
+            }           // end foreach order
+            }           // end foreach shop
+        }               // end foreach rule
+    }
+    // ─── ONLINE PLAYERS & TRACKING ───────────────────────────────────────────
+
+    private void OnOnlinePlayersUpdated()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            RefreshOnlinePlayersList();
+        });
+    }
+
+    private void RefreshOnlinePlayersList()
+    {
+        var players = TrackingService.LastOnlinePlayers;
+        
+        // Dynamic Filter visibility
+        if (players.Count > 0) {
+            TxtOnlineFilter.Visibility = Visibility.Visible;
+            if (string.IsNullOrEmpty(TxtOnlineFilter.Text)) {
+                TxtOnlineFilter.Text = "Filter players...";
+                TxtOnlineFilter.Foreground = Brushes.Gray;
+            }
+        } else {
+            TxtOnlineFilter.Visibility = Visibility.Collapsed;
+        }
+
+        var filterTxt = TxtOnlineFilter.Text;
+        if (!string.IsNullOrEmpty(filterTxt) && filterTxt != "Filter players...")
+        {
+            players = players.Where(p => p.Name.Contains(filterTxt, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        ListOnlinePlayers.ItemsSource = null;
+        ListOnlinePlayers.ItemsSource = players;
+
+        if (TrackingService.LastOnlinePlayers.Count == 0)
+        {
+            TxtOnlinePlayersStatus.Text = TrackingService.StatusMessage;
+            TxtOnlinePlayersStatus.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            TxtOnlinePlayersStatus.Visibility = Visibility.Collapsed;
+        }
+
+        // Update Server BM button visibility
+        BtnServerBM.Visibility = string.IsNullOrEmpty(TrackingService.CurrentServerBMId) 
+            ? Visibility.Collapsed 
+            : Visibility.Visible;
+    }
+
+    private void TxtOnlineFilter_GotFocus(object sender, RoutedEventArgs e) {
+        if (TxtOnlineFilter.Text == "Filter players...") {
+            TxtOnlineFilter.Text = "";
+            TxtOnlineFilter.Foreground = Brushes.White;
+        }
+    }
+    private void TxtOnlineFilter_LostFocus(object sender, RoutedEventArgs e) {
+        if (string.IsNullOrWhiteSpace(TxtOnlineFilter.Text)) {
+            TxtOnlineFilter.Text = "Filter players...";
+            TxtOnlineFilter.Foreground = Brushes.Gray;
+        }
+    }
+    private void TxtOnlineFilter_TextChanged(object sender, TextChangedEventArgs e) {
+        if (TxtOnlineFilter.Text != "Filter players...") RefreshOnlinePlayersList();
+    }
+
+    private async void BtnShowOnline_Click(object sender, RoutedEventArgs e)
+    {
+        // When user opens the popup, trigger a fresh fetch
+        if (BtnShowOnline.IsChecked == true)
+        {
+            if (_vm.Selected == null || string.IsNullOrEmpty(_vm.Selected.Host))
+            {
+                TxtOnlinePlayersStatus.Text = "Connect to a server to load players list";
+                TxtOnlinePlayersStatus.Visibility = Visibility.Visible;
+                ListOnlinePlayers.ItemsSource = null;
+                return;
+            }
+
+            TxtOnlinePlayersStatus.Text = "Loading from Battlemetrics...";
+            TxtOnlinePlayersStatus.Visibility = Visibility.Visible;
+            ListOnlinePlayers.ItemsSource = null;
+
+            try
+            {
+                await TrackingService.FetchOnlinePlayersNowAsync();
+            }
+            catch (Exception ex)
+            {
+                TxtOnlinePlayersStatus.Text = $"Error: {ex.Message}";
+                TxtOnlinePlayersStatus.Visibility = Visibility.Visible;
             }
         }
     }
-}
+
+    private void BtnTrackPlayer_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as Button)?.Tag is not OnlinePlayerBM player) return;
+
+        if (player.IsTracked)
+        {
+            // Already tracked → open inline analysis dialog
+            ShowPlayerAnalysis(player.BMId, player.Name);
+        }
+        else
+        {
+            TrackingService.TrackPlayer(player.BMId, player.Name, _vm.Selected?.Name ?? "Unknown");
+            player.IsTracked = true;
+            // Refresh list so button text updates
+            RefreshOnlinePlayersList();
+            AppendLog($"[tracking] Now tracking {player.Name} from {_vm.Selected?.Name ?? "this server"}");
+        }
+    }
+
+    private void BtnViewTracking_Click(object sender, RoutedEventArgs e)
+    {
+        ShowTrackedPlayersManager();
+    }
+
+    private void BtnServerBM_Click(object sender, RoutedEventArgs e)
+    {
+        var serverId = TrackingService.CurrentServerBMId;
+        if (!string.IsNullOrEmpty(serverId))
+        {
+            OpenUrl($"https://www.battlemetrics.com/servers/rust/{serverId}");
+        }
+    }
+
+    private void BtnPlayerBM_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as Button)?.Tag is OnlinePlayerBM player)
+        {
+            OpenUrl($"https://www.battlemetrics.com/players/{player.BMId}");
+        }
+    }
+
+    private async void BtnAddManual_Click(object sender, RoutedEventArgs e)
+    {
+        var bmId = TxtManualBMId.Text?.Trim();
+        if (string.IsNullOrEmpty(bmId) || !bmId.All(char.IsDigit)) return;
+
+        TxtManualBMId.IsEnabled = false;
+        BtnAddManual.Content = "...";
+        
+        var name = await TrackingService.FetchPlayerNameAsync(bmId);
+        TrackingService.TrackPlayer(bmId, name, _vm.Selected?.Name ?? "Manual Add");
+        
+        TxtManualBMId.Text = "";
+        TxtManualBMId.IsEnabled = true;
+        BtnAddManual.Content = "Track ID";
+        
+        AppendLog($"[tracking] Manually added {name} ({bmId}) to tracking list.");
+        RefreshOnlinePlayersList();
+    }
+
+    private void OpenUrl(string url)
+    {
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[error] Failed to open URL: {ex.Message}");
+        }
+    }
+
+    private void ShowTrackedPlayersManager()
+    {
+        var win = new Window
+        {
+            Title = "Managed Tracked Players",
+            Width = 500,
+            Height = 650,
+            Background = new SolidColorBrush(Color.FromRgb(18, 20, 23)),
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Owner = this,
+        };
+
+        var grid = new Grid { Margin = new Thickness(20) };
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Header
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Search
+        grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }); // List
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Actions
+
+        var header = new TextBlock { Text = "Tracked Players", FontSize = 20, FontWeight = FontWeights.Bold, Foreground = Brushes.White, Margin = new Thickness(0,0,0,10) };
+        grid.Children.Add(header);
+
+        var searchBox = new TextBox { 
+            Margin = new Thickness(0,0,0,10), 
+            Padding = new Thickness(6,4,6,4),
+            Background = new SolidColorBrush(Color.FromRgb(30, 32, 35)),
+            Foreground = Brushes.White,
+            BorderBrush = new SolidColorBrush(Color.FromRgb(50, 50, 50)),
+            FontSize = 12
+        };
+        Grid.SetRow(searchBox, 1);
+        grid.Children.Add(searchBox);
+
+        var list = new ListBox { Background = Brushes.Transparent, BorderThickness = new Thickness(0), Foreground = Brushes.White };
+        Grid.SetRow(list, 2);
+        grid.Children.Add(list);
+
+        Action<string> refreshList = null;
+        refreshList = (filter) => {
+            list.Items.Clear();
+            var players = TrackingService.GetTrackedPlayers();
+            if (!string.IsNullOrEmpty(filter)) {
+                players = players.Where(p => 
+                    p.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) || 
+                    p.LastServerName.Contains(filter, StringComparison.OrdinalIgnoreCase)
+                ).ToList();
+            }
+
+            var grouped = players.GroupBy(p => string.IsNullOrEmpty(p.LastServerName) ? "Global / Legacy" : p.LastServerName);
+            foreach(var group in grouped)
+            {
+                list.Items.Add(new TextBlock { 
+                    Text = group.Key, 
+                    FontWeight = FontWeights.Bold, 
+                    Foreground = new SolidColorBrush(Color.FromRgb(88, 166, 255)),
+                    Margin = new Thickness(0, 10, 0, 5),
+                    FontSize = 14
+                });
+
+                foreach(var p in group)
+                {
+                    var pGrid = new Grid { Margin = new Thickness(10,5,0,5) };
+                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+                    var nameTxt = new TextBlock { Text = p.Name, VerticalAlignment = VerticalAlignment.Center, FontSize = 13 };
+                    Grid.SetColumn(nameTxt, 0);
+                    pGrid.Children.Add(nameTxt);
+
+                    var viewBtn = new Button { Content = "View", Width = 50, Margin = new Thickness(5,0,0,0), Tag = p.BMId };
+                    viewBtn.Click += (s, e) => ShowTrackingAnalysisWindow((string)((Button)s).Tag);
+                    Grid.SetColumn(viewBtn, 1);
+                    pGrid.Children.Add(viewBtn);
+
+                    var removeBtn = new Button { Content = "Remove", Width = 60, Margin = new Thickness(5,0,0,0), Tag = p.BMId, Background = Brushes.DarkRed, Foreground = Brushes.White };
+                    removeBtn.Click += (s, e) => {
+                        TrackingService.UntrackPlayer((string)((Button)s).Tag);
+                        refreshList(searchBox.Text);
+                    };
+                    Grid.SetColumn(removeBtn, 2);
+                    pGrid.Children.Add(removeBtn);
+
+                    list.Items.Add(pGrid);
+                }
+            }
+            if (players.Count == 0 && !string.IsNullOrEmpty(filter)) {
+                list.Items.Add(new TextBlock { Text = "No results found matching filter.", Margin = new Thickness(0,20,0,0), Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center });
+            }
+        };
+
+        searchBox.TextChanged += (s, e) => refreshList(searchBox.Text);
+        refreshList(""); // Initial load
+
+        var viewAllBtn = new Button { Content = "View All Analysis", Height = 35, Margin = new Thickness(0,15,0,0), Background = new SolidColorBrush(Color.FromRgb(76, 139, 245)), Foreground = Brushes.White };
+        viewAllBtn.Click += (s, e) => ShowTrackingAnalysisWindow();
+        Grid.SetRow(viewAllBtn, 3);
+        grid.Children.Add(viewAllBtn);
+
+        win.Content = grid;
+        win.ShowDialog();
+    }
+
+    private void ShowTrackingAnalysisWindow(string? bmId = null)
+    {
+        var html = TrackingService.GetAnalysisReport(bmId);
+
+        var win = new Window
+        {
+            Title = "Player Activity Analytics & Forecasts",
+            Width = 900,
+            Height = 750,
+            Background = new SolidColorBrush(Color.FromRgb(18, 20, 23)),
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Owner = this,
+        };
+
+        var grid = new Grid();
+        var wv = new WebView2 { Margin = new Thickness(0) };
+        grid.Children.Add(wv);
+        win.Content = grid;
+        
+        win.Loaded += async (s, e) =>
+        {
+            try 
+            {
+                var dataPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "WebView2_Report");
+                var env = await Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync(userDataFolder: dataPath);
+                await wv.EnsureCoreWebView2Async(env);
+                wv.NavigateToString(html);
+            } 
+            catch (Exception ex) 
+            {
+                win.Content = new ScrollViewer 
+                { 
+                   Content = new TextBlock 
+                   { 
+                      Text = "Error loading analytics view: " + ex.Message + "\n\nEnsure WebView2 Runtime is installed.", 
+                      Foreground = Brushes.White,
+                      TextWrapping = TextWrapping.Wrap,
+                      Margin = new Thickness(20) 
+                   } 
+                };
+            }
+        };
+
+        win.Show();
+    }
+
+    private void ShowPlayerAnalysis(string bmId, string name)
+    {
+        ShowTrackingAnalysisWindow(bmId);
+    }
 
     private void RebaselineAllAlertRulesFromCurrentShops(IReadOnlyList<RustPlusClientReal.ShopMarker> shops)
     {
