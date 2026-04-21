@@ -1,4 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
@@ -1019,7 +1019,7 @@ public partial class MainWindow : Window
             {
                 await Dispatcher.InvokeAsync(async () =>
                 {
-                    var dev = _vm.Selected?.Devices?.FirstOrDefault(d => d.EntityId == id);
+                    var dev = FindDeviceById(_vm.Selected?.Devices, id);
                     if (dev == null) return;
 
                     // Kind nur setzen, wenn wir es NOCH NICHT kennen – nie ein SmartAlarm "wegschreiben"
@@ -1035,23 +1035,27 @@ public partial class MainWindow : Window
 
                         // optional: nach kurzer Zeit automatisch auf INAKTIV zurücknehmen,
                         // falls kein weiterer Alarm-Event kommt
+                        // Trigger Alarm UI/Sound auch via WebSocket
                         if (isOn)
                         {
-                            _ = Task.Run(async () =>
-                            {
-                                await Task.Delay(7000);   // 7s Puls-Fenster
-                                await Dispatcher.InvokeAsync(() =>
-                                {
-                                    // nur zurücksetzen, wenn seither kein neuer Alarm kam
-                                    if (dev.IsOn == true)
-                                    {
-                                        _suppressToggleHandler = true;
-                                        dev.IsOn = false;  // INAKTIV
-                                        _suppressToggleHandler = false;
-                                    }
-                                });
-                            });
+                            var alarm = new AlarmNotification(DateTime.Now, _vm.Selected?.Name ?? "Server", dev.Name ?? "Smart Alarm", dev.EntityId, "Alarm activated!");
+                            ShowAlarmPopup(alarm, "WS");
                         }
+
+                        _ = Task.Run(async () =>
+                        {
+                            await Task.Delay(7000);   // 7s Puls-Fenster
+                            await Dispatcher.InvokeAsync(() =>
+                            {
+                                // nur zurücksetzen, wenn seither kein neuer Alarm kam
+                                if (dev.IsOn == true)
+                                {
+                                    _suppressToggleHandler = true;
+                                    dev.IsOn = false;  // INAKTIV
+                                    _suppressToggleHandler = false;
+                                }
+                            });
+                        });
                         return;
                     }
 
@@ -2251,8 +2255,70 @@ public partial class MainWindow : Window
 
     private AlarmWindow? _alarmWin; // nicht AlarmPopupWindow
     private readonly ObservableCollection<AlarmNotification> _alarmFeed = new();
-    private void ShowAlarmPopup(AlarmNotification n)
+    private readonly Dictionary<string, DateTime> _lastAlarmProcessed = new();
+    private DateTime _lastAnyAlarmTime = DateTime.MinValue; // Globaler Marker für Fuzzy-Dedup
+    private void ShowAlarmPopup(AlarmNotification n, string source = "FCM")
     {
+        var now = DateTime.UtcNow;
+
+        if (n.EntityId.HasValue)
+        {
+            // Dedup primär über ID (ignoriere Server-Namensunterschiede wie ANSI-Farben)
+            string key = $"ID:{n.EntityId.Value}";
+            if (_lastAlarmProcessed.TryGetValue(key, out var last) && (now - last).TotalSeconds < 5)
+            {
+                return;
+            }
+            _lastAlarmProcessed[key] = now;
+            _lastAnyAlarmTime = now; // Merken, dass IRGENDEIN Alarm kam
+        }
+        else
+        {
+            // FUZZY DEDUP: Wenn gerade erst (vor < 5s) ein gezielter Alarm kam, 
+            // ignoriere diesen generischen (ID-losen) FCM-Alarm.
+            if ((now - _lastAnyAlarmTime).TotalSeconds < 5)
+            {
+                AppendLog($"[alarm/debug] ({source}) Dropping generic alarm because a specific alarm was just handled.");
+                return;
+            }
+            _lastAnyAlarmTime = now;
+        }
+
+        SmartDevice? dev = null;
+        if (n.EntityId.HasValue)
+        {
+            uint eid = n.EntityId.Value;
+            AppendLog($"[alarm/debug] ({source}) Searching for device #{eid} in all profiles ...");
+            
+            foreach (var profile in _vm.Servers)
+            {
+                dev = FindDeviceById(profile.Devices, eid);
+                if (dev != null) break;
+            }
+            
+            if (dev != null)
+                AppendLog($"[alarm/debug] ({source}) Found: {dev.Name} (Kind: {dev.Kind})");
+            else
+                AppendLog($"[alarm/debug] ({source}) NOT found in any tree.");
+        }
+
+        if (dev != null)
+        {
+            AppendLog($"[alarm/debug] ({source}) dev.AudioEnabled={dev.AudioEnabled}, dev.PopupEnabled={dev.PopupEnabled}");
+            PlayAlarmAudio(dev);
+            if (!dev.PopupEnabled) 
+            {
+                AppendLog($"[alarm/debug] ({source}) Skipping popup because dev.PopupEnabled is false.");
+                return; 
+            }
+        }
+        else
+        {
+            AppendLog($"[alarm/debug] ({source}) No device info found, showing generic popup.");
+        }
+
+        AppendLog($"[alarm/debug] ({source}) Executing: Show Alarm Window");
+
         if (_alarmWin is null || !_alarmWin.IsLoaded)
         {
             _alarmWin = new AlarmWindow { Owner = this };
@@ -2346,17 +2412,360 @@ public partial class MainWindow : Window
         }
         finally { Interlocked.Exchange(ref _statusBusy, 0); }
     }
+
+    private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    {
+        if (_vm != null)
+        {
+            _vm.SelectedDevice = e.NewValue as SmartDevice;
+        }
+    }
+
+    private Point _dragStartPoint;
+    private TreeViewItem? _draggedItemContainer;
+    private SmartDevice? _draggedDevice;
+
+    private void TreeViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        _dragStartPoint = e.GetPosition(null);
+        if (sender is TreeViewItem tvi)
+        {
+            _draggedItemContainer = tvi;
+            _draggedDevice = tvi.Header as SmartDevice ?? tvi.DataContext as SmartDevice;
+            // Allow event to continue for selection
+        }
+    }
+
+    private void TreeViewItem_PreviewMouseMove(object sender, MouseEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed && _draggedItemContainer != null && _draggedDevice != null)
+        {
+            Point currentPosition = e.GetPosition(null);
+            if (Math.Abs(currentPosition.X - _dragStartPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                Math.Abs(currentPosition.Y - _dragStartPoint.Y) > SystemParameters.MinimumVerticalDragDistance)
+            {
+                DragDrop.DoDragDrop(_draggedItemContainer, _draggedDevice, DragDropEffects.Move);
+            }
+        }
+    }
+
+    private void TreeViewItem_DragEnter(object sender, DragEventArgs e)
+    {
+        if (!e.Data.GetDataPresent(typeof(SmartDevice)))
+        {
+            e.Effects = DragDropEffects.None;
+        }
+        e.Handled = true;
+    }
+
+    private void TreeViewItem_DragOver(object sender, DragEventArgs e)
+    {
+        e.Handled = true;
+    }
+
+    private void TreeViewItem_Drop(object sender, DragEventArgs e)
+    {
+        e.Handled = true;
+        if (_draggedDevice == null || !e.Data.GetDataPresent(typeof(SmartDevice)))
+            return;
+
+        var targetContainer = sender as TreeViewItem;
+        if (targetContainer == null) return;
+
+        var targetDevice = targetContainer.Header as SmartDevice ?? targetContainer.DataContext as SmartDevice;
+        if (targetDevice == null || ReferenceEquals(_draggedDevice, targetDevice))
+            return;
+
+        if (_vm.Selected?.Devices == null) return;
+
+        Point dropPosition = e.GetPosition(targetContainer);
+        double containerHeight = targetContainer.ActualHeight;
+
+        bool dropInto = dropPosition.Y > (containerHeight * 0.25) && dropPosition.Y < (containerHeight * 0.75);
+
+        RemoveDeviceFromHierarchy(_vm.Selected.Devices, _draggedDevice);
+
+        if (dropInto)
+        {
+            if (!targetDevice.IsGroup)
+            {
+                var newGroup = new SmartDevice
+                {
+                    EntityId = GenerateGroupId(),
+                    Kind = "Group",
+                    IsGroup = true,
+                    Alias = "Group " + (_vm.Selected.Devices.Count(d => d.IsGroup) + 1),
+                    Children = new System.Collections.ObjectModel.ObservableCollection<SmartDevice>(),
+                    IsExpanded = true
+                };
+
+                var parentLevel = FindParentCollection(_vm.Selected.Devices, targetDevice) ?? _vm.Selected.Devices;
+                int idx = parentLevel.IndexOf(targetDevice);
+                if (idx >= 0)
+                {
+                    parentLevel.Insert(idx, newGroup);
+                    parentLevel.Remove(targetDevice);
+                }
+                else
+                {
+                    _vm.Selected.Devices.Add(newGroup);
+                }
+
+                newGroup.Children.Add(targetDevice);
+                newGroup.Children.Add(_draggedDevice);
+            }
+            else
+            {
+                if (targetDevice.Children == null)
+                    targetDevice.Children = new System.Collections.ObjectModel.ObservableCollection<SmartDevice>();
+
+                targetDevice.Children.Add(_draggedDevice);
+                targetDevice.IsExpanded = true;
+            }
+        }
+        else
+        {
+            bool insertBefore = dropPosition.Y <= (containerHeight * 0.25);
+            var parentCol = FindParentCollection(_vm.Selected.Devices, targetDevice);
+            if (parentCol != null)
+            {
+                int index = parentCol.IndexOf(targetDevice);
+                if (!insertBefore) index++;
+                
+                if (index >= parentCol.Count)
+                    parentCol.Add(_draggedDevice);
+                else
+                    parentCol.Insert(index, _draggedDevice);
+            }
+            else
+            {
+                _vm.Selected.Devices.Add(_draggedDevice);
+            }
+        }
+
+        CleanupEmptyGroups(_vm.Selected.Devices);
+        _vm.Save();
+        _draggedDevice = null;
+        _draggedItemContainer = null;
+    }
+
+    private bool RemoveDeviceFromHierarchy(System.Collections.ObjectModel.ObservableCollection<SmartDevice> col, SmartDevice toRemove)
+    {
+        if (col == null) return false;
+        if (col.Remove(toRemove)) return true;
+        foreach (var dev in col)
+        {
+            if (dev.IsGroup && dev.Children != null)
+            {
+                if (RemoveDeviceFromHierarchy(dev.Children, toRemove)) return true;
+            }
+        }
+        return false;
+    }
+
+    private System.Collections.ObjectModel.ObservableCollection<SmartDevice>? FindParentCollection(System.Collections.ObjectModel.ObservableCollection<SmartDevice> col, SmartDevice target)
+    {
+        if (col == null) return null;
+        if (col.Contains(target)) return col;
+        foreach (var dev in col)
+        {
+            if (dev.IsGroup && dev.Children != null)
+            {
+                var found = FindParentCollection(dev.Children, target);
+                if (found != null) return found;
+            }
+        }
+        return null;
+    }
+
+    private void CleanupEmptyGroups(System.Collections.ObjectModel.ObservableCollection<SmartDevice> col)
+    {
+        if (col == null) return;
+        for (int i = col.Count - 1; i >= 0; i--)
+        {
+            var dev = col[i];
+            if (dev.IsGroup)
+            {
+                if (dev.Children != null)
+                {
+                    CleanupEmptyGroups(dev.Children);
+                }
+
+                if (dev.Children == null || dev.Children.Count == 0)
+                {
+                    col.RemoveAt(i);
+                }
+            }
+        }
+    }
+
+    private uint GenerateGroupId()
+    {
+        var rng = new Random();
+        uint highBit = 0x80000000;
+        uint randomBits = (uint)rng.Next(1, int.MaxValue);
+        return highBit | randomBits;
+    }
+
+    private async void GroupToggle_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (sender is Button btn && btn.Tag is SmartDevice groupDev && groupDev.IsGroup && groupDev.Children != null)
+            {
+                AppendLog($"[group/toggle] Toggling group '{groupDev.Alias}'...");
+                var switches = GetSwitchesRecursive(groupDev.Children);
+                AppendLog($"[group/toggle] Found {switches.Count} switches in group.");
+                
+                if (!switches.Any()) return;
+
+                if (!await EnsureConnectedAsync()) return;
+
+                bool targetOn = !switches.First().IsOn.GetValueOrDefault(false);
+                AppendLog($"[group/toggle] Target state: {(targetOn ? "ON" : "OFF")}");
+                
+                foreach (var sw in switches)
+                {
+                    if (sw.IsOn == targetOn) continue;
+                    
+                    AppendLog($"[group/toggle] Switching #{sw.EntityId} ({sw.Name})...");
+                    
+                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                    await _rust.ToggleSmartSwitchAsync(sw.EntityId, targetOn, cts.Token);
+                    
+                    await Task.Delay(800); 
+                }
+                AppendLog("[group/toggle] Group toggle complete.");
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[group/toggle] Error: {ex.Message}");
+        }
+    }
+
+    private List<SmartDevice> GetSwitchesRecursive(IEnumerable<SmartDevice> devices)
+    {
+        var list = new List<SmartDevice>();
+        foreach (var d in devices)
+        {
+            if (d.IsGroup && d.Children != null)
+                list.AddRange(GetSwitchesRecursive(d.Children));
+            else if (string.Equals(d.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase) || string.Equals(d.Kind, "Smart Switch", StringComparison.OrdinalIgnoreCase))
+                list.Add(d);
+        }
+        return list;
+    }
+
+    private SmartDevice? FindDeviceById(IEnumerable<SmartDevice>? devices, uint id)
+    {
+        if (devices == null) return null;
+        foreach (var d in devices)
+        {
+            if (d.EntityId == id) return d;
+            if (d.IsGroup && d.Children != null)
+            {
+                var found = FindDeviceById(d.Children, id);
+                if (found != null) return found;
+            }
+        }
+        return null;
+    }
+
     private void BtnDeleteDevice_Click(object sender, RoutedEventArgs e)
     {
-        if (ListDevices.SelectedItem is not SmartDevice d) return;
-        if (!d.IsMissing && !string.Equals(d.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
+        if (ListDevices.SelectedItem is SmartDevice dev && dev.IsMissing)
+        {
+            _vm.Selected?.Devices?.Remove(dev);
+            _vm.NotifyDevicesChanged();
+            _vm.Save();
+            AppendLog($"Device #{dev.EntityId} removed.");
+        }
+        else
         {
             MessageBox.Show("Only missing devices can be deleted.");
+        }
+    }
+
+    private void OnSelectAlarmAudioFileClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is SmartDevice dev)
+        {
+            var dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Audio Files|*.mp3;*.wav|All Files|*.*"
+            };
+
+            if (dlg.ShowDialog() == true)
+            {
+                dev.AudioFilePath = dlg.FileName;
+                _vm.Save();
+                AppendLog($"Selected audio for #{dev.EntityId}: {dlg.SafeFileName}");
+            }
+        }
+    }
+
+    private void OnResetAlarmAudioFileClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is SmartDevice dev)
+        {
+            dev.AudioFilePath = null;
+            _vm.Save();
+            AppendLog($"Reset audio to default for #{dev.EntityId}");
+        }
+    }
+
+    private System.Windows.Media.MediaPlayer? _alarmPlayer;
+
+    private void PlayAlarmAudio(SmartDevice? dev)
+    {
+        if (dev == null)
+        {
+            AppendLog("[audio/debug] Skipping: dev is null");
             return;
         }
-        _vm.Selected?.Devices?.Remove(d);   // oder _vm.Devices.Remove(d) – je nach Variante
-        _vm.Save();
-        AppendLog($"Device #{d.EntityId} removed.");
+        if (!dev.AudioEnabled)
+        {
+            AppendLog($"[audio/debug] Skipping: AudioEnabled is false for #{dev.EntityId}");
+            return;
+        }
+        
+        string audioFile = "";
+        
+        if (!string.IsNullOrWhiteSpace(dev.AudioFilePath))
+        {
+            audioFile = dev.AudioFilePath!;
+        }
+        else
+        {
+            audioFile = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "rust-c4.mp3");
+        }
+
+        if (System.IO.File.Exists(audioFile))
+        {
+            try
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    if (_alarmPlayer == null)
+                    {
+                        _alarmPlayer = new System.Windows.Media.MediaPlayer();
+                    }
+                    AppendLog($"[audio] Playing: {audioFile}");
+                    _alarmPlayer.Open(new Uri(audioFile, UriKind.Absolute));
+                    _alarmPlayer.Volume = 1.0;
+                    _alarmPlayer.Play();
+                });
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[audio] Error playing alarm audio: {ex.Message}");
+            }
+        }
+        else
+        {
+            AppendLog($"[audio] File not found: {audioFile}");
+        }
     }
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
@@ -2527,7 +2936,7 @@ public partial class MainWindow : Window
 
                 // ------- /NEU -------
 
-                var dev = prof.Devices.FirstOrDefault(d => d.EntityId == e.EntityId.Value);
+                var dev = FindDeviceById(prof.Devices, e.EntityId.Value);
                 if (dev is null)
                 {
                     dev = new SmartDevice
@@ -3826,7 +4235,7 @@ public partial class MainWindow : Window
                 // 1) upsert
                 foreach (var s in saved.Devices)
                 {
-                    var ex = current.Devices.FirstOrDefault(d => d.EntityId == s.EntityId);
+                    var ex = FindDeviceById(current.Devices, s.EntityId);
                     if (ex == null)
                     {
                         current.Devices.Add(s);
@@ -3925,9 +4334,10 @@ public partial class MainWindow : Window
     {
         if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev) return;
 
+        var title = dev.IsGroup ? "Rename Group" : "Rename Device";
+        var promptText = dev.IsGroup ? "New name for group:" : $"New name for #{dev.EntityId}:";
         var preset = string.IsNullOrWhiteSpace(dev.Alias) ? (dev.Name ?? "") : dev.Alias!;
-        var input = PromptText(this, "Rename Device",
-                               $"New name for #{dev.EntityId}:", preset);
+        var input = PromptText(this, title, promptText, preset);
 
         if (input == null) return;                   // Abgebrochen
         dev.Alias = string.IsNullOrWhiteSpace(input) ? null : input.Trim();
@@ -10191,15 +10601,24 @@ public partial class MainWindow : Window
 
     private SmartDevice? FindDevice(long entityId)
     {
-        // 1) Versuche aus dem DataContext (VM)
         var enumerable = (DataContext as dynamic)?.CurrentDevices as IEnumerable
-                         ?? ListDevices.ItemsSource as IEnumerable; // 2) Fallback: direkt aus der ListBox
+                         ?? ListDevices.ItemsSource as IEnumerable; 
         if (enumerable == null) return null;
 
-        foreach (var obj in enumerable)
-            if (obj is SmartDevice sd && sd.EntityId == entityId)
-                return sd;
+        return FindDeviceRecursive(enumerable.OfType<SmartDevice>(), entityId);
+    }
 
+    private SmartDevice? FindDeviceRecursive(IEnumerable<SmartDevice> col, long entityId)
+    {
+        foreach (var dev in col)
+        {
+            if (dev.EntityId == entityId) return dev;
+            if (dev.IsGroup && dev.Children != null)
+            {
+                var found = FindDeviceRecursive(dev.Children, entityId);
+                if (found != null) return found;
+            }
+        }
         return null;
     }
 
@@ -10207,19 +10626,28 @@ public partial class MainWindow : Window
     {
         foreach (var id in entityIds)
         {
-            var dev = FindDevice(id);
-            if (dev == null) continue;
-            if (!string.Equals(dev.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase)) continue;
-            if (dev.IsMissing) continue;
+            var rootDev = FindDevice(id);
+            if (rootDev == null) continue;
 
-            bool current = dev.IsOn ?? false;
-            bool desired = !current; // „wie Klick” → invertieren
+            var targets = new List<SmartDevice>();
+            if (rootDev.IsGroup && rootDev.Children != null)
+                targets.AddRange(GetSwitchesRecursive(rootDev.Children));
+            else if (string.Equals(rootDev.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase))
+                targets.Add(rootDev);
 
-            var fakeSender = new System.Windows.FrameworkElement { DataContext = dev };
-            await HandleDeviceToggleAsync(fakeSender, desired);
+            foreach (var dev in targets)
+            {
+                if (dev.IsMissing) continue;
 
-            await Task.Delay(650); // etwas Luft zwischen Requests
-            if (_rust == null) break; // Verbindung weg? Abbrechen
+                bool current = dev.IsOn ?? false;
+                bool desired = !current; 
+
+                var fakeSender = new System.Windows.FrameworkElement { DataContext = dev };
+                await HandleDeviceToggleAsync(fakeSender, desired);
+
+                await Task.Delay(650);
+                if (_rust == null) break; 
+            }
         }
     }
 
@@ -10261,23 +10689,36 @@ public partial class MainWindow : Window
 
     private void BtnHotkeys_Click(object sender, RoutedEventArgs e)
     {
-        // 1) während des Editierens immer pausieren
         DeactivateHotkeys();
 
         IEnumerable? src = (ListDevices.ItemsSource as IEnumerable) ?? (DataContext as IEnumerable);
         if (src == null) { MessageBox.Show("No devices."); return; }
-        var smartDevices = src.OfType<SmartDevice>();
+        
+        var flatAssignable = GetHotkeyAssignableDevices(src.OfType<SmartDevice>());
 
-        // 2) Dialog öffnen
-        var dlg = new HotkeysWindow(smartDevices, MapForCurrentServer()) { Owner = this };
-        bool? activate = dlg.ShowDialog();       // true = Activate, false/null = Deactivate
+        var dlg = new HotkeysWindow(flatAssignable, MapForCurrentServer()) { Owner = this };
+        bool? activate = dlg.ShowDialog();
 
-        // 3) Änderungen speichern
         SaveHotkeys();
 
-        // 4) je nach Wahl aktivieren/deaktivieren
         if (activate == true) ActivateHotkeysForCurrentServer();
         else DeactivateHotkeys();
+    }
+
+    private IEnumerable<SmartDevice> GetHotkeyAssignableDevices(IEnumerable<SmartDevice> devices)
+    {
+        var list = new List<SmartDevice>();
+        foreach (var d in devices)
+        {
+            if (d.IsGroup && d.HasGroupSwitches)
+                list.Add(d);
+            else if (string.Equals(d.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase))
+                list.Add(d);
+                
+            if (d.IsGroup && d.Children != null)
+                list.AddRange(GetHotkeyAssignableDevices(d.Children));
+        }
+        return list;
     }
 
     private bool _hotkeysActive;
@@ -11886,24 +12327,8 @@ public partial class MainWindow : Window
         }
     }
 
-    public class OverlaySaveData
-    {
-        public long LastUpdatedUnix { get; set; } = 0; // Unix seconds
-        public List<SavedStroke> Strokes { get; set; } = new();
-        public List<SavedIcon> Icons { get; set; } = new();
-        public List<SavedText> Texts { get; set; } = new();
+    // DTOs moved to Models/SharingModels.cs
 
-        public List<ExportedDeviceDto> Devices { get; set; } = new();
-    }
-
-    // DEVICE EXPORT LOGIK
-    public sealed class ExportedDeviceDto
-    {
-        public uint EntityId { get; set; }
-        public string? Kind { get; set; }
-        public string? Name { get; set; }
-        public string? Alias { get; set; }
-    }
     public List<ExportedDeviceDto> Devices { get; set; } = new();
 
     private async void BtnDevicesExport_Click(object sender, RoutedEventArgs e)
@@ -11941,19 +12366,11 @@ public partial class MainWindow : Window
         // 1) aktuelles Overlay-JSON aufbauen (deine bestehende Methode)
         var data = BuildCurrentOverlaySaveDataForMe(); // <- nutzt du bereits für Map-Overlay
 
-        // 2) Devices-Liste füllen
+        // 2) Devices-Liste füllen (Rekursiv)
         data.Devices.Clear();
         foreach (var d in profile.Devices)
         {
-            if (d.EntityId == 0) continue;
-
-            data.Devices.Add(new ExportedDeviceDto
-            {
-                EntityId = d.EntityId,
-                Kind = d.Kind,
-                Name = d.Name,
-                Alias = d.Alias
-            });
+            data.Devices.Add(MapDeviceToDto(d));
         }
 
         data.LastUpdatedUnix = UnixNow(); // damit remote/locally „neuer“ ist
@@ -12002,6 +12419,29 @@ public partial class MainWindow : Window
         return data.Devices.Count;
     }
 
+    private ExportedDeviceDto MapDeviceToDto(SmartDevice d)
+    {
+        var dto = new ExportedDeviceDto
+        {
+            EntityId = d.EntityId,
+            Kind = d.Kind,
+            Name = d.Name,
+            Alias = d.Alias,
+            IsGroup = d.IsGroup
+        };
+
+        if (d.IsGroup && d.Children != null && d.Children.Count > 0)
+        {
+            dto.Children = new List<ExportedDeviceDto>();
+            foreach (var child in d.Children)
+            {
+                dto.Children.Add(MapDeviceToDto(child));
+            }
+        }
+
+        return dto;
+    }
+
     private async void BtnDevicesImport_Click(object sender, RoutedEventArgs e)
     {
         if (_vm.Selected is null)
@@ -12047,24 +12487,7 @@ public partial class MainWindow : Window
 
                 foreach (var d in data.Devices)
                 {
-                    if (d.EntityId == 0) continue;
-
-                    bool already = _vm.Selected.Devices?.Any(x => x.EntityId == d.EntityId) == true;
-
-                    var item = new DeviceImportItem
-                    {
-                        OwnerSteamId = tm.SteamId,
-                        OwnerName = tm.Name ?? tm.SteamId.ToString(),
-                        EntityId = d.EntityId,
-                        Kind = d.Kind,
-                        Name = d.Name,
-                        Alias = d.Alias,
-                        AlreadyPresent = already,
-                        IsSelected = !already,
-                        ExistsState = already ? "local" : "?",
-                        ServerName = _vm.Selected.Name   // <— wichtig für das Binding
-                    };
-                    items.Add(item);
+                    AddDeviceToImportItems(items, d, tm);
                 }
             }
 
@@ -12089,18 +12512,31 @@ public partial class MainWindow : Window
             // 3) Ausgewählte Devices ins aktuelle Profile übernehmen
             foreach (var it in toImport)
             {
-                if (_vm.Selected.Devices.Any(d => d.EntityId == it.EntityId))
-                    continue;
-
-                var dev = new SmartDevice
+                if (it.OriginalDto != null)
                 {
-                    EntityId = it.EntityId,
-                    Kind = it.Kind,
-                    Name = it.Name,
-                    Alias = it.Alias,
-                    IsMissing = true  // bis Refresh / ProbeEntity gelaufen ist
-                };
-                _vm.Selected.Devices.Add(dev);
+                    // Rekursiver Import via DTO
+                    if (_vm.Selected.Devices.Any(d => d.EntityId == it.OriginalDto.EntityId))
+                        continue;
+
+                    var dev = MapDtoToDevice(it.OriginalDto);
+                    _vm.Selected.Devices.Add(dev);
+                }
+                else
+                {
+                    // Fallback (sollte nicht mehr passieren)
+                    if (_vm.Selected.Devices.Any(d => d.EntityId == it.EntityId))
+                        continue;
+
+                    var dev = new SmartDevice
+                    {
+                        EntityId = it.EntityId,
+                        Kind = it.Kind,
+                        Name = it.Name,
+                        Alias = it.Alias,
+                        IsMissing = true
+                    };
+                    _vm.Selected.Devices.Add(dev);
+                }
             }
 
             _vm.NotifyDevicesChanged();
@@ -12140,12 +12576,22 @@ public partial class MainWindow : Window
         AppendLog("Updating Device Status…");
         foreach (var d in list)
         {
-            try
+            await RefreshDeviceRecursiveAsync(d);
+        }
+
+        _vm.Save();
+        AppendLog("Refresh completed.");
+    }
+
+    private async Task RefreshDeviceRecursiveAsync(SmartDevice d)
+    {
+        try
+        {
+            if (!d.IsGroup)
             {
                 var r = await _rust.ProbeEntityAsync(d.EntityId);
 
                 d.Kind = r.Kind ?? d.Kind;
-
                 d.IsMissing = !r.Exists;
                 if ((d.Kind ?? r.Kind)?.Equals("SmartAlarm", StringComparison.OrdinalIgnoreCase) == true)
                 {
@@ -12161,44 +12607,72 @@ public partial class MainWindow : Window
                 else
                     AppendLog($"#{d.EntityId} ({d.Kind ?? "?"}): {(r.IsOn is bool b ? (b ? "ON" : "OFF") : "–")}");
             }
-            catch (Exception ex)
+            else
             {
-                d.IsMissing = true;
+                // Gruppen haben keinen direkten Status, aber wir refreshen Kinder
+                if (d.Children != null)
+                {
+                    foreach (var child in d.Children)
+                    {
+                        await RefreshDeviceRecursiveAsync(child);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            d.IsMissing = true;
+            if (!d.IsGroup)
                 AppendLog($"#{d.EntityId}: Status Request Failed → {ex.Message}");
+        }
+    }
+
+    private void AddDeviceToImportItems(List<DeviceImportItem> items, ExportedDeviceDto d, TeamMemberVM tm)
+    {
+        // Wir fügen nur Top-Level Items hinzu, die dann aber den OriginalDto mitschleifen
+        bool already = _vm.Selected.Devices?.Any(x => x.EntityId == d.EntityId) == true;
+
+        var item = new DeviceImportItem
+        {
+            OwnerSteamId = tm.SteamId,
+            OwnerName = tm.Name ?? tm.SteamId.ToString(),
+            EntityId = d.EntityId,
+            Kind = d.Kind,
+            Name = d.Name,
+            Alias = d.Alias,
+            AlreadyPresent = already,
+            IsSelected = !already,
+            ExistsState = already ? "local" : "?",
+            ServerName = _vm.Selected.Name,
+            OriginalDto = d // <- Hier speichern wir das volle DTO inklusive Children!
+        };
+        items.Add(item);
+    }
+
+    private SmartDevice MapDtoToDevice(ExportedDeviceDto dto)
+    {
+        var dev = new SmartDevice
+        {
+            EntityId = dto.EntityId,
+            Kind = dto.Kind,
+            Name = dto.Name,
+            Alias = dto.Alias,
+            IsGroup = dto.IsGroup,
+            IsMissing = true
+        };
+
+        if (dto.Children != null && dto.Children.Count > 0)
+        {
+            foreach (var childDto in dto.Children)
+            {
+                dev.Children.Add(MapDtoToDevice(childDto));
             }
         }
 
-        _vm.Save();
-        AppendLog("Refresh completed.");
+        return dev;
     }
 
-    public class SavedStroke
-    {
-        public List<Point> Points { get; set; } = new();
-        public string Color { get; set; } = "#FF0000"; // ARGB oder RGB als Hex
-        public double Thickness { get; set; } = 2.0;
-    }
 
-    public class SavedIcon
-    {
-        public string IconPath { get; set; } = ""; // z.B. "pack://application:,,,/Icons/map-icons/sam-site.png"
-        public double X { get; set; }
-        public double Y { get; set; }
-        public double Width { get; set; } = 32;
-        public double Height { get; set; } = 32;
-
-        public string? Label { get; set; } // fürs spätere Umbenennen
-    }
-
-    public class SavedText
-    {
-        public string Content { get; set; } = "";
-        public string Color { get; set; } = "#FFFFFFFF";
-        public double FontSize { get; set; } = 16.0;
-        public double X { get; set; }
-        public double Y { get; set; }
-        public bool Bold { get; set; } = true;
-    }
 
     private void SaveOwnOverlayToJson()
     {
@@ -12767,11 +13241,11 @@ public partial class MainWindow : Window
 
         // 1) Aktuelle Sicht (gefilterte Liste)
         if (_vm?.CurrentDevices != null)
-            dev = _vm.CurrentDevices.FirstOrDefault(d => d.EntityId == entityId);
+            dev = FindDeviceById(_vm.CurrentDevices, entityId);
 
         // 2) Fallback: alle Devices des ausgewählten Servers
         if (dev == null)
-            dev = _vm?.Selected?.Devices?.FirstOrDefault(d => d.EntityId == entityId);
+            dev = FindDeviceById(_vm?.Selected?.Devices, entityId);
 
         if (dev == null)
             return;

@@ -1,8 +1,8 @@
-﻿<Window x:Class="RustPlusDesk.Views.PatchNotesWindow"
+<Window x:Class="RustPlusDesk.Views.PatchNotesWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:views="clr-namespace:RustPlusDesk.Views"
-        Title="Rust+ Desk – Patch Notes 3.3.1 – 16/02/26"
+        Title="Rust+ Desk – Patch Notes 3.4.0 – 21/04/26"
         Width="720"
         Height="620"
         Background="{DynamicResource AppBg}"
@@ -22,15 +22,15 @@
             Margin="8">
         <DockPanel LastChildFill="True">
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
-                <TextBlock Text="Patch Notes February 2026 | Stability &amp; Event Refinement"
+                <TextBlock Text="Patch Notes April 2026 | Hierarchical Control"
                            FontSize="20"
                            FontWeight="SemiBold"
                            Margin="0,0,0,2"/>
-                <TextBlock Text="Version 3.3.1"
+                <TextBlock Text="Version 3.4.0"
                            Foreground="{DynamicResource Accent}"
                            FontSize="11"
                            Margin="0,0,0,4"/>
-                <TextBlock Text="16.02.2026"
+                <TextBlock Text="21.04.2026"
                            Foreground="{DynamicResource TextSubtle}"
                            FontSize="13"/>
             </StackPanel>
@@ -40,6 +40,40 @@
               CanContentScroll="False"
               ScrollViewer.PanningMode="VerticalOnly">
                 <StackPanel Margin="0,0,0,12" Orientation="Vertical" >
+                    <!-- April 2026 Entry -->
+                    <Border Background="{DynamicResource SurfaceAlt}"
+                            BorderBrush="{DynamicResource CardBorder}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Padding="10"
+                            Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v3.4.0  |  Hierarchical Grouping &amp; Advanced Alarms"
+                                       FontWeight="SemiBold"
+                                       FontSize="15"
+                                       Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• Hierarchical Device Grouping" 
+                                       FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="You can now organize your smart devices into nested groups! Simply drag one device onto another to create a folder. Groups allow you to toggle all contained switches at once with a single click."
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• Persistent Smart Alarm Settings" 
+                                       FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="You can now enable/disable popups and audio independently, and even select your own .wav/.mp3 files for specific alarms. Just right-click on the Audio toggle to select your own audio file!"
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• Recursive Team Sync" 
+                                       FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="Exporting and importing device snapshots now fully supports your custom group structures. Your team members will see the exact same hierarchy you've organized."
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,8"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- February 2026 Entry -->
                     <Border Background="{DynamicResource SurfaceAlt}"
                             BorderBrush="{DynamicResource CardBorder}"
                             BorderThickness="1"

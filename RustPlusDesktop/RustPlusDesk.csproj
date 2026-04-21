@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows</TargetFramework>
@@ -13,12 +13,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>3.3.1</Version>
-
-		<!-- EXE-Eigenschaften im Windows-Dateidialog -->
-		<AssemblyVersion>3.3.1</AssemblyVersion>
-		<FileVersion>3.3.1</FileVersion>
-		<InformationalVersion>3.3.1</InformationalVersion>
+		<Version>3.4.0</Version>
+		<Title>Rust+ Desk</Title>
+		<Authors>Pronwan</Authors>
+		<AssemblyVersion>3.4.0</AssemblyVersion>
+		<FileVersion>3.4.0</FileVersion>
+		<InformationalVersion>3.4.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -100,6 +100,7 @@
 	  <None Remove="icons\powerplant.png" />
 	  <None Remove="icons\powerstation.png" />
 	  <None Remove="icons\radtown.png" />
+	  <None Remove="icons\rust-c4.mp3" />
 	  <None Remove="icons\satellitedish.png" />
 	  <None Remove="icons\save.png" />
 	  <None Remove="icons\sewerbranch.png" />
@@ -151,6 +152,9 @@
 	  <Resource Include="icons\pin.png">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>
+	  <Content Include="icons\rust-c4.mp3">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	  <Resource Include="icons\save.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Resource>

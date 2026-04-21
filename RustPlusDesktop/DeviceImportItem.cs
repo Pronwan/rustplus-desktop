@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace RustPlusDesk.Models
@@ -12,6 +12,8 @@ namespace RustPlusDesk.Models
         public string? Name { get; init; }
         public string? Alias { get; init; }
         public bool AlreadyPresent { get; init; }
+
+        public ExportedDeviceDto? OriginalDto { get; init; }
 
         // neu:
         public string ServerName { get; init; } = "";   // Name des aktuellen Server-Profils

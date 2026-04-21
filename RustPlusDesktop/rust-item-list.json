@@ -35,6 +35,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/attackhelicopter.png"
   },
   {
+    "shortName": "ball",
+    "id": 405904531,
+    "displayName": "Soccer Ball",
+    "description": "Soccer Ball",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/ball.png"
+  },
+  {
     "shortName": "motorbike",
     "id": -1417478274,
     "displayName": "Motorbike",
@@ -70,6 +77,34 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/kayak.png"
   },
   {
+    "shortName": "ptboat",
+    "id": 1933140008,
+    "displayName": "PT Boat",
+    "description": null,
+    "iconUrl": "https://cdn.rusthelp.com/images/public/ptboat.png"
+  },
+  {
+    "shortName": "50cal.mounted",
+    "id": 162882477,
+    "displayName": "#50cal",
+    "description": "#50cal.desc",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/50cal.mounted.png"
+  },
+  {
+    "shortName": "50cal.mounted.left",
+    "id": -1467876094,
+    "displayName": "#50cal",
+    "description": "#50cal.desc",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/50cal.mounted.left.png"
+  },
+  {
+    "shortName": "50cal.mounted.right",
+    "id": 1248383659,
+    "displayName": "#50cal",
+    "description": "#50cal.desc",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/50cal.mounted.right.png"
+  },
+  {
     "shortName": "rhib",
     "id": 1394042569,
     "displayName": "RHIB",
@@ -98,6 +133,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/skidoo.png"
   },
   {
+    "shortName": "horse",
+    "id": 82772055,
+    "displayName": "Horse",
+    "description": "Horse",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/horse.png"
+  },
+  {
     "shortName": "horse.armor.roadsign",
     "id": 60528587,
     "displayName": "Roadsign Horse Armor",
@@ -110,6 +152,13 @@
     "displayName": "Wooden Horse Armor",
     "description": "A full body armor for a horse made of wood. Provides moderate protection for you and your steed, but with a reduction in movement speed.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/horse.armor.wood.png"
+  },
+  {
+    "shortName": "horse.armor.lny26",
+    "id": -2068194497,
+    "displayName": "Lunar New Year Horse Armor",
+    "description": "A full body Lunar New Year themed armor for a horse. Provides strong protection for you and your steed, at the cost of greatly reduced movement speed.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/horse.armor.lny26.png"
   },
   {
     "shortName": "horse.saddle.double",
@@ -154,6 +203,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/horse.shoes.basic.png"
   },
   {
+    "shortName": "minicopter",
+    "id": -1334255764,
+    "displayName": "Minicopter",
+    "description": "Minicopter",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/minicopter.png"
+  },
+  {
     "shortName": "minihelicopter.repair",
     "id": 1426574435,
     "displayName": "Minicopter",
@@ -182,11 +238,60 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/ammo.rocket.mlrs.png"
   },
   {
-    "shortName": "scraptransportheli.repair",
-    "id": -1884328185,
+    "shortName": "2module car",
+    "id": -866121090,
+    "displayName": "2 Module Car",
+    "description": "A motorbike.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/2module car.png"
+  },
+  {
+    "shortName": "3module car",
+    "id": -831725027,
+    "displayName": "3 Module Car",
+    "description": "3 Module Car",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/3module car.png"
+  },
+  {
+    "shortName": "4module car",
+    "id": -935322684,
+    "displayName": "4 Module Car",
+    "description": "4 Module Car",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/4module car.png"
+  },
+  {
+    "shortName": "2module car chassis",
+    "id": -226151558,
+    "displayName": "2 Module Car Chassis",
+    "description": "2 Module Car Chassis",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/2module car chassis.png"
+  },
+  {
+    "shortName": "3module car chassis",
+    "id": 1482871705,
+    "displayName": "3 Module Car Chassis",
+    "description": "3 Module Car Chassis",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/3module car chassis.png"
+  },
+  {
+    "shortName": "4module car chassis",
+    "id": 385099196,
+    "displayName": "4 Module Car Chassis",
+    "description": "4 Module Car Chassis",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/4module car chassis.png"
+  },
+  {
+    "shortName": "scraptransportheli",
+    "id": 375473148,
     "displayName": "Scrap Transport Helicopter",
     "description": null,
-    "iconUrl": "https://cdn.rusthelp.com/images/public/scraptransportheli.repair.png"
+    "iconUrl": "https://cdn.rusthelp.com/images/public/scraptransportheli.png"
+  },
+  {
+    "shortName": "sedan",
+    "id": -374457631,
+    "displayName": "Sedan",
+    "description": "Sedan",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/sedan.png"
   },
   {
     "shortName": "ballista.bolt.hammerhead",
@@ -315,6 +420,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/submarinesolo.png"
   },
   {
+    "shortName": "caboose",
+    "id": 1732236518,
+    "displayName": "Caboose",
+    "description": "Caboose",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/caboose.png"
+  },
+  {
     "shortName": "locomotive",
     "id": -2027988285,
     "displayName": "Locomotive",
@@ -425,6 +537,13 @@
     "displayName": "Nailgun Nails",
     "description": "Standard nailgun ammunition",
     "iconUrl": "https://cdn.rusthelp.com/images/public/ammo.nailgun.nails.png"
+  },
+  {
+    "shortName": "ammo.paintball",
+    "id": 385645417,
+    "displayName": "Paintball",
+    "description": "Ammo for a paintball gun.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/ammo.paintball.png"
   },
   {
     "shortName": "ammo.pistol",
@@ -546,6 +665,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/submarine.torpedo.straight.png"
   },
   {
+    "shortName": "ladder.wooden.boat",
+    "id": 255305250,
+    "displayName": "Wooden Boat Ladder",
+    "description": "A ladder will help you climb walls on any boat.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/ladder.wooden.boat.png"
+  },
+  {
     "shortName": "door.double.hinged.metal",
     "id": 1390353317,
     "displayName": "Sheet Metal Double Door",
@@ -565,6 +691,13 @@
     "displayName": "Wood Double Door",
     "description": "A Cheap door to secure your base. Its vulnerability to fire and weak explosive resistance makes the door a temporary solution to securing your base. Due to its flaws you should look at upgrading to a higher tier door such as Sheet Metal.\n\nThe Wooden Door can take two kinds of locks the basic Key Lock and the Code Lock. To pick up the door, remove any locks and open, hold down the E (USE) key and select \u0027Pickup\u0027.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/door.double.hinged.wood.png"
+  },
+  {
+    "shortName": "door.hinged.boat.wood",
+    "id": -1063073030,
+    "displayName": "Wooden Boat Door",
+    "description": "Secure your boat with this wooden door",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/door.hinged.boat.wood.png"
   },
   {
     "shortName": "door.hinged.metal",
@@ -593,6 +726,20 @@
     "displayName": "Floor grill",
     "description": "A floor grill must be placed in floor frames. Perfect for placing above a large furnace.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/floor.grill.png"
+  },
+  {
+    "shortName": "floor.ladder.hatch.toptier",
+    "id": 607785075,
+    "displayName": "Armored Ladder Hatch",
+    "description": "An armored hatch that opens and changes into a ladder.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/floor.ladder.hatch.toptier.png"
+  },
+  {
+    "shortName": "floor.triangle.ladder.hatch.toptier",
+    "id": -478923685,
+    "displayName": "Armored Triangle Ladder Hatch",
+    "description": "A triangular armored hatch that opens and changes into a ladder.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/floor.triangle.ladder.hatch.toptier.png"
   },
   {
     "shortName": "floor.ladder.hatch",
@@ -798,6 +945,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/watchtower.wood.png"
   },
   {
+    "shortName": "kriegbackpack",
+    "id": -874650016,
+    "displayName": "Krieg Large Backpack",
+    "description": "Carry your essentials in a rugged military pack, built for endurance and practicality.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/kriegbackpack.png"
+  },
+  {
     "shortName": "cocoknight.armor.gloves",
     "id": 1873004466,
     "displayName": "Coconut Armor Gloves",
@@ -840,10 +994,17 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/diving.mask.png"
   },
   {
+    "shortName": "diving.tank.double",
+    "id": -1559420426,
+    "displayName": "Double Diving Tank",
+    "description": "An oxygen tank that enables breathing under water for a period of time. Can be refilled at a workbench. Holds 80% more Oxygen than a standard diving tank",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/diving.tank.double.png"
+  },
+  {
     "shortName": "diving.tank",
     "id": -2022172587,
     "displayName": "Diving Tank",
-    "description": "An oxygen tank that enables breathing under water for a period of time. Can be refilled at a workbench.",
+    "description": "An oxygen tank that enables breathing under water for a period of time. Can be refilled at a workbench or repair bench.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/diving.tank.png"
   },
   {
@@ -920,7 +1081,7 @@
     "shortName": "draculacape",
     "id": -258574361,
     "displayName": "Dracula Cape",
-    "description": "A robustly thick outer garment providing ample protection to the wearer.",
+    "description": "A Halloween themed replacement for the Vagabond Jacket which flows in the wind.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/draculacape.png"
   },
   {
@@ -1020,6 +1181,13 @@
     "displayName": "Candle Hat",
     "description": "A hat with a candle on top. You can turn the candle on in your inventory.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/hat.candle.png"
+  },
+  {
+    "shortName": "hat.candle.birthday",
+    "id": 1633553557,
+    "displayName": "Birthday Candle Hat",
+    "description": "A hat with a birthday candle on top. You can turn the candle on in your inventory.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/hat.candle.birthday.png"
   },
   {
     "shortName": "hat.cap",
@@ -1204,6 +1372,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/attire.ninja.suit.png"
   },
   {
+    "shortName": "paintballoveralls.suit",
+    "id": -1014934560,
+    "displayName": "Paintball Overalls",
+    "description": "A set of paintball overalls.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/paintballoveralls.suit.png"
+  },
+  {
     "shortName": "burlap.trousers",
     "id": 1992974553,
     "displayName": "Burlap Trousers",
@@ -1316,6 +1491,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/attire.hide.boots.png"
   },
   {
+    "shortName": "silly.horse.mask",
+    "id": 1849409072,
+    "displayName": "Silly Horse Mask",
+    "description": "A silly rubber horse mask to celebrate Lunar New Year 2026. Comes in three varieties.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/silly.horse.mask.png"
+  },
+  {
     "shortName": "attire.hide.skirt",
     "id": -1773144852,
     "displayName": "Hide Skirt",
@@ -1346,8 +1528,8 @@
   {
     "shortName": "hazmatsuit.diver",
     "id": -797592358,
-    "displayName": "Abyss Divers Suit",
-    "description": "A divers suit found in the abyss, doubles as a reliable hazmat suit",
+    "displayName": "Abyss Pack",
+    "description": "A damaged deep-water survival suit was found in the abyss. Although it may no longer serve its original purpose, it functions reliably as a Hazmat suit. Owning this suit also grants access to the Abyss Pickaxe, Abyss Hatchet, Abyss Torch, and Abyss AR.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/hazmatsuit.diver.png"
   },
   {
@@ -1363,6 +1545,13 @@
     "displayName": "Hazmat Suit",
     "description": "A hazmat suit made from radiation resistant rubber.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/hazmatsuit.png"
+  },
+  {
+    "shortName": "hazmatsuit.kick",
+    "id": 972302244,
+    "displayName": "Kick Hazmat",
+    "description": "Hazmat obtained during Kick Drops 2025",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/hazmatsuit.kick.png"
   },
   {
     "shortName": "hazmatsuit.lumberjack",
@@ -1400,6 +1589,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/hazmatsuit_scientist_arctic.png"
   },
   {
+    "shortName": "hazmatsuit_scientist_naval",
+    "id": -1937799374,
+    "displayName": "Naval Scientist Suit",
+    "description": "A hazmat suit made from radiation resistant rubber.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/hazmatsuit_scientist_naval.png"
+  },
+  {
     "shortName": "hazmatsuit_scientist_nvgm",
     "id": 86840834,
     "displayName": "NVGM Scientist Suit",
@@ -1426,6 +1622,13 @@
     "displayName": "Twitch Rivals Hazmat Suit",
     "description": "A purple hazmat suit made from radiation resistant rubber.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/hazmatsuittwitch.png"
+  },
+  {
+    "shortName": "hazmat.krieg",
+    "id": -902423513,
+    "displayName": "Krieg Hazmat",
+    "description": "A Krieg Hazmat Suit, standard issue for those who never retreat.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/hazmat.krieg.png"
   },
   {
     "shortName": "scientistsuit_heavy",
@@ -1855,6 +2058,69 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/beehive.png"
   },
   {
+    "shortName": "boatbuildingstation",
+    "id": 1993693904,
+    "displayName": "Boat Building Station",
+    "description": "A deployable building station, creates a stable workspace on the water to build or edit your floating wooden refuge.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/boatbuildingstation.png"
+  },
+  {
+    "shortName": "anchor",
+    "id": 829641693,
+    "displayName": "Anchor",
+    "description": "A heavy anchor to stop your boat drifting.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/anchor.png"
+  },
+  {
+    "shortName": "cannon",
+    "id": -34498533,
+    "displayName": "Cannon",
+    "description": "A heavy mountable cannon for your boat with a short fuse. Questionable accuracy but high damage.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/cannon.png"
+  },
+  {
+    "shortName": "cannonball",
+    "id": -411735114,
+    "displayName": "Cannonball",
+    "description": "Round solid ammo for the cannon",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/cannonball.png"
+  },
+  {
+    "shortName": "plank",
+    "id": -952411326,
+    "displayName": "Plank",
+    "description": "Crude boarding plank thrown together from ruined floorboards, watch out for splinters.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/plank.png"
+  },
+  {
+    "shortName": "sail",
+    "id": 405905095,
+    "displayName": "Sail",
+    "description": "A slow but effective boat sail, made from scraps of fabric hastily stitched together. More sails will generate more speed.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/sail.png"
+  },
+  {
+    "shortName": "small_ramp",
+    "id": -158718378,
+    "displayName": "Small Ramp",
+    "description": "Deployable wooden ramp cobbled together from recycled doors, probably sturdy enough. Unfolds for boarding enemy vessels.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/small_ramp.png"
+  },
+  {
+    "shortName": "smallengine",
+    "id": -2115299615,
+    "displayName": "Small Boat Engine",
+    "description": "A punchy boat engine made from scavenged parts, not good for the environment. More engines means more speed.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/smallengine.png"
+  },
+  {
+    "shortName": "steeringwheel.boat",
+    "id": -1866909924,
+    "displayName": "Steering Wheel",
+    "description": "A lockable steering wheel for your modular boat with some suspiciously shaped handles.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/steeringwheel.boat.png"
+  },
+  {
     "shortName": "campfire",
     "id": 1946219319,
     "displayName": "Camp Fire",
@@ -1886,7 +2152,7 @@
     "shortName": "chair.icethrone",
     "id": -1944704288,
     "displayName": "Ice Throne",
-    "description": "Every home needs a chair. A decorative item which provides comfort while seated.",
+    "description": "An Ice Throne. Fit for the one true arctic warlord.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/chair.icethrone.png"
   },
   {
@@ -1909,6 +2175,20 @@
     "displayName": "Salvaged Ejector Seat",
     "description": "A chair made from an ejector seat. A decorative item which provides comfort while seated. Stays put.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/chair.ejector.seat.png"
+  },
+  {
+    "shortName": "charity.plushy.01",
+    "id": 2130820932,
+    "displayName": "Cancer Research UK Plushie",
+    "description": "A soft and squishy plush that provides comfort in your base. First sold on the Rust store in October 2025 to support Cancer Research UK, each purchase helped fund real-world cancer research.\n\nwww.cancerresearchuk.org",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/charity.plushy.01.png"
+  },
+  {
+    "shortName": "charity.plushy.02",
+    "id": 2130820933,
+    "displayName": "Ronald McDonald House UK Plushie",
+    "description": "A soft and squishy plush that provides comfort in your base. First sold on the Rust store in October 2025 to support Ronald McDonald House Charities UK, helping ease the burden on families by providing free \u2018home away from home\u2019 accommodation near hospitals.\n\nwww.rmhc.org.uk",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/charity.plushy.02.png"
   },
   {
     "shortName": "chickencoop",
@@ -1958,6 +2238,13 @@
     "displayName": "Drop Box",
     "description": "This item can be deployed on walls so that players can input items from the exterior of the building for safe keeping. You can only access the submitted contents of the Drop Box from the rear.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/dropbox.png"
+  },
+  {
+    "shortName": "easel",
+    "id": -1779203452,
+    "displayName": "Portable Easel",
+    "description": "A portable easel for painting plein air!",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/easel.png"
   },
   {
     "shortName": "elevator",
@@ -2135,6 +2422,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/hazmat.plushy.png"
   },
   {
+    "shortName": "heavy.scientist.plushie",
+    "id": 146221721,
+    "displayName": "Heavy Scientist Plushie",
+    "description": "Heavy Scientist Plushie",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/heavy.scientist.plushie.png"
+  },
+  {
     "shortName": "hitchtroughcombo",
     "id": 1160881421,
     "displayName": "Hitch \u0026 Trough",
@@ -2156,11 +2450,11 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/hab.armor.png"
   },
   {
-    "shortName": "habrepair",
-    "id": -1759188988,
+    "shortName": "hab",
+    "id": 696029539,
     "displayName": "Hot Air Balloon",
     "description": "A Hot Air Balloon.",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/habrepair.png"
+    "iconUrl": "https://cdn.rusthelp.com/images/public/hab.png"
   },
   {
     "shortName": "iotable",
@@ -2219,6 +2513,118 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/abyss.barrel.vertical.png"
   },
   {
+    "shortName": "component.box.ammo.large",
+    "id": -1593678393,
+    "displayName": "Ammo Storage Box",
+    "description": "Keep your ammunition in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.ammo.large.png"
+  },
+  {
+    "shortName": "component.box.armor.large",
+    "id": 1254295946,
+    "displayName": "Armor Storage Box",
+    "description": "Keep your armor in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.armor.large.png"
+  },
+  {
+    "shortName": "component.box.charcoal.large",
+    "id": 1884461210,
+    "displayName": "Charcoal Storage Box",
+    "description": "Keep your charcoal in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.charcoal.large.png"
+  },
+  {
+    "shortName": "component.box.clothing.large",
+    "id": 1736620421,
+    "displayName": "Clothing Storage Box",
+    "description": "Keep your clothing in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.clothing.large.png"
+  },
+  {
+    "shortName": "component.box.comps.large",
+    "id": -413663149,
+    "displayName": "Comps Storage Box",
+    "description": "Keep your components in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.comps.large.png"
+  },
+  {
+    "shortName": "component.box.explosives.large",
+    "id": -1998423571,
+    "displayName": "Explosives Storage Box",
+    "description": "Keep your explosives in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.explosives.large.png"
+  },
+  {
+    "shortName": "component.box.food.large",
+    "id": 1023919015,
+    "displayName": "Food Storage Box",
+    "description": "Keep your food in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.food.large.png"
+  },
+  {
+    "shortName": "component.box.guns.large",
+    "id": -544295594,
+    "displayName": "Guns Storage Box",
+    "description": "Keep your guns in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.guns.large.png"
+  },
+  {
+    "shortName": "component.box.meds.large",
+    "id": -800824218,
+    "displayName": "Meds Storage Box",
+    "description": "Keep your medical things in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.meds.large.png"
+  },
+  {
+    "shortName": "component.box.metal.large",
+    "id": 1465782238,
+    "displayName": "Metal Storage Box",
+    "description": "Keep your metal things in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.metal.large.png"
+  },
+  {
+    "shortName": "component.box.ore.large",
+    "id": 992944937,
+    "displayName": "Ore Storage Box",
+    "description": "Keep your ore in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.ore.large.png"
+  },
+  {
+    "shortName": "component.box.scrap.large",
+    "id": 574701440,
+    "displayName": "Scrap Storage Box",
+    "description": "Keep your scrap in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.scrap.large.png"
+  },
+  {
+    "shortName": "component.box.stone.large",
+    "id": 94971664,
+    "displayName": "Stone Storage Box",
+    "description": "Keep your stone in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.stone.large.png"
+  },
+  {
+    "shortName": "component.box.sulfur.large",
+    "id": -10594280,
+    "displayName": "Sulfur Storage Box",
+    "description": "Keep your sulfur in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.sulfur.large.png"
+  },
+  {
+    "shortName": "component.box.tools.large",
+    "id": 679690962,
+    "displayName": "Tools Storage Box",
+    "description": "Keep your tools in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.tools.large.png"
+  },
+  {
+    "shortName": "component.box.wood.large",
+    "id": 1044081720,
+    "displayName": "Wood Storage Box",
+    "description": "Keep your wood in this storage box. Stores up to 48 items.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/component.box.wood.large.png"
+  },
+  {
     "shortName": "wicker.barrel",
     "id": -526026171,
     "displayName": "Wicker Barrel",
@@ -2238,6 +2644,20 @@
     "displayName": "Medieval Large Wood Box",
     "description": "Keep your things in this medieval themed wooden storage box. Stores up to 48 items.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/medieval.box.wooden.large.png"
+  },
+  {
+    "shortName": "krieg.storage.horizontal",
+    "id": 652793345,
+    "displayName": "Krieg Storage Crates",
+    "description": "Military-grade crates designed for efficient storage and durability. A staple of any well-supplied outpost.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/krieg.storage.horizontal.png"
+  },
+  {
+    "shortName": "krieg.storage.vertical",
+    "id": 1305765685,
+    "displayName": "Krieg Storage Barrel",
+    "description": "Industrial barrels repurposed for the front lines. Sturdy, disciplined, and unmistakably Krieg.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/krieg.storage.vertical.png"
   },
   {
     "shortName": "legacyfurnace",
@@ -2263,21 +2683,21 @@
   {
     "shortName": "wall.frame.lunar2025_a",
     "id": 1115193056,
-    "displayName": "Lunar Wall Frame Inlay",
+    "displayName": "Wall Divider Pack",
     "description": "A Lunar New Year themed decorative wall divider with geometric inlay",
     "iconUrl": "https://cdn.rusthelp.com/images/public/wall.frame.lunar2025_a.png"
   },
   {
     "shortName": "wall.frame.lunar2025_b",
     "id": -450890885,
-    "displayName": "Lunar Wall Frame Inlay",
+    "displayName": "Wall Divider Pack",
     "description": "A Lunar New Year themed decorative wall divider with swirling inlay",
     "iconUrl": "https://cdn.rusthelp.com/images/public/wall.frame.lunar2025_b.png"
   },
   {
     "shortName": "wall.frame.lunar2025_c",
     "id": -2016974826,
-    "displayName": "Lunar Wall Frame Inlay",
+    "displayName": "Wall Divider Pack",
     "description": "A Lunar New Year themed decorative wall divider with floral inlay",
     "iconUrl": "https://cdn.rusthelp.com/images/public/wall.frame.lunar2025_c.png"
   },
@@ -2296,6 +2716,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/mannequin.png"
   },
   {
+    "shortName": "mini fridge",
+    "id": 1174484438,
+    "displayName": "Mini Fridge",
+    "description": "Ideal for preserving food and keeping items cool.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/mini fridge.png"
+  },
+  {
     "shortName": "mixingtable",
     "id": 1259919256,
     "displayName": "Mixing Table",
@@ -2308,6 +2735,13 @@
     "displayName": "Modular Car Lift",
     "description": "This allows you to modify modular vehicles",
     "iconUrl": "https://cdn.rusthelp.com/images/public/modularcarlift.png"
+  },
+  {
+    "shortName": "neonsigntr",
+    "id": 381595627,
+    "displayName": "Twitch Rivals Neon Sign",
+    "description": "A Twitch Rivals Light-Up Neon Sign",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/neonsigntr.png"
   },
   {
     "shortName": "mining.pumpjack",
@@ -2809,7 +3243,7 @@
   {
     "shortName": "rug.bear",
     "id": -1104881824,
-    "displayName": "Rug Bear Skin",
+    "displayName": "Bear Skin Rug",
     "description": "A decorative rug that can be placed on walls, floors, and ceilings. Provides comfort when in close proximity.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/rug.bear.png"
   },
@@ -2821,10 +3255,17 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/rug.png"
   },
   {
+    "shortName": "scientist.plushie",
+    "id": 445662288,
+    "displayName": "Scientist Plushie",
+    "description": "Scientist Plushie",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/scientist.plushie.png"
+  },
+  {
     "shortName": "sculpture.ice",
     "id": 504109620,
     "displayName": "Ice Sculpture",
-    "description": "An block of ice you can sculpt.",
+    "description": "A block of ice you can sculpt and light up with electric power.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/sculpture.ice.png"
   },
   {
@@ -3010,6 +3451,20 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/sofa.pattern.png"
   },
   {
+    "shortName": "twitchrivals2025sofa",
+    "id": 1604092540,
+    "displayName": "Twitch Rivals 2025 Sofa",
+    "description": "A comfortable twitch branded sofa. A decorative item which provides comfort and seats two.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/twitchrivals2025sofa.png"
+  },
+  {
+    "shortName": "spikes.trap",
+    "id": -1850297170,
+    "displayName": "Small Spike Trap",
+    "description": "A small improvised trap that injures and slows anyone who steps on it.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/spikes.trap.png"
+  },
+  {
     "shortName": "spinner.wheel",
     "id": -1100422738,
     "displayName": "Spinning Wheel",
@@ -3115,6 +3570,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/water.catcher.small.png"
   },
   {
+    "shortName": "generator.water",
+    "id": -379403794,
+    "displayName": "Water Wheel",
+    "description": "Converts kinetic energy harvested from flowing water into electricity.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/generator.water.png"
+  },
+  {
     "shortName": "water.purifier",
     "id": 2114754781,
     "displayName": "Water Purifier",
@@ -3187,8 +3649,8 @@
   {
     "shortName": "pilot.hazmat.box.wooden",
     "id": 537946062,
-    "displayName": "Black Box",
-    "description": "Keep your things in this Black Box. Stores up to 18 items.",
+    "displayName": "Flight Recorder Box",
+    "description": "Keep your things in this Flight Recorder box. Stores up to 18 items.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/pilot.hazmat.box.wooden.png"
   },
   {
@@ -3288,6 +3750,13 @@
     "displayName": "Chocolate Bar",
     "description": "Chocolate Bar found as loot. Eating it provides a small boost to health, hunger, and thirst.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/chocolate.png"
+  },
+  {
+    "shortName": "coconut",
+    "id": -24571537,
+    "displayName": "Coconut",
+    "description": "A coconut. Consuming it restores hydration, and the flesh yields a modest amount of calories.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/coconut.png"
   },
   {
     "shortName": "egg",
@@ -3878,6 +4347,265 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/lock.code.a.pilot.png"
   },
   {
+    "shortName": "sign.artistcanvas.l",
+    "id": -946599114,
+    "displayName": "Artist Canvas Standing",
+    "description": "A standing canvas for seamless murals",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/sign.artistcanvas.l.png"
+  },
+  {
+    "shortName": "sign.artistcanvas.m",
+    "id": -946599113,
+    "displayName": "Artist Canvas Large",
+    "description": "A large sized canvas for seamless murals",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/sign.artistcanvas.m.png"
+  },
+  {
+    "shortName": "sign.artistcanvas.s",
+    "id": -946599131,
+    "displayName": "Artist Canvas Medium",
+    "description": "A medium canvas for seamless murals",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/sign.artistcanvas.s.png"
+  },
+  {
+    "shortName": "sign.artistcanvas.xl",
+    "id": 1562867678,
+    "displayName": "Artist Canvas XL",
+    "description": "An extra large canvas for seamless murals",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/sign.artistcanvas.xl.png"
+  },
+  {
+    "shortName": "sign.artistcanvas.xs",
+    "id": 1609921845,
+    "displayName": "Artist Canvas Small",
+    "description": "A small canvas for seamless murals",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/sign.artistcanvas.xs.png"
+  },
+  {
+    "shortName": "sign.artistcanvas.xxl",
+    "id": -816769770,
+    "displayName": "Artist Canvas XXL",
+    "description": "An extra, extra large canvas for seamless murals",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/sign.artistcanvas.xxl.png"
+  },
+  {
+    "shortName": "lightup.large",
+    "id": 242421166,
+    "displayName": "Light-Up Frame Large",
+    "description": "A large light up frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/lightup.large.png"
+  },
+  {
+    "shortName": "lightupframe.medium",
+    "id": -1294739579,
+    "displayName": "Light-Up Frame Medium",
+    "description": "A medium Light-up frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/lightupframe.medium.png"
+  },
+  {
+    "shortName": "lightupframe.small",
+    "id": 1691223771,
+    "displayName": "Light-Up Frame Small",
+    "description": "A small light-up frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/lightupframe.small.png"
+  },
+  {
+    "shortName": "lightupframe.standing",
+    "id": 1950013766,
+    "displayName": "Light-Up Frame Standing",
+    "description": "A standing light-up frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/lightupframe.standing.png"
+  },
+  {
+    "shortName": "lightup.xl",
+    "id": 1801656689,
+    "displayName": "Light-Up Frame XL",
+    "description": "An extra large light-up frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/lightup.xl.png"
+  },
+  {
+    "shortName": "lightup.xxl",
+    "id": 1447138977,
+    "displayName": "Light-Up Frame XXL",
+    "description": "An extra extra large light up frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/lightup.xxl.png"
+  },
+  {
+    "shortName": "goldframe.large",
+    "id": -996235148,
+    "displayName": "Ornate Frame large",
+    "description": "A large ornate frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/goldframe.large.png"
+  },
+  {
+    "shortName": "goldframe.medium",
+    "id": -1901993050,
+    "displayName": "Ornate Frame Medium",
+    "description": "A medium ornate frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/goldframe.medium.png"
+  },
+  {
+    "shortName": "goldframe.small",
+    "id": -1836526520,
+    "displayName": "Ornate Frame Small",
+    "description": "A small ornate frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/goldframe.small.png"
+  },
+  {
+    "shortName": "goldframe.standing",
+    "id": -1528767189,
+    "displayName": "Ornate Frame Standing",
+    "description": "A standing ornate frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/goldframe.standing.png"
+  },
+  {
+    "shortName": "goldframe.xl",
+    "id": -1430299277,
+    "displayName": "Ornate Frame XL",
+    "description": "An extra large ornate frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/goldframe.xl.png"
+  },
+  {
+    "shortName": "goldframe.xxl",
+    "id": -1322332389,
+    "displayName": "Ornate Frame XXL",
+    "description": "An extra extra large ornate frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/goldframe.xxl.png"
+  },
+  {
+    "shortName": "paintabletarget.reactive",
+    "id": -1039234836,
+    "displayName": "Paintable Reactive Target",
+    "description": "A reactive target practice in which you can paint whatever you want",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/paintabletarget.reactive.png"
+  },
+  {
+    "shortName": "window.paintable",
+    "id": 738611016,
+    "displayName": "Paintable Window",
+    "description": "A window with paintable glass",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/window.paintable.png"
+  },
+  {
+    "shortName": "scrapframe.large",
+    "id": -1094453063,
+    "displayName": "Shutter Frame large",
+    "description": "A large shutter frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/scrapframe.large.png"
+  },
+  {
+    "shortName": "scrapframe.medium",
+    "id": -1060567807,
+    "displayName": "Shutter Frame Medium",
+    "description": "A medium shutter frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/scrapframe.medium.png"
+  },
+  {
+    "shortName": "scrapframe.small",
+    "id": -498301781,
+    "displayName": "Shutter Frame Small",
+    "description": "A small shutter frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/scrapframe.small.png"
+  },
+  {
+    "shortName": "scrapframe.standing",
+    "id": -1774190142,
+    "displayName": "Shutter Frame Standing",
+    "description": "A standing shutter frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/scrapframe.standing.png"
+  },
+  {
+    "shortName": "scrapframe.xl",
+    "id": -1244287686,
+    "displayName": "Shutter Frame XL",
+    "description": "An extra large shutter frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/scrapframe.xl.png"
+  },
+  {
+    "shortName": "scrapframe.xxl",
+    "id": -1211801774,
+    "displayName": "Shutter Frame XXL",
+    "description": "An extra extra large shutter frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/scrapframe.xxl.png"
+  },
+  {
+    "shortName": "woodframe.large",
+    "id": -635951327,
+    "displayName": "Wood Frame Large",
+    "description": "A large wooden frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/woodframe.large.png"
+  },
+  {
+    "shortName": "woodframe.medium",
+    "id": -1541706279,
+    "displayName": "Wood Frame Medium",
+    "description": "A medium wooden frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/woodframe.medium.png"
+  },
+  {
+    "shortName": "woodframe.small",
+    "id": -1476278729,
+    "displayName": "Wood Frame Small",
+    "description": "A small wooden frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/woodframe.small.png"
+  },
+  {
+    "shortName": "woodframe.standing",
+    "id": 1769475390,
+    "displayName": "Wood Frame Standing",
+    "description": "A standing wooden frame",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/woodframe.standing.png"
+  },
+  {
+    "shortName": "circleballoon2025",
+    "id": -105343718,
+    "displayName": "Circle Balloon",
+    "description": "A circular balloon to use as decoration and for you to celebrate. You can write on it.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/circleballoon2025.png"
+  },
+  {
+    "shortName": "heartballoon2025",
+    "id": 362863314,
+    "displayName": "Heart Balloon",
+    "description": "A heart-shaped balloon to use as decoration and for you to celebrate. You can write on it.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/heartballoon2025.png"
+  },
+  {
+    "shortName": "latexballoon2025",
+    "id": 1295301598,
+    "displayName": "Latex Balloon",
+    "description": "A latex balloon to use as decoration and for you to celebrate. You can write on it.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/latexballoon2025.png"
+  },
+  {
+    "shortName": "latexclumpballoon2025",
+    "id": -1440443161,
+    "displayName": "Clump of Latex Balloons",
+    "description": "A clump of latex balloons to use as decoration and for you to celebrate.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/latexclumpballoon2025.png"
+  },
+  {
+    "shortName": "mixedclumpballoon2025",
+    "id": 571949408,
+    "displayName": "Clump of Mixed Balloons",
+    "description": "A clump of mixed balloons to use as decoration and for you to celebrate.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/mixedclumpballoon2025.png"
+  },
+  {
+    "shortName": "speechbubbleballoon2025",
+    "id": 963400638,
+    "displayName": "Speech Bubble Balloon",
+    "description": "A speech bubble-shaped balloon to use as decoration and for you to celebrate. You can write on it.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/speechbubbleballoon2025.png"
+  },
+  {
+    "shortName": "starballoon2025",
+    "id": -1782127806,
+    "displayName": "Star Balloon",
+    "description": "A star-shaped balloon to use as decoration and for you to celebrate. You can write on it.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/starballoon2025.png"
+  },
+  {
     "shortName": "blueprintbase",
     "id": -996920608,
     "displayName": "Blueprint",
@@ -3913,6 +4641,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/hat.dragonmask.png"
   },
   {
+    "shortName": "hat.horsemask",
+    "id": -418359052,
+    "displayName": "Horse Mask",
+    "description": "A Beautifully crafted red and gold Horse mask to celebrate the 2026 Lunar New Year. This item replaces the wolf headdress.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/hat.horsemask.png"
+  },
+  {
     "shortName": "newyeargong",
     "id": -961457160,
     "displayName": "New Year Gong",
@@ -3937,14 +4672,14 @@
     "shortName": "hat.ratmask",
     "id": 271048478,
     "displayName": "Rat Mask",
-    "description": "A Beautifully crafted bronze and gold Rat mask to celebrate the 2020 Lunar New Year",
+    "description": "A Beautifully crafted bronze and gold Rat mask to celebrate the 2020 Lunar New Year. This item replaces the wolf headdress.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/hat.ratmask.png"
   },
   {
     "shortName": "skylantern",
     "id": 1819863051,
     "displayName": "Sky Lantern",
-    "description": "A beautiful sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch.",
+    "description": "A set of beautiful sky lanterns. Comes in 5 colors. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/skylantern.png"
   },
   {
@@ -4207,6 +4942,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/hat.bunnyhat.png"
   },
   {
+    "shortName": "bunny.suit",
+    "id": 1285226495,
+    "displayName": "Bunny Costume",
+    "description": "An inflatable bunny costume. Acting as a replacement for wooden pants, you can equip this item to look as silly as possible.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/bunny.suit.png"
+  },
+  {
     "shortName": "chicken.costume",
     "id": -152332823,
     "displayName": "Chicken Costume",
@@ -4284,6 +5026,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/rustige_egg_g.png"
   },
   {
+    "shortName": "rustige_egg_h",
+    "id": -173268138,
+    "displayName": "Rustig\u00E9 Egg - Amethyst",
+    "description": "A beautiful hand crafted amethyst and gold egg, with a miniature excavator scene contained inside.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/rustige_egg_h.png"
+  },
+  {
     "shortName": "horse.costume",
     "id": 1420547167,
     "displayName": "Horse Costume",
@@ -4350,7 +5099,7 @@
     "shortName": "carvable.pumpkin",
     "id": 1524980732,
     "displayName": "Carvable Pumpkin",
-    "description": "A pumpkin that you can carve. \n\nRequires wood as a fuel source.",
+    "description": "A pumpkin you can carve any design you\u0027d like into and light up at night. Requires wood as a fuel source.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/carvable.pumpkin.png"
   },
   {
@@ -4511,7 +5260,7 @@
     "shortName": "skulldoorknocker",
     "id": -216116642,
     "displayName": "Skull Door Knocker",
-    "description": "A spooky skull door knocker",
+    "description": "A spooky heavy iron door knocker. Its haunted skull will produce flames when distrubed.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/skulldoorknocker.png"
   },
   {
@@ -4539,7 +5288,7 @@
     "shortName": "halloween.surgeonsuit",
     "id": -1785231475,
     "displayName": "Surgeon Scrubs",
-    "description": "A Surgeon Suit",
+    "description": "A bloody surgeon outfit. Protects your entire body and provides good protection while giving off a creepy halloween vibe.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/halloween.surgeonsuit.png"
   },
   {
@@ -4697,34 +5446,6 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/frontiermirror.standing.png"
   },
   {
-    "shortName": "goldframe.large",
-    "id": -996235148,
-    "displayName": "Gold Frame large",
-    "description": "A large gold frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/goldframe.large.png"
-  },
-  {
-    "shortName": "goldframe.medium",
-    "id": -1901993050,
-    "displayName": "Gold Frame Medium",
-    "description": "A medium gold frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/goldframe.medium.png"
-  },
-  {
-    "shortName": "goldframe.small",
-    "id": -1836526520,
-    "displayName": "Gold Frame Small",
-    "description": "A small gold frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/goldframe.small.png"
-  },
-  {
-    "shortName": "goldframe.standing",
-    "id": -1528767189,
-    "displayName": "Gold Frame Standing",
-    "description": "A standing gold frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/goldframe.standing.png"
-  },
-  {
     "shortName": "goldmirror.large",
     "id": 1365234594,
     "displayName": "Gold Mirror large",
@@ -4751,34 +5472,6 @@
     "displayName": "Gold Mirror Standing",
     "description": "A standing gold mirror",
     "iconUrl": "https://cdn.rusthelp.com/images/public/goldmirror.standing.png"
-  },
-  {
-    "shortName": "lightup.large",
-    "id": 242421166,
-    "displayName": "Light-Up Frame Large",
-    "description": "A large light up frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/lightup.large.png"
-  },
-  {
-    "shortName": "lightupframe.medium",
-    "id": -1294739579,
-    "displayName": "Light-Up Frame Medium",
-    "description": "A medium Light-up frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/lightupframe.medium.png"
-  },
-  {
-    "shortName": "lightupframe.small",
-    "id": 1691223771,
-    "displayName": "Light-Up Frame Small",
-    "description": "A small light-up frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/lightupframe.small.png"
-  },
-  {
-    "shortName": "lightupframe.standing",
-    "id": 1950013766,
-    "displayName": "Light-Up Frame Standing",
-    "description": "A standing light-up frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/lightupframe.standing.png"
   },
   {
     "shortName": "lightupmirror.large",
@@ -4809,34 +5502,6 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/lightupmirror.standing.png"
   },
   {
-    "shortName": "scrapframe.large",
-    "id": -1094453063,
-    "displayName": "Scrap Frame large",
-    "description": "A large scrap frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/scrapframe.large.png"
-  },
-  {
-    "shortName": "scrapframe.medium",
-    "id": -1060567807,
-    "displayName": "Scrap Frame Medium",
-    "description": "A medium scrap frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/scrapframe.medium.png"
-  },
-  {
-    "shortName": "scrapframe.small",
-    "id": -498301781,
-    "displayName": "Scrap Frame Small",
-    "description": "A small scrap frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/scrapframe.small.png"
-  },
-  {
-    "shortName": "scrapframe.standing",
-    "id": -1774190142,
-    "displayName": "Scrap Frame Standing",
-    "description": "A standing scrap frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/scrapframe.standing.png"
-  },
-  {
     "shortName": "scrapmirror.large",
     "id": -82758111,
     "displayName": "Scrap Mirror Large",
@@ -4863,41 +5528,6 @@
     "displayName": "Scrap Mirror Standing",
     "description": "A standing scrap mirror",
     "iconUrl": "https://cdn.rusthelp.com/images/public/scrapmirror.standing.png"
-  },
-  {
-    "shortName": "twowaymirror.window",
-    "id": -1683726934,
-    "displayName": "Two-Way Mirror",
-    "description": "A Two-Way mirror",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/twowaymirror.window.png"
-  },
-  {
-    "shortName": "woodframe.large",
-    "id": -635951327,
-    "displayName": "Wood Frame Large",
-    "description": "A large wooden frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/woodframe.large.png"
-  },
-  {
-    "shortName": "woodframe.medium",
-    "id": -1541706279,
-    "displayName": "Wood Frame Medium",
-    "description": "A medium wooden frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/woodframe.medium.png"
-  },
-  {
-    "shortName": "woodframe.small",
-    "id": -1476278729,
-    "displayName": "Wood Frame Small",
-    "description": "A small wooden frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/woodframe.small.png"
-  },
-  {
-    "shortName": "woodframe.standing",
-    "id": 1769475390,
-    "displayName": "Wood Frame Standing",
-    "description": "A standing wooden frame",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/woodframe.standing.png"
   },
   {
     "shortName": "woodmirror.large",
@@ -4938,7 +5568,7 @@
     "shortName": "movembermoustache",
     "id": -2047081330,
     "displayName": "Movember Moustache",
-    "description": "A magnificent moustache for Movember",
+    "description": "A magnificent moustache (it acts as a hairy bandana) - all proceeds go to Movember, a charity promoting men\u0027s health awareness,",
     "iconUrl": "https://cdn.rusthelp.com/images/public/movembermoustache.png"
   },
   {
@@ -5204,7 +5834,7 @@
     "shortName": "twitchsunglasses",
     "id": 20489901,
     "displayName": "Purple Sunglasses",
-    "description": "Sunglasses - Gained from Rust\u0027s first Twitch drop event.",
+    "description": "Sunglasses - Gained from Rust\u0027s first Twitch drop.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/twitchsunglasses.png"
   },
   {
@@ -5225,7 +5855,7 @@
     "shortName": "door.hinged.industrial.a",
     "id": 818733919,
     "displayName": "Industrial Door",
-    "description": "Medium strength door, vulnerable to explosives.",
+    "description": "A red industrial door with a window.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/door.hinged.industrial.a.png"
   },
   {
@@ -5427,7 +6057,7 @@
   {
     "shortName": "ammo.snowballgun",
     "id": 550753330,
-    "displayName": null,
+    "displayName": "Snowball Gun Ammo",
     "description": null,
     "iconUrl": "https://cdn.rusthelp.com/images/public/ammo.snowballgun.png"
   },
@@ -5477,7 +6107,7 @@
     "shortName": "santabeard",
     "id": 2126889441,
     "displayName": "Santa Beard",
-    "description": "A santa beard. Ho Ho ho.",
+    "description": "A santa beard. Ho Ho ho. This item acts as a hairy bandana.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/santabeard.png"
   },
   {
@@ -5598,6 +6228,13 @@
     "displayName": "Fishing Tackle",
     "description": "Fishing Tackle",
     "iconUrl": "https://cdn.rusthelp.com/images/public/fishing.tackle.png"
+  },
+  {
+    "shortName": "mrspice.can",
+    "id": -648077743,
+    "displayName": "Mr Spice Can",
+    "description": "A delicious and refreshing beverage, with a delightful spicy undertone.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/mrspice.can.png"
   },
   {
     "shortName": "bottle.vodka",
@@ -5948,6 +6585,20 @@
     "displayName": "Blood",
     "description": "Used in creation of medkits.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/blood.png"
+  },
+  {
+    "shortName": "advancedblueprintfragment",
+    "id": -1896395719,
+    "displayName": "Advanced Blueprint Fragment",
+    "description": "Precision schematics with complex information, multiple fragments are necessary for crafting a Tier 3 Workbench.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/advancedblueprintfragment.png"
+  },
+  {
+    "shortName": "basicblueprintfragment",
+    "id": -143481979,
+    "displayName": "Basic Blueprint Fragment",
+    "description": "Damaged diagrams containing partial information to constuct a Tier 2 Workbench for advanced crafting. Several fragments are needed.\n\n20 Basic Fragments can be pieced together to make an Advanced Fragment.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/basicblueprintfragment.png"
   },
   {
     "shortName": "bone.fragments",
@@ -6601,6 +7252,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/pipetool.png"
   },
   {
+    "shortName": "boat.planner",
+    "id": -321247698,
+    "displayName": "Boat Building Plan",
+    "description": "A boat plan. You can use this to craft boats - right click when equipped for more options.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/boat.planner.png"
+  },
+  {
     "shortName": "building.planner",
     "id": 1525520776,
     "displayName": "Building Plan",
@@ -7072,7 +7730,7 @@
   {
     "shortName": "rifle.ak.med",
     "id": 472505338,
-    "displayName": "Medieval Assault Rifle",
+    "displayName": "Medieval AR",
     "description": "Medieval themed high damage machine rifle.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/rifle.ak.med.png"
   },
@@ -7387,7 +8045,7 @@
   {
     "shortName": "legacy bow",
     "id": -73195037,
-    "displayName": "Legacy bow",
+    "displayName": "Legacy Bow",
     "description": "Hunting Bow, useful for short to medium range combat and hunting.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/legacy bow.png"
   },
@@ -7397,6 +8055,13 @@
     "displayName": "LR-300 Assault Rifle",
     "description": "Stalk your enemies with this high powered light assault rifle.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/rifle.lr300.png"
+  },
+  {
+    "shortName": "rifle.lr300.space",
+    "id": 533993281,
+    "displayName": "Space LR-300 Assault Rifle",
+    "description": "Non-standard-issue high-powered light assault rifle for only the most elite of practitioners.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/rifle.lr300.space.png"
   },
   {
     "shortName": "lmg.m249",
@@ -7465,7 +8130,7 @@
     "shortName": "minigun",
     "id": 935606207,
     "displayName": "Minigun",
-    "description": "A military issue belt-fed machine gun with that must be spun up to fire. Fires rapidly once spun up at the expense of movement speed.",
+    "description": "A military issue belt-fed machine gun that must be spun up to fire. Fires rapidly at the expense of movement speed.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/minigun.png"
   },
   {
@@ -7495,6 +8160,13 @@
     "displayName": "Paddle",
     "description": "A versatile melee weapon that can also be used to paddle a kayak.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/paddle.png"
+  },
+  {
+    "shortName": "paintballgun",
+    "id": -707792719,
+    "displayName": "Paintball Gun",
+    "description": "An air gun that uses compressed gas to fire and make targets works of art.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/paintballgun.png"
   },
   {
     "shortName": "pickaxe",
@@ -7546,6 +8218,13 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/jungle.rock.png"
   },
   {
+    "shortName": "rocket.launcher",
+    "id": 442886268,
+    "displayName": "Rocket Launcher",
+    "description": "Unmatched craftsmanship meets devastating firepower.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/rocket.launcher.png"
+  },
+  {
     "shortName": "rocket.launcher.dragon",
     "id": -1315992997,
     "displayName": "Dragon Rocket Launcher",
@@ -7553,11 +8232,11 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/rocket.launcher.dragon.png"
   },
   {
-    "shortName": "rocket.launcher",
-    "id": 442886268,
-    "displayName": "Rocket Launcher",
+    "shortName": "rocket.launcher.rpg7",
+    "id": 494161326,
+    "displayName": "RPG Launcher",
     "description": "Unmatched craftsmanship meets devastating firepower.",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/rocket.launcher.png"
+    "iconUrl": "https://cdn.rusthelp.com/images/public/rocket.launcher.rpg7.png"
   },
   {
     "shortName": "axe.salvaged",
@@ -7591,7 +8270,7 @@
     "shortName": "shotgun.pump",
     "id": 795371088,
     "displayName": "Pump Shotgun",
-    "description": "A Shotgun. Fires six rounds.",
+    "description": "A Shotgun. Fires 8 rounds.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/shotgun.pump.png"
   },
   {
@@ -7707,6 +8386,20 @@
     "iconUrl": "https://cdn.rusthelp.com/images/public/torch.png"
   },
   {
+    "shortName": "krieg.chainsword",
+    "id": -1770281406,
+    "displayName": "Krieg chainsword",
+    "description": "A brutal tool of war, roaring to life with every swing.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/krieg.chainsword.png"
+  },
+  {
+    "shortName": "krieg.shotgun",
+    "id": -420889602,
+    "displayName": "Krieg Shotgun",
+    "description": "Heavy, reliable, and unforgiving. A weapon that never hesitates.",
+    "iconUrl": "https://cdn.rusthelp.com/images/public/krieg.shotgun.png"
+  },
+  {
     "shortName": "bucket.water",
     "id": 1424075905,
     "displayName": "Water Bucket",
@@ -7726,19 +8419,5 @@
     "displayName": "Wooden Spear",
     "description": "Primitive weapon, perfect for hunting your foes. Can be upgraded to Stone Spear.",
     "iconUrl": "https://cdn.rusthelp.com/images/public/spear.wooden.png"
-  },
-  {
-    "shortName": "basic-blueprint-fragment",
-    "id": -143481979,
-    "displayName": "Basic Blueprint Fragment",
-    "description": "Basic Fragments you need for crafting a T2 Workbench",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/basicblueprintfragment.png"
-  },
-  {
-    "shortName": "advanced-blueprint-fragment",
-    "id": -1896395719,
-    "displayName": "Advanced Blueprint Fragment",
-    "description": "Advanced Fragments you need for crafting a T3 Workbench",
-    "iconUrl": "https://cdn.rusthelp.com/images/public/advancedblueprintfragment.png"
   }
 ]
