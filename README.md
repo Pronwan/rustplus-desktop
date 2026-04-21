@@ -46,6 +46,18 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 [![YouTube Video](./App-Version3.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)  
 *(click the image to watch on YouTube)*
+Here are a few options for your GitHub release notes, ranging from a concise version to a more detailed "Changelog" style.
+Option 1: Clean & Professional (Recommended)
+
+This version is perfect for a standard GitHub release description.
+## Update 3.4.0 - Custom Alarms & Device Grouping (April 26)
+🚀** New Features**
+    Customizable Smart Alarms: You can now set individual popup alerts and custom audio files. Perfect for turning up the volume and getting woken up specifically for Raids!
+    Smart Device Groups: Organize your setup by merging devices into groups. You can rename these groups and control multiple devices simultaneously with a single click (bringing the power of hotkeys to the UI).
+
+**🛠 Improvements**
+    Enhanced Team Uploads: Device uploads for team members now fully support hierarchical group structures. No matter how many devices you manage, everything stays organized and easy to navigate.
+
 ## Update Notes 3.3.1 (February 16th 26)
 - **New Pre Deep Sea Notification:** Before Deep Sea is triggered, you can get a notification in Team Chat (around 3 minutes ahead of actual spawn) -> note that the direction will always be shown in West - this is not the actual spawn location. It's just coming from the fact that Deep Sea shops have negative X-coordinates. 
 - **Stability Patch:** Even on weak servers the connection should now be more stable and smart devices should work more reliably. Reduced duplicate chat fetches, made shop search and shops more stable with caching icons to local drive.
