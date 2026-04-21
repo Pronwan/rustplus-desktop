@@ -46,13 +46,11 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 [![YouTube Video](./App-Version3.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)  
 *(click the image to watch on YouTube)*
-Here are a few options for your GitHub release notes, ranging from a concise version to a more detailed "Changelog" style.
-Option 1: Clean & Professional (Recommended)
 
-This version is perfect for a standard GitHub release description.
 ## Update 3.4.0 - Custom Alarms & Device Grouping (April 26)
-🚀** New Features**
+**🚀 New Features**
     Customizable Smart Alarms: You can now set individual popup alerts and custom audio files. Perfect for turning up the volume and getting woken up specifically for Raids!
+    
     Smart Device Groups: Organize your setup by merging devices into groups. You can rename these groups and control multiple devices simultaneously with a single click (bringing the power of hotkeys to the UI).
 
 **🛠 Improvements**
