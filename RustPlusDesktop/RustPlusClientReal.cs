@@ -1,4 +1,4 @@
-﻿// Services/RustPlusClientReal.cs
+// Services/RustPlusClientReal.cs
 using RustPlusApi;                 // NuGet: HandyS11.RustPlusApi
 using RustPlusApi.Data.Events;
 using RustPlusDesk.Models;
@@ -44,27 +44,38 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
 
     public event Action? ConnectionLost;
     private readonly SemaphoreSlim _rateLimitLock = new(1, 1);
-    private int _tokens = 5;
+    private int _tokens = 50;
     private DateTime _lastRefill = DateTime.UtcNow;
 
     private async Task AcquireTokenAsync(CancellationToken ct)
     {
-        await _rateLimitLock.WaitAsync(ct);
+        bool lockAcquired = false;
         try
         {
+            await _rateLimitLock.WaitAsync(ct);
+            lockAcquired = true;
+
             RefillTokens();
             while (_tokens <= 0)
             {
                 _rateLimitLock.Release();
+                lockAcquired = false;
+
                 await Task.Delay(333, ct);
+
                 await _rateLimitLock.WaitAsync(ct);
+                lockAcquired = true;
+
                 RefillTokens();
             }
             _tokens--;
         }
         finally
         {
-            _rateLimitLock.Release();
+            if (lockAcquired)
+            {
+                _rateLimitLock.Release();
+            }
         }
     }
 
@@ -72,10 +83,10 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
     {
         var now = DateTime.UtcNow;
         var seconds = (now - _lastRefill).TotalSeconds;
-        var newTokens = (int)(seconds * 2.0);
+        var newTokens = (int)(seconds * 25.0);
         if (newTokens > 0)
         {
-            _tokens = Math.Min(5, _tokens + newTokens);
+            _tokens = Math.Min(50, _tokens + newTokens);
             _lastRefill = now;
         }
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
@@ -15,6 +15,57 @@ public class SmartDevice : INotifyPropertyChanged
         get => _entityId;
         set { if (_entityId != value) { _entityId = value; OnProp(); OnProp(nameof(Display)); } }
     }
+
+    private bool _isGroup;
+    public bool IsGroup
+    {
+        get => _isGroup;
+        set { if (_isGroup != value) { _isGroup = value; OnProp(); OnProp(nameof(HasGroupSwitches)); } }
+    }
+
+    private System.Collections.ObjectModel.ObservableCollection<SmartDevice> _children = new();
+    public System.Collections.ObjectModel.ObservableCollection<SmartDevice> Children
+    {
+        get => _children;
+        set 
+        { 
+            if (_children != value) 
+            { 
+                if (_children != null) _children.CollectionChanged -= Children_CollectionChanged;
+                _children = value; 
+                if (_children != null) _children.CollectionChanged += Children_CollectionChanged;
+                OnProp(); 
+                OnProp(nameof(HasGroupSwitches)); 
+            } 
+        }
+    }
+
+    private void Children_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        OnProp(nameof(HasGroupSwitches));
+    }
+
+
+
+    [JsonIgnore]
+    public bool HasGroupSwitches
+    {
+        get
+        {
+            if (!IsGroup || Children == null) return false;
+            foreach (var child in Children)
+            {
+                if (string.Equals(child.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(child.Kind, "Smart Switch", StringComparison.OrdinalIgnoreCase) ||
+                    child.HasGroupSwitches)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
 
    // public int? UpkeepSeconds => Storage?.UpkeepSeconds;
 
@@ -126,6 +177,27 @@ public class SmartDevice : INotifyPropertyChanged
     {
         get => _alias;
         set { if (_alias != value) { _alias = value; OnProp(); } }
+    }
+
+    private bool _popupEnabled = true;
+    public bool PopupEnabled
+    {
+        get => _popupEnabled;
+        set { if (_popupEnabled != value) { _popupEnabled = value; OnProp(); } }
+    }
+
+    private bool _audioEnabled = true;
+    public bool AudioEnabled
+    {
+        get => _audioEnabled;
+        set { if (_audioEnabled != value) { _audioEnabled = value; OnProp(); } }
+    }
+
+    private string? _audioFilePath;
+    public string? AudioFilePath
+    {
+        get => _audioFilePath;
+        set { if (_audioFilePath != value) { _audioFilePath = value; OnProp(); } }
     }
 
 
