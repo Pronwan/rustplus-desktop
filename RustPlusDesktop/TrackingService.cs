@@ -42,9 +42,7 @@ public class OnlinePlayerBM
     public string BMId { get; set; } = string.Empty;
     public TimeSpan Duration { get; set; }
     public bool IsTracked { get; set; }
-    public string PlayTimeStr => Duration.TotalHours >= 1 
-        ? $"{(int)Duration.TotalHours}h {Duration.Minutes}m" 
-        : $"{Duration.Minutes}m";
+    public string PlayTimeStr => $"{(int)Duration.TotalHours:D2}:{Duration.Minutes:D2}";
 }
 
 public static class TrackingService
@@ -561,7 +559,7 @@ public static class TrackingService
 
             // 2. Get Players using the ID we found
             StatusMessage = "Fetching players...";
-            var reqUrl = $"https://api.battlemetrics.com/servers/{_foundServerId}?include=player";
+            var reqUrl = $"https://api.battlemetrics.com/servers/{_foundServerId}?include=session";
             using var responsePlayers = await _http.GetAsync(reqUrl);
             if (!responsePlayers.IsSuccessStatusCode)
             {
@@ -589,38 +587,36 @@ public static class TrackingService
             {
                 foreach (var inc in included.EnumerateArray())
                 {
-                    if (inc.GetProperty("type").GetString() == "player")
+                    string type = inc.TryGetProperty("type", out var tProp) ? tProp.GetString() ?? "" : "";
+                    if (type == "session")
                     {
-                        var bmId = inc.GetProperty("id").GetString() ?? "";
-                        var name = inc.GetProperty("attributes").GetProperty("name").GetString() ?? "Unknown";
-                        int seconds = 0;
-                        if (inc.TryGetProperty("meta", out var meta))
+                        var attr = inc.GetProperty("attributes");
+                        var name = attr.TryGetProperty("name", out var nProp) ? nProp.GetString() ?? "Unknown" : "Unknown";
+                        var bmId = "";
+                        
+                        if (inc.TryGetProperty("relationships", out var rel) && 
+                            rel.TryGetProperty("player", out var pRel) &&
+                            pRel.TryGetProperty("data", out var pData))
                         {
-                            // Playtime is often in a metadata array as 'time' key
-                            if (meta.TryGetProperty("metadata", out var metaArr) && metaArr.ValueKind == JsonValueKind.Array)
-                            {
-                                foreach (var mObj in metaArr.EnumerateArray())
-                                {
-                                    if (mObj.TryGetProperty("key", out var k) && k.GetString() == "time" && 
-                                        mObj.TryGetProperty("value", out var v))
-                                    {
-                                        seconds = v.ValueKind == JsonValueKind.Number ? v.GetInt32() : 0;
-                                        break;
-                                    }
-                                }
-                            }
-                            // Fallback to direct 'time' property if present
-                            else if (meta.TryGetProperty("time", out var timeProp))
-                            {
-                                seconds = timeProp.GetInt32();
-                            }
+                            bmId = pData.GetProperty("id").GetString() ?? "";
                         }
                         
+                        if (string.IsNullOrEmpty(bmId)) continue;
+
+                        int seconds = 0;
+                        if (attr.TryGetProperty("start", out var sProp) && sProp.ValueKind == JsonValueKind.String)
+                        {
+                            if (DateTimeOffset.TryParse(sProp.GetString(), out var start))
+                            {
+                                seconds = (int)(DateTimeOffset.UtcNow - start).TotalSeconds;
+                            }
+                        }
+
                         onlineList.Add(new OnlinePlayerBM
                         {
                             BMId = bmId,
                             Name = name,
-                            Duration = TimeSpan.FromSeconds(seconds),
+                            Duration = TimeSpan.FromSeconds(Math.Max(0, seconds)),
                             IsTracked = _trackedPlayers.ContainsKey(bmId)
                         });
                         newOnlineIds.Add(bmId);
