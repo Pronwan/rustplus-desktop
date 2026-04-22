@@ -13,12 +13,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>3.4.0</Version>
+		<Version>3.5.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>3.4.0</AssemblyVersion>
-		<FileVersion>3.4.0</FileVersion>
-		<InformationalVersion>3.4.0</InformationalVersion>
+		<AssemblyVersion>3.5.0</AssemblyVersion>
+		<FileVersion>3.5.0</FileVersion>
+		<InformationalVersion>3.5.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -137,6 +137,8 @@
 	  <None Remove="Screenshots\3.2.0.png" />
 	  <None Remove="Screenshots\3.3.0_1.png" />
 	  <None Remove="Screenshots\3.3.0_2.png" />
+	  <None Remove="Screenshots\3_5A.png" />
+	  <None Remove="Screenshots\3_5B.png" />
 	  <None Remove="TitleScreen-rust-plus-desktop.png" />
 	</ItemGroup>
 	<ItemGroup>
@@ -267,6 +269,8 @@
     <Resource Include="Screenshots\3.2.0.png" />
     <Resource Include="Screenshots\3.3.0_1.png" />
     <Resource Include="Screenshots\3.3.0_2.png" />
+    <Resource Include="Screenshots\3_5A.png" />
+    <Resource Include="Screenshots\3_5B.png" />
     <Resource Include="TitleScreen-rust-plus-desktop.png" />
     <Content Include="rust_items.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
