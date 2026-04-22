@@ -27,6 +27,7 @@ public class TrackingSettings
     public bool StartMinimizedEnabled { get; set; } = false;
     public bool AutoConnectEnabled { get; set; } = false;
     public bool AutoStartEnabled { get; set; } = false;
+    public string SteamId64 { get; set; } = string.Empty;
 }
 
 public class PlayerSession
@@ -183,6 +184,12 @@ public static class TrackingService
             SetAutoStart(value);
             SaveDB(); 
         }
+    }
+
+    public static string SteamId64
+    {
+        get => _settings.SteamId64;
+        set { _settings.SteamId64 = value; SaveDB(); }
     }
 
     private static void SetAutoStart(bool enabled)
