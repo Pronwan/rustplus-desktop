@@ -9960,15 +9960,30 @@ public partial class MainWindow : Window
         Dispatcher.Invoke(() =>
         {
             RefreshOnlinePlayersList();
-            
             // Update tracking status indicator
+            bool anyTracked = TrackingService.GetTrackedPlayers().Count > 0;
             _vm.IsTrackingActive = TrackingService.IsTracking;
-            TxtTrackingStatus.Text = TrackingService.IsTracking ? "Tracking Active" : "Tracking Idle";
-            TxtTrackingStatus.Foreground = TrackingService.IsTracking ? Brushes.White : Brushes.Gray;
+
+            if (!anyTracked)
+            {
+                TxtTrackingStatus.Text = "Add players to tracker to start tracking";
+                TxtTrackingStatus.Foreground = Brushes.Gray;
+                TxtTrackingStatus.FontStyle = FontStyles.Italic;
+            }
+            else
+            {
+                TxtTrackingStatus.Text = TrackingService.IsTracking ? "Tracking Active" : "Tracking Idle";
+                TxtTrackingStatus.Foreground = TrackingService.IsTracking ? Brushes.White : Brushes.Gray;
+                TxtTrackingStatus.FontStyle = FontStyles.Normal;
+            }
             
-            if (TrackingService.LastPullTime.HasValue)
+            if (TrackingService.LastPullTime.HasValue && anyTracked)
             {
                 TxtLastPull.Text = $"Last pull: {TrackingService.LastPullTime.Value:HH:mm:ss}";
+            }
+            else
+            {
+                TxtLastPull.Text = "Last pull: --:--";
             }
         });
     }

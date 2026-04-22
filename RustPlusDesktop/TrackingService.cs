@@ -119,6 +119,13 @@ public static class TrackingService
             _trackedPlayers[bmId].LastServerName = serverName;
         }
         SaveDB();
+
+        // Auto-start tracking if we have a server but no timer yet
+        if (_trackingTimer == null && !string.IsNullOrEmpty(_settings.LastHost))
+        {
+            StartPolling(_settings.LastHost, _settings.LastPort, _settings.LastServerName);
+        }
+        OnOnlinePlayersUpdated?.Invoke();
     }
     
     public static void UntrackPlayer(string bmId)
@@ -126,6 +133,11 @@ public static class TrackingService
         if (_trackedPlayers.Remove(bmId))
         {
             SaveDB();
+            if (_trackedPlayers.Count == 0)
+            {
+                StopPolling();
+            }
+            OnOnlinePlayersUpdated?.Invoke();
         }
     }
     
@@ -392,9 +404,16 @@ public static class TrackingService
         _settings.LastServerName = name;
         SaveDB();
 
-        // Poll every 2 minutes
+        // Poll every 2 minutes only if we have players
         _trackingTimer?.Dispose();
-        _trackingTimer = new Timer(async _ => await PollOnceAsync(), null, 0, 120_000);
+        if (_trackedPlayers.Count > 0)
+        {
+            _trackingTimer = new Timer(async _ => await PollOnceAsync(), null, 0, 120_000);
+        }
+        else
+        {
+            _trackingTimer = null;
+        }
     }
 
     public static void StopPolling()
