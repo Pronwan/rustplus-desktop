@@ -927,6 +927,18 @@ public partial class MainWindow : Window
 
     // throttle: nicht bei jedem Tick refreshe n
     private DateTime _lastTeamRefresh = DateTime.MinValue;
+    protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+    {
+        if (TrackingService.CloseToTrayEnabled)
+        {
+            e.Cancel = true;
+            this.Hide();
+            return;
+        }
+
+        base.OnClosing(e);
+    }
+
     public MainWindow()
     {
         // Nur freiwillig zum Diagnostizieren:
@@ -10140,9 +10152,47 @@ public partial class MainWindow : Window
         Grid.SetRow(searchBox, 1);
         grid.Children.Add(searchBox);
 
+        // Background tracking toggle
+        var bgCheck = new System.Windows.Controls.CheckBox { 
+            Content = "Always track in background (auto-starts with Windows)",
+            Foreground = Brushes.LightGray,
+            Margin = new Thickness(0,0,0,5),
+            IsChecked = TrackingService.IsBackgroundTrackingEnabled
+        };
+        bgCheck.Checked += (s, e) => SetBackgroundTracking(true);
+        bgCheck.Unchecked += (s, e) => SetBackgroundTracking(false);
+
+        var trayCheck = new System.Windows.Controls.CheckBox { 
+            Content = "Minimize to tray when closing window",
+            Foreground = Brushes.LightGray,
+            Margin = new Thickness(0,0,0,5),
+            IsChecked = TrackingService.CloseToTrayEnabled
+        };
+        trayCheck.Checked += (s, e) => TrackingService.CloseToTrayEnabled = true;
+        trayCheck.Unchecked += (s, e) => TrackingService.CloseToTrayEnabled = false;
+
+        var minCheck = new System.Windows.Controls.CheckBox { 
+            Content = "Start application minimized in tray",
+            Foreground = Brushes.LightGray,
+            Margin = new Thickness(0,0,0,10),
+            IsChecked = TrackingService.StartMinimizedEnabled
+        };
+        minCheck.Checked += (s, e) => TrackingService.StartMinimizedEnabled = true;
+        minCheck.Unchecked += (s, e) => TrackingService.StartMinimizedEnabled = false;
+
+        var listContainer = new DockPanel();
+        var controlsStack = new StackPanel();
+        controlsStack.Children.Add(bgCheck);
+        controlsStack.Children.Add(trayCheck);
+        controlsStack.Children.Add(minCheck);
+        listContainer.Children.Add(controlsStack);
+        DockPanel.SetDock(controlsStack, Dock.Top);
+        
         var list = new ListBox { Background = Brushes.Transparent, BorderThickness = new Thickness(0), Foreground = Brushes.White };
-        Grid.SetRow(list, 2);
-        grid.Children.Add(list);
+        listContainer.Children.Add(list);
+
+        Grid.SetRow(listContainer, 2);
+        grid.Children.Add(listContainer);
 
         Action<string> refreshList = null;
         refreshList = (filter) => {
@@ -10208,6 +10258,32 @@ public partial class MainWindow : Window
 
         win.Content = grid;
         win.ShowDialog();
+    }
+
+    private void SetBackgroundTracking(bool enable)
+    {
+        TrackingService.IsBackgroundTrackingEnabled = enable;
+        
+        try
+        {
+            var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
+            if (key != null)
+            {
+                if (enable)
+                {
+                    var exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule!.FileName!;
+                    key.SetValue("RustPlusDeskTracker", $"\"{exePath}\" --background");
+                }
+                else
+                {
+                    key.DeleteValue("RustPlusDeskTracker", false);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[error] Failed to update startup registry: {ex.Message}");
+        }
     }
 
     private void ShowTrackingAnalysisWindow(string? bmId = null)

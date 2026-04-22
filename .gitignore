@@ -41,3 +41,5 @@ installer/Output/*
 !docs/
 !RustPlusDesktop/*.png
 !RustPlusDesktop/*.jpg
+RustPlusDesktop/RustPlusDesk_lbvqmzga_wpftmp.csproj
+RustPlusDesktop/Setup.iss

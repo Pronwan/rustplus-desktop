@@ -17,6 +17,16 @@ public class TrackedPlayer
     public List<PlayerSession> Sessions { get; set; } = new();
 }
 
+public class TrackingSettings
+{
+    public string LastHost { get; set; } = string.Empty;
+    public int LastPort { get; set; } = 0;
+    public string LastServerName { get; set; } = string.Empty;
+    public bool BackgroundTrackingEnabled { get; set; } = false;
+    public bool CloseToTrayEnabled { get; set; } = false;
+    public bool StartMinimizedEnabled { get; set; } = false;
+}
+
 public class PlayerSession
 {
     public DateTime ConnectTime { get; set; }
@@ -40,11 +50,16 @@ public static class TrackingService
     private static readonly string _dbPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
         "RustPlusDesk", "tracked_players.json");
+    private static readonly string _settingsPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "RustPlusDesk", "tracking_settings.json");
     
     private static Dictionary<string, TrackedPlayer> _trackedPlayers = new();
+    private static TrackingSettings _settings = new();
     private static Timer? _trackingTimer;
     private static string? _lastServerHost;
     private static int _lastServerPort;
+    private static string? _lastServerName;
 
     public static event Action? OnOnlinePlayersUpdated;
     public static string StatusMessage { get; private set; } = "";
@@ -64,10 +79,12 @@ public static class TrackingService
             {
                 var json = File.ReadAllText(_dbPath);
                 var list = JsonSerializer.Deserialize<List<TrackedPlayer>>(json);
-                if (list != null)
-                {
-                    _trackedPlayers = list.ToDictionary(p => p.BMId);
-                }
+                if (list != null) _trackedPlayers = list.ToDictionary(p => p.BMId);
+            }
+            if (File.Exists(_settingsPath))
+            {
+                var json = File.ReadAllText(_settingsPath);
+                _settings = JsonSerializer.Deserialize<TrackingSettings>(json) ?? new();
             }
         }
         catch { }
@@ -78,9 +95,13 @@ public static class TrackingService
         try
         {
             var dir = Path.GetDirectoryName(_dbPath);
-            if (dir != null) Directory.CreateDirectory(dir);
-            var json = JsonSerializer.Serialize(_trackedPlayers.Values.ToList(), new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(_dbPath, json);
+            if (dir != null && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
+
+            var jsonP = JsonSerializer.Serialize(_trackedPlayers.Values.ToList(), new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(_dbPath, jsonP);
+
+            var jsonS = JsonSerializer.Serialize(_settings, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(_settingsPath, jsonS);
         }
         catch { }
     }
@@ -110,6 +131,26 @@ public static class TrackingService
 
     public static List<TrackedPlayer> GetTrackedPlayers() => _trackedPlayers.Values.ToList();
     public static bool IsTracked(string bmId) => _trackedPlayers.ContainsKey(bmId);
+
+    public static bool IsBackgroundTrackingEnabled
+    {
+        get => _settings.BackgroundTrackingEnabled;
+        set { _settings.BackgroundTrackingEnabled = value; SaveDB(); }
+    }
+
+    public static bool CloseToTrayEnabled
+    {
+        get => _settings.CloseToTrayEnabled;
+        set { _settings.CloseToTrayEnabled = value; SaveDB(); }
+    }
+
+    public static bool StartMinimizedEnabled
+    {
+        get => _settings.StartMinimizedEnabled;
+        set { _settings.StartMinimizedEnabled = value; SaveDB(); }
+    }
+
+    public static (string host, int port, string name) LastServer => (_settings.LastHost, _settings.LastPort, _settings.LastServerName);
 
     public static async Task<string> FetchPlayerNameAsync(string bmId)
     {
@@ -335,7 +376,6 @@ public static class TrackingService
         return sb.ToString();
     }
 
-    private static string? _lastServerName;
     private static string? _foundServerId;
 
     public static void StartPolling(string host, int port, string name)
@@ -344,6 +384,12 @@ public static class TrackingService
         _lastServerPort = port;
         _lastServerName = name;
         _foundServerId = null; // Reset to force new lookup
+
+        _settings.LastHost = host;
+        _settings.LastPort = port;
+        _settings.LastServerName = name;
+        SaveDB();
+
         // Poll every 2 minutes
         _trackingTimer?.Dispose();
         _trackingTimer = new Timer(async _ => await PollOnceAsync(), null, 0, 120_000);
