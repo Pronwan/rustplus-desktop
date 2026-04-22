@@ -989,6 +989,12 @@ public partial class MainWindow : Window
         HydrateSteamUiFromStorage();   // <= HIER
         _statusTimer.Tick += async (_, __) => await UpdateServerStatusAsync();
         ListServers.ItemsSource = _vm.Servers;
+        
+        // Initial tracking status update and hook global events
+        TrackingService.OnOnlinePlayersUpdated -= OnOnlinePlayersUpdated;
+        TrackingService.OnOnlinePlayersUpdated += OnOnlinePlayersUpdated;
+        OnOnlinePlayersUpdated();
+        
         // Einmal erzeugen (falls du den Stub behalten willst: try/fallback – aber nur EINMAL zuweisen)
 
         _pairing = new PairingListenerRealProcess(AppendLog);
@@ -3570,8 +3576,6 @@ public partial class MainWindow : Window
             _connectedProfile = _vm.Selected;
 
             // Start Battlemetrics tracking polling for this server
-            TrackingService.OnOnlinePlayersUpdated -= OnOnlinePlayersUpdated;
-            TrackingService.OnOnlinePlayersUpdated += OnOnlinePlayersUpdated;
             TrackingService.StartPolling(_vm.Selected.Host ?? "", _vm.Selected.Port, _vm.Selected.Name ?? "");
 
             // Allow socket to stabilize before firing requests
@@ -9956,6 +9960,16 @@ public partial class MainWindow : Window
         Dispatcher.Invoke(() =>
         {
             RefreshOnlinePlayersList();
+            
+            // Update tracking status indicator
+            _vm.IsTrackingActive = TrackingService.IsTracking;
+            TxtTrackingStatus.Text = TrackingService.IsTracking ? "Tracking Active" : "Tracking Idle";
+            TxtTrackingStatus.Foreground = TrackingService.IsTracking ? Brushes.White : Brushes.Gray;
+            
+            if (TrackingService.LastPullTime.HasValue)
+            {
+                TxtLastPull.Text = $"Last pull: {TrackingService.LastPullTime.Value:HH:mm:ss}";
+            }
         });
     }
 

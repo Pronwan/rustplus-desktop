@@ -56,14 +56,15 @@ public partial class App : Application
                 TrackingService.StartPolling(host, port, name);
         }
 
-        if (isBackgroundArg || TrackingService.StartMinimizedEnabled)
+        if (isBackgroundArg && TrackingService.StartMinimizedEnabled)
         {
-            // Run silently in tray or started minimized
+            // Started by Windows (auto-start) and minimized is enabled
             if (e.Args.Length > 0 && e.Args[0].StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase))
                 ShowMainWindow();
         }
         else
         {
+            // Manual start by user, or auto-start with minimized disabled
             ShowMainWindow();
         }
 
@@ -94,15 +95,40 @@ public partial class App : Application
         _trayIcon.Visible = true;
 
         var menu = new System.Windows.Forms.ContextMenuStrip();
-        menu.Items.Add("Open Rust+ Desk", null, (s, e) => ShowMainWindow());
-        menu.Items.Add("-");
-        menu.Items.Add("Exit", null, (s, e) => {
-            _trayIcon.Visible = false;
-            Current.Shutdown();
-        });
+        
+        // Dynamic update on open
+        menu.Opening += (s, e) =>
+        {
+            menu.Items.Clear();
+            var status = TrackingService.IsTracking ? "Active" : "Idle";
+            var last = TrackingService.LastPullTime?.ToString("HH:mm:ss") ?? "--:--:--";
+            
+            var statusItem = new System.Windows.Forms.ToolStripMenuItem($"Tracking: {status}");
+            statusItem.Enabled = false;
+            menu.Items.Add(statusItem);
+            
+            var lastItem = new System.Windows.Forms.ToolStripMenuItem($"Last update: {last}");
+            lastItem.Enabled = false;
+            menu.Items.Add(lastItem);
+            
+            menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
+            menu.Items.Add("Open Rust+ Desk", null, (s, ex) => ShowMainWindow());
+            menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
+            menu.Items.Add("Exit", null, (s, ex) => {
+                _trayIcon.Visible = false;
+                Current.Shutdown();
+            });
+        };
 
         _trayIcon.ContextMenuStrip = menu;
         _trayIcon.DoubleClick += (s, e) => ShowMainWindow();
+        
+        // Also update tray tooltip periodically or on event
+        TrackingService.OnOnlinePlayersUpdated += () => {
+            var last = TrackingService.LastPullTime?.ToString("HH:mm:ss") ?? "--:--";
+            if (_trayIcon != null)
+                _trayIcon.Text = $"Rust+ Desk (Tracking {last})";
+        };
     }
 
     protected override void OnExit(ExitEventArgs e)
