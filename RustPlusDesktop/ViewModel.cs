@@ -1,4 +1,4 @@
-﻿using RustPlusDesk.Models;
+using RustPlusDesk.Models;
 using RustPlusDesk.Services;
 using RustPlusDesk.Views;
 using System;
@@ -23,6 +23,13 @@ public class MainViewModel : INotifyPropertyChanged
     }
 
     public bool CanStartPairing => !_isPairingRunning && !IsBusy;
+
+    private bool _isTrackingActive;
+    public bool IsTrackingActive
+    {
+        get => _isTrackingActive;
+        set { _isTrackingActive = value; OnPropertyChanged(); }
+    }
 
     public bool IsBusy
     {
