@@ -438,41 +438,37 @@ public static class TrackingService
             {
                 StatusMessage = "Looking up server...";
 
-                // Strategy 1: Filter by exact address and port
-                var searchUrlAddr = $"https://api.battlemetrics.com/servers?filter[address]={Uri.EscapeDataString(_lastServerHost)}&filter[port]={_lastServerPort}&filter[game]=rust";
-                
+                // --- SCHRITT A: Suche über IP-Adresse (Port ignorieren, da oft unterschiedlich) ---
+                var searchUrlAddr = $"https://api.battlemetrics.com/servers?filter[address]={Uri.EscapeDataString(_lastServerHost)}&filter[game]=rust";
+
                 using var responseAddr = await _http.GetAsync(searchUrlAddr);
                 if (responseAddr.IsSuccessStatusCode)
                 {
                     var resAddr = await responseAddr.Content.ReadAsStringAsync();
                     using var docAddr = JsonDocument.Parse(resAddr);
                     var dataArr = docAddr.RootElement.GetProperty("data");
-                    if (dataArr.GetArrayLength() > 0)
-                    {
-                        _foundServerId = dataArr[0].GetProperty("id").GetString();
-                    }
-                }
 
-                // Strategy 2: Search by IP:PORT directly (Recommended Method 2)
-                if (string.IsNullOrEmpty(_foundServerId))
-                {
-                    var query = $"{_lastServerHost}:{_lastServerPort}";
-                    var searchUrl = $"https://api.battlemetrics.com/servers?filter[game]=rust&filter[search]={Uri.EscapeDataString(query)}";
-                    
-                    using var response = await _http.GetAsync(searchUrl);
-                    if (response.IsSuccessStatusCode)
+                    foreach (var serverObj in dataArr.EnumerateArray())
                     {
-                        var json = await response.Content.ReadAsStringAsync();
-                        using var doc = JsonDocument.Parse(json);
-                        var dataArr = doc.RootElement.GetProperty("data");
-                        if (dataArr.GetArrayLength() > 0)
+                        var attr = serverObj.GetProperty("attributes");
+                        var foundIp = attr.GetProperty("ip").GetString();
+                        var foundName = attr.GetProperty("name").GetString() ?? "";
+
+                        // CRITICAL: Wir nehmen den Server nur, wenn die IP EXAKT stimmt
+                        if (foundIp == _lastServerHost)
                         {
-                            _foundServerId = dataArr[0].GetProperty("id").GetString();
+                            // Wenn wir mehrere Server auf einer IP haben (Shared Hosting), 
+                            // nehmen wir den, dessen Name am besten passt.
+                            if (string.IsNullOrEmpty(_lastServerName) || foundName.Contains(_lastServerName, StringComparison.OrdinalIgnoreCase))
+                            {
+                                _foundServerId = serverObj.GetProperty("id").GetString();
+                                break;
+                            }
                         }
                     }
                 }
 
-                // Strategy 3: If still failed, search by name and verify IP
+                // --- SCHRITT B: Fallback über Namen (falls IP bei Battlemetrics anders gelistet ist) ---
                 if (string.IsNullOrEmpty(_foundServerId) && !string.IsNullOrEmpty(_lastServerName))
                 {
                     var searchUrlName = $"https://api.battlemetrics.com/servers?filter[game]=rust&filter[search]={Uri.EscapeDataString(_lastServerName)}";
@@ -486,11 +482,12 @@ public static class TrackingService
                         foreach (var serverObj in dataArr.EnumerateArray())
                         {
                             var attr = serverObj.GetProperty("attributes");
-                            var ip = attr.TryGetProperty("ip", out var vIp) ? vIp.GetString() : "";
-                            var port = attr.TryGetProperty("port", out var vPort) ? vPort.GetInt32() : 0;
-                            var qPort = attr.TryGetProperty("portQuery", out var vQPort) ? vQPort.GetInt32() : 0;
+                            var foundIp = attr.TryGetProperty("ip", out var vIp) ? vIp.GetString() : "";
+                            var foundName = attr.GetProperty("name").GetString() ?? "";
 
-                            if (ip == _lastServerHost && (port == _lastServerPort || qPort == _lastServerPort))
+                            // Wenn der Name exakt passt, nehmen wir die ID, auch wenn die IP leicht abweicht 
+                            // (manche Server haben unterschiedliche IPs für Game und Websocket)
+                            if (foundName.Equals(_lastServerName, StringComparison.OrdinalIgnoreCase))
                             {
                                 _foundServerId = serverObj.GetProperty("id").GetString();
                                 break;
