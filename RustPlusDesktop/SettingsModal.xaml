@@ -1,0 +1,97 @@
+<Window x:Class="RustPlusDesk.Views.SettingsModal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Application Settings" 
+        Width="500" Height="450"
+        WindowStartupLocation="CenterOwner"
+        AllowsTransparency="True" 
+        WindowStyle="None"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        Topmost="True">
+    
+    <Border Background="{DynamicResource SurfaceAlt}" 
+            BorderBrush="{DynamicResource CardBorder}" 
+            BorderThickness="2" 
+            CornerRadius="12">
+        <DockPanel Margin="20">
+            <!-- Header -->
+            <StackPanel DockPanel.Dock="Top" Margin="0,0,0,20">
+                <DockPanel>
+                    <TextBlock Text="Settings" 
+                               Foreground="White" 
+                               FontSize="22" 
+                               FontWeight="Bold" 
+                               VerticalAlignment="Center"/>
+                    <Button Content="✕" 
+                            HorizontalAlignment="Right" 
+                            Width="30" Height="30"
+                            Style="{StaticResource GhostButton}"
+                            Click="BtnClose_Click"
+                            Cursor="Hand"
+                            FontSize="18"
+                            Foreground="{DynamicResource TextSubtle}"/>
+                </DockPanel>
+                <Separator Background="{DynamicResource CardBorder}" Margin="0,10,0,0"/>
+            </StackPanel>
+
+            <!-- Footer -->
+            <Button DockPanel.Dock="Bottom" 
+                    Content="Close" 
+                    Width="100" 
+                    Height="35"
+                    HorizontalAlignment="Right"
+                    Style="{StaticResource PrimaryButton}"
+                    Click="BtnClose_Click"
+                    Margin="0,15,0,0"/>
+
+            <!-- Content -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="General" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,0,0,10"/>
+                    
+                    <CheckBox x:Name="ChkAutoStart" 
+                              Content="Launch with Windows (Minimized)" 
+                              Margin="0,0,0,12" 
+                              Style="{StaticResource DotCheckBox}"
+                              Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
+
+                    <CheckBox x:Name="ChkStartMinimized" 
+                              Content="Start Minimized (Always)" 
+                              Margin="0,0,0,12" 
+                              Style="{StaticResource DotCheckBox}"
+                              Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
+
+                    <CheckBox x:Name="ChkAutoConnect" 
+                              Content="Auto-Connect to last server on startup" 
+                              Margin="0,0,0,12" 
+                              Style="{StaticResource DotCheckBox}"
+                              Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                              ToolTip="Automatically reconnects to the last server and loads the map."/>
+
+                    <TextBlock Text="Behavior" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
+
+                    <CheckBox x:Name="ChkCloseToTray" 
+                              Content="Minimize to Tray instead of closing" 
+                              Margin="0,0,0,12" 
+                              Style="{StaticResource DotCheckBox}"
+                              Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
+
+                    <CheckBox x:Name="ChkBackgroundTracking" 
+                              Content="Enable Background Player Tracking" 
+                              Margin="0,0,0,12" 
+                              Style="{StaticResource DotCheckBox}"
+                              Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                              ToolTip="Keeps tracking players via BattleMetrics even when minimized."/>
+
+                    <TextBlock Text="Steam Account" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
+                    <TextBlock Text="Manage your linked Steam account in the main window." 
+                               Foreground="{DynamicResource TextSubtle}" 
+                               FontSize="12" 
+                               FontStyle="Italic"
+                               TextWrapping="Wrap"/>
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</Window>
