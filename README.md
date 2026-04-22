@@ -47,7 +47,7 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./App-Version3.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)  
 *(click the image to watch on YouTube)*
 
-## Update 3.5.0 - Player Intelligence & Background Ops (April 22)
+## Update 3.5.0 - Player Intelligence & Background Ops (April 22nd)
 **🚀 New Features**
 - **Advanced Activity Intelligence**: Introducing a full-scale player tracking system! View 12-week GitHub-style activity grids and 24-hour heatmaps to predict when your enemies (or friends) are most likely to be online or sleeping.
 - **Background Operations**: The app can now reside in your System Tray. Collect player data 24/7 without having the main window open.
