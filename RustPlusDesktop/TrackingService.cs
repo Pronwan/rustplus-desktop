@@ -40,6 +40,7 @@ public class OnlinePlayerBM
 {
     public string Name { get; set; } = string.Empty;
     public string BMId { get; set; } = string.Empty;
+    public DateTime SessionStartTimeUtc { get; set; }
     public TimeSpan Duration { get; set; }
     public bool IsTracked { get; set; }
     public string PlayTimeStr => $"{(int)Duration.TotalHours:D2}:{Duration.Minutes:D2}";
@@ -106,6 +107,20 @@ public static class TrackingService
 
             var jsonS = JsonSerializer.Serialize(_settings, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_settingsPath, jsonS);
+        }
+        catch { }
+    }
+
+    private static void Log(string message)
+    {
+        try
+        {
+            var logPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "RustPlusDesk", "tracking_log.txt");
+            var dir = Path.GetDirectoryName(logPath);
+            if (dir != null && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}");
         }
         catch { }
     }
@@ -366,7 +381,13 @@ public static class TrackingService
                 var statusText = isOnline ? "Online" : "Offline";
                 sb.AppendLine($"<div style='margin-bottom:20px;'><span class='badge {statusClass}'>{statusText}</span></div>");
 
+                var lastS = p.Sessions.LastOrDefault();
+                string lastConnectedStr = lastS != null ? lastS.ConnectTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm") : "Never";
+                string lastSeenStr = lastS != null ? (lastS.DisconnectTime?.ToLocalTime().ToString("yyyy-MM-dd HH:mm") ?? "Active Now") : "Never";
+
                 sb.AppendLine("<div class='stat-grid'>");
+                sb.AppendLine("<div class='stat-item'><div class='stat-label'>Last Connected</div><div class='stat-value'>" + lastConnectedStr + "</div></div>");
+                sb.AppendLine("<div class='stat-item'><div class='stat-label'>Last Seen</div><div class='stat-value'>" + lastSeenStr + "</div></div>");
                 sb.AppendLine("<div class='stat-item'><div class='stat-label'>Total Tracked Time</div><div class='stat-value'>" + $"{(int)totalTime.TotalHours}h {totalTime.Minutes}m" + "</div></div>");
                 sb.AppendLine("<div class='stat-item'><div class='stat-label'>Last 7 Days</div><div class='stat-value'>" + $"{(int)past7Days.TotalHours}h {past7Days.Minutes}m" + "</div></div>");
                 sb.AppendLine("<div class='stat-item'><div class='stat-label'>Session Count</div><div class='stat-value'>" + p.Sessions.Count + "</div></div>");
@@ -581,7 +602,7 @@ public static class TrackingService
             }
             
             var onlineList = new List<OnlinePlayerBM>();
-            var newOnlineIds = new HashSet<string>();
+            var newOnlineIds = new Dictionary<string, DateTime>();
 
             if (pDoc.RootElement.TryGetProperty("included", out var included))
             {
@@ -604,10 +625,12 @@ public static class TrackingService
                         if (string.IsNullOrEmpty(bmId)) continue;
 
                         int seconds = 0;
+                        DateTime actualStart = DateTime.UtcNow;
                         if (attr.TryGetProperty("start", out var sProp) && sProp.ValueKind == JsonValueKind.String)
                         {
                             if (DateTimeOffset.TryParse(sProp.GetString(), out var start))
                             {
+                                actualStart = start.UtcDateTime;
                                 seconds = (int)(DateTimeOffset.UtcNow - start).TotalSeconds;
                             }
                         }
@@ -616,10 +639,11 @@ public static class TrackingService
                         {
                             BMId = bmId,
                             Name = name,
+                            SessionStartTimeUtc = actualStart,
                             Duration = TimeSpan.FromSeconds(Math.Max(0, seconds)),
                             IsTracked = _trackedPlayers.ContainsKey(bmId)
                         });
-                        newOnlineIds.Add(bmId);
+                        newOnlineIds[bmId] = actualStart;
                     }
                 }
             }
@@ -638,7 +662,7 @@ public static class TrackingService
             OnOnlinePlayersUpdated?.Invoke();
 
             // 3. Update Tracking stats
-            UpdateTrackingStats(newOnlineIds);
+            await UpdateTrackingStatsAsync(newOnlineIds);
         }
         catch (Exception ex)
         {
@@ -647,31 +671,65 @@ public static class TrackingService
         }
     }
 
-    private static void UpdateTrackingStats(HashSet<string> currentlyOnlineIds)
+    private static async Task UpdateTrackingStatsAsync(Dictionary<string, DateTime> currentlyOnlineWithStart)
     {
         bool changed = false;
         var now = DateTime.UtcNow;
 
         foreach (var tp in _trackedPlayers.Values)
         {
-            bool isOnline = currentlyOnlineIds.Contains(tp.BMId);
+            bool isOnline = currentlyOnlineWithStart.TryGetValue(tp.BMId, out var actualConnectTime);
             var lastSession = tp.Sessions.LastOrDefault();
 
             if (isOnline)
             {
                 if (lastSession == null || lastSession.DisconnectTime.HasValue)
                 {
-                    // Newly connected
-                    tp.Sessions.Add(new PlayerSession { ConnectTime = now, DisconnectTime = null });
+                    // Newly connected or we just started tracking/opened the app
+                    tp.Sessions.Add(new PlayerSession { ConnectTime = actualConnectTime, DisconnectTime = null });
+                    Log($"[SESSION] {tp.Name} ({tp.BMId}) connected at {actualConnectTime:yyyy-MM-dd HH:mm:ss} UTC (detected at {now:HH:mm})");
                     changed = true;
+                }
+                else
+                {
+                    // If we have an open session, but the connect time is different (e.g. app was closed and they rejoined)
+                    // BattleMetrics session ID would change, but here we track by server session.
+                    // If the actualConnectTime is NEWER than our last recorded ConnectTime, they must have reconnected 
+                    // while we were closed.
+                    if (actualConnectTime > lastSession.ConnectTime.AddMinutes(5))
+                    {
+                        // They reconnected. Close old session at their last seen or roughly before this connect?
+                        // For simplicity, we close the old one at actualConnectTime - 1 second and start new one.
+                        lastSession.DisconnectTime = actualConnectTime.AddSeconds(-1);
+                        tp.Sessions.Add(new PlayerSession { ConnectTime = actualConnectTime, DisconnectTime = null });
+                        Log($"[SESSION] {tp.Name} reconnected (missed disconnect). New session start: {actualConnectTime:yyyy-MM-dd HH:mm:ss} UTC");
+                        changed = true;
+                    }
+                    else if (Math.Abs((lastSession.ConnectTime - actualConnectTime).TotalMinutes) > 1)
+                    {
+                        // Small correction of start time
+                        lastSession.ConnectTime = actualConnectTime;
+                        changed = true;
+                    }
                 }
             }
             else
             {
                 if (lastSession != null && !lastSession.DisconnectTime.HasValue)
                 {
-                    // Newly disconnected
-                    lastSession.DisconnectTime = now;
+                    // Newly disconnected. Fetch actual last seen/stop time.
+                    var actualDisconnectTime = await FetchLastSeenTimeAsync(tp.BMId);
+                    if (actualDisconnectTime == DateTime.MinValue)
+                    {
+                        actualDisconnectTime = now;
+                        Log($"[SESSION] {tp.Name} disconnected. API stop time fetch failed, using fallback: {now:yyyy-MM-dd HH:mm:ss} UTC");
+                    }
+                    else
+                    {
+                        Log($"[SESSION] {tp.Name} disconnected at {actualDisconnectTime:yyyy-MM-dd HH:mm:ss} UTC");
+                    }
+                    
+                    lastSession.DisconnectTime = actualDisconnectTime;
                     changed = true;
                 }
             }
@@ -681,5 +739,32 @@ public static class TrackingService
         {
             SaveDB();
         }
+    }
+
+    private static async Task<DateTime> FetchLastSeenTimeAsync(string bmId)
+    {
+        if (string.IsNullOrEmpty(_foundServerId)) return DateTime.MinValue;
+
+        try
+        {
+            // Fetch server-specific player information (free endpoint)
+            var url = $"https://api.battlemetrics.com/players/{bmId}/servers/{_foundServerId}";
+            var json = await _http.GetStringAsync(url);
+            using var doc = JsonDocument.Parse(json);
+            
+            if (doc.RootElement.TryGetProperty("data", out var data) && 
+                data.TryGetProperty("attributes", out var attr))
+            {
+                if (attr.TryGetProperty("lastSeen", out var stopProp) && stopProp.ValueKind == JsonValueKind.String)
+                {
+                    if (DateTimeOffset.TryParse(stopProp.GetString(), out var stop))
+                    {
+                        return stop.UtcDateTime;
+                    }
+                }
+            }
+        }
+        catch { }
+        return DateTime.MinValue;
     }
 }
