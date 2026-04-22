@@ -64,6 +64,8 @@ public static class TrackingService
     public static event Action? OnOnlinePlayersUpdated;
     public static string StatusMessage { get; private set; } = "";
     public static List<OnlinePlayerBM> LastOnlinePlayers { get; private set; } = new();
+    public static DateTime? LastPullTime { get; private set; }
+    public static bool IsTracking => _trackingTimer != null;
 
     static TrackingService()
     {
@@ -556,6 +558,7 @@ public static class TrackingService
             }
 
             LastOnlinePlayers = onlineList.OrderByDescending(x => x.Duration).ToList();
+            LastPullTime = DateTime.Now;
             OnOnlinePlayersUpdated?.Invoke();
 
             // 3. Update Tracking stats
