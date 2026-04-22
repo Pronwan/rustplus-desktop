@@ -25,6 +25,8 @@ public class TrackingSettings
     public bool BackgroundTrackingEnabled { get; set; } = false;
     public bool CloseToTrayEnabled { get; set; } = false;
     public bool StartMinimizedEnabled { get; set; } = false;
+    public bool AutoConnectEnabled { get; set; } = false;
+    public bool AutoStartEnabled { get; set; } = false;
 }
 
 public class PlayerSession
@@ -62,6 +64,7 @@ public static class TrackingService
     private static string? _lastServerName;
 
     public static event Action? OnOnlinePlayersUpdated;
+    public static event Action<string>? OnServerInfoUpdated;
     public static string StatusMessage { get; private set; } = "";
     public static List<OnlinePlayerBM> LastOnlinePlayers { get; private set; } = new();
     public static DateTime? LastPullTime { get; private set; }
@@ -162,6 +165,46 @@ public static class TrackingService
     {
         get => _settings.StartMinimizedEnabled;
         set { _settings.StartMinimizedEnabled = value; SaveDB(); }
+    }
+
+    public static bool AutoConnectEnabled
+    {
+        get => _settings.AutoConnectEnabled;
+        set { _settings.AutoConnectEnabled = value; SaveDB(); }
+    }
+
+    public static bool AutoStartEnabled
+    {
+        get => _settings.AutoStartEnabled;
+        set 
+        { 
+            if (_settings.AutoStartEnabled == value) return;
+            _settings.AutoStartEnabled = value; 
+            SetAutoStart(value);
+            SaveDB(); 
+        }
+    }
+
+    private static void SetAutoStart(bool enabled)
+    {
+        try
+        {
+            const string runKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
+            using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(runKey, true);
+            if (key == null) return;
+
+            string appName = "RustPlusDesk";
+            if (enabled)
+            {
+                string exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule!.FileName!;
+                key.SetValue(appName, $"\"{exePath}\" --background");
+            }
+            else
+            {
+                key.DeleteValue(appName, false);
+            }
+        }
+        catch { }
     }
 
     public static (string host, int port, string name) LastServer => (_settings.LastHost, _settings.LastPort, _settings.LastServerName);
@@ -457,6 +500,11 @@ public static class TrackingService
                         // CRITICAL: Wir nehmen den Server nur, wenn die IP EXAKT stimmt
                         if (foundIp == _lastServerHost)
                         {
+                            if (attr.TryGetProperty("details", out var details) && details.TryGetProperty("rust_description", out var desc))
+                            {
+                                OnServerInfoUpdated?.Invoke(desc.GetString() ?? "");
+                            }
+
                             // Wenn wir mehrere Server auf einer IP haben (Shared Hosting), 
                             // nehmen wir den, dessen Name am besten passt.
                             if (string.IsNullOrEmpty(_lastServerName) || foundName.Contains(_lastServerName, StringComparison.OrdinalIgnoreCase))
@@ -517,6 +565,15 @@ public static class TrackingService
 
             var pRes = await responsePlayers.Content.ReadAsStringAsync();
             using var pDoc = JsonDocument.Parse(pRes);
+
+            if (pDoc.RootElement.TryGetProperty("data", out var serverData))
+            {
+                var attr = serverData.GetProperty("attributes");
+                if (attr.TryGetProperty("details", out var details) && details.TryGetProperty("rust_description", out var desc))
+                {
+                    OnServerInfoUpdated?.Invoke(desc.GetString() ?? "");
+                }
+            }
             
             var onlineList = new List<OnlinePlayerBM>();
             var newOnlineIds = new HashSet<string>();

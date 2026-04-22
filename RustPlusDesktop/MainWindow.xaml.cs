@@ -993,6 +993,8 @@ public partial class MainWindow : Window
         // Initial tracking status update and hook global events
         TrackingService.OnOnlinePlayersUpdated -= OnOnlinePlayersUpdated;
         TrackingService.OnOnlinePlayersUpdated += OnOnlinePlayersUpdated;
+        TrackingService.OnServerInfoUpdated -= OnServerInfoUpdated;
+        TrackingService.OnServerInfoUpdated += OnServerInfoUpdated;
         OnOnlinePlayersUpdated();
         
         // Einmal erzeugen (falls du den Stub behalten willst: try/fallback – aber nur EINMAL zuweisen)
@@ -1115,7 +1117,14 @@ public partial class MainWindow : Window
         
         _monumentWatcher.OnDebug += (s, msg) => AppendLog(msg);
 
-
+        // Auto-connect if enabled
+        if (TrackingService.AutoConnectEnabled && _vm.Selected != null)
+        {
+            _ = Task.Run(async () => {
+                await Task.Delay(2000); // Give UI/WebView time to settle
+                await Dispatcher.InvokeAsync(async () => await PerformConnectAsync(true));
+            });
+        }
     }
 
     // CROSSHAIR \\
@@ -2787,6 +2796,15 @@ public partial class MainWindow : Window
     }
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
+        if (TrackingService.CloseToTrayEnabled)
+        {
+            e.Cancel = true;
+            this.Hide();
+            // We still save profiles just in case
+            try { _vm.Save(); } catch { }
+            return;
+        }
+
         try
         {
             AppendLog($"Speichere Profile → {StorageService.GetProfilesPath()}");
@@ -3473,6 +3491,18 @@ public partial class MainWindow : Window
     private async void BtnConnect_Click(object sender, RoutedEventArgs e)
     {
          await PerformConnectAsync(false);
+    }
+
+    private async void BtnDisconnect_Click(object sender, RoutedEventArgs e)
+    {
+        await HardResetAsync(reconnect: false);
+    }
+
+    private void BtnShowServerInfo_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.Selected == null) return;
+        var modal = new Views.ServerInfoModal(_vm.Selected.Name, _vm.Selected.Description) { Owner = this };
+        modal.ShowDialog();
     }
 
     private bool _isReconnecting = false;
@@ -9988,6 +10018,16 @@ public partial class MainWindow : Window
         });
     }
 
+    private void OnServerInfoUpdated(string description)
+    {
+        Dispatcher.Invoke(() => {
+            if (_vm.Selected != null && string.IsNullOrWhiteSpace(_vm.Selected.Description))
+            {
+                _vm.Selected.Description = description;
+            }
+        });
+    }
+
     private void RefreshOnlinePlayersList()
     {
         var players = TrackingService.LastOnlinePlayers;
@@ -10181,42 +10221,7 @@ public partial class MainWindow : Window
         Grid.SetRow(searchBox, 1);
         grid.Children.Add(searchBox);
 
-        // Background tracking toggle
-        var bgCheck = new System.Windows.Controls.CheckBox { 
-            Content = "Always track in background (auto-starts with Windows)",
-            Foreground = Brushes.LightGray,
-            Margin = new Thickness(0,0,0,5),
-            IsChecked = TrackingService.IsBackgroundTrackingEnabled
-        };
-        bgCheck.Checked += (s, e) => SetBackgroundTracking(true);
-        bgCheck.Unchecked += (s, e) => SetBackgroundTracking(false);
-
-        var trayCheck = new System.Windows.Controls.CheckBox { 
-            Content = "Minimize to tray when closing window",
-            Foreground = Brushes.LightGray,
-            Margin = new Thickness(0,0,0,5),
-            IsChecked = TrackingService.CloseToTrayEnabled
-        };
-        trayCheck.Checked += (s, e) => TrackingService.CloseToTrayEnabled = true;
-        trayCheck.Unchecked += (s, e) => TrackingService.CloseToTrayEnabled = false;
-
-        var minCheck = new System.Windows.Controls.CheckBox { 
-            Content = "Start application minimized in tray",
-            Foreground = Brushes.LightGray,
-            Margin = new Thickness(0,0,0,10),
-            IsChecked = TrackingService.StartMinimizedEnabled
-        };
-        minCheck.Checked += (s, e) => TrackingService.StartMinimizedEnabled = true;
-        minCheck.Unchecked += (s, e) => TrackingService.StartMinimizedEnabled = false;
-
         var listContainer = new DockPanel();
-        var controlsStack = new StackPanel();
-        controlsStack.Children.Add(bgCheck);
-        controlsStack.Children.Add(trayCheck);
-        controlsStack.Children.Add(minCheck);
-        listContainer.Children.Add(controlsStack);
-        DockPanel.SetDock(controlsStack, Dock.Top);
-        
         var list = new ListBox { Background = Brushes.Transparent, BorderThickness = new Thickness(0), Foreground = Brushes.White };
         listContainer.Children.Add(list);
 
@@ -10289,31 +10294,6 @@ public partial class MainWindow : Window
         win.ShowDialog();
     }
 
-    private void SetBackgroundTracking(bool enable)
-    {
-        TrackingService.IsBackgroundTrackingEnabled = enable;
-        
-        try
-        {
-            var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
-            if (key != null)
-            {
-                if (enable)
-                {
-                    var exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule!.FileName!;
-                    key.SetValue("RustPlusDeskTracker", $"\"{exePath}\" --background");
-                }
-                else
-                {
-                    key.DeleteValue("RustPlusDeskTracker", false);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            AppendLog($"[error] Failed to update startup registry: {ex.Message}");
-        }
-    }
 
     private void ShowTrackingAnalysisWindow(string? bmId = null)
     {
@@ -10773,6 +10753,12 @@ public partial class MainWindow : Window
         };
         win.Show();
         win.Activate();
+    }
+
+    private void BtnSettings_Click(object sender, RoutedEventArgs e)
+    {
+        var modal = new SettingsModal { Owner = this };
+        modal.ShowDialog();
     }
     private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
     {
