@@ -821,20 +821,28 @@
                             </Style>
                         </Border.Style>
                         <StackPanel>
-                            <DockPanel Margin="0,0,0,5">
+                            <Grid Margin="0,0,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
                                 <TextBlock Text="{Binding Selected.Name, FallbackValue='Select a Server'}" 
                                            Foreground="White" FontWeight="Bold" FontSize="18"
-                                           VerticalAlignment="Center"/>
-                                <Button Content="ⓘ Info" 
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"
+                                           Margin="0,0,10,0"/>
+                                <Button Grid.Column="1"
+                                        Content="ⓘ Info" 
                                         Click="BtnShowServerInfo_Click" 
                                         HorizontalAlignment="Right" 
                                         VerticalAlignment="Center"
                                         Style="{StaticResource GhostButton}" 
                                         FontSize="11" 
-                                        Padding="6,2"
+                                        Padding="10,4"
+                                        Margin="5,0,0,0"
                                         Foreground="{StaticResource TextSubtle}"
                                         ToolTip="Show Server Description"/>
-                            </DockPanel>
+                            </Grid>
 
                             <Separator Background="{StaticResource CardBorder}" Margin="0,4,0,8"/>
 

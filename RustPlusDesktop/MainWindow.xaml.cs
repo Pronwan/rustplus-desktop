@@ -63,9 +63,7 @@ public partial class MainWindow : Window
     private WebView2? _webView;
     private IPairingListener _pairing;
     private readonly Dictionary<uint, DateTime> _entityPairSeen = new();
-    private bool _pairingStarting;
     private string? _lastPairSig;
-    private bool _listenerWired; // damit Events nur einmal verdrahtet werden
     private bool _listenerStarting; // Schutz gegen Doppelklicks
     private readonly System.Windows.Threading.DispatcherTimer _statusTimer =
     new() { Interval = TimeSpan.FromSeconds(30) };
@@ -2898,7 +2896,9 @@ public partial class MainWindow : Window
         {
             var keyHost = (e.Host ?? "").Trim();
             var keyPort = e.Port;
-            var keySteam = string.IsNullOrEmpty(_vm.SteamId64) ? e.SteamId64 : _vm.SteamId64;
+            // PREFER the SteamID from the pairing payload if it exists. 
+            // Only fallback to _vm.SteamId64 if the payload is missing it.
+            var keySteam = !string.IsNullOrEmpty(e.SteamId64) ? e.SteamId64 : _vm.SteamId64;
 
             var prof = _vm.Servers.FirstOrDefault(s =>
                 s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
@@ -3086,25 +3086,39 @@ public partial class MainWindow : Window
             _vm.BusyText = "Starting Pairing-Listener …";
 
             var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-            EventHandler onListen = (_, __) => tcs.TrySetResult(true);
-            EventHandler<string> onFail = (_, __) => tcs.TrySetResult(false);
+            EventHandler onListen = null!; 
+            onListen = (_, __) => { _pairing.Listening -= onListen; tcs.TrySetResult(true); };
+            EventHandler<string> onFail = null!;
+            onFail = (_, msg) => { _pairing.Failed -= onFail; AppendLog("[pairing] Listener failed: " + msg); tcs.TrySetResult(false); };
 
             _pairing.Listening += onListen;
             _pairing.Failed += onFail;
 
-            await _pairing.StartAsync();
+            try
+            {
+                await _pairing.StartAsync();
+            }
+            catch (Exception exStart)
+            {
+                _pairing.Listening -= onListen;
+                _pairing.Failed -= onFail;
+                AppendLog("[pairing] StartAsync exception: " + exStart.Message);
+                tcs.TrySetResult(false);
+            }
 
             // Kleines Safety-Timeout, damit das Overlay nie hängen bleibt
-            var completed = await Task.WhenAny(tcs.Task, Task.Delay(8000));
-            bool ok = (completed == tcs.Task) && tcs.Task.Result;
-
-            // Aufräumen
-            _pairing.Listening -= onListen;
-            _pairing.Failed -= onFail;
+            var completed = await Task.WhenAny(tcs.Task, Task.Delay(10000));
+            bool ok = (completed == tcs.Task) && await tcs.Task;
 
             _vm.IsBusy = false;
             _vm.BusyText = "";
             if (ok) TxtPairingState.Text = "Pairing: listening…";
+            else TxtPairingState.Text = "Pairing: failed";
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[pairing] UI Handler Error: " + ex.Message);
+            _vm.IsBusy = false;
         }
         finally
         {
@@ -3264,6 +3278,7 @@ public partial class MainWindow : Window
             var loopback = new SteamOpenIdLoopbackService();
             var sid = await loopback.SignInAsync(); // ggf. Port anpassen
             _vm.SteamId64 = sid;
+            TrackingService.SteamId64 = sid; // Persist globally
             TxtSteamId.Text = sid;
             AppendLog($"Steam angemeldet (Loopback): {sid}");
             _vm.Save();
@@ -3485,7 +3500,45 @@ public partial class MainWindow : Window
 
     private async void BtnHardReset_Click(object sender, RoutedEventArgs e)
     {
-        await HardResetAsync(reconnect: false); // oder true, wenn er direkt wieder verbinden soll
+        var ask = MessageBox.Show(
+            "WIRKLICH ALLES ZURÜCKSETZEN (WIPE)?\n\n" +
+            "- Alle Server werden gelöscht\n" +
+            "- Die Steam-Anmeldung wird entfernt\n" +
+            "- Die Pairing-Konfig wird gelöscht\n\n" +
+            "Fortfahren?", "FULL WIPE", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+        if (ask != MessageBoxResult.Yes) return;
+
+        await FullWipeResetAsync();
+    }
+
+    private async Task FullWipeResetAsync()
+    {
+        AppendLog("[WIPE] Starting full reset...");
+        
+        // 1. Connection reset
+        await HardResetAsync(reconnect: false);
+
+        // 2. Clear servers
+        _vm.Servers.Clear();
+        _vm.Save();
+        AppendLog("[WIPE] Servers cleared.");
+
+        // 3. Clear SteamID
+        _vm.SteamId64 = "";
+        TrackingService.SteamId64 = "";
+        AppendLog("[WIPE] Steam credentials removed.");
+
+        // 4. Wipe Pairing Config
+        await ResetPairingConfigAsync(stopListenerFirst: true);
+        AppendLog("[WIPE] Pairing configuration deleted.");
+
+        // 5. Update UI
+        HydrateSteamUiFromStorage();
+        AppendLog("[WIPE] Full wipe completed. Starting new pairing flow...");
+        
+        // Trigger the pairing listener (which will trigger fcm-register because we wiped the config)
+        _ = StartPairingListenerUiAsync();
     }
 
     private async void BtnConnect_Click(object sender, RoutedEventArgs e)
@@ -4321,14 +4374,23 @@ public partial class MainWindow : Window
 
     private void HydrateSteamUiFromStorage()
     {
-        // Falls ViewModel keine SteamID hat: aus gespeicherten Servern ableiten
+        // 1. First try global settings
+        if (string.IsNullOrWhiteSpace(_vm.SteamId64))
+        {
+            _vm.SteamId64 = TrackingService.SteamId64;
+        }
+
+        // 2. Fallback: derive from existing servers
         if (string.IsNullOrWhiteSpace(_vm.SteamId64))
         {
             var sid = _vm.Servers
                          .Select(s => s.SteamId64)
                          .FirstOrDefault(x => !string.IsNullOrWhiteSpace(x));
             if (!string.IsNullOrWhiteSpace(sid))
+            {
                 _vm.SteamId64 = sid;
+                TrackingService.SteamId64 = sid; // Backfill if found
+            }
         }
 
         // Label setzen + Login-Button ggf. deaktivieren
