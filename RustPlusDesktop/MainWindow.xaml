@@ -1140,23 +1140,34 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                         <StackPanel Margin="0,2,0,0">
 
                                             <!-- ===== Zeile ===== -->
+                                            <Border CornerRadius="10" Padding="14,12" Margin="0,4,8,4">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Background" Value="#171A21"/>
+                                                        <Setter Property="BorderBrush" Value="#222734"/>
+                                                        <Setter Property="BorderThickness" Value="1"/>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="#1C202A"/>
+                                                                <Setter Property="BorderBrush" Value="#303746"/>
+                                                            </Trigger>
+                                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                <Setter Property="Opacity" Value="0.6"/>
+                                                                <Setter Property="Background" Value="#101217"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsGroup}" Value="True">
+                                                                <Setter Property="Background" Value="#141F33"/>
+                                                                <Setter Property="BorderBrush" Value="#253550"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" SharedSizeGroup="ColTypeID"/>
                                                     <ColumnDefinition Width="*"    SharedSizeGroup="ColAlias"/>
                                                     <ColumnDefinition Width="Auto" SharedSizeGroup="ColToggle"/>
                                                 </Grid.ColumnDefinitions>
-
-                                                <Grid.Style>
-                                                    <Style TargetType="Grid">
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                <Setter Property="Opacity" Value="0.6"/>
-
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Grid.Style>
 
                                                 <!-- Spalte 1: Display -->
                                                 <!-- Spalte 1: Icon + (#id) [state] für bekannte Kinds; sonst: alter Display-Text -->
@@ -1367,8 +1378,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                 <!-- Spalte 2: Alias -->
                                                 <TextBlock Grid.Column="1"
                          VerticalAlignment="Center"
-                         ToolTip="Right click to rename"
-                                                           Foreground="#4FC3F7">
+                         ToolTip="Right click to rename" FontSize="14" FontWeight="SemiBold" Margin="16,0,0,0" Foreground="#EAECEE">
                                                     <TextBlock.Text>
                                                         <Binding Path="Alias" TargetNullValue="(no custom name)"/>
                                                     </TextBlock.Text>
@@ -1603,6 +1613,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                 </Border>
 
                                             </Grid>
+                                            </Border>
                                             <!-- ===== Ende Zeile ===== -->
 
                                             <!-- ===== Klappbereich (hängt direkt an 
@@ -1670,8 +1681,14 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                         </Style.Triggers>
                                     </Style>
                                 </StackPanel.Style>
-                                <TextBlock Text="No devices found" Foreground="{StaticResource TextSubtle}" HorizontalAlignment="Center" FontStyle="Italic"/>
-                                <TextBlock Text="Pair a device to see it here" Foreground="{StaticResource TextSubtle}" FontSize="10" HorizontalAlignment="Center" Opacity="0.6"/>
+                                
+                                <Border Background="#101217" BorderBrush="#1C202A" BorderThickness="1" CornerRadius="16" Padding="32,24" HorizontalAlignment="Center">
+                                    <StackPanel>
+                                        <TextBlock Text="📡" FontSize="36" HorizontalAlignment="Center" Margin="0,0,0,12" Opacity="0.8"/>
+                                        <TextBlock Text="No devices found" Foreground="#EAECEE" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,6"/>
+                                        <TextBlock Text="Pair a smart device, switch or alarm to see it here" Foreground="#7F8A96" FontSize="12" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="200" TextAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
                             </StackPanel>
 
 
