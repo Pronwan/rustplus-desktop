@@ -1040,14 +1040,22 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                  BorderBrush="#333" Text="Manual BM ID..."
                                                  GotFocus="TxtManualBMId_GotFocus" LostFocus="TxtManualBMId_LostFocus"/>
                                     </DockPanel>
-
                                     <!-- Online List Filter -->
                                     <TextBox x:Name="TxtOnlineFilter" Grid.Row="1" Margin="0,0,0,6" Visibility="Collapsed" 
                                              Padding="4,2" FontSize="10" Background="#1a1c1e" Foreground="White" 
                                              BorderThickness="1" BorderBrush="#333" GotFocus="TxtOnlineFilter_GotFocus" 
                                              LostFocus="TxtOnlineFilter_LostFocus" TextChanged="TxtOnlineFilter_TextChanged"/>
 
-                                    <TextBlock x:Name="TxtOnlinePlayersStatus" Text="Loading..." FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,6" Grid.Row="1" Visibility="Collapsed"/>
+                                    <Grid x:Name="PnlOnlineStatus" Grid.Row="2" Visibility="Collapsed" Margin="20" VerticalAlignment="Center">
+                                        <StackPanel>
+                                            <ProgressBar x:Name="PbOnlineLoading" IsIndeterminate="True" Height="2" Width="120" 
+                                                         Margin="0,0,0,12" Background="#111" BorderThickness="0"
+                                                         Foreground="{DynamicResource CbAccent}"/>
+                                            <TextBlock x:Name="TxtOnlinePlayersStatus" Text="Loading players..." 
+                                                       HorizontalAlignment="Center" Foreground="{DynamicResource TextSubtle}" 
+                                                       FontSize="11" TextWrapping="Wrap" TextAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
                                     <ListBox x:Name="ListOnlinePlayers" Grid.Row="2" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
