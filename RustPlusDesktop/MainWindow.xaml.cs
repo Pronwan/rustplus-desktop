@@ -10197,7 +10197,7 @@ public partial class MainWindow : Window
         // Dynamic Filter visibility
         if (players.Count > 0) {
             TxtOnlineFilter.Visibility = Visibility.Visible;
-            if (string.IsNullOrEmpty(TxtOnlineFilter.Text)) {
+            if (string.IsNullOrEmpty(TxtOnlineFilter.Text) && !TxtOnlineFilter.IsFocused) {
                 TxtOnlineFilter.Text = "Filter players...";
                 TxtOnlineFilter.Foreground = Brushes.Gray;
             }
@@ -10217,11 +10217,12 @@ public partial class MainWindow : Window
         if (TrackingService.LastOnlinePlayers.Count == 0)
         {
             TxtOnlinePlayersStatus.Text = TrackingService.StatusMessage;
-            TxtOnlinePlayersStatus.Visibility = Visibility.Visible;
+            PnlOnlineStatus.Visibility = Visibility.Visible;
+            PbOnlineLoading.Visibility = string.IsNullOrEmpty(TrackingService.StatusMessage) || TrackingService.StatusMessage.Contains("Fetching") || TrackingService.StatusMessage.Contains("Looking") ? Visibility.Visible : Visibility.Collapsed;
         }
         else
         {
-            TxtOnlinePlayersStatus.Visibility = Visibility.Collapsed;
+            PnlOnlineStatus.Visibility = Visibility.Collapsed;
         }
 
         // Update Server BM button visibility
@@ -10254,13 +10255,15 @@ public partial class MainWindow : Window
             if (_vm.Selected == null || string.IsNullOrEmpty(_vm.Selected.Host))
             {
                 TxtOnlinePlayersStatus.Text = "Connect to a server to load players list";
-                TxtOnlinePlayersStatus.Visibility = Visibility.Visible;
+                PnlOnlineStatus.Visibility = Visibility.Visible;
+                PbOnlineLoading.Visibility = Visibility.Collapsed;
                 ListOnlinePlayers.ItemsSource = null;
                 return;
             }
 
-            TxtOnlinePlayersStatus.Text = "Loading from Battlemetrics...";
-            TxtOnlinePlayersStatus.Visibility = Visibility.Visible;
+            TxtOnlinePlayersStatus.Text = "Synchronizing with Battlemetrics...";
+            PnlOnlineStatus.Visibility = Visibility.Visible;
+            PbOnlineLoading.Visibility = Visibility.Visible;
             ListOnlinePlayers.ItemsSource = null;
 
             try
@@ -10270,7 +10273,8 @@ public partial class MainWindow : Window
             catch (Exception ex)
             {
                 TxtOnlinePlayersStatus.Text = $"Error: {ex.Message}";
-                TxtOnlinePlayersStatus.Visibility = Visibility.Visible;
+                PnlOnlineStatus.Visibility = Visibility.Visible;
+                PbOnlineLoading.Visibility = Visibility.Collapsed;
             }
         }
     }
@@ -10405,11 +10409,13 @@ public partial class MainWindow : Window
             Margin = new Thickness(0,0,0,10), 
             Padding = new Thickness(6,4,6,4),
             Background = new SolidColorBrush(Color.FromRgb(30, 32, 35)),
-            Foreground = Brushes.White,
+            Foreground = Brushes.Gray,
             BorderBrush = new SolidColorBrush(Color.FromRgb(50, 50, 50)),
             FontSize = 12,
-            Tag = "Search by name or server..."
+            Text = "Filter players..."
         };
+        searchBox.GotFocus += (s, e) => { if (searchBox.Text == "Filter players...") { searchBox.Text = ""; searchBox.Foreground = Brushes.White; } };
+        searchBox.LostFocus += (s, e) => { if (string.IsNullOrWhiteSpace(searchBox.Text)) { searchBox.Text = "Filter players..."; searchBox.Foreground = Brushes.Gray; } };
         Grid.SetRow(searchBox, 1);
         grid.Children.Add(searchBox);
 
@@ -10453,7 +10459,7 @@ public partial class MainWindow : Window
         refreshList = (filter) => {
             list.Items.Clear();
             var players = TrackingService.GetTrackedPlayers();
-            if (!string.IsNullOrEmpty(filter) && filter != "Search by name or server...") {
+            if (!string.IsNullOrEmpty(filter) && filter != "Filter players...") {
                 players = players.Where(p => 
                     p.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) || 
                     p.LastServerName.Contains(filter, StringComparison.OrdinalIgnoreCase)
@@ -10474,18 +10480,52 @@ public partial class MainWindow : Window
                 foreach(var p in group)
                 {
                     var pGrid = new Grid { Margin = new Thickness(10,5,0,5) };
-                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // Name
+                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Playtime
+                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // View
+                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Rename
+                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Remove
 
-                    var nameTxt = new TextBlock { Text = p.Name, VerticalAlignment = VerticalAlignment.Center, FontSize = 13 };
-                    Grid.SetColumn(nameTxt, 0);
-                    pGrid.Children.Add(nameTxt);
+                    var onlineInfo = TrackingService.LastOnlinePlayers.FirstOrDefault(op => op.BMId == p.BMId);
+                    bool isOnline = onlineInfo != null;
+
+                    var namePanel = new StackPanel { Orientation = Orientation.Horizontal };
+                    var dot = new Ellipse { 
+                        Width = 8, 
+                        Height = 8, 
+                        Fill = isOnline ? new SolidColorBrush(Color.FromRgb(98, 211, 139)) : new SolidColorBrush(Color.FromRgb(102, 102, 102)),
+                        Margin = new Thickness(0, 0, 8, 0),
+                        VerticalAlignment = VerticalAlignment.Center
+                    };
+                    namePanel.Children.Add(dot);
+                    namePanel.Children.Add(new TextBlock { 
+                        Text = p.Name, 
+                        VerticalAlignment = VerticalAlignment.Center, 
+                        FontSize = 13,
+                        Foreground = isOnline ? Brushes.White : Brushes.Gray
+                    });
+
+                    Grid.SetColumn(namePanel, 0);
+                    pGrid.Children.Add(namePanel);
+
+                    if (isOnline)
+                    {
+                        var playTxt = new TextBlock { 
+                            Text = onlineInfo.PlayTimeStr, 
+                            Foreground = new SolidColorBrush(Color.FromRgb(176, 190, 197)), 
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(10, 0, 10, 0),
+                            FontSize = 11,
+                            Width = 50,
+                            TextAlignment = TextAlignment.Right
+                        };
+                        Grid.SetColumn(playTxt, 1);
+                        pGrid.Children.Add(playTxt);
+                    }
 
                     var viewBtn = new Button { Content = "View", Width = 45, Margin = new Thickness(5,0,0,0), Tag = p.BMId };
                     viewBtn.Click += (s, e) => ShowTrackingAnalysisWindow((string)((Button)s).Tag);
-                    Grid.SetColumn(viewBtn, 1);
+                    Grid.SetColumn(viewBtn, 2);
                     pGrid.Children.Add(viewBtn);
 
                     var renameBtn = new Button { Content = "Rename", Width = 55, Margin = new Thickness(5,0,0,0), Tag = p };
@@ -10497,7 +10537,7 @@ public partial class MainWindow : Window
                             refreshList(searchBox.Text);
                         }
                     };
-                    Grid.SetColumn(renameBtn, 2);
+                    Grid.SetColumn(renameBtn, 3);
                     pGrid.Children.Add(renameBtn);
 
                     var removeBtn = new Button { Content = "Remove", Width = 55, Margin = new Thickness(5,0,0,0), Tag = p.BMId, Background = Brushes.DarkRed, Foreground = Brushes.White };
@@ -10505,7 +10545,7 @@ public partial class MainWindow : Window
                         TrackingService.UntrackPlayer((string)((Button)s).Tag);
                         refreshList(searchBox.Text);
                     };
-                    Grid.SetColumn(removeBtn, 3);
+                    Grid.SetColumn(removeBtn, 4);
                     pGrid.Children.Add(removeBtn);
 
                     list.Items.Add(pGrid);
@@ -10542,7 +10582,15 @@ public partial class MainWindow : Window
         };
 
         searchBox.TextChanged += (s, e) => refreshList(searchBox.Text);
+        
+        Action updateList = () => {
+            this.Dispatcher.Invoke(() => refreshList?.Invoke(searchBox.Text));
+        };
+        TrackingService.OnOnlinePlayersUpdated += updateList;
+        win.Closed += (s, e) => TrackingService.OnOnlinePlayersUpdated -= updateList;
+
         refreshList(""); // Initial load
+        searchBox.Focus();
 
         var viewAllBtn = new Button { Content = "View All Analysis Report", Height = 35, Margin = new Thickness(0,15,0,0), Background = new SolidColorBrush(Color.FromRgb(76, 139, 245)), Foreground = Brushes.White };
         viewAllBtn.Click += (s, e) => ShowTrackingAnalysisWindow();
