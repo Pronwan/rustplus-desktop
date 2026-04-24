@@ -25,6 +25,9 @@ public class TrackingSettings
     public bool BackgroundTrackingEnabled { get; set; } = false;
     public bool CloseToTrayEnabled { get; set; } = false;
     public bool StartMinimizedEnabled { get; set; } = false;
+    public bool AutoConnectEnabled { get; set; } = false;
+    public bool AutoStartEnabled { get; set; } = false;
+    public string SteamId64 { get; set; } = string.Empty;
 }
 
 public class PlayerSession
@@ -37,11 +40,10 @@ public class OnlinePlayerBM
 {
     public string Name { get; set; } = string.Empty;
     public string BMId { get; set; } = string.Empty;
+    public DateTime SessionStartTimeUtc { get; set; }
     public TimeSpan Duration { get; set; }
     public bool IsTracked { get; set; }
-    public string PlayTimeStr => Duration.TotalHours >= 1 
-        ? $"{(int)Duration.TotalHours}h {Duration.Minutes}m" 
-        : $"{Duration.Minutes}m";
+    public string PlayTimeStr => $"{(int)Duration.TotalHours:D2}:{Duration.Minutes:D2}";
 }
 
 public static class TrackingService
@@ -62,6 +64,7 @@ public static class TrackingService
     private static string? _lastServerName;
 
     public static event Action? OnOnlinePlayersUpdated;
+    public static event Action<string>? OnServerInfoUpdated;
     public static string StatusMessage { get; private set; } = "";
     public static List<OnlinePlayerBM> LastOnlinePlayers { get; private set; } = new();
     public static DateTime? LastPullTime { get; private set; }
@@ -104,6 +107,20 @@ public static class TrackingService
 
             var jsonS = JsonSerializer.Serialize(_settings, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_settingsPath, jsonS);
+        }
+        catch { }
+    }
+
+    private static void Log(string message)
+    {
+        try
+        {
+            var logPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "RustPlusDesk", "tracking_log.txt");
+            var dir = Path.GetDirectoryName(logPath);
+            if (dir != null && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}");
         }
         catch { }
     }
@@ -162,6 +179,52 @@ public static class TrackingService
     {
         get => _settings.StartMinimizedEnabled;
         set { _settings.StartMinimizedEnabled = value; SaveDB(); }
+    }
+
+    public static bool AutoConnectEnabled
+    {
+        get => _settings.AutoConnectEnabled;
+        set { _settings.AutoConnectEnabled = value; SaveDB(); }
+    }
+
+    public static bool AutoStartEnabled
+    {
+        get => _settings.AutoStartEnabled;
+        set 
+        { 
+            if (_settings.AutoStartEnabled == value) return;
+            _settings.AutoStartEnabled = value; 
+            SetAutoStart(value);
+            SaveDB(); 
+        }
+    }
+
+    public static string SteamId64
+    {
+        get => _settings.SteamId64;
+        set { _settings.SteamId64 = value; SaveDB(); }
+    }
+
+    private static void SetAutoStart(bool enabled)
+    {
+        try
+        {
+            const string runKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
+            using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(runKey, true);
+            if (key == null) return;
+
+            string appName = "RustPlusDesk";
+            if (enabled)
+            {
+                string exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule!.FileName!;
+                key.SetValue(appName, $"\"{exePath}\" --background");
+            }
+            else
+            {
+                key.DeleteValue(appName, false);
+            }
+        }
+        catch { }
     }
 
     public static (string host, int port, string name) LastServer => (_settings.LastHost, _settings.LastPort, _settings.LastServerName);
@@ -318,7 +381,13 @@ public static class TrackingService
                 var statusText = isOnline ? "Online" : "Offline";
                 sb.AppendLine($"<div style='margin-bottom:20px;'><span class='badge {statusClass}'>{statusText}</span></div>");
 
+                var lastS = p.Sessions.LastOrDefault();
+                string lastConnectedStr = lastS != null ? lastS.ConnectTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm") : "Never";
+                string lastSeenStr = lastS != null ? (lastS.DisconnectTime?.ToLocalTime().ToString("yyyy-MM-dd HH:mm") ?? "Active Now") : "Never";
+
                 sb.AppendLine("<div class='stat-grid'>");
+                sb.AppendLine("<div class='stat-item'><div class='stat-label'>Last Connected</div><div class='stat-value'>" + lastConnectedStr + "</div></div>");
+                sb.AppendLine("<div class='stat-item'><div class='stat-label'>Last Seen</div><div class='stat-value'>" + lastSeenStr + "</div></div>");
                 sb.AppendLine("<div class='stat-item'><div class='stat-label'>Total Tracked Time</div><div class='stat-value'>" + $"{(int)totalTime.TotalHours}h {totalTime.Minutes}m" + "</div></div>");
                 sb.AppendLine("<div class='stat-item'><div class='stat-label'>Last 7 Days</div><div class='stat-value'>" + $"{(int)past7Days.TotalHours}h {past7Days.Minutes}m" + "</div></div>");
                 sb.AppendLine("<div class='stat-item'><div class='stat-label'>Session Count</div><div class='stat-value'>" + p.Sessions.Count + "</div></div>");
@@ -457,6 +526,11 @@ public static class TrackingService
                         // CRITICAL: Wir nehmen den Server nur, wenn die IP EXAKT stimmt
                         if (foundIp == _lastServerHost)
                         {
+                            if (attr.TryGetProperty("details", out var details) && details.TryGetProperty("rust_description", out var desc))
+                            {
+                                OnServerInfoUpdated?.Invoke(desc.GetString() ?? "");
+                            }
+
                             // Wenn wir mehrere Server auf einer IP haben (Shared Hosting), 
                             // nehmen wir den, dessen Name am besten passt.
                             if (string.IsNullOrEmpty(_lastServerName) || foundName.Contains(_lastServerName, StringComparison.OrdinalIgnoreCase))
@@ -506,7 +580,7 @@ public static class TrackingService
 
             // 2. Get Players using the ID we found
             StatusMessage = "Fetching players...";
-            var reqUrl = $"https://api.battlemetrics.com/servers/{_foundServerId}?include=player";
+            var reqUrl = $"https://api.battlemetrics.com/servers/{_foundServerId}?include=session";
             using var responsePlayers = await _http.GetAsync(reqUrl);
             if (!responsePlayers.IsSuccessStatusCode)
             {
@@ -517,49 +591,59 @@ public static class TrackingService
 
             var pRes = await responsePlayers.Content.ReadAsStringAsync();
             using var pDoc = JsonDocument.Parse(pRes);
+
+            if (pDoc.RootElement.TryGetProperty("data", out var serverData))
+            {
+                var attr = serverData.GetProperty("attributes");
+                if (attr.TryGetProperty("details", out var details) && details.TryGetProperty("rust_description", out var desc))
+                {
+                    OnServerInfoUpdated?.Invoke(desc.GetString() ?? "");
+                }
+            }
             
             var onlineList = new List<OnlinePlayerBM>();
-            var newOnlineIds = new HashSet<string>();
+            var newOnlineIds = new Dictionary<string, DateTime>();
 
             if (pDoc.RootElement.TryGetProperty("included", out var included))
             {
                 foreach (var inc in included.EnumerateArray())
                 {
-                    if (inc.GetProperty("type").GetString() == "player")
+                    string type = inc.TryGetProperty("type", out var tProp) ? tProp.GetString() ?? "" : "";
+                    if (type == "session")
                     {
-                        var bmId = inc.GetProperty("id").GetString() ?? "";
-                        var name = inc.GetProperty("attributes").GetProperty("name").GetString() ?? "Unknown";
-                        int seconds = 0;
-                        if (inc.TryGetProperty("meta", out var meta))
+                        var attr = inc.GetProperty("attributes");
+                        var name = attr.TryGetProperty("name", out var nProp) ? nProp.GetString() ?? "Unknown" : "Unknown";
+                        var bmId = "";
+                        
+                        if (inc.TryGetProperty("relationships", out var rel) && 
+                            rel.TryGetProperty("player", out var pRel) &&
+                            pRel.TryGetProperty("data", out var pData))
                         {
-                            // Playtime is often in a metadata array as 'time' key
-                            if (meta.TryGetProperty("metadata", out var metaArr) && metaArr.ValueKind == JsonValueKind.Array)
-                            {
-                                foreach (var mObj in metaArr.EnumerateArray())
-                                {
-                                    if (mObj.TryGetProperty("key", out var k) && k.GetString() == "time" && 
-                                        mObj.TryGetProperty("value", out var v))
-                                    {
-                                        seconds = v.ValueKind == JsonValueKind.Number ? v.GetInt32() : 0;
-                                        break;
-                                    }
-                                }
-                            }
-                            // Fallback to direct 'time' property if present
-                            else if (meta.TryGetProperty("time", out var timeProp))
-                            {
-                                seconds = timeProp.GetInt32();
-                            }
+                            bmId = pData.GetProperty("id").GetString() ?? "";
                         }
                         
+                        if (string.IsNullOrEmpty(bmId)) continue;
+
+                        int seconds = 0;
+                        DateTime actualStart = DateTime.UtcNow;
+                        if (attr.TryGetProperty("start", out var sProp) && sProp.ValueKind == JsonValueKind.String)
+                        {
+                            if (DateTimeOffset.TryParse(sProp.GetString(), out var start))
+                            {
+                                actualStart = start.UtcDateTime;
+                                seconds = (int)(DateTimeOffset.UtcNow - start).TotalSeconds;
+                            }
+                        }
+
                         onlineList.Add(new OnlinePlayerBM
                         {
                             BMId = bmId,
                             Name = name,
-                            Duration = TimeSpan.FromSeconds(seconds),
+                            SessionStartTimeUtc = actualStart,
+                            Duration = TimeSpan.FromSeconds(Math.Max(0, seconds)),
                             IsTracked = _trackedPlayers.ContainsKey(bmId)
                         });
-                        newOnlineIds.Add(bmId);
+                        newOnlineIds[bmId] = actualStart;
                     }
                 }
             }
@@ -578,7 +662,7 @@ public static class TrackingService
             OnOnlinePlayersUpdated?.Invoke();
 
             // 3. Update Tracking stats
-            UpdateTrackingStats(newOnlineIds);
+            await UpdateTrackingStatsAsync(newOnlineIds);
         }
         catch (Exception ex)
         {
@@ -587,31 +671,65 @@ public static class TrackingService
         }
     }
 
-    private static void UpdateTrackingStats(HashSet<string> currentlyOnlineIds)
+    private static async Task UpdateTrackingStatsAsync(Dictionary<string, DateTime> currentlyOnlineWithStart)
     {
         bool changed = false;
         var now = DateTime.UtcNow;
 
         foreach (var tp in _trackedPlayers.Values)
         {
-            bool isOnline = currentlyOnlineIds.Contains(tp.BMId);
+            bool isOnline = currentlyOnlineWithStart.TryGetValue(tp.BMId, out var actualConnectTime);
             var lastSession = tp.Sessions.LastOrDefault();
 
             if (isOnline)
             {
                 if (lastSession == null || lastSession.DisconnectTime.HasValue)
                 {
-                    // Newly connected
-                    tp.Sessions.Add(new PlayerSession { ConnectTime = now, DisconnectTime = null });
+                    // Newly connected or we just started tracking/opened the app
+                    tp.Sessions.Add(new PlayerSession { ConnectTime = actualConnectTime, DisconnectTime = null });
+                    Log($"[SESSION] {tp.Name} ({tp.BMId}) connected at {actualConnectTime:yyyy-MM-dd HH:mm:ss} UTC (detected at {now:HH:mm})");
                     changed = true;
+                }
+                else
+                {
+                    // If we have an open session, but the connect time is different (e.g. app was closed and they rejoined)
+                    // BattleMetrics session ID would change, but here we track by server session.
+                    // If the actualConnectTime is NEWER than our last recorded ConnectTime, they must have reconnected 
+                    // while we were closed.
+                    if (actualConnectTime > lastSession.ConnectTime.AddMinutes(5))
+                    {
+                        // They reconnected. Close old session at their last seen or roughly before this connect?
+                        // For simplicity, we close the old one at actualConnectTime - 1 second and start new one.
+                        lastSession.DisconnectTime = actualConnectTime.AddSeconds(-1);
+                        tp.Sessions.Add(new PlayerSession { ConnectTime = actualConnectTime, DisconnectTime = null });
+                        Log($"[SESSION] {tp.Name} reconnected (missed disconnect). New session start: {actualConnectTime:yyyy-MM-dd HH:mm:ss} UTC");
+                        changed = true;
+                    }
+                    else if (Math.Abs((lastSession.ConnectTime - actualConnectTime).TotalMinutes) > 1)
+                    {
+                        // Small correction of start time
+                        lastSession.ConnectTime = actualConnectTime;
+                        changed = true;
+                    }
                 }
             }
             else
             {
                 if (lastSession != null && !lastSession.DisconnectTime.HasValue)
                 {
-                    // Newly disconnected
-                    lastSession.DisconnectTime = now;
+                    // Newly disconnected. Fetch actual last seen/stop time.
+                    var actualDisconnectTime = await FetchLastSeenTimeAsync(tp.BMId);
+                    if (actualDisconnectTime == DateTime.MinValue)
+                    {
+                        actualDisconnectTime = now;
+                        Log($"[SESSION] {tp.Name} disconnected. API stop time fetch failed, using fallback: {now:yyyy-MM-dd HH:mm:ss} UTC");
+                    }
+                    else
+                    {
+                        Log($"[SESSION] {tp.Name} disconnected at {actualDisconnectTime:yyyy-MM-dd HH:mm:ss} UTC");
+                    }
+                    
+                    lastSession.DisconnectTime = actualDisconnectTime;
                     changed = true;
                 }
             }
@@ -621,5 +739,32 @@ public static class TrackingService
         {
             SaveDB();
         }
+    }
+
+    private static async Task<DateTime> FetchLastSeenTimeAsync(string bmId)
+    {
+        if (string.IsNullOrEmpty(_foundServerId)) return DateTime.MinValue;
+
+        try
+        {
+            // Fetch server-specific player information (free endpoint)
+            var url = $"https://api.battlemetrics.com/players/{bmId}/servers/{_foundServerId}";
+            var json = await _http.GetStringAsync(url);
+            using var doc = JsonDocument.Parse(json);
+            
+            if (doc.RootElement.TryGetProperty("data", out var data) && 
+                data.TryGetProperty("attributes", out var attr))
+            {
+                if (attr.TryGetProperty("lastSeen", out var stopProp) && stopProp.ValueKind == JsonValueKind.String)
+                {
+                    if (DateTimeOffset.TryParse(stopProp.GetString(), out var stop))
+                    {
+                        return stop.UtcDateTime;
+                    }
+                }
+            }
+        }
+        catch { }
+        return DateTime.MinValue;
     }
 }

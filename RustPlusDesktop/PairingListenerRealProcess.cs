@@ -1,4 +1,4 @@
-﻿using RustPlusDesk.Models;
+using RustPlusDesk.Models;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -47,8 +47,6 @@ namespace RustPlusDesk.Services
         private string? _pendingAlarmMsg;
         private DateTime? _pendingAlarmMsgTs;
 
-        // NEU: markieren, dass als NÄCHSTES die value:'…' zum body kommt
-        private bool _waitingBodyValue;
         private bool _chatBundleOpen;
         private string? _pendingChatMsg;
         private string? _pendingChatTitle;
@@ -105,6 +103,7 @@ namespace RustPlusDesk.Services
             if (!File.Exists(ConfigPath) || new FileInfo(ConfigPath).Length < 50)
             {
                 _log("Starting one time registration (fcm-register) …");
+                _log("IMPORTANT: Log into the SAME Steam account in your browser that you use in the Rust+ app!");
                 await RunCliWithLoggingAsync(
     node,
     $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
@@ -135,6 +134,11 @@ namespace RustPlusDesk.Services
                 noWindow: true,
                 redirect: true
             );
+
+            if (_listenProc == null)
+            {
+                throw new InvalidOperationException("Failed to start fcm-listen process.");
+            }
 
             _running = true;
             _listenProc.EnableRaisingEvents = true;
@@ -691,7 +695,7 @@ namespace RustPlusDesk.Services
             return s;
         }
 
-        private Task<int> RunCliWithLoggingAsync(
+        private async Task<int> RunCliWithLoggingAsync(
     string fileName, string args, string? workingDir, string tag, CancellationToken token)
         {
             var tcs = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -707,8 +711,17 @@ namespace RustPlusDesk.Services
             p.EnableRaisingEvents = true;
             p.Exited += (_, __) => tcs.TrySetResult(p.ExitCode);
 
-            using (token.Register(() => { try { if (!p.HasExited) p.Kill(entireProcessTree: true); } catch { } }))
-                return tcs.Task;
+            try
+            {
+                using (token.Register(() => { try { if (p is { HasExited: false }) p.Kill(entireProcessTree: true); } catch { } }))
+                {
+                    return await tcs.Task;
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                return -1;
+            }
         }
 
 

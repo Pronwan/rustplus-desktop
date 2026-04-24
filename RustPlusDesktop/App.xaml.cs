@@ -24,6 +24,9 @@ public partial class App : Application
     private MainWindow? _main;
     private System.Windows.Forms.NotifyIcon? _trayIcon;
 
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern bool SetForegroundWindow(IntPtr hWnd);
+
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -120,7 +123,26 @@ public partial class App : Application
             });
         };
 
-        _trayIcon.ContextMenuStrip = menu;
+        _trayIcon.MouseUp += (s, e) =>
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                // Ensure the window exists to provide a handle for focus management
+                if (_main == null)
+                {
+                    _main = new MainWindow();
+                    _main.Closed += (s, ev) => _main = null;
+                }
+
+                // This is a known fix for NotifyIcon context menus in WPF.
+                // It ensures the menu opens on the first click and closes when clicking away.
+                var handle = new System.Windows.Interop.WindowInteropHelper(_main).Handle;
+                SetForegroundWindow(handle);
+
+                menu.Show(System.Windows.Forms.Control.MousePosition);
+            }
+        };
+
         _trayIcon.DoubleClick += (s, e) => ShowMainWindow();
         
         // Also update tray tooltip periodically or on event
