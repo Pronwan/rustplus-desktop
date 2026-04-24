@@ -10216,22 +10216,50 @@ public partial class MainWindow : Window
         }
     }
 
+    private void TxtManualBMId_GotFocus(object sender, RoutedEventArgs e) {
+        if (TxtManualBMId.Text == "Manual BM ID...") {
+            TxtManualBMId.Text = "";
+            TxtManualBMId.Foreground = Brushes.White;
+        }
+    }
+    private void TxtManualBMId_LostFocus(object sender, RoutedEventArgs e) {
+        if (string.IsNullOrWhiteSpace(TxtManualBMId.Text)) {
+            TxtManualBMId.Text = "Manual BM ID...";
+            TxtManualBMId.Foreground = Brushes.Gray;
+        }
+    }
+
     private async void BtnAddManual_Click(object sender, RoutedEventArgs e)
     {
         var bmId = TxtManualBMId.Text?.Trim();
-        if (string.IsNullOrEmpty(bmId) || !bmId.All(char.IsDigit)) return;
+        if (string.IsNullOrEmpty(bmId) || bmId == "Manual BM ID..." || !bmId.All(char.IsDigit)) return;
 
         TxtManualBMId.IsEnabled = false;
         BtnAddManual.Content = "...";
         
         var name = await TrackingService.FetchPlayerNameAsync(bmId);
-        TrackingService.TrackPlayer(bmId, name, _vm.Selected?.Name ?? "Manual Add");
+        var lastSession = await TrackingService.FetchPlayerLastSessionAsync(bmId);
         
-        TxtManualBMId.Text = "";
+        // If name is unknown but we got session info, take name from session
+        if (name == "Unknown Player" && lastSession != null)
+        {
+            // We can't get the name easily from the PlayerSession object as currently structured, 
+            // but the API call in FetchPlayerLastSessionAsync could be updated to return it.
+            // For now, FetchPlayerNameAsync already has a fallback to sessions.
+        }
+
+        var serverName = TrackingService.LastServer.name;
+        if (string.IsNullOrEmpty(serverName)) serverName = _vm.Selected?.Name ?? "Manual Add";
+
+        TrackingService.TrackPlayer(bmId, name, serverName, lastSession);
+        
+        TxtManualBMId.Text = "Manual BM ID...";
+        TxtManualBMId.Foreground = Brushes.Gray;
         TxtManualBMId.IsEnabled = true;
         BtnAddManual.Content = "Track ID";
         
-        AppendLog($"[tracking] Manually added {name} ({bmId}) to tracking list.");
+        var sessionMsg = lastSession != null ? $" (found last session: {lastSession.ConnectTime.ToLocalTime():g})" : "";
+        AppendLog($"[tracking] Manually added {name} ({bmId}) to tracking list on server: {serverName}{sessionMsg}");
         RefreshOnlinePlayersList();
     }
 
@@ -10257,7 +10285,7 @@ public partial class MainWindow : Window
         {
             Title = "Managed Tracked Players",
             Width = 500,
-            Height = 650,
+            Height = 700,
             Background = new SolidColorBrush(Color.FromRgb(18, 20, 23)),
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
             Owner = this,
@@ -10266,6 +10294,7 @@ public partial class MainWindow : Window
         var grid = new Grid { Margin = new Thickness(20) };
         grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Header
         grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Search
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Add Player
         grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }); // List
         grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Actions
 
@@ -10278,23 +10307,53 @@ public partial class MainWindow : Window
             Background = new SolidColorBrush(Color.FromRgb(30, 32, 35)),
             Foreground = Brushes.White,
             BorderBrush = new SolidColorBrush(Color.FromRgb(50, 50, 50)),
-            FontSize = 12
+            FontSize = 12,
+            Tag = "Search by name or server..."
         };
         Grid.SetRow(searchBox, 1);
         grid.Children.Add(searchBox);
+
+        // Manual Add Section
+        var addGrid = new Grid { Margin = new Thickness(0, 0, 0, 15) };
+        addGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        addGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        
+        var idInput = new TextBox { 
+            Padding = new Thickness(6,4,6,4),
+            Background = new SolidColorBrush(Color.FromRgb(25, 27, 30)),
+            Foreground = Brushes.White,
+            BorderBrush = new SolidColorBrush(Color.FromRgb(60, 60, 60)),
+            FontSize = 12,
+            Margin = new Thickness(0,0,8,0)
+        };
+        // Poor man's watermark
+        idInput.Text = "Enter BattleMetrics Player ID...";
+        idInput.Foreground = Brushes.Gray;
+        idInput.GotFocus += (s, e) => { if (idInput.Text == "Enter BattleMetrics Player ID...") { idInput.Text = ""; idInput.Foreground = Brushes.White; } };
+        idInput.LostFocus += (s, e) => { if (string.IsNullOrWhiteSpace(idInput.Text)) { idInput.Text = "Enter BattleMetrics Player ID..."; idInput.Foreground = Brushes.Gray; } };
+
+        var addBtn = new Button { Content = "Track Player ID", Padding = new Thickness(15, 0, 15, 0), Height = 30, Background = new SolidColorBrush(Color.FromRgb(63, 185, 80)), Foreground = Brushes.White };
+        
+        Grid.SetColumn(idInput, 0);
+        Grid.SetColumn(addBtn, 1);
+        addGrid.Children.Add(idInput);
+        addGrid.Children.Add(addBtn);
+        
+        Grid.SetRow(addGrid, 2);
+        grid.Children.Add(addGrid);
 
         var listContainer = new DockPanel();
         var list = new ListBox { Background = Brushes.Transparent, BorderThickness = new Thickness(0), Foreground = Brushes.White };
         listContainer.Children.Add(list);
 
-        Grid.SetRow(listContainer, 2);
+        Grid.SetRow(listContainer, 3);
         grid.Children.Add(listContainer);
 
         Action<string> refreshList = null;
         refreshList = (filter) => {
             list.Items.Clear();
             var players = TrackingService.GetTrackedPlayers();
-            if (!string.IsNullOrEmpty(filter)) {
+            if (!string.IsNullOrEmpty(filter) && filter != "Search by name or server...") {
                 players = players.Where(p => 
                     p.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) || 
                     p.LastServerName.Contains(filter, StringComparison.OrdinalIgnoreCase)
@@ -10318,22 +10377,35 @@ public partial class MainWindow : Window
                     pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
                     pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
                     pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
                     var nameTxt = new TextBlock { Text = p.Name, VerticalAlignment = VerticalAlignment.Center, FontSize = 13 };
                     Grid.SetColumn(nameTxt, 0);
                     pGrid.Children.Add(nameTxt);
 
-                    var viewBtn = new Button { Content = "View", Width = 50, Margin = new Thickness(5,0,0,0), Tag = p.BMId };
+                    var viewBtn = new Button { Content = "View", Width = 45, Margin = new Thickness(5,0,0,0), Tag = p.BMId };
                     viewBtn.Click += (s, e) => ShowTrackingAnalysisWindow((string)((Button)s).Tag);
                     Grid.SetColumn(viewBtn, 1);
                     pGrid.Children.Add(viewBtn);
 
-                    var removeBtn = new Button { Content = "Remove", Width = 60, Margin = new Thickness(5,0,0,0), Tag = p.BMId, Background = Brushes.DarkRed, Foreground = Brushes.White };
+                    var renameBtn = new Button { Content = "Rename", Width = 55, Margin = new Thickness(5,0,0,0), Tag = p };
+                    renameBtn.Click += (s, e) => {
+                        var player = (TrackedPlayer)((Button)s).Tag;
+                        var newName = Microsoft.VisualBasic.Interaction.InputBox($"Enter new name for {player.BMId}:", "Rename Player", player.Name);
+                        if (!string.IsNullOrWhiteSpace(newName)) {
+                            TrackingService.RenameTrackedPlayer(player.BMId, newName);
+                            refreshList(searchBox.Text);
+                        }
+                    };
+                    Grid.SetColumn(renameBtn, 2);
+                    pGrid.Children.Add(renameBtn);
+
+                    var removeBtn = new Button { Content = "Remove", Width = 55, Margin = new Thickness(5,0,0,0), Tag = p.BMId, Background = Brushes.DarkRed, Foreground = Brushes.White };
                     removeBtn.Click += (s, e) => {
                         TrackingService.UntrackPlayer((string)((Button)s).Tag);
                         refreshList(searchBox.Text);
                     };
-                    Grid.SetColumn(removeBtn, 2);
+                    Grid.SetColumn(removeBtn, 3);
                     pGrid.Children.Add(removeBtn);
 
                     list.Items.Add(pGrid);
@@ -10344,12 +10416,37 @@ public partial class MainWindow : Window
             }
         };
 
+        addBtn.Click += async (s, e) => {
+            var val = idInput.Text.Trim();
+            if (string.IsNullOrEmpty(val) || val == "Enter BattleMetrics Player ID..." || !val.All(char.IsDigit)) return;
+            
+            addBtn.IsEnabled = false;
+            addBtn.Content = "...";
+            
+            var name = await TrackingService.FetchPlayerNameAsync(val);
+            var lastSession = await TrackingService.FetchPlayerLastSessionAsync(val);
+            
+            var serverName = TrackingService.LastServer.name;
+            if (string.IsNullOrEmpty(serverName)) serverName = _vm.Selected?.Name ?? "Manual Add";
+            
+            TrackingService.TrackPlayer(val, name, serverName, lastSession);
+            
+            var sessionMsg = lastSession != null ? $" (found last session: {lastSession.ConnectTime.ToLocalTime():g})" : "";
+            AppendLog($"[tracking] Manually added {name} ({val}) to tracking list on server: {serverName}{sessionMsg}");
+            
+            idInput.Text = "";
+            idInput.Focus();
+            addBtn.IsEnabled = true;
+            addBtn.Content = "Track Player ID";
+            refreshList(searchBox.Text);
+        };
+
         searchBox.TextChanged += (s, e) => refreshList(searchBox.Text);
         refreshList(""); // Initial load
 
-        var viewAllBtn = new Button { Content = "View All Analysis", Height = 35, Margin = new Thickness(0,15,0,0), Background = new SolidColorBrush(Color.FromRgb(76, 139, 245)), Foreground = Brushes.White };
+        var viewAllBtn = new Button { Content = "View All Analysis Report", Height = 35, Margin = new Thickness(0,15,0,0), Background = new SolidColorBrush(Color.FromRgb(76, 139, 245)), Foreground = Brushes.White };
         viewAllBtn.Click += (s, e) => ShowTrackingAnalysisWindow();
-        Grid.SetRow(viewAllBtn, 3);
+        Grid.SetRow(viewAllBtn, 4);
         grid.Children.Add(viewAllBtn);
 
         win.Content = grid;
