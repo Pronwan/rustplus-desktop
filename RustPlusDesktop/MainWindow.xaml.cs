@@ -1565,6 +1565,7 @@ public partial class MainWindow : Window
     private static readonly Dictionary<int, ItemInfo> sItemsById = new();
     private static readonly Dictionary<string, ItemInfo> sItemsByShort = new(StringComparer.OrdinalIgnoreCase);
     private static readonly Dictionary<string, ImageSource> sIconCache = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly HashSet<string> sPendingDownloads = new();
     private static bool sNewDbLoaded = false;
     private static string sNewDbSource = "(unbekannt)";
 
@@ -4739,32 +4740,52 @@ public partial class MainWindow : Window
     {
         EnsureNewItemDbLoaded();
 
-        string? url = null;
-        if (itemId != 0 && sItemsById.TryGetValue(itemId, out var ii1)) url = ii1.IconUrl;
-        if (url == null && !string.IsNullOrWhiteSpace(shortName) && sItemsByShort.TryGetValue(shortName!, out var ii2))
-            url = ii2.IconUrl;
+        // Standard-Shortname besorgen, falls fehlt
+        if (string.IsNullOrWhiteSpace(shortName) && itemId != 0 && sItemsById.TryGetValue(itemId, out var ii0))
+            shortName = ii0.ShortName;
 
-        if (string.IsNullOrWhiteSpace(url)) return null;
+        // Fallback-URL (rusthelp)
+        string? rusthelpUrl = null;
+        if (itemId != 0 && sItemsById.TryGetValue(itemId, out var ii1)) rusthelpUrl = ii1.IconUrl;
+        if (rusthelpUrl == null && !string.IsNullOrWhiteSpace(shortName) && sItemsByShort.TryGetValue(shortName!, out var ii2))
+            rusthelpUrl = ii2.IconUrl;
 
-        // Memory-Cache?
-        if (sIconCache.TryGetValue(url!, out var ready)) return ready;
+        // Primär-URL (rustclash)
+        string? rustclashUrl = !string.IsNullOrWhiteSpace(shortName)
+            ? $"https://wiki.rustclash.com/img/items40/{shortName}.png"
+            : null;
 
-        // File-Cache?
-        var file = GetIconCachePath(url!);
-        if (System.IO.File.Exists(file))
+        // 1) Versuche RustClash (Primär)
+        if (rustclashUrl != null)
         {
-            var img = TryLoadBitmapFromFile(file, decodePx);
-            if (img != null)
+            if (sIconCache.TryGetValue(rustclashUrl, out var ready)) return ready;
+            var path = GetIconCachePath(rustclashUrl);
+            if (System.IO.File.Exists(path))
             {
-                sIconCache[url!] = img;
-                return img;
+                var img = TryLoadBitmapFromFile(path, decodePx);
+                if (img != null) { sIconCache[rustclashUrl] = img; return img; }
             }
         }
 
-        // Noch kein Cache → Download im Hintergrund starten (nicht blockieren)
-        QueueIconDownload(url!, file);
+        // 2) Versuche RustHelp (Fallback/DB)
+        if (rusthelpUrl != null)
+        {
+            if (sIconCache.TryGetValue(rusthelpUrl, out var ready)) return ready;
+            var path = GetIconCachePath(rusthelpUrl);
+            if (System.IO.File.Exists(path))
+            {
+                var img = TryLoadBitmapFromFile(path, decodePx);
+                if (img != null) { sIconCache[rusthelpUrl] = img; return img; }
+            }
+        }
 
-        return null; // beim nächsten Tooltip-/Hover-Versuch ist das Icon meist schon da
+        // 3) Nichts da -> Download (RustClash bevorzugt, RustHelp als Fallback)
+        if (rustclashUrl != null)
+            QueueIconDownload(rustclashUrl, GetIconCachePath(rustclashUrl), rusthelpUrl);
+        else if (rusthelpUrl != null)
+            QueueIconDownload(rusthelpUrl, GetIconCachePath(rusthelpUrl), null);
+
+        return null;
     }
 
     private static string GetIconCachePath(string url)
@@ -4791,19 +4812,57 @@ public partial class MainWindow : Window
         catch { return null; }
     }
 
-    private static void QueueIconDownload(string url, string targetPath)
+    private static void QueueIconDownload(string url, string targetPath, string? fallbackUrl)
     {
+        lock (sPendingDownloads)
+        {
+            if (!sPendingDownloads.Add(url)) return;
+        }
+
+        UpdateIconProgress(-1); // Total erhöhen
+
         _ = Task.Run(async () =>
         {
             try
             {
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(targetPath)!);
-                using var http = new HttpClient() { Timeout = TimeSpan.FromSeconds(5) };
-                var data = await http.GetByteArrayAsync(url);
-                await System.IO.File.WriteAllBytesAsync(targetPath, data);
-                // System.Diagnostics.Debug.WriteLine($"[ICON] Saved to {targetPath}");
+                using var http = new HttpClient() { Timeout = TimeSpan.FromSeconds(10) };
+
+                // 1) Primär versuchen
+                var resp = await http.GetAsync(url).ConfigureAwait(false);
+                if (resp.IsSuccessStatusCode)
+                {
+                    var data = await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                    await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
+                }
+                else if (fallbackUrl != null)
+                {
+                    // 2) Fallback versuchen
+                    var respF = await http.GetAsync(fallbackUrl).ConfigureAwait(false);
+                    if (respF.IsSuccessStatusCode)
+                    {
+                        var data = await respF.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                        await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
+                    }
+                }
             }
-            catch { /* tolerant */ }
+            catch { }
+            finally
+            {
+                UpdateIconProgress(1); // Fertig
+            }
+        });
+    }
+
+    private static void UpdateIconProgress(int deltaFinish)
+    {
+        Application.Current?.Dispatcher?.BeginInvoke(() =>
+        {
+            if (Application.Current?.MainWindow is MainWindow mw)
+            {
+                if (deltaFinish > 0) mw._vm.IconsDownloaded++;
+                else mw._vm.IconsTotal++;
+            }
         });
     }
 
