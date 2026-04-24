@@ -773,7 +773,7 @@
                             <ListBox.Resources>
                                 <ContextMenu x:Key="ServerCtx" Foreground="White" Style="{StaticResource DarkContextMenu}">
                                     <!-- Der Trick: den aktuellen Server ins Tag binden -->
-                                    <MenuItem Header="Server löschen…"
+                                    <MenuItem Header="Delete server…"
                                       Foreground="Black"
                                       Click="Server_Delete_Click"
                                       Tag="{Binding PlacementTarget.DataContext,
