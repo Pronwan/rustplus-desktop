@@ -2829,7 +2829,7 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             AppendLog("RustPlus-Link-Error: " + ex.Message);
-            MessageBox.Show("Unable to read RustPlus-Link: " + ex.Message);
+            MessageBox.Show($"Unable to read RustPlus-Link: {ex.Message}\n\nFormat: rustplus://IP:PORT?playerId=...&token=...");
         }
     }
 
@@ -10391,7 +10391,7 @@ public partial class MainWindow : Window
                     var renameBtn = new Button { Content = "Rename", Width = 55, Margin = new Thickness(5,0,0,0), Tag = p };
                     renameBtn.Click += (s, e) => {
                         var player = (TrackedPlayer)((Button)s).Tag;
-                        var newName = Microsoft.VisualBasic.Interaction.InputBox($"Enter new name for {player.BMId}:", "Rename Player", player.Name);
+                        var newName = ShowInputBox($"Enter new name for {player.BMId}:", "Rename Player", player.Name);
                         if (!string.IsNullOrWhiteSpace(newName)) {
                             TrackingService.RenameTrackedPlayer(player.BMId, newName);
                             refreshList(searchBox.Text);
@@ -10453,6 +10453,45 @@ public partial class MainWindow : Window
         win.ShowDialog();
     }
 
+
+    private string? ShowInputBox(string prompt, string title, string defaultResponse)
+    {
+        var win = new Window
+        {
+            Title = title,
+            Width = 350,
+            Height = 150,
+            WindowStartupLocation = WindowStartupLocation.CenterScreen,
+            ResizeMode = ResizeMode.NoResize,
+            Background = new SolidColorBrush(Color.FromRgb(30, 30, 30)),
+            Foreground = Brushes.White
+        };
+
+        var stack = new StackPanel { Margin = new Thickness(15) };
+        stack.Children.Add(new TextBlock { Text = prompt, Margin = new Thickness(0, 0, 0, 10), TextWrapping = TextWrapping.Wrap });
+        
+        var input = new TextBox { Text = defaultResponse, Padding = new Thickness(5), Background = new SolidColorBrush(Color.FromRgb(40, 40, 40)), Foreground = Brushes.White, BorderBrush = Brushes.Gray };
+        input.SelectAll();
+        stack.Children.Add(input);
+
+        var btnPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 15, 0, 0) };
+        var okBtn = new Button { Content = "OK", Width = 70, Margin = new Thickness(0, 0, 10, 0), IsDefault = true };
+        var cancelBtn = new Button { Content = "Cancel", Width = 70, IsCancel = true };
+
+        string? result = null;
+        okBtn.Click += (s, e) => { result = input.Text; win.DialogResult = true; };
+        cancelBtn.Click += (s, e) => { win.DialogResult = false; };
+
+        btnPanel.Children.Add(okBtn);
+        btnPanel.Children.Add(cancelBtn);
+        stack.Children.Add(btnPanel);
+
+        win.Content = stack;
+        input.Focus();
+        
+        win.ShowDialog();
+        return result;
+    }
 
     private void ShowTrackingAnalysisWindow(string? bmId = null)
     {
