@@ -668,6 +668,7 @@
         </Style>
 
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityInv" Invert="True"/>
         <conv:NotNullToBoolConverter   x:Key="NotNull"/>
 
     </Window.Resources>
@@ -722,6 +723,12 @@
                 BorderBrush="{DynamicResource CardBorder}"
                 Margin="8,0,0,0"
                 ToolTip="Show latest changes"/>
+                                    <Button x:Name="BtnSettings" 
+                Content=" ⚙ Settings " 
+                Click="BtnSettings_Click"
+                Style="{StaticResource GhostButton}"
+                Margin="8,0,0,0"
+                ToolTip="App Settings &amp; Options"/>
                                 </StackPanel>
                             </Grid>
                         </Grid>
@@ -752,41 +759,150 @@
 
                     <Separator Margin="0,8,0,8"/>
 
-                    <TextBlock Text="Server" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,8"/>
-                    <ListBox x:Name="ListServers"
-                     ItemsSource="{Binding Servers}"
-                     SelectedItem="{Binding Selected, Mode=TwoWay}"
-                     DisplayMemberPath="Name"
-                     Foreground="White"
-                     MinHeight="70"
-                     MaxHeight="110"
-                     SelectionChanged="ListServers_SelectionChanged">
+                    <TextBlock Text="Paired servers list" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,8"/>
+                    <Grid x:Name="ServerListGrid">
+                        <ListBox x:Name="ListServers"
+                          ItemsSource="{Binding Servers}"
+                          SelectedItem="{Binding Selected, Mode=TwoWay}"
+                          DisplayMemberPath="Name"
+                          Foreground="White"
+                          MinHeight="70"
+                          MaxHeight="110"
+                          SelectionChanged="ListServers_SelectionChanged">
 
-                        <ListBox.Resources>
-                            <ContextMenu x:Key="ServerCtx" Foreground="White" Style="{StaticResource DarkContextMenu}">
-                                <!-- Der Trick: den aktuellen Server ins Tag binden -->
-                                <MenuItem Header="Server löschen…"
-                                  Foreground="Black"
-                                  Click="Server_Delete_Click"
-                                  Tag="{Binding PlacementTarget.DataContext,
-                                        RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-                            </ContextMenu>
-                        </ListBox.Resources>
+                            <ListBox.Resources>
+                                <ContextMenu x:Key="ServerCtx" Foreground="White" Style="{StaticResource DarkContextMenu}">
+                                    <!-- Der Trick: den aktuellen Server ins Tag binden -->
+                                    <MenuItem Header="Server löschen…"
+                                      Foreground="Black"
+                                      Click="Server_Delete_Click"
+                                      Tag="{Binding PlacementTarget.DataContext,
+                                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                </ContextMenu>
+                            </ListBox.Resources>
 
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="ContextMenu" Value="{StaticResource ServerCtx}"/>
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="ContextMenu" Value="{StaticResource ServerCtx}"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
+
+                        <TextBlock Text="No servers paired yet" 
+                                   Foreground="{StaticResource TextSubtle}" 
+                                   FontStyle="Italic"
+                                   FontSize="12"
+                                   HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center"
+                                   IsHitTestVisible="False">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Servers.Count}" Value="0">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+
+                    <!-- Connection Card -->
+                    <Border Background="{StaticResource SurfaceAlt}" Margin="0,8,0,0">
+                        <Border.Style>
+                            <Style TargetType="Border" BasedOn="{StaticResource Card}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Selected, Converter={StaticResource NotNull}}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
                             </Style>
-                        </ListBox.ItemContainerStyle>
-                    </ListBox>
+                        </Border.Style>
+                        <StackPanel>
+                            <Grid Margin="0,0,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Selected.Name, FallbackValue='Select a Server'}" 
+                                           Foreground="White" FontWeight="Bold" FontSize="18"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"
+                                           Margin="0,0,10,0"/>
+                                <Button Grid.Column="1"
+                                        Content="ⓘ Info" 
+                                        Click="BtnShowServerInfo_Click" 
+                                        HorizontalAlignment="Right" 
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource GhostButton}" 
+                                        FontSize="11" 
+                                        Padding="10,4"
+                                        Margin="5,0,0,0"
+                                        Foreground="{StaticResource TextSubtle}"
+                                        ToolTip="Show Server Description"/>
+                            </Grid>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                            <Separator Background="{StaticResource CardBorder}" Margin="0,4,0,8"/>
+
+                            <DockPanel LastChildFill="False">
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" VerticalAlignment="Center">
+                                    <Ellipse Width="12" Height="12" Margin="0,0,10,0">
+                                        <Ellipse.Style>
+                                            <Style TargetType="Ellipse">
+                                                <Setter Property="Fill" Value="#EF5350"/> <!-- Disconnected: Red -->
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsBusy}" Value="True">
+                                                        <Setter Property="Fill" Value="#FFCA28"/> <!-- Pairing/Connecting: Yellow -->
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True">
+                                                        <Setter Property="Fill" Value="#66BB6A"/> <!-- Connected: Green -->
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Ellipse.Style>
+                                    </Ellipse>
+                                    <TextBlock FontWeight="Bold" FontSize="13" VerticalAlignment="Center">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="DISCONNECTED"/>
+                                                <Setter Property="Foreground" Value="#EF5350"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsBusy}" Value="True">
+                                                        <Setter Property="Text" Value="PAIRING..."/>
+                                                        <Setter Property="Foreground" Value="#FFCA28"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True">
+                                                        <Setter Property="Text" Value="CONNECTED"/>
+                                                        <Setter Property="Foreground" Value="#66BB6A"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                    <Button Content=" Connect to Server " Click="BtnConnect_Click" 
+                                            Style="{StaticResource PrimaryButton}" 
+                                            Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}"/>
+                                    <Button Content=" Disconnect " Click="BtnDisconnect_Click" 
+                                            Background="#D32F2F" BorderBrush="#B71C1C" Foreground="White"
+                                            Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}}"/>
+                                </StackPanel>
+                            </DockPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
                         <Button x:Name="BtnListenPairing"
-        Content="Listen (Pairing)"
-        Width="150"
-        Click="BtnListenPairing_Click"
-        IsEnabled="{Binding CanStartPairing}"
-        Margin="0,0,8,0">
+                                Content="Listen (Pairing)"
+                                Width="120"
+                                Style="{StaticResource GhostButton}"
+                                Click="BtnListenPairing_Click"
+                                IsEnabled="{Binding CanStartPairing}"
+                                Margin="0,0,8,0">
                             <Button.ContextMenu>
                                 <ContextMenu Style="{StaticResource DarkContextMenu}">
                                     <MenuItem Header="Try Pairing with Edge" Click="BtnListenWithEdge_Click"/>
@@ -797,18 +913,14 @@
                                 </ContextMenu>
                             </Button.ContextMenu>
                         </Button>
-                        <TextBlock x:Name="TxtPairingState" VerticalAlignment="Center" Text="Pairing: idle" Margin="0,0,30,0"/>
+                        <TextBlock x:Name="TxtPairingState" VerticalAlignment="Center" Text="Pairing: idle" Foreground="{StaticResource TextSubtle}" FontSize="11" Margin="0,0,30,0"/>
 
-                        <Button Content="Connect"
-                        Width="100"
-                        Click="BtnConnect_Click"
-                        Margin="0,0,8,0"
-                        Background="{DynamicResource AccentDark}" BorderBrush="{DynamicResource Accent}"/>
+                        <TextBlock Text="Tip: Right-click Listen for more options" 
+                                   Foreground="{StaticResource TextSubtle}" 
+                                   FontSize="9" VerticalAlignment="Center" FontStyle="Italic"/>
                     </StackPanel>
 
-                    <TextBlock Margin="0,8,0,0"
-                       Text="Click Listen (Pairing) to pair new servers. Rightclick for more options." 
-                       FontSize="9.5" FontStyle="Italic"/>
+                    <Separator Margin="0,12,0,12"/>
 
                     <Grid Margin="0,4,0,0">
                         <Grid.ColumnDefinitions>
@@ -954,7 +1066,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
-                                    <Button x:Name="BtnViewTracking" Grid.Row="3" Content="View Tracking Analysis" Margin="0,6,0,0" Style="{StaticResource PrimaryButton}" Click="BtnViewTracking_Click" />
+                                    <Button x:Name="BtnViewTracking" Grid.Row="3" Content="View tracker players list" Margin="0,6,0,0" Style="{StaticResource PrimaryButton}" Click="BtnViewTracking_Click" />
                                 </Grid>
                             </Border>
                         </Popup>
@@ -969,26 +1081,39 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                 <!-- CENTER: TabControl füllt den Rest, mit Mindesthöhe -->
                 <TabControl x:Name="MainTabs"
                     Style="{StaticResource PrettyTabControl}"
-                    MinHeight="350"
                     VerticalAlignment="Stretch">
                     <!-- ===== DEVICES ===== -->
                     <TabItem Header="Devices" Style="{StaticResource PrettyTabItem}">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
+                        <DockPanel LastChildFill="True">
+                            <!-- Footer -->
+                            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                                <Button x:Name="BtnHotkeys" Content="Hotkeys" Width="90" Style="{StaticResource GhostButton}" Click="BtnHotkeys_Click" Margin="0,0,10,0"/>
+                                <Button x:Name="BtnDevicesImport"
+                                        Width="32" Height="32" Margin="0,0,8,0" Padding="4" 
+                                        Style="{StaticResource GhostButton}" ToolTip="Import devices from teammates" Click="BtnDevicesImport_Click">
+                                    <Image Source="pack://application:,,,/icons/cloud-download.png" Width="24"/>
+                                </Button>
+                                <Button x:Name="BtnDevicesExport"
+                                        Width="32" Height="32" Margin="0,0,16,0" Padding="4" 
+                                        Style="{StaticResource GhostButton}" ToolTip="Export devices to teammates" Click="BtnDevicesExport_Click">
+                                    <Image Source="pack://application:,,,/icons/cloud-upload.png" Width="24"/>
+                                </Button>
+                                <Button Content="Refresh" Width="80" Margin="10,0,0,0" Style="{StaticResource GhostButton}" Click="BtnDeviceRefresh_Click"/>
+                                <Button Content="Delete" Width="80" Margin="10,0,0,0" Style="{StaticResource GhostButton}" Click="BtnDeleteDevice_Click"
+                                        ToolTip="You can only delete missing devices"
+                                        IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem.IsMissing, Converter={StaticResource NotNull}}"/>
+                            </StackPanel>
 
-                            <TreeView x:Name="ListDevices" Grid.IsSharedSizeScope="True"
-             Grid.Row="0"
-             ItemsSource="{Binding CurrentDevices}"
-             SelectedItemChanged="ListDevices_SelectedItemChanged"
-             ScrollViewer.CanContentScroll="False"
-             VirtualizingPanel.IsVirtualizing="False"
-             VirtualizingPanel.ScrollUnit="Pixel"
-             HorizontalContentAlignment="Stretch"
-             Background="Transparent"
-             BorderThickness="0">
+                            <Grid>
+                                <TreeView x:Name="ListDevices" Grid.IsSharedSizeScope="True"
+                                          ItemsSource="{Binding CurrentDevices}"
+                                          SelectedItemChanged="ListDevices_SelectedItemChanged"
+                                          ScrollViewer.CanContentScroll="False"
+                                          VirtualizingPanel.IsVirtualizing="False"
+                                          VirtualizingPanel.ScrollUnit="Pixel"
+                                          HorizontalContentAlignment="Stretch"
+                                          Background="Transparent"
+                                          BorderThickness="0">
 
                                 <TreeView.ItemContainerStyle>
                                     <Style TargetType="TreeViewItem">
@@ -1015,23 +1140,34 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                         <StackPanel Margin="0,2,0,0">
 
                                             <!-- ===== Zeile ===== -->
+                                            <Border CornerRadius="10" Padding="14,12" Margin="0,4,8,4">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Background" Value="#171A21"/>
+                                                        <Setter Property="BorderBrush" Value="#222734"/>
+                                                        <Setter Property="BorderThickness" Value="1"/>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="#1C202A"/>
+                                                                <Setter Property="BorderBrush" Value="#303746"/>
+                                                            </Trigger>
+                                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                <Setter Property="Opacity" Value="0.6"/>
+                                                                <Setter Property="Background" Value="#101217"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsGroup}" Value="True">
+                                                                <Setter Property="Background" Value="#141F33"/>
+                                                                <Setter Property="BorderBrush" Value="#253550"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" SharedSizeGroup="ColTypeID"/>
                                                     <ColumnDefinition Width="*"    SharedSizeGroup="ColAlias"/>
                                                     <ColumnDefinition Width="Auto" SharedSizeGroup="ColToggle"/>
                                                 </Grid.ColumnDefinitions>
-
-                                                <Grid.Style>
-                                                    <Style TargetType="Grid">
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                <Setter Property="Opacity" Value="0.6"/>
-
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Grid.Style>
 
                                                 <!-- Spalte 1: Display -->
                                                 <!-- Spalte 1: Icon + (#id) [state] für bekannte Kinds; sonst: alter Display-Text -->
@@ -1242,8 +1378,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                 <!-- Spalte 2: Alias -->
                                                 <TextBlock Grid.Column="1"
                          VerticalAlignment="Center"
-                         ToolTip="Right click to rename"
-                                                           Foreground="#4FC3F7">
+                         ToolTip="Right click to rename" FontSize="14" FontWeight="SemiBold" Margin="16,0,0,0" Foreground="#EAECEE">
                                                     <TextBlock.Text>
                                                         <Binding Path="Alias" TargetNullValue="(no custom name)"/>
                                                     </TextBlock.Text>
@@ -1478,6 +1613,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                 </Border>
 
                                             </Grid>
+                                            </Border>
                                             <!-- ===== Ende Zeile ===== -->
 
                                             <!-- ===== Klappbereich (hängt direkt an 
@@ -1533,41 +1669,31 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                     </HierarchicalDataTemplate>
                                 </TreeView.ItemTemplate>
                             </TreeView>
-
-                            <!-- Footer -->
-                            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-                                <Button x:Name="BtnHotkeys" Content="Hotkeys" Width="90" Style="{StaticResource GhostButton}" Click="BtnHotkeys_Click" Margin="0,0,10,0"/>
-                                <!--  <Button Content="Info" Width="80" Style="{StaticResource GhostButton}" Click="BtnDeviceInfo_Click" 
-              IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem, Converter={StaticResource NotNull}}"/> -->
-                                <!-- Import Devices (Cloud-Download) -->
-                                <Button x:Name="BtnDevicesImport"
-            Width="32"
-            Height="32"
-            Margin="0,0,8,0"
-            Padding="4" 
-            Style="{StaticResource GhostButton}"
-            ToolTip="Import devices from teammates"
-            Click="BtnDevicesImport_Click">
-                                    <Image Source="pack://application:,,,/icons/cloud-download.png" Width="24"/>
-                                </Button>
-
-                                <!-- Export Devices (Cloud-Upload) -->
-                                <Button x:Name="BtnDevicesExport"
-            Width="32"
-            Height="32"
-            Margin="0,0,16,0"
-                                        Padding="4" 
-            Style="{StaticResource GhostButton}"
-            ToolTip="Export devices to teammates"
-            Click="BtnDevicesExport_Click">
-                                    <Image Source="pack://application:,,,/icons/cloud-upload.png" Width="24"/>
-                                </Button>
-                                <Button Content="Refresh" Width="80" Margin="10,0,0,0" Style="{StaticResource GhostButton}" Click="BtnDeviceRefresh_Click"/>
-                                <Button Content="Delete" Width="80" Margin="10,0,0,0" Style="{StaticResource GhostButton}" Click="BtnDeleteDevice_Click"
-              ToolTip="You can only delete missing devices"
-              IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem.IsMissing, Converter={StaticResource NotNull}}"/>
+                            
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasItems, ElementName=ListDevices}" Value="False">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                                
+                                <Border Background="#101217" BorderBrush="#1C202A" BorderThickness="1" CornerRadius="16" Padding="32,24" HorizontalAlignment="Center">
+                                    <StackPanel>
+                                        <TextBlock Text="📡" FontSize="36" HorizontalAlignment="Center" Margin="0,0,0,12" Opacity="0.8"/>
+                                        <TextBlock Text="No devices found" Foreground="#EAECEE" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,6"/>
+                                        <TextBlock Text="Pair a smart device, switch or alarm to see it here" Foreground="#7F8A96" FontSize="12" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="200" TextAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
                             </StackPanel>
-                        </Grid>
+
+
+                            </Grid>
+                        </DockPanel>
                     </TabItem>
 
                     <!-- ===== TEAM ===== -->
@@ -1723,42 +1849,43 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
 
                     <!-- ===== CAMERAS ===== -->
                     <TabItem Header="Cameras" Style="{StaticResource PrettyTabItem}">
-                        <Grid Margin="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <!-- Previews oben -->
-                                <RowDefinition Height="Auto"/>
-                                <!-- Button unten -->
-                            </Grid.RowDefinitions>
-
-                            <!-- Kamera-Previews / Liste -->
-                            <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
-                                <ItemsControl x:Name="CamItems">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel ItemWidth="220" ItemHeight="180"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                </ItemsControl>
-                            </ScrollViewer>
-
+                        <DockPanel LastChildFill="True">
                             <!-- Add Camera unten rechts -->
-                            <StackPanel Grid.Row="1"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    Margin="0,10,0,0">
-
-
-                                <!--  Variante B (optional): Icon + Text – falls du den Plus-Glyph behalten willst -->
-                                <Button x:Name="BtnAddCam"
-                    Style="{StaticResource PrimaryButton}">
+                            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                                <Button x:Name="BtnAddCam" Style="{StaticResource PrimaryButton}">
                                     <StackPanel Orientation="Horizontal" Margin="6,1">
                                         <TextBlock Text="🎥 Add Camera"/>
                                     </StackPanel>
                                 </Button>
-
                             </StackPanel>
-                        </Grid>
+
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <Grid>
+                                    <ItemsControl x:Name="CamItems">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel ItemWidth="220" ItemHeight="180"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                    
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" Margin="0,50">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HasItems, ElementName=CamItems}" Value="False">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="No cameras found" Foreground="{StaticResource TextSubtle}" HorizontalAlignment="Center" FontStyle="Italic"/>
+                                        <TextBlock Text="Pair a camera to see its preview here" Foreground="{StaticResource TextSubtle}" FontSize="10" HorizontalAlignment="Center" Opacity="0.6"/>
+                                    </StackPanel>
+                                </Grid>
+                            </ScrollViewer>
+                        </DockPanel>
                     </TabItem>
                 </TabControl>
 

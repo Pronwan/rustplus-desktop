@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows</TargetFramework>
@@ -43,10 +43,12 @@
 		<!-- portable Node -->
 		<Content Include="runtime\node-win-x64\**\*">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		</Content>
 		<!-- CLI-Archiv -->
 		<Content Include="runtime\rustplus-cli.zip">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		</Content>
 	</ItemGroup>
 	
@@ -289,23 +291,7 @@
     </Page>
   </ItemGroup>
 
-	<!-- 2) DEBUG: nichts Großes kopieren (wir lesen direkt aus dem Projektordner) -->
-	<ItemGroup Condition="'$(Configuration)'=='Debug'">
-		<None Include="runtime\rustplus-cli\**\*" />
-		<None Include="runtime\node-win-x64\**\*" />
-	</ItemGroup>
 
-	<!-- 3) RELEASE: nur die schlanken Assets kopieren -->
-	<ItemGroup Condition="'$(Configuration)'=='Release'">
-		<!-- portable Node mitgeben -->
-		<Content Include="runtime\node-win-x64\**\*">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<!-- CLI nur als ZIP mitgeben -->
-		<Content Include="runtime\rustplus-cli.zip">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
 	
 	<PropertyGroup>
 		<CopyRetryCount>60</CopyRetryCount>
