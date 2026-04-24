@@ -1021,8 +1021,9 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                 Style="{StaticResource GhostButton}" FontSize="10" Padding="4,0" 
                                                 Click="BtnAddManual_Click" Margin="4,0,0,0"/>
                                         <TextBox x:Name="TxtManualBMId" Padding="4,1" FontSize="10" 
-                                                 Background="#25272a" Foreground="White" BorderThickness="1" 
-                                                 BorderBrush="#333" Tag="Manual BM ID..."/>
+                                                 Background="#25272a" Foreground="Gray" BorderThickness="1" 
+                                                 BorderBrush="#333" Text="Manual BM ID..."
+                                                 GotFocus="TxtManualBMId_GotFocus" LostFocus="TxtManualBMId_LostFocus"/>
                                     </DockPanel>
 
                                     <!-- Online List Filter -->
