@@ -19,27 +19,33 @@
 
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="v3.5.0  |  Player Intelligence &amp; Background Operations" FontWeight="SemiBold" FontSize="15" Margin="0,0,0,4"/>
+                            <TextBlock Text="v3.5.3  |  The Intelligence Update" FontWeight="SemiBold" FontSize="15" Margin="0,0,0,4"/>
 
                             <TextBlock Margin="0,0,0,10" TextWrapping="Wrap">
-                                <Span Foreground="{DynamicResource TextSubtle}">Special thanks to </Span>
-                                <Hyperlink NavigateUri="https://github.com/JawadYzbk" RequestNavigate="Hyperlink_RequestNavigate" Foreground="{DynamicResource Accent}">JawadYzbk</Hyperlink>
-                                <Span Foreground="{DynamicResource TextSubtle}"> for this massive contribution!</Span>
+            <Span Foreground="{DynamicResource TextSubtle}">Special thanks to </Span>
+            <Hyperlink NavigateUri="https://github.com/JawadYzbk" RequestNavigate="Hyperlink_RequestNavigate" Foreground="{DynamicResource Accent}">JawadYzbk</Hyperlink>
+            <Span Foreground="{DynamicResource TextSubtle}"> for this massive contribution!</Span>
                             </TextBlock>
 
                             <TextBlock Text="• Advanced Activity Intelligence" FontWeight="Bold" Margin="0,0,0,4"/>
                             <Image Source="pack://application:,,,/Screenshots/3_5A.png" Stretch="Uniform" MaxHeight="350" Margin="0,0,0,6"/>
-                            <TextBlock Text="Introducing a comprehensive player tracking system! Monitor connections/disconnections to build a historical database. View activity grids and 24h forecasts to predict player patterns." TextWrapping="Wrap" Margin="0,0,0,8"/>
+                            <TextBlock Text="Full player tracking system with 12-week heatmaps and 24h forecasts. Predict when players are active or sleeping based on historical connection data." TextWrapping="Wrap" Margin="0,0,0,8"/>
 
-                            <TextBlock Text="• System Tray &amp; Background Tracking" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="• Manual IP &amp; Protocol Support" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="Added support for rustplus:// links! You can now manually add servers using 'rustplus://IP:PORT'—a workaround for some servers where the pairing button is disabled." TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• Centralized Settings &amp; Auto-Connect" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="New Settings Modal: Toggle Auto-Start with Windows, Minimize to Tray, and Auto-Connect to your last server on startup." TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• System Tray &amp; Background Ops" FontWeight="Bold" Margin="0,0,0,4"/>
                             <Image Source="pack://application:,,,/Screenshots/3_5B.png" Stretch="Uniform" MaxHeight="150" Margin="0,0,0,6"/>
-                            <TextBlock Text="The app can now reside in your system tray. Collect player data 24/7 without having the main window open. Includes 'Start with Windows' and 'Single Instance' handling." TextWrapping="Wrap" Margin="0,0,0,8"/>
+                            <TextBlock Text="The app can now reside in your system tray to collect data 24/7. Improved single-instance handling ensures the window pops up when you need it." TextWrapping="Wrap" Margin="0,0,0,8"/>
 
                             <TextBlock Text="• Fixed: Battlemetrics Server Lookup" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
-                            <TextBlock Text="Improved server identification logic. Searching is now strictly IP-based for 100% accuracy, fixing issues with shared IP ranges like Rustoria." TextWrapping="Wrap" Margin="0,0,0,4"/>
+                            <TextBlock Text="Overhauled server identification. Searching is now strictly IP-based for 100% accuracy, fixing issues with shared IP ranges (e.g., Rustoria)." TextWrapping="Wrap" Margin="0,0,0,4"/>
                         </StackPanel>
                     </Border>
-
+                    
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
                             <TextBlock Text="v3.4.0  |  Hierarchical Grouping &amp; Advanced Alarms" FontWeight="SemiBold" FontSize="15" Margin="0,0,0,8"/>
