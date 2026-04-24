@@ -698,10 +698,25 @@
                                 <!-- rechts: Button -->
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="Account"
-                   Foreground="White"
-                   FontWeight="Bold"
-                   FontSize="16"/>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="Account"
+                                   Foreground="White"
+                                   FontWeight="Bold"
+                                   FontSize="16"/>
+
+                                <!-- Icon Download Progress -->
+                                <StackPanel Orientation="Horizontal" Margin="12,0,0,0" VerticalAlignment="Center"
+                                            Visibility="{Binding IsDownloadingIcons, Converter={StaticResource BoolToVisibility}}">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE896;" Foreground="{StaticResource Accent}" FontSize="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                    <TextBlock FontSize="12" Foreground="{StaticResource TextSubtle}" VerticalAlignment="Center">
+                                        <Run Text="Downloading Icons ("/>
+                                        <Run Text="{Binding IconsDownloaded, Mode=OneWay}"/>
+                                        <Run Text="/"/>
+                                        <Run Text="{Binding IconsTotal, Mode=OneWay}"/>
+                                        <Run Text=")"/>
+                                    </TextBlock>
+                                </StackPanel>
+                            </StackPanel>
 
                             <Grid Grid.Column="1">
                                 <Grid.ColumnDefinitions>

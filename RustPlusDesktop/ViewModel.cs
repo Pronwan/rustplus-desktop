@@ -12,6 +12,24 @@ namespace RustPlusDesk.ViewModels;
 
 public class MainViewModel : INotifyPropertyChanged
 {
+    private int _iconsTotal;
+    private int _iconsDownloaded;
+
+    public int IconsTotal
+    {
+        get => _iconsTotal;
+        set { _iconsTotal = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsDownloadingIcons)); OnPropertyChanged(nameof(IconDownloadProgress)); }
+    }
+
+    public int IconsDownloaded
+    {
+        get => _iconsDownloaded;
+        set { _iconsDownloaded = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsDownloadingIcons)); OnPropertyChanged(nameof(IconDownloadProgress)); }
+    }
+
+    public bool IsDownloadingIcons => _iconsTotal > 0 && _iconsDownloaded < _iconsTotal;
+    public double IconDownloadProgress => _iconsTotal > 0 ? (double)_iconsDownloaded / _iconsTotal * 100 : 0;
+
     public ObservableCollection<ServerProfile> Servers { get; } = new();
 
     private bool _isBusy;
