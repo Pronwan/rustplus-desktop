@@ -3542,11 +3542,11 @@ public partial class MainWindow : Window
     private async void BtnHardReset_Click(object sender, RoutedEventArgs e)
     {
         var ask = MessageBox.Show(
-            "WIRKLICH ALLES ZURÜCKSETZEN (WIPE)?\n\n" +
-            "- Alle Server werden gelöscht\n" +
-            "- Die Steam-Anmeldung wird entfernt\n" +
-            "- Die Pairing-Konfig wird gelöscht\n\n" +
-            "Fortfahren?", "FULL WIPE", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            "ARE YOU SURE YOU WANT TO RESET EVERYTHING (WIPE)?\n\n" +
+            "- All servers will be deleted\n" +
+            "- Your Steam Login will be removed\n" +
+            "- The pairing config will be deleted\n\n" +
+            "Continue?", "FULL WIPE DATA", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
         if (ask != MessageBoxResult.Yes) return;
 
