@@ -2799,21 +2799,62 @@ public partial class MainWindow : Window
     {
         try
         {
-            var p = ParseRustPlusLink(link);
+            string host = "";
+            int port = 28082; // Standard Rust+ Port
+            string playerId = _vm.SteamId64 ?? "0";
+            string playerToken = "0";
+            string serverName = "Manual Server";
+
+            if (link.Contains("?") && (link.Contains("address=") || link.Contains("ip=")))
+            {
+                // --- FALL A: Offizieller Link (mit Parametern) ---
+                var p = ParseRustPlusLink(link);
+                host = p.host;
+                port = p.port;
+                playerId = p.playerId != 0 ? p.playerId.ToString() : playerId;
+                playerToken = p.playerToken.ToString();
+                serverName = !string.IsNullOrEmpty(p.name) ? p.name : "Paired Server";
+            }
+            else
+            {
+                // --- FALL B: Manueller Link (z.B. rustplus://1.2.3.4:28082) ---
+                // Wir entfernen das Protokoll "rustplus://"
+                var raw = link.Replace("rustplus://", "").TrimEnd('/');
+
+                if (raw.Contains(":"))
+                {
+                    var parts = raw.Split(':');
+                    host = parts[0];
+                    int.TryParse(parts[1], out port);
+                }
+                else
+                {
+                    host = raw;
+                }
+
+                serverName = "Custom: " + host;
+                AppendLog($"Manual IP detected: {host}:{port}");
+            }
+
+            if (string.IsNullOrEmpty(host)) throw new Exception("IP/Address missing");
+
+            // Wir rufen die Pairing-Funktion auf
             Pairing_Paired(this, new PairingPayload
             {
-                Host = p.host,
-                Port = p.port,
-                SteamId64 = string.IsNullOrEmpty(_vm.SteamId64) ? p.playerId.ToString() : _vm.SteamId64,
-                PlayerToken = p.playerToken.ToString(),
-                ServerName = p.name
+                Host = host,
+                Port = port,
+                SteamId64 = playerId,
+                PlayerToken = playerToken,
+                ServerName = serverName
             });
-            AppendLog("RustPlus-Link processed.");
+
+            AppendLog($"Server {host} added to list.");
+            this.Activate(); // Bringt das Fenster nach vorne
         }
         catch (Exception ex)
         {
             AppendLog("RustPlus-Link-Error: " + ex.Message);
-            MessageBox.Show("Unable to read RustPlus-Link: " + ex.Message);
+            MessageBox.Show("Unable to read RustPlus-Link: " + ex.Message + "\n\nFormat: rustplus://IP:PORT");
         }
     }
 
