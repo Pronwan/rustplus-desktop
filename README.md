@@ -47,6 +47,20 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./App-Version3.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)  
 *(click the image to watch on YouTube)*
 
+## Update 3.5.0 - Player Intelligence & Background Ops (April 22nd)
+**🚀 New Features**
+- **Advanced Activity Intelligence**: Introducing a full-scale player tracking system! View 12-week GitHub-style activity grids and 24-hour heatmaps to predict when your enemies (or friends) are most likely to be online or sleeping.
+- **Background Operations**: The app can now reside in your System Tray. Collect player data 24/7 without having the main window open.
+- **Single Instance Management**: Launching the app via `rustplus://` links or a second desktop shortcut now automatically focuses your already running instance.
+- **Auto-Start**: New option to launch the app minimized with Windows, so your tracking database is always up to date.
+
+**🛠 Improvements & Fixes**
+- **Battlemetrics Accuracy**: Completely overhauled server identification. Fixed an issue where servers on shared IP ranges (like Rustoria) were sometimes incorrectly identified. 
+- **Tray Menu**: Dynamic tray context menu showing current tracking status and last update time.
+
+**🙌 Special Thanks**
+A massive shout-out to [JawadYzbk](https://github.com/JawadYzbk) for contributing this entire intelligence system and background logic!
+
 ## Update 3.4.0 - Custom Alarms & Device Grouping (April 26)
 **🚀 New Features**
 - Customizable Smart Alarms: You can now set individual popup alerts and custom audio files. Perfect for turning up the volume and getting woken up specifically for Raids!
@@ -115,35 +129,23 @@ Enjoy! :)
 
 
 - Pair Rust servers via Steam + Rust+ Companion
-
-- Share Smart Devices with your Team
-
+- **Player Activity Intelligence: 12-week heatmaps & 24h activity forecasts**
+- **Persistent Background Tracking & System Tray integration**
+- **Single Instance Management (Named Pipes)**
+- Share Smart Devices and device groups with your Team
 - Track Storage Monitors and Upkeep Time 
-
 - Auto-start listener when connecting to a server
-
 - Dynamic map (Cargo, Patrol Heli, Chinook, Travelling Vendor, Players, …)
-
 - Smart Devices (pair in-game while connected — shows up instantly)
-
 - Local storage of paired servers & devices, map overlays
-
 - Vending Machine Search System for Buy and Sell orders
-
 - Profit Trade analytics and deep trade route search (buy X for Y) 
-
 - Open-source for transparency and trust
-
 - Team Chat support and event spawn posts to chat
-
 - Camera Support (no pannable cams yet)
-
 - Mini Map and Crosshairs as Rust Overlay
-
 - Death Markers
-
 - Profile Icons
-
 - Chat-Notifications for spawns, shops, deaths, events and more
 
 ---

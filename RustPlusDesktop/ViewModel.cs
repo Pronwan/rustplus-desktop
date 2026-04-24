@@ -117,6 +117,7 @@ public class MainViewModel : INotifyPropertyChanged
         {
             p.Devices ??= new ObservableCollection<SmartDevice>(); // niemals null
             p.CameraIds ??= new ObservableCollection<string>();      // NEU: ebenso niemals null
+            p.IsConnected = false; // Reset connection state on load
             Servers.Add(p);
         }
 
