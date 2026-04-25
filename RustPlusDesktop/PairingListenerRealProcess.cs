@@ -104,22 +104,43 @@ namespace RustPlusDesk.Services
             {
                 _log("Starting one time registration (fcm-register) …");
                 _log("IMPORTANT: Log into the SAME Steam account in your browser that you use in the Rust+ app!");
-                await RunCliWithLoggingAsync(
-    node,
-    $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
-    wd,
-    "fcm-register",
-    _cts.Token
-);
-                // old version without logging:    
-                //             await RunProcessDirectAsync(
-                //                 node,
-                //                  $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
-                //                  workingDir: wd,
-                //                 waitForExit: true,
-                //                redirect: true,
-                //                 token: _cts.Token
-                //            );
+                int regExitCode = await RunCliWithLoggingAsync(
+                    node,
+                    $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
+                    wd,
+                    "fcm-register",
+                    _cts.Token
+                );
+                
+                if (regExitCode != 0)
+                {
+                    var edge = FindEdge();
+                    if (edge != null)
+                    {
+                        var env = new (string key, string value)[] {
+                            ("PUPPETEER_EXECUTABLE_PATH", edge),
+                            ("CHROME_PATH", edge)
+                        };
+                        _log("Chrome start failed. Trying fallback with Microsoft Edge...");
+                        regExitCode = await RunCliWithLoggingAsync(
+                            node,
+                            $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
+                            wd,
+                            "fcm-register",
+                            _cts.Token,
+                            env
+                        );
+                    }
+                }
+                
+                if (regExitCode != 0)
+                {
+                    _log("❌ Registering failed. Please ensure Chrome or Edge is installed, or run Start using Edge.");
+                    _running = false;
+                    Stopped?.Invoke(this, EventArgs.Empty);
+                    return; // Stop here, do not start listener or loop
+                }
+
                 _log("Registering completed (Confirm login in browser if applicable).");
             }
 
@@ -696,16 +717,18 @@ namespace RustPlusDesk.Services
         }
 
         private async Task<int> RunCliWithLoggingAsync(
-    string fileName, string args, string? workingDir, string tag, CancellationToken token)
+    string fileName, string args, string? workingDir, string tag, CancellationToken token,
+    params (string key, string value)[] env)
         {
             var tcs = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            var p = StartProcessDirect(
+            var p = StartProcessDirectWithEnv(
                 fileName, args, workingDir,
                 onOut: s => { if (!string.IsNullOrEmpty(s)) _log($"[{tag}] {HumanizeCli(s)}"); },
                 onErr: s => { if (!string.IsNullOrEmpty(s)) _log($"[{tag}:err] {HumanizeCli(s)}"); },
                 noWindow: false,           // wie zuvor beim Register: Browser darf aufgehen
-                redirect: true
+                redirect: true,
+                env: env
             );
 
             p.EnableRaisingEvents = true;
