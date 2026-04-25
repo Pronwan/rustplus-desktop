@@ -698,10 +698,25 @@
                                 <!-- rechts: Button -->
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="Account"
-                   Foreground="White"
-                   FontWeight="Bold"
-                   FontSize="16"/>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="Account"
+                                   Foreground="White"
+                                   FontWeight="Bold"
+                                   FontSize="16"/>
+
+                                <!-- Icon Download Progress -->
+                                <StackPanel Orientation="Horizontal" Margin="12,0,0,0" VerticalAlignment="Center"
+                                            Visibility="{Binding IsDownloadingIcons, Converter={StaticResource BoolToVisibility}}">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE896;" Foreground="{StaticResource Accent}" FontSize="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                    <TextBlock FontSize="12" Foreground="{StaticResource TextSubtle}" VerticalAlignment="Center">
+                                        <Run Text="Downloading Icons ("/>
+                                        <Run Text="{Binding IconsDownloaded, Mode=OneWay}"/>
+                                        <Run Text="/"/>
+                                        <Run Text="{Binding IconsTotal, Mode=OneWay}"/>
+                                        <Run Text=")"/>
+                                    </TextBlock>
+                                </StackPanel>
+                            </StackPanel>
 
                             <Grid Grid.Column="1">
                                 <Grid.ColumnDefinitions>
@@ -1021,17 +1036,26 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                 Style="{StaticResource GhostButton}" FontSize="10" Padding="4,0" 
                                                 Click="BtnAddManual_Click" Margin="4,0,0,0"/>
                                         <TextBox x:Name="TxtManualBMId" Padding="4,1" FontSize="10" 
-                                                 Background="#25272a" Foreground="White" BorderThickness="1" 
-                                                 BorderBrush="#333" Tag="Manual BM ID..."/>
+                                                 Background="#25272a" Foreground="Gray" BorderThickness="1" 
+                                                 BorderBrush="#333" Text="Manual BM ID..."
+                                                 GotFocus="TxtManualBMId_GotFocus" LostFocus="TxtManualBMId_LostFocus"/>
                                     </DockPanel>
-
                                     <!-- Online List Filter -->
                                     <TextBox x:Name="TxtOnlineFilter" Grid.Row="1" Margin="0,0,0,6" Visibility="Collapsed" 
                                              Padding="4,2" FontSize="10" Background="#1a1c1e" Foreground="White" 
                                              BorderThickness="1" BorderBrush="#333" GotFocus="TxtOnlineFilter_GotFocus" 
                                              LostFocus="TxtOnlineFilter_LostFocus" TextChanged="TxtOnlineFilter_TextChanged"/>
 
-                                    <TextBlock x:Name="TxtOnlinePlayersStatus" Text="Loading..." FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,6" Grid.Row="1" Visibility="Collapsed"/>
+                                    <Grid x:Name="PnlOnlineStatus" Grid.Row="2" Visibility="Collapsed" Margin="20" VerticalAlignment="Center">
+                                        <StackPanel>
+                                            <ProgressBar x:Name="PbOnlineLoading" IsIndeterminate="True" Height="2" Width="120" 
+                                                         Margin="0,0,0,12" Background="#111" BorderThickness="0"
+                                                         Foreground="{DynamicResource CbAccent}"/>
+                                            <TextBlock x:Name="TxtOnlinePlayersStatus" Text="Loading players..." 
+                                                       HorizontalAlignment="Center" Foreground="{DynamicResource TextSubtle}" 
+                                                       FontSize="11" TextWrapping="Wrap" TextAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
                                     <ListBox x:Name="ListOnlinePlayers" Grid.Row="2" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
