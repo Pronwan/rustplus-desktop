@@ -11,11 +11,30 @@
         <DockPanel LastChildFill="True">
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
                 <TextBlock Text="Patch Notes &amp; Version History" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,2"/>
-                <TextBlock Text="Current Version: 3.5.3" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
+                <TextBlock Text="Current Version: 3.5.4" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
             </StackPanel>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel Margin="0,0,0,12">
+
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v3.5.4  |  Player Management &amp; Optimization" FontWeight="SemiBold" FontSize="15" Margin="0,0,0,4"/>
+                            <Image Source="https://github.com/user-attachments/assets/d6fad211-efb2-4c15-9ec3-29e65cb6c8dd" Stretch="Uniform" MaxHeight="350" Margin="0,0,0,6"/>
+                            <Image Source="https://github.com/user-attachments/assets/ba63c2ec-1ee6-4d12-9da1-d06df26bcd7a" Stretch="Uniform" MaxHeight="350" Margin="0,0,0,6"/>
+                            <Image Source="https://github.com/user-attachments/assets/9544f75e-d98b-4e6a-b9e1-9ef6d6ee00f6" Stretch="Uniform" MaxHeight="350" Margin="0,0,0,6"/>
+
+                            <TextBlock Text="• Manual Player Tracking &amp; Renaming" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="Manually add players to your trackers list using their BattleMetrics ID. The app fetches their last seen status and allows you to rename them for better organization." TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• Optimized Item Icon Downloads" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="Icons are now fetched from RustClash CDN in 40x40 size, reducing download size by 12.9x (totaling 151KB). Existing high-res icons remain cached; only missing ones are fetched in the new optimized format." TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• Progress Tracking" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="Added a download progress bar to show visual status when the app is fetching item icons or updates." TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                        </StackPanel>
+                    </Border>
 
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>

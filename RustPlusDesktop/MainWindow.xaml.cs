@@ -1565,6 +1565,7 @@ public partial class MainWindow : Window
     private static readonly Dictionary<int, ItemInfo> sItemsById = new();
     private static readonly Dictionary<string, ItemInfo> sItemsByShort = new(StringComparer.OrdinalIgnoreCase);
     private static readonly Dictionary<string, ImageSource> sIconCache = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly HashSet<string> sPendingDownloads = new();
     private static bool sNewDbLoaded = false;
     private static string sNewDbSource = "(unbekannt)";
 
@@ -4739,32 +4740,52 @@ public partial class MainWindow : Window
     {
         EnsureNewItemDbLoaded();
 
-        string? url = null;
-        if (itemId != 0 && sItemsById.TryGetValue(itemId, out var ii1)) url = ii1.IconUrl;
-        if (url == null && !string.IsNullOrWhiteSpace(shortName) && sItemsByShort.TryGetValue(shortName!, out var ii2))
-            url = ii2.IconUrl;
+        // Standard-Shortname besorgen, falls fehlt
+        if (string.IsNullOrWhiteSpace(shortName) && itemId != 0 && sItemsById.TryGetValue(itemId, out var ii0))
+            shortName = ii0.ShortName;
 
-        if (string.IsNullOrWhiteSpace(url)) return null;
+        // Fallback-URL (rusthelp)
+        string? rusthelpUrl = null;
+        if (itemId != 0 && sItemsById.TryGetValue(itemId, out var ii1)) rusthelpUrl = ii1.IconUrl;
+        if (rusthelpUrl == null && !string.IsNullOrWhiteSpace(shortName) && sItemsByShort.TryGetValue(shortName!, out var ii2))
+            rusthelpUrl = ii2.IconUrl;
 
-        // Memory-Cache?
-        if (sIconCache.TryGetValue(url!, out var ready)) return ready;
+        // Primär-URL (rustclash)
+        string? rustclashUrl = !string.IsNullOrWhiteSpace(shortName)
+            ? $"https://wiki.rustclash.com/img/items40/{shortName}.png"
+            : null;
 
-        // File-Cache?
-        var file = GetIconCachePath(url!);
-        if (System.IO.File.Exists(file))
+        // 1) Versuche RustClash (Primär)
+        if (rustclashUrl != null)
         {
-            var img = TryLoadBitmapFromFile(file, decodePx);
-            if (img != null)
+            if (sIconCache.TryGetValue(rustclashUrl, out var ready)) return ready;
+            var path = GetIconCachePath(rustclashUrl);
+            if (System.IO.File.Exists(path))
             {
-                sIconCache[url!] = img;
-                return img;
+                var img = TryLoadBitmapFromFile(path, decodePx);
+                if (img != null) { sIconCache[rustclashUrl] = img; return img; }
             }
         }
 
-        // Noch kein Cache → Download im Hintergrund starten (nicht blockieren)
-        QueueIconDownload(url!, file);
+        // 2) Versuche RustHelp (Fallback/DB)
+        if (rusthelpUrl != null)
+        {
+            if (sIconCache.TryGetValue(rusthelpUrl, out var ready)) return ready;
+            var path = GetIconCachePath(rusthelpUrl);
+            if (System.IO.File.Exists(path))
+            {
+                var img = TryLoadBitmapFromFile(path, decodePx);
+                if (img != null) { sIconCache[rusthelpUrl] = img; return img; }
+            }
+        }
 
-        return null; // beim nächsten Tooltip-/Hover-Versuch ist das Icon meist schon da
+        // 3) Nichts da -> Download (RustClash bevorzugt, RustHelp als Fallback)
+        if (rustclashUrl != null)
+            QueueIconDownload(rustclashUrl, GetIconCachePath(rustclashUrl), rusthelpUrl);
+        else if (rusthelpUrl != null)
+            QueueIconDownload(rusthelpUrl, GetIconCachePath(rusthelpUrl), null);
+
+        return null;
     }
 
     private static string GetIconCachePath(string url)
@@ -4791,19 +4812,57 @@ public partial class MainWindow : Window
         catch { return null; }
     }
 
-    private static void QueueIconDownload(string url, string targetPath)
+    private static void QueueIconDownload(string url, string targetPath, string? fallbackUrl)
     {
+        lock (sPendingDownloads)
+        {
+            if (!sPendingDownloads.Add(url)) return;
+        }
+
+        UpdateIconProgress(-1); // Total erhöhen
+
         _ = Task.Run(async () =>
         {
             try
             {
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(targetPath)!);
-                using var http = new HttpClient() { Timeout = TimeSpan.FromSeconds(5) };
-                var data = await http.GetByteArrayAsync(url);
-                await System.IO.File.WriteAllBytesAsync(targetPath, data);
-                // System.Diagnostics.Debug.WriteLine($"[ICON] Saved to {targetPath}");
+                using var http = new HttpClient() { Timeout = TimeSpan.FromSeconds(10) };
+
+                // 1) Primär versuchen
+                var resp = await http.GetAsync(url).ConfigureAwait(false);
+                if (resp.IsSuccessStatusCode)
+                {
+                    var data = await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                    await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
+                }
+                else if (fallbackUrl != null)
+                {
+                    // 2) Fallback versuchen
+                    var respF = await http.GetAsync(fallbackUrl).ConfigureAwait(false);
+                    if (respF.IsSuccessStatusCode)
+                    {
+                        var data = await respF.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                        await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
+                    }
+                }
             }
-            catch { /* tolerant */ }
+            catch { }
+            finally
+            {
+                UpdateIconProgress(1); // Fertig
+            }
+        });
+    }
+
+    private static void UpdateIconProgress(int deltaFinish)
+    {
+        Application.Current?.Dispatcher?.BeginInvoke(() =>
+        {
+            if (Application.Current?.MainWindow is MainWindow mw)
+            {
+                if (deltaFinish > 0) mw._vm.IconsDownloaded++;
+                else mw._vm.IconsTotal++;
+            }
         });
     }
 
@@ -10138,7 +10197,7 @@ public partial class MainWindow : Window
         // Dynamic Filter visibility
         if (players.Count > 0) {
             TxtOnlineFilter.Visibility = Visibility.Visible;
-            if (string.IsNullOrEmpty(TxtOnlineFilter.Text)) {
+            if (string.IsNullOrEmpty(TxtOnlineFilter.Text) && !TxtOnlineFilter.IsFocused) {
                 TxtOnlineFilter.Text = "Filter players...";
                 TxtOnlineFilter.Foreground = Brushes.Gray;
             }
@@ -10158,11 +10217,12 @@ public partial class MainWindow : Window
         if (TrackingService.LastOnlinePlayers.Count == 0)
         {
             TxtOnlinePlayersStatus.Text = TrackingService.StatusMessage;
-            TxtOnlinePlayersStatus.Visibility = Visibility.Visible;
+            PnlOnlineStatus.Visibility = Visibility.Visible;
+            PbOnlineLoading.Visibility = string.IsNullOrEmpty(TrackingService.StatusMessage) || TrackingService.StatusMessage.Contains("Fetching") || TrackingService.StatusMessage.Contains("Looking") ? Visibility.Visible : Visibility.Collapsed;
         }
         else
         {
-            TxtOnlinePlayersStatus.Visibility = Visibility.Collapsed;
+            PnlOnlineStatus.Visibility = Visibility.Collapsed;
         }
 
         // Update Server BM button visibility
@@ -10195,13 +10255,15 @@ public partial class MainWindow : Window
             if (_vm.Selected == null || string.IsNullOrEmpty(_vm.Selected.Host))
             {
                 TxtOnlinePlayersStatus.Text = "Connect to a server to load players list";
-                TxtOnlinePlayersStatus.Visibility = Visibility.Visible;
+                PnlOnlineStatus.Visibility = Visibility.Visible;
+                PbOnlineLoading.Visibility = Visibility.Collapsed;
                 ListOnlinePlayers.ItemsSource = null;
                 return;
             }
 
-            TxtOnlinePlayersStatus.Text = "Loading from Battlemetrics...";
-            TxtOnlinePlayersStatus.Visibility = Visibility.Visible;
+            TxtOnlinePlayersStatus.Text = "Synchronizing with Battlemetrics...";
+            PnlOnlineStatus.Visibility = Visibility.Visible;
+            PbOnlineLoading.Visibility = Visibility.Visible;
             ListOnlinePlayers.ItemsSource = null;
 
             try
@@ -10211,7 +10273,8 @@ public partial class MainWindow : Window
             catch (Exception ex)
             {
                 TxtOnlinePlayersStatus.Text = $"Error: {ex.Message}";
-                TxtOnlinePlayersStatus.Visibility = Visibility.Visible;
+                PnlOnlineStatus.Visibility = Visibility.Visible;
+                PbOnlineLoading.Visibility = Visibility.Collapsed;
             }
         }
     }
@@ -10257,22 +10320,50 @@ public partial class MainWindow : Window
         }
     }
 
+    private void TxtManualBMId_GotFocus(object sender, RoutedEventArgs e) {
+        if (TxtManualBMId.Text == "Manual BM ID...") {
+            TxtManualBMId.Text = "";
+            TxtManualBMId.Foreground = Brushes.White;
+        }
+    }
+    private void TxtManualBMId_LostFocus(object sender, RoutedEventArgs e) {
+        if (string.IsNullOrWhiteSpace(TxtManualBMId.Text)) {
+            TxtManualBMId.Text = "Manual BM ID...";
+            TxtManualBMId.Foreground = Brushes.Gray;
+        }
+    }
+
     private async void BtnAddManual_Click(object sender, RoutedEventArgs e)
     {
         var bmId = TxtManualBMId.Text?.Trim();
-        if (string.IsNullOrEmpty(bmId) || !bmId.All(char.IsDigit)) return;
+        if (string.IsNullOrEmpty(bmId) || bmId == "Manual BM ID..." || !bmId.All(char.IsDigit)) return;
 
         TxtManualBMId.IsEnabled = false;
         BtnAddManual.Content = "...";
         
         var name = await TrackingService.FetchPlayerNameAsync(bmId);
-        TrackingService.TrackPlayer(bmId, name, _vm.Selected?.Name ?? "Manual Add");
+        var lastSession = await TrackingService.FetchPlayerLastSessionAsync(bmId);
         
-        TxtManualBMId.Text = "";
+        // If name is unknown but we got session info, take name from session
+        if (name == "Unknown Player" && lastSession != null)
+        {
+            // We can't get the name easily from the PlayerSession object as currently structured, 
+            // but the API call in FetchPlayerLastSessionAsync could be updated to return it.
+            // For now, FetchPlayerNameAsync already has a fallback to sessions.
+        }
+
+        var serverName = TrackingService.LastServer.name;
+        if (string.IsNullOrEmpty(serverName)) serverName = _vm.Selected?.Name ?? "Manual Add";
+
+        TrackingService.TrackPlayer(bmId, name, serverName, lastSession);
+        
+        TxtManualBMId.Text = "Manual BM ID...";
+        TxtManualBMId.Foreground = Brushes.Gray;
         TxtManualBMId.IsEnabled = true;
         BtnAddManual.Content = "Track ID";
         
-        AppendLog($"[tracking] Manually added {name} ({bmId}) to tracking list.");
+        var sessionMsg = lastSession != null ? $" (found last session: {lastSession.ConnectTime.ToLocalTime():g})" : "";
+        AppendLog($"[tracking] Manually added {name} ({bmId}) to tracking list on server: {serverName}{sessionMsg}");
         RefreshOnlinePlayersList();
     }
 
@@ -10298,7 +10389,7 @@ public partial class MainWindow : Window
         {
             Title = "Managed Tracked Players",
             Width = 500,
-            Height = 650,
+            Height = 700,
             Background = new SolidColorBrush(Color.FromRgb(18, 20, 23)),
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
             Owner = this,
@@ -10307,6 +10398,7 @@ public partial class MainWindow : Window
         var grid = new Grid { Margin = new Thickness(20) };
         grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Header
         grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Search
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Add Player
         grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }); // List
         grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Actions
 
@@ -10317,25 +10409,57 @@ public partial class MainWindow : Window
             Margin = new Thickness(0,0,0,10), 
             Padding = new Thickness(6,4,6,4),
             Background = new SolidColorBrush(Color.FromRgb(30, 32, 35)),
-            Foreground = Brushes.White,
+            Foreground = Brushes.Gray,
             BorderBrush = new SolidColorBrush(Color.FromRgb(50, 50, 50)),
-            FontSize = 12
+            FontSize = 12,
+            Text = "Filter players..."
         };
+        searchBox.GotFocus += (s, e) => { if (searchBox.Text == "Filter players...") { searchBox.Text = ""; searchBox.Foreground = Brushes.White; } };
+        searchBox.LostFocus += (s, e) => { if (string.IsNullOrWhiteSpace(searchBox.Text)) { searchBox.Text = "Filter players..."; searchBox.Foreground = Brushes.Gray; } };
         Grid.SetRow(searchBox, 1);
         grid.Children.Add(searchBox);
+
+        // Manual Add Section
+        var addGrid = new Grid { Margin = new Thickness(0, 0, 0, 15) };
+        addGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        addGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        
+        var idInput = new TextBox { 
+            Padding = new Thickness(6,4,6,4),
+            Background = new SolidColorBrush(Color.FromRgb(25, 27, 30)),
+            Foreground = Brushes.White,
+            BorderBrush = new SolidColorBrush(Color.FromRgb(60, 60, 60)),
+            FontSize = 12,
+            Margin = new Thickness(0,0,8,0)
+        };
+        // Poor man's watermark
+        idInput.Text = "Enter BattleMetrics Player ID...";
+        idInput.Foreground = Brushes.Gray;
+        idInput.GotFocus += (s, e) => { if (idInput.Text == "Enter BattleMetrics Player ID...") { idInput.Text = ""; idInput.Foreground = Brushes.White; } };
+        idInput.LostFocus += (s, e) => { if (string.IsNullOrWhiteSpace(idInput.Text)) { idInput.Text = "Enter BattleMetrics Player ID..."; idInput.Foreground = Brushes.Gray; } };
+
+        var addBtn = new Button { Content = "Track Player ID", Padding = new Thickness(15, 0, 15, 0), Height = 30, Background = new SolidColorBrush(Color.FromRgb(63, 185, 80)), Foreground = Brushes.White };
+        
+        Grid.SetColumn(idInput, 0);
+        Grid.SetColumn(addBtn, 1);
+        addGrid.Children.Add(idInput);
+        addGrid.Children.Add(addBtn);
+        
+        Grid.SetRow(addGrid, 2);
+        grid.Children.Add(addGrid);
 
         var listContainer = new DockPanel();
         var list = new ListBox { Background = Brushes.Transparent, BorderThickness = new Thickness(0), Foreground = Brushes.White };
         listContainer.Children.Add(list);
 
-        Grid.SetRow(listContainer, 2);
+        Grid.SetRow(listContainer, 3);
         grid.Children.Add(listContainer);
 
         Action<string> refreshList = null;
         refreshList = (filter) => {
             list.Items.Clear();
             var players = TrackingService.GetTrackedPlayers();
-            if (!string.IsNullOrEmpty(filter)) {
+            if (!string.IsNullOrEmpty(filter) && filter != "Filter players...") {
                 players = players.Where(p => 
                     p.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) || 
                     p.LastServerName.Contains(filter, StringComparison.OrdinalIgnoreCase)
@@ -10356,25 +10480,72 @@ public partial class MainWindow : Window
                 foreach(var p in group)
                 {
                     var pGrid = new Grid { Margin = new Thickness(10,5,0,5) };
-                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // Name
+                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Playtime
+                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // View
+                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Rename
+                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Remove
 
-                    var nameTxt = new TextBlock { Text = p.Name, VerticalAlignment = VerticalAlignment.Center, FontSize = 13 };
-                    Grid.SetColumn(nameTxt, 0);
-                    pGrid.Children.Add(nameTxt);
+                    var onlineInfo = TrackingService.LastOnlinePlayers.FirstOrDefault(op => op.BMId == p.BMId);
+                    bool isOnline = onlineInfo != null;
 
-                    var viewBtn = new Button { Content = "View", Width = 50, Margin = new Thickness(5,0,0,0), Tag = p.BMId };
+                    var namePanel = new StackPanel { Orientation = Orientation.Horizontal };
+                    var dot = new Ellipse { 
+                        Width = 8, 
+                        Height = 8, 
+                        Fill = isOnline ? new SolidColorBrush(Color.FromRgb(98, 211, 139)) : new SolidColorBrush(Color.FromRgb(102, 102, 102)),
+                        Margin = new Thickness(0, 0, 8, 0),
+                        VerticalAlignment = VerticalAlignment.Center
+                    };
+                    namePanel.Children.Add(dot);
+                    namePanel.Children.Add(new TextBlock { 
+                        Text = p.Name, 
+                        VerticalAlignment = VerticalAlignment.Center, 
+                        FontSize = 13,
+                        Foreground = isOnline ? Brushes.White : Brushes.Gray
+                    });
+
+                    Grid.SetColumn(namePanel, 0);
+                    pGrid.Children.Add(namePanel);
+
+                    if (isOnline)
+                    {
+                        var playTxt = new TextBlock { 
+                            Text = onlineInfo.PlayTimeStr, 
+                            Foreground = new SolidColorBrush(Color.FromRgb(176, 190, 197)), 
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(10, 0, 10, 0),
+                            FontSize = 11,
+                            Width = 50,
+                            TextAlignment = TextAlignment.Right
+                        };
+                        Grid.SetColumn(playTxt, 1);
+                        pGrid.Children.Add(playTxt);
+                    }
+
+                    var viewBtn = new Button { Content = "View", Width = 45, Margin = new Thickness(5,0,0,0), Tag = p.BMId };
                     viewBtn.Click += (s, e) => ShowTrackingAnalysisWindow((string)((Button)s).Tag);
-                    Grid.SetColumn(viewBtn, 1);
+                    Grid.SetColumn(viewBtn, 2);
                     pGrid.Children.Add(viewBtn);
 
-                    var removeBtn = new Button { Content = "Remove", Width = 60, Margin = new Thickness(5,0,0,0), Tag = p.BMId, Background = Brushes.DarkRed, Foreground = Brushes.White };
+                    var renameBtn = new Button { Content = "Rename", Width = 55, Margin = new Thickness(5,0,0,0), Tag = p };
+                    renameBtn.Click += (s, e) => {
+                        var player = (TrackedPlayer)((Button)s).Tag;
+                        var newName = ShowInputBox($"Enter new name for {player.BMId}:", "Rename Player", player.Name);
+                        if (!string.IsNullOrWhiteSpace(newName)) {
+                            TrackingService.RenameTrackedPlayer(player.BMId, newName);
+                            refreshList(searchBox.Text);
+                        }
+                    };
+                    Grid.SetColumn(renameBtn, 3);
+                    pGrid.Children.Add(renameBtn);
+
+                    var removeBtn = new Button { Content = "Remove", Width = 55, Margin = new Thickness(5,0,0,0), Tag = p.BMId, Background = Brushes.DarkRed, Foreground = Brushes.White };
                     removeBtn.Click += (s, e) => {
                         TrackingService.UntrackPlayer((string)((Button)s).Tag);
                         refreshList(searchBox.Text);
                     };
-                    Grid.SetColumn(removeBtn, 2);
+                    Grid.SetColumn(removeBtn, 4);
                     pGrid.Children.Add(removeBtn);
 
                     list.Items.Add(pGrid);
@@ -10385,18 +10556,90 @@ public partial class MainWindow : Window
             }
         };
 
-        searchBox.TextChanged += (s, e) => refreshList(searchBox.Text);
-        refreshList(""); // Initial load
+        addBtn.Click += async (s, e) => {
+            var val = idInput.Text.Trim();
+            if (string.IsNullOrEmpty(val) || val == "Enter BattleMetrics Player ID..." || !val.All(char.IsDigit)) return;
+            
+            addBtn.IsEnabled = false;
+            addBtn.Content = "...";
+            
+            var name = await TrackingService.FetchPlayerNameAsync(val);
+            var lastSession = await TrackingService.FetchPlayerLastSessionAsync(val);
+            
+            var serverName = TrackingService.LastServer.name;
+            if (string.IsNullOrEmpty(serverName)) serverName = _vm.Selected?.Name ?? "Manual Add";
+            
+            TrackingService.TrackPlayer(val, name, serverName, lastSession);
+            
+            var sessionMsg = lastSession != null ? $" (found last session: {lastSession.ConnectTime.ToLocalTime():g})" : "";
+            AppendLog($"[tracking] Manually added {name} ({val}) to tracking list on server: {serverName}{sessionMsg}");
+            
+            idInput.Text = "";
+            idInput.Focus();
+            addBtn.IsEnabled = true;
+            addBtn.Content = "Track Player ID";
+            refreshList(searchBox.Text);
+        };
 
-        var viewAllBtn = new Button { Content = "View All Analysis", Height = 35, Margin = new Thickness(0,15,0,0), Background = new SolidColorBrush(Color.FromRgb(76, 139, 245)), Foreground = Brushes.White };
+        searchBox.TextChanged += (s, e) => refreshList(searchBox.Text);
+        
+        Action updateList = () => {
+            this.Dispatcher.Invoke(() => refreshList?.Invoke(searchBox.Text));
+        };
+        TrackingService.OnOnlinePlayersUpdated += updateList;
+        win.Closed += (s, e) => TrackingService.OnOnlinePlayersUpdated -= updateList;
+
+        refreshList(""); // Initial load
+        searchBox.Focus();
+
+        var viewAllBtn = new Button { Content = "View All Analysis Report", Height = 35, Margin = new Thickness(0,15,0,0), Background = new SolidColorBrush(Color.FromRgb(76, 139, 245)), Foreground = Brushes.White };
         viewAllBtn.Click += (s, e) => ShowTrackingAnalysisWindow();
-        Grid.SetRow(viewAllBtn, 3);
+        Grid.SetRow(viewAllBtn, 4);
         grid.Children.Add(viewAllBtn);
 
         win.Content = grid;
         win.ShowDialog();
     }
 
+
+    private string? ShowInputBox(string prompt, string title, string defaultResponse)
+    {
+        var win = new Window
+        {
+            Title = title,
+            Width = 350,
+            Height = 150,
+            WindowStartupLocation = WindowStartupLocation.CenterScreen,
+            ResizeMode = ResizeMode.NoResize,
+            Background = new SolidColorBrush(Color.FromRgb(30, 30, 30)),
+            Foreground = Brushes.White
+        };
+
+        var stack = new StackPanel { Margin = new Thickness(15) };
+        stack.Children.Add(new TextBlock { Text = prompt, Margin = new Thickness(0, 0, 0, 10), TextWrapping = TextWrapping.Wrap });
+        
+        var input = new TextBox { Text = defaultResponse, Padding = new Thickness(5), Background = new SolidColorBrush(Color.FromRgb(40, 40, 40)), Foreground = Brushes.White, BorderBrush = Brushes.Gray };
+        input.SelectAll();
+        stack.Children.Add(input);
+
+        var btnPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 15, 0, 0) };
+        var okBtn = new Button { Content = "OK", Width = 70, Margin = new Thickness(0, 0, 10, 0), IsDefault = true };
+        var cancelBtn = new Button { Content = "Cancel", Width = 70, IsCancel = true };
+
+        string? result = null;
+        okBtn.Click += (s, e) => { result = input.Text; win.DialogResult = true; };
+        cancelBtn.Click += (s, e) => { win.DialogResult = false; };
+
+        btnPanel.Children.Add(okBtn);
+        btnPanel.Children.Add(cancelBtn);
+        stack.Children.Add(btnPanel);
+
+        win.Content = stack;
+        input.Focus();
+        
+        win.ShowDialog();
+        return result;
+    }
 
     private void ShowTrackingAnalysisWindow(string? bmId = null)
     {

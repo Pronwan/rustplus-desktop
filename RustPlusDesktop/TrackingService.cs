@@ -125,16 +125,31 @@ public static class TrackingService
         catch { }
     }
 
-    public static void TrackPlayer(string bmId, string name, string serverName)
+    public static void TrackPlayer(string bmId, string name, string serverName, PlayerSession? initialSession = null)
     {
-        if (!_trackedPlayers.ContainsKey(bmId))
+        TrackedPlayer? player;
+        if (!_trackedPlayers.TryGetValue(bmId, out player))
         {
-            _trackedPlayers[bmId] = new TrackedPlayer { BMId = bmId, Name = name, LastServerName = serverName };
+            player = new TrackedPlayer { BMId = bmId, Name = name, LastServerName = serverName };
+            _trackedPlayers[bmId] = player;
         }
         else
         {
-            _trackedPlayers[bmId].LastServerName = serverName;
+            player.LastServerName = serverName;
+            // Update name if we got a real one
+            if (name != "Unknown Player") player.Name = name;
         }
+
+        if (initialSession != null)
+        {
+            // Only add if we don't have overlapping sessions already
+            if (!player.Sessions.Any(s => s.ConnectTime == initialSession.ConnectTime))
+            {
+                player.Sessions.Add(initialSession);
+                player.Sessions = player.Sessions.OrderBy(s => s.ConnectTime).ToList();
+            }
+        }
+
         SaveDB();
 
         // Auto-start tracking if we have a server but no timer yet
@@ -160,6 +175,15 @@ public static class TrackingService
     
     public static string? CurrentServerBMId => _foundServerId;
 
+    public static void RenameTrackedPlayer(string bmId, string newName)
+    {
+        if (_trackedPlayers.TryGetValue(bmId, out var player))
+        {
+            player.Name = newName;
+            SaveDB();
+            OnOnlinePlayersUpdated?.Invoke();
+        }
+    }
     public static List<TrackedPlayer> GetTrackedPlayers() => _trackedPlayers.Values.ToList();
     public static bool IsTracked(string bmId) => _trackedPlayers.ContainsKey(bmId);
 
@@ -233,11 +257,66 @@ public static class TrackingService
     {
         try
         {
-            var json = await _http.GetStringAsync($"https://api.battlemetrics.com/players/{bmId}");
-            using var doc = JsonDocument.Parse(json);
-            return doc.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("name").GetString() ?? "Unknown Player";
+            // 1. Try direct player endpoint
+            var url = $"https://api.battlemetrics.com/players/{bmId}";
+            var response = await _http.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(json);
+                return doc.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("name").GetString() ?? "Unknown Player";
+            }
+            
+            Log($"[API] FetchPlayerName direct failed for {bmId}: {response.StatusCode}. Trying session fallback...");
+            
+            // 2. Fallback: Try most recent session to get name
+            var sUrl = $"https://api.battlemetrics.com/sessions?filter[players]={bmId}&page[size]=1";
+            var sResponse = await _http.GetAsync(sUrl);
+            if (sResponse.IsSuccessStatusCode)
+            {
+                var sJson = await sResponse.Content.ReadAsStringAsync();
+                using var sDoc = JsonDocument.Parse(sJson);
+                if (sDoc.RootElement.TryGetProperty("data", out var sData) && sData.ValueKind == JsonValueKind.Array && sData.GetArrayLength() > 0)
+                {
+                    return sData[0].GetProperty("attributes").GetProperty("name").GetString() ?? "Unknown Player";
+                }
+            }
+            
+            return "Unknown Player";
         }
-        catch { return "Unknown Player"; }
+        catch (Exception ex) 
+        { 
+            Log($"[API] Error fetching name for {bmId}: {ex.Message}");
+            return "Unknown Player"; 
+        }
+    }
+
+    public static async Task<DateTime?> FetchPlayerLastSeenAsync(string bmId)
+    {
+        if (string.IsNullOrEmpty(_foundServerId)) return null;
+        try
+        {
+            var url = $"https://api.battlemetrics.com/players/{bmId}/servers/{_foundServerId}";
+            var response = await _http.GetAsync(url);
+            if (!response.IsSuccessStatusCode) return null;
+
+            var json = await response.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(json);
+            
+            if (doc.RootElement.TryGetProperty("data", out var data) && 
+                data.TryGetProperty("attributes", out var attr))
+            {
+                if (attr.TryGetProperty("lastSeen", out var stopProp) && stopProp.ValueKind == JsonValueKind.String)
+                {
+                    if (DateTimeOffset.TryParse(stopProp.GetString(), out var stop))
+                    {
+                        return stop.UtcDateTime;
+                    }
+                }
+            }
+        }
+        catch { }
+        return null;
     }
 
     public static void LoadDemoData()
@@ -275,7 +354,45 @@ public static class TrackingService
         OnOnlinePlayersUpdated?.Invoke();
     }
 
-    // Provide tracking analysis view - Rich HTML
+    public static async Task<PlayerSession?> FetchPlayerLastSessionAsync(string bmId)
+    {
+        if (string.IsNullOrEmpty(_foundServerId)) return null;
+        try
+        {
+            // Try to fetch the most recent session for this player on this server
+            var url = $"https://api.battlemetrics.com/sessions?filter[players]={bmId}&filter[servers]={_foundServerId}&page[size]=1";
+            var response = await _http.GetAsync(url);
+            if (!response.IsSuccessStatusCode) return null;
+
+            var json = await response.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(json);
+            
+            if (doc.RootElement.TryGetProperty("data", out var data) && data.ValueKind == JsonValueKind.Array && data.GetArrayLength() > 0)
+            {
+                var sessionObj = data[0];
+                var attr = sessionObj.GetProperty("attributes");
+                
+                DateTime? start = null;
+                DateTime? stop = null;
+
+                if (attr.TryGetProperty("start", out var sProp) && sProp.ValueKind == JsonValueKind.String)
+                {
+                    if (DateTimeOffset.TryParse(sProp.GetString(), out var s)) start = s.UtcDateTime;
+                }
+                if (attr.TryGetProperty("stop", out var eProp) && eProp.ValueKind == JsonValueKind.String)
+                {
+                    if (DateTimeOffset.TryParse(eProp.GetString(), out var e)) stop = e.UtcDateTime;
+                }
+
+                if (start.HasValue)
+                {
+                    return new PlayerSession { ConnectTime = start.Value, DisconnectTime = stop };
+                }
+            }
+        }
+        catch { }
+        return null;
+    }
     public static string GetAnalysisReport(string? targetBmId = null)
     {
         var sb = new System.Text.StringBuilder();
@@ -602,7 +719,7 @@ public static class TrackingService
             }
             
             var onlineList = new List<OnlinePlayerBM>();
-            var newOnlineIds = new Dictionary<string, DateTime>();
+            var currentlyOnlineInfo = new Dictionary<string, (DateTime start, string name)>();
 
             if (pDoc.RootElement.TryGetProperty("included", out var included))
             {
@@ -643,7 +760,7 @@ public static class TrackingService
                             Duration = TimeSpan.FromSeconds(Math.Max(0, seconds)),
                             IsTracked = _trackedPlayers.ContainsKey(bmId)
                         });
-                        newOnlineIds[bmId] = actualStart;
+                        currentlyOnlineInfo[bmId] = (actualStart, name);
                     }
                 }
             }
@@ -662,7 +779,7 @@ public static class TrackingService
             OnOnlinePlayersUpdated?.Invoke();
 
             // 3. Update Tracking stats
-            await UpdateTrackingStatsAsync(newOnlineIds);
+            await UpdateTrackingStatsAsync(currentlyOnlineInfo);
         }
         catch (Exception ex)
         {
@@ -671,18 +788,26 @@ public static class TrackingService
         }
     }
 
-    private static async Task UpdateTrackingStatsAsync(Dictionary<string, DateTime> currentlyOnlineWithStart)
+    private static async Task UpdateTrackingStatsAsync(Dictionary<string, (DateTime start, string name)> currentlyOnlineInfo)
     {
         bool changed = false;
         var now = DateTime.UtcNow;
 
         foreach (var tp in _trackedPlayers.Values)
         {
-            bool isOnline = currentlyOnlineWithStart.TryGetValue(tp.BMId, out var actualConnectTime);
+            bool isOnline = currentlyOnlineInfo.TryGetValue(tp.BMId, out var info);
             var lastSession = tp.Sessions.LastOrDefault();
 
             if (isOnline)
             {
+                // Update name if it was previously unknown or empty
+                if (tp.Name == "Unknown Player" || string.IsNullOrEmpty(tp.Name))
+                {
+                    tp.Name = info.name;
+                    changed = true;
+                }
+
+                var actualConnectTime = info.start;
                 if (lastSession == null || lastSession.DisconnectTime.HasValue)
                 {
                     // Newly connected or we just started tracking/opened the app
