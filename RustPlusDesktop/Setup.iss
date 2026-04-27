@@ -41,12 +41,21 @@ PrivilegesRequired=admin
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-; Jawads optimierte Dateiliste
+; 1. Die Haupt-EXE
 Source: "bin\Installer\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\Installer\publish\runtime\*";       DestDir: "{app}\runtime"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "bin\Installer\publish\icons\*";         DestDir: "{app}\icons";   Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "bin\Installer\publish\rust_items.json"; DestDir: "{app}";         Flags: ignoreversion
-Source: "bin\Installer\publish\cash.wav";        DestDir: "{app}";         Flags: ignoreversion
+
+; 2. Alle Dateien im Root-Verzeichnis (ohne Unterordner)
+; Ohne 'recursesubdirs' werden nur die Dateien direkt in \publish\ kopiert.
+Source: "bin\Installer\publish\*"; DestDir: "{app}"; Flags: ignoreversion
+
+; 3. Alle Unterordner mit ihrem kompletten Inhalt
+Source: "bin\Installer\publish\runtime\*";  DestDir: "{app}\runtime";  Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "bin\Installer\publish\runtimes\*"; DestDir: "{app}\runtimes"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "bin\Installer\publish\icons\*";    DestDir: "{app}\icons";    Flags: ignoreversion recursesubdirs createallsubdirs
+
+; Falls vorhanden/nötig:
+; Source: "bin\Installer\publish\Screenshots\*"; DestDir: "{app}\Screenshots"; Flags: ignoreversion recursesubdirs createallsubdirs
+
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
