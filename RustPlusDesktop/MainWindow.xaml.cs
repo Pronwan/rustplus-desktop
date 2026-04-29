@@ -3523,6 +3523,8 @@ public partial class MainWindow : Window
             _vm.BusyText = "";
         }
 
+        ResetMapDisplay();
+
         AppendLog("Hard reset completed.");
 
         // 7) Optional: direkt wieder verbinden
@@ -5143,6 +5145,25 @@ public partial class MainWindow : Window
         }
         _mapView.Child = _scene;
     }
+    private void ResetMapDisplay()
+    {
+        _mapBaseBmp = null;
+        _mapReady = false;
+
+        ImgMap.Source = null;
+        GridLayer.Children.Clear();
+
+        if (MapPlaceholder != null) MapPlaceholder.Visibility = Visibility.Visible;
+        if (_mapView != null) _mapView.Visibility = Visibility.Collapsed;
+
+        if (_miniMap != null)
+        {
+            _miniMap.Close();
+            _miniMap = null;
+            _miniMapBrush = null;
+        }
+    }
+
     private void ShowMapBasic(BitmapSource bmp)
     {
         if (_webView != null) _webView.Visibility = Visibility.Collapsed;
@@ -5150,6 +5171,7 @@ public partial class MainWindow : Window
         _mapBaseBmp = bmp;
         _mapReady = true;
         if (MapPlaceholder != null) MapPlaceholder.Visibility = Visibility.Collapsed;
+        if (_mapView != null) _mapView.Visibility = Visibility.Visible;
         _staticMarkers.Clear();            // << keine Testpunkte
 
         ImgMap.Source = bmp;               // zunächst nackte Map
