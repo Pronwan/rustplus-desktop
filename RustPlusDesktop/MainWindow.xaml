@@ -2006,8 +2006,35 @@ Click="BtnToggleMiniMap_Click"/>
                 </StackPanel>
 
                 <Grid x:Name="WebViewHost" Grid.Row="1" Margin="0,0,0,8" ClipToBounds="True"
-              Background="{DynamicResource SurfaceAlt}">
-                    <Rectangle x:Name="SplashBgColor" Fill="{DynamicResource SurfaceAlt}" />
+              Background="#0B3A4A">
+                    <Rectangle x:Name="SplashBgColor" Fill="#0B3A4A" />
+
+                    <Border x:Name="MapPlaceholder"
+                            Background="#0B3A4A"
+                            Panel.ZIndex="50">
+                        <Border HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Background="#40101518"
+                                BorderBrush="#66FFFFFF"
+                                BorderThickness="1"
+                                CornerRadius="16"
+                                Padding="24">
+                            <StackPanel MaxWidth="320">
+                                <TextBlock Text="Connect to a server to see the map"
+                                           Foreground="White"
+                                           FontSize="20"
+                                           FontWeight="SemiBold"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap"/>
+                                <TextBlock Text="Once connected, the live Rust map will load here."
+                                           Margin="0,10,0,0"
+                                           Foreground="#D9FFFFFF"
+                                           FontSize="13"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                    </Border>
 
                     <!-- 2) Titelbild als „contain“, zentriert, unverzerrt -->
                     <Image x:Name="SplashBg"
@@ -2015,6 +2042,7 @@ Click="BtnToggleMiniMap_Click"/>
                         HorizontalAlignment="Center"
            VerticalAlignment="Center"
            IsHitTestVisible="False"
+           Visibility="Collapsed"
            Opacity="0.95"
            Source="pack://application:,,,/TitleScreen-rust-plus-desktop.png"/>
                     <Image x:Name="ImgMap" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top"/>
