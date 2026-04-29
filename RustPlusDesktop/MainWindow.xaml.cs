@@ -3297,7 +3297,7 @@ public partial class MainWindow : Window
 
         var env = await CoreWebView2Environment.CreateAsync(userDataFolder: dataFolder);
         _webView = new WebView2();
-        WebViewHost.Background = (Brush)FindResource("SurfaceAlt");
+        WebViewHost.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0B3A4A"));
         WebViewHost.Children.Add(_webView);
         Panel.SetZIndex(_webView, 0);           // WebView standardmäßig unten
 
@@ -5148,6 +5148,8 @@ public partial class MainWindow : Window
         if (_webView != null) _webView.Visibility = Visibility.Collapsed;
 
         _mapBaseBmp = bmp;
+        _mapReady = true;
+        if (MapPlaceholder != null) MapPlaceholder.Visibility = Visibility.Collapsed;
         _staticMarkers.Clear();            // << keine Testpunkte
 
         ImgMap.Source = bmp;               // zunächst nackte Map
