@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Application Settings" 
-        Width="500" Height="450"
+        Width="500" Height="480"
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True" 
         WindowStyle="None"
@@ -51,38 +51,54 @@
                     <TextBlock Text="General" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,0,0,10"/>
                     
                     <CheckBox x:Name="ChkAutoStart" 
-                              Content="Launch with Windows (Minimized)" 
-                              Margin="0,0,0,12" 
-                              Style="{StaticResource DotCheckBox}"
-                              Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
+                               Content="Launch with Windows (Minimized)" 
+                               Margin="0,0,0,12" 
+                               Style="{StaticResource DotCheckBox}"
+                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
 
                     <CheckBox x:Name="ChkStartMinimized" 
-                              Content="Start Minimized (Always)" 
-                              Margin="0,0,0,12" 
-                              Style="{StaticResource DotCheckBox}"
-                              Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
+                               Content="Start Minimized (Always)" 
+                               Margin="0,0,0,12" 
+                               Style="{StaticResource DotCheckBox}"
+                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
 
                     <CheckBox x:Name="ChkAutoConnect" 
-                              Content="Auto-Connect to last server on startup" 
-                              Margin="0,0,0,12" 
-                              Style="{StaticResource DotCheckBox}"
-                              Checked="OnSettingChanged" Unchecked="OnSettingChanged"
-                              ToolTip="Automatically reconnects to the last server and loads the map."/>
+                               Content="Auto-Connect to last server on startup" 
+                               Margin="0,0,0,12" 
+                               Style="{StaticResource DotCheckBox}"
+                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                               ToolTip="Automatically reconnects to the last server and loads the map."/>
 
                     <TextBlock Text="Behavior" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
 
                     <CheckBox x:Name="ChkCloseToTray" 
-                              Content="Minimize to Tray instead of closing" 
-                              Margin="0,0,0,12" 
-                              Style="{StaticResource DotCheckBox}"
-                              Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
+                               Content="Minimize to Tray instead of closing" 
+                               Margin="0,0,0,12" 
+                               Style="{StaticResource DotCheckBox}"
+                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
 
                     <CheckBox x:Name="ChkBackgroundTracking" 
-                              Content="Enable Background Player Tracking" 
-                              Margin="0,0,0,12" 
-                              Style="{StaticResource DotCheckBox}"
-                              Checked="OnSettingChanged" Unchecked="OnSettingChanged"
-                              ToolTip="Keeps tracking players via BattleMetrics even when minimized."/>
+                               Content="Enable Background Player Tracking" 
+                               Margin="0,0,0,12" 
+                               Style="{StaticResource DotCheckBox}"
+                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                               ToolTip="Keeps tracking players via BattleMetrics even when minimized."/>
+
+                    <CheckBox x:Name="ChkHideConsole" 
+                               Content="Hide System Console (Declutter)" 
+                               Margin="0,0,0,12" 
+                               Style="{StaticResource DotCheckBox}"
+                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                               ToolTip="Hides the bottom log/console panel to save map space."/>
+
+                    <TextBlock Text="Map Settings" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
+                    
+                    <CheckBox x:Name="ChkAutoLoadShops" 
+                               Content="Auto load shops on connection" 
+                               Margin="0,0,0,12" 
+                               Style="{StaticResource DotCheckBox}"
+                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                               ToolTip="Automatically starts polling shops and alerts when connected to a server."/>
 
                     <TextBlock Text="Steam Account" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
                     <TextBlock Text="Manage your linked Steam account in the main window." 

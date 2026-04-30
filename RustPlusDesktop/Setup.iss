@@ -45,8 +45,6 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "bin\Installer\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Installer\publish\runtime\*";       DestDir: "{app}\runtime"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "bin\Installer\publish\icons\*";         DestDir: "{app}\icons";   Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "bin\Installer\publish\rust_items.json"; DestDir: "{app}";         Flags: ignoreversion
-Source: "bin\Installer\publish\cash.wav";        DestDir: "{app}";         Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

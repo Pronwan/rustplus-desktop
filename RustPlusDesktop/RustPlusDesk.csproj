@@ -68,6 +68,7 @@
 	  <None Remove="icons\cloud-upload.png" />
 	  <None Remove="icons\crate.png" />
 	  <None Remove="icons\crate3.png" />
+	  <None Remove="icons\ds_event.png" />
 	  <None Remove="icons\dome.png" />
 	  <None Remove="icons\eraser.png" />
 	  <None Remove="icons\excavator.png" />
@@ -201,7 +202,7 @@
     <Resource Include="icons\cave.png" />
     <Resource Include="icons\ch47.png" />
     <Resource Include="icons\crate.png" />
-	  
+    <Resource Include="icons\ds_event.png" />
     <Resource Include="icons\dome.png" />
     <Resource Include="icons\excavator.png" />
     <Resource Include="icons\explosion.png" />
@@ -256,6 +257,9 @@
     <Resource Include="icons\underwater.png" />
     <Resource Include="icons\vending.png" />
     <Resource Include="icons\vending2.png" />
+    <Resource Include="icons\vending_orange.png" />
+    <Resource Include="icons\animat-Icons\patrol_helicopter.png" />
+    <Resource Include="icons\animat-Icons\chinook_map_blades.png" />
     <Resource Include="icons\vendor.png" />
     <Resource Include="icons\watertreatment.png" />
     <Resource Include="icons\waterwell.png" />
@@ -274,9 +278,8 @@
     <Resource Include="Screenshots\3_5A.png" />
     <Resource Include="Screenshots\3_5B.png" />
     <Resource Include="TitleScreen-rust-plus-desktop.png" />
-    <Content Include="rust_items.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="rust_items.json" />
+    <Resource Include="ShopSearch.html" />
   </ItemGroup>
 
   <ItemGroup>

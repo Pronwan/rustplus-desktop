@@ -3258,8 +3258,9 @@ rp.connect();
         public readonly string? Label;     // Roh-Label vom Marker
         public readonly string? Name;      // Player-Name (falls vorhanden), sonst null
         public readonly ulong SteamId;     // NEU
+        public readonly float Rotation;    // NEU
 
-        public DynMarker(uint id, int type, string kind, double x, double y, string? label, string? name, ulong steamId)
+        public DynMarker(uint id, int type, string kind, double x, double y, string? label, string? name, ulong steamId, float rotation = 0)
         {
             Id = id;
             Type = type;
@@ -3269,6 +3270,7 @@ rp.connect();
             Label = label;
             Name = name;
             SteamId = steamId;             // NEU
+            Rotation = rotation;
         }
     }
 
@@ -3676,8 +3678,9 @@ rp.connect();
                 }
 
                 var (kind, norm) = MapType(rawType, label ?? pname, typeNm, steamId);
+                var rotation = (float)RDbl(it, "Rotation", "Rot", "Angle");
 
-                list.Add(new DynMarker(id, norm, kind, x, y, label, pname ?? label, steamId));
+                list.Add(new DynMarker(id, norm, kind, x, y, label, pname ?? label, steamId, rotation));
             }
         }
         catch (Exception ex)
