@@ -208,6 +208,7 @@ public partial class MainWindow
         });
     }
 
+    private bool _v1MarkerResetDone = false;
     private void StartDynPolling()
     {
         _dynTimer?.Stop();
@@ -223,6 +224,7 @@ public partial class MainWindow
 
         foreach (var kv in _dynEls) Overlay.Children.Remove(kv.Value);
         _dynEls.Clear();
+        _dynStates.Clear();
         if (clearKnown) _dynKnown.Clear();
     }
 
@@ -447,7 +449,16 @@ public partial class MainWindow
 
                 var uiImg = (Image)itemRow.Children[1];
                 if (uiImg.Source == null || uiImg.Tag as string != ev.Icon) {
-                    try { uiImg.Source = new BitmapImage(new Uri(ev.Icon)); uiImg.Tag = ev.Icon; } catch {}
+                    try { 
+                        var bi = new BitmapImage();
+                        bi.BeginInit();
+                        bi.UriSource = new Uri(ev.Icon);
+                        bi.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+                        bi.CacheOption = BitmapCacheOption.OnLoad;
+                        bi.EndInit();
+                        uiImg.Source = bi; 
+                        uiImg.Tag = ev.Icon; 
+                    } catch {}
                 }
 
                 // Add direct icon glow for active events
@@ -509,6 +520,21 @@ public partial class MainWindow
 
     private void UpdateDynUI(IReadOnlyList<RustPlusClientReal.DynMarker> markers)
     {
+        if (!_v1MarkerResetDone)
+        {
+            try {
+                if (StorageService.LoadCache<bool>("v1_marker_reset_v2") == false) {
+                    foreach (var kv in _dynEls.ToList()) Overlay.Children.Remove(kv.Value);
+                    _dynEls.Clear();
+                    _dynStates.Clear();
+                    _dynKnown.Clear();
+                    StorageService.SaveCache("v1_marker_reset_v2", true);
+                    AppendLog("One-time marker refresh performed.");
+                }
+            } catch { }
+            _v1MarkerResetDone = true;
+        }
+
         _lastMarkers = markers;
         if (Overlay == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0) return;
 
@@ -528,6 +554,23 @@ public partial class MainWindow
             uint key = m.Id != 0 ? m.Id : DynFallbackKey(m.X, m.Y, m.Label ?? m.Kind, m.Type);
             incoming.Add(key);
 
+            // Track state and velocity for smooth transitions and persistence
+            if (!_dynStates.TryGetValue(key, out var state))
+            {
+                state = new DynMarkerState();
+                _dynStates[key] = state;
+            }
+            if (state.History.Count > 0)
+            {
+                var last = state.History.Last();
+                // Simple velocity calculation based on 1s polling
+                state.LastVX = m.X - last.X;
+                state.LastVY = m.Y - last.Y;
+            }
+            state.History.Add((m.X, m.Y));
+            if (state.History.Count > 5) state.History.RemoveAt(0);
+            state.MissingCount = 0;
+
             bool online = false, dead = false;
             if (_lastPresence.TryGetValue(m.SteamId, out var pr)) { online = pr.Item1; dead = pr.Item2; }
 
@@ -546,44 +589,27 @@ public partial class MainWindow
 
             var nameNow = ResolvePlayerName(m);
 
+            bool isNew = false;
             if (!_dynEls.TryGetValue(key, out var el))
             {
+                isNew = true;
                 try
                 {
                     if (m.Type == 150)
                     {
                         var img = MakeIcon("pack://application:,,,/icons/crate3.png", 48);
                         var host = BuildEventIconHost(img, m.Label, 48);
-
                         el = host;
-                        _dynEls[key] = el;
-                        Overlay.Children.Add(el);
-                        Panel.SetZIndex(el, 2000);
-
-                        var pPos = WorldToImagePx(m.X, m.Y);
-                        Canvas.SetLeft(el, pPos.X - 24);
-                        Canvas.SetTop(el, pPos.Y - 24);
-
-                        ApplyCurrentOverlayScale(el);
                     }
                     else if (m.Type == 8) // Patrol Helicopter
                     {
                         el = BuildAnimatedHeliMarker(m);
                         AttachTrackingHandler(el, m.Id); // Enable tracking
-                        _dynEls[key] = el;
-                        Overlay.Children.Add(el);
-                        Panel.SetZIndex(el, 920);
-                        ApplyCurrentOverlayScale(el);
                     }
                     else if (isPlayer)
                     {
                         if (_showProfileMarkers) el = BuildPlayerMarker(m.SteamId, nameNow, online, dead);
                         else el = BuildPlayerDotMarker(m.SteamId, nameNow, online, dead);
-
-                        _dynEls[key] = el;
-                        Overlay.Children.Add(el);
-                        Panel.SetZIndex(el, 950);
-                        ApplyCurrentOverlayScale(el);
                     }
                     else
                     {
@@ -602,11 +628,6 @@ public partial class MainWindow
                         }
                         else host = BuildEventDot($"{m.Kind} ({m.Type})", 14);
 
-                        _dynEls[key] = host;
-                        Overlay.Children.Add(host);
-                        Panel.SetZIndex(host, 920);
-                        ApplyCurrentOverlayScale(host);
-
                         // Enable tracking for specific large events
                         if (m.Type == 5 || m.Type == 4 || m.Type == 6)
                         {
@@ -622,47 +643,88 @@ public partial class MainWindow
                         }
                         el = host;
                     }
+
+                    _dynEls[key] = el;
+                    Overlay.Children.Add(el);
+                    Panel.SetZIndex(el, m.Type == 150 ? 2000 : (isPlayer ? 950 : 920));
+
+                    // Set initial rotation (with 180 degree correction for specific types)
+                    if (el.Tag is PlayerMarkerTag pmtNew)
+                    {
+                        bool needsCorrection = (m.Type == 8 || m.Type == 4 || m.Type == 5 || m.Type == 6 || m.Type == 3);
+                        pmtNew.Rotation = m.Rotation + (needsCorrection ? 180 : 0);
+                    }
+
+                    ApplyCurrentOverlayScale(el);
                 }
                 catch { continue; }
             }
             else
             {
+                var oldEl = el;
                 if (m.Type == 150)
                 {
                     if (el is FrameworkElement fe)
                     {
                         fe.ToolTip = m.Label;
                     }
-
-                    var pPos = WorldToImagePx(m.X, m.Y);
-                    Canvas.SetLeft(el, pPos.X - 24);
-                    Canvas.SetTop(el, pPos.Y - 24);
-                    continue;
+                }
+                else if (isPlayer) 
+                {
+                    UpdatePlayerMarker(ref el, key, m.SteamId, nameNow, online, dead);
+                }
+                else if (el.Tag is not PlayerMarkerTag) 
+                {
+                    el.Tag = m;
                 }
 
-                if (isPlayer) UpdatePlayerMarker(ref el, key, m.SteamId, nameNow, online, dead);
-                else if (el.Tag is not PlayerMarkerTag) el.Tag = m;
-
-                // Update rotation for helicopters
-                if (m.Type == 8 && el.Tag is PlayerMarkerTag pmt)
+                // If el was replaced (e.g. dot -> avatar), transfer position for smooth transition
+                if (!ReferenceEquals(oldEl, el))
                 {
-                    pmt.Rotation = m.Rotation;
-                    ApplyCurrentOverlayScale(el);
+                    Canvas.SetLeft(el, Canvas.GetLeft(oldEl));
+                    Canvas.SetTop(el, Canvas.GetTop(oldEl));
+                }
+
+                // Update rotation smoothly (with 180 degree correction for specific types)
+                if (el.Tag is PlayerMarkerTag pmt)
+                {
+                    bool needsCorrection = (m.Type == 8 || m.Type == 4 || m.Type == 5 || m.Type == 6 || m.Type == 3);
+                    double targetRot = m.Rotation + (needsCorrection ? 180 : 0);
+                    
+                    if (isNew) 
+                    {
+                        pmt.Rotation = targetRot;
+                        ApplyCurrentOverlayScale(el);
+                    }
+                    else 
+                    {
+                        AnimateMarkerRotation(el, targetRot);
+                    }
                 }
             }
 
-            if (m.Type != 150)
+            // Update Position
+            if (m.Type == 150 || m.Type != 150) // All dynamic types
             {
                 var p = WorldToImagePx(m.X, m.Y);
-                if (!(el.Tag is PlayerMarkerTag t && t.IsDeathPin))
+                if (!(el.Tag is PlayerMarkerTag tag && tag.IsDeathPin))
                 {
                     double off = (el.Tag is PlayerMarkerTag t2 && t2.Radius > 0) ? t2.Radius : 5.0;
-                    
-                    // Specific adjustment for the larger Heli container
-                    if (m.Type == 8 && el is Grid) off = 64; 
+                    if (m.Type == 150) off = 24;
+                    else if (m.Type == 8 && el is Grid) off = 64; 
 
-                    Canvas.SetLeft(el, p.X - off);
-                    Canvas.SetTop(el, p.Y - off);
+                    double targetLeft = p.X - off;
+                    double targetTop = p.Y - off;
+
+                    if (isNew)
+                    {
+                        Canvas.SetLeft(el, targetLeft);
+                        Canvas.SetTop(el, targetTop);
+                    }
+                    else
+                    {
+                        AnimateMarker(el, targetLeft, targetTop);
+                    }
                 }
                 if (isPlayer) el.Visibility = _showPlayers ? Visibility.Visible : Visibility.Collapsed;
             }
@@ -672,11 +734,38 @@ public partial class MainWindow
         var gone = _dynEls.Keys.Where(id => !incoming.Contains(id)).ToList();
         foreach (var id in gone)
         {
-            if (_dynEls.TryGetValue(id, out var el))
+            if (_dynStates.TryGetValue(id, out var state))
             {
-                Overlay.Children.Remove(el);
+                state.MissingCount++;
+                // Keep marker alive and moving for up to 5 seconds (5 poll cycles)
+                if (state.MissingCount < 5)
+                {
+                    if (_dynEls.TryGetValue(id, out var el))
+                    {
+                        var last = state.History.Last();
+                        double nextX = last.X + state.LastVX;
+                        double nextY = last.Y + state.LastVY;
+
+                        state.History.Add((nextX, nextY));
+                        if (state.History.Count > 5) state.History.RemoveAt(0);
+
+                        var p = WorldToImagePx(nextX, nextY);
+                        double off = (el.Tag is PlayerMarkerTag t2 && t2.Radius > 0) ? t2.Radius : 5.0;
+                        if (el is Grid && el.Tag is PlayerMarkerTag t3 && t3.Radius == 64) off = 64; // Heli special case
+
+                        AnimateMarker(el, p.X - off, p.Y - off);
+                        continue; // Skip removal for now
+                    }
+                }
+            }
+
+            // Real removal after 5 missing polls or if no state
+            if (_dynEls.TryGetValue(id, out var oldEl))
+            {
+                Overlay.Children.Remove(oldEl);
                 _dynEls.Remove(id);
-                if (_trackingEntityId == id) _trackingEntityId = null; // Stop tracking if entity is gone
+                _dynStates.Remove(id);
+                if (_trackingEntityId == id) _trackingEntityId = null; 
             }
         }
 
@@ -686,7 +775,7 @@ public partial class MainWindow
             var target = markers.FirstOrDefault(m => m.Id == _trackingEntityId.Value);
             if (target.Id != 0)
             {
-                CenterMapOnWorld(target.X, target.Y);
+                CenterMapOnWorldAnimated(target.X, target.Y, allowDip: false, fast: true, keepTracking: true);
             }
         }
     }
@@ -702,14 +791,7 @@ public partial class MainWindow
             var target = _lastMarkers?.FirstOrDefault(m => m.Id == id);
             if (target.HasValue && target.Value.Id != 0)
             {
-                if (Math.Abs(GetEffectiveZoom() - MAP_FOCUS_ZOOM) < 0.1)
-                {
-                    CenterMapOnWorld(target.Value.X, target.Value.Y);
-                }
-                else
-                {
-                    CenterMapOnWorldAnimated(target.Value.X, target.Value.Y, false, true);
-                }
+                CenterMapOnWorldAnimated(target.Value.X, target.Value.Y, false, true);
                 
                 // Set the ID LAST so it isn't cleared by the StopTracking inside CenterMapOnWorldAnimated
                 _trackingEntityId = id;
@@ -765,5 +847,65 @@ public partial class MainWindow
         };
 
         return grid;
+    }
+
+    private void AnimateMarker(FrameworkElement el, double targetLeft, double targetTop)
+    {
+        double currentLeft = Canvas.GetLeft(el);
+        double currentTop = Canvas.GetTop(el);
+
+        // If it's the first time or too far (teleport), snap instead of animate
+        if (double.IsNaN(currentLeft) || double.IsNaN(currentTop))
+        {
+            Canvas.SetLeft(el, targetLeft);
+            Canvas.SetTop(el, targetTop);
+            return;
+        }
+
+        double dist = Math.Sqrt(Math.Pow(targetLeft - currentLeft, 2) + Math.Pow(targetTop - currentTop, 2));
+        if (dist > 200) // Large jump, snap
+        {
+            el.BeginAnimation(Canvas.LeftProperty, null);
+            el.BeginAnimation(Canvas.TopProperty, null);
+            Canvas.SetLeft(el, targetLeft);
+            Canvas.SetTop(el, targetTop);
+            return;
+        }
+
+        // 1000ms animation for 1.0s polling interval to achieve flawless constant velocity
+        var animX = new DoubleAnimation(targetLeft, TimeSpan.FromMilliseconds(1000));
+        var animY = new DoubleAnimation(targetTop, TimeSpan.FromMilliseconds(1000));
+
+        el.BeginAnimation(Canvas.LeftProperty, animX);
+        el.BeginAnimation(Canvas.TopProperty, animY);
+    }
+
+    private void AnimateMarkerRotation(FrameworkElement el, double targetAngle)
+    {
+        if (el == null) return;
+        ApplyCurrentOverlayScale(el); // Ensure TransformGroup exists
+        
+        if (el.Tag is PlayerMarkerTag pt && pt.ScaleTarget != null)
+        {
+            var group = pt.ScaleTarget.RenderTransform as TransformGroup;
+            if (group != null && group.Children.Count >= 2 && group.Children[1] is RotateTransform rt)
+            {
+                // Use the last logical rotation as the start point
+                double current = pt.Rotation;
+                
+                // Calculate shortest path for rotation
+                double diff = (targetAngle - current) % 360;
+                if (diff > 180) diff -= 360;
+                if (diff < -180) diff += 360;
+                
+                double normalizedTarget = current + diff;
+
+                var anim = new DoubleAnimation(normalizedTarget, TimeSpan.FromMilliseconds(1000));
+                rt.BeginAnimation(RotateTransform.AngleProperty, anim);
+                
+                // Store the logical target so the next poll (and scaling updates) stay in sync
+                pt.Rotation = normalizedTarget;
+            }
+        }
     }
 }

@@ -1320,6 +1320,14 @@ public partial class MainWindow : Window
     private static bool sItemMapLoaded;
     private static string sItemMapSource = "(unbekannt)";
     private readonly Dictionary<uint, FrameworkElement> _dynEls = new();   // UI per marker
+
+    private sealed class DynMarkerState
+    {
+        public List<(double X, double Y)> History = new();
+        public int MissingCount;
+        public double LastVX, LastVY;
+    }
+    private readonly Dictionary<uint, DynMarkerState> _dynStates = new();
     private readonly HashSet<uint> _dynKnown = new();                      // “already spawned” for chat announcements
     private DispatcherTimer? _dynTimer;
     private bool _showPlayers = true;                                      // controlled by ChkPlayers
@@ -3893,12 +3901,20 @@ public partial class MainWindow : Window
 
     private static Image MakeIcon(string packUri, double size = 32)
     {
+        var bi = new BitmapImage();
+        bi.BeginInit();
+        bi.UriSource = new Uri(packUri, UriKind.Absolute);
+        bi.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+        bi.CacheOption = BitmapCacheOption.OnLoad;
+        bi.EndInit();
+
         var img = new Image
         {
             Width = size,
             Height = size,
             Stretch = Stretch.Uniform,
-            Source = new BitmapImage(new Uri(packUri, UriKind.Absolute))
+            Source = bi,
+            Tag = packUri
         };
         RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
         return img;
@@ -4552,14 +4568,30 @@ public partial class MainWindow : Window
         double scale = CalcOverlayScale(eff, exp, baseMult);
         double rotation = (el.Tag is PlayerMarkerTag ptRot) ? ptRot.Rotation : 0;
 
-        target.RenderTransformOrigin = new Point(0.5, 0.5); // Center rotation/scaling
-        var group = new TransformGroup();
-        group.Children.Add(new ScaleTransform(scale, scale));
-        if (rotation != 0)
+        target.RenderTransformOrigin = new Point(0.5, 0.5); 
+        
+        var group = target.RenderTransform as TransformGroup;
+        if (group == null || group.Children.Count < 2 || !(group.Children[0] is ScaleTransform) || !(group.Children[1] is RotateTransform))
         {
+            group = new TransformGroup();
+            group.Children.Add(new ScaleTransform(scale, scale));
             group.Children.Add(new RotateTransform(rotation));
+            target.RenderTransform = group;
         }
-        target.RenderTransform = group;
+        else
+        {
+            var st = (ScaleTransform)group.Children[0];
+            st.ScaleX = scale;
+            st.ScaleY = scale;
+
+            // Only update rotation if not currently animating it (handled in AnimateMarkerRotation)
+            var rt = (RotateTransform)group.Children[1];
+            var source = DependencyPropertyHelper.GetValueSource(rt, RotateTransform.AngleProperty);
+            if (!source.IsAnimated)
+            {
+                rt.Angle = rotation;
+            }
+        }
     }
 
     private class TwoStepFlip
