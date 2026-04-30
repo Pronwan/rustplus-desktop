@@ -48,18 +48,6 @@ public partial class MainWindow
             dHost.Y / s);
     }
 
-    private void WebViewHost_MouseWheel(object sender, MouseWheelEventArgs e)
-    {
-        if (_scene == null) return;
-
-        double zoom = e.Delta > 0 ? 1.10 : (1.0 / 1.10);
-        var hostPos = e.GetPosition(WebViewHost);
-
-        StopTracking(); // Stop tracking on zoom
-        ZoomAtHostPosition(hostPos, zoom);
-        e.Handled = true;
-    }
-
     private void ZoomAtHostPosition(Point hostPos, double factor)
     {
         if (_scene == null) return;
@@ -80,6 +68,63 @@ public partial class MainWindow
         RefreshMonumentOverlayPositions();
         RefreshUserOverlayIcons();
         CenterMiniMapOnPlayer();
+    }
+
+    private double _zoomAnimationTarget = -1;
+    private Point _zoomAnimationPivot;
+    private bool _isZooming = false;
+
+    private async void ZoomAtHostPositionAnimated(Point hostPos, double factor)
+    {
+        if (_scene == null) return;
+
+        var m = MapTransform.Matrix;
+        double currentScale = m.M11;
+        double targetScale = currentScale * factor;
+        targetScale = Math.Max(1.0, Math.Min(20.0, targetScale));
+
+        _zoomAnimationTarget = targetScale;
+        _zoomAnimationPivot = hostPos;
+
+        if (_isZooming) return;
+        _isZooming = true;
+
+        while (Math.Abs(MapTransform.Matrix.M11 - _zoomAnimationTarget) > 0.001)
+        {
+            var curM = MapTransform.Matrix;
+            double curS = curM.M11;
+            double diff = _zoomAnimationTarget - curS;
+            
+            // Move 25% of the way each frame for smooth easing
+            double stepScale = curS + diff * 0.25;
+            double stepFactor = stepScale / curS;
+
+            ZoomAtHostPosition(_zoomAnimationPivot, stepFactor);
+            await Task.Delay(16);
+            
+            // If the map was reloaded or scene cleared, stop
+            if (_scene == null || !_isZooming) break;
+        }
+        
+        // Final snap to target
+        if (_scene != null && Math.Abs(MapTransform.Matrix.M11 - _zoomAnimationTarget) > 0)
+        {
+            ZoomAtHostPosition(_zoomAnimationPivot, _zoomAnimationTarget / MapTransform.Matrix.M11);
+        }
+
+        _isZooming = false;
+    }
+
+    private void WebViewHost_MouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        if (_scene == null) return;
+
+        double zoom = e.Delta > 0 ? 1.25 : (1.0 / 1.25);
+        var hostPos = e.GetPosition(WebViewHost);
+
+        if (e.Delta < 0) StopTracking(); // Only stop tracking on zoom OUT
+        ZoomAtHostPositionAnimated(hostPos, zoom);
+        e.Handled = true;
     }
 
     // Welt->Bild (Pixel im Bildkoordinatensystem - vor Zoom/Pan)
@@ -156,9 +201,10 @@ public partial class MainWindow
             hostPos.Y > WebViewHost.ActualHeight)
             return;
 
-        double factor = zoomIn ? 1.10 : (1.0 / 1.10);
+        double factor = zoomIn ? 1.25 : (1.0 / 1.25);
 
-        ZoomAtHostPosition(hostPos, factor);
+        if (zoomOut) StopTracking();
+        ZoomAtHostPositionAnimated(hostPos, factor);
         e.Handled = true;
     }
 
@@ -211,19 +257,17 @@ public partial class MainWindow
     private bool _isAnimatingMap = false;
 
     // Smoothly fly to a world coordinate (x,y) with a zoom dip
-    private async void CenterMapOnWorldAnimated(double targetX, double targetY, bool allowDip = true, bool fast = false)
+    private async void CenterMapOnWorldAnimated(double targetX, double targetY, bool allowDip = true, bool fast = false, bool keepTracking = false, double? targetZoom = null)
     {
         if (_worldSizeS <= 0) return;
 
-        StopTracking(); // Reset any active follow-lock when manually animating somewhere else
-        AppendLog($"[MapAnim] Start fly to world {targetX}, {targetY}");
-
+        if (!keepTracking) StopTracking(); // Reset any active follow-lock when manually animating somewhere else
+        
         _isAnimatingMap = false; // Stop any current animation
         await Task.Delay(20);    // Give it a moment to stop
         _isAnimatingMap = true;
 
         var targetP = WorldToImagePx(targetX, targetY);
-        AppendLog($"[MapAnim] Target Image Px: {targetP.X}, {targetP.Y}");
 
         var (s, offX, offY) = GetViewboxScaleAndOffset();
 
@@ -238,9 +282,9 @@ public partial class MainWindow
         double startPx = ((hostCx - offX) / s - startM.OffsetX) / startSx;
         double startPy = ((hostCy - offY) / s - startM.OffsetY) / startSy;
 
-        // Target zoom level: standardized as requested
-        double targetSx = MAP_FOCUS_ZOOM; 
-        double targetSy = MAP_FOCUS_ZOOM;
+        // Target zoom level
+        double targetSx = targetZoom ?? (fast ? MAP_FOCUS_ZOOM : startSx); 
+        double targetSy = targetZoom ?? (fast ? MAP_FOCUS_ZOOM : startSy);
 
         // Calculate distance to decide if we should do the "overview dip"
         double dx = targetP.X - startPx;
@@ -250,7 +294,7 @@ public partial class MainWindow
 
         try
         {
-            int steps = fast ? 40 : 100; // Fast for entities, slow/cinematic for others
+            int steps = fast ? 30 : 60; // Faster steps for better responsiveness
             for (int i = 0; i <= steps; i++)
             {
                 if (!_isAnimatingMap) break;
@@ -338,14 +382,22 @@ public partial class MainWindow
     private void BtnResetMap_Click(object sender, RoutedEventArgs e)
     {
         ResetMapZoom();
+        AppendLog("Map reset.");
     }
  
     private void ResetMapZoom()
     {
-        MapTransform.Matrix = new Matrix(MAP_DEFAULT_ZOOM, 0, 0, MAP_DEFAULT_ZOOM, 0, 0);
-        RefreshAllOverlayScales();
-        RefreshMonumentOverlayPositions();
-        RefreshUserOverlayIcons();
-        CenterMiniMapOnPlayer();
+        if (_worldSizeS > 0)
+        {
+            CenterMapOnWorldAnimated(_worldSizeS / 2, _worldSizeS / 2, allowDip: false, fast: false, targetZoom: MAP_DEFAULT_ZOOM);
+        }
+        else
+        {
+            MapTransform.Matrix = new Matrix(MAP_DEFAULT_ZOOM, 0, 0, MAP_DEFAULT_ZOOM, 0, 0);
+            RefreshAllOverlayScales();
+            RefreshMonumentOverlayPositions();
+            RefreshUserOverlayIcons();
+            CenterMiniMapOnPlayer();
+        }
     }
 }

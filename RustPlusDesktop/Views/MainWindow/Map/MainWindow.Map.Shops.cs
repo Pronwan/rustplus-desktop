@@ -75,7 +75,7 @@ public partial class MainWindow
             {
                 double avgX = cluster.Average(x => x.X);
                 double avgY = cluster.Average(x => x.Y);
-                CenterMapOnWorld(avgX, avgY);
+                CenterMapOnWorldAnimated(avgX, avgY, false, true);
                 ShowShopDetails(cluster, fe);
                 e.Handled = true;
             }

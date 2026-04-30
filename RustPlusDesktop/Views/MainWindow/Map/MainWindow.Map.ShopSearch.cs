@@ -67,7 +67,7 @@ public partial class MainWindow
         foreach (var o in offers)
             root.Children.Add(BuildOfferRowSearchUI(o, compact));
 
-        card.MouseLeftButtonUp += (_, __) => { StopTracking(); CenterMapOnWorld(s.X, s.Y); };
+        card.MouseLeftButtonUp += (_, __) => { CenterMapOnWorldAnimated(s.X, s.Y, false, true); };
         return card;
     }
 
