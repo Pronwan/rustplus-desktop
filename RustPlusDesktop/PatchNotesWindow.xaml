@@ -11,12 +11,53 @@
         <DockPanel LastChildFill="True">
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
                 <TextBlock Text="Patch Notes &amp; Version History" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,2"/>
-                <TextBlock Text="Current Version: 3.5.4" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
+                <!-- UPDATE VERSION NUMBER HERE -->
+                <TextBlock Text="Current Version: 4.0.0" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
             </StackPanel>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel Margin="0,0,0,12">
 
+                    <!-- ============================================== -->
+                    <!-- NEW v4.0.0 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v4.0.0  |  The Map &amp; Stability Overhaul (Major Release)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+
+                            <!-- Contributor Credit -->
+                            <TextBlock Margin="0,0,0,10" TextWrapping="Wrap">
+                                <Span Foreground="{DynamicResource TextSubtle}">This massive milestone update is entirely thanks to </Span>
+                                <Hyperlink NavigateUri="https://github.com/JawadYzbk" RequestNavigate="Hyperlink_RequestNavigate" Foreground="{DynamicResource Accent}">JawadYzbk</Hyperlink>
+                                <Span Foreground="{DynamicResource TextSubtle}">! He rebuilt the core architecture of the app to be faster, smarter, and infinitely more stable.</Span>
+                            </TextBlock>
+
+                            <!-- Screenshots -->
+                            <Image Source="pack://application:,,,/Screenshots/v4_map_overhaul.png" Stretch="Uniform" MaxHeight="350" Margin="0,0,0,6"/>
+                            <Image Source="pack://application:,,,/Screenshots/v4_shop_hover.png" Stretch="Uniform" MaxHeight="350" Margin="0,0,0,12"/>
+
+                            <!-- Features -->
+                            <TextBlock Text="• 'Dead Reckoning' &amp; Connection Resilience" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="Say goodbye to flickering markers! If a high-pop server (like Rustoria) delays data, the app now uses predictive interpolation to keep players and events moving smoothly. Shops will no longer disappear during brief connection drops." TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• Interactive Event Dock &amp; Auto-Follow" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="A brand new Event Dock tracks active map events (Patrol Heli, Cargo Ship, Chinook, Travelling Vendor, Deep Sea). Click an event to instantly lock the camera onto it and track it automatically across the map." TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• Smart Shop Clustering" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="Multiple vending machines in a single base are now clustered into one clean map icon. Hovering over the cluster reveals a beautifully redesigned, scrollable popup showing all items sold at that location." TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• Modern Shop Search &amp; Advanced Trades" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="The Shop Search is now an ultra-fast, modern embedded interface. The 'Profit Trades' (Arbitrage) and 'Buy X for Y' tools have been moved to their own dedicated windows. The app also introduces 'Suspicious Shop' detection to warn you about bait bases." TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• 60 FPS Animations &amp; Offline Icon Caching" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="Map zooming and panning now feature butter-smooth animations and a cinematic 'overview dip'. Item icons are securely cached offline using SHA1 hashes, making map loading near-instant and saving bandwidth." TextWrapping="Wrap" Margin="0,0,0,8"/>
+                        </StackPanel>
+                    </Border>
+
+
+                    <!-- ============================================== -->
+                    <!-- OLD PATCH NOTES (Unchanged) -->
+                    <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
                             <TextBlock Text="v3.5.4  |  Player Management &amp; Optimization" FontWeight="SemiBold" FontSize="15" Margin="0,0,0,4"/>
@@ -41,9 +82,9 @@
                             <TextBlock Text="v3.5.3  |  The Intelligence Update" FontWeight="SemiBold" FontSize="15" Margin="0,0,0,4"/>
 
                             <TextBlock Margin="0,0,0,10" TextWrapping="Wrap">
-            <Span Foreground="{DynamicResource TextSubtle}">Special thanks to </Span>
-            <Hyperlink NavigateUri="https://github.com/JawadYzbk" RequestNavigate="Hyperlink_RequestNavigate" Foreground="{DynamicResource Accent}">JawadYzbk</Hyperlink>
-            <Span Foreground="{DynamicResource TextSubtle}"> for this massive contribution!</Span>
+                                <Span Foreground="{DynamicResource TextSubtle}">Special thanks to </Span>
+                                <Hyperlink NavigateUri="https://github.com/JawadYzbk" RequestNavigate="Hyperlink_RequestNavigate" Foreground="{DynamicResource Accent}">JawadYzbk</Hyperlink>
+                                <Span Foreground="{DynamicResource TextSubtle}"> for this massive contribution!</Span>
                             </TextBlock>
 
                             <TextBlock Text="• Advanced Activity Intelligence" FontWeight="Bold" Margin="0,0,0,4"/>
@@ -64,7 +105,7 @@
                             <TextBlock Text="Overhauled server identification. Searching is now strictly IP-based for 100% accuracy, fixing issues with shared IP ranges (e.g., Rustoria)." TextWrapping="Wrap" Margin="0,0,0,4"/>
                         </StackPanel>
                     </Border>
-                    
+
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
                             <TextBlock Text="v3.4.0  |  Hierarchical Grouping &amp; Advanced Alarms" FontWeight="SemiBold" FontSize="15" Margin="0,0,0,8"/>
