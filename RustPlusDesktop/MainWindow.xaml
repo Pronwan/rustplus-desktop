@@ -8,8 +8,10 @@
         xmlns:conv="clr-namespace:RustPlusDesk.Converters"
         
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d"
         Title="Rust+ Desktop by Pronwan" Height="814" Width="1600"
+        MinHeight="700" MinWidth="1300"
         Background="{DynamicResource AppBg}" Foreground="{DynamicResource TextPrimary}"
         UseLayoutRounding="True" SnapsToDevicePixels="True">
     <Window.Resources>
@@ -675,12 +677,23 @@
 
     <Grid x:Name="Root" Margin="16">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="331*"/>
-            <ColumnDefinition Width="453*"/>
+            <ColumnDefinition x:Name="ColSidebar" Width="600" MinWidth="400" MaxWidth="600"/>
+            <ColumnDefinition Width="8"/>
+            <ColumnDefinition Width="*" MinWidth="800"/>
         </Grid.ColumnDefinitions>
 
+        <GridSplitter Grid.Column="1" 
+                      Width="8" 
+                      HorizontalAlignment="Stretch" 
+                      VerticalAlignment="Stretch"
+                      Background="Transparent" 
+                      ShowsPreview="False"
+                      ResizeBehavior="PreviousAndNext"
+                      ResizeDirection="Columns"
+                      DragCompleted="SidebarSplitter_DragCompleted"/>
+
         <!-- Linke Spalte: Account + Serverliste -->
-        <Border Grid.Column="0" Style="{StaticResource Card}" Margin="0,0,12,0">
+        <Border Grid.Column="0" Style="{StaticResource Card}" Margin="0,0,4,0" MinWidth="400" MaxWidth="600">
             <!-- WICHTIG: DockPanel statt StackPanel, damit die Mitte flexibel ist -->
             <DockPanel LastChildFill="True">
 
@@ -1917,12 +1930,12 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
         </Border>
 
         <!-- Rechte Spalte: Login/Status + WebViewHost -->
-        <Border Grid.Column="1" Style="{StaticResource Card}">
+        <Border Grid.Column="2" Style="{StaticResource Card}" MinWidth="800">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
@@ -1945,10 +1958,6 @@ Margin="12,0,0,0"
           Unchecked="Monuments_Unchecked"/>
                     <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChkShops" Content="Shops" Margin="12,0,0,0"
                       Checked="ChkShops_Checked" Unchecked="ChkShops_Checked"/>
-                    <Button x:Name="BtnShopSearch" Style="{StaticResource IconButton}" Margin="12,0,0,0"
-                    ToolTip="Shop Search" Click="BtnShopSearch_Click">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="16" Text="&#xE721;"/>
-                    </Button>
                     <TextBlock Width="20"></TextBlock>
                     <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChatAnnounce"
           Content="Event Spawns in Chat"
@@ -1956,6 +1965,12 @@ Margin="12,0,0,0"
           Margin="8,0,0,0"
           Checked="ChatAnnounce_Checked"
           Unchecked="ChatAnnounce_Unchecked"/>
+                    <Button Content="Reset ⟲"
+                            Width="80"
+                            Margin="8,0,0,0"
+                            Style="{StaticResource GhostButton}"
+                            Click="BtnResetMap_Click"
+                            ToolTip="Reset map zoom and position"/>
                     <Button Content="Mini 🗺️"
 Width="80"
 Style="{StaticResource GhostButton}"
@@ -1996,13 +2011,16 @@ Click="BtnToggleMiniMap_Click"/>
                     </Button>
 
                     <Button x:Name="BtnToggleOverlayTools"
-        Width="32" Height="32"
-        Margin="4,0,0,0"
-        ToolTip="Map-Overlay Zeichnen / Team Overlays"
-        Click="BtnToggleOverlayTools_Click">
+                            Width="32" Height="32"
+                            Margin="4,0,0,0"
+                            ToolTip="Map-Overlay Zeichnen / Team Overlays"
+                            Click="BtnToggleOverlayTools_Click">
                         <Image Source="pack://application:,,,/icons/pencil.png"/>
                     </Button>
 
+                    <!-- StackPanel with Heli Demo removed -->
+                    <StackPanel Orientation="Horizontal" Margin="12,0,0,0">
+                    </StackPanel>
                 </StackPanel>
 
                 <Grid x:Name="WebViewHost" Grid.Row="1" Margin="0,0,0,8" ClipToBounds="True"
@@ -2045,9 +2063,179 @@ Click="BtnToggleMiniMap_Click"/>
            Visibility="Collapsed"
            Opacity="0.95"
            Source="pack://application:,,,/TitleScreen-rust-plus-desktop.png"/>
-                    <Image x:Name="ImgMap" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Image x:Name="ImgMap" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                    <!-- LIVE EVENT DOCK (Top Right) -->
+                    <StackPanel x:Name="EventDock" 
+                                Orientation="Vertical" 
+                                VerticalAlignment="Top" 
+                                HorizontalAlignment="Right" 
+                                Margin="15" 
+                                Panel.ZIndex="100"/>
+
                     <Canvas x:Name="GridLayer" IsHitTestVisible="False"/>
                     <Canvas x:Name="Overlay"   IsHitTestVisible="True"/>
+ 
+                    <!-- Shop Details Panel (Clamped to Map Container) -->
+                    <Border x:Name="ShopDetailsPopup" 
+                            Visibility="Collapsed"
+                            Width="340"
+                            Panel.ZIndex="1100"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Background="#1E2126"
+                            BorderBrush="#60FFFFFF"
+                            BorderThickness="1"
+                            CornerRadius="12">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.6" Color="Black"/>
+                        </Border.Effect>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            
+                            <Button x:Name="BtnCloseShopDetails" 
+                                    Content="✕" 
+                                    HorizontalAlignment="Right" 
+                                    Style="{StaticResource GhostButton}"
+                                    Width="30" Height="30" 
+                                    FontSize="14"
+                                    Foreground="Gray"
+                                    Click="BtnCloseShopDetails_Click"
+                                    Panel.ZIndex="10"/>
+
+                            <ScrollViewer x:Name="ShopDetailsScroll" 
+                                          Grid.Row="1"
+                                          MaxHeight="600"
+                                          VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <StackPanel x:Name="ShopDetailsContent" Margin="12,4,12,12"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+
+                    <!-- Integrated Shop Search Overlay (Roll-up) -->
+                    <Border x:Name="ShopSearchPanel" 
+                            HorizontalAlignment="Right" 
+                            VerticalAlignment="Bottom"
+                            Width="400" 
+                            Margin="0,0,12,0"
+                            Background="Transparent"
+                            Panel.ZIndex="1000">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+ 
+                            <Border x:Name="ShopSearchContent" 
+                                    Grid.Row="0"
+                                    Height="540"
+                                    Background="#16181C"
+                                    BorderBrush="#40FFFFFF"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Visibility="Collapsed"
+                                    RenderTransformOrigin="0.5,1">
+                                <Border.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform x:Name="ShopSearchScale" ScaleY="1"/>
+                                        <TranslateTransform x:Name="ShopSearchTranslate" Y="0"/>
+                                    </TransformGroup>
+                                </Border.RenderTransform>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Header / Drag / Close Area -->
+                                    <Grid Grid.Row="0" Background="#1E2126">
+                                        <TextBlock Text="SHOP SEARCH" 
+                                                   Foreground="#60FFFFFF" 
+                                                   FontSize="10" 
+                                                   FontWeight="Bold" 
+                                                   VerticalAlignment="Center" 
+                                                   HorizontalAlignment="Left" 
+                                                   Margin="12,0,0,0"/>
+                                        
+                                        <Button x:Name="BtnCloseShopSearch" 
+                                                Content="✕" 
+                                                HorizontalAlignment="Right" 
+                                                VerticalAlignment="Center"
+                                                Margin="0,0,4,0"
+                                                Width="26" Height="26"
+                                                Style="{StaticResource GhostButton}"
+                                                Click="BtnCloseShopSearch_Click"
+                                                Foreground="#99FFFFFF"
+                                                FontSize="12"
+                                                Cursor="Hand"
+                                                ToolTip="Close Search">
+                                            <Button.Resources>
+                                                <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Foreground" Value="White"/>
+                                                            <Setter Property="Background" Value="#20FFFFFF"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Resources>
+                                        </Button>
+                                    </Grid>
+
+                                    <wv2:WebView2 x:Name="EmbeddedShopSearch" Grid.Row="1"/>
+                                </Grid>
+                            </Border>
+ 
+                            <Border x:Name="BtnShopToggleBorder"
+                                    Grid.Row="1"
+                                    Height="26"
+                                    Width="160"
+                                    HorizontalAlignment="Right"
+                                    Background="#16181C"
+                                    BorderBrush="#40FFFFFF"
+                                    BorderThickness="1,1,1,0"
+                                    CornerRadius="8,8,0,0">
+                                <Button x:Name="BtnShopToggle"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Padding="0"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center"
+                                        Click="BtnShopSearch_Click">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8,8,0,0">
+                                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="border" Property="Background" Value="#30FFFFFF"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE721;" 
+                                                   FontFamily="Segoe MDL2 Assets" 
+                                                   FontSize="12" 
+                                                   VerticalAlignment="Center"
+                                                   Margin="0,0,6,0"/>
+                                        <TextBlock Text="Shop Search" 
+                                                   FontSize="11" 
+                                                   FontWeight="SemiBold"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                            </Border>
+                        </Grid>
+                    </Border>
 
                     <Border x:Name="OverlayToolbox"
         Grid.Row="1"
@@ -2140,8 +2328,9 @@ Click="BtnToggleMiniMap_Click"/>
                 </Grid>
 
                 <TextBox x:Name="TxtLog" Grid.Row="2"
-                 IsReadOnly="True" TextWrapping="Wrap"
-                 VerticalScrollBarVisibility="Auto"/>
+                         Height="100"
+                         IsReadOnly="True" TextWrapping="Wrap"
+                         VerticalScrollBarVisibility="Auto"/>
             </Grid>
         </Border>
         <Grid Background="#80000000"
