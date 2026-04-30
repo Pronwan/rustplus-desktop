@@ -47,6 +47,27 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./App-Version3.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)  
 *(click the image to watch on YouTube)*
 
+## Update 4.0.0 - The Evolution Update | Major Map & Stability Overhaul (April 30th)
+
+**🚀 Key Highlights**
+- **Rebuilt Core Architecture**: A massive refactoring of over 4,000 lines of code into a modular system, ensuring the app is faster and future-proof.
+- **"Dead Reckoning" Resilience**: Markers and shops no longer disappear during brief server lags. The app now uses predictive interpolation to keep player and event icons moving smoothly even when data is delayed.
+- **Interactive Event Dock**: A new real-time sidebar for active events (Patrol Heli, Cargo Ship, Chinook, etc.). Click any event to **auto-lock and track** it dynamically across the map.
+- **Smart Shop Clustering**: Multiple vending machines in one base are now grouped into clean cluster icons. Hovering over them reveals a redesigned, scrollable list of all items without map clutter.
+
+![V4 Map Overhaul](./RustPlusDesktop/Screenshots/v4_map_overhaul.png)
+
+**🛠 Improvements**
+- **60 FPS Map Animations**: Butter-smooth zooming and panning with a new cinematic "Overview Dip" when jumping across the map.
+- **Modern Shop Search**: Powered by WebView2, the new search interface is near-instant and includes advanced arbitrage (Profit Trades) and pathfinding tools.
+- **Offline Icon Caching**: All item icons are now securely cached locally using SHA1 hashes, making map loads instant and saving massive bandwidth.
+- **Flexible UI**: Added a GridSplitter for a resizable sidebar and the ability to hide the system console to maximize map space.
+
+**🙌 Special Thanks**
+This milestone release was made possible by the incredible contribution of **[JawadYzbk](https://github.com/JawadYzbk)**, who rebuilt the core architecture and implemented the advanced map features!
+
+---
+
 ## Update 3.5.0 - Player Intelligence & Background Ops (April 22nd)
 **🚀 New Features**
 - **Advanced Activity Intelligence**: Introducing a full-scale player tracking system! View 12-week GitHub-style activity grids and 24-hour heatmaps to predict when your enemies (or friends) are most likely to be online or sleeping.
