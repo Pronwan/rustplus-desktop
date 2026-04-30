@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Shop Search</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --bg: rgba(22, 24, 28, 0.98);
+      --card: rgba(30, 34, 40, 0.7);
+      --card2: rgba(37, 42, 50, 0.8);
+      --accent: #00adef;
+      --accent2: rgba(0, 173, 239, .15);
+      --border: rgba(255, 255, 255, .08);
+      --text: #eceff1;
+      --sub: rgba(200, 200, 200, .6);
+      --red: #ef5350;
+      --green: #66bb6a
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font: 12px/1.3 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      border-radius: 12px
+    }
+
+    /* ── Header ── */
+    #hdr {
+      padding: 8px 10px 0;
+      flex-shrink: 0
+    }
+
+    /* ── Search row ── */
+    #searchRow {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 6px
+    }
+
+    #comboWrap {
+      position: relative;
+      flex: 1;
+      min-width: 0
+    }
+
+    #searchInput {
+      width: 100%;
+      background: rgba(0, 0, 0, .2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      padding: 5px 8px 5px 24px;
+      font: 12px 'Segoe UI', sans-serif;
+      outline: none;
+      transition: border-color .2s
+    }
+
+    #searchInput:focus {
+      border-color: var(--accent)
+    }
+
+    #searchPrefix {
+      position: absolute;
+      left: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      opacity: .4;
+      font-size: 12px
+    }
+
+    #selIcon {
+      position: absolute;
+      left: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      display: none;
+      object-fit: contain;
+      pointer-events: none
+    }
+
+    #clearBtn {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--sub);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 10px;
+      transition: all .15s;
+      z-index: 10
+    }
+
+    #clearBtn:hover {
+      background: var(--red);
+      color: white;
+      border-color: var(--red)
+    }
+
+    #dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: #1e2228;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 999;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .5)
+    }
+
+    .ditem {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
+      transition: background .15s;
+      font-size: 11px
+    }
+
+    .ditem:hover,
+    .ditem.active {
+      background: var(--accent2)
+    }
+
+    .ditem img {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+      flex-shrink: 0
+    }
+
+    /* ── Toggles ── */
+    #filterRow {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex-wrap: wrap;
+      margin-bottom: 6px
+    }
+
+    .tgl {
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--sub);
+      padding: 2px 8px;
+      font: 11px 'Segoe UI', sans-serif;
+      cursor: pointer;
+      transition: all .18s;
+      white-space: nowrap
+    }
+
+    .tgl.on {
+      background: var(--accent2);
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    .tgl-red.on {
+      background: rgba(239, 83, 80, .1);
+      border-color: var(--red);
+      color: var(--red)
+    }
+
+    .sep {
+      width: 1px;
+      height: 14px;
+      background: var(--border);
+      margin: 0 1px;
+      flex-shrink: 0
+    }
+
+    .btn-action {
+      background: rgba(0, 173, 239, .1);
+      border: 1px solid rgba(0, 173, 239, .3);
+      border-radius: 4px;
+      color: var(--accent);
+      padding: 2px 8px;
+      font: 11px 'Segoe UI', sans-serif;
+      cursor: pointer;
+      transition: all .18s;
+      white-space: nowrap
+    }
+
+    .btn-action:hover {
+      background: rgba(0, 173, 239, .2);
+      border-color: var(--accent)
+    }
+
+    /* ── Alert section ── */
+    #alertSection {
+      background: rgba(0, 0, 0, .15);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 6px
+    }
+
+    #alertHdr {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
+      user-select: none
+    }
+
+    #alertHdr span {
+      font-weight: 600;
+      font-size: 11px;
+      color: var(--sub)
+    }
+
+    #alertHdr .arrow {
+      font-size: 9px;
+      color: var(--sub);
+      margin-left: auto;
+      transition: transform .2s
+    }
+
+    #alertHdr.open .arrow {
+      transform: rotate(180deg)
+    }
+
+    #alertBody {
+      display: none;
+      padding: 0 8px 6px
+    }
+
+    #alertBody.show {
+      display: block
+    }
+
+    #alertList {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      max-height: 100px;
+      overflow-y: auto
+    }
+
+    .alert-chip {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      background: rgba(0, 0, 0, .2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 6px
+    }
+
+    .alert-chip .aq {
+      flex: 1;
+      font-size: 11px;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap
+    }
+
+    .alert-chip .am {
+      font-size: 9px;
+      color: var(--sub)
+    }
+
+    .chip-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--sub);
+      font-size: 11px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all .15s
+    }
+
+    .chip-btn.on {
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    .chip-btn.saved {
+      border-color: var(--green);
+      color: var(--green)
+    }
+
+    .chip-btn.del:hover {
+      border-color: var(--red);
+      color: var(--red)
+    }
+
+    /* ── Results ── */
+    #results {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 10px 10px
+    }
+
+    .shop-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      transition: border-color .18s
+    }
+
+    .shop-card:hover {
+      border-color: rgba(0, 173, 239, .3)
+    }
+
+    .shop-hdr {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 4px
+    }
+
+    .shop-name {
+      font-weight: 600;
+      font-size: 12px
+    }
+
+    .shop-grid {
+      font-size: 10px;
+      color: var(--sub)
+    }
+
+    .offer-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 0;
+      border-top: 1px solid rgba(255, 255, 255, .03)
+    }
+
+    .offer-row:first-child {
+      border-top: none
+    }
+
+    .offer-icon {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+      flex-shrink: 0
+    }
+
+    .offer-name {
+      flex: 1;
+      font-size: 11px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap
+    }
+
+    .offer-stock {
+      font-size: 10px;
+      color: var(--sub);
+      white-space: nowrap
+    }
+
+    .offer-arr {
+      color: var(--sub);
+      font-size: 10px;
+      flex-shrink: 0
+    }
+
+    .offer-curr {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      white-space: nowrap
+    }
+
+    .offer-curr img {
+      width: 14px;
+      height: 14px;
+      object-fit: contain
+    }
+
+    .offer-curr span {
+      font-size: 11px;
+      font-weight: 600
+    }
+
+    .out-stock {
+      opacity: .4
+    }
+
+    #empty {
+      text-align: center;
+      color: var(--sub);
+      padding: 30px 10px;
+      font-size: 12px
+    }
+
+    *::-webkit-scrollbar {
+      width: 4px
+    }
+
+    *::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, .08);
+      border-radius: 2px
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, .15)
+    }
+  </style>
+</head>
+
+<body>
+  <div id="hdr">
+    <!-- Search -->
+    <div id="searchRow">
+      <div id="comboWrap">
+        <span id="searchPrefix">🔍</span>
+        <img id="selIcon" alt="">
+        <input id="searchInput" type="text" placeholder="Search items or type freely…" autocomplete="off">
+        <div id="clearBtn" title="Clear search" onclick="clearSearch()">✕</div>
+        <div id="dropdown" style="display:none"></div>
+      </div>
+      <button class="btn-action" onclick="post('openAnalysis',{})" title="Profit analysis">💰 Profit</button>
+      <button class="btn-action" onclick="post('openPathFinder',{})" title="Buy X for Y">🔍 Buy X</button>
+      <button class="btn-action" onclick="addAlert()" title="Create item alert">🔔 Alert</button>
+    </div>
+
+    <!-- Filter toggles -->
+    <div id="filterRow">
+      <button class="tgl on" id="tSell" onclick="toggle(this,'sell')">💰 Sells</button>
+      <button class="tgl on" id="tBuy" onclick="toggle(this,'buy')">🛒 Buys</button>
+      <button class="tgl" id="tHide" onclick="toggle(this,'hide')">👁 Hide 0-stock</button>
+      <div class="sep"></div>
+      <button class="tgl tgl-red" id="tNew" onclick="toggle(this,'new')">🔔 New→chat</button>
+      <button class="tgl tgl-red" id="tSusp" onclick="toggle(this,'susp')">⚠ Suspicious</button>
+    </div>
+
+    <!-- Alert panel -->
+    <div id="alertSection">
+      <div id="alertHdr" onclick="toggleAlerts()">
+        <span>🚨 Item Alerts</span>
+        <div class="arrow">▼</div>
+      </div>
+      <div id="alertBody">
+        <div id="alertList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results">
+    <div id="empty">No shops loaded yet…</div>
+  </div>
+
+  <script>
+    var allItems = [];
+    var allShops = [];
+    var allAlerts = [];
+    var selItem = null;
+    var filters = { sell: true, buy: true, hide: false, new: false, susp: false };
+    var dropVisible = false;
+
+    // ── Public API called by C# ─────────────────────────────────────────────────
+    window.loadItems = function (items) {
+      allItems = items;
+    };
+
+    window.updateShops = function (shops) {
+      allShops = shops;
+      render();
+    };
+
+    window.updateAlerts = function (alerts) {
+      allAlerts = alerts;
+      renderAlerts();
+    };
+
+    // ── Post to C# ──────────────────────────────────────────────────────────────
+    function post(action, data) {
+      if (window.chrome && window.chrome.webview) {
+        window.chrome.webview.postMessage(Object.assign({ action }, data));
+      }
+    }
+
+    function notifyFilter() {
+      post('filterChanged', { query: searchVal(), sell: filters.sell, buy: filters.buy });
+    }
+
+    // ── Filter toggles ───────────────────────────────────────────────────────────
+    function toggle(btn, key) {
+      filters[key] = !filters[key];
+      btn.classList.toggle('on', filters[key]);
+      if (key === 'new') post('notifyNew', { on: filters.new });
+      if (key === 'susp') post('notifySuspicious', { on: filters.susp });
+      notifyFilter();
+      render();
+    }
+
+    // ── Search / combobox ────────────────────────────────────────────────────────
+    var inp = document.getElementById('searchInput');
+    var drop = document.getElementById('dropdown');
+    var si = document.getElementById('selIcon');
+    var sp = document.getElementById('searchPrefix');
+
+    function searchVal() { return selItem ? selItem.display : inp.value.trim(); }
+
+    inp.addEventListener('input', function () {
+      selItem = null;
+      si.style.display = 'none';
+      sp.style.display = '';
+      updateClearBtn();
+      showDrop();
+      render();
+      notifyFilter();
+    });
+
+    function updateClearBtn() {
+      var btn = document.getElementById('clearBtn');
+      btn.style.display = (inp.value || selItem) ? 'flex' : 'none';
+    }
+
+    function clearSearch() {
+      inp.value = '';
+      selItem = null;
+      si.style.display = 'none';
+      sp.style.display = '';
+      updateClearBtn();
+      hideDrop();
+      render();
+      notifyFilter();
+      inp.focus();
+    }
+
+    inp.addEventListener('keydown', function (e) {
+      var items = drop.querySelectorAll('.ditem');
+      var cur = drop.querySelector('.ditem.active');
+      var idx = cur ? Array.from(items).indexOf(cur) : -1;
+      if (e.key === 'ArrowDown') { e.preventDefault(); setActive(items, idx + 1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(items, idx - 1); }
+      else if (e.key === 'Enter') { if (cur) pickItem(parseInt(cur.dataset.i)); else { hideDrop(); render(); } }
+      else if (e.key === 'Escape') { hideDrop(); }
+    });
+
+    inp.addEventListener('focus', function () { if (inp.value.length > 0) showDrop(); });
+
+    document.addEventListener('click', function (e) {
+      if (!document.getElementById('comboWrap').contains(e.target)) hideDrop();
+    });
+
+    function setActive(items, idx) {
+      items.forEach(function (el) { el.classList.remove('active'); });
+      if (idx >= 0 && idx < items.length) items[idx].classList.add('active');
+    }
+
+    function showDrop() {
+      var q = inp.value.trim().toLowerCase();
+      if (!q || allItems.length === 0) { hideDrop(); return; }
+      var matches = allItems.filter(function (it) {
+        return it.display.toLowerCase().includes(q) || it.sn.toLowerCase().includes(q);
+      }).slice(0, 20);
+      if (!matches.length) { hideDrop(); return; }
+      drop.innerHTML = matches.map(function (it, i) {
+        var ico = it.icon ? '<img src="' + esc(it.icon) + '" onerror="this.style.display=\'none\'">' : '<span style="width:20px"></span>';
+        return '<div class="ditem" data-i="' + i + '" onclick="pickItem(' + i + ')">' + ico +
+          '<span>' + esc(it.display) + '</span></div>';
+      }).join('');
+      drop._matches = matches;
+      drop.style.display = 'block';
+      dropVisible = true;
+    }
+
+    function hideDrop() { drop.style.display = 'none'; dropVisible = false; }
+
+    function pickItem(i) {
+      var it = drop._matches && drop._matches[i];
+      if (!it) return;
+      selItem = it;
+      inp.value = it.display;
+      if (it.icon) { si.src = it.icon; si.style.display = 'block'; sp.style.display = 'none'; }
+      hideDrop();
+      updateClearBtn();
+      render();
+      notifyFilter();
+    }
+
+    // ── Render shop cards ────────────────────────────────────────────────────────
+    function render() {
+      var q = searchVal().toLowerCase();
+      var res = document.getElementById('results');
+      var cards = [];
+
+      allShops.forEach(function (s) {
+        var orders = s.orders.filter(function (o) {
+          if (filters.hide && o.stock <= 0) return false;
+          var left = filters.sell && (o.iName.toLowerCase().includes(q) || !q);
+          var right = filters.buy && (o.cName.toLowerCase().includes(q) || !q);
+          if (!q) return true;
+          return left || right;
+        });
+        if (!orders.length) return;
+
+        var rows = orders.map(function (o) {
+          var cls = o.stock <= 0 ? ' out-stock' : '';
+          var ii = o.iIcon ? '<img class="offer-icon" src="' + esc(o.iIcon) + '" onerror="this.style.display=\'none\'">' : '';
+          var ci = o.cIcon ? '<img src="' + esc(o.cIcon) + '" onerror="this.style.display=\'none\'">' : '';
+          var qty = o.qty > 1 ? '<span style="color:var(--sub);font-size:11px">x' + o.qty + '</span> ' : '';
+          var bp = o.bp ? ' <span style="font-size:10px;color:#f4b942">[BP]</span>' : '';
+          return '<div class="offer-row' + cls + '">' + ii +
+            '<span class="offer-name">' + qty + esc(o.iName) + bp + '</span>' +
+            '<span class="offer-stock">📦' + o.stock + '</span>' +
+            '<span class="offer-arr">→</span>' +
+            '<div class="offer-curr">' + ci + '<span>' + o.cAmt + ' ' + esc(o.cName) + '</span></div>' +
+            '</div>';
+        }).join('');
+
+        cards.push('<div class="shop-card" onclick="post(\'centerMap\',{x:' + s.x + ',y:' + s.y + '})">' +
+          '<div class="shop-hdr"><span class="shop-name">' + esc(s.label) + '</span>' +
+          '<span class="shop-grid">[' + esc(s.grid) + ']</span></div>' + rows + '</div>');
+      });
+
+      res.innerHTML = cards.length
+        ? cards.join('')
+        : '<div id="empty">' + (q ? 'No shops match "' + esc(q) + '"' : 'No shops loaded yet…') + '</div>';
+    }
+
+    // ── Alert section ────────────────────────────────────────────────────────────
+    function toggleAlerts() {
+      var hdr = document.getElementById('alertHdr');
+      var body = document.getElementById('alertBody');
+      hdr.classList.toggle('open');
+      body.classList.toggle('show');
+    }
+
+    function addAlert() {
+      var q = searchVal();
+      if (!q) return;
+      // Ensure alert panel is open so user sees it added
+      var body = document.getElementById('alertBody');
+      if (!body.classList.contains('show')) toggleAlerts();
+
+      post('addAlert', { query: q, sell: filters.sell, buy: filters.buy });
+    }
+
+    function renderAlerts() {
+      var el = document.getElementById('alertList');
+      if (!allAlerts.length) { el.innerHTML = '<div style="color:var(--sub);font-size:12px;padding:4px 0">No alerts yet.</div>'; return; }
+      el.innerHTML = allAlerts.map(function (a) {
+        var mode = (a.sell && a.buy) ? 'sell+buy' : a.sell ? 'sell' : 'buy';
+        var cs = a.saved ? ' saved' : '';
+        return '<div class="alert-chip">' +
+          '<span class="aq">' + esc(a.query) + '</span>' +
+          '<span class="am">' + mode + '</span>' +
+          '<button class="chip-btn' + (a.chat ? ' on' : '') + '" title="Team chat"' +
+          ' onclick="togAlertProp(\'' + a.id + '\',\'chat\')">💬</button>' +
+          '<button class="chip-btn' + (a.sound ? ' on' : '') + '" title="Sound"' +
+          ' onclick="togAlertProp(\'' + a.id + '\',\'sound\')">🔊</button>' +
+          '<button class="chip-btn' + cs + '" title="Save across restarts"' +
+          ' onclick="togAlertSave(\'' + a.id + '\',' + a.saved + ')">💾</button>' +
+          '<button class="chip-btn del" title="Remove"' +
+          ' onclick="removeAlert(\'' + a.id + '\')">🗑</button>' +
+          '</div>';
+      }).join('');
+    }
+
+    function togAlertProp(id, prop) {
+      var a = allAlerts.find(function (x) { return x.id === id; });
+      if (!a) return;
+      a[prop] = !a[prop];
+      post('alertNotify', { id: id, chat: a.chat, sound: a.sound });
+      renderAlerts();
+    }
+
+    function togAlertSave(id, saved) {
+      post('saveAlert', { id: id, saved: !saved });
+    }
+
+    function removeAlert(id) {
+      post('removeAlert', { id: id });
+    }
+
+    // ── Utility ──────────────────────────────────────────────────────────────────
+    function esc(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+  </script>
+</body>
+
+</html>

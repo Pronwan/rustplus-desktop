@@ -27,6 +27,9 @@ public class TrackingSettings
     public bool StartMinimizedEnabled { get; set; } = false;
     public bool AutoConnectEnabled { get; set; } = false;
     public bool AutoStartEnabled { get; set; } = false;
+    public bool AutoLoadShops { get; set; } = true;
+    public bool HideConsole { get; set; } = false;
+    public double SidebarWidth { get; set; } = 600;
     public string SteamId64 { get; set; } = string.Empty;
 }
 
@@ -221,6 +224,24 @@ public static class TrackingService
             SetAutoStart(value);
             SaveDB(); 
         }
+    }
+
+    public static bool AutoLoadShops
+    {
+        get => _settings.AutoLoadShops;
+        set { _settings.AutoLoadShops = value; SaveDB(); }
+    }
+
+    public static bool HideConsole
+    {
+        get => _settings.HideConsole;
+        set { _settings.HideConsole = value; SaveDB(); }
+    }
+
+    public static double SidebarWidth
+    {
+        get => _settings.SidebarWidth;
+        set { _settings.SidebarWidth = value; SaveDB(); }
     }
 
     public static string SteamId64
