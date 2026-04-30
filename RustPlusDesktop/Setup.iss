@@ -4,7 +4,7 @@
 ; =============================================
 
 #define MyAppName      "RustPlusDesk"
-#define MyAppVersion   "3.5.4"
+#define MyAppVersion   "4.0.0"
 #define MyAppPublisher "Pronwan" 
 #define MyAppURL       "https://github.com/Pronwan/rustplus-desktop"
 #define MyAppExeName   "RustPlusDesk.exe"
@@ -41,21 +41,10 @@ PrivilegesRequired=admin
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-; 1. Die Haupt-EXE
+; Jawads optimierte Dateiliste
 Source: "bin\Installer\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-
-; 2. Alle Dateien im Root-Verzeichnis (ohne Unterordner)
-; Ohne 'recursesubdirs' werden nur die Dateien direkt in \publish\ kopiert.
-Source: "bin\Installer\publish\*"; DestDir: "{app}"; Flags: ignoreversion
-
-; 3. Alle Unterordner mit ihrem kompletten Inhalt
-Source: "bin\Installer\publish\runtime\*";  DestDir: "{app}\runtime";  Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "bin\Installer\publish\runtimes\*"; DestDir: "{app}\runtimes"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "bin\Installer\publish\icons\*";    DestDir: "{app}\icons";    Flags: ignoreversion recursesubdirs createallsubdirs
-
-; Falls vorhanden/nötig:
-; Source: "bin\Installer\publish\Screenshots\*"; DestDir: "{app}\Screenshots"; Flags: ignoreversion recursesubdirs createallsubdirs
-
+Source: "bin\Installer\publish\runtime\*";       DestDir: "{app}\runtime"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "bin\Installer\publish\icons\*";         DestDir: "{app}\icons";   Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

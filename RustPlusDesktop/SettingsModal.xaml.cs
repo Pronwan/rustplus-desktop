@@ -21,6 +21,8 @@ namespace RustPlusDesk.Views
             ChkAutoConnect.IsChecked = TrackingService.AutoConnectEnabled;
             ChkCloseToTray.IsChecked = TrackingService.CloseToTrayEnabled;
             ChkBackgroundTracking.IsChecked = TrackingService.IsBackgroundTrackingEnabled;
+            ChkAutoLoadShops.IsChecked = TrackingService.AutoLoadShops;
+            ChkHideConsole.IsChecked = TrackingService.HideConsole;
         }
 
         private void OnSettingChanged(object sender, RoutedEventArgs e)
@@ -32,6 +34,8 @@ namespace RustPlusDesk.Views
             TrackingService.AutoConnectEnabled = ChkAutoConnect.IsChecked == true;
             TrackingService.CloseToTrayEnabled = ChkCloseToTray.IsChecked == true;
             TrackingService.IsBackgroundTrackingEnabled = ChkBackgroundTracking.IsChecked == true;
+            TrackingService.AutoLoadShops = ChkAutoLoadShops.IsChecked == true;
+            TrackingService.HideConsole = ChkHideConsole.IsChecked == true;
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)

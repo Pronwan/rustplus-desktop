@@ -13,12 +13,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>3.5.4</Version>
+		<Version>4.0.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>3.5.4</AssemblyVersion>
-		<FileVersion>3.5.4</FileVersion>
-		<InformationalVersion>3.5.4</InformationalVersion>
+		<AssemblyVersion>4.0.0</AssemblyVersion>
+		<FileVersion>4.0.0</FileVersion>
+		<InformationalVersion>4.0.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -68,6 +68,7 @@
 	  <None Remove="icons\cloud-upload.png" />
 	  <None Remove="icons\crate.png" />
 	  <None Remove="icons\crate3.png" />
+	  <None Remove="icons\ds_event.png" />
 	  <None Remove="icons\dome.png" />
 	  <None Remove="icons\eraser.png" />
 	  <None Remove="icons\excavator.png" />
@@ -141,6 +142,8 @@
 	  <None Remove="Screenshots\3.3.0_2.png" />
 	  <None Remove="Screenshots\3_5A.png" />
 	  <None Remove="Screenshots\3_5B.png" />
+	  <None Remove="Screenshots\v4_map_overhaul.png" />
+	  <None Remove="Screenshots\v4_shop_hover.png" />
 	  <None Remove="TitleScreen-rust-plus-desktop.png" />
 	</ItemGroup>
 	<ItemGroup>
@@ -201,7 +204,7 @@
     <Resource Include="icons\cave.png" />
     <Resource Include="icons\ch47.png" />
     <Resource Include="icons\crate.png" />
-	  
+    <Resource Include="icons\ds_event.png" />
     <Resource Include="icons\dome.png" />
     <Resource Include="icons\excavator.png" />
     <Resource Include="icons\explosion.png" />
@@ -256,6 +259,9 @@
     <Resource Include="icons\underwater.png" />
     <Resource Include="icons\vending.png" />
     <Resource Include="icons\vending2.png" />
+    <Resource Include="icons\vending_orange.png" />
+    <Resource Include="icons\animat-Icons\patrol_helicopter.png" />
+    <Resource Include="icons\animat-Icons\chinook_map_blades.png" />
     <Resource Include="icons\vendor.png" />
     <Resource Include="icons\watertreatment.png" />
     <Resource Include="icons\waterwell.png" />
@@ -273,10 +279,11 @@
     <Resource Include="Screenshots\3.3.0_2.png" />
     <Resource Include="Screenshots\3_5A.png" />
     <Resource Include="Screenshots\3_5B.png" />
+    <Resource Include="Screenshots\v4_map_overhaul.png" />
+    <Resource Include="Screenshots\v4_shop_hover.png" />
     <Resource Include="TitleScreen-rust-plus-desktop.png" />
-    <Content Include="rust_items.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="rust_items.json" />
+    <Resource Include="ShopSearch.html" />
   </ItemGroup>
 
   <ItemGroup>
