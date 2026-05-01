@@ -1166,6 +1166,10 @@ public partial class MainWindow : Window
 
         _overlay.Show();
         _visible = true;
+
+        BtnCrosshair.Background = new SolidColorBrush(Color.FromArgb(50, 0, 150, 255));
+        BtnCrosshair.BorderBrush = new SolidColorBrush(Colors.DodgerBlue);
+        BtnCrosshair.BorderThickness = new Thickness(1);
     }
 
     private void HideOverlay()
@@ -1176,6 +1180,10 @@ public partial class MainWindow : Window
             _overlay = null;
         }
         _visible = false;
+        
+        BtnCrosshair.ClearValue(Control.BackgroundProperty);
+        BtnCrosshair.ClearValue(Control.BorderBrushProperty);
+        BtnCrosshair.ClearValue(Control.BorderThicknessProperty);
     }
 
     private void PositionOverlayCentered(Window w, MonitorInfo mon)
@@ -1214,7 +1222,181 @@ public partial class MainWindow : Window
     private void CrosshairContextMenu_Opened(object sender, RoutedEventArgs e)
     {
         BuildMonitorMenu();
+        LoadCustomCrosshairs();
         UpdateStyleChecks();
+    }
+
+    private void LoadCustomCrosshairs()
+    {
+        if (FindName("MenuCrosshairStyle") is MenuItem menuCrosshairStyle && FindName("CrosshairStyleSeparator") is Separator sep)
+        {
+            int sepIndex = menuCrosshairStyle.Items.IndexOf(sep);
+            if (sepIndex == -1) return;
+
+            // Remove all items after "Draw Crosshair..."
+            int drawItemIndex = sepIndex + 1;
+            while (menuCrosshairStyle.Items.Count > drawItemIndex + 1)
+            {
+                menuCrosshairStyle.Items.RemoveAt(drawItemIndex + 1);
+            }
+
+            var customCrosshairs = CustomCrosshairManager.LoadCrosshairs();
+            foreach (var cc in customCrosshairs)
+            {
+                var mi = new MenuItem();
+                mi.Tag = "Custom_" + cc.Id;
+
+                var sp = new StackPanel { Orientation = Orientation.Horizontal };
+
+                var tb = new TextBlock { Text = cc.Name, Width = 100, VerticalAlignment = VerticalAlignment.Center };
+                sp.Children.Add(tb);
+
+                var btnRename = new Button { Content = "Abc", ToolTip = "Rename", Width = 28, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Foreground = Brushes.LightGray, Tag = cc };
+                btnRename.Click += CustomCrosshairRename_Click;
+
+                var btnEdit = new Button { Content = "✏️", ToolTip = "Edit", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
+                btnEdit.Click += CustomCrosshairEdit_Click;
+                
+                var btnDelete = new Button { Content = "🗑️", ToolTip = "Delete", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
+                btnDelete.Click += CustomCrosshairDelete_Click;
+
+                sp.Children.Add(btnRename);
+                sp.Children.Add(btnEdit);
+                sp.Children.Add(btnDelete);
+
+                if (!string.IsNullOrEmpty(cc.Base64Image))
+                {
+                    try
+                    {
+                        byte[] bytes = Convert.FromBase64String(cc.Base64Image);
+                        var bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.StreamSource = new System.IO.MemoryStream(bytes);
+                        bitmap.EndInit();
+                        bitmap.Freeze();
+                        
+                        mi.Icon = new Image
+                        {
+                            Source = bitmap,
+                            Width = 16,
+                            Height = 16,
+                            Stretch = Stretch.Uniform
+                        };
+                    }
+                    catch { }
+                }
+
+                mi.Header = sp;
+                mi.Click += CustomStyle_Click;
+
+                menuCrosshairStyle.Items.Add(mi);
+            }
+        }
+    }
+
+    private void DrawCustomCrosshair_Click(object sender, RoutedEventArgs e)
+    {
+        var editor = new CrosshairEditorWindow { Owner = this };
+        if (editor.ShowDialog() == true && editor.SavedCrosshair != null)
+        {
+            _currentStyle = CrosshairStyle.Custom;
+            if (_visible && _overlay != null)
+            {
+                _overlay.CustomBase64 = editor.SavedCrosshair.Base64Image;
+                _overlay.SetStyle(_currentStyle);
+                if (_selectedMonitor != null)
+                    PositionOverlayCentered(_overlay, _selectedMonitor);
+            }
+        }
+    }
+
+    private void CustomStyle_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Header is StackPanel sp)
+        {
+            var btn = sp.Children.OfType<Button>().FirstOrDefault();
+            if (btn != null && btn.Tag is CustomCrosshair cc)
+            {
+                _currentStyle = CrosshairStyle.Custom;
+                UpdateStyleChecks();
+
+                if (!_visible)
+                {
+                    ShowOverlay();
+                }
+                if (_visible && _overlay != null)
+                {
+                    _overlay.CustomBase64 = cc.Base64Image;
+                    _overlay.SetStyle(_currentStyle);
+                    if (_selectedMonitor != null)
+                        PositionOverlayCentered(_overlay, _selectedMonitor);
+                }
+            }
+        }
+    }
+
+    private void CustomCrosshairRename_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        if (sender is Button btn && btn.Tag is CustomCrosshair cc)
+        {
+            var dlg = new RenameDialog(cc.Name) { Owner = this };
+            if (dlg.ShowDialog() == true && !string.IsNullOrWhiteSpace(dlg.InputText))
+            {
+                var list = CustomCrosshairManager.LoadCrosshairs();
+                var existing = list.FirstOrDefault(c => c.Id == cc.Id);
+                if (existing != null)
+                {
+                    existing.Name = dlg.InputText.Trim();
+                    CustomCrosshairManager.SaveCrosshairs(list);
+                }
+            }
+            BtnCrosshair.ContextMenu.IsOpen = false;
+        }
+    }
+
+    private void CustomCrosshairEdit_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        if (sender is Button btn && btn.Tag is CustomCrosshair cc)
+        {
+            var editor = new CrosshairEditorWindow(cc) { Owner = this };
+            if (editor.ShowDialog() == true && editor.SavedCrosshair != null)
+            {
+                // The editor saves it correctly now, replacing the old entry.
+                // We just update the currently selected crosshair if we were editing the active one
+                if (_currentStyle == CrosshairStyle.Custom && _overlay?.CustomBase64 == cc.Base64Image)
+                {
+                    _overlay.CustomBase64 = editor.SavedCrosshair.Base64Image;
+                    if (_visible) _overlay.SetStyle(_currentStyle);
+                }
+            }
+            BtnCrosshair.ContextMenu.IsOpen = false;
+        }
+    }
+
+    private void CustomCrosshairDelete_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        if (sender is Button btn && btn.Tag is CustomCrosshair cc)
+        {
+            var list = CustomCrosshairManager.LoadCrosshairs();
+            list.RemoveAll(c => c.Id == cc.Id);
+            CustomCrosshairManager.SaveCrosshairs(list);
+
+            if (_currentStyle == CrosshairStyle.Custom && _overlay?.CustomBase64 == cc.Base64Image)
+            {
+                _currentStyle = CrosshairStyle.GreenDot;
+                if (_visible && _overlay != null)
+                {
+                    _overlay.CustomBase64 = null;
+                    _overlay.SetStyle(_currentStyle);
+                }
+            }
+
+            BtnCrosshair.ContextMenu.IsOpen = false;
+        }
     }
 
     // Menüaufbau
@@ -1245,14 +1427,27 @@ public partial class MainWindow : Window
 
     private void UpdateStyleChecks()
     {
-        foreach (var t in new[] { "GreenDot", "MiniGreen", "OpenCrossRG", "ThinRedCircle", "SquareDot", "MagentaDot", "MagentaOpenCross", "RangeLine" })
+        if (FindName("MenuCrosshairStyle") is MenuItem menuCrosshairStyle)
         {
-            var mi = FindStyleItem(t);
-            if (mi != null) mi.IsChecked = false;
+            foreach (var item in menuCrosshairStyle.Items.OfType<MenuItem>())
+            {
+                if (item.Header is StackPanel)
+                {
+                    bool isSelected = false;
+                    var btn = ((StackPanel)item.Header).Children.OfType<Button>().FirstOrDefault();
+                    if (btn != null && btn.Tag is CustomCrosshair cc)
+                    {
+                        isSelected = (_currentStyle == CrosshairStyle.Custom && _overlay?.CustomBase64 == cc.Base64Image);
+                    }
+                    item.Background = isSelected ? new SolidColorBrush(Color.FromRgb(45, 90, 136)) : Brushes.Transparent;
+                }
+                else
+                {
+                    bool isSelected = (item.Tag is string tag && _currentStyle.ToString() == tag);
+                    item.Background = isSelected ? new SolidColorBrush(Color.FromRgb(45, 90, 136)) : Brushes.Transparent;
+                }
+            }
         }
-        var currentTag = _currentStyle.ToString(); // nutzt die Enum-Namen
-        var cur = FindStyleItem(currentTag);
-        if (cur != null) cur.IsChecked = true;
     }
 
     private MenuItem? FindStyleItem(string tag) =>
@@ -1280,7 +1475,11 @@ public partial class MainWindow : Window
 
             UpdateStyleChecks();
 
-            if (_visible && _overlay != null)
+            if (!_visible)
+            {
+                ShowOverlay();
+            }
+            else if (_overlay != null)
             {
                 _overlay.SetStyle(_currentStyle);
                 // nach Größenänderung neu zentrieren
@@ -11395,5 +11594,48 @@ public partial class MainWindow : Window
 
     
 
+}
+
+public class RenameDialog : Window
+{
+    public string InputText { get; private set; }
+    public RenameDialog(string defaultText)
+    {
+        Title = "Rename Custom Crosshair";
+        Width = 300; SizeToContent = SizeToContent.Height;
+        WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        ResizeMode = ResizeMode.NoResize;
+        Background = new SolidColorBrush(Color.FromRgb(24, 26, 30));
+        Foreground = Brushes.White;
+
+        var grid = new StackPanel { Margin = new Thickness(15) };
+        var tb = new TextBox 
+        { 
+            Text = defaultText, 
+            Margin = new Thickness(0,0,0,15),
+            Background = new SolidColorBrush(Color.FromRgb(51, 51, 51)),
+            Foreground = Brushes.White,
+            Padding = new Thickness(5),
+            BorderThickness = new Thickness(0)
+        };
+        var btn = new Button 
+        { 
+            Content = "OK", 
+            Width = 80, 
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Background = new SolidColorBrush(Color.FromRgb(76, 175, 80)),
+            Foreground = Brushes.White,
+            Padding = new Thickness(5,2,5,2),
+            BorderThickness = new Thickness(0)
+        };
+        btn.Click += (s, e) => { InputText = tb.Text; DialogResult = true; Close(); };
+        tb.KeyDown += (s, e) => { if (e.Key == Key.Enter) { InputText = tb.Text; DialogResult = true; Close(); } };
+        
+        grid.Children.Add(tb);
+        grid.Children.Add(btn);
+        Content = grid;
+        
+        Loaded += (s, e) => { tb.Focus(); tb.SelectAll(); };
+    }
 }
 
