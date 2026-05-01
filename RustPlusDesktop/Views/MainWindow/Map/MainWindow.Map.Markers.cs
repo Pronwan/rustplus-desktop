@@ -648,11 +648,10 @@ public partial class MainWindow
                     Overlay.Children.Add(el);
                     Panel.SetZIndex(el, m.Type == 150 ? 2000 : (isPlayer ? 950 : 920));
 
-                    // Set initial rotation (with 180 degree correction for specific types)
+                    // Set initial rotation (negated per reference logic)
                     if (el.Tag is PlayerMarkerTag pmtNew)
                     {
-                        bool needsCorrection = (m.Type == 8 || m.Type == 4 || m.Type == 5 || m.Type == 6 || m.Type == 3);
-                        pmtNew.Rotation = m.Rotation + (needsCorrection ? 180 : 0);
+                        pmtNew.Rotation = -m.Rotation;
                     }
 
                     ApplyCurrentOverlayScale(el);
@@ -685,11 +684,10 @@ public partial class MainWindow
                     Canvas.SetTop(el, Canvas.GetTop(oldEl));
                 }
 
-                // Update rotation smoothly (with 180 degree correction for specific types)
+                // Update rotation smoothly (negated per reference logic)
                 if (el.Tag is PlayerMarkerTag pmt)
                 {
-                    bool needsCorrection = (m.Type == 8 || m.Type == 4 || m.Type == 5 || m.Type == 6 || m.Type == 3);
-                    double targetRot = m.Rotation + (needsCorrection ? 180 : 0);
+                    double targetRot = -m.Rotation;
                     
                     if (isNew) 
                     {
@@ -831,9 +829,9 @@ public partial class MainWindow
         };
         rtBlades.BeginAnimation(RotateTransform.AngleProperty, anim);
 
-        // Apply base rotation to the whole grid
+        // Apply base rotation to the whole grid (negated per reference logic)
         grid.RenderTransformOrigin = new Point(0.5, 0.5);
-        grid.RenderTransform = new RotateTransform(m.Rotation);
+        grid.RenderTransform = new RotateTransform(-m.Rotation);
 
         grid.Tag = new PlayerMarkerTag
         {
@@ -843,7 +841,7 @@ public partial class MainWindow
             ScaleTarget = grid,
             ScaleCenterX = 64,
             ScaleCenterY = 64,
-            Rotation = m.Rotation
+            Rotation = -m.Rotation
         };
 
         return grid;
