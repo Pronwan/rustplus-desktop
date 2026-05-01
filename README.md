@@ -47,6 +47,14 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./App-Version3.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)  
 *(click the image to watch on YouTube)*
 
+## Update 4.1.0 - Crosshair Editor (Right Click Crosshair icon to access) (May 1st)
+
+**𖦏 Custom Crosshairs**
+- **Draw your own**: intuitive pixel-art style editor. Supports drawing tools (Pen, Pixel, Line, Square, Circle), custom colors, adjustable thickness and opacity, and full Undo/Redo support.
+- **Upload PNGs**: Upload existing PNG images to use as crosshairs. The editor automatically scales them to fit the pixel grid. You can also right-click to erase individual pixels and easily rename or delete your creations.
+![CrosshairEditor](./RustPlusDesktop/Screenshots/v4_5.png)
+---
+
 ## Update 4.0.0 - The Evolution Update | Major Map & Stability Overhaul (April 30th)
 
 **🚀 Key Highlights**
