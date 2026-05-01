@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -25,7 +25,8 @@ namespace RustPlusDesk
         SquareDot,         // neu
         MagentaDot,        // neu
         MagentaOpenCross,  // neu
-        RangeLine          // neu
+        RangeLine,         // neu
+        Custom             // neu
     }
 
     public partial class CrosshairWindow : Window
@@ -56,6 +57,7 @@ namespace RustPlusDesk
 
         
         private CrosshairStyle _style;
+        public string? CustomBase64 { get; set; }
 
         public CrosshairWindow()
         {
@@ -82,6 +84,7 @@ namespace RustPlusDesk
                 case CrosshairStyle.MagentaDot: Width = Height = 32; break;
                 case CrosshairStyle.MagentaOpenCross: Width = Height = 32; break;
                 case CrosshairStyle.RangeLine: Width = 36; Height = 72; break;   // höher für Skala
+                case CrosshairStyle.Custom: Width = Height = 64; break;
                 case CrosshairStyle.GreenDot:
                 default: Width = Height = 32; break;
             }
@@ -103,10 +106,39 @@ namespace RustPlusDesk
                 CrosshairStyle.MagentaDot => BuildMagentaDot(),
                 CrosshairStyle.MagentaOpenCross => BuildMagentaOpenCross(),
                 CrosshairStyle.RangeLine => BuildRangeLine(),
+                CrosshairStyle.Custom => BuildCustom(),
                 _ => BuildGreenDot()
             };
 
             Presenter.Content = el;
+        }
+
+        private UIElement BuildCustom()
+        {
+            if (string.IsNullOrEmpty(CustomBase64)) return new Grid();
+            try
+            {
+                byte[] bytes = Convert.FromBase64String(CustomBase64);
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.StreamSource = new System.IO.MemoryStream(bytes);
+                bitmap.EndInit();
+                bitmap.Freeze();
+
+                var img = new Image
+                {
+                    Source = bitmap,
+                    Width = 64,
+                    Height = 64,
+                    Stretch = Stretch.Uniform
+                };
+                return img;
+            }
+            catch
+            {
+                return new Grid();
+            }
         }
 
         private UIElement BuildGreenDot()
