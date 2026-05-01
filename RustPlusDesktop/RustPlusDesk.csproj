@@ -13,12 +13,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>4.1.0</Version>
+		<Version>4.1.1</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>4.1.0</AssemblyVersion>
-		<FileVersion>4.1.0</FileVersion>
-		<InformationalVersion>4.1.0</InformationalVersion>
+		<AssemblyVersion>4.1.1</AssemblyVersion>
+		<FileVersion>4.1.1</FileVersion>
+		<InformationalVersion>4.1.1</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -56,6 +56,7 @@
 	  <None Remove="1-76fc6c7e.ico" />
 	  <None Remove="cash.wav" />
 	  <None Remove="icons\airfield.png" />
+	  <None Remove="icons\animat-Icons\chinook_animate.png" />
 	  <None Remove="icons\arcticresearch.png" />
 	  <None Remove="icons\banditcamp.png" />
 	  <None Remove="icons\barn.png" />
@@ -147,6 +148,7 @@
 	  <None Remove="TitleScreen-rust-plus-desktop.png" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Resource Include="icons\animat-Icons\chinook_animate.png" />
 	  <Resource Include="icons\cloud-download.png" />
 	  <Resource Include="icons\cloud-upload.png" />
 	  <Resource Include="icons\crate3.png" />

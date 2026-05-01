@@ -601,9 +601,9 @@ public partial class MainWindow
                         var host = BuildEventIconHost(img, m.Label, 48);
                         el = host;
                     }
-                    else if (m.Type == 8) // Patrol Helicopter
+                    else if (m.Type == 8 || m.Type == 4) // Patrol Helicopter or Chinook
                     {
-                        el = BuildAnimatedHeliMarker(m);
+                        el = BuildAnimatedAirVehicleMarker(m);
                         AttachTrackingHandler(el, m.Id); // Enable tracking
                     }
                     else if (isPlayer)
@@ -648,11 +648,17 @@ public partial class MainWindow
                     Overlay.Children.Add(el);
                     Panel.SetZIndex(el, m.Type == 150 ? 2000 : (isPlayer ? 950 : 920));
 
-                    // Set initial rotation (with 180 degree correction for specific types)
                     if (el.Tag is PlayerMarkerTag pmtNew)
                     {
-                        bool needsCorrection = (m.Type == 8 || m.Type == 4 || m.Type == 5 || m.Type == 6 || m.Type == 3);
-                        pmtNew.Rotation = m.Rotation + (needsCorrection ? 180 : 0);
+                        if (m.Type == 5 || m.Type == 8 || m.Type == 4)
+                        {
+                            pmtNew.Rotation = -m.Rotation;
+                        }
+                        else
+                        {
+                            double correction = (m.Type == 6 || m.Type == 3) ? 180 : 0;
+                            pmtNew.Rotation = m.Rotation + correction;
+                        }
                     }
 
                     ApplyCurrentOverlayScale(el);
@@ -685,11 +691,19 @@ public partial class MainWindow
                     Canvas.SetTop(el, Canvas.GetTop(oldEl));
                 }
 
-                // Update rotation smoothly (with 180 degree correction for specific types)
+                // Update rotation smoothly
                 if (el.Tag is PlayerMarkerTag pmt)
                 {
-                    bool needsCorrection = (m.Type == 8 || m.Type == 4 || m.Type == 5 || m.Type == 6 || m.Type == 3);
-                    double targetRot = m.Rotation + (needsCorrection ? 180 : 0);
+                    double targetRot;
+                    if (m.Type == 5 || m.Type == 8 || m.Type == 4)
+                    {
+                        targetRot = -m.Rotation;
+                    }
+                    else
+                    {
+                        double correction = (m.Type == 6 || m.Type == 3) ? 180 : 0;
+                        targetRot = m.Rotation + correction;
+                    }
                     
                     if (isNew) 
                     {
@@ -798,42 +812,59 @@ public partial class MainWindow
             }
         };
     }
-    private FrameworkElement BuildAnimatedHeliMarker(RustPlusClientReal.DynMarker m)
+    private FrameworkElement BuildAnimatedAirVehicleMarker(RustPlusClientReal.DynMarker m)
     {
         var grid = new Grid { Width = 128, Height = 128, ClipToBounds = false };
         if (m.Label != null) ToolTipService.SetToolTip(grid, m.Label);
 
-        var bodyUri = "pack://application:,,,/icons/animat-Icons/patrol_helicopter.png";
+        bool isChinook = m.Type == 4;
+        var bodyUri = isChinook ? "pack://application:,,,/icons/animat-Icons/chinook_animate.png" : "pack://application:,,,/icons/animat-Icons/patrol_helicopter.png";
         var bladesUri = "pack://application:,,,/icons/animat-Icons/chinook_map_blades.png";
 
-        var body = MakeIcon(bodyUri, 48);
+        var body = MakeIcon(bodyUri, isChinook ? 64 : 48);
         body.HorizontalAlignment = HorizontalAlignment.Center;
         body.VerticalAlignment = VerticalAlignment.Center;
-        body.Margin = new Thickness(0, 20, 0, 0); // Nudge body UP to bring rotor to center
+        
+        if (!isChinook)
+        {
+            body.Margin = new Thickness(0, 20, 0, 0); // Nudge heli body so rotor is centered
+        }
         grid.Children.Add(body);
 
-        var blades = MakeIcon(bladesUri, 48);
-        blades.HorizontalAlignment = HorizontalAlignment.Center;
-        blades.VerticalAlignment = VerticalAlignment.Center;
-        // blades.Margin = new Thickness(0, 0, 0, 0); // Center blades on grid center
-        blades.RenderTransformOrigin = new Point(0.5, 0.5);
-        var rtBlades = new RotateTransform(0);
-        blades.RenderTransform = rtBlades;
-        grid.Children.Add(blades);
-
-        // Clockwise animation for blades (Lower seconds = faster spin)
-        var anim = new DoubleAnimation
+        void AddRotor(Thickness margin)
         {
-            From = 0,
-            To = 360,
-            Duration = TimeSpan.FromSeconds(0.5),
-            RepeatBehavior = RepeatBehavior.Forever
-        };
-        rtBlades.BeginAnimation(RotateTransform.AngleProperty, anim);
+            var blades = MakeIcon(bladesUri, 48);
+            blades.HorizontalAlignment = HorizontalAlignment.Center;
+            blades.VerticalAlignment = VerticalAlignment.Center;
+            blades.Margin = margin;
+            blades.RenderTransformOrigin = new Point(0.5, 0.5);
+            var rtBlades = new RotateTransform(0);
+            blades.RenderTransform = rtBlades;
+            grid.Children.Add(blades);
 
-        // Apply base rotation to the whole grid
+            var anim = new DoubleAnimation
+            {
+                From = 0,
+                To = 360,
+                Duration = TimeSpan.FromSeconds(0.5),
+                RepeatBehavior = RepeatBehavior.Forever
+            };
+            rtBlades.BeginAnimation(RotateTransform.AngleProperty, anim);
+        }
+
+        if (isChinook)
+        {
+            AddRotor(new Thickness(0, 0, 0, 42)); // Front rotor
+            AddRotor(new Thickness(0, 42, 0, 0)); // Back rotor
+        }
+        else
+        {
+            AddRotor(new Thickness(0, 0, 0, 0)); // Main rotor
+        }
+
+        // Base rotation origin
         grid.RenderTransformOrigin = new Point(0.5, 0.5);
-        grid.RenderTransform = new RotateTransform(m.Rotation);
+        grid.RenderTransform = new RotateTransform(0); // Will be updated by scale/rotation logic
 
         grid.Tag = new PlayerMarkerTag
         {

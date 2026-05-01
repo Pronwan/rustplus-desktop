@@ -1525,6 +1525,7 @@ public partial class MainWindow : Window
         public List<(double X, double Y)> History = new();
         public int MissingCount;
         public double LastVX, LastVY;
+        public double LastCalculatedAngle;
     }
     private readonly Dictionary<uint, DynMarkerState> _dynStates = new();
     private readonly HashSet<uint> _dynKnown = new();                      // “already spawned” for chat announcements
