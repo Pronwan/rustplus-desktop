@@ -2409,17 +2409,34 @@ public partial class MainWindow : Window
 
         if (dev != null)
         {
-            AppendLog($"[alarm/debug] ({source}) dev.AudioEnabled={dev.AudioEnabled}, dev.PopupEnabled={dev.PopupEnabled}");
+            AppendLog($"[alarm/debug] ({source}) Device identified: {dev.Name} (Kind: {dev.Kind}, ID: {dev.EntityId})");
+            AppendLog($"[alarm/debug] ({source}) Settings: AudioEnabled={dev.AudioEnabled}, PopupEnabled={dev.PopupEnabled}");
+            
+            // Wenn der Alarm via FCM kommt, setzen wir den UI-Zustand manuell auf "ACTIVE" (10s Puls)
+            if (source != "WS")
+            {
+                dev.IsOn = true;
+                _ = Task.Run(async () =>
+                {
+                    await Task.Delay(10000);
+                    await Dispatcher.InvokeAsync(() => dev.IsOn = false);
+                });
+            }
+
             PlayAlarmAudio(dev);
+            
             if (!dev.PopupEnabled) 
             {
-                AppendLog($"[alarm/debug] ({source}) Skipping popup because dev.PopupEnabled is false.");
+                AppendLog($"[alarm/debug] ({source}) Skipping popup window because PopupEnabled is false for this device.");
                 return; 
             }
         }
         else
         {
-            AppendLog($"[alarm/debug] ({source}) No device info found, showing generic popup.");
+            if (n.EntityId.HasValue)
+                AppendLog($"[alarm/debug] ({source}) No device found for ID {n.EntityId.Value}. Showing generic popup.");
+            else
+                AppendLog($"[alarm/debug] ({source}) Generic alarm (no ID). Showing generic popup.");
         }
 
         AppendLog($"[alarm/debug] ({source}) Executing: Show Alarm Window");

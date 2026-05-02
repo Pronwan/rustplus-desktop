@@ -327,6 +327,7 @@ public partial class MainWindow
         public double X;
         public double Y;
         public bool Trackable;
+        public int Type;
     }
 
     private void UpdateEventDock(IReadOnlyList<RustPlusClientReal.DynMarker> markers)
@@ -337,22 +338,22 @@ public partial class MainWindow
 
         // 1. Patrol Heli (Type 8)
         var heli = markers.FirstOrDefault(m => m.Type == 8);
-        activeEvents.Add(new EventDockItem { Name = "Patrol Heli", Icon = "pack://application:,,,/icons/animat-Icons/patrol_helicopter.png", Active = heli.Id != 0, Id = heli.Id, X = heli.X, Y = heli.Y, Trackable = true });
-
+        activeEvents.Add(new EventDockItem { Name = "Patrol Heli", Icon = "pack://application:,,,/icons/animat-Icons/patrol_helicopter.png", Active = heli.Id != 0, Id = heli.Id, X = heli.X, Y = heli.Y, Trackable = true, Type = 8 });
+ 
         // 2. Cargo Ship (Type 5)
         var cargo = markers.FirstOrDefault(m => m.Type == 5);
-        activeEvents.Add(new EventDockItem { Name = "Cargo Ship", Icon = "pack://application:,,,/icons/cargo.png", Active = cargo.Id != 0, Id = cargo.Id, X = cargo.X, Y = cargo.Y, Trackable = true });
-
+        activeEvents.Add(new EventDockItem { Name = "Cargo Ship", Icon = "pack://application:,,,/icons/cargo.png", Active = cargo.Id != 0, Id = cargo.Id, X = cargo.X, Y = cargo.Y, Trackable = true, Type = 5 });
+ 
         // 3. Chinook (Type 4)
         var chinook = markers.FirstOrDefault(m => m.Type == 4);
-        activeEvents.Add(new EventDockItem { Name = "Chinook", Icon = "pack://application:,,,/icons/ch47.png", Active = chinook.Id != 0, Id = chinook.Id, X = chinook.X, Y = chinook.Y, Trackable = true });
-
+        activeEvents.Add(new EventDockItem { Name = "Chinook", Icon = "pack://application:,,,/icons/ch47.png", Active = chinook.Id != 0, Id = chinook.Id, X = chinook.X, Y = chinook.Y, Trackable = true, Type = 4 });
+ 
         // 4. Vendor (Type 6)
         var vendor = markers.FirstOrDefault(m => m.Type == 6);
-        activeEvents.Add(new EventDockItem { Name = "Travelling Vendor", Icon = "pack://application:,,,/icons/vendor.png", Active = vendor.Id != 0, Id = vendor.Id, X = vendor.X, Y = vendor.Y, Trackable = true });
-
+        activeEvents.Add(new EventDockItem { Name = "Travelling Vendor", Icon = "pack://application:,,,/icons/vendor.png", Active = vendor.Id != 0, Id = vendor.Id, X = vendor.X, Y = vendor.Y, Trackable = true, Type = 6 });
+ 
         // 5. Deep Sea (Using native _deepSeaActive logic)
-        activeEvents.Add(new EventDockItem { Name = "Deep Sea Event", Icon = "pack://application:,,,/icons/ds_event.png", Active = _deepSeaActive, Id = 0, X = 0, Y = 0, Trackable = false });
+        activeEvents.Add(new EventDockItem { Name = "Deep Sea Event", Icon = "pack://application:,,,/icons/ds_event.png", Active = _deepSeaActive, Id = 0, X = 0, Y = 0, Trackable = false, Type = 0 });
 
         Dispatcher.Invoke(() =>
         {
@@ -425,9 +426,12 @@ public partial class MainWindow
                     var glow = new System.Windows.Shapes.Ellipse { Width = 32, Height = 32, Effect = new System.Windows.Media.Effects.BlurEffect { Radius = 10 }, HorizontalAlignment = HorizontalAlignment.Center, Visibility = Visibility.Collapsed };
                     Grid.SetColumn(glow, 0); itemRow.Children.Add(glow);
 
+                    var iconHost = new Grid { Width = 32, Height = 32, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+                    Grid.SetColumn(iconHost, 0); itemRow.Children.Add(iconHost);
+
                     var img = new Image { Width = 24, Height = 24, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
                     RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
-                    Grid.SetColumn(img, 0); itemRow.Children.Add(img);
+                    iconHost.Children.Add(img);
 
                     var txt = new TextBlock { Foreground = Brushes.White, FontSize = 12, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0, 12, 0), Visibility = mainBorder.IsMouseOver ? Visibility.Visible : Visibility.Collapsed, Opacity = mainBorder.IsMouseOver ? 1 : 0 };
                     Grid.SetColumn(txt, 1); itemRow.Children.Add(txt);
@@ -447,7 +451,8 @@ public partial class MainWindow
                 uiGlow.Fill = new SolidColorBrush(Color.FromArgb(40, 0, 200, 255));
                 uiGlow.Visibility = ev.Active ? Visibility.Visible : Visibility.Collapsed;
 
-                var uiImg = (Image)itemRow.Children[1];
+                var uiIconHost = (Grid)itemRow.Children[1];
+                var uiImg = (Image)uiIconHost.Children[0];
                 if (uiImg.Source == null || uiImg.Tag as string != ev.Icon) {
                     try { 
                         var bi = new BitmapImage();
@@ -475,6 +480,66 @@ public partial class MainWindow
                 else
                 {
                     uiImg.Effect = null;
+                }
+
+                // Handle Animated Blades for Heli (Type 8) and Chinook (Type 4)
+                if (ev.Type == 8 || ev.Type == 4)
+                {
+                    int rotorCount = ev.Type == 4 ? 2 : 1;
+                    while (uiIconHost.Children.Count - 1 < rotorCount)
+                    {
+                        var blades = new Image
+                        {
+                            Width = 24,
+                            Height = 24,
+                            Source = new BitmapImage(new Uri("pack://application:,,,/icons/animat-Icons/chinook_map_blades.png")),
+                            RenderTransformOrigin = new Point(0.5, 0.5),
+                            RenderTransform = new RotateTransform(0),
+                            IsHitTestVisible = false
+                        };
+                        RenderOptions.SetBitmapScalingMode(blades, BitmapScalingMode.HighQuality);
+                        uiIconHost.Children.Add(blades);
+                    }
+
+                    for (int r = 0; r < rotorCount; r++)
+                    {
+                        var uiBlades = (Image)uiIconHost.Children[r + 1];
+                        var rt = (RotateTransform)uiBlades.RenderTransform;
+
+                        if (ev.Active)
+                        {
+                            if (uiBlades.Tag as string != "Spinning")
+                            {
+                                var anim = new DoubleAnimation(0, 360, TimeSpan.FromSeconds(0.5)) { RepeatBehavior = RepeatBehavior.Forever };
+                                rt.BeginAnimation(RotateTransform.AngleProperty, anim);
+                                uiBlades.Tag = "Spinning";
+                            }
+                        }
+                        else
+                        {
+                            rt.BeginAnimation(RotateTransform.AngleProperty, null);
+                            uiBlades.Tag = null;
+                        }
+
+                        // Offsets for rotors
+                        if (ev.Type == 4) // Chinook
+                        {
+                            uiBlades.Margin = r == 0 ? new Thickness(0, 0, 0, 16) : new Thickness(0, 16, 0, 0);
+                        }
+                        else
+                        {
+                            uiBlades.Margin = new Thickness(0);
+                        }
+                    }
+
+                    // Nudge body icon for Heli (Type 8) to align with centered rotor
+                    if (ev.Type == 8) uiImg.Margin = new Thickness(0, 8, 0, 0);
+                    else uiImg.Margin = new Thickness(0);
+                }
+                else
+                {
+                    while (uiIconHost.Children.Count > 1) uiIconHost.Children.RemoveAt(1);
+                    uiImg.Margin = new Thickness(0);
                 }
 
                 var uiTxt = (TextBlock)itemRow.Children[2];
