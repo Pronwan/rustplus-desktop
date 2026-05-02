@@ -1830,13 +1830,6 @@ rp.connect();
             _log?.Invoke($"[Gerät] {id} → {(on ? "AN" : "AUS")}");
         };
 
-        _api.OnSmartAlarmTriggered += (_, al) =>
-        {
-            var id = GetEntityId(al);
-            // SmartAlarm ist immer "true" (ausgelöst) wenn das Event kommt
-            DeviceStateEvent?.Invoke(id, true, "SmartAlarm");
-            _log?.Invoke($"[Gerät] {id} (SmartAlarm) → TRIGGERED");
-        };
 
         _api.OnStorageMonitorTriggered += (_, st) =>
         {

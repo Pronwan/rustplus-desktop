@@ -1070,7 +1070,21 @@ public partial class MainWindow : Window
                         // Trigger Alarm UI/Sound auch via WebSocket
                         if (isOn)
                         {
-                            var alarm = new AlarmNotification(DateTime.Now, _vm.Selected?.Name ?? "Server", dev.Name ?? "Smart Alarm", dev.EntityId, "Alarm activated!");
+                            string srv = _vm.Selected?.Name ?? "Server";
+                            // Bereinigen für UI und Cache-Matching
+                            srv = Regex.Replace(srv, @"\x1B\[[0-9;]*[A-Za-z]", "");
+                            srv = Regex.Replace(srv, @"\[/?[a-zA-Z]+\]", "").Trim();
+                            if (string.IsNullOrEmpty(srv)) srv = "Server";
+
+                            string title = dev.Name ?? "Smart Alarm";
+                            string msg = dev.LastAlarmMessage ?? "Alarm activated!";
+                            if (_alarmMetadataCache.TryGetValue(dev.EntityId, out var cached))
+                            {
+                                if (title == "Smart Alarm" && !string.IsNullOrEmpty(cached.Title)) title = cached.Title;
+                                if (msg == "Alarm activated!" && !string.IsNullOrEmpty(cached.Message)) msg = cached.Message;
+                            }
+
+                            var alarm = new AlarmNotification(DateTime.Now, srv, title, dev.EntityId, msg);
                             ShowAlarmPopup(alarm, "WS");
                         }
 
@@ -2354,17 +2368,77 @@ public partial class MainWindow : Window
 
         return $"{left} → {right}{stock}{bp}";
     }
-
-    private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP, double V_DIP, double Radius);
+private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP, double V_DIP, double Radius);
     private readonly List<MarkerRef> _markers = new();
 
     private AlarmWindow? _alarmWin; // nicht AlarmPopupWindow
     private readonly ObservableCollection<AlarmNotification> _alarmFeed = new();
     private readonly Dictionary<string, DateTime> _lastAlarmProcessed = new();
     private DateTime _lastAnyAlarmTime = DateTime.MinValue; // Globaler Marker für Fuzzy-Dedup
+    private readonly Dictionary<uint, (string Title, string Message)> _alarmMetadataCache = new();
+    private readonly Dictionary<string, (uint Id, DateTime Time)> _lastSeenIdPerServer = new();
+    private readonly List<string> _alarmHistoryDedup = new();
+
     private void ShowAlarmPopup(AlarmNotification n, string source = "FCM")
     {
+        // 0) Backlog-Filter: Ignoriere Alarme, die älter als 5 Minuten sind
+        if ((DateTime.Now - n.Timestamp).TotalMinutes > 5) return;
+
+        // 0.1) Exakter Duplikat-Check (Server + Msg + Zeitstempel)
+        string dedupKey = $"{n.Server}|{n.Message}|{n.Timestamp:yyyyMMddHHmmss}";
+        if (_alarmHistoryDedup.Contains(dedupKey)) return;
+        _alarmHistoryDedup.Add(dedupKey);
+        if (_alarmHistoryDedup.Count > 100) _alarmHistoryDedup.RemoveAt(0);
+
         var now = DateTime.UtcNow;
+
+        // Servernamen bereinigen für stabiles Mapping
+        string cleanSrv = Regex.Replace(n.Server ?? "", @"\x1B\[[0-9;]*[A-Za-z]", "");
+        cleanSrv = Regex.Replace(cleanSrv, @"\[/?[a-zA-Z]+\]", "").Trim();
+        if (string.IsNullOrEmpty(cleanSrv)) cleanSrv = "-";
+
+        // Wenn die Meldung eine ID hat (WS), merken wir sie uns für diesen Server
+        if (n.EntityId.HasValue)
+        {
+            _lastSeenIdPerServer[cleanSrv] = (n.EntityId.Value, now);
+        }
+
+        SmartDevice? dev = null;
+        if (n.EntityId.HasValue)
+        {
+            uint eid = n.EntityId.Value;
+            foreach (var profile in _vm.Servers)
+            {
+                dev = FindDeviceById(profile.Devices, eid);
+                if (dev != null) break;
+            }
+        }
+
+        // Metadaten cachen (FCM liefert Text, WS liefert ID)
+        if (source == "FCM" && n.Message != "Alarm activated!")
+        {
+            uint? tid = n.EntityId;
+            // Falls FCM keine ID hat, versuchen wir sie über den letzten WS-Event dieses Servers zu finden
+            if (!tid.HasValue && _lastSeenIdPerServer.TryGetValue(cleanSrv, out var last) && (now - last.Time).TotalSeconds < 10)
+            {
+                tid = last.Id;
+                // WICHTIG: Die Benachrichtigung selbst mit der ID aktualisieren, damit UpdateOrAdd korrekt funktioniert!
+                n = n with { EntityId = tid };
+            }
+
+            if (tid.HasValue)
+            {
+                _alarmMetadataCache[tid.Value] = (n.DeviceName, n.Message);
+                if (dev == null)
+                {
+                    foreach (var profile in _vm.Servers) { dev = FindDeviceById(profile.Devices, tid.Value); if (dev != null) break; }
+                }
+                if (dev != null) dev.LastAlarmMessage = n.Message;
+            }
+        }
+        
+        // n.Server ebenfalls bereinigen für konsistentes UI/Matching
+        n = n with { Server = cleanSrv };
 
         if (n.EntityId.HasValue)
         {
@@ -2372,6 +2446,14 @@ public partial class MainWindow : Window
             string key = $"ID:{n.EntityId.Value}";
             if (_lastAlarmProcessed.TryGetValue(key, out var last) && (now - last).TotalSeconds < 5)
             {
+                // Wenn dies eine detaillierte FCM-Meldung ist, die auf eine generische WS-Meldung folgt: Update!
+                if (source == "FCM" && n.Message != "Alarm activated!")
+                {
+                    if (_alarmWin != null && _alarmWin.IsLoaded)
+                    {
+                        _alarmWin.UpdateOrAdd(n);
+                    }
+                }
                 return;
             }
             _lastAlarmProcessed[key] = now;
@@ -2383,28 +2465,18 @@ public partial class MainWindow : Window
             // ignoriere diesen generischen (ID-losen) FCM-Alarm.
             if ((now - _lastAnyAlarmTime).TotalSeconds < 5)
             {
-                AppendLog($"[alarm/debug] ({source}) Dropping generic alarm because a specific alarm was just handled.");
+                // Auch hier: Wenn es ein detaillierter FCM-Alarm ist -> Updaten statt droppen!
+                if (source == "FCM" && n.Message != "Alarm activated!")
+                {
+                    if (_alarmWin != null && _alarmWin.IsLoaded)
+                    {
+                        _alarmWin.UpdateOrAdd(n);
+                    }
+                }
+                AppendLog($"[alarm/debug] ({source}) Dropping generic alarm because a specific alarm was just handled (or updated).");
                 return;
             }
             _lastAnyAlarmTime = now;
-        }
-
-        SmartDevice? dev = null;
-        if (n.EntityId.HasValue)
-        {
-            uint eid = n.EntityId.Value;
-            AppendLog($"[alarm/debug] ({source}) Searching for device #{eid} in all profiles ...");
-            
-            foreach (var profile in _vm.Servers)
-            {
-                dev = FindDeviceById(profile.Devices, eid);
-                if (dev != null) break;
-            }
-            
-            if (dev != null)
-                AppendLog($"[alarm/debug] ({source}) Found: {dev.Name} (Kind: {dev.Kind})");
-            else
-                AppendLog($"[alarm/debug] ({source}) NOT found in any tree.");
         }
 
         if (dev != null)
