@@ -280,10 +280,31 @@ namespace RustPlusDesk.Services
             return null;
         }
 
+        private static string? GetJsonString(JsonElement el, string name)
+        {
+            if (el.TryGetProperty(name, out var v))
+            {
+                return v.ValueKind switch
+                {
+                    JsonValueKind.String => v.GetString(),
+                    JsonValueKind.Number => v.GetRawText(),
+                    JsonValueKind.True => "true",
+                    JsonValueKind.False => "false",
+                    JsonValueKind.Null => null,
+                    _ => v.GetRawText()
+                };
+            }
+            return null;
+        }
+
         private static uint? JGetUInt(JsonElement root, params string[] names)
         {
-            var s = JGet(root, names);
-            return (uint.TryParse(s, out var u) ? u : null);
+            foreach (var n in names)
+            {
+                var s = GetJsonString(root, n);
+                if (uint.TryParse(s, out var u)) return u;
+            }
+            return null;
         }
 
 
@@ -372,11 +393,11 @@ namespace RustPlusDesk.Services
                     static string? J(JsonElement el, string name)
                         => el.TryGetProperty(name, out var v) ? v.GetString() : null;
 
-                    var type = J(root, "type");   // "alarm" | "entity" | "server" | evtl. "chat"
+                    var type = GetJsonString(root, "type");   // "alarm" | "entity" | "server" | evtl. "chat"
                     if (string.Equals(type, "chat", StringComparison.OrdinalIgnoreCase))
                     {
-                        var author = J(root, "name") ?? J(root, "username") ?? "Team";
-                        var text = J(root, "message") ?? _pendingChatMsg ?? "";
+                        var author = GetJsonString(root, "name") ?? GetJsonString(root, "username") ?? "Team";
+                        var text = GetJsonString(root, "message") ?? _pendingChatMsg ?? "";
                         ChatReceived?.Invoke(this,
                             new TeamChatMessage(DateTime.Now, author, 0, text));
                         // Chat-Bundle zurücksetzen
@@ -422,18 +443,15 @@ namespace RustPlusDesk.Services
                     using var doc = JsonDocument.Parse(json);
                     var root = doc.RootElement;
 
-                    static string? J(JsonElement el, string name) =>
-                        el.TryGetProperty(name, out var v) ? v.GetString() : null;
-
-                    string? host = J(root, "ip");
-                    string? portStr = J(root, "port");
-                    string? name = J(root, "name");
-                    string? playerId = J(root, "playerId");
-                    string? playerToken = J(root, "playerToken");
-                    string? entityIdStr = J(root, "entityId") ?? J(root, "entityID");
-                    string? entityName = J(root, "entityName");
-                    string? type = J(root, "type");          // "server" | "entity" | "alarm"
-                    string? entityType = J(root, "entityType");    // z.B. "1" (Switch) / "2" (Alarm)
+                    string? host = GetJsonString(root, "ip");
+                    string? portStr = GetJsonString(root, "port");
+                    string? name = GetJsonString(root, "name");
+                    string? playerId = GetJsonString(root, "playerId");
+                    string? playerToken = GetJsonString(root, "playerToken");
+                    string? entityIdStr = GetJsonString(root, "entityId") ?? GetJsonString(root, "entityID");
+                    string? entityName = GetJsonString(root, "entityName");
+                    string? type = GetJsonString(root, "type");          // "server" | "entity" | "alarm"
+                    string? entityType = GetJsonString(root, "entityType");    // z.B. "1" (Switch) / "2" (Alarm)
 
                     if (!int.TryParse(portStr, out var port)) port = 28082;
                     uint? entityId = (uint.TryParse(entityIdStr, out var eid) ? eid : (uint?)null);
