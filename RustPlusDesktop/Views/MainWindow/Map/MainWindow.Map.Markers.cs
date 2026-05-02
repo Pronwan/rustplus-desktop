@@ -241,7 +241,7 @@ public partial class MainWindow
         }
     }
 
-    private FrameworkElement BuildEventIconHost(FrameworkElement inner, string? tooltip, int size)
+    private FrameworkElement BuildEventIconHost(FrameworkElement inner, string? tooltip, int size, double? scaleExp = null, double? baseMult = null)
     {
         var host = new Grid { Width = size, Height = size, IsHitTestVisible = true };
         if (tooltip != null) ToolTipService.SetToolTip(host, tooltip);
@@ -251,8 +251,8 @@ public partial class MainWindow
         host.Tag = new PlayerMarkerTag
         {
             Radius = size * 0.5,
-            ScaleExp = SHOP_SIZE_EXP,
-            ScaleBaseMult = SHOP_BASE_MULT,
+            ScaleExp = scaleExp ?? SHOP_SIZE_EXP,
+            ScaleBaseMult = baseMult ?? SHOP_BASE_MULT,
             ScaleTarget = inner,
             ScaleCenterX = size * 0.5,
             ScaleCenterY = size * 0.5
@@ -261,7 +261,7 @@ public partial class MainWindow
         return host;
     }
 
-    private FrameworkElement BuildEventDot(string tooltip, int size = 14)
+    private FrameworkElement BuildEventDot(string tooltip, int size = 14, double? scaleExp = null, double? baseMult = null)
     {
         var dot = new Ellipse
         {
@@ -271,7 +271,7 @@ public partial class MainWindow
             Stroke = Brushes.Black,
             StrokeThickness = 1.5
         };
-        return BuildEventIconHost(dot, tooltip, size);
+        return BuildEventIconHost(dot, tooltip, size, scaleExp, baseMult);
     }
 
     private async Task PollDynMarkersOnceAsync()
@@ -618,15 +618,27 @@ public partial class MainWindow
                         {
                             try
                             {
-                                var img = MakeIcon(sDynIconByType[m.Type], 64);
-                                host = BuildEventIconHost(img, m.Label ?? m.Kind, 64);
+                                // Cargo Ship (Type 5) should scale naturally (grow on zoom in, shrink on zoom out)
+                                bool isCargo = (m.Type == 5);
+                                int size = isCargo ? 48 : 64;
+                                double exp = isCargo ? 0.5 : SHOP_SIZE_EXP;
+                                double mult = isCargo ? SHOP_BASE_MULT : SHOP_BASE_MULT;
+
+                                var img = MakeIcon(sDynIconByType[m.Type], size);
+                                host = BuildEventIconHost(img, m.Label ?? m.Kind, size, exp, mult);
                             }
                             catch
                             {
                                 host = BuildEventDot($"{m.Kind} ({m.Type})", 14);
                             }
                         }
-                        else host = BuildEventDot($"{m.Kind} ({m.Type})", 14);
+                        else 
+                        {
+                            bool isCargo = (m.Type == 5);
+                            double exp = isCargo ? 0.5 : SHOP_SIZE_EXP;
+                            double mult = SHOP_BASE_MULT;
+                            host = BuildEventDot($"{m.Kind} ({m.Type})", 14, exp, mult);
+                        }
 
                         // Enable tracking for specific large events
                         if (m.Type == 5 || m.Type == 4 || m.Type == 6)
@@ -682,6 +694,13 @@ public partial class MainWindow
                 else if (el.Tag is not PlayerMarkerTag) 
                 {
                     el.Tag = m;
+                }
+
+                if (el.Tag is PlayerMarkerTag pmt2 && !isPlayer)
+                {
+                    bool isCargo = (m.Type == 5);
+                    pmt2.ScaleExp = isCargo ? 0.5 : SHOP_SIZE_EXP;
+                    pmt2.ScaleBaseMult = SHOP_BASE_MULT;
                 }
 
                 // If el was replaced (e.g. dot -> avatar), transfer position for smooth transition
