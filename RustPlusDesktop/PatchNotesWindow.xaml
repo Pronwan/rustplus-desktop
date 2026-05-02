@@ -23,24 +23,25 @@
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="v4.2.0  |  The High-Fidelity Update" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="v4.2.0  |  The High-Fidelity &amp; Animation Update" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
 
-                            <TextBlock Text="• High-Quality Map Rendering" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
-                            <TextBlock Text="The map now uses high-quality bicubic interpolation, providing crystal clear visuals even when zoomed in. No more pixelated landscapes!" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                            <!-- Features -->
+                            <TextBlock Text="• High-Fidelity Map Rendering" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="Overhauled the map rendering engine to use high-quality bicubic interpolation. The map now remains crystal clear at all zoom levels, eliminating pixelation and blur during tactical maneuvers." TextWrapping="Wrap" Margin="0,0,0,8"/>
 
-                            <TextBlock Text="• Smooth Dynamic Marker Transitions" FontWeight="Bold" Margin="0,0,0,4"/>
-                            <TextBlock Text="Dynamic markers (players and vehicles) now transition smoothly between polling updates, eliminating visual stuttering and providing a more fluid tracking experience." TextWrapping="Wrap" Margin="0,0,0,8"/>
+                            <TextBlock Text="• Animated Event Markers" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="Added dynamic animations to map events! The Patrol Helicopter and Chinook now feature spinning rotor blades, providing better visual feedback for active air threats." TextWrapping="Wrap" Margin="0,0,0,8"/>
 
-                            <TextBlock Text="• Accurate Vehicle Orientation &amp; Animations" FontWeight="Bold" Margin="0,0,0,4"/>
-                            <TextBlock Text="Cargo Ship, Chinook, and Patrol Helicopter now orient themselves correctly based on their heading. Additionally, helicopters now feature animated spinning rotor blades for enhanced visual feedback." TextWrapping="Wrap" Margin="0,0,0,8"/>
+                            <TextBlock Text="• Smooth Entity Transitions &amp; Heading" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="Implemented constant-velocity interpolation for all dynamic markers. Vehicles now move smoothly across the map without stutter, and accurately reflect their real-time heading and rotation from the Rust+ protocol." TextWrapping="Wrap" Margin="0,0,0,8"/>
 
-                            <TextBlock Text="• Cargo Ship Scaling &amp; UI Refinements" FontWeight="Bold" Margin="0,0,0,4"/>
-                            <TextBlock Text="Fixed the Cargo Ship marker scaling issue to maintain consistent visibility. Various layout refinements and stability improvements have been applied across the board." TextWrapping="Wrap" Margin="0,0,0,8"/>
+                            <TextBlock Text="• Optimized Marker Scaling" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="Refined scaling logic for large-scale events like the Cargo Ship, ensuring they maintain consistent visibility and size regardless of your current map zoom." TextWrapping="Wrap" Margin="0,0,0,8"/>
                         </StackPanel>
                     </Border>
 
                     <!-- ============================================== -->
-                    <!-- v4.1.1 PATCH NOTES -->
+                    <!-- v4.1.0 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
