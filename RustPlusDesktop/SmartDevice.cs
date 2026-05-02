@@ -200,6 +200,13 @@ public class SmartDevice : INotifyPropertyChanged
         set { if (_audioFilePath != value) { _audioFilePath = value; OnProp(); } }
     }
 
+    private string? _lastAlarmMessage;
+    public string? LastAlarmMessage
+    {
+        get => _lastAlarmMessage;
+        set { if (_lastAlarmMessage != value) { _lastAlarmMessage = value; OnProp(); } }
+    }
+
 
     public string Display
     {
