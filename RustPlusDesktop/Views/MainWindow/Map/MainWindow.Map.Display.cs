@@ -21,6 +21,7 @@ public partial class MainWindow
         ImgMap.VerticalAlignment = VerticalAlignment.Top;
         ImgMap.Width = wDip;
         ImgMap.Height = hDip;
+        RenderOptions.SetBitmapScalingMode(ImgMap, BitmapScalingMode.HighQuality);
 
         GridLayer.Width = wDip;
         GridLayer.Height = hDip;
