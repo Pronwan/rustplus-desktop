@@ -723,10 +723,16 @@ public partial class MainWindow : Window
             // Online/Offline (wenn dieser Part auch vom Button abhängen soll, ebenfalls mit _announceSpawns verknüpfen)
             if (prev.online != now.online  && _announceSpawns )
             {
-                var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : "unknown";
-                var txt = now.online ? $"{vm.Name} came online @ {where}"
-                                     : $"{vm.Name} went offline";
-                await SendTeamChatSafeAsync(txt);
+                bool isSelf = (vm.SteamId == _mySteamId);
+                bool shouldAnnounce = now.online ? TrackingService.AnnouncePlayerOnline : TrackingService.AnnouncePlayerOffline;
+
+                if (shouldAnnounce)
+                {
+                    var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : "unknown";
+                    var txt = now.online ? $"{vm.Name} came online @ {where}"
+                                         : $"{vm.Name} went offline";
+                    await SendTeamChatSafeAsync(txt);
+                }
             }
 
             // Death/Respawn
@@ -740,9 +746,21 @@ public partial class MainWindow : Window
                 // ---> Meldung nur senden, wenn Button aktiv
                 if (_announceSpawns)
                 {
-                    var where = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : "unknown";
-                    var txt = now.dead ? $"{vm.Name} died @ {where}" : $"{vm.Name} respawned @ {where}";
-                    await SendTeamChatSafeAsync(txt);
+                    bool isSelf = (vm.SteamId == _mySteamId);
+                    bool shouldAnnounce = false;
+
+                    if (prev.dead != now.dead)
+                    {
+                        if (now.dead) shouldAnnounce = isSelf ? TrackingService.AnnouncePlayerDeathSelf : TrackingService.AnnouncePlayerDeathTeam;
+                        else shouldAnnounce = isSelf ? TrackingService.AnnouncePlayerRespawnSelf : TrackingService.AnnouncePlayerRespawnTeam;
+                    }
+
+                    if (shouldAnnounce)
+                    {
+                        var where = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : "unknown";
+                        var txt = now.dead ? $"{vm.Name} died @ {where}" : $"{vm.Name} respawned @ {where}";
+                        await SendTeamChatSafeAsync(txt);
+                    }
                 }
 
                 // Death-Pin weiter unabhängig vom Toggle behandeln
@@ -1002,6 +1020,9 @@ public partial class MainWindow : Window
         _statusTimer.Tick += async (_, __) => await UpdateServerStatusAsync();
         ListServers.ItemsSource = _vm.Servers;
         
+        UpdateMasterToggleState();
+        SyncAlertMenuItems();
+
         // Initial tracking status update and hook global events
         TrackingService.OnOnlinePlayersUpdated -= OnOnlinePlayersUpdated;
         TrackingService.OnOnlinePlayersUpdated += OnOnlinePlayersUpdated;
@@ -4291,8 +4312,233 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     }
     private bool _announceSpawns = false;
 
-    private void ChatAnnounce_Checked(object sender, RoutedEventArgs e) => _announceSpawns = true;
-    private void ChatAnnounce_Unchecked(object sender, RoutedEventArgs e) => _announceSpawns = false;
+    private void ChatAnnounce_Toggle(object sender, RoutedEventArgs e)
+    {
+        // User clicked the master checkbox. WPF has already toggled IsChecked.
+        // Normal cycle: Unchecked (false) -> Checked (true) -> Indeterminate (null) -> Unchecked (false)
+        bool? current = ChatAnnounce.IsChecked;
+
+        if (current == true)
+        {
+            // User clicked while it was OFF or Indeterminate -> Turn EVERYTHING ON
+            TrackingService.AnnounceSpawnsMaster = true;
+            SetAllAlerts(true);
+        }
+        else
+        {
+            // User clicked while it was ON (becoming null) or already Indeterminate (becoming false)
+            // In both cases, the user wants to turn EVERYTHING OFF.
+            TrackingService.AnnounceSpawnsMaster = false;
+            SetAllAlerts(false);
+            
+            // Force the checkbox to be visually unchecked (false) if it was null
+            if (current == null) ChatAnnounce.IsChecked = false;
+        }
+
+        UpdateMasterToggleState();
+        SyncAlertMenuItems();
+        UpdateShopSearchConfig();
+    }
+
+    private void SetAllAlerts(bool val)
+    {
+        TrackingService.AnnounceCargo = val;
+        TrackingService.AnnounceHeli = val;
+        TrackingService.AnnounceChinook = val;
+        TrackingService.AnnounceVendor = val;
+        TrackingService.AnnounceOilRig = val;
+        TrackingService.AnnounceDeepSea = val;
+        TrackingService.AnnouncePlayerOnline = val;
+        TrackingService.AnnouncePlayerOffline = val;
+        TrackingService.AnnouncePlayerDeathSelf = val;
+        TrackingService.AnnouncePlayerDeathTeam = val;
+        TrackingService.AnnouncePlayerRespawnSelf = val;
+        TrackingService.AnnouncePlayerRespawnTeam = val;
+        TrackingService.AnnounceNewShops = val;
+        TrackingService.AnnounceSuspiciousShops = val;
+        TrackingService.AnnounceTradeAlerts = val;
+    }
+
+    private bool CheckIfAllOff()
+    {
+        return !TrackingService.AnnounceCargo && !TrackingService.AnnounceHeli && !TrackingService.AnnounceChinook &&
+               !TrackingService.AnnounceVendor && !TrackingService.AnnounceOilRig && !TrackingService.AnnounceDeepSea &&
+               !TrackingService.AnnouncePlayerOnline && !TrackingService.AnnouncePlayerOffline &&
+               !TrackingService.AnnouncePlayerDeathSelf && !TrackingService.AnnouncePlayerDeathTeam &&
+               !TrackingService.AnnouncePlayerRespawnSelf && !TrackingService.AnnouncePlayerRespawnTeam &&
+               !TrackingService.AnnounceNewShops && !TrackingService.AnnounceSuspiciousShops &&
+               !TrackingService.AnnounceTradeAlerts;
+    }
+
+    private void UpdateMasterToggleState()
+    {
+        bool allOn = TrackingService.AnnounceCargo && TrackingService.AnnounceHeli && TrackingService.AnnounceChinook &&
+                     TrackingService.AnnounceVendor && TrackingService.AnnounceOilRig && TrackingService.AnnounceDeepSea &&
+                     TrackingService.AnnouncePlayerOnline && TrackingService.AnnouncePlayerOffline &&
+                     TrackingService.AnnouncePlayerDeathSelf && TrackingService.AnnouncePlayerDeathTeam &&
+                     TrackingService.AnnouncePlayerRespawnSelf && TrackingService.AnnouncePlayerRespawnTeam &&
+                     TrackingService.AnnounceNewShops && TrackingService.AnnounceSuspiciousShops;
+
+        bool anyOn = TrackingService.AnnounceCargo || TrackingService.AnnounceHeli || TrackingService.AnnounceChinook ||
+                     TrackingService.AnnounceVendor || TrackingService.AnnounceOilRig || TrackingService.AnnounceDeepSea ||
+                     TrackingService.AnnouncePlayerOnline || TrackingService.AnnouncePlayerOffline ||
+                     TrackingService.AnnouncePlayerDeathSelf || TrackingService.AnnouncePlayerDeathTeam ||
+                     TrackingService.AnnouncePlayerRespawnSelf || TrackingService.AnnouncePlayerRespawnTeam ||
+                     TrackingService.AnnounceNewShops || TrackingService.AnnounceSuspiciousShops;
+
+        if (_alertRules.Count > 0)
+        {
+            // Trade alerts no longer affect the master button state per user request
+            // We just keep the existing anyOn/allOn which are based on categories
+        }
+
+        _announceSpawns = TrackingService.AnnounceSpawnsMaster;
+
+        if (!_announceSpawns)
+        {
+            ChatAnnounce.IsChecked = false;
+        }
+        else
+        {
+            if (allOn) ChatAnnounce.IsChecked = true;
+            else if (!anyOn) ChatAnnounce.IsChecked = false; 
+            else ChatAnnounce.IsChecked = null; // Smaller dot
+        }
+    }
+
+    private void Alert_MenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is string tag)
+        {
+            bool val = mi.IsChecked;
+            switch (tag)
+            {
+                case "Cargo": TrackingService.AnnounceCargo = val; break;
+                case "Heli": TrackingService.AnnounceHeli = val; break;
+                case "Chinook": TrackingService.AnnounceChinook = val; break;
+                case "Vendor": TrackingService.AnnounceVendor = val; break;
+                case "OilRig": TrackingService.AnnounceOilRig = val; break;
+                case "DeepSea": TrackingService.AnnounceDeepSea = val; break;
+                case "PlayerOnline": TrackingService.AnnouncePlayerOnline = val; break;
+                case "PlayerOffline": TrackingService.AnnouncePlayerOffline = val; break;
+                case "PlayerDeathSelf": TrackingService.AnnouncePlayerDeathSelf = val; break;
+                case "PlayerDeathTeam": TrackingService.AnnouncePlayerDeathTeam = val; break;
+                case "PlayerRespawnSelf": TrackingService.AnnouncePlayerRespawnSelf = val; break;
+                case "PlayerRespawnTeam": TrackingService.AnnouncePlayerRespawnTeam = val; break;
+                case "NewShops": TrackingService.AnnounceNewShops = val; break;
+                case "SuspiciousShops": TrackingService.AnnounceSuspiciousShops = val; break;
+            }
+
+            if (val)
+            {
+                TrackingService.AnnounceSpawnsMaster = true;
+            }
+
+            UpdateMasterToggleState();
+            UpdateShopSearchConfig();
+            SyncAlertMenuItems();
+        }
+    }
+
+    private void SyncAlertMenuItems()
+    {
+        bool masterOn = TrackingService.AnnounceSpawnsMaster;
+        PopulateTradeAlertsSubMenu(masterOn);
+
+        if (ChatAnnounce.ContextMenu == null) return;
+        foreach (var item in ChatAnnounce.ContextMenu.Items)
+        {
+            if (item is MenuItem mi && mi.Tag is string tag)
+            {
+                bool isSelected = false;
+                switch (tag)
+                {
+                    case "Cargo": isSelected = TrackingService.AnnounceCargo; break;
+                    case "Heli": isSelected = TrackingService.AnnounceHeli; break;
+                    case "Chinook": isSelected = TrackingService.AnnounceChinook; break;
+                    case "Vendor": isSelected = TrackingService.AnnounceVendor; break;
+                    case "OilRig": isSelected = TrackingService.AnnounceOilRig; break;
+                    case "DeepSea": isSelected = TrackingService.AnnounceDeepSea; break;
+                    case "PlayerOnline": isSelected = TrackingService.AnnouncePlayerOnline; break;
+                    case "PlayerOffline": isSelected = TrackingService.AnnouncePlayerOffline; break;
+                    case "PlayerDeathSelf": isSelected = TrackingService.AnnouncePlayerDeathSelf; break;
+                    case "PlayerDeathTeam": isSelected = TrackingService.AnnouncePlayerDeathTeam; break;
+                    case "PlayerRespawnSelf": isSelected = TrackingService.AnnouncePlayerRespawnSelf; break;
+                    case "PlayerRespawnTeam": isSelected = TrackingService.AnnouncePlayerRespawnTeam; break;
+                    case "NewShops": isSelected = TrackingService.AnnounceNewShops; break;
+                    case "SuspiciousShops": isSelected = TrackingService.AnnounceSuspiciousShops; break;
+                }
+
+                mi.IsChecked = masterOn && isSelected;
+                mi.IsEnabled = masterOn;
+            }
+        }
+    }
+
+    private void PopulateTradeAlertsSubMenu(bool masterOn)
+    {
+        if (TradeAlertsMenuItem == null) return;
+
+        TradeAlertsMenuItem.Items.Clear();
+        // Trade Alerts menu is always enabled if rules exist, regardless of master toggle
+        TradeAlertsMenuItem.IsEnabled = _alertRules.Count > 0;
+
+        if (_alertRules.Count == 0)
+        {
+            TradeAlertsMenuItem.Header = "Trade Alerts (None)";
+            return;
+        }
+
+        TradeAlertsMenuItem.Header = "Trade Alerts";
+        foreach (var rule in _alertRules)
+        {
+            var mi = new MenuItem
+            {
+                Header = rule.QueryText,
+                IsCheckable = true,
+                IsChecked = rule.NotifyChat,
+                IsEnabled = true, // Always allow manual control
+                StaysOpenOnClick = true,
+                Style = (Style)FindResource("DarkMenuItem"),
+                Tag = rule
+            };
+            mi.Click += TradeAlertSubItem_Click;
+            TradeAlertsMenuItem.Items.Add(mi);
+        }
+    }
+
+    private void TradeAlertSubItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is ShopAlertRule rule)
+        {
+            rule.NotifyChat = mi.IsChecked;
+            SavePersistentAlerts();
+            
+            TrackingService.AnnounceSpawnsMaster = true;
+            UpdateMasterToggleState();
+            UpdateShopSearchConfig();
+            _ = PushAlertsToWebViewAsync();
+        }
+    }
+
+    private async void UpdateShopSearchConfig()
+    {
+        if (EmbeddedShopSearch?.CoreWebView2 != null)
+        {
+            try
+            {
+                var config = new
+                {
+                    notifyNew = TrackingService.AnnounceNewShops,
+                    notifySuspicious = TrackingService.AnnounceSuspiciousShops,
+                    notifyTradeAlerts = _alertRules.Any(r => r.NotifyChat)
+                };
+                string json = JsonSerializer.Serialize(config);
+                await EmbeddedShopSearch.CoreWebView2.ExecuteScriptAsync($"if(window.updateConfig) window.updateConfig({json});");
+            }
+            catch { }
+        }
+    }
 
     // avatar size on the map
     private const double PlayerAvatarSize = 24;

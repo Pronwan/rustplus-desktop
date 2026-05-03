@@ -714,9 +714,23 @@ public partial class MainWindow
                         if (_announceSpawns && !_dynKnown.Contains(key))
                         {
                             _dynKnown.Add(key);
-                            var grid = GetGridLabel(m.X, m.Y);
-                            var kind = EventKindText(m.Type);
-                            _ = SendTeamChatSafeAsync($"{kind} spawned in at {grid}");
+
+                            bool shouldAnnounce = m.Type switch
+                            {
+                                5 => TrackingService.AnnounceCargo,
+                                8 => TrackingService.AnnounceHeli,
+                                4 => TrackingService.AnnounceChinook,
+                                6 => TrackingService.AnnounceVendor,
+                                9 => TrackingService.AnnounceOilRig,
+                                _ => true // Default for unknown events
+                            };
+
+                            if (shouldAnnounce)
+                            {
+                                var grid = GetGridLabel(m.X, m.Y);
+                                var kind = EventKindText(m.Type);
+                                _ = SendTeamChatSafeAsync($"{kind} spawned in at {grid}");
+                            }
                         }
                         el = host;
                     }

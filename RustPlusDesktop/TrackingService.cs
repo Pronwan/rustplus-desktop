@@ -31,7 +31,25 @@ public class TrackingSettings
     public bool HideConsole { get; set; } = false;
     public double SidebarWidth { get; set; } = 600;
     public string SteamId64 { get; set; } = string.Empty;
+    public bool AnnounceCargo { get; set; } = false;
+    public bool AnnounceHeli { get; set; } = false;
+    public bool AnnounceChinook { get; set; } = false;
+    public bool AnnounceVendor { get; set; } = false;
+    public bool AnnounceOilRig { get; set; } = false;
+    public bool AnnounceDeepSea { get; set; } = false;
+    public bool AnnouncePlayerOnline { get; set; } = false;
+    public bool AnnouncePlayerOffline { get; set; } = false;
+    public bool AnnouncePlayerDeathSelf { get; set; } = false;
+    public bool AnnouncePlayerDeathTeam { get; set; } = false;
+    public bool AnnouncePlayerRespawnSelf { get; set; } = false;
+    public bool AnnouncePlayerRespawnTeam { get; set; } = false;
+    public bool AnnounceNewShops { get; set; } = false;
+    public bool AnnounceSuspiciousShops { get; set; } = false;
+    public bool AnnounceTradeAlerts { get; set; } = false;
+    public bool AnnounceSpawnsMaster { get; set; } = false;
+    public bool SaveAlertSelection { get; set; } = true;
 }
+
 
 public class PlayerSession
 {
@@ -248,6 +266,92 @@ public static class TrackingService
     {
         get => _settings.SteamId64;
         set { _settings.SteamId64 = value; SaveDB(); }
+    }
+
+    public static bool AnnounceCargo
+    {
+        get => _settings.AnnounceCargo;
+        set { _settings.AnnounceCargo = value; SaveDB(); }
+    }
+    public static bool AnnounceHeli
+    {
+        get => _settings.AnnounceHeli;
+        set { _settings.AnnounceHeli = value; SaveDB(); }
+    }
+    public static bool AnnounceChinook
+    {
+        get => _settings.AnnounceChinook;
+        set { _settings.AnnounceChinook = value; SaveDB(); }
+    }
+    public static bool AnnounceVendor
+    {
+        get => _settings.AnnounceVendor;
+        set { _settings.AnnounceVendor = value; SaveDB(); }
+    }
+    public static bool AnnounceOilRig
+    {
+        get => _settings.AnnounceOilRig;
+        set { _settings.AnnounceOilRig = value; SaveDB(); }
+    }
+    public static bool AnnounceDeepSea
+    {
+        get => _settings.AnnounceDeepSea;
+        set { _settings.AnnounceDeepSea = value; SaveDB(); }
+    }
+    public static bool AnnouncePlayerOnline
+    {
+        get => _settings.AnnouncePlayerOnline;
+        set { _settings.AnnouncePlayerOnline = value; SaveDB(); }
+    }
+    public static bool AnnouncePlayerOffline
+    {
+        get => _settings.AnnouncePlayerOffline;
+        set { _settings.AnnouncePlayerOffline = value; SaveDB(); }
+    }
+    public static bool AnnouncePlayerDeathSelf
+    {
+        get => _settings.AnnouncePlayerDeathSelf;
+        set { _settings.AnnouncePlayerDeathSelf = value; SaveDB(); }
+    }
+    public static bool AnnouncePlayerDeathTeam
+    {
+        get => _settings.AnnouncePlayerDeathTeam;
+        set { _settings.AnnouncePlayerDeathTeam = value; SaveDB(); }
+    }
+    public static bool AnnouncePlayerRespawnSelf
+    {
+        get => _settings.AnnouncePlayerRespawnSelf;
+        set { _settings.AnnouncePlayerRespawnSelf = value; SaveDB(); }
+    }
+    public static bool AnnouncePlayerRespawnTeam
+    {
+        get => _settings.AnnouncePlayerRespawnTeam;
+        set { _settings.AnnouncePlayerRespawnTeam = value; SaveDB(); }
+    }
+    public static bool AnnounceNewShops
+    {
+        get => _settings.AnnounceNewShops;
+        set { _settings.AnnounceNewShops = value; SaveDB(); }
+    }
+    public static bool AnnounceSuspiciousShops
+    {
+        get => _settings.AnnounceSuspiciousShops;
+        set { _settings.AnnounceSuspiciousShops = value; SaveDB(); }
+    }
+    public static bool AnnounceTradeAlerts
+    {
+        get => _settings.AnnounceTradeAlerts;
+        set { _settings.AnnounceTradeAlerts = value; SaveDB(); }
+    }
+    public static bool AnnounceSpawnsMaster
+    {
+        get => _settings.AnnounceSpawnsMaster;
+        set { _settings.AnnounceSpawnsMaster = value; SaveDB(); }
+    }
+    public static bool SaveAlertSelection
+    {
+        get => _settings.SaveAlertSelection;
+        set { _settings.SaveAlertSelection = value; SaveDB(); }
     }
 
     private static void SetAutoStart(bool enabled)

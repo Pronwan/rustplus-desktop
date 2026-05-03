@@ -232,6 +232,7 @@ public partial class MainWindow
                 await InjectItemsAsync();
                 await PushShopsToWebViewAsync();
                 await PushAlertsToWebViewAsync();
+                UpdateShopSearchConfig();
             };
         }
         catch (Exception ex)
@@ -240,7 +241,10 @@ public partial class MainWindow
         }
 
         if (_alertRules.All(r => !r.IsSaved))
+        {
             LoadPersistentAlerts();
+            SyncAlertMenuItems();
+        }
     }
 
     // ── Refresh (called by PollShopsOnceAsync) ───────────────────────────────
@@ -431,6 +435,8 @@ public partial class MainWindow
                             _alertRules.Add(rule);
                             SavePersistentAlerts();
                             RefreshAlertListUI();
+                            UpdateMasterToggleState();
+                            SyncAlertMenuItems();
                         }
                         else
                         {
@@ -438,10 +444,30 @@ public partial class MainWindow
                         }
                         break;
 
+                    case "notifyNew":
+                        bool onNew = root.GetProperty("on").GetBoolean();
+                        TrackingService.AnnounceNewShops = onNew;
+                        UpdateMasterToggleState();
+                        SyncAlertMenuItems();
+                        break;
+
+                    case "notifySuspicious":
+                        bool onSusp = root.GetProperty("on").GetBoolean();
+                        TrackingService.AnnounceSuspiciousShops = onSusp;
+                        UpdateMasterToggleState();
+                        SyncAlertMenuItems();
+                        break;
+
                     case "removeAlert":
                         var rid = Guid.Parse(root.GetProperty("id").GetString()!);
                         var rr  = _alertRules.FirstOrDefault(r => r.Id == rid);
-                        if (rr != null) { _alertRules.Remove(rr); SavePersistentAlerts(); }
+                        if (rr != null) 
+                        { 
+                            _alertRules.Remove(rr); 
+                            SavePersistentAlerts();
+                            UpdateMasterToggleState();
+                            SyncAlertMenuItems();
+                        }
                         _ = PushAlertsToWebViewAsync();
                         break;
 
@@ -464,6 +490,10 @@ public partial class MainWindow
                             nr.NotifyChat  = root.GetProperty("chat").GetBoolean();
                             nr.NotifySound = root.GetProperty("sound").GetBoolean();
                             SavePersistentAlerts();
+
+                            // Sync global Chat Alert menu state
+                            UpdateMasterToggleState();
+                            SyncAlertMenuItems();
                         }
                         break;
 
@@ -477,12 +507,6 @@ public partial class MainWindow
                         OpenPathFinderWindow();
                         break;
 
-                    case "notifyNew":
-                        _notifyNewShopsToChat = root.GetProperty("on").GetBoolean();
-                        break;
-
-                    case "notifySuspicious":
-                        _notifySuspiciousShops = root.GetProperty("on").GetBoolean();
                         break;
                 }
             });

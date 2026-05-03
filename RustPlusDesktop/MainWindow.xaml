@@ -151,31 +151,44 @@
         <!-- ITEM-TEMPLATE (Leaf) bleibt ein einzelnes Root-Element, alles gut) -->
         <ControlTemplate x:Key="DarkMenuItem_Item" TargetType="MenuItem">
             <Border x:Name="Bd"
-            Background="{TemplateBinding Background}"
-            CornerRadius="6"
-            SnapsToDevicePixels="True"
-            Padding="{TemplateBinding Padding}">
+                    Background="{TemplateBinding Background}"
+                    CornerRadius="6"
+                    SnapsToDevicePixels="True"
+                    Padding="{TemplateBinding Padding}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="18"/>
+                        <ColumnDefinition Width="22"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="16"/>
                     </Grid.ColumnDefinitions>
 
+                    <!-- Dot indicator inside the template so it's NOT shared between instances -->
+                    <Ellipse x:Name="CheckedDot" 
+                             Grid.Column="0"
+                             Width="8" Height="8" 
+                             Fill="{DynamicResource Accent}"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             Visibility="Collapsed"/>
+
                     <ContentPresenter Grid.Column="0"
-                              VerticalAlignment="Center"
-                              HorizontalAlignment="Center"
-                              ContentSource="Icon"/>
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      ContentSource="Icon"/>
 
                     <ContentPresenter Grid.Column="1"
-                              Margin="0,0,6,0"
-                              VerticalAlignment="Center"
-                              RecognizesAccessKey="True"
-                              ContentSource="Header"/>
+                                      Margin="4,0,6,0"
+                                      VerticalAlignment="Center"
+                                      RecognizesAccessKey="True"
+                                      ContentSource="Header"/>
                 </Grid>
             </Border>
 
             <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter TargetName="CheckedDot" Property="Visibility" Value="Visible"/>
+                    <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
+                </Trigger>
                 <Trigger Property="IsHighlighted" Value="True">
                     <Setter TargetName="Bd" Property="Background" Value="#141A22"/>
                 </Trigger>
@@ -186,8 +199,6 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
-        <!-- STYLE: wählt automatisch das passende Template per Role
-     + setzt Checked-Indikator als Accent-Punkt über Icon -->
         <Style x:Key="DarkMenuItem" TargetType="MenuItem">
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -200,16 +211,6 @@
                 </Trigger>
                 <Trigger Property="Role" Value="SubmenuHeader">
                     <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}"/>
-                </Trigger>
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter Property="Icon">
-                        <Setter.Value>
-                            <Ellipse Width="8" Height="8" Fill="{DynamicResource Accent}"/>
-                        </Setter.Value>
-                    </Setter>
-                </Trigger>
-                <Trigger Property="IsChecked" Value="False">
-                    <Setter Property="Icon" Value="{x:Null}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -528,9 +529,9 @@
                                   Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)"
                                   To="#62D38B" Duration="0:0:0.08"/>
                                             <DoubleAnimation Storyboard.TargetName="DotScale"
-                                   Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.10"/>
+                                    Storyboard.TargetProperty="ScaleX" To="0.5" Duration="0:0:0.10"/>
                                             <DoubleAnimation Storyboard.TargetName="DotScale"
-                                   Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.10"/>
+                                    Storyboard.TargetProperty="ScaleY" To="0.5" Duration="0:0:0.10"/>
                                         </Storyboard>
                                     </VisualState>
                                 </VisualStateGroup>
@@ -1960,11 +1961,37 @@ Margin="12,0,0,0"
                       Checked="ChkShops_Checked" Unchecked="ChkShops_Checked"/>
                     <TextBlock Width="20"></TextBlock>
                     <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChatAnnounce"
-          Content="Event Spawns in Chat"
+          Content="Chat Alerts"
+          ToolTip="Right-click to configure"
           IsChecked="False"
           Margin="8,0,0,0"
-          Checked="ChatAnnounce_Checked"
-          Unchecked="ChatAnnounce_Unchecked"/>
+          IsThreeState="True"
+          Click="ChatAnnounce_Toggle">
+                        <CheckBox.ContextMenu>
+                            <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                <MenuItem Header="Events" IsHitTestVisible="False" FontWeight="Bold" Foreground="{StaticResource TextBrushMuted}"/>
+                                <MenuItem Header="Cargo Ship" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="Cargo"/>
+                                <MenuItem Header="Patrol Helicopter" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="Heli"/>
+                                <MenuItem Header="Chinook (CH47)" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="Chinook"/>
+                                <MenuItem Header="Travelling Vendor" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="Vendor"/>
+                                <MenuItem Header="Oil Rig Trigger" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="OilRig"/>
+                                <MenuItem Header="Deep Sea Event" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="DeepSea"/>
+                                <Separator Style="{StaticResource DarkSeparator}"/>
+                                <MenuItem Header="Players" IsHitTestVisible="False" FontWeight="Bold" Foreground="{StaticResource TextBrushMuted}"/>
+                                <MenuItem Header="Online Status" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerOnline"/>
+                                <MenuItem Header="Offline Status" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerOffline"/>
+                                <MenuItem Header="Self Death" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerDeathSelf"/>
+                                <MenuItem Header="Team Death" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerDeathTeam"/>
+                                <MenuItem Header="Self Respawn" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerRespawnSelf"/>
+                                <MenuItem Header="Team Respawn" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerRespawnTeam"/>
+                                <Separator Style="{StaticResource DarkSeparator}"/>
+                                <MenuItem Header="Shops" IsHitTestVisible="False" FontWeight="Bold" Foreground="{StaticResource TextBrushMuted}"/>
+                                <MenuItem Header="New Shops" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="NewShops"/>
+                                <MenuItem Header="Suspicious Shops" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="SuspiciousShops"/>
+                                <MenuItem x:Name="TradeAlertsMenuItem" Header="Trade Alerts" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}"/>
+                            </ContextMenu>
+                        </CheckBox.ContextMenu>
+                    </CheckBox>
                     <Button Content="Reset ⟲"
                             Width="80"
                             Margin="8,0,0,0"
