@@ -5,6 +5,11 @@
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ApplicationIcon>rustplus-desktop-icon.ico</ApplicationIcon>
+		
+		<!-- Fixes for Single-File Publish and Cleanup -->
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+		<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
 	</PropertyGroup>
 	<ItemGroup>
 	  
@@ -154,6 +159,7 @@
 	  <Resource Include="icons\crate3.png" />
 	  <Resource Include="icons\eraser.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
 	  <Resource Include="icons\pen.png">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
@@ -163,21 +169,26 @@
 	  </Resource>
 	  <Content Include="icons\rust-c4.mp3">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Content>
 	  <Resource Include="icons\save.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
 	  <Resource Include="icons\smartalarm.png" />
 	  <Resource Include="icons\smartswitch.png" />
 	  <Resource Include="icons\storagemonitor.png" />
 	  <Resource Include="icons\text.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
 	  <Resource Include="icons\trash.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
 	  <Resource Include="icons\upload.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
 	  <Content Include="1-76fc6c7e.ico">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -195,6 +206,7 @@
   <ItemGroup>
     <Content Include="cash.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
     <Resource Include="icons\airfield.png" />
     <Resource Include="icons\arcticresearch.png" />
