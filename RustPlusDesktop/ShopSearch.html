@@ -188,6 +188,17 @@
       color: var(--red)
     }
 
+    .alert-chip.chat-disabled {
+      border-color: rgba(255, 255, 255, 0.05);
+      opacity: 0.8;
+    }
+
+    .chip-btn.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      filter: grayscale(1);
+    }
+
     .sep {
       width: 1px;
       height: 14px;
@@ -488,7 +499,7 @@
     var allShops = [];
     var allAlerts = [];
     var selItem = null;
-    var filters = { sell: true, buy: true, hide: false, new: false, susp: false };
+    var filters = { sell: true, buy: true, hide: false, new: false, susp: false, tradeAlerts: true };
     var dropVisible = false;
 
     // ── Public API called by C# ─────────────────────────────────────────────────
@@ -504,6 +515,24 @@
     window.updateAlerts = function (alerts) {
       allAlerts = alerts;
       renderAlerts();
+    };
+
+    window.updateConfig = function (cfg) {
+      if (cfg.notifyNew !== undefined) {
+        filters.new = cfg.notifyNew;
+        const el = document.getElementById('tNew');
+        if (el) el.classList.toggle('on', filters.new);
+      }
+      if (cfg.notifySuspicious !== undefined) {
+        filters.susp = cfg.notifySuspicious;
+        const el = document.getElementById('tSusp');
+        if (el) el.classList.toggle('on', filters.susp);
+      }
+      if (cfg.notifyTradeAlerts !== undefined) {
+        filters.tradeAlerts = cfg.notifyTradeAlerts;
+      }
+      renderAlerts();
+      render();
     };
 
     // ── Post to C# ──────────────────────────────────────────────────────────────

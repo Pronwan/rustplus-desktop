@@ -26,7 +26,8 @@ public partial class MainWindow
             {
                 _deepSeaActive = true;
                 string dir = GetDeepSeaDirection(deepSeaShop.X, deepSeaShop.Y);
-                _ = SendTeamChatSafeAsync($"Deep Sea Event started! (Direction: {dir})");
+                if (_announceSpawns && TrackingService.AnnounceDeepSea)
+                    _ = SendTeamChatSafeAsync($"Deep Sea Event started! (Direction: {dir})");
                 AppendLog($"[DEEPSEA] Event detected at {deepSeaShop.X:F0},{deepSeaShop.Y:F0} ({dir})");
             }
         }
@@ -165,7 +166,7 @@ public partial class MainWindow
             return;
         }
 
-        if (!_notifyNewShopsToChat)
+        if (!_announceSpawns || !TrackingService.AnnounceNewShops)
             return;
 
         foreach (var s in shops)
@@ -220,7 +221,7 @@ public partial class MainWindow
             life.LastSnapshot = s;
         }
 
-        if (_notifySuspiciousShops)
+        if (_announceSpawns && TrackingService.AnnounceSuspiciousShops)
         {
             foreach (var kv in _shopLifetimes.ToList())
             {

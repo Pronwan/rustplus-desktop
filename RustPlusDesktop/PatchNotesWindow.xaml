@@ -12,13 +12,32 @@
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
                 <TextBlock Text="Patch Notes &amp; Version History" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,2"/>
                 <!-- UPDATE VERSION NUMBER HERE -->
-                <TextBlock Text="Current Version: 4.1.3" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
+                <TextBlock Text="Current Version: 4.1.4" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
             </StackPanel>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v4.1.0 PATCH NOTES -->
+                    <!-- NEW v4.1.4 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v4.1.4  |  Granular Chat Notifications" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+
+                            <!-- Screenshots -->
+                            <Image Source="pack://application:,,,/Screenshots/Notifications.png" Stretch="Uniform" MaxHeight="350" Margin="0,0,0,12"/>
+
+                            <!-- Features -->
+                            <TextBlock Text="• Granular Notification Management" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="Right-click 'Chat Alerts' to access a detailed management menu. You can now individually toggle notifications for cargo, helicopters, players, and more. Even Item Alerts and Shop settings can now be managed directly from this menu." TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                            <TextBlock Text="• Improved Map Rendering &amp; Scaling" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="Adjusted the render size of the Cargo Ship and optimized map rendering performance when zoomed in deeply. The interface remains snappy and readable even at extreme zoom levels." TextWrapping="Wrap" Margin="0,0,0,8"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
+                    <!-- v4.1.2 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
