@@ -2107,7 +2107,7 @@ Click="BtnToggleMiniMap_Click"/>
            Visibility="Collapsed"
            Opacity="0.95"
            Source="pack://application:,,,/TitleScreen-rust-plus-desktop.png"/>
-                    <Image x:Name="ImgMap" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                    <Image x:Name="ImgMap" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="HighQuality"/>
                     <!-- LIVE EVENT DOCK (Top Right) -->
                     <StackPanel x:Name="EventDock" 
                                 Orientation="Vertical" 
