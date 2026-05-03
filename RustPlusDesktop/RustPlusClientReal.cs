@@ -2851,6 +2851,7 @@ rp.connect();
                 var bi = new BitmapImage();
                 bi.BeginInit();
                 bi.CacheOption = BitmapCacheOption.OnLoad;
+                bi.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
                 bi.StreamSource = ms;
                 bi.EndInit();
                 bi.Freeze();
