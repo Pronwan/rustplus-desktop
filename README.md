@@ -44,7 +44,7 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 *(I publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
 
-[![YouTube Video](./App-Version3.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)  
+[![YouTube Video](./RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
 ## Update 4.1.0 - Crosshair Editor (Right Click Crosshair icon to access) (May 1st)
