@@ -41,10 +41,13 @@ PrivilegesRequired=admin
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-; Jawads optimierte Dateiliste
-Source: "bin\Installer\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\Installer\publish\runtime\*";       DestDir: "{app}\runtime"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "bin\Installer\publish\icons\*";         DestDir: "{app}\icons";   Flags: ignoreversion recursesubdirs createallsubdirs
+; 1. Alle Hauptdateien (DLLs, EXE, cash.wav, etc.) aus dem Release-Ordner
+Source: "bin\Installer\publish\*"; DestDir: "{app}"; Flags: ignoreversion
+
+; 2. Die Unterordner direkt aus dem Release-Verzeichnis
+Source: "bin\Installer\publish\icons\*";    DestDir: "{app}\icons";    Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "bin\Installer\publish\runtime\*";  DestDir: "{app}\runtime";  Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "bin\Installer\publish\runtimes\*"; DestDir: "{app}\runtimes"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
