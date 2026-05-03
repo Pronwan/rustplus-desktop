@@ -283,9 +283,9 @@
     <Resource Include="Screenshots\3_5B.png" />
     <Resource Include="Screenshots\v4_map_overhaul.png" />
     <Resource Include="Screenshots\v4_shop_hover.png" />
-    <Content Include="Screenshots\v4_5.png">
+    <Resource Include="Screenshots\v4_5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </Resource>
     <Resource Include="Screenshots\Notifications.png" />
     <Resource Include="TitleScreen-rust-plus-desktop.png" />
     <Resource Include="rust_items.json" />
