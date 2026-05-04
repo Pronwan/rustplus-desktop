@@ -12,13 +12,55 @@
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
                 <TextBlock Text="Patch Notes &amp; Version History" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,2"/>
                 <!-- UPDATE VERSION NUMBER HERE -->
-                <TextBlock Text="Current Version: 4.1.4" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
+                <TextBlock Text="Current Version: 4.2" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
             </StackPanel>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v4.1.4 PATCH NOTES -->
+                    <!-- NEW v4.2 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v4.2  |  Cargo Ship Overhaul" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+
+                            <!-- Screenshots -->
+                            <Image Source="pack://application:,,,/Screenshots/Cargo_notification_settings.png" Stretch="Uniform" MaxHeight="280" Margin="0,0,0,8"/>
+                            <Image Source="pack://application:,,,/Screenshots/Cargo_docked_countdown.png" Stretch="Uniform" MaxHeight="280" Margin="0,0,0,8"/>
+                            <Image Source="pack://application:,,,/Screenshots/Cargo_remaining-on-map.png" Stretch="Uniform" MaxHeight="180" Margin="0,0,0,12"/>
+
+                            <!-- Features -->
+                            <TextBlock Text="• Smart Cargo Route Learning" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                The app now silently learns the Cargo Ship's route on your server. After the first full run, it knows the exact docking harbors, how long it stays, and where it triggers 5 minutes before arrival.
+                            </TextBlock>
+
+                            <TextBlock Text="• Live Countdown Timers" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                A docking countdown appears directly below the Cargo Ship while it's at harbor, and a remaining-on-map timer is shown in the Event Dock. When connecting mid-event the timer shows ??:?? to indicate the duration is known but elapsed time is not.
+                            </TextBlock>
+
+                            <TextBlock Text="• Granular Cargo Chat Notifications" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Three new notification types are now available in Chat Alerts: Harbor Docking, Departure Warning (5 min before leaving), and Arrival Warning (5 min before docking). All are individually toggleable via right-click on the Chat Alerts button.
+                            </TextBlock>
+
+                            <TextBlock Text="• Oil Rig Crate Trigger Detection" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                The app detects when a Chinook hovers over an Oil Rig and synthetically triggers the crate countdown — even though the Rust+ API provides no native event for this. A countdown appears on the map and chat notifications fire at trigger, 10 min, and 5 min remaining.
+                            </TextBlock>
+
+                            <Border Background="#1A4A7A" BorderBrush="#2A6AAA" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,4,0,0">
+                                <TextBlock TextWrapping="Wrap" Foreground="#90C8FF">
+                                    <Run FontWeight="Bold">Action Required for existing users:</Run>
+                                    <Run> Open Chat Alerts (right-click) and reset your notifications once using the master toggle to activate the new cargo alert types.</Run>
+                                </TextBlock>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
+                    <!-- v4.1.4 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>

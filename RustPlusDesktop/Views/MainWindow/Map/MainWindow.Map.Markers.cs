@@ -12,17 +12,68 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Text.RegularExpressions;
 
 namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
+    private bool _firstMarkerPollDone = false;
+    private class CargoDockInfo
+    {
+        public uint Id;
+        public double LastX, LastY;
+        public DateTime? DockTime;
+        public bool AnnouncedDock;
+        public bool AnnouncedEgressWarning;
+        public string? HarborName;
+        public bool IsDocked;
+        public bool WasAlreadyDocked;
+        public bool SeenAtEdge; // To confirm we saw it spawn
+        public bool EverMoved;  // To confirm we saw it in motion
+        public DateTime LastSeen;
+
+        // Life Cycle Learning
+        public DateTime? FirstSeen;
+        public DateTime? LastDeparted;
+        public int HarborCount;
+        public bool AnnouncedArrivalWarning;
+        public List<(DateTime Ts, double X, double Y)> History = new();
+    }
+    private readonly Dictionary<uint, CargoDockInfo> _cargoDockStates = new();
+    private bool _firstPollDyn = true;
     private void BuildMonumentOverlays()
     {
         if (Overlay == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0) return;
 
         foreach (var kv in _monEls) Overlay.Children.Remove(kv.Value);
         _monEls.Clear();
+
+        string host = _rust?.Host ?? "unknown";
+        var currentHarbors = _monData
+            .Where(m => m.Name?.Contains("Harbor", StringComparison.OrdinalIgnoreCase) == true)
+            .Select(m => new HarborInfo { Name = m.Name!, X = m.X, Y = m.Y })
+            .OrderBy(h => h.Name).ToList();
+
+        var savedHarbors = TrackingService.GetServerHarbors(host).OrderBy(h => h.Name).ToList();
+        bool wipe = false;
+        if (currentHarbors.Count != savedHarbors.Count) wipe = true;
+        else
+        {
+            for (int i = 0; i < currentHarbors.Count; i++)
+            {
+                if (currentHarbors[i].Name != savedHarbors[i].Name || 
+                    Math.Abs(currentHarbors[i].X - savedHarbors[i].X) > 50 || 
+                    Math.Abs(currentHarbors[i].Y - savedHarbors[i].Y) > 50)
+                {
+                    wipe = true; break;
+                }
+            }
+        }
+        if (wipe && currentHarbors.Count > 0)
+        {
+            TrackingService.SetServerHarbors(host, currentHarbors);
+        }
 
         foreach (var m in _monData)
         {
@@ -171,6 +222,7 @@ public partial class MainWindow
                 RefreshMonumentOverlayPositions();
             }, DispatcherPriority.Loaded);
             StartDynPolling();
+            SyncAlertMenuItems(); // Refresh arrival warning enabled state now that host is known
 
             Overlay.Width = ImgMap.Width;
             Overlay.Height = ImgMap.Height;
@@ -209,6 +261,7 @@ public partial class MainWindow
     }
 
     private bool _v1MarkerResetDone = false;
+
     private void StartDynPolling()
     {
         _dynTimer?.Stop();
@@ -247,6 +300,28 @@ public partial class MainWindow
         if (tooltip != null) ToolTipService.SetToolTip(host, tooltip);
 
         host.Children.Add(inner);
+        
+        var timerTxt = new TextBlock
+        {
+            Foreground = Brushes.White,
+            FontSize = 13,
+            FontWeight = FontWeights.SemiBold,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(4, 1, 4, 1)
+        };
+
+        var timerBox = new Border
+        {
+            Background = new SolidColorBrush(Color.FromArgb(160, 40, 40, 40)),
+            CornerRadius = new CornerRadius(4),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Bottom,
+            Margin = new Thickness(0, 0, 0, -22),
+            Visibility = Visibility.Collapsed,
+            Child = timerTxt
+        };
+        host.Children.Add(timerBox);
 
         host.Tag = new PlayerMarkerTag
         {
@@ -255,10 +330,196 @@ public partial class MainWindow
             ScaleBaseMult = baseMult ?? SHOP_BASE_MULT,
             ScaleTarget = inner,
             ScaleCenterX = size * 0.5,
-            ScaleCenterY = size * 0.5
+            ScaleCenterY = size * 0.5,
+            TimerText = timerTxt,
+            TimerContainer = timerBox
         };
 
         return host;
+    }
+
+    private void ProcessCargoDocking(RustPlusClientReal.DynMarker m)
+    {
+        if (m.Type != 5) return;
+        
+        string host = _rust?.Host ?? "unknown";
+
+        if (!_cargoDockStates.TryGetValue(m.Id, out var state))
+        {
+            state = new CargoDockInfo { Id = m.Id, LastX = m.X, LastY = m.Y, FirstSeen = DateTime.UtcNow };
+            
+            // Check if it's near the edge (Spawn detection)
+            double distFromCenter = Math.Sqrt(m.X * m.X + m.Y * m.Y);
+            if (distFromCenter > (_worldSizeS * 0.42)) // Approx edge of map
+            {
+                state.SeenAtEdge = true;
+            }
+
+            _cargoDockStates[m.Id] = state;
+        }
+        state.LastSeen = DateTime.UtcNow;
+
+        state.History.Add((DateTime.UtcNow, m.X, m.Y));
+        if (state.History.Count > 150) 
+        {
+            var cutoff = DateTime.UtcNow.AddMinutes(-12);
+            state.History.RemoveAll(h => h.Ts < cutoff);
+        }
+
+        double dx = m.X - state.LastX;
+        double dy = m.Y - state.LastY;
+        double distMoved = Math.Sqrt(dx * dx + dy * dy);
+        
+        // Threshold for stationary (approx < 0.5m per poll)
+        bool isStationary = distMoved < 0.5; 
+        if (!isStationary) state.EverMoved = true;
+        
+        if (isStationary && !state.IsDocked)
+        {
+            var harbor = _monData.FirstOrDefault(mon => 
+                (mon.Name?.Contains("Harbor", StringComparison.OrdinalIgnoreCase) == true) && 
+                Math.Sqrt(Math.Pow(mon.X - m.X, 2) + Math.Pow(mon.Y - m.Y, 2)) < 300);
+            
+            if (harbor.Name != null)
+            {
+                state.IsDocked = true;
+                state.DockTime = DateTime.UtcNow;
+                state.HarborName = Beautify(harbor.Name);
+                state.AnnouncedDock = false;
+                state.AnnouncedEgressWarning = false;
+                state.HarborCount++;
+                
+                // If it's stationary the VERY first time we see it, it was already there
+                if (isStationary && !state.EverMoved && state.LastX == m.X && state.LastY == m.Y) 
+                {
+                    state.WasAlreadyDocked = true;
+                    state.AnnouncedDock = true; // Suppress docked alert
+                }
+
+                // Learn Trigger Point (Look back 5 minutes)
+                if (!state.WasAlreadyDocked)
+                {
+                    var targetTs = DateTime.UtcNow.AddMinutes(-5);
+                    var best = state.History.OrderBy(h => Math.Abs((h.Ts - targetTs).TotalSeconds)).FirstOrDefault();
+                    if (best.Ts != default && (DateTime.UtcNow - best.Ts).TotalMinutes > 4)
+                    {
+                        TrackingService.SetCargoTriggerPoint(host, harbor.Name, best.X, best.Y);
+                        // Auto-enable arrival warning now that this harbor's route is known
+                        if (!TrackingService.AnnounceCargoArrival && TrackingService.AnnounceSpawnsMaster)
+                        {
+                            TrackingService.AnnounceCargoArrival = true;
+                            _ = Dispatcher.InvokeAsync(SyncAlertMenuItems);
+                        }
+                    }
+                }
+
+                if (_announceSpawns && TrackingService.AnnounceCargoDocking && !state.WasAlreadyDocked)
+                {
+                    // Will be announced after 5s stationary delay to prevent spam
+                }
+            }
+        }
+        else if (distMoved > 2.0 && state.IsDocked)
+        {
+            if (state.DockTime.HasValue && !state.WasAlreadyDocked)
+            {
+                var duration = DateTime.UtcNow - state.DockTime.Value;
+                if (duration.TotalMinutes > 2)
+                {
+                    int learned = (int)Math.Round(duration.TotalMinutes);
+                    TrackingService.SetLearnedDockingDuration(host, learned);
+                }
+            }
+            // Just departed or moved slightly
+            state.LastDeparted = DateTime.UtcNow;
+            state.IsDocked = false;
+            state.DockTime = null;
+            state.AnnouncedDock = false;
+            state.AnnouncedEgressWarning = false;
+            state.WasAlreadyDocked = false;
+            state.AnnouncedArrivalWarning = false; // Reset for next harbor
+        }
+
+        // Docking announcement with 5s delay
+        if (state.IsDocked && !state.AnnouncedDock && TrackingService.AnnounceCargoDocking && _announceSpawns && state.DockTime.HasValue)
+        {
+            if ((DateTime.UtcNow - state.DockTime.Value).TotalSeconds >= 5)
+            {
+                string grid = GetGridLabel(m.X, m.Y);
+                _ = SendTeamChatSafeAsync($"Cargo Ship docked at {state.HarborName} ({grid})");
+                state.AnnouncedDock = true;
+            }
+        }
+
+        // Arrival Warning (Trigger Point Detection)
+        if (!state.IsDocked && !state.AnnouncedArrivalWarning && TrackingService.AnnounceCargoArrival && _announceSpawns)
+        {
+            var harbors = _monData.Where(mon => mon.Name?.Contains("Harbor", StringComparison.OrdinalIgnoreCase) == true);
+            foreach (var h in harbors)
+            {
+                var tp = TrackingService.GetCargoTriggerPoint(host, h.Name!);
+                if (tp != null)
+                {
+                    double dToTp = Math.Sqrt(Math.Pow(m.X - tp.X, 2) + Math.Pow(m.Y - tp.Y, 2));
+                    if (dToTp < 150) // Proximity to trigger point
+                    {
+                        double dToH = Math.Sqrt(Math.Pow(m.X - h.X, 2) + Math.Pow(m.Y - h.Y, 2));
+                        double dLastToH = Math.Sqrt(Math.Pow(state.LastX - h.X, 2) + Math.Pow(state.LastY - h.Y, 2));
+
+                        if (dToH < dLastToH) // Approaching
+                        {
+                            string grid = GetGridLabel(h.X, h.Y);
+                            _ = SendTeamChatSafeAsync($"Cargo Ship expected to dock at {Beautify(h.Name!)} ({grid}) in approx. 5 minutes.");
+                            state.AnnouncedArrivalWarning = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Egress warning (5 minutes before expected departure)
+        if (state.IsDocked && state.DockTime.HasValue && !state.AnnouncedEgressWarning && TrackingService.AnnounceCargoEgress && _announceSpawns)
+        {
+            int duration = TrackingService.GetLearnedDockingDuration(host);
+            var elapsed = DateTime.UtcNow - state.DockTime.Value;
+            if (elapsed.TotalMinutes >= (duration - 5) && duration > 5)
+            {
+                string grid = GetGridLabel(m.X, m.Y);
+               // _ = SendTeamChatSafeAsync($"Cargo Ship departing from Harbor in 5 minutes ({grid})");
+                _ = SendTeamChatSafeAsync($"Cargo Ship departing from {state.HarborName} in 5 minutes ({grid})");
+                state.AnnouncedEgressWarning = true;
+            }
+        }
+
+        state.LastX = m.X;
+        state.LastY = m.Y;
+    }
+
+    private void CleanupCargoDockStates()
+    {
+        string host = _rust?.Host ?? "unknown";
+        var keys = _cargoDockStates.Keys.ToList();
+        var now = DateTime.UtcNow;
+
+        foreach (var key in keys)
+        {
+            var state = _cargoDockStates[key];
+            // Grace period: 60 seconds before we forget the ship
+            if ((now - state.LastSeen).TotalSeconds > 60)
+            {
+                if (state.FirstSeen.HasValue && state.HarborCount >= 1 && state.SeenAtEdge) 
+                {
+                    // Only learn full life if we saw it come in from the edge
+                    int total = (int)(now - state.FirstSeen.Value).TotalMinutes;
+                    if (total > 20) // Sanity check for a full run
+                    {
+                        TrackingService.SetLearnedCargoFullLife(host, total);
+                    }
+                }
+                _cargoDockStates.Remove(key);
+            }
+        }
     }
 
     private FrameworkElement BuildEventDot(string tooltip, int size = 14, double? scaleExp = null, double? baseMult = null)
@@ -309,6 +570,8 @@ public partial class MainWindow
             UpdateDynUI(combinedList);
             UpdateEventDock(combinedList);
 
+            _firstMarkerPollDone = true;
+
 
 
             _ = Dispatcher.InvokeAsync(() => RefreshAllOverlayScales(), DispatcherPriority.Loaded);
@@ -328,6 +591,33 @@ public partial class MainWindow
         public double Y;
         public bool Trackable;
         public int Type;
+        public string? TimerText;
+        public string? ToolTip;
+    }
+
+    private RustPlusClientReal.DynMarker GetPersistentEvent(IReadOnlyList<RustPlusClientReal.DynMarker> markers, int type)
+    {
+        var m = markers.FirstOrDefault(m => m.Type == type);
+        if (m.Id != 0) return m;
+
+        // Fallback: Check persistence in _dynStates
+        var entry = _dynStates.FirstOrDefault(kv => kv.Value.Type == type && kv.Value.MissingCount > 0 && kv.Value.MissingCount < 5);
+        if (entry.Value != null && entry.Value.History.Count > 0)
+        {
+            var last = entry.Value.History.Last();
+            return new RustPlusClientReal.DynMarker(
+                entry.Key, 
+                type, 
+                EventKindText(type), 
+                last.X, 
+                last.Y, 
+                null, 
+                null, 
+                0, 
+                (float)entry.Value.LastCalculatedAngle
+            );
+        }
+        return default;
     }
 
     private void UpdateEventDock(IReadOnlyList<RustPlusClientReal.DynMarker> markers)
@@ -337,19 +627,47 @@ public partial class MainWindow
         var activeEvents = new List<EventDockItem>();
 
         // 1. Patrol Heli (Type 8)
-        var heli = markers.FirstOrDefault(m => m.Type == 8);
+        var heli = GetPersistentEvent(markers, 8);
         activeEvents.Add(new EventDockItem { Name = "Patrol Heli", Icon = "pack://application:,,,/icons/animat-Icons/patrol_helicopter.png", Active = heli.Id != 0, Id = heli.Id, X = heli.X, Y = heli.Y, Trackable = true, Type = 8 });
  
         // 2. Cargo Ship (Type 5)
-        var cargo = markers.FirstOrDefault(m => m.Type == 5);
-        activeEvents.Add(new EventDockItem { Name = "Cargo Ship", Icon = "pack://application:,,,/icons/cargo.png", Active = cargo.Id != 0, Id = cargo.Id, X = cargo.X, Y = cargo.Y, Trackable = true, Type = 5 });
+        var cargo = GetPersistentEvent(markers, 5);
+        string host = _rust?.Host ?? "unknown";
+        int cargoLife = TrackingService.GetLearnedCargoFullLife(host);
+        string? cargoTimer = null;
+        string? cargoTip = null;
+
+        if (cargo.Id != 0 && _cargoDockStates.TryGetValue(cargo.Id, out var ds))
+        {
+            if (cargoLife > 0)
+            {
+                if (ds.SeenAtEdge && ds.FirstSeen.HasValue)
+                {
+                    // We saw the spawn — remaining time is accurate
+                    var remain = TimeSpan.FromMinutes(cargoLife) - (DateTime.UtcNow - ds.FirstSeen.Value);
+                    if (remain.TotalSeconds > 0)
+                    {
+                        cargoTimer = $"{(int)remain.TotalMinutes}:{remain.Seconds:D2}";
+                        cargoTip = "Total time remaining on map";
+                    }
+                }
+                else
+                {
+                    // Connected mid-route — we know the total duration but not how far along cargo is
+                    cargoTimer = "??:??";
+                    cargoTip = $"Route learned (~{cargoLife}m total), connected mid-event";
+                }
+            }
+        }
+
+        activeEvents.Add(new EventDockItem { Name = "Cargo Ship", Icon = "pack://application:,,,/icons/cargo.png", Active = cargo.Id != 0, Id = cargo.Id, X = cargo.X, Y = cargo.Y, Trackable = true, Type = 5, TimerText = cargoTimer, ToolTip = cargoTip });
  
         // 3. Chinook (Type 4)
-        var chinook = markers.FirstOrDefault(m => m.Type == 4);
+        var chinook = GetPersistentEvent(markers, 4);
         activeEvents.Add(new EventDockItem { Name = "Chinook", Icon = "pack://application:,,,/icons/ch47.png", Active = chinook.Id != 0, Id = chinook.Id, X = chinook.X, Y = chinook.Y, Trackable = true, Type = 4 });
  
         // 4. Vendor (Type 6)
-        var vendor = markers.FirstOrDefault(m => m.Type == 6);
+        var vendor = GetPersistentEvent(markers, 6);
         activeEvents.Add(new EventDockItem { Name = "Travelling Vendor", Icon = "pack://application:,,,/icons/vendor.png", Active = vendor.Id != 0, Id = vendor.Id, X = vendor.X, Y = vendor.Y, Trackable = true, Type = 6 });
  
         // 5. Deep Sea (Using native _deepSeaActive logic)
@@ -381,8 +699,7 @@ public partial class MainWindow
                 mainBorder.MouseEnter += (s, e) => {
                     var items = stack.Children.OfType<Grid>().ToList();
                     foreach (var item in items) {
-                        var lb = item.Children.OfType<TextBlock>().FirstOrDefault();
-                        if (lb != null) {
+                        foreach (var lb in item.Children.OfType<TextBlock>()) {
                             lb.Visibility = Visibility.Visible;
                             lb.BeginAnimation(UIElement.OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(200)));
                         }
@@ -391,10 +708,10 @@ public partial class MainWindow
                 mainBorder.MouseLeave += (s, e) => {
                     var items = stack.Children.OfType<Grid>().ToList();
                     foreach (var item in items) {
-                        var lb = item.Children.OfType<TextBlock>().FirstOrDefault();
-                        if (lb != null) {
+                        foreach (var lb in item.Children.OfType<TextBlock>()) {
                             var anim = new DoubleAnimation(0, TimeSpan.FromMilliseconds(150));
-                            anim.Completed += (s2, e2) => lb.Visibility = Visibility.Collapsed;
+                            var targetLb = lb;
+                            anim.Completed += (s2, e2) => targetLb.Visibility = Visibility.Collapsed;
                             lb.BeginAnimation(UIElement.OpacityProperty, anim);
                         }
                     }
@@ -415,29 +732,37 @@ public partial class MainWindow
                 if (i < stack.Children.Count)
                 {
                     itemRow = (Grid)stack.Children[i];
+                    if (itemRow.Children.Count < 5 || itemRow.RowDefinitions.Count < 2) { stack.Children.Clear(); i = -1; continue; } // Force rebuild on structure change
                 }
                 else
                 {
-                    itemRow = new Grid { Height = 36, Margin = new Thickness(0, 2, 0, 2), UseLayoutRounding = true, SnapsToDevicePixels = true };
+                    itemRow = new Grid { Margin = new Thickness(0, 2, 0, 2), UseLayoutRounding = true, SnapsToDevicePixels = true };
+                    itemRow.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Row 0: name
+                    itemRow.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Row 1: timer
                     itemRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(36) });
                     itemRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
                     
                     // Add components once
                     var glow = new System.Windows.Shapes.Ellipse { Width = 32, Height = 32, Effect = new System.Windows.Media.Effects.BlurEffect { Radius = 10 }, HorizontalAlignment = HorizontalAlignment.Center, Visibility = Visibility.Collapsed };
-                    Grid.SetColumn(glow, 0); itemRow.Children.Add(glow);
+                    Grid.SetColumn(glow, 0); Grid.SetRowSpan(glow, 2); itemRow.Children.Add(glow);
 
                     var iconHost = new Grid { Width = 32, Height = 32, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
-                    Grid.SetColumn(iconHost, 0); itemRow.Children.Add(iconHost);
+                    Grid.SetColumn(iconHost, 0); Grid.SetRowSpan(iconHost, 2); itemRow.Children.Add(iconHost);
 
                     var img = new Image { Width = 24, Height = 24, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
                     RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
                     iconHost.Children.Add(img);
 
-                    var txt = new TextBlock { Foreground = Brushes.White, FontSize = 12, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0, 12, 0), Visibility = mainBorder.IsMouseOver ? Visibility.Visible : Visibility.Collapsed, Opacity = mainBorder.IsMouseOver ? 1 : 0 };
-                    Grid.SetColumn(txt, 1); itemRow.Children.Add(txt);
+                    // Row 0: event name
+                    var txt = new TextBlock { Foreground = Brushes.White, FontSize = 12, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 2, 12, 0), Visibility = mainBorder.IsMouseOver ? Visibility.Visible : Visibility.Collapsed, Opacity = mainBorder.IsMouseOver ? 1 : 0 };
+                    Grid.SetColumn(txt, 1); Grid.SetRow(txt, 0); itemRow.Children.Add(txt);
 
-                    var dot = new System.Windows.Shapes.Ellipse { Width = 6, Height = 6, VerticalAlignment = VerticalAlignment.Bottom, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 0, 4, 4) };
-                    Grid.SetColumn(dot, 0); itemRow.Children.Add(dot);
+                    // Row 1: countdown timer (directly below name)
+                    var timer = new TextBlock { Foreground = new SolidColorBrush(Color.FromRgb(100, 200, 255)), FontSize = 10, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0, 12, 2), Opacity = mainBorder.IsMouseOver ? 0.9 : 0, Visibility = mainBorder.IsMouseOver ? Visibility.Visible : Visibility.Collapsed };
+                    Grid.SetColumn(timer, 1); Grid.SetRow(timer, 1); itemRow.Children.Add(timer);
+
+                    var dot = new System.Windows.Shapes.Ellipse { Width = 6, Height = 6, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 0, 4, 0) };
+                    Grid.SetColumn(dot, 0); Grid.SetRowSpan(dot, 2); itemRow.Children.Add(dot);
 
                     stack.Children.Add(itemRow);
                 }
@@ -471,7 +796,7 @@ public partial class MainWindow
                 {
                     uiImg.Effect = new System.Windows.Media.Effects.DropShadowEffect
                     {
-                        Color = Color.FromRgb(0, 200, 255),
+                        Color = Colors.Cyan,
                         BlurRadius = 8,
                         ShadowDepth = 0,
                         Opacity = 0.8
@@ -546,8 +871,16 @@ public partial class MainWindow
                 uiTxt.Text = ev.Name;
                 uiTxt.FontWeight = ev.Active ? FontWeights.SemiBold : FontWeights.Normal;
 
-                var uiDot = (System.Windows.Shapes.Ellipse)itemRow.Children[3];
+                var uiTimer = (TextBlock)itemRow.Children[3];
+                uiTimer.Text = ev.TimerText ?? "";
+                // Visibility is managed by hover logic, but we must update the state
+                if (string.IsNullOrEmpty(ev.TimerText) || !ev.Active) uiTimer.Visibility = Visibility.Collapsed;
+
+                var uiDot = (System.Windows.Shapes.Ellipse)itemRow.Children[4];
                 uiDot.Fill = ev.Active ? Brushes.Cyan : Brushes.Transparent;
+                
+                // Tooltip
+                itemRow.ToolTip = ev.ToolTip;
 
                 // Refresh Click Handler (clear first to avoid duplicates)
                 itemRow.MouseLeftButtonDown -= EventItem_Click;
@@ -585,6 +918,7 @@ public partial class MainWindow
 
     private void UpdateDynUI(IReadOnlyList<RustPlusClientReal.DynMarker> markers)
     {
+        _announceSpawns = TrackingService.AnnounceSpawnsMaster;
         if (!_v1MarkerResetDone)
         {
             try {
@@ -610,9 +944,18 @@ public partial class MainWindow
             if (m.Type == 0 && m.SteamId == 0) continue;
 
             bool isPlayer = (m.Type == 1);
+            if (m.Type == 5) ProcessCargoDocking(m);
             if (isPlayer && m.SteamId != 0)
                 _lastPlayersBySid[m.SteamId] = (m.X, m.Y, ResolvePlayerName(m));
 
+            if (isPlayer && !_showPlayers) continue;
+        }
+
+
+        foreach (var m in markers)
+        {
+            if (m.Type == 0 && m.SteamId == 0) continue;
+            bool isPlayer = (m.Type == 1);
             if (isPlayer && !_showPlayers) continue;
 
             bool knownEventType = !isPlayer && sDynIconByType.ContainsKey(m.Type);
@@ -623,8 +966,17 @@ public partial class MainWindow
             if (!_dynStates.TryGetValue(key, out var state))
             {
                 state = new DynMarkerState();
+                
+                // Check if it's near the edge (Spawn detection - outside playable grid)
+                double distFromCenter = Math.Sqrt(m.X * m.X + m.Y * m.Y);
+                if (distFromCenter > (_worldSizeS * 0.5)) 
+                {
+                    state.SeenAtEdge = true;
+                }
+
                 _dynStates[key] = state;
             }
+            state.Type = m.Type;
             if (state.History.Count > 0)
             {
                 var last = state.History.Last();
@@ -710,32 +1062,35 @@ public partial class MainWindow
                         {
                             AttachTrackingHandler(host, m.Id);
                         }
-
-                        if (_announceSpawns && !_dynKnown.Contains(key))
-                        {
-                            _dynKnown.Add(key);
-
-                            bool shouldAnnounce = m.Type switch
-                            {
-                                5 => TrackingService.AnnounceCargo,
-                                8 => TrackingService.AnnounceHeli,
-                                4 => TrackingService.AnnounceChinook,
-                                6 => TrackingService.AnnounceVendor,
-                                9 => TrackingService.AnnounceOilRig,
-                                _ => true // Default for unknown events
-                            };
-
-                            if (shouldAnnounce)
-                            {
-                                var grid = GetGridLabel(m.X, m.Y);
-                                var kind = EventKindText(m.Type);
-                                _ = SendTeamChatSafeAsync($"{kind} spawned in at {grid}");
-                            }
-                        }
                         el = host;
                     }
 
                     _dynEls[key] = el;
+
+                    // Announcement Logic for all dynamic events (API types and internal virtual markers)
+                    if (!isPlayer && (knownEventType || m.Type == 150) && !_dynKnown.Contains(key))
+                    {
+                        _dynKnown.Add(key);
+                        AppendLog($"[DynEvent] New: Type={m.Type}, Kind={m.Kind}, Label={m.Label}");
+
+                        bool shouldAnnounce = m.Type switch
+                        {
+                            5 => TrackingService.AnnounceCargo && (state.MissingCount > 0 || state.SeenAtEdge),
+                            8 => TrackingService.AnnounceHeli,
+                            4 => TrackingService.AnnounceChinook,
+                            6 => TrackingService.AnnounceVendor,
+                            9 => TrackingService.AnnounceOilRig,
+                            _ => true 
+                        };
+
+                        if (_announceSpawns && shouldAnnounce && _firstMarkerPollDone && !_firstPollDyn)
+                        {
+                            var grid = GetGridLabel(m.X, m.Y);
+                            var kind = EventKindText(m.Type);
+                            _ = SendTeamChatSafeAsync($"{kind} spawned in at {grid}");
+                        }
+                    }
+
                     Overlay.Children.Add(el);
                     Panel.SetZIndex(el, m.Type == 150 ? 2000 : (isPlayer ? 950 : 920));
 
@@ -812,6 +1167,7 @@ public partial class MainWindow
                     {
                         AnimateMarkerRotation(el, targetRot);
                     }
+                    state.LastCalculatedAngle = targetRot;
                 }
             }
 
@@ -838,11 +1194,85 @@ public partial class MainWindow
                         AnimateMarker(el, targetLeft, targetTop);
                     }
                 }
+
+                // Update Cargo Timer
+                if (m.Type == 5 && el.Tag is PlayerMarkerTag pmtTimer && pmtTimer.TimerText != null && pmtTimer.TimerContainer != null)
+                {
+                    string host = _rust?.Host ?? "unknown";
+                    if (_cargoDockStates.TryGetValue(m.Id, out var ds))
+                    {
+                        if (ds.IsDocked && ds.DockTime.HasValue)
+                        {
+                            pmtTimer.TimerContainer.Visibility = Visibility.Visible;
+                            if (ds.WasAlreadyDocked)
+                            {
+                                pmtTimer.TimerText.Text = "??:??";
+                            }
+                            else
+                            {
+                                int duration = TrackingService.GetLearnedDockingDuration(host);
+                                var remain = TimeSpan.FromMinutes(duration) - (DateTime.UtcNow - ds.DockTime.Value);
+                                pmtTimer.TimerText.Text = remain.TotalSeconds > 0 ? $"{(int)remain.TotalMinutes}:{remain.Seconds:D2}" : "0:00";
+                                pmtTimer.TimerContainer.Visibility = Visibility.Visible;
+                            }
+                        }
+                        else if (ds.FirstSeen.HasValue)
+                        {
+                            int fullLife = TrackingService.GetLearnedCargoFullLife(host);
+                            if (fullLife > 0)
+                            {
+                                if (ds.SeenAtEdge)
+                                {
+                                    var remain = TimeSpan.FromMinutes(fullLife) - (DateTime.UtcNow - ds.FirstSeen.Value);
+                                    if (remain.TotalSeconds > 0)
+                                    {
+                                        pmtTimer.TimerText.Text = $"{(int)remain.TotalMinutes}:{remain.Seconds:D2}";
+                                        pmtTimer.TimerContainer.Visibility = Visibility.Visible;
+                                    }
+                                    else pmtTimer.TimerContainer.Visibility = Visibility.Collapsed;
+                                }
+                                else
+                                {
+                                    // Connected mid-route — duration known but elapsed unknown
+                                    pmtTimer.TimerText.Text = "??:??";
+                                    pmtTimer.TimerContainer.Visibility = Visibility.Visible;
+                                }
+                            }
+                            else pmtTimer.TimerContainer.Visibility = Visibility.Collapsed;
+                        }
+                        else pmtTimer.TimerContainer.Visibility = Visibility.Collapsed;
+                    }
+                    else pmtTimer.TimerContainer.Visibility = Visibility.Collapsed;
+                }
                 if (isPlayer) el.Visibility = _showPlayers ? Visibility.Visible : Visibility.Collapsed;
+
+                // Update Crate Timer (Type 150 or Type 9)
+                if ((m.Type == 150 || m.Type == 9) && el.Tag is PlayerMarkerTag pmtCrate && pmtCrate.TimerText != null && pmtCrate.TimerContainer != null)
+                {
+                    if (m.Type == 150)
+                    {
+                        // Custom virtual markers (Oil Rig Crate) have the time string directly in the label
+                        pmtCrate.TimerText.Text = m.Label ?? "??:??";
+                        pmtCrate.TimerContainer.Visibility = Visibility.Visible;
+                    }
+                    else if (!string.IsNullOrEmpty(m.Label))
+                    {
+                        // API markers: Match MM:SS or M:SS anywhere in label
+                        var match = Regex.Match(m.Label, @"(\d{1,2}:\d{2})");
+                        if (match.Success)
+                        {
+                            pmtCrate.TimerText.Text = match.Groups[1].Value;
+                            pmtCrate.TimerContainer.Visibility = Visibility.Visible;
+                        }
+                        else pmtCrate.TimerContainer.Visibility = Visibility.Collapsed;
+                    }
+                    else pmtCrate.TimerContainer.Visibility = Visibility.Collapsed;
+                }
             }
         }
 
         CenterMiniMapOnPlayer();
+        _firstPollDyn = false;
         var gone = _dynEls.Keys.Where(id => !incoming.Contains(id)).ToList();
         foreach (var id in gone)
         {
@@ -850,7 +1280,7 @@ public partial class MainWindow
             {
                 state.MissingCount++;
                 // Keep marker alive and moving for up to 5 seconds (5 poll cycles)
-                if (state.MissingCount < 5)
+                if (state.MissingCount < 10)
                 {
                     if (_dynEls.TryGetValue(id, out var el))
                     {
@@ -865,7 +1295,15 @@ public partial class MainWindow
                         double off = (el.Tag is PlayerMarkerTag t2 && t2.Radius > 0) ? t2.Radius : 5.0;
                         if (el is Grid && el.Tag is PlayerMarkerTag t3 && t3.Radius == 64) off = 64; // Heli special case
 
+                        if (state.Type == 5)
+                        {
+                            // Maintain docking state during ghosting with a fake marker at predicted position
+                            var ghost = new RustPlusClientReal.DynMarker(id, 5, "CargoShip", nextX, nextY, "Cargo Ship", null, 0);
+                            ProcessCargoDocking(ghost);
+                        }
+
                         AnimateMarker(el, p.X - off, p.Y - off);
+                        incoming.Add(id); // Prevent cleanup of state (docking timer etc)
                         continue; // Skip removal for now
                     }
                 }
@@ -890,6 +1328,8 @@ public partial class MainWindow
                 CenterMapOnWorldAnimated(target.X, target.Y, allowDip: false, fast: true, keepTracking: true);
             }
         }
+
+        CleanupCargoDockStates();
     }
 
     private void AttachTrackingHandler(FrameworkElement el, uint id)

@@ -149,17 +149,15 @@ public partial class MainWindow
                 if (_rust is RustPlusClientReal real)
                 {
                     var st = await real.GetServerStatusAsync(ct);
-                    if (st != null)
+                    if (st != null && st.Players >= 0)
                     {
-                        _vm.ServerPlayers = (st.Players >= 0 && st.MaxPlayers >= 0)
-                            ? $"{st.Players}/{st.MaxPlayers}" : "–";
-
-                        _vm.ServerQueue = (st.Queue >= 0) ? st.Queue.ToString() : "–";
+                        _vm.ServerPlayers = $"{st.Players}/{st.MaxPlayers}";
+                        _vm.ServerQueue = (st.Queue >= 0) ? st.Queue.ToString() : "0";
                         _vm.ServerTime = string.IsNullOrWhiteSpace(st.TimeString) ? "–" : st.TimeString;
                     }
                 }
             }
-            catch { }
+            catch { /* Keep last known values on error */ }
 
             try { await Task.Delay(TimeSpan.FromSeconds(10), ct); } catch { }
         }

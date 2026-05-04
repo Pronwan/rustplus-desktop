@@ -17,6 +17,19 @@ public class TrackedPlayer
     public List<PlayerSession> Sessions { get; set; } = new();
 }
 
+public class HarborInfo
+{
+    public string Name { get; set; } = "";
+    public double X { get; set; }
+    public double Y { get; set; }
+}
+
+public class CargoTriggerPoint
+{
+    public double X { get; set; }
+    public double Y { get; set; }
+}
+
 public class TrackingSettings
 {
     public string LastHost { get; set; } = string.Empty;
@@ -46,8 +59,17 @@ public class TrackingSettings
     public bool AnnounceNewShops { get; set; } = false;
     public bool AnnounceSuspiciousShops { get; set; } = false;
     public bool AnnounceTradeAlerts { get; set; } = false;
+    public bool AnnounceCargoDocking { get; set; } = false;
+    public bool AnnounceCargoEgress { get; set; } = false;
+    public bool AnnounceCargoArrival { get; set; } = false;
+    public Dictionary<string, int> LearnedDockingDurations { get; set; } = new();
+    public Dictionary<string, int> LearnedCargoFullLifeMinutes { get; set; } = new();
+    public Dictionary<string, int> LearnedCargoTravelMinutes { get; set; } = new();
+    public Dictionary<string, List<HarborInfo>> ServerHarbors { get; set; } = new();
+    public Dictionary<string, Dictionary<string, CargoTriggerPoint>> ServerCargoTriggers { get; set; } = new();
     public bool AnnounceSpawnsMaster { get; set; } = false;
     public bool SaveAlertSelection { get; set; } = true;
+    public string LastSeenVersion { get; set; } = "";
 }
 
 
@@ -348,6 +370,96 @@ public static class TrackingService
         get => _settings.AnnounceSpawnsMaster;
         set { _settings.AnnounceSpawnsMaster = value; SaveDB(); }
     }
+
+    public static bool AnnounceCargoDocking
+    {
+        get => _settings.AnnounceCargoDocking;
+        set { _settings.AnnounceCargoDocking = value; SaveDB(); }
+    }
+    public static bool AnnounceCargoEgress
+    {
+        get => _settings.AnnounceCargoEgress;
+        set { _settings.AnnounceCargoEgress = value; SaveDB(); }
+    }
+    public static int GetLearnedDockingDuration(string host)
+    {
+        if (_settings.LearnedDockingDurations.TryGetValue(host, out var d)) return d;
+        return 8; // Default 8 minutes (before server-specific value is learned)
+    }
+    public static void SetLearnedDockingDuration(string host, int minutes)
+    {
+        if (minutes < 1 || minutes > 60) return;
+        _settings.LearnedDockingDurations[host] = minutes;
+        SaveDB();
+    }
+    public static bool AnnounceCargoArrival
+    {
+        get => _settings.AnnounceCargoArrival;
+        set { _settings.AnnounceCargoArrival = value; SaveDB(); }
+    }
+    public static string LastSeenVersion
+    {
+        get => _settings.LastSeenVersion;
+        set { _settings.LastSeenVersion = value; SaveDB(); }
+    }
+    public static int GetLearnedCargoFullLife(string host)
+    {
+        if (_settings.LearnedCargoFullLifeMinutes.TryGetValue(host, out var d)) return d;
+        return 0; 
+    }
+    public static void SetLearnedCargoFullLife(string host, int minutes)
+    {
+        if (minutes < 10 || minutes > 120) return;
+        _settings.LearnedCargoFullLifeMinutes[host] = minutes;
+        SaveDB();
+    }
+    public static int GetLearnedCargoTravelTime(string host)
+    {
+        if (_settings.LearnedCargoTravelMinutes.TryGetValue(host, out var d)) return d;
+        return 0;
+    }
+    public static void SetLearnedCargoTravelTime(string host, int minutes)
+    {
+        if (minutes < 1 || minutes > 30) return;
+        _settings.LearnedCargoTravelMinutes[host] = minutes;
+        SaveDB();
+    }
+
+    public static List<HarborInfo> GetServerHarbors(string host)
+    {
+        if (_settings.ServerHarbors.TryGetValue(host, out var list)) return list;
+        return new();
+    }
+
+    public static void SetServerHarbors(string host, List<HarborInfo> harbors)
+    {
+        _settings.ServerHarbors[host] = harbors;
+        _settings.ServerCargoTriggers.Remove(host); // Wipe detected -> Clear triggers
+        SaveDB();
+    }
+
+    public static CargoTriggerPoint? GetCargoTriggerPoint(string host, string harborName)
+    {
+        if (_settings.ServerCargoTriggers.TryGetValue(host, out var dict))
+        {
+            if (dict.TryGetValue(harborName, out var p)) return p;
+        }
+        return null;
+    }
+
+    public static void SetCargoTriggerPoint(string host, string harborName, double x, double y)
+    {
+        if (!_settings.ServerCargoTriggers.ContainsKey(host))
+            _settings.ServerCargoTriggers[host] = new();
+        _settings.ServerCargoTriggers[host][harborName] = new CargoTriggerPoint { X = x, Y = y };
+        SaveDB();
+    }
+
+    public static bool HasAnyCargoTrigger(string host)
+    {
+        return _settings.ServerCargoTriggers.TryGetValue(host, out var dict) && dict.Count > 0;
+    }
+
     public static bool SaveAlertSelection
     {
         get => _settings.SaveAlertSelection;

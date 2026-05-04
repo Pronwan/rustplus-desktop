@@ -93,13 +93,22 @@
                             <ColumnDefinition Width="16"/>
                         </Grid.ColumnDefinitions>
 
+                        <!-- Dot indicator for checkable headers -->
+                        <Ellipse x:Name="CheckedDot" 
+                                 Grid.Column="0"
+                                 Width="8" Height="8" 
+                                 Fill="{DynamicResource Accent}"
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Center"
+                                 Visibility="Collapsed"/>
+
                         <ContentPresenter Grid.Column="0"
                                   VerticalAlignment="Center"
                                   HorizontalAlignment="Center"
                                   ContentSource="Icon"/>
 
                         <ContentPresenter Grid.Column="1"
-                                  Margin="0,0,6,0"
+                                  Margin="4,0,6,0"
                                   VerticalAlignment="Center"
                                   RecognizesAccessKey="True"
                                   ContentSource="Header"/>
@@ -138,6 +147,16 @@
             </Grid>
 
             <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter TargetName="CheckedDot" Property="Visibility" Value="Visible"/>
+                    <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="Partial">
+                    <Setter TargetName="CheckedDot" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="CheckedDot" Property="Opacity" Value="0.6"/>
+                    <Setter TargetName="CheckedDot" Property="Width" Value="5"/>
+                    <Setter TargetName="CheckedDot" Property="Height" Value="5"/>
+                </Trigger>
                 <Trigger Property="IsHighlighted" Value="True">
                     <Setter TargetName="Bd" Property="Background" Value="#141A22"/>
                 </Trigger>
@@ -189,6 +208,12 @@
                     <Setter TargetName="CheckedDot" Property="Visibility" Value="Visible"/>
                     <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
                 </Trigger>
+                <Trigger Property="Tag" Value="Partial">
+                    <Setter TargetName="CheckedDot" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="CheckedDot" Property="Opacity" Value="0.6"/>
+                    <Setter TargetName="CheckedDot" Property="Width" Value="5"/>
+                    <Setter TargetName="CheckedDot" Property="Height" Value="5"/>
+                </Trigger>
                 <Trigger Property="IsHighlighted" Value="True">
                     <Setter TargetName="Bd" Property="Background" Value="#141A22"/>
                 </Trigger>
@@ -206,10 +231,7 @@
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template" Value="{StaticResource DarkMenuItem_Item}"/>
             <Style.Triggers>
-                <Trigger Property="Role" Value="TopLevelHeader">
-                    <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}"/>
-                </Trigger>
-                <Trigger Property="Role" Value="SubmenuHeader">
+                <Trigger Property="HasItems" Value="True">
                     <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}"/>
                 </Trigger>
             </Style.Triggers>
@@ -1970,7 +1992,12 @@ Margin="12,0,0,0"
                         <CheckBox.ContextMenu>
                             <ContextMenu Style="{StaticResource DarkContextMenu}">
                                 <MenuItem Header="Events" IsHitTestVisible="False" FontWeight="Bold" Foreground="{StaticResource TextBrushMuted}"/>
-                                <MenuItem Header="Cargo Ship" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="Cargo"/>
+                                <MenuItem Header="Cargo Ship" Style="{StaticResource DarkMenuItem}" Tag="Cargo">
+                                    <MenuItem Header="Spawn" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="CargoSpawn"/>
+                                    <MenuItem Header="Harbor Docking" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="CargoDock"/>
+                                    <MenuItem Header="Departure (5m Warning)" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="CargoEgress"/>
+                                    <MenuItem Header="Arrival Warning (5m before Dock)" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="CargoArrival" x:Name="MenuCargoArrival"/>
+                                </MenuItem>
                                 <MenuItem Header="Patrol Helicopter" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="Heli"/>
                                 <MenuItem Header="Chinook (CH47)" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="Chinook"/>
                                 <MenuItem Header="Travelling Vendor" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="Vendor"/>

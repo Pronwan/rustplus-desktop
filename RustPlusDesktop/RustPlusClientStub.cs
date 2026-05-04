@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -48,4 +48,6 @@ public class RustPlusClientStub : IRustPlusClient
         _log("[Stub] Subscribe Raid Alarms");
         return Task.CompletedTask;
     }
+
+    public string? Host => "stub";
 }

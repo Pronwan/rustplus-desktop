@@ -467,6 +467,8 @@ public partial class MainWindow : Window
         public event PropertyChangedEventHandler? PropertyChanged;
         private void OnChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
+        public int MissingCount { get; set; }
+
         // Schlüssel / Stammdaten
         public ulong SteamId { get; init; }
 
@@ -655,6 +657,7 @@ public partial class MainWindow : Window
 
             var leaderId = team.LeaderSteamId;
             var seen = new HashSet<ulong>();
+            foreach (var m in TeamMembers) m.MissingCount++;
 
             foreach (var m in team.Members)
             {
@@ -673,6 +676,7 @@ public partial class MainWindow : Window
                         _ = EnsureAvatarAsync(vm); // siehe unten
                     }
                 }
+                vm.MissingCount = 0;
 
                 // Vorheriger Zustand für Announcements
                 var hadPrev = _lastPresence.TryGetValue(sid, out var prev);
@@ -691,9 +695,9 @@ public partial class MainWindow : Window
 
             }
 
-            // Entferne nicht mehr vorhandene
+            // Entferne nicht mehr vorhandene (nach 10 Sek Puffer)
             for (int i = TeamMembers.Count - 1; i >= 0; i--)
-                if (!seen.Contains(TeamMembers[i].SteamId))
+                if (TeamMembers[i].MissingCount > 2)
                     TeamMembers.RemoveAt(i);
 
             // Log hilft bei der Rechteprüfung LEADER etc.
@@ -1022,6 +1026,27 @@ public partial class MainWindow : Window
         
         UpdateMasterToggleState();
         SyncAlertMenuItems();
+
+        // One-time migration notice for v4.2 — new cargo notification types were added
+        const string CurrentVersion = "4.2";
+        if (TrackingService.LastSeenVersion != CurrentVersion)
+        {
+            TrackingService.LastSeenVersion = CurrentVersion;
+            Dispatcher.InvokeAsync(() =>
+            {
+                var dlg = new Views.MigrationNoticeWindow { Owner = this };
+                dlg.ShowDialog();
+                if (dlg.ShouldReset)
+                {
+                    SetAllAlerts(false);
+                    TrackingService.AnnounceSpawnsMaster = false;
+                    SetAllAlerts(true);
+                    TrackingService.AnnounceSpawnsMaster = true;
+                    UpdateMasterToggleState();
+                    SyncAlertMenuItems();
+                }
+            }, System.Windows.Threading.DispatcherPriority.Loaded);
+        }
 
         // Initial tracking status update and hook global events
         TrackingService.OnOnlinePlayersUpdated -= OnOnlinePlayersUpdated;
@@ -1559,8 +1584,10 @@ public partial class MainWindow : Window
     {
         public List<(double X, double Y)> History = new();
         public int MissingCount;
+        public int Type;
         public double LastVX, LastVY;
         public double LastCalculatedAngle;
+        public bool SeenAtEdge;
     }
     private readonly Dictionary<uint, DynMarkerState> _dynStates = new();
     private readonly HashSet<uint> _dynKnown = new();                      // “already spawned” for chat announcements
@@ -4232,10 +4259,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private static string Beautify(string s)
     {
         if (string.IsNullOrWhiteSpace(s)) return s;
+
+        string lower = s.ToLowerInvariant();
+        if (lower.Contains("harbor_2") || lower.Contains("harbor 2")) return "Harbor";
+        if (lower.Contains("harbor")) return "Harbor 2";
+
         s = s.Replace('\\', '/');
         var last = s.LastIndexOf('/');
         var token = last >= 0 ? s[(last + 1)..] : s;
-        return token.Replace(".prefab", "").Replace('_', ' ');
+        return token.Replace(".prefab", "").Replace('_', ' ').Replace("display name", "", StringComparison.OrdinalIgnoreCase).Trim();
     }
 
 
@@ -4343,6 +4375,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private void SetAllAlerts(bool val)
     {
         TrackingService.AnnounceCargo = val;
+        TrackingService.AnnounceCargoDocking = val;
+        TrackingService.AnnounceCargoEgress = val;
+        TrackingService.AnnounceCargoArrival = val;
         TrackingService.AnnounceHeli = val;
         TrackingService.AnnounceChinook = val;
         TrackingService.AnnounceVendor = val;
@@ -4361,7 +4396,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private bool CheckIfAllOff()
     {
-        return !TrackingService.AnnounceCargo && !TrackingService.AnnounceHeli && !TrackingService.AnnounceChinook &&
+        return !TrackingService.AnnounceCargo && !TrackingService.AnnounceCargoDocking &&
+               !TrackingService.AnnounceCargoEgress && !TrackingService.AnnounceCargoArrival &&
+               !TrackingService.AnnounceHeli && !TrackingService.AnnounceChinook &&
                !TrackingService.AnnounceVendor && !TrackingService.AnnounceOilRig && !TrackingService.AnnounceDeepSea &&
                !TrackingService.AnnouncePlayerOnline && !TrackingService.AnnouncePlayerOffline &&
                !TrackingService.AnnouncePlayerDeathSelf && !TrackingService.AnnouncePlayerDeathTeam &&
@@ -4377,14 +4414,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                      TrackingService.AnnouncePlayerOnline && TrackingService.AnnouncePlayerOffline &&
                      TrackingService.AnnouncePlayerDeathSelf && TrackingService.AnnouncePlayerDeathTeam &&
                      TrackingService.AnnouncePlayerRespawnSelf && TrackingService.AnnouncePlayerRespawnTeam &&
-                     TrackingService.AnnounceNewShops && TrackingService.AnnounceSuspiciousShops;
+                     TrackingService.AnnounceNewShops && TrackingService.AnnounceSuspiciousShops &&
+                     TrackingService.AnnounceCargoDocking && TrackingService.AnnounceCargoEgress;
 
         bool anyOn = TrackingService.AnnounceCargo || TrackingService.AnnounceHeli || TrackingService.AnnounceChinook ||
                      TrackingService.AnnounceVendor || TrackingService.AnnounceOilRig || TrackingService.AnnounceDeepSea ||
                      TrackingService.AnnouncePlayerOnline || TrackingService.AnnouncePlayerOffline ||
                      TrackingService.AnnouncePlayerDeathSelf || TrackingService.AnnouncePlayerDeathTeam ||
                      TrackingService.AnnouncePlayerRespawnSelf || TrackingService.AnnouncePlayerRespawnTeam ||
-                     TrackingService.AnnounceNewShops || TrackingService.AnnounceSuspiciousShops;
+                     TrackingService.AnnounceNewShops || TrackingService.AnnounceSuspiciousShops ||
+                     TrackingService.AnnounceCargoDocking || TrackingService.AnnounceCargoEgress;
 
         if (_alertRules.Count > 0)
         {
@@ -4392,6 +4431,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             // We just keep the existing anyOn/allOn which are based on categories
         }
 
+        if (anyOn) TrackingService.AnnounceSpawnsMaster = true;
         _announceSpawns = TrackingService.AnnounceSpawnsMaster;
 
         if (!_announceSpawns)
@@ -4414,6 +4454,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             switch (tag)
             {
                 case "Cargo": TrackingService.AnnounceCargo = val; break;
+                case "CargoSpawn": TrackingService.AnnounceCargo = val; break;
+                case "CargoDock": TrackingService.AnnounceCargoDocking = val; break;
+                case "CargoEgress": TrackingService.AnnounceCargoEgress = val; break;
+                case "CargoArrival": TrackingService.AnnounceCargoArrival = val; break;
                 case "Heli": TrackingService.AnnounceHeli = val; break;
                 case "Chinook": TrackingService.AnnounceChinook = val; break;
                 case "Vendor": TrackingService.AnnounceVendor = val; break;
@@ -4446,31 +4490,68 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         PopulateTradeAlertsSubMenu(masterOn);
 
         if (ChatAnnounce.ContextMenu == null) return;
+        
+        string host = _rust?.Host ?? "unknown";
+        bool hasTravelData = TrackingService.HasAnyCargoTrigger(host);
+
         foreach (var item in ChatAnnounce.ContextMenu.Items)
         {
-            if (item is MenuItem mi && mi.Tag is string tag)
+            if (item is MenuItem mi)
             {
-                bool isSelected = false;
-                switch (tag)
-                {
-                    case "Cargo": isSelected = TrackingService.AnnounceCargo; break;
-                    case "Heli": isSelected = TrackingService.AnnounceHeli; break;
-                    case "Chinook": isSelected = TrackingService.AnnounceChinook; break;
-                    case "Vendor": isSelected = TrackingService.AnnounceVendor; break;
-                    case "OilRig": isSelected = TrackingService.AnnounceOilRig; break;
-                    case "DeepSea": isSelected = TrackingService.AnnounceDeepSea; break;
-                    case "PlayerOnline": isSelected = TrackingService.AnnouncePlayerOnline; break;
-                    case "PlayerOffline": isSelected = TrackingService.AnnouncePlayerOffline; break;
-                    case "PlayerDeathSelf": isSelected = TrackingService.AnnouncePlayerDeathSelf; break;
-                    case "PlayerDeathTeam": isSelected = TrackingService.AnnouncePlayerDeathTeam; break;
-                    case "PlayerRespawnSelf": isSelected = TrackingService.AnnouncePlayerRespawnSelf; break;
-                    case "PlayerRespawnTeam": isSelected = TrackingService.AnnouncePlayerRespawnTeam; break;
-                    case "NewShops": isSelected = TrackingService.AnnounceNewShops; break;
-                    case "SuspiciousShops": isSelected = TrackingService.AnnounceSuspiciousShops; break;
-                }
+                SyncMenuItemRecursive(mi, masterOn, hasTravelData);
+            }
+        }
+    }
 
-                mi.IsChecked = masterOn && isSelected;
-                mi.IsEnabled = masterOn;
+    private void SyncMenuItemRecursive(MenuItem mi, bool masterOn, bool hasTravelData)
+    {
+        if (mi.Tag is string tag)
+        {
+            bool isSelected = false;
+            switch (tag)
+            {
+                case "Cargo": 
+                case "Partial":
+                    bool cs = TrackingService.AnnounceCargo;
+                    bool cd = TrackingService.AnnounceCargoDocking;
+                    bool ce = TrackingService.AnnounceCargoEgress;
+                    bool ca = TrackingService.AnnounceCargoArrival;
+                    if (cs && cd && ce && ca) { isSelected = true; mi.Tag = "Cargo"; }
+                    else if (cs || cd || ce || ca) { isSelected = true; mi.Tag = "Partial"; }
+                    else { isSelected = false; mi.Tag = "Cargo"; }
+                    break;
+                case "CargoSpawn": isSelected = TrackingService.AnnounceCargo; break;
+                case "CargoDock": isSelected = TrackingService.AnnounceCargoDocking; break;
+                case "CargoEgress": isSelected = TrackingService.AnnounceCargoEgress; break;
+                case "CargoArrival": 
+                    isSelected = TrackingService.AnnounceCargoArrival; 
+                    mi.Header = hasTravelData ? "Arrival Warning (5m before Dock)" : "Arrival Warning (Unlearned)";
+                    mi.IsEnabled = masterOn && hasTravelData; 
+                    break;
+                case "Heli": isSelected = TrackingService.AnnounceHeli; break;
+                case "Chinook": isSelected = TrackingService.AnnounceChinook; break;
+                case "Vendor": isSelected = TrackingService.AnnounceVendor; break;
+                case "OilRig": isSelected = TrackingService.AnnounceOilRig; break;
+                case "DeepSea": isSelected = TrackingService.AnnounceDeepSea; break;
+                case "PlayerOnline": isSelected = TrackingService.AnnouncePlayerOnline; break;
+                case "PlayerOffline": isSelected = TrackingService.AnnouncePlayerOffline; break;
+                case "PlayerDeathSelf": isSelected = TrackingService.AnnouncePlayerDeathSelf; break;
+                case "PlayerDeathTeam": isSelected = TrackingService.AnnouncePlayerDeathTeam; break;
+                case "PlayerRespawnSelf": isSelected = TrackingService.AnnouncePlayerRespawnSelf; break;
+                case "PlayerRespawnTeam": isSelected = TrackingService.AnnouncePlayerRespawnTeam; break;
+                case "NewShops": isSelected = TrackingService.AnnounceNewShops; break;
+                case "SuspiciousShops": isSelected = TrackingService.AnnounceSuspiciousShops; break;
+            }
+
+            if (tag != "CargoArrival") mi.IsEnabled = masterOn;
+            mi.IsChecked = masterOn && isSelected;
+        }
+
+        if (mi.HasItems)
+        {
+            foreach (var sub in mi.Items)
+            {
+                if (sub is MenuItem smi) SyncMenuItemRecursive(smi, masterOn, hasTravelData);
             }
         }
     }
@@ -4560,6 +4641,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         public double ScaleCenterX { get; set; }  // Pivot X
         public double ScaleCenterY { get; set; }  // Pivot Y
         public double Rotation { get; set; }      // NEU: für orientierte Marker
+        public TextBlock? TimerText { get; set; }
+        public FrameworkElement? TimerContainer { get; set; }
     }
 
 
@@ -7982,6 +8065,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void OnServerInfoUpdated(string description)
     {
+        _firstPollDyn = true;
         Dispatcher.Invoke(() => {
             if (_vm.Selected != null && string.IsNullOrWhiteSpace(_vm.Selected.Description))
             {
