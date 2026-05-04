@@ -8065,7 +8065,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void OnServerInfoUpdated(string description)
     {
-        _firstPollDyn = true;
         Dispatcher.Invoke(() => {
             if (_vm.Selected != null && string.IsNullOrWhiteSpace(_vm.Selected.Description))
             {
