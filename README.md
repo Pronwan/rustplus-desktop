@@ -47,6 +47,28 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+## Update 4.2 — Cargo Ship Overhaul (May 5th)
+<img width="595" height="331" alt="grafik" src="https://github.com/user-attachments/assets/5e19a7b3-9231-4dc3-8c3b-0a6d14bad1d3" />
+
+**🚢 Smart Cargo Tracking**
+
+- Route Learning: After the first full Cargo cycle, the app remembers docking times, total map life, and trigger points — saved per server and map wipe, resets automatically after a wipe.
+- Docking Countdown: A live countdown appears below the Cargo Ship while it's anchored at harbor. Docking duration is learned per server; the default fallback is 8 minutes.
+- Remaining On-Map Timer: Once a full cycle is tracked, a remaining-time countdown is shown in the Event Dock and on the Cargo Ship marker. 
+<img width="503" height="326" alt="grafik" src="https://github.com/user-attachments/assets/471ed1f8-9af3-4d5b-b3f8-9909b398a217" />
+
+**💬 Cargo Chat Notifications**
+<img width="596" height="44" alt="grafik" src="https://github.com/user-attachments/assets/7ae05e27-65fe-48a3-b141-3e519762d37f" />
+- Arrival Warning: Team chat alert ~5 minutes before Cargo docks at the next harbor (requires a learned route).
+- Docking Alert: Notification when Cargo anchors at a harbor.
+- Departure Warning: Notification 5 minutes before Cargo leaves.
+- All three can be toggled individually via right-click on the Chat Alerts button.
+
+**🛢️ Oil Rig Crate Countdown**
+- The app detects when a Chinook hovers over an Oil Rig and automatically starts a crate countdown on the map.
+<img width="651" height="223" alt="grafik" src="https://github.com/user-attachments/assets/1435999f-e06e-4f1e-9695-92d9df78e429" />
+
+
 ## Update 4.1.0 - Crosshair Editor (Right Click Crosshair icon to access) (May 1st)
 
 **𖦏 Custom Crosshairs**
