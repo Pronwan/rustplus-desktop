@@ -267,6 +267,7 @@ public partial class MainWindow
         _dynTimer?.Stop();
         _dynTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
         _dynTimer.Tick += async (_, __) => await PollDynMarkersOnceAsync();
+        _firstPollDyn = true; // Suppress announcements on the very first poll of a new connection
         _dynTimer.Start();
     }
 
