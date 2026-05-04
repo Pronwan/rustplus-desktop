@@ -34,6 +34,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
     private RustPlus? _api;
     private readonly Action<string> _log;
     private string? _host;
+    public string? Host => _host;
     private int _port;
     private ulong _steamId;
     private int _playerToken;

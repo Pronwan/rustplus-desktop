@@ -1,4 +1,4 @@
-﻿using RustPlusDesk.Models;
+using RustPlusDesk.Models;
 using System.Threading;
 using System.Threading.Tasks;
 // using static RustPlusDesk.Services.RustPlusClientReal;
@@ -12,6 +12,7 @@ namespace RustPlusDesk.Services;
     Task DisconnectAsync();
     Task ToggleSmartSwitchAsync(long entityId, bool on, CancellationToken ct = default);
     Task<bool?> GetSmartSwitchStateAsync(uint entityId);
+    string? Host { get; }
 
     // NEU:
     Task<EntityProbeResult> ProbeEntityAsync(uint entityId, CancellationToken ct = default);

@@ -18,12 +18,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>4.1.4</Version>
+		<Version>4.2</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>4.1.4</AssemblyVersion>
-		<FileVersion>4.1.4</FileVersion>
-		<InformationalVersion>4.1.4</InformationalVersion>
+		<AssemblyVersion>4.2</AssemblyVersion>
+		<FileVersion>4.2</FileVersion>
+		<InformationalVersion>4.2</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -148,6 +148,9 @@
 	  <None Remove="Screenshots\3.3.0_2.png" />
 	  <None Remove="Screenshots\3_5A.png" />
 	  <None Remove="Screenshots\3_5B.png" />
+	  <None Remove="Screenshots\Cargo_docked_countdown.png" />
+	  <None Remove="Screenshots\Cargo_notification_settings.png" />
+	  <None Remove="Screenshots\Cargo_remaining-on-map.png" />
 	  <None Remove="Screenshots\v4_map_overhaul.png" />
 	  <None Remove="Screenshots\v4_shop_hover.png" />
 	  <None Remove="TitleScreen-rust-plus-desktop.png" />
@@ -293,6 +296,9 @@
     <Resource Include="Screenshots\3.3.0_2.png" />
     <Resource Include="Screenshots\3_5A.png" />
     <Resource Include="Screenshots\3_5B.png" />
+    <Resource Include="Screenshots\Cargo_docked_countdown.png" />
+    <Resource Include="Screenshots\Cargo_notification_settings.png" />
+    <Resource Include="Screenshots\Cargo_remaining-on-map.png" />
     <Resource Include="Screenshots\v4_map_overhaul.png" />
     <Resource Include="Screenshots\v4_shop_hover.png" />
     <Resource Include="Screenshots\v4_5.png">
