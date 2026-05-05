@@ -12,13 +12,43 @@
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
                 <TextBlock Text="Patch Notes &amp; Version History" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,2"/>
                 <!-- UPDATE VERSION NUMBER HERE -->
-                <TextBlock Text="Current Version: 4.2" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
+                <TextBlock Text="Current Version: 4.3" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
             </StackPanel>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v4.2 PATCH NOTES -->
+                    <!-- NEW v4.3 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v4.3  |  Tracking &amp; Event Stability" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+
+                            <!-- Features -->
+                            <TextBlock Text="• Corrected Player Tracking &amp; Map Alignment" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Fixed a coordinate mismatch between pixels and DIPs that caused markers to "drift" when zooming. The Mini-Map is now perfectly centered on the player at all zoom levels.
+                            </TextBlock>
+
+                            <TextBlock Text="• Patrol Helicopter Crash Detection" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                The app now intelligently distinguishes between a helicopter flying off-map and a crash. When a crash is detected, an explosion icon remains on the map for 10 minutes with a "minutes ago" timer.
+                            </TextBlock>
+
+                            <TextBlock Text="• Deep Sea Timer Improvements" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Added "spawned ago" timers to the Event Dock and map icons. Integrated a "First Poll" guard to prevent false "Deep Sea started!" alerts upon initial server connection.
+                            </TextBlock>
+
+                            <TextBlock Text="• Background Stability &amp; Reset Logic" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Hardened the connection logic to prevent "frozen" background states and ensured all event timers and markers are correctly reset when switching servers.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
+                    <!-- v4.2 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
