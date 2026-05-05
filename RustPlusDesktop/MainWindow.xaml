@@ -1782,7 +1782,8 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                  Grid.Row="0"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
          HorizontalContentAlignment="Stretch"
-         ItemsSource="{Binding TeamMembers, RelativeSource={RelativeSource AncestorType=Window}}">
+         ItemsSource="{Binding TeamMembers, RelativeSource={RelativeSource AncestorType=Window}}"
+         Visibility="Visible">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <WrapPanel />
@@ -1878,7 +1879,52 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                 </ListBox.ItemTemplate>
                             </ListBox>
 
-                            <!-- Buttonleiste unten -->
+                            <!-- Inline chat panel (shown when CHAT toggle is active) -->
+                            <DockPanel x:Name="TeamChatPanel" Grid.Row="0" LastChildFill="True"
+                                       Visibility="Collapsed" Background="#FF141821">
+                                <DockPanel DockPanel.Dock="Bottom" Margin="6,4,6,6" LastChildFill="True">
+                                    <Button DockPanel.Dock="Right" x:Name="BtnTeamChatSend"
+                                            Content="Send" Width="64" Margin="6,0,0,0"
+                                            Style="{StaticResource PrimaryButton}"
+                                            Click="BtnTeamChatSend_Click"/>
+                                    <TextBox x:Name="TxtTeamChatInput"
+                                             Padding="8,5" FontSize="12"
+                                             Background="#1a1c1e" Foreground="White"
+                                             BorderThickness="1" BorderBrush="#333"
+                                             KeyDown="TxtTeamChatInput_KeyDown"/>
+                                </DockPanel>
+                                <ScrollViewer x:Name="TeamChatScroll"
+                                              VerticalScrollBarVisibility="Auto"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              Padding="6,4,6,0">
+                                    <ItemsControl x:Name="TeamChatList">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="0,2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" Text="{Binding TimeStr}"
+                                                               Foreground="{DynamicResource TextSubtle}"
+                                                               FontSize="10" Margin="0,2,8,0"
+                                                               FontFamily="Consolas, Courier New"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Author}"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="{Binding AuthorBrush}"
+                                                               Margin="0,1,8,0"/>
+                                                    <TextBlock Grid.Column="2" Text="{Binding Text}"
+                                                               TextWrapping="Wrap"
+                                                               Foreground="{DynamicResource TextPrimary}"
+                                                               Margin="0,1,0,0"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </DockPanel>
+
                             <!-- Buttonleiste unten -->
                             <StackPanel Grid.Row="1"
             Orientation="Horizontal"
@@ -1901,10 +1947,11 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
               Checked="ChkDeathMarkers_Toggled"
               Unchecked="ChkDeathMarkers_Toggled"/>
 
-                                <Button Content="CHAT"
-            Width="80"
-            Style="{StaticResource GhostButton}"
-            Click="BtnOpenChat_Click"/>
+                                <Button x:Name="BtnTeamChatToggle"
+                                        Content="CHAT"
+                                        Width="80"
+                                        Style="{StaticResource GhostButton}"
+                                        Click="BtnTeamChatToggle_Click"/>
                             </StackPanel>
                         </Grid>
                     </TabItem>
@@ -2455,6 +2502,15 @@ Click="BtnToggleMiniMap_Click"/>
                         <Image Source="pack://application:,,,/icons/pencil.png"/>
                     </Button>
 
+                    <Button x:Name="BtnCommandsHelp"
+                            Content="Commands"
+                            Padding="10,4"
+                            Margin="6,0,0,0"
+                            Style="{StaticResource GhostButton}"
+                            ToolTip="Show team-chat commands"
+                            Click="BtnCommandsHelp_Click"/>
+
+
                     <!-- StackPanel with Heli Demo removed -->
                     <StackPanel Orientation="Horizontal" Margin="12,0,0,0">
                     </StackPanel>
@@ -2768,6 +2824,73 @@ Click="BtnToggleMiniMap_Click"/>
                          Height="100"
                          IsReadOnly="True" TextWrapping="Wrap"
                          VerticalScrollBarVisibility="Auto"/>
+
+                <!-- Slide-in commands reference: covers all 3 rows of the right column -->
+                <Border x:Name="CommandsPanel" Grid.RowSpan="3"
+                        Background="{DynamicResource AppBg}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        Visibility="Collapsed"
+                        SizeChanged="CommandsPanel_SizeChanged">
+                    <Border.RenderTransform>
+                        <TranslateTransform x:Name="CommandsPanelTransform" X="0"/>
+                    </Border.RenderTransform>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Background="{DynamicResource Surface}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Commands"
+                                       FontWeight="SemiBold" FontSize="14"
+                                       Foreground="{DynamicResource TextPrimary}"
+                                       VerticalAlignment="Center"
+                                       Margin="14,10"/>
+                            <Button Grid.Column="1" Content="✕"
+                                    Click="BtnCloseCommands_Click"
+                                    Style="{StaticResource GhostButton}"
+                                    Padding="10,4" Margin="6"
+                                    ToolTip="Close (Esc)"/>
+                        </Grid>
+                        <ScrollViewer Grid.Row="1" Margin="20,16,20,16"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel MaxWidth="640" HorizontalAlignment="Left">
+
+                                <TextBlock Text="Team chat commands"
+                                           FontWeight="Bold" FontSize="18"
+                                           Foreground="{DynamicResource TextPrimary}"
+                                           Margin="0,0,0,4"/>
+                                <TextBlock Foreground="{DynamicResource TextSubtle}"
+                                           FontSize="12" Margin="0,0,0,16"
+                                           TextWrapping="Wrap"
+                                           Text="Anyone in your team can type these in the in-game team chat. The app reacts when it sees them."/>
+
+                                <Border Background="{DynamicResource Surface}" Padding="14" CornerRadius="6"
+                                        Margin="0,0,0,8" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1">
+                                    <StackPanel>
+                                        <TextBlock FontFamily="Consolas, Courier New" FontSize="14"
+                                                   Foreground="{DynamicResource TextPrimary}"
+                                                   FontWeight="SemiBold" Text="!leader"/>
+                                        <TextBlock Foreground="{DynamicResource TextSubtle}" FontSize="12"
+                                                   Margin="0,4,0,4" TextWrapping="Wrap"
+                                                   Text="Auto-promote the sender to team leader. Anyone on your team can type this in team chat to grab the leader role without you having to do it manually."/>
+                                        <TextBlock Foreground="#7BA8E8" FontFamily="Consolas, Courier New" FontSize="11"
+                                                   Text="[Auto-Promote] Moe (76561198030515046) requested promotion."/>
+                                    </StackPanel>
+                                </Border>
+
+                                <TextBlock Foreground="{DynamicResource TextSubtle}" FontSize="11"
+                                           TextWrapping="Wrap" Margin="0,12,0,0"
+                                           Text="More commands can be added here as the app grows."/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
 
                 <!-- Slide-in player report overlay: covers all 3 rows of the right column -->
                 <Border x:Name="ReportPanel" Grid.RowSpan="3"

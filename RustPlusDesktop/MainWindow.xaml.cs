@@ -71,7 +71,7 @@ public partial class MainWindow : Window
     private long _chatLastTicks = 0;          // zuletzt gesehener Timestamp (Ticks)
     private string? _chatLastKey = null;      // Fallback bei exakt gleichem Timestamp
     private int _statusBusy = 0;
-    private ChatWindow? _chatWin;
+    // Legacy popup removed — chat now renders inline in the Team tab via TeamChatPanel.
     private CancellationTokenSource? _chatCts;
     private readonly List<TeamChatMessage> _chatHistoryLog = new();
     private DateTime? _lastChatTsForCurrentServer = null;
@@ -984,6 +984,7 @@ public partial class MainWindow : Window
             txt.Text = $"v{AppInfo.VersionShort}";
         InitCameraUi();
         InitTrackerTab();
+        InitTeamChat();
         ApplySettings();
         _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
         AppendLog($"[items-new] baseDir={baseDir}");
@@ -1732,11 +1733,7 @@ public partial class MainWindow : Window
         _lastChatTsForCurrentServer = null;
 
         // UI leeren
-        if (_chatWin != null)
-        {
-             try { _chatWin.Close(); } catch { }
-             _chatWin = null;
-        }
+        // Legacy popup teardown removed — inline chat panel resets via _chatHistoryLog clear elsewhere.
 
         if (p == null) return;
 
@@ -3718,19 +3715,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
 
 
-    private async void BtnOpenChat_Click(object sender, RoutedEventArgs e)
+    /// <summary>
+    /// Prime the team-chat subscription + replay missing server-side history.
+    /// Idempotent. Used by the inline Team-tab chat view (replaces the old popup-open flow).
+    /// </summary>
+    internal async System.Threading.Tasks.Task EnsureChatPrimedAsync()
     {
-        if (_rust is not RustPlusClientReal real)
-        {
-            MessageBox.Show("Not connected.");
-            return;
-        }
-
-        if (!(_vm.Selected?.IsConnected ?? false))
-        {
-            MessageBox.Show("Please connect to a server first.");
-            return;
-        }
+        if (_rust is not RustPlusClientReal real) return;
+        if (!(_vm.Selected?.IsConnected ?? false)) return;
 
         try
         {
@@ -3738,51 +3730,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             real.TeamChatReceived += Real_TeamChatReceived;
             await real.PrimeTeamChatAsync();
         }
-        catch (InvalidOperationException)
-        {
-            MessageBox.Show("Please connect to a server first.");
-            return;
-        }
-        catch (Exception ex)
-        {
-            AppendLog("PrimeChat failed: " + ex.Message);
-            MessageBox.Show("Chat is not available right now.");
-            return;
-        }
+        catch (InvalidOperationException) { return; }
+        catch (Exception ex) { AppendLog("PrimeChat failed: " + ex.Message); return; }
 
-        // Fenster öffnen
-        if (_chatWin == null || !_chatWin.IsLoaded)
-        {
-            _chatWin = new Views.ChatWindow(async msg => await real.SendTeamMessageAsync(msg))
-            {
-                Owner = this
-            };
-            _chatWin.Closed += (_, __) => _chatWin = null;
-
-            // WICHTIG: Hier spielen wir den alten Verlauf ab (Replay)
-            // Da wir die gespeicherten Messages nutzen, stimmen die Uhrzeiten (Timestamp)!
-            lock (_chatHistoryLog)
-            {
-                foreach (var m in _chatHistoryLog.OrderBy(x => x.Timestamp))
-                {
-                    _chatWin.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime());
-                }
-            }
-
-            _chatWin.Show();
-        }
-        else
-        {
-            _chatWin.Activate();
-        }
-
-        // Fehlende History vom Server nachladen
         try
         {
             var history = await real.GetTeamChatHistoryAsync(_lastChatTsForCurrentServer, limit: 120);
             foreach (var m in history.OrderBy(m => m.Timestamp))
                 AppendChatIfNew(m);
-
             if (history.Count > 0)
                 _lastChatTsForCurrentServer = history.Max(x => x.Timestamp);
         }
@@ -3795,7 +3750,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         Dispatcher.Invoke(() =>
         {
-            // Robust Check: Ist diese Nachricht (Inhalt + Autor) bereits in den letzten 100 Zeilen?
+            // Dedup with a 3-second timestamp window: only treat (author + text) as a
+            // duplicate if a near-simultaneous copy already exists. Repeated identical
+            // messages minutes apart (e.g. typing "!track" twice) are real events — let them through.
             lock (_chatHistoryLog)
             {
                 var normAuthor = (m.Author ?? "").Trim().ToLowerInvariant();
@@ -3805,9 +3762,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 for (int i = _chatHistoryLog.Count - 1; i >= start; i--)
                 {
                     var existing = _chatHistoryLog[i];
-                    if (string.Equals(existing.Author, normAuthor, StringComparison.OrdinalIgnoreCase) && 
-                        string.Equals(existing.Text, normText, StringComparison.OrdinalIgnoreCase)) 
-                        return; // Duplikat ignorieren
+                    if (string.Equals(existing.Author, normAuthor, StringComparison.OrdinalIgnoreCase) &&
+                        string.Equals(existing.Text, normText, StringComparison.OrdinalIgnoreCase) &&
+                        Math.Abs((existing.Timestamp - m.Timestamp).TotalSeconds) < 30)
+                        return; // Genuine cross-path duplicate.
                 }
                 _chatHistoryLog.Add(m);
             }
@@ -3821,13 +3779,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     AppendLog($"[Auto-Promote] {m.Author} ({m.SteamId}) requested promotion.");
                 }
             }
-            else
-            {
-                // !track / !trackteam / !track<groupName> chat commands.
-                _ = TryHandleTrackChatCommand(m.Author ?? "", m.Text ?? "");
-            }
 
-            _chatWin?.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime());
+            AppendInlineChat(m);
             
             // Timestamp für History-Anfragen aktuell halten
             if (!_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value)
@@ -3842,14 +3795,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             var normAuthor = (m.Author ?? "").Trim().ToLowerInvariant();
             var normText = (m.Text ?? "").Trim().ToLowerInvariant();
 
-            // Robust Check: Ist diese Nachricht (Inhalt + Autor) bereits in den letzten 100 Zeilen?
+            // Dedup with a 3-second timestamp window. See Real_TeamChatReceived for rationale.
             int start = Math.Max(0, _chatHistoryLog.Count - 100);
             for (int i = _chatHistoryLog.Count - 1; i >= start; i--)
             {
                 var existing = _chatHistoryLog[i];
-                if (string.Equals(existing.Author, normAuthor, StringComparison.OrdinalIgnoreCase) && 
-                    string.Equals(existing.Text, normText, StringComparison.OrdinalIgnoreCase)) 
-                    return false; // Duplikat ignorieren
+                if (string.Equals(existing.Author, normAuthor, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(existing.Text, normText, StringComparison.OrdinalIgnoreCase) &&
+                    Math.Abs((existing.Timestamp - m.Timestamp).TotalSeconds) < 3)
+                    return false;
             }
             _chatHistoryLog.Add(m);
         }
@@ -3857,14 +3811,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (!_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value)
             _lastChatTsForCurrentServer = m.Timestamp;
 
-        _chatWin?.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime());
+        AppendInlineChat(m);
         return true;
     }
 
     private void OnTeamChatReceived(object? _, RustPlusDesk.Models.TeamChatMessage m)
     {
-        if (_chatWin is null || !_chatWin.IsLoaded) return;
-        Dispatcher.Invoke(() => _chatWin.AddIncoming(m.Author, m.Text, m.Timestamp));
+        AppendInlineChat(m);
     }
 
     private void Monuments_Checked(object sender, RoutedEventArgs e)
@@ -3885,9 +3838,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void OnChatReceived(object? sender, TeamChatMessage e)
     {
-        // Nur anzeigen, wenn das Chatfenster offen ist
-        if (_chatWin is { IsLoaded: true })
-            _chatWin.AddIncoming(e.Author, e.Text);
+        AppendInlineChat(e);
     }
 
     private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
