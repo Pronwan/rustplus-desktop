@@ -255,6 +255,8 @@ public partial class MainWindow
 
         foreach (var s in shops)
         {
+            if (IsDeepSeaNpcShop(s)) continue; // Never track lifetimes for constant NPC shops
+
             if (!_shopLifetimes.TryGetValue(s.Id, out var life))
             {
                 life = new ShopLifetimeInfo
@@ -269,13 +271,13 @@ public partial class MainWindow
             life.LastSnapshot = s;
         }
 
-        if (_announceSpawns && TrackingService.AnnounceSuspiciousShops)
+        foreach (var kv in _shopLifetimes.ToList())
         {
-            foreach (var kv in _shopLifetimes.ToList())
-            {
-                var life = kv.Value;
+            var life = kv.Value;
 
-                if (life.LastSeenUtc == null && !life.AnnouncedSuspicious)
+            if (life.LastSeenUtc == null)
+            {
+                if (_announceSpawns && TrackingService.AnnounceSuspiciousShops && !life.AnnouncedSuspicious)
                 {
                     string grid = life.LastSnapshot != null ? GetGridLabel(life.LastSnapshot) : "unknown";
                     AppendLog($"[dbg] Shop {life.LastSnapshot?.Label ?? "(no label)"} [{grid}] offline after {(DateTime.UtcNow - life.FirstSeenUtc).TotalSeconds:0}s");
@@ -310,6 +312,9 @@ public partial class MainWindow
                         life.AnnouncedSuspicious = true;
                     }
                 }
+
+                // FIX: Actually remove the shop so we don't log it again in 20 seconds!
+                _shopLifetimes.Remove(kv.Key);
             }
         }
     }

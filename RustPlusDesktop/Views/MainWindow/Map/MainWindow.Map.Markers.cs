@@ -710,6 +710,12 @@ public partial class MainWindow
                     cargoTip = $"Route learned (~{cargoLife}m total), connected mid-event";
                 }
             }
+            else
+            {
+                // Unlearned route
+                cargoTimer = "??:??";
+                cargoTip = "Total time remaining unknown (not yet learned on this server)";
+            }
         }
 
         activeEvents.Add(new EventDockItem { Name = "Cargo Ship", Icon = "pack://application:,,,/icons/cargo.png", Active = cargo.Id != 0, Id = cargo.Id, X = cargo.X, Y = cargo.Y, Trackable = true, Type = 5, TimerText = cargoTimer, ToolTip = cargoTip });
@@ -948,7 +954,7 @@ public partial class MainWindow
                 var uiTimer = (TextBlock)itemRow.Children[3];
                 uiTimer.Text = ev.TimerText ?? "";
                 // Visibility is managed by hover logic, but we must update the state
-                if (string.IsNullOrEmpty(ev.TimerText) || !ev.Active) uiTimer.Visibility = Visibility.Collapsed;
+                if (string.IsNullOrEmpty(ev.TimerText)) uiTimer.Visibility = Visibility.Collapsed;
 
                 var uiDot = (System.Windows.Shapes.Ellipse)itemRow.Children[4];
                 uiDot.Fill = ev.Active ? Brushes.Cyan : Brushes.Transparent;
@@ -1307,32 +1313,27 @@ public partial class MainWindow
                                 int duration = TrackingService.GetLearnedDockingDuration(host);
                                 var remain = TimeSpan.FromMinutes(duration) - (DateTime.UtcNow - ds.DockTime.Value);
                                 pmtTimer.TimerText.Text = remain.TotalSeconds > 0 ? $"{(int)remain.TotalMinutes}:{remain.Seconds:D2}" : "0:00";
-                                pmtTimer.TimerContainer.Visibility = Visibility.Visible;
                             }
                         }
                         else if (ds.FirstSeen.HasValue)
                         {
                             int fullLife = TrackingService.GetLearnedCargoFullLife(host);
-                            if (fullLife > 0)
+                            if (fullLife > 0 && ds.SeenAtEdge)
                             {
-                                if (ds.SeenAtEdge)
+                                var remain = TimeSpan.FromMinutes(fullLife) - (DateTime.UtcNow - ds.FirstSeen.Value);
+                                if (remain.TotalSeconds > 0)
                                 {
-                                    var remain = TimeSpan.FromMinutes(fullLife) - (DateTime.UtcNow - ds.FirstSeen.Value);
-                                    if (remain.TotalSeconds > 0)
-                                    {
-                                        pmtTimer.TimerText.Text = $"{(int)remain.TotalMinutes}:{remain.Seconds:D2}";
-                                        pmtTimer.TimerContainer.Visibility = Visibility.Visible;
-                                    }
-                                    else pmtTimer.TimerContainer.Visibility = Visibility.Collapsed;
+                                    pmtTimer.TimerText.Text = $"{(int)remain.TotalMinutes}:{remain.Seconds:D2}";
+                                    pmtTimer.TimerContainer.Visibility = Visibility.Visible;
                                 }
-                                else
-                                {
-                                    // Connected mid-route — hide the timer on the marker,
-                                    // the Event Dock already shows ??:?? with the tooltip
-                                    pmtTimer.TimerContainer.Visibility = Visibility.Collapsed;
-                                }
+                                else pmtTimer.TimerContainer.Visibility = Visibility.Collapsed;
                             }
-                            else pmtTimer.TimerContainer.Visibility = Visibility.Collapsed;
+                            else
+                            {
+                                // Connected mid-route or unlearned — show question marks
+                                pmtTimer.TimerText.Text = "??:??";
+                                pmtTimer.TimerContainer.Visibility = Visibility.Visible;
+                            }
                         }
                         else pmtTimer.TimerContainer.Visibility = Visibility.Collapsed;
                     }
