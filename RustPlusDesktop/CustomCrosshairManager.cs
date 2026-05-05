@@ -16,7 +16,7 @@ namespace RustPlusDesk
     {
         private static readonly string SavePath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "RustPlusDesk", "custom_crosshairs.json");
+            "RustPlusDesk-Ryyott", "custom_crosshairs.json");
 
         public static List<CustomCrosshair> LoadCrosshairs()
         {

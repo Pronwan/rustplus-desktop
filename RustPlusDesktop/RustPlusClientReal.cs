@@ -994,7 +994,7 @@ rp.connect();
             throw new DirectoryNotFoundException("[cam-node] rustplus.js package not found at: " + rustplusPkgDir);
         // _log?.Invoke("[cam-node] using pkg dir: " + rustplusPkgDir);
 
-        var tempDir = Path.Combine(Path.GetTempPath(), "RustPlusDesk");
+        var tempDir = Path.Combine(Path.GetTempPath(), "RustPlusDesk-Ryyott");
         Directory.CreateDirectory(tempDir);
         var jsFile = Path.Combine(tempDir, "camera_once.js");
         File.WriteAllText(jsFile, js);
@@ -1167,7 +1167,7 @@ rp.connect();
             var candidates = new[]
             {
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "RustPlusDesk","runtime","rustplus-cli"), // Release (ZIP entpackt)
+                "RustPlusDesk-Ryyott","runtime","rustplus-cli"), // Release (ZIP entpackt)
             Path.Combine(AppContext.BaseDirectory, "runtime","rustplus-cli"), // neben EXE
             Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..","..","..","runtime","rustplus-cli")) // Dev
         };

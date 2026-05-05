@@ -94,10 +94,10 @@ public static class TrackingService
     private static readonly HttpClient _http = new();
     private static readonly string _dbPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
-        "RustPlusDesk", "tracked_players.json");
+        "RustPlusDesk-Ryyott", "tracked_players.json");
     private static readonly string _settingsPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "RustPlusDesk", "tracking_settings.json");
+        "RustPlusDesk-Ryyott", "tracking_settings.json");
     
     private static Dictionary<string, TrackedPlayer> _trackedPlayers = new();
     private static TrackingSettings _settings = new();
@@ -160,7 +160,7 @@ public static class TrackingService
         {
             var logPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "RustPlusDesk", "tracking_log.txt");
+                "RustPlusDesk-Ryyott", "tracking_log.txt");
             var dir = Path.GetDirectoryName(logPath);
             if (dir != null && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
             File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}");
@@ -474,7 +474,7 @@ public static class TrackingService
             using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(runKey, true);
             if (key == null) return;
 
-            string appName = "RustPlusDesk";
+            string appName = "RustPlusDesk-Ryyott";
             if (enabled)
             {
                 string exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule!.FileName!;

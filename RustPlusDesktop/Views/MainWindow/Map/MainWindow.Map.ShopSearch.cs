@@ -204,7 +204,7 @@ public partial class MainWindow
         {
             var dataPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "RustPlusDesk", "WebView2_ShopSearch");
+                "RustPlusDesk-Ryyott", "WebView2_ShopSearch");
             Directory.CreateDirectory(dataPath);
 
             var env = await CoreWebView2Environment.CreateAsync(userDataFolder: dataPath);
@@ -216,7 +216,7 @@ public partial class MainWindow
             string html = BuildShopSearchHtml();
             if (!string.IsNullOrWhiteSpace(html))
             {
-                var iconPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "icons");
+                var iconPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk-Ryyott", "icons");
                 if (Directory.Exists(iconPath))
                     wv.CoreWebView2.SetVirtualHostNameToFolderMapping("rusticons.local", iconPath, CoreWebView2HostResourceAccessKind.Allow);
 

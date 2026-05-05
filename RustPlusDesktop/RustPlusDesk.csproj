@@ -2,6 +2,7 @@
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows</TargetFramework>
+		<AssemblyName>RustPlusDesk-Ryyott</AssemblyName>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ApplicationIcon>rustplus-desktop-icon.ico</ApplicationIcon>
@@ -19,7 +20,7 @@
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
 		<Version>4.2</Version>
-		<Title>Rust+ Desk</Title>
+		<Title>Rust+ Desk (Ryyott)</Title>
 		<Authors>Pronwan</Authors>
 		<AssemblyVersion>4.2</AssemblyVersion>
 		<FileVersion>4.2</FileVersion>
@@ -27,8 +28,8 @@
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
-		<AssemblyTitle>RustPlusDesk</AssemblyTitle>
-		<Product>RustPlusDesk</Product>
+		<AssemblyTitle>RustPlusDesk-Ryyott</AssemblyTitle>
+		<Product>RustPlusDesk-Ryyott</Product>
 	</PropertyGroup>
 	
 	<!-- Den dicken Ordner NICHT mehr kopieren -->

@@ -64,7 +64,7 @@ namespace RustPlusDesk.Services
 
         private string ConfigPath => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "RustPlusDesk", "rustplusjs-config.json");
+            "RustPlusDesk-Ryyott", "rustplusjs-config.json");
         public event EventHandler<TeamChatMessage>? ChatReceived;
 
         private void TryFlushChat()
@@ -544,7 +544,7 @@ namespace RustPlusDesk.Services
         private static string EnsureCliUnpackedRoot()
         {
             var target = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                                      "RustPlusDesk", "runtime", "rustplus-cli");
+                                      "RustPlusDesk-Ryyott", "runtime", "rustplus-cli");
             Directory.CreateDirectory(target);
 
             var zip = Path.Combine(AppContext.BaseDirectory, "runtime", "rustplus-cli.zip");

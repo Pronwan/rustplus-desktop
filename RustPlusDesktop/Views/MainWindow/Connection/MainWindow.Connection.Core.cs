@@ -21,7 +21,7 @@ public partial class MainWindow
     {
         var dataFolder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "RustPlusDesk", "WebView2");
+            "RustPlusDesk-Ryyott", "WebView2");
         Directory.CreateDirectory(dataFolder);
 
         var env = await CoreWebView2Environment.CreateAsync(userDataFolder: dataFolder);

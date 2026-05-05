@@ -9,7 +9,7 @@ namespace RustPlusDesk.Services;
 public static class StorageService
 {
     private static string AppDir =>
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RustPlusDesk");
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RustPlusDesk-Ryyott");
 
     private static string ProfilesPath => Path.Combine(AppDir, "profiles.json");
 
@@ -20,7 +20,7 @@ public static class StorageService
         File.WriteAllText(ProfilesPath, json);
     }
     public static string GetProfilesPath() =>
-    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RustPlusDesk", "profiles.json");
+    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RustPlusDesk-Ryyott", "profiles.json");
 
     public static List<ServerProfile> LoadProfiles()
     {

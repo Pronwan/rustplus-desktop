@@ -978,7 +978,7 @@ public partial class MainWindow : Window
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
         InitializeComponent();
-        this.Title = $"RustPlusDesk v{AppInfo.VersionShort}";
+        this.Title = $"RustPlusDesk-Ryyott v{AppInfo.VersionShort}";
         
         if (FindName("TxtVersion") is TextBlock txt)
             txt.Text = $"v{AppInfo.VersionShort}";
@@ -1625,7 +1625,7 @@ public partial class MainWindow : Window
     // Lokaler Icon-Cache (z.B. %LOCALAPPDATA%\RustPlusDesk\icons)
     private static readonly string sIconCacheDir =
         System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                               "RustPlusDesk", "icons");
+                               "RustPlusDesk-Ryyott", "icons");
 
     // === Layers ===
     // Optional: externe Ergänzungen laden (Datei neben der EXE)
@@ -8547,7 +8547,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             try 
             {
-                var dataPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "WebView2_Report");
+                var dataPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk-Ryyott", "WebView2_Report");
                 var env = await Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync(userDataFolder: dataPath);
                 await wv.EnsureCoreWebView2Async(env);
                 wv.NavigateToString(html);
@@ -8760,7 +8760,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private static string PairingConfigPath =>
     System.IO.Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "RustPlusDesk", "rustplusjs-config.json");
+        "RustPlusDesk-Ryyott", "rustplusjs-config.json");
 
     private async Task<bool> ResetPairingConfigAsync(bool stopListenerFirst = true)
     {
@@ -8875,7 +8875,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private async Task<(Version latest, string tag, string? downloadUrl)?> GetLatestReleaseAsync()
     {
         using var http = new HttpClient();
-        http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("RustPlusDesk", GetCurrentVersion().ToString()));
+        http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("RustPlusDesk-Ryyott", GetCurrentVersion().ToString()));
         http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
         http.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
 
@@ -8920,7 +8920,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         try
         {
             using var http = new HttpClient();
-            http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("RustPlusDesk", GetCurrentVersion().ToString()));
+            http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("RustPlusDesk-Ryyott", GetCurrentVersion().ToString()));
 
             using var resp = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
             resp.EnsureSuccessStatusCode();
@@ -9109,7 +9109,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
      = new(StringComparer.OrdinalIgnoreCase);
     private static string HotkeyConfigPath =>
         System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                               "RustPlusDesk", "hotkeys.json");
+                               "RustPlusDesk-Ryyott", "hotkeys.json");
 
     private string CurrentServerKey()
     {
@@ -9849,7 +9849,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         var baseDir = System.IO.Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "RustPlusDesk",
+            "RustPlusDesk-Ryyott",
             "Overlays",
             GetServerKey()
         );
@@ -11419,7 +11419,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         var baseDir = System.IO.Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "RustPlusDesk",
+            "RustPlusDesk-Ryyott",
             "Overlays",
             GetServerKey()
         );
