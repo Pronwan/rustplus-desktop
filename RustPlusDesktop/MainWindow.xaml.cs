@@ -3821,6 +3821,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     AppendLog($"[Auto-Promote] {m.Author} ({m.SteamId}) requested promotion.");
                 }
             }
+            else
+            {
+                // !track / !trackteam / !track<groupName> chat commands.
+                _ = TryHandleTrackChatCommand(m.Author ?? "", m.Text ?? "");
+            }
 
             _chatWin?.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime());
             

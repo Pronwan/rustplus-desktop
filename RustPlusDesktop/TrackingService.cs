@@ -70,6 +70,8 @@ public class TrackingSettings
     public bool AnnounceSpawnsMaster { get; set; } = false;
     public bool SaveAlertSelection { get; set; } = true;
     public string LastSeenVersion { get; set; } = "";
+    /// <summary>When true, !track / !trackteam / !track&lt;groupName&gt; chat commands reply in team chat. Default on.</summary>
+    public bool EnableChatCommands { get; set; } = true;
 }
 
 
@@ -158,7 +160,7 @@ public static class TrackingService
         catch { }
     }
 
-    private static void Log(string message)
+    internal static void Log(string message)
     {
         try
         {
@@ -238,6 +240,12 @@ public static class TrackingService
     {
         get => _settings.BackgroundTrackingEnabled;
         set { _settings.BackgroundTrackingEnabled = value; SaveDB(); }
+    }
+
+    public static bool EnableChatCommands
+    {
+        get => _settings.EnableChatCommands;
+        set { _settings.EnableChatCommands = value; SaveDB(); }
     }
 
     public static bool CloseToTrayEnabled
