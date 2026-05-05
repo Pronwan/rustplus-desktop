@@ -1,7 +1,8 @@
 ﻿<Window x:Class="RustPlusDesk.Views.HotkeysWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Hotkeys"
+        xmlns:l="clr-namespace:RustPlusDesk.Localization"
+        Title="{l:Loc hotkeys.window_title}"
         Width="640" Height="420"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
@@ -160,8 +161,8 @@
 
         <!-- Header -->
         <StackPanel Orientation="Vertical" Margin="0,0,0,8">
-            <TextBlock Text="Hotkeys" Style="{StaticResource H1}"/>
-            <TextBlock Text="Assign global hotkeys to Smart Switches. Multiple devices can share one hotkey (will toggle sequentially)."
+            <TextBlock Text="{l:Loc hotkeys.title}" Style="{StaticResource H1}"/>
+            <TextBlock Text="{l:Loc hotkeys.subtitle}"
                        Style="{StaticResource Subtle}" Margin="0,2,0,0"/>
         </StackPanel>
 
@@ -174,17 +175,17 @@
                       CanUserDeleteRows="False"
                       ItemsSource="{Binding}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Device" Binding="{Binding Display}" Width="2*"/>
-                    <DataGridTextColumn Header="EntityId" Binding="{Binding EntityId}" Width="*"/>
-                    <DataGridTextColumn Header="Hotkey" Binding="{Binding Hotkey}" Width="*" />
+                    <DataGridTextColumn Header="{l:Loc hotkeys.col_device}" Binding="{Binding Display}" Width="2*"/>
+                    <DataGridTextColumn Header="{l:Loc hotkeys.col_entity_id}" Binding="{Binding EntityId}" Width="*"/>
+                    <DataGridTextColumn Header="{l:Loc hotkeys.col_hotkey}" Binding="{Binding Hotkey}" Width="*" />
                     <DataGridTemplateColumn Header="" Width="160">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Content="Set"   Width="64" Margin="0,0,6,0"
+                                    <Button Content="{l:Loc hotkeys.btn_set}"   Width="64" Margin="0,0,6,0"
                                             Style="{StaticResource GhostTiny}"
                                             Click="BtnSet_Click"/>
-                                    <Button Content="Clear" Width="64"
+                                    <Button Content="{l:Loc hotkeys.btn_clear}" Width="64"
                                             Style="{StaticResource GhostTiny}"
                                             Click="BtnClear_Click"/>
                                 </StackPanel>
@@ -197,11 +198,11 @@
 
         <!-- Footer -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
-            <Button Content="Close &amp; Deactivate"
+            <Button Content="{l:Loc hotkeys.btn_close_deactivate}"
                     Width="150" Margin="0,0,8,0"
                     Style="{StaticResource GhostTiny}"
                     Click="BtnCloseDeactivate_Click"/>
-            <Button Content="Close &amp; Activate"
+            <Button Content="{l:Loc hotkeys.btn_close_activate}"
                     Width="150" IsDefault="True"
                     Style="{StaticResource AccentButton}"
                     Click="BtnCloseActivate_Click"/>

@@ -70,6 +70,7 @@ public class TrackingSettings
     public bool AnnounceSpawnsMaster { get; set; } = false;
     public bool SaveAlertSelection { get; set; } = true;
     public string LastSeenVersion { get; set; } = "";
+    public string Language { get; set; } = "en";
 }
 
 
@@ -276,6 +277,12 @@ public static class TrackingService
     {
         get => _settings.HideConsole;
         set { _settings.HideConsole = value; SaveDB(); }
+    }
+
+    public static string Language
+    {
+        get => string.IsNullOrWhiteSpace(_settings.Language) ? "en" : _settings.Language;
+        set { _settings.Language = string.IsNullOrWhiteSpace(value) ? "en" : value; SaveDB(); }
     }
 
     public static double SidebarWidth

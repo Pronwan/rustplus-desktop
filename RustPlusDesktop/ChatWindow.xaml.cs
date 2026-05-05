@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using RustPlusDesk.Localization;
 
 namespace RustPlusDesk.Views
 {
@@ -36,7 +37,7 @@ namespace RustPlusDesk.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Senden fehlgeschlagen: " + ex.Message, "Chat", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(Loc.T("chat.send_failed", ex.Message), Loc.T("chat.window_title"), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
