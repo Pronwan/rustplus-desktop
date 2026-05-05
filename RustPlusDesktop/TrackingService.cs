@@ -15,6 +15,10 @@ public class TrackedPlayer
     public string Name { get; set; } = string.Empty;
     public string LastServerName { get; set; } = string.Empty;
     public List<PlayerSession> Sessions { get; set; } = new();
+    /// <summary>Unix-seconds (UTC) of last directory mutation (track / un-track / rename).
+    /// Drives last-write-wins team sync. NOT bumped when sessions are appended — sessions
+    /// are local-only and not synced.</summary>
+    public long LastModifiedUnix { get; set; } = 0;
 }
 
 public class HarborInfo
@@ -70,6 +74,8 @@ public class TrackingSettings
     public bool AnnounceSpawnsMaster { get; set; } = false;
     public bool SaveAlertSelection { get; set; } = true;
     public string LastSeenVersion { get; set; } = "";
+    /// <summary>If true, share the tracked-players directory + groups with teammates and pull theirs. Default off.</summary>
+    public bool TeamSyncEnabled { get; set; } = false;
 }
 
 
@@ -112,16 +118,100 @@ public static class TrackingService
 
     public static event Action? OnOnlinePlayersUpdated;
     public static event Action<string>? OnServerInfoUpdated;
+    /// <summary>Fires whenever the tracked-players directory changes (track / untrack / rename).
+    /// Used by team sync to know it should re-upload. Sessions append do NOT fire this.</summary>
+    public static event Action? OnTrackedDirectoryChanged;
     public static string StatusMessage { get; private set; } = "";
     public static List<OnlinePlayerBM> LastOnlinePlayers { get; private set; } = new();
     public static DateTime? LastPullTime { get; private set; }
     public static bool IsTracking => _trackingTimer != null;
+
+    /// <summary>Tombstone for an untracked player so the deletion propagates via team sync
+    /// instead of being resurrected by a teammate's older copy.</summary>
+    public class TrackedTombstone
+    {
+        public string BMId { get; set; } = "";
+        public long DeletedAtUnix { get; set; }
+    }
+    private static List<TrackedTombstone> _trackerTombstones = new();
+    public static IReadOnlyList<TrackedTombstone> TrackerTombstones => _trackerTombstones;
+
+    /// <summary>Drop tombstones older than 30 days — they've propagated to every reasonable client by then.</summary>
+    private static void GcOldTombstones()
+    {
+        long cutoff = DateTimeOffset.UtcNow.AddDays(-30).ToUnixTimeSeconds();
+        _trackerTombstones.RemoveAll(t => t.DeletedAtUnix < cutoff);
+    }
+
+    /// <summary>Inject a remote tombstone (called by team-sync merge). Returns true if applied.</summary>
+    public static bool ApplyRemoteTrackerTombstone(string bmId, long deletedAtUnix)
+    {
+        if (string.IsNullOrEmpty(bmId)) return false;
+        bool changed = false;
+        if (_trackedPlayers.TryGetValue(bmId, out var existing) &&
+            existing.LastModifiedUnix < deletedAtUnix)
+        {
+            _trackedPlayers.Remove(bmId);
+            changed = true;
+        }
+        var local = _trackerTombstones.FirstOrDefault(t => t.BMId == bmId);
+        if (local == null || local.DeletedAtUnix < deletedAtUnix)
+        {
+            _trackerTombstones.RemoveAll(t => t.BMId == bmId);
+            _trackerTombstones.Add(new TrackedTombstone { BMId = bmId, DeletedAtUnix = deletedAtUnix });
+            changed = true;
+        }
+        if (changed) GcOldTombstones();
+        return changed;
+    }
+
+    /// <summary>Inject a remote tracked player (called by team-sync merge). Returns true if applied.</summary>
+    public static bool ApplyRemoteTrackedPlayer(TrackedPlayer remote)
+    {
+        if (remote == null || string.IsNullOrEmpty(remote.BMId)) return false;
+        // If we have a more recent tombstone, ignore.
+        var tomb = _trackerTombstones.FirstOrDefault(t => t.BMId == remote.BMId);
+        if (tomb != null && tomb.DeletedAtUnix >= remote.LastModifiedUnix) return false;
+
+        if (_trackedPlayers.TryGetValue(remote.BMId, out var existing))
+        {
+            if (existing.LastModifiedUnix >= remote.LastModifiedUnix) return false;
+            existing.Name = remote.Name;
+            existing.LastServerName = string.IsNullOrEmpty(remote.LastServerName)
+                ? existing.LastServerName : remote.LastServerName;
+            existing.LastModifiedUnix = remote.LastModifiedUnix;
+            // Sessions are local-only; do not import.
+            return true;
+        }
+
+        _trackedPlayers[remote.BMId] = new TrackedPlayer
+        {
+            BMId = remote.BMId,
+            Name = remote.Name,
+            LastServerName = remote.LastServerName,
+            LastModifiedUnix = remote.LastModifiedUnix
+            // Sessions intentionally empty — local-only.
+        };
+        return true;
+    }
+
+    /// <summary>Triggered after team-sync merge to persist + notify.</summary>
+    public static void PersistAfterRemoteMerge()
+    {
+        SaveDB();
+        OnTrackedDirectoryChanged?.Invoke();
+        OnOnlinePlayersUpdated?.Invoke();
+    }
 
     static TrackingService()
     {
         _http.DefaultRequestHeaders.Add("User-Agent", "RustPlusDesk/1.0");
         LoadDB();
     }
+
+    private static readonly string _tombstonesPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "RustPlusDesk-Ryyott", "tracker_tombstones.json");
 
     private static void LoadDB()
     {
@@ -137,6 +227,13 @@ public static class TrackingService
             {
                 var json = File.ReadAllText(_settingsPath);
                 _settings = JsonSerializer.Deserialize<TrackingSettings>(json) ?? new();
+            }
+            if (File.Exists(_tombstonesPath))
+            {
+                var json = File.ReadAllText(_tombstonesPath);
+                var list = JsonSerializer.Deserialize<List<TrackedTombstone>>(json);
+                if (list != null) _trackerTombstones = list;
+                GcOldTombstones();
             }
         }
         catch { }
@@ -154,6 +251,9 @@ public static class TrackingService
 
             var jsonS = JsonSerializer.Serialize(_settings, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_settingsPath, jsonS);
+
+            var jsonT = JsonSerializer.Serialize(_trackerTombstones, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(_tombstonesPath, jsonT);
         }
         catch { }
     }
@@ -174,10 +274,16 @@ public static class TrackingService
 
     public static void TrackPlayer(string bmId, string name, string serverName, PlayerSession? initialSession = null)
     {
+        long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
         TrackedPlayer? player;
         if (!_trackedPlayers.TryGetValue(bmId, out player))
         {
-            player = new TrackedPlayer { BMId = bmId, Name = name, LastServerName = serverName };
+            player = new TrackedPlayer
+            {
+                BMId = bmId, Name = name, LastServerName = serverName,
+                LastModifiedUnix = now
+            };
             _trackedPlayers[bmId] = player;
         }
         else
@@ -185,7 +291,11 @@ public static class TrackingService
             player.LastServerName = serverName;
             // Update name if we got a real one
             if (name != "Unknown Player") player.Name = name;
+            player.LastModifiedUnix = now;
         }
+
+        // Drop any old tombstone for this BMId — re-tracking overrules a previous untrack.
+        _trackerTombstones.RemoveAll(t => t.BMId == bmId);
 
         if (initialSession != null)
         {
@@ -205,18 +315,24 @@ public static class TrackingService
             StartPolling(_settings.LastHost, _settings.LastPort, _settings.LastServerName);
         }
         OnOnlinePlayersUpdated?.Invoke();
+        OnTrackedDirectoryChanged?.Invoke();
     }
-    
+
     public static void UntrackPlayer(string bmId)
     {
         if (_trackedPlayers.Remove(bmId))
         {
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            _trackerTombstones.RemoveAll(t => t.BMId == bmId);
+            _trackerTombstones.Add(new TrackedTombstone { BMId = bmId, DeletedAtUnix = now });
+            GcOldTombstones();
             SaveDB();
             if (_trackedPlayers.Count == 0)
             {
                 StopPolling();
             }
             OnOnlinePlayersUpdated?.Invoke();
+            OnTrackedDirectoryChanged?.Invoke();
         }
     }
     
@@ -238,6 +354,12 @@ public static class TrackingService
     {
         get => _settings.BackgroundTrackingEnabled;
         set { _settings.BackgroundTrackingEnabled = value; SaveDB(); }
+    }
+
+    public static bool TeamSyncEnabled
+    {
+        get => _settings.TeamSyncEnabled;
+        set { _settings.TeamSyncEnabled = value; SaveDB(); }
     }
 
     public static bool CloseToTrayEnabled

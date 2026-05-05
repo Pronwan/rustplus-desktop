@@ -22,4 +22,6 @@ public class PlayerGroup
     public List<string> BMIds { get; set; } = new();
     /// <summary>Per-server pinned base location. At most one pin per (group, server).</summary>
     public List<GroupMapPin> MapPins { get; set; } = new();
+    /// <summary>Unix-seconds (UTC) of the last mutation. Drives last-write-wins team sync.</summary>
+    public long LastModifiedUnix { get; set; } = 0;
 }

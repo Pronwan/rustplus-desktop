@@ -985,6 +985,9 @@ public partial class MainWindow : Window
         InitCameraUi();
         InitTrackerTab();
         InitTeamChat();
+        InitTeamSync();
+        if (ChkTeamSyncEnabled != null)
+            ChkTeamSyncEnabled.IsChecked = TrackingService.TeamSyncEnabled;
         ApplySettings();
         _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
         AppendLog($"[items-new] baseDir={baseDir}");

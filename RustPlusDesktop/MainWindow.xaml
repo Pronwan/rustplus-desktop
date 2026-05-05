@@ -2011,6 +2011,21 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                            Foreground="{DynamicResource TextSubtle}" FontSize="10"
                                            VerticalAlignment="Center" Margin="0,0,6,0"
                                            Text="never refreshed"/>
+                                <Button DockPanel.Dock="Left" x:Name="BtnTeamSyncNow"
+                                        Content="⟳ Team" FontSize="10" Padding="6,2"
+                                        Margin="0,0,8,0"
+                                        Style="{StaticResource GhostButton}"
+                                        Click="BtnTeamSyncNow_Click"
+                                        ToolTip="Sync tracked players + groups with teammates now"/>
+                                <CheckBox DockPanel.Dock="Left" x:Name="ChkTeamSyncEnabled"
+                                          Content="Team sync" FontSize="10"
+                                          VerticalAlignment="Center" Margin="0,0,8,0"
+                                          Click="ChkTeamSyncEnabled_Click"
+                                          ToolTip="Share tracked players + groups with your team and pull theirs every 30 s"/>
+                                <TextBlock DockPanel.Dock="Left" x:Name="TxtTeamSyncStatus"
+                                           Foreground="{DynamicResource TextSubtle}" FontSize="10"
+                                           VerticalAlignment="Center"
+                                           Text=""/>
                             </DockPanel>
                             <TabControl x:Name="TrackerSubTabs" Style="{StaticResource PrettyTabControl}">
 
