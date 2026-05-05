@@ -77,6 +77,10 @@ public class PlayerSession
 {
     public DateTime ConnectTime { get; set; }
     public DateTime? DisconnectTime { get; set; }
+    /// <summary>BM server ID this session is on. Null on legacy entries written before the field existed.</summary>
+    public string? ServerId { get; set; }
+    /// <summary>"local" for sessions observed via local 2-min poll, "bm" for sessions imported from BattleMetrics.</summary>
+    public string Source { get; set; } = "local";
 }
 
 public class OnlinePlayerBM
@@ -623,22 +627,176 @@ public static class TrackingService
 
                 if (start.HasValue)
                 {
-                    return new PlayerSession { ConnectTime = start.Value, DisconnectTime = stop };
+                    return new PlayerSession
+                    {
+                        ConnectTime = start.Value,
+                        DisconnectTime = stop,
+                        ServerId = _foundServerId,
+                        Source = "bm"
+                    };
                 }
             }
         }
         catch { }
         return null;
     }
+
+    /// <summary>
+    /// Pull the player's session history from BattleMetrics (paginated, filtered by server)
+    /// and merge it into the local tracking DB. De-dupes against any existing session whose
+    /// ConnectTime is within 60 seconds of an incoming one. Returns the count of newly-added
+    /// sessions. Caller is responsible for choosing whether to persist via SaveDB().
+    /// </summary>
+    /// <remarks>
+    /// BM's /sessions endpoint auth-gates the filter[servers] parameter for anonymous clients,
+    /// so we fetch ALL of the player's recent sessions (no server filter on the wire) and apply
+    /// the server filter client-side via relationships.server.data.id. page[size]=10 is the
+    /// largest size BM allows anonymously. A heavy player playing on multiple servers can take
+    /// 10–30 pages to span 90 days; expect 5–30 s of network round-trips on first open.
+    /// </remarks>
+    public static async Task<int> BackfillSessionsFromBMAsync(
+        string bmId, string serverId, int daysBack = 90, CancellationToken ct = default)
+    {
+        if (string.IsNullOrEmpty(bmId) || string.IsNullOrEmpty(serverId)) return 0;
+
+        var cutoff = DateTime.UtcNow.AddDays(-daysBack);
+        var imported = new List<PlayerSession>();
+        int totalScanned = 0, matched = 0;
+
+        const int pageSize = 10;
+        const int maxPages = 60;     // safety ceiling: 600 sessions across all servers
+
+        // Fetch the player's recent sessions across ALL servers; we filter to `serverId` client-side.
+        string? url = $"https://api.battlemetrics.com/sessions" +
+                      $"?filter[players]={Uri.EscapeDataString(bmId)}" +
+                      $"&page[size]={pageSize}";
+
+        int pages = 0;
+
+        while (!string.IsNullOrEmpty(url) && pages < maxPages)
+        {
+            ct.ThrowIfCancellationRequested();
+            using var resp = await _http.GetAsync(url, ct);
+            if (!resp.IsSuccessStatusCode)
+            {
+                Log($"[backfill] HTTP {(int)resp.StatusCode} on page {pages + 1} for {bmId} (URL: {url})");
+                if ((int)resp.StatusCode == 401 || (int)resp.StatusCode == 403)
+                {
+                    Log("[backfill] BM is auth-gating this request. The report will use only locally-collected sessions for this player.");
+                }
+                break;
+            }
+
+            var json = await resp.Content.ReadAsStringAsync(ct);
+            using var doc = JsonDocument.Parse(json);
+            var root = doc.RootElement;
+
+            if (!root.TryGetProperty("data", out var data) || data.ValueKind != JsonValueKind.Array)
+                break;
+
+            DateTime? oldestOnPage = null;
+            foreach (var item in data.EnumerateArray())
+            {
+                totalScanned++;
+                if (!item.TryGetProperty("attributes", out var attr)) continue;
+
+                DateTime? start = null, stop = null;
+                if (attr.TryGetProperty("start", out var sEl) && sEl.ValueKind == JsonValueKind.String &&
+                    DateTime.TryParse(sEl.GetString(), null,
+                        System.Globalization.DateTimeStyles.RoundtripKind, out var sv))
+                    start = sv.ToUniversalTime();
+                if (attr.TryGetProperty("stop", out var stEl) && stEl.ValueKind == JsonValueKind.String &&
+                    DateTime.TryParse(stEl.GetString(), null,
+                        System.Globalization.DateTimeStyles.RoundtripKind, out var stv))
+                    stop = stv.ToUniversalTime();
+
+                if (!start.HasValue) continue;
+                if (oldestOnPage == null || start < oldestOnPage) oldestOnPage = start;
+
+                // Client-side server filter: parse relationships.server.data.id.
+                string? sessionServerId = null;
+                if (item.TryGetProperty("relationships", out var rels) &&
+                    rels.TryGetProperty("server", out var srvRel) &&
+                    srvRel.TryGetProperty("data", out var srvData) &&
+                    srvData.TryGetProperty("id", out var srvIdEl) &&
+                    srvIdEl.ValueKind == JsonValueKind.String)
+                {
+                    sessionServerId = srvIdEl.GetString();
+                }
+                if (!string.Equals(sessionServerId, serverId, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                matched++;
+                imported.Add(new PlayerSession
+                {
+                    ConnectTime = start.Value,
+                    DisconnectTime = stop,
+                    ServerId = serverId,
+                    Source = "bm"
+                });
+            }
+
+            pages++;
+
+            // Stop if the oldest session on this page is past our cutoff — older pages are even older.
+            if (oldestOnPage.HasValue && oldestOnPage.Value < cutoff) break;
+
+            // Follow cursor if present.
+            url = null;
+            if (root.TryGetProperty("links", out var links) &&
+                links.TryGetProperty("next", out var next) &&
+                next.ValueKind == JsonValueKind.String)
+            {
+                url = next.GetString();
+            }
+        }
+
+        // Trim anything older than the cutoff (last page may include older entries).
+        imported = imported.Where(s => s.ConnectTime >= cutoff).ToList();
+
+        // Merge into the tracked-players DB (creating an entry if the player isn't tracked yet).
+        if (!_trackedPlayers.TryGetValue(bmId, out var tp))
+        {
+            tp = new TrackedPlayer { BMId = bmId };
+            _trackedPlayers[bmId] = tp;
+        }
+
+        int added = 0;
+        var existingTimes = tp.Sessions
+            .Select(s => s.ConnectTime.ToUniversalTime().Ticks)
+            .ToHashSet();
+        const long toleranceTicks = TimeSpan.TicksPerSecond * 60; // 60 seconds
+
+        foreach (var s in imported)
+        {
+            var t = s.ConnectTime.ToUniversalTime().Ticks;
+            bool dup = existingTimes.Any(e => Math.Abs(e - t) <= toleranceTicks);
+            if (dup) continue;
+            tp.Sessions.Add(s);
+            existingTimes.Add(t);
+            added++;
+        }
+
+        if (added > 0)
+        {
+            // Keep sessions chronologically ordered for any code that scans them.
+            tp.Sessions = tp.Sessions.OrderBy(s => s.ConnectTime).ToList();
+            try { SaveDB(); } catch { /* tolerant */ }
+        }
+
+        Log($"[backfill] {bmId} on server {serverId}: scanned {totalScanned} sessions across all servers, {matched} matched this server, imported {added} new (after dedupe), pages {pages}.");
+        return added;
+    }
+
     /// <summary>
     /// Build an ad-hoc HTML report for a single BM ID, fetching their name and last session
     /// from BattleMetrics if we don't already have them in the tracked-players DB. Doesn't persist.
     /// </summary>
-    public static async Task<string> GetAnalysisReportForBMIdAsync(string bmId, string fallbackName = "")
+    public static async Task<string> GetAnalysisReportForBMIdAsync(string bmId, string fallbackName = "", string? serverIdFilter = null)
     {
         if (string.IsNullOrEmpty(bmId)) return GetAnalysisReport();
         if (_trackedPlayers.ContainsKey(bmId))
-            return GetAnalysisReport(bmId);
+            return GetAnalysisReport(bmId, null, serverIdFilter);
 
         string name;
         try
@@ -662,10 +820,10 @@ public static class TrackingService
             LastServerName = LastServer.name ?? string.Empty,
             Sessions = sessions
         };
-        return GetAnalysisReport(bmId, new[] { adhoc });
+        return GetAnalysisReport(bmId, new[] { adhoc }, serverIdFilter);
     }
 
-    public static string GetAnalysisReport(string? targetBmId = null, IEnumerable<TrackedPlayer>? adHocPlayers = null)
+    public static string GetAnalysisReport(string? targetBmId = null, IEnumerable<TrackedPlayer>? adHocPlayers = null, string? serverIdFilter = null)
     {
         var sb = new System.Text.StringBuilder();
         sb.AppendLine("<!DOCTYPE html><html><head><meta charset='utf-8'>");
@@ -745,31 +903,49 @@ public static class TrackingService
                 var totalTime = TimeSpan.Zero;
                 var past7Days = TimeSpan.Zero;
                 var now = DateTime.UtcNow;
-                
-                int[] hourActivity = new int[24];
+
+                // Per-hour MINUTES of play (more accurate than the legacy "++ per hour touched").
+                double[] hourMinutes = new double[24];
                 Dictionary<DateTime, int> dailyActivity = new Dictionary<DateTime, int>();
 
-                foreach (var session in p.Sessions)
+                // Filter to the requested server if a filter is in play. Sessions with null ServerId
+                // (legacy data, written before the field existed) are kept so old DBs still report.
+                IEnumerable<PlayerSession> sessionsForReport = p.Sessions;
+                if (!string.IsNullOrEmpty(serverIdFilter))
+                {
+                    sessionsForReport = p.Sessions.Where(s =>
+                        string.IsNullOrEmpty(s.ServerId) ||
+                        string.Equals(s.ServerId, serverIdFilter, StringComparison.OrdinalIgnoreCase));
+                }
+                var filteredSessions = sessionsForReport.ToList();
+
+                foreach (var session in filteredSessions)
                 {
                     var end = session.DisconnectTime ?? now;
+                    if (end <= session.ConnectTime) continue;
                     var dur = end - session.ConnectTime;
                     totalTime += dur;
                     if (session.ConnectTime > now.AddDays(-7)) past7Days += dur;
 
-                    var date = session.ConnectTime.Date;
+                    var date = session.ConnectTime.ToLocalTime().Date;
                     if (!dailyActivity.ContainsKey(date)) dailyActivity[date] = 0;
                     dailyActivity[date] += (int)dur.TotalMinutes;
 
-                    var iter = session.ConnectTime;
-                    while (iter < end)
+                    // Distribute the session's duration across local-time hour buckets.
+                    var localStart = session.ConnectTime.ToLocalTime();
+                    var localEnd = end.ToLocalTime();
+                    var iter = localStart;
+                    while (iter < localEnd)
                     {
-                        hourActivity[iter.ToLocalTime().Hour]++;
-                        iter = iter.AddHours(1);
+                        var nextHour = new DateTime(iter.Year, iter.Month, iter.Day, iter.Hour, 0, 0).AddHours(1);
+                        var sliceEnd = nextHour < localEnd ? nextHour : localEnd;
+                        hourMinutes[iter.Hour] += (sliceEnd - iter).TotalMinutes;
+                        iter = sliceEnd;
                     }
                 }
 
-                double avgSessionMins = p.Sessions.Any() ? totalTime.TotalMinutes / p.Sessions.Count : 0;
-                var isOnline = p.Sessions.Any() && !p.Sessions.Last().DisconnectTime.HasValue;
+                double avgSessionMins = filteredSessions.Count > 0 ? totalTime.TotalMinutes / filteredSessions.Count : 0;
+                var isOnline = filteredSessions.Count > 0 && !filteredSessions[filteredSessions.Count - 1].DisconnectTime.HasValue;
                 var themeClass = isOnline ? "theme-online" : "theme-offline";
 
                 sb.AppendLine($"<div class='player-card {themeClass}'>");
@@ -779,7 +955,7 @@ public static class TrackingService
                 var statusText = isOnline ? "Online" : "Offline";
                 sb.AppendLine($"<div style='margin-bottom:20px;'><span class='badge {statusClass}'>{statusText}</span></div>");
 
-                var lastS = p.Sessions.LastOrDefault();
+                var lastS = filteredSessions.Count > 0 ? filteredSessions[filteredSessions.Count - 1] : null;
                 string lastConnectedStr = lastS != null ? lastS.ConnectTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm") : "Never";
                 string lastSeenStr = lastS != null ? (lastS.DisconnectTime?.ToLocalTime().ToString("yyyy-MM-dd HH:mm") ?? "Active Now") : "Never";
 
@@ -788,7 +964,7 @@ public static class TrackingService
                 sb.AppendLine("<div class='stat-item'><div class='stat-label'>Last Seen</div><div class='stat-value'>" + lastSeenStr + "</div></div>");
                 sb.AppendLine("<div class='stat-item'><div class='stat-label'>Total Tracked Time</div><div class='stat-value'>" + $"{(int)totalTime.TotalHours}h {totalTime.Minutes}m" + "</div></div>");
                 sb.AppendLine("<div class='stat-item'><div class='stat-label'>Last 7 Days</div><div class='stat-value'>" + $"{(int)past7Days.TotalHours}h {past7Days.Minutes}m" + "</div></div>");
-                sb.AppendLine("<div class='stat-item'><div class='stat-label'>Session Count</div><div class='stat-value'>" + p.Sessions.Count + "</div></div>");
+                sb.AppendLine("<div class='stat-item'><div class='stat-label'>Session Count</div><div class='stat-value'>" + filteredSessions.Count + "</div></div>");
                 sb.AppendLine("<div class='stat-item'><div class='stat-label'>Avg Session</div><div class='stat-value'>" + $"{(int)avgSessionMins} min" + "</div></div>");
                 sb.AppendLine("</div>");
 
@@ -818,12 +994,13 @@ public static class TrackingService
             sb.AppendLine("<div class='section-title'>24H ACTIVITY FORECAST</div>");
             sb.AppendLine("<div class='hourly-wrap'>");
             sb.AppendLine("<div class='hourly-container'>");
-            int maxH = hourActivity.Any() ? hourActivity.Max() : 0;
+            double maxHm = hourMinutes.Length > 0 ? hourMinutes.Max() : 0;
+            double meanHm = hourMinutes.Sum() / 24.0;
             for(int i=0; i<24; i++)
             {
-                double hVal = maxH > 0 ? (double)hourActivity[i] / maxH * 100 : 5;
-                string activeClass = hourActivity[i] > (maxH * 0.4) ? "active" : "";
-                sb.AppendLine($"<div class='hour-bar {activeClass}' style='height:{hVal}%' title='{i:00}:00 - {hourActivity[i]} occurrences'></div>");
+                double hVal = maxHm > 0 ? hourMinutes[i] / maxHm * 100 : 5;
+                string activeClass = hourMinutes[i] > (maxHm * 0.4) ? "active" : "";
+                sb.AppendLine($"<div class='hour-bar {activeClass}' style='height:{hVal:0.##}%' title='{i:00}:00 - {(int)hourMinutes[i]} min'></div>");
             }
             sb.AppendLine("</div>");
             sb.AppendLine("<div class='hour-labels'>");
@@ -831,21 +1008,66 @@ public static class TrackingService
             sb.AppendLine("</div>");
             sb.AppendLine("</div>");
 
-            // AI Insights Box
-            int peakPlay = 0; int maxPlayVal = -1;
-            int peakSleep = 0; int minPlayVal = int.MaxValue;
-            for(int i=0; i<24; i++) {
-                if (hourActivity[i] > maxPlayVal) { maxPlayVal = hourActivity[i]; peakPlay = i; }
-                if (hourActivity[i] < minPlayVal) { minPlayVal = hourActivity[i]; peakSleep = i; }
+            // ─── Predictions ─────────────────────────────────────────────────
+            // Most likely to play: 3-hour window with the highest sum of minutes (wraps midnight).
+            int playStart = 0;
+            double bestPlaySum = -1;
+            const int playWindow = 3;
+            for (int h = 0; h < 24; h++)
+            {
+                double sum = 0;
+                for (int k = 0; k < playWindow; k++) sum += hourMinutes[(h + k) % 24];
+                if (sum > bestPlaySum) { bestPlaySum = sum; playStart = h; }
+            }
+            int playEnd = (playStart + playWindow) % 24;
+
+            // Most likely to sleep: longest contiguous run of hours with minutes <= mean*0.25.
+            // Try every starting hour and walk forward up to 24 to find the longest run; this naturally
+            // handles wrap-around (e.g. sleep window 22:00 → 06:00).
+            double sleepThreshold = meanHm * 0.25;
+            int sleepStart = -1, sleepLen = 0;
+            for (int start = 0; start < 24; start++)
+            {
+                int len = 0;
+                for (int k = 0; k < 24; k++)
+                {
+                    int h = (start + k) % 24;
+                    if (hourMinutes[h] <= sleepThreshold) len++;
+                    else break;
+                }
+                if (len > sleepLen) { sleepLen = len; sleepStart = start; }
+            }
+
+            // Confidence
+            int sessionCount = filteredSessions.Count;
+            int distinctDays = dailyActivity.Count;
+            double totalHours = totalTime.TotalHours;
+            string confidence;
+            if (sessionCount >= 30 && distinctDays >= 14 && totalHours >= 20) confidence = "HIGH";
+            else if (sessionCount >= 9 && distinctDays >= 4) confidence = "MEDIUM";
+            else confidence = "LOW";
+
+            string playStr = bestPlaySum > 0 ? $"{playStart:00}:00 - {playEnd:00}:00" : "—";
+            string sleepStr;
+            if (sleepLen >= 24) sleepStr = "always quiet (no signal)";
+            else if (sleepLen <= 0) sleepStr = "—";
+            else
+            {
+                int sleepEnd = (sleepStart + sleepLen) % 24;
+                sleepStr = $"{sleepStart:00}:00 - {sleepEnd:00}:00";
             }
 
             sb.AppendLine("<div class='insight-box'>");
-            sb.AppendLine("<div class='insight-item'><span class='insight-icon'>⚡</span> Most likely to play: <b>" + $"{peakPlay:00}:00 - {(peakPlay + 3) % 24:00}:00" + "</b></div>");
-            sb.AppendLine("<div class='insight-item'><span class='insight-icon'>💤</span> Most likely to sleep: <b>" + $"{peakSleep:00}:00 - {(peakSleep + 5) % 24:00}:00" + "</b></div>");
-            if (p.Sessions.Count < 5) {
-                sb.AppendLine("<div class='warning'><b>Data Confidence: LOW</b><br/>More sessions needed for accurate pattern recognition. Predictions currenty represent early observations.</div>");
-            } else {
-                sb.AppendLine("<div style='color: #8b949e; font-size: 11px; margin-top: 10px;'>Forecast based on " + p.Sessions.Count + " recorded sessions.</div>");
+            sb.AppendLine("<div class='insight-item'><span class='insight-icon'>⚡</span> Most likely to play: <b>" + playStr + "</b></div>");
+            sb.AppendLine("<div class='insight-item'><span class='insight-icon'>💤</span> Most likely to sleep: <b>" + sleepStr + "</b></div>");
+
+            if (confidence == "LOW")
+            {
+                sb.AppendLine("<div class='warning'><b>Data Confidence: LOW</b><br/>Few sessions or short observation window. Predictions are early estimates — more activity will tighten them.</div>");
+            }
+            else
+            {
+                sb.AppendLine($"<div style='color: #8b949e; font-size: 11px; margin-top: 10px;'>Forecast based on {sessionCount} sessions across {distinctDays} day{(distinctDays == 1 ? "" : "s")} · Confidence: <b>{confidence}</b></div>");
             }
             sb.AppendLine("</div>");
 
@@ -1092,7 +1314,7 @@ public static class TrackingService
                 if (lastSession == null || lastSession.DisconnectTime.HasValue)
                 {
                     // Newly connected or we just started tracking/opened the app
-                    tp.Sessions.Add(new PlayerSession { ConnectTime = actualConnectTime, DisconnectTime = null });
+                    tp.Sessions.Add(new PlayerSession { ConnectTime = actualConnectTime, DisconnectTime = null, ServerId = _foundServerId, Source = "local" });
                     Log($"[SESSION] {tp.Name} ({tp.BMId}) connected at {actualConnectTime:yyyy-MM-dd HH:mm:ss} UTC (detected at {now:HH:mm})");
                     changed = true;
                 }
@@ -1107,7 +1329,7 @@ public static class TrackingService
                         // They reconnected. Close old session at their last seen or roughly before this connect?
                         // For simplicity, we close the old one at actualConnectTime - 1 second and start new one.
                         lastSession.DisconnectTime = actualConnectTime.AddSeconds(-1);
-                        tp.Sessions.Add(new PlayerSession { ConnectTime = actualConnectTime, DisconnectTime = null });
+                        tp.Sessions.Add(new PlayerSession { ConnectTime = actualConnectTime, DisconnectTime = null, ServerId = _foundServerId, Source = "local" });
                         Log($"[SESSION] {tp.Name} reconnected (missed disconnect). New session start: {actualConnectTime:yyyy-MM-dd HH:mm:ss} UTC");
                         changed = true;
                     }

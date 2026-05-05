@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,6 +15,13 @@ public partial class MainWindow
 {
     private bool _reportWebViewInitialized;
     private bool _reportPanelOpen;
+
+    /// <summary>(bmId, serverId) → last successful backfill time. Used to skip redundant network round-trips.</summary>
+    private readonly Dictionary<(string bmId, string serverId), DateTime> _lastBackfillAt = new();
+    private static readonly TimeSpan _backfillFreshFor = TimeSpan.FromMinutes(10);
+
+    /// <summary>(bmId, serverId) currently being backfilled, to suppress concurrent duplicate fetches.</summary>
+    private readonly HashSet<(string bmId, string serverId)> _backfillInFlight = new();
 
     /// <summary>
     /// Open the inline report panel (slide-in from right) and load the analysis HTML.
@@ -52,9 +60,41 @@ public partial class MainWindow
                 await ReportWebView.EnsureCoreWebView2Async(env);
                 _reportWebViewInitialized = true;
             }
-            // Show a quick "loading" state while we fetch ad-hoc data for non-tracked players.
-            ReportWebView.NavigateToString(BuildLoadingHtml(playerName));
-            var html = await TrackingService.GetAnalysisReportForBMIdAsync(bmId, playerName);
+            ReportWebView.NavigateToString(BuildLoadingHtml(playerName, "Loading report…"));
+
+            var serverId = TrackingService.CurrentServerBMId;
+            int imported = 0;
+
+            if (!string.IsNullOrEmpty(serverId))
+            {
+                var key = (bmId, serverId);
+                bool alreadyInFlight = _backfillInFlight.Contains(key);
+                bool fresh = _lastBackfillAt.TryGetValue(key, out var when)
+                             && (DateTime.UtcNow - when) < _backfillFreshFor;
+
+                if (!alreadyInFlight && !fresh)
+                {
+                    _backfillInFlight.Add(key);
+                    try
+                    {
+                        ReportWebView.NavigateToString(BuildLoadingHtml(playerName,
+                            "Pulling last 90 days from BattleMetrics…"));
+                        imported = await TrackingService.BackfillSessionsFromBMAsync(bmId, serverId, daysBack: 90);
+                        _lastBackfillAt[key] = DateTime.UtcNow;
+                        AppendLog($"[report] Imported {imported} BM sessions for {playerName} on this server.");
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog($"[report] BM backfill failed: {ex.Message}");
+                    }
+                    finally
+                    {
+                        _backfillInFlight.Remove(key);
+                    }
+                }
+            }
+
+            var html = await TrackingService.GetAnalysisReportForBMIdAsync(bmId, playerName, serverId);
             ReportWebView.NavigateToString(html);
         }
         catch (Exception ex)
@@ -63,16 +103,17 @@ public partial class MainWindow
         }
     }
 
-    private static string BuildLoadingHtml(string playerName)
+    private static string BuildLoadingHtml(string playerName, string subText)
     {
         var safe = System.Net.WebUtility.HtmlEncode(playerName ?? "");
+        var safeSub = System.Net.WebUtility.HtmlEncode(subText ?? "");
         return "<!DOCTYPE html><html><head><meta charset='utf-8'><style>" +
                "body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;margin:30px;}" +
                "h1{color:#f0f6fc;font-size:22px;font-weight:600;}" +
                ".sub{color:#8b949e;font-size:13px;margin-top:8px;}" +
                "</style></head><body>" +
                $"<h1>Loading report for {safe}…</h1>" +
-               "<div class='sub'>Fetching session data from BattleMetrics.</div>" +
+               $"<div class='sub'>{safeSub}</div>" +
                "</body></html>";
     }
 
