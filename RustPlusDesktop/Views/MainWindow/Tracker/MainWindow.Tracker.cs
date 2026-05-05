@@ -650,7 +650,26 @@ public partial class MainWindow
                 : trackedByBMId.TryGetValue(bmId, out var t) ? t.Name
                 : "(unknown)";
             bool isOnline = onlineByBMId.ContainsKey(bmId);
-            string statusText = isOnline ? $"online · {onlineByBMId[bmId].PlayTimeStr}" : "offline";
+
+            string statusText;
+            if (isOnline)
+            {
+                statusText = $"online · {onlineByBMId[bmId].PlayTimeStr}";
+            }
+            else if (trackedByBMId.TryGetValue(bmId, out var tp) &&
+                     tp.Sessions != null && tp.Sessions.Count > 0)
+            {
+                var lastSession = tp.Sessions[tp.Sessions.Count - 1];
+                if (lastSession.DisconnectTime.HasValue)
+                    statusText = $"offline · last seen {RelativeTime(lastSession.DisconnectTime.Value)}";
+                else
+                    statusText = "offline";
+            }
+            else
+            {
+                statusText = "offline";
+            }
+
             return new GroupMemberRow
             {
                 BMId = bmId,

@@ -9143,6 +9143,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         base.OnSourceInitialized(e);
 
         var hwnd = new WindowInteropHelper(this).Handle;
+
+        ApplyDarkTitleBar(hwnd);
+
         _hotkeyMgr = new GlobalHotkeyManager(hwnd);
         _hotkeyMgr.HotkeyPressed += OnHotkeyPressed;
 
@@ -9150,6 +9153,33 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         LoadHotkeys();
         ActivateHotkeysForCurrentServer();   // statt RegisterAllHotkeys()
+    }
+
+    // ─── Dark title bar (Windows 10 1809+ / Windows 11) ─────────────────────
+    [System.Runtime.InteropServices.DllImport("dwmapi.dll", PreserveSig = true)]
+    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int value, int size);
+
+    private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20; // Windows 10 1809+
+    private const int DWMWA_BORDER_COLOR = 34;            // Windows 11 22H2+
+    private const int DWMWA_CAPTION_COLOR = 35;           // Windows 11 22H2+
+
+    private static void ApplyDarkTitleBar(IntPtr hwnd)
+    {
+        if (hwnd == IntPtr.Zero) return;
+        try
+        {
+            // 1) Force dark immersive caption (white glyphs on dark background).
+            int dark = 1;
+            DwmSetWindowAttribute(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, ref dark, sizeof(int));
+
+            // 2) Win11: paint caption + border in our app-bg color (#121417 ≈ 0x171412 in COLORREF/BGR).
+            //    COLORREF is 0x00BBGGRR. AppBg = #121417 → R=12 G=14 B=17 → COLORREF 0x00171412.
+            int captionColor = 0x00171412;
+            DwmSetWindowAttribute(hwnd, DWMWA_CAPTION_COLOR, ref captionColor, sizeof(int));
+            int borderColor = 0x00171412;
+            DwmSetWindowAttribute(hwnd, DWMWA_BORDER_COLOR, ref borderColor, sizeof(int));
+        }
+        catch { /* older Windows or DWM not available — ignore, fall back to system default */ }
     }
 
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
