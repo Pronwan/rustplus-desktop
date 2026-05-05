@@ -1,4 +1,6 @@
 using System.Windows;
+using System.Windows.Controls;
+using RustPlusDesk.Localization;
 using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views
@@ -11,6 +13,7 @@ namespace RustPlusDesk.Views
         {
             InitializeComponent();
             LoadSettings();
+            PopulateLanguages();
             _isInitialized = true;
         }
 
@@ -25,6 +28,23 @@ namespace RustPlusDesk.Views
             ChkHideConsole.IsChecked = TrackingService.HideConsole;
         }
 
+        private void PopulateLanguages()
+        {
+            CboLanguage.Items.Clear();
+            var current = TrackingService.Language;
+            int selectedIndex = 0;
+            int i = 0;
+            foreach (var lang in LocalizationManager.Instance.AvailableLanguages)
+            {
+                CboLanguage.Items.Add(lang);
+                if (string.Equals(lang.Code, current, System.StringComparison.OrdinalIgnoreCase))
+                    selectedIndex = i;
+                i++;
+            }
+            if (CboLanguage.Items.Count > 0)
+                CboLanguage.SelectedIndex = selectedIndex;
+        }
+
         private void OnSettingChanged(object sender, RoutedEventArgs e)
         {
             if (!_isInitialized) return;
@@ -36,6 +56,16 @@ namespace RustPlusDesk.Views
             TrackingService.IsBackgroundTrackingEnabled = ChkBackgroundTracking.IsChecked == true;
             TrackingService.AutoLoadShops = ChkAutoLoadShops.IsChecked == true;
             TrackingService.HideConsole = ChkHideConsole.IsChecked == true;
+        }
+
+        private void OnLanguageChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isInitialized) return;
+            if (CboLanguage.SelectedItem is LanguageMetadata lang)
+            {
+                TrackingService.Language = lang.Code;
+                LocalizationManager.Instance.SetLanguage(lang.Code);
+            }
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)

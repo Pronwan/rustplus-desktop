@@ -1,5 +1,6 @@
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
+using RustPlusDesk.Localization;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
 using System;
@@ -56,7 +57,7 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Steam-Login fehlgeschlagen: " + ex.Message);
+            MessageBox.Show(Loc.T("conn.steam_login_failed", ex.Message));
         }
     }
 
@@ -124,7 +125,7 @@ public partial class MainWindow
         }
         else
         {
-            MessageBox.Show("Ungültige Eingaben.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(Loc.T("conn.invalid_inputs"), Loc.T("common.error"), MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 
@@ -199,7 +200,7 @@ public partial class MainWindow
 
         if (_vm.Selected is null)
         {
-            if (!silent) MessageBox.Show("Please chose a server.");
+            if (!silent) MessageBox.Show(Loc.T("conn.please_choose_server"));
             return false;
         }
 
@@ -315,7 +316,7 @@ public partial class MainWindow
             _vm.IsBusy = false;
             _vm.BusyText = "";
             AppendLog("Fehler: " + ex.Message);
-            if (!silent) MessageBox.Show($"Connection failed: {ex.Message}");
+            if (!silent) MessageBox.Show(Loc.T("conn.connection_failed", ex.Message));
             return false;
         }
 

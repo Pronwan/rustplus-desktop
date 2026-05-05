@@ -1,7 +1,8 @@
 <Window x:Class="RustPlusDesk.Views.AlarmWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Alarms" Width="550" Height="400"
+        xmlns:l="clr-namespace:RustPlusDesk.Localization"
+        Title="{l:Loc alarms.window_title}" Width="550" Height="400"
         WindowStartupLocation="CenterOwner"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         MouseDown="Window_MouseDown"
@@ -28,11 +29,11 @@
             <Grid Grid.Row="0" Margin="0,0,0,12">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Image Source="{StaticResource IconSmartAlarm}" Width="20" Height="20" Margin="0,0,10,0"/>
-                    <TextBlock Text="INCOMING ALARMS" FontWeight="Bold" FontSize="14" Foreground="{StaticResource RustRed}"/>
+                    <TextBlock Text="{l:Loc alarms.heading}" FontWeight="Bold" FontSize="14" Foreground="{StaticResource RustRed}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="Wipe" Padding="12,4" Margin="0,0,8,0" Click="BtnClear_Click" 
+                    <Button Content="{l:Loc alarms.btn_wipe}" Padding="12,4" Margin="0,0,8,0" Click="BtnClear_Click"
                             Background="#1AFFFFFF" Foreground="White" BorderThickness="0">
                         <Button.Resources>
                             <Style TargetType="Border">

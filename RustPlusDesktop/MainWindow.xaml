@@ -9,8 +9,9 @@
         
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:l="clr-namespace:RustPlusDesk.Localization"
         mc:Ignorable="d"
-        Title="Rust+ Desktop by Pronwan" Height="814" Width="1600"
+        Title="{l:Loc app.window_title}" Height="814" Width="1600"
         MinHeight="700" MinWidth="1300"
         Background="{DynamicResource AppBg}" Foreground="{DynamicResource TextPrimary}"
         UseLayoutRounding="True" SnapsToDevicePixels="True">
@@ -735,7 +736,7 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="Account"
+                                <TextBlock Text="{l:Loc main.section.account}"
                                    Foreground="White"
                                    FontWeight="Bold"
                                    FontSize="16"/>
@@ -761,25 +762,25 @@
                                 <StackPanel Orientation="Horizontal"
                 HorizontalAlignment="Right">
                                     <Button x:Name="BtnCheckUpdates"
-                Content=" Check for Updates "
+                Content="{l:Loc main.btn_check_updates}"
                 Click="BtnCheckUpdates_Click"
                 Background="{DynamicResource AccentDark}"
                 BorderBrush="{DynamicResource Accent}"
                 Margin="8,0,0,0"
-                ToolTip="Check GitHub for a newer version"/>
+                ToolTip="{l:Loc main.btn_check_updates_tooltip}"/>
                                     <Button x:Name="BtnPatchNotes"
-                Content=" Patch Notes "
+                Content="{l:Loc main.btn_patch_notes}"
                 Click="BtnPatchNotes_Click"
                 Background="{DynamicResource SurfaceAlt}"
                 BorderBrush="{DynamicResource CardBorder}"
                 Margin="8,0,0,0"
-                ToolTip="Show latest changes"/>
-                                    <Button x:Name="BtnSettings" 
-                Content=" ⚙ Settings " 
+                ToolTip="{l:Loc main.btn_patch_notes_tooltip}"/>
+                                    <Button x:Name="BtnSettings"
+                Content="{l:Loc main.btn_settings}"
                 Click="BtnSettings_Click"
                 Style="{StaticResource GhostButton}"
                 Margin="8,0,0,0"
-                ToolTip="App Settings &amp; Options"/>
+                ToolTip="{l:Loc main.btn_settings_tooltip}"/>
                                 </StackPanel>
                             </Grid>
                         </Grid>
@@ -797,11 +798,11 @@
 
                     <StackPanel Orientation="Horizontal">
                         <Button x:Name="BtnSteamLogin"
-                        Content="Login with Steam"
+                        Content="{l:Loc main.btn_steam_login}"
                         Width="180"
                         Click="BtnSteamLogin_Click"
                         Margin="0,0,8,0"/>
-                        <TextBlock Text="SteamID64:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="{l:Loc main.steam_id_label}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                         <TextBlock x:Name="TxtSteamId" VerticalAlignment="Center" FontWeight="SemiBold"/>
                         <!-- Avatar -->
                         <Image x:Name="ImgSteam" Width="24" Height="24" Margin="8,0,0,0"
@@ -810,7 +811,7 @@
 
                     <Separator Margin="0,8,0,8"/>
 
-                    <TextBlock Text="Paired servers list" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,8"/>
+                    <TextBlock Text="{l:Loc main.section.paired_servers}" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,8"/>
                     <Grid x:Name="ServerListGrid">
                         <ListBox x:Name="ListServers"
                           ItemsSource="{Binding Servers}"
@@ -839,11 +840,11 @@
                             </ListBox.ItemContainerStyle>
                         </ListBox>
 
-                        <TextBlock Text="No servers paired yet" 
-                                   Foreground="{StaticResource TextSubtle}" 
+                        <TextBlock Text="{l:Loc main.no_servers_paired}"
+                                   Foreground="{StaticResource TextSubtle}"
                                    FontStyle="Italic"
                                    FontSize="12"
-                                   HorizontalAlignment="Center" 
+                                   HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    IsHitTestVisible="False">
                             <TextBlock.Style>
@@ -948,7 +949,7 @@
 
                     <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
                         <Button x:Name="BtnListenPairing"
-                                Content="Listen (Pairing)"
+                                Content="{l:Loc main.btn_pairing_listen}"
                                 Width="120"
                                 Style="{StaticResource GhostButton}"
                                 Click="BtnListenPairing_Click"
@@ -956,18 +957,18 @@
                                 Margin="0,0,8,0">
                             <Button.ContextMenu>
                                 <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                    <MenuItem Header="Try Pairing with Edge" Click="BtnListenWithEdge_Click"/>
+                                    <MenuItem Header="{l:Loc main.pairing.menu_edge}" Click="BtnListenWithEdge_Click"/>
                                     <Separator/>
-                                    <MenuItem Header="Reset pairing (delete config)" Click="BtnResetPairing_Click"/>
-                                    <MenuItem Header="Reset + Listen (re-pair)" Click="BtnResetAndListen_Click"/>
-                                    <MenuItem Header="Reset + Listen with Edge" Click="BtnResetAndListenEdge_Click"/>
+                                    <MenuItem Header="{l:Loc main.pairing.menu_reset}" Click="BtnResetPairing_Click"/>
+                                    <MenuItem Header="{l:Loc main.pairing.menu_reset_listen}" Click="BtnResetAndListen_Click"/>
+                                    <MenuItem Header="{l:Loc main.pairing.menu_reset_listen_edge}" Click="BtnResetAndListenEdge_Click"/>
                                 </ContextMenu>
                             </Button.ContextMenu>
                         </Button>
-                        <TextBlock x:Name="TxtPairingState" VerticalAlignment="Center" Text="Pairing: idle" Foreground="{StaticResource TextSubtle}" FontSize="11" Margin="0,0,30,0"/>
+                        <TextBlock x:Name="TxtPairingState" VerticalAlignment="Center" Text="{l:Loc main.pairing.state_idle}" Foreground="{StaticResource TextSubtle}" FontSize="11" Margin="0,0,30,0"/>
 
-                        <TextBlock Text="Tip: Right-click Listen for more options" 
-                                   Foreground="{StaticResource TextSubtle}" 
+                        <TextBlock Text="{l:Loc main.pairing.tip}"
+                                   Foreground="{StaticResource TextSubtle}"
                                    FontSize="9" VerticalAlignment="Center" FontStyle="Italic"/>
                     </StackPanel>
 
@@ -999,9 +1000,9 @@
                                     </Style>
                                 </Ellipse.Style>
                             </Ellipse>
-                            <TextBlock x:Name="TxtTrackingStatus" Text="Tracking Active" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtTrackingStatus" Text="{l:Loc main.tracking_active}" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <TextBlock x:Name="TxtLastPull" Grid.Column="1" Text="Last pull: --:--" Foreground="{DynamicResource TextSubtle}" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtLastPull" Grid.Column="1" Text="{l:Loc main.last_pull_initial}" Foreground="{DynamicResource TextSubtle}" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     </Grid>
 
                     <Separator Margin="0,12,0,12"/>
@@ -1020,17 +1021,17 @@
                     Grid.Column="0"
                     Style="{StaticResource DonateButton}"
                     Click="BtnDonate_Click"
-                    ToolTip="Support (Opens in Browser)"
+                    ToolTip="{l:Loc main.btn_donate_tooltip}"
                     Margin="0,0,10,0">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="❤" Foreground="Red" FontSize="14" Margin="2,0,6,0"/>
-                            <TextBlock Text="Donate" Foreground="Red" Margin="2,0,6,0"/>
+                            <TextBlock Text="{l:Loc main.btn_donate}" Foreground="Red" Margin="2,0,6,0"/>
                         </StackPanel>
                     </Button>
 
                     <!-- Spacer -->
                     <Border Grid.Column="1">
-                        <Button Content="Reset Connection"
+                        <Button Content="{l:Loc main.btn_reset_connection}"
 Width="100"
 Click="BtnHardReset_Click"
 Margin="0,0,8,0"
@@ -1042,16 +1043,16 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                     <StackPanel Grid.Column="2"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
-                        <TextBlock Text="Players:"/>
+                        <TextBlock Text="{l:Loc main.players_label}"/>
                         <TextBlock Text="{Binding ServerPlayers}" FontWeight="SemiBold" Margin="4,0,0,0"/>
 
                         <Button x:Name="BtnServerBM" Content="BM" Width="24" Height="18" Padding="0" Margin="6,0,0,0"
                                 FontSize="9" FontWeight="Bold" Style="{StaticResource GhostButton}"
-                                ToolTip="Open Server on BattleMetrics" Click="BtnServerBM_Click" Visibility="Collapsed"/>
+                                ToolTip="{l:Loc main.btn_server_bm_tooltip}" Click="BtnServerBM_Click" Visibility="Collapsed"/>
 
-                        <ToggleButton x:Name="BtnShowOnline" Content="▼" Margin="4,0,0,0" Width="18" Height="18" 
-                                      Background="Transparent" BorderThickness="0" Foreground="White" 
-                                      ToolTip="Show Online Players" Click="BtnShowOnline_Click" />
+                        <ToggleButton x:Name="BtnShowOnline" Content="▼" Margin="4,0,0,0" Width="18" Height="18"
+                                      Background="Transparent" BorderThickness="0" Foreground="White"
+                                      ToolTip="{l:Loc main.btn_show_online_tooltip}" Click="BtnShowOnline_Click" />
                         
                         <Popup x:Name="PopupOnlinePlayers" PlacementTarget="{Binding ElementName=BtnShowOnline}" 
                                IsOpen="{Binding IsChecked, ElementName=BtnShowOnline}" StaysOpen="False" 
@@ -1064,15 +1065,15 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Text="Online Players" FontWeight="Bold" Margin="0,0,0,6" Grid.Row="0"/>
-                                    
+                                    <TextBlock Text="{l:Loc main.online_players}" FontWeight="Bold" Margin="0,0,0,6" Grid.Row="0"/>
+
                                     <!-- Manual Add Section -->
                                     <DockPanel Grid.Row="1" Margin="0,0,0,8">
-                                        <Button x:Name="BtnAddManual" DockPanel.Dock="Right" Content="Track ID" 
-                                                Style="{StaticResource GhostButton}" FontSize="10" Padding="4,0" 
+                                        <Button x:Name="BtnAddManual" DockPanel.Dock="Right" Content="{l:Loc main.btn_track_id}"
+                                                Style="{StaticResource GhostButton}" FontSize="10" Padding="4,0"
                                                 Click="BtnAddManual_Click" Margin="4,0,0,0"/>
-                                        <TextBox x:Name="TxtManualBMId" Padding="4,1" FontSize="10" 
-                                                 Background="#25272a" Foreground="Gray" BorderThickness="1" 
+                                        <TextBox x:Name="TxtManualBMId" Padding="4,1" FontSize="10"
+                                                 Background="#25272a" Foreground="Gray" BorderThickness="1"
                                                  BorderBrush="#333" Text="Manual BM ID..."
                                                  GotFocus="TxtManualBMId_GotFocus" LostFocus="TxtManualBMId_LostFocus"/>
                                     </DockPanel>
@@ -1087,7 +1088,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                             <ProgressBar x:Name="PbOnlineLoading" IsIndeterminate="True" Height="2" Width="120" 
                                                          Margin="0,0,0,12" Background="#111" BorderThickness="0"
                                                          Foreground="{DynamicResource CbAccent}"/>
-                                            <TextBlock x:Name="TxtOnlinePlayersStatus" Text="Loading players..." 
+                                            <TextBlock x:Name="TxtOnlinePlayersStatus" Text="{l:Loc main.loading_players}"
                                                        HorizontalAlignment="Center" Foreground="{DynamicResource TextSubtle}" 
                                                        FontSize="11" TextWrapping="Wrap" TextAlignment="Center"/>
                                         </StackPanel>
@@ -1126,14 +1127,14 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
-                                    <Button x:Name="BtnViewTracking" Grid.Row="3" Content="View tracker players list" Margin="0,6,0,0" Style="{StaticResource PrimaryButton}" Click="BtnViewTracking_Click" />
+                                    <Button x:Name="BtnViewTracking" Grid.Row="3" Content="{l:Loc main.btn_view_tracking}" Margin="0,6,0,0" Style="{StaticResource PrimaryButton}" Click="BtnViewTracking_Click" />
                                 </Grid>
                             </Border>
                         </Popup>
 
-                        <TextBlock Text="  |  Queue:" Margin="6,0,0,0"/>
+                        <TextBlock Text="{l:Loc main.queue_label}" Margin="6,0,0,0"/>
                         <TextBlock Text="{Binding ServerQueue}" FontWeight="SemiBold" Margin="4,0,0,0"/>
-                        <TextBlock Text="  |  Server Time:" Margin="6,0,0,0"/>
+                        <TextBlock Text="{l:Loc main.server_time_label}" Margin="6,0,0,0"/>
                         <TextBlock Text="{Binding ServerTime}" FontWeight="SemiBold" Margin="4,0,0,0"/>
                     </StackPanel>
                 </Grid>
@@ -1143,24 +1144,24 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                     Style="{StaticResource PrettyTabControl}"
                     VerticalAlignment="Stretch">
                     <!-- ===== DEVICES ===== -->
-                    <TabItem Header="Devices" Style="{StaticResource PrettyTabItem}">
+                    <TabItem Header="{l:Loc main.tab.devices}" Style="{StaticResource PrettyTabItem}">
                         <DockPanel LastChildFill="True">
                             <!-- Footer -->
                             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-                                <Button x:Name="BtnHotkeys" Content="Hotkeys" Width="90" Style="{StaticResource GhostButton}" Click="BtnHotkeys_Click" Margin="0,0,10,0"/>
+                                <Button x:Name="BtnHotkeys" Content="{l:Loc main.btn_hotkeys}" Width="90" Style="{StaticResource GhostButton}" Click="BtnHotkeys_Click" Margin="0,0,10,0"/>
                                 <Button x:Name="BtnDevicesImport"
-                                        Width="32" Height="32" Margin="0,0,8,0" Padding="4" 
-                                        Style="{StaticResource GhostButton}" ToolTip="Import devices from teammates" Click="BtnDevicesImport_Click">
+                                        Width="32" Height="32" Margin="0,0,8,0" Padding="4"
+                                        Style="{StaticResource GhostButton}" ToolTip="{l:Loc main.btn_devices_import_tooltip}" Click="BtnDevicesImport_Click">
                                     <Image Source="pack://application:,,,/icons/cloud-download.png" Width="24"/>
                                 </Button>
                                 <Button x:Name="BtnDevicesExport"
-                                        Width="32" Height="32" Margin="0,0,16,0" Padding="4" 
-                                        Style="{StaticResource GhostButton}" ToolTip="Export devices to teammates" Click="BtnDevicesExport_Click">
+                                        Width="32" Height="32" Margin="0,0,16,0" Padding="4"
+                                        Style="{StaticResource GhostButton}" ToolTip="{l:Loc main.btn_devices_export_tooltip}" Click="BtnDevicesExport_Click">
                                     <Image Source="pack://application:,,,/icons/cloud-upload.png" Width="24"/>
                                 </Button>
-                                <Button Content="Refresh" Width="80" Margin="10,0,0,0" Style="{StaticResource GhostButton}" Click="BtnDeviceRefresh_Click"/>
-                                <Button Content="Delete" Width="80" Margin="10,0,0,0" Style="{StaticResource GhostButton}" Click="BtnDeleteDevice_Click"
-                                        ToolTip="You can only delete missing devices"
+                                <Button Content="{l:Loc common.refresh}" Width="80" Margin="10,0,0,0" Style="{StaticResource GhostButton}" Click="BtnDeviceRefresh_Click"/>
+                                <Button Content="{l:Loc common.delete}" Width="80" Margin="10,0,0,0" Style="{StaticResource GhostButton}" Click="BtnDeleteDevice_Click"
+                                        ToolTip="{l:Loc main.btn_delete_tooltip}"
                                         IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem.IsMissing, Converter={StaticResource NotNull}}"/>
                             </StackPanel>
 
@@ -1745,8 +1746,8 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                 <Border Background="#101217" BorderBrush="#1C202A" BorderThickness="1" CornerRadius="16" Padding="32,24" HorizontalAlignment="Center">
                                     <StackPanel>
                                         <TextBlock Text="📡" FontSize="36" HorizontalAlignment="Center" Margin="0,0,0,12" Opacity="0.8"/>
-                                        <TextBlock Text="No devices found" Foreground="#EAECEE" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,6"/>
-                                        <TextBlock Text="Pair a smart device, switch or alarm to see it here" Foreground="#7F8A96" FontSize="12" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="200" TextAlignment="Center"/>
+                                        <TextBlock Text="{l:Loc main.devices.empty_title}" Foreground="#EAECEE" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,6"/>
+                                        <TextBlock Text="{l:Loc main.devices.empty_subtitle}" Foreground="#7F8A96" FontSize="12" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="200" TextAlignment="Center"/>
                                     </StackPanel>
                                 </Border>
                             </StackPanel>
@@ -1885,7 +1886,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
             >
                                 <!-- Profile marker toggle (default ON) -->
                                 <CheckBox x:Name="ChkProfileMarkers"
-              Content="Profile markers"
+              Content="{l:Loc main.chk_profile_markers}"
               IsChecked="True"
               Margin="0,0,12,0"
               Checked="ChkProfileMarkers_Toggled"
@@ -1893,13 +1894,13 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
 
                                 <!-- Death markers toggle (default OFF) -->
                                 <CheckBox x:Name="ChkDeathMarkers"
-              Content="Death markers"
+              Content="{l:Loc main.chk_death_markers}"
               IsChecked="False"
               Margin="0,0,12,0"
               Checked="ChkDeathMarkers_Toggled"
               Unchecked="ChkDeathMarkers_Toggled"/>
 
-                                <Button Content="CHAT"
+                                <Button Content="{l:Loc main.btn_chat}"
             Width="80"
             Style="{StaticResource GhostButton}"
             Click="BtnOpenChat_Click"/>
@@ -1908,13 +1909,13 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                     </TabItem>
 
                     <!-- ===== CAMERAS ===== -->
-                    <TabItem Header="Cameras" Style="{StaticResource PrettyTabItem}">
+                    <TabItem Header="{l:Loc main.tab.cameras}" Style="{StaticResource PrettyTabItem}">
                         <DockPanel LastChildFill="True">
                             <!-- Add Camera unten rechts -->
                             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
                                 <Button x:Name="BtnAddCam" Style="{StaticResource PrimaryButton}">
                                     <StackPanel Orientation="Horizontal" Margin="6,1">
-                                        <TextBlock Text="🎥 Add Camera"/>
+                                        <TextBlock Text="{l:Loc main.btn_add_camera}"/>
                                     </StackPanel>
                                 </Button>
                             </StackPanel>
@@ -1940,8 +1941,8 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                 </Style.Triggers>
                                             </Style>
                                         </StackPanel.Style>
-                                        <TextBlock Text="No cameras found" Foreground="{StaticResource TextSubtle}" HorizontalAlignment="Center" FontStyle="Italic"/>
-                                        <TextBlock Text="Pair a camera to see its preview here" Foreground="{StaticResource TextSubtle}" FontSize="10" HorizontalAlignment="Center" Opacity="0.6"/>
+                                        <TextBlock Text="{l:Loc main.cameras.empty_title}" Foreground="{StaticResource TextSubtle}" HorizontalAlignment="Center" FontStyle="Italic"/>
+                                        <TextBlock Text="{l:Loc main.cameras.empty_subtitle}" Foreground="{StaticResource TextSubtle}" FontSize="10" HorizontalAlignment="Center" Opacity="0.6"/>
                                     </StackPanel>
                                 </Grid>
                             </ScrollViewer>
@@ -1962,77 +1963,77 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
-                    <TextBlock Text="Map Controls" Style="{StaticResource SectionTitle}" Margin="0,5,8,0"/>
-                    <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChkGrid"  Content="Grid"  Margin="8,0,0,0"
+                    <TextBlock Text="{l:Loc map.section.controls}" Style="{StaticResource SectionTitle}" Margin="0,5,8,0"/>
+                    <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChkGrid"  Content="{l:Loc map.chk_grid}"  Margin="8,0,0,0"
                       Checked="ChkGrid_Checked" Unchecked="ChkGrid_Checked"/>
                     <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChkPlayers"
-                              
-Content="Players"
+
+Content="{l:Loc map.chk_players}"
                                IsChecked="True"
 Margin="12,0,0,0"
 Checked="ChkPlayers_Checked"
 Unchecked="ChkPlayers_Checked"/>
                     <CheckBox Style="{StaticResource DotCheckBox}" x:Name="Monuments"
-                              
-Content="Monuments"
+
+Content="{l:Loc map.chk_monuments}"
                                IsChecked="True"
 Margin="12,0,0,0"
  Checked="Monuments_Checked"
           Unchecked="Monuments_Unchecked"/>
-                    <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChkShops" Content="Shops" Margin="12,0,0,0"
+                    <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChkShops" Content="{l:Loc map.chk_shops}" Margin="12,0,0,0"
                       Checked="ChkShops_Checked" Unchecked="ChkShops_Checked"/>
                     <TextBlock Width="20"></TextBlock>
                     <CheckBox Style="{StaticResource DotCheckBox}" x:Name="ChatAnnounce"
-          Content="Chat Alerts"
-          ToolTip="Right-click to configure"
+          Content="{l:Loc map.chk_chat_alerts}"
+          ToolTip="{l:Loc map.chk_chat_alerts_tooltip}"
           IsChecked="False"
           Margin="8,0,0,0"
           IsThreeState="True"
           Click="ChatAnnounce_Toggle">
                         <CheckBox.ContextMenu>
                             <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                <MenuItem Header="Events" IsHitTestVisible="False" FontWeight="Bold" Foreground="{StaticResource TextBrushMuted}"/>
-                                <MenuItem Header="Cargo Ship" Style="{StaticResource DarkMenuItem}" Tag="Cargo">
-                                    <MenuItem Header="Spawn" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="CargoSpawn"/>
-                                    <MenuItem Header="Harbor Docking" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="CargoDock"/>
-                                    <MenuItem Header="Departure (5m Warning)" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="CargoEgress"/>
-                                    <MenuItem Header="Arrival Warning (5m before Dock)" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="CargoArrival" x:Name="MenuCargoArrival"/>
+                                <MenuItem Header="{l:Loc map.alerts.events}" IsHitTestVisible="False" FontWeight="Bold" Foreground="{StaticResource TextBrushMuted}"/>
+                                <MenuItem Header="{l:Loc map.alerts.cargo_ship}" Style="{StaticResource DarkMenuItem}" Tag="Cargo">
+                                    <MenuItem Header="{l:Loc map.alerts.cargo_spawn}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="CargoSpawn"/>
+                                    <MenuItem Header="{l:Loc map.alerts.cargo_dock}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="CargoDock"/>
+                                    <MenuItem Header="{l:Loc map.alerts.cargo_egress}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="CargoEgress"/>
+                                    <MenuItem Header="{l:Loc map.alerts.cargo_arrival}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="CargoArrival" x:Name="MenuCargoArrival"/>
                                 </MenuItem>
-                                <MenuItem Header="Patrol Helicopter" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="Heli"/>
-                                <MenuItem Header="Chinook (CH47)" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="Chinook"/>
-                                <MenuItem Header="Travelling Vendor" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="Vendor"/>
-                                <MenuItem Header="Oil Rig Trigger" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="OilRig"/>
-                                <MenuItem Header="Deep Sea Event" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="DeepSea"/>
+                                <MenuItem Header="{l:Loc map.alerts.heli}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="Heli"/>
+                                <MenuItem Header="{l:Loc map.alerts.chinook}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="Chinook"/>
+                                <MenuItem Header="{l:Loc map.alerts.vendor}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="Vendor"/>
+                                <MenuItem Header="{l:Loc map.alerts.oil_rig}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="OilRig"/>
+                                <MenuItem Header="{l:Loc map.alerts.deep_sea}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="DeepSea"/>
                                 <Separator Style="{StaticResource DarkSeparator}"/>
-                                <MenuItem Header="Players" IsHitTestVisible="False" FontWeight="Bold" Foreground="{StaticResource TextBrushMuted}"/>
-                                <MenuItem Header="Online Status" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerOnline"/>
-                                <MenuItem Header="Offline Status" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerOffline"/>
-                                <MenuItem Header="Self Death" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerDeathSelf"/>
-                                <MenuItem Header="Team Death" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerDeathTeam"/>
-                                <MenuItem Header="Self Respawn" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerRespawnSelf"/>
-                                <MenuItem Header="Team Respawn" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerRespawnTeam"/>
+                                <MenuItem Header="{l:Loc map.alerts.players}" IsHitTestVisible="False" FontWeight="Bold" Foreground="{StaticResource TextBrushMuted}"/>
+                                <MenuItem Header="{l:Loc map.alerts.player_online}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerOnline"/>
+                                <MenuItem Header="{l:Loc map.alerts.player_offline}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerOffline"/>
+                                <MenuItem Header="{l:Loc map.alerts.death_self}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerDeathSelf"/>
+                                <MenuItem Header="{l:Loc map.alerts.death_team}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerDeathTeam"/>
+                                <MenuItem Header="{l:Loc map.alerts.respawn_self}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerRespawnSelf"/>
+                                <MenuItem Header="{l:Loc map.alerts.respawn_team}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="PlayerRespawnTeam"/>
                                 <Separator Style="{StaticResource DarkSeparator}"/>
-                                <MenuItem Header="Shops" IsHitTestVisible="False" FontWeight="Bold" Foreground="{StaticResource TextBrushMuted}"/>
-                                <MenuItem Header="New Shops" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="NewShops"/>
-                                <MenuItem Header="Suspicious Shops" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="SuspiciousShops"/>
-                                <MenuItem x:Name="TradeAlertsMenuItem" Header="Trade Alerts" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}"/>
+                                <MenuItem Header="{l:Loc map.alerts.shops}" IsHitTestVisible="False" FontWeight="Bold" Foreground="{StaticResource TextBrushMuted}"/>
+                                <MenuItem Header="{l:Loc map.alerts.new_shops}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="NewShops"/>
+                                <MenuItem Header="{l:Loc map.alerts.suspicious_shops}" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="SuspiciousShops"/>
+                                <MenuItem x:Name="TradeAlertsMenuItem" Header="{l:Loc map.alerts.trade_alerts}" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}"/>
                             </ContextMenu>
                         </CheckBox.ContextMenu>
                     </CheckBox>
-                    <Button Content="Reset ⟲"
+                    <Button Content="{l:Loc map.btn_reset}"
                             Width="80"
                             Margin="8,0,0,0"
                             Style="{StaticResource GhostButton}"
                             Click="BtnResetMap_Click"
-                            ToolTip="Reset map zoom and position"/>
-                    <Button Content="Mini 🗺️"
+                            ToolTip="{l:Loc map.btn_reset_tooltip}"/>
+                    <Button Content="{l:Loc map.btn_mini}"
 Width="80"
 Style="{StaticResource GhostButton}"
 Click="BtnToggleMiniMap_Click"/>
 
                     <Button x:Name="BtnCrosshair" Margin="4,0,0,0"
         Style="{StaticResource IconButton}"
-        ToolTip="Crosshair on/off (Right Click For Options)"
+        ToolTip="{l:Loc map.btn_crosshair_tooltip}"
         Click="BtnCrosshair_Click"
         PreviewMouseRightButtonDown="BtnCrosshair_PreviewMouseRightButtonDown">
                         <TextBlock Text="⌖" FontSize="18"/>
@@ -2111,7 +2112,7 @@ Click="BtnToggleMiniMap_Click"/>
                     <Button x:Name="BtnToggleOverlayTools"
                             Width="32" Height="32"
                             Margin="4,0,0,0"
-                            ToolTip="Map-Overlay Zeichnen / Team Overlays"
+                            ToolTip="{l:Loc overlay.btn_team_overlay_tooltip}"
                             Click="BtnToggleOverlayTools_Click">
                         <Image Source="pack://application:,,,/icons/pencil.png"/>
                     </Button>
@@ -2136,13 +2137,13 @@ Click="BtnToggleMiniMap_Click"/>
                                 CornerRadius="16"
                                 Padding="24">
                             <StackPanel MaxWidth="320">
-                                <TextBlock Text="Connect to a server to see the map"
+                                <TextBlock Text="{l:Loc map.splash.connect_prompt}"
                                            Foreground="White"
                                            FontSize="20"
                                            FontWeight="SemiBold"
                                            TextAlignment="Center"
                                            TextWrapping="Wrap"/>
-                                <TextBlock Text="Once connected, the live Rust map will load here."
+                                <TextBlock Text="{l:Loc map.splash.connect_subtitle}"
                                            Margin="0,10,0,0"
                                            Foreground="#D9FFFFFF"
                                            FontSize="13"
@@ -2250,8 +2251,8 @@ Click="BtnToggleMiniMap_Click"/>
 
                                     <!-- Header / Drag / Close Area -->
                                     <Grid Grid.Row="0" Background="#1E2126">
-                                        <TextBlock Text="SHOP SEARCH" 
-                                                   Foreground="#60FFFFFF" 
+                                        <TextBlock Text="{l:Loc shops.search_header}"
+                                                   Foreground="#60FFFFFF"
                                                    FontSize="10" 
                                                    FontWeight="Bold" 
                                                    VerticalAlignment="Center" 
@@ -2269,7 +2270,7 @@ Click="BtnToggleMiniMap_Click"/>
                                                 Foreground="#99FFFFFF"
                                                 FontSize="12"
                                                 Cursor="Hand"
-                                                ToolTip="Close Search">
+                                                ToolTip="{l:Loc shops.btn_close_search_tooltip}">
                                             <Button.Resources>
                                                 <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
                                                     <Setter Property="Background" Value="Transparent"/>
@@ -2325,8 +2326,8 @@ Click="BtnToggleMiniMap_Click"/>
                                                    FontSize="12" 
                                                    VerticalAlignment="Center"
                                                    Margin="0,0,6,0"/>
-                                        <TextBlock Text="Shop Search" 
-                                                   FontSize="11" 
+                                        <TextBlock Text="{l:Loc shops.toggle_label}"
+                                                   FontSize="11"
                                                    FontWeight="SemiBold"
                                                    VerticalAlignment="Center"/>
                                     </StackPanel>
@@ -2350,7 +2351,7 @@ Click="BtnToggleMiniMap_Click"/>
                             <!-- Zeichnen -->
                             <Button x:Name="ToolDrawButton"
                 Width="32" Height="32"
-                ToolTip="Draw (Right Click: Size / Color)"
+                ToolTip="{l:Loc overlay.tool_draw_tooltip}"
                 Click="ToolDrawButton_Click"
                 PreviewMouseRightButtonDown="ToolDrawButton_RightClick">
                                 <Image Source="pack://application:,,,/icons/pen.png"/>
@@ -2359,7 +2360,7 @@ Click="BtnToggleMiniMap_Click"/>
                             <!-- Text -->
                             <Button x:Name="ToolTextButton"
                 Width="32" Height="32"
-                ToolTip="Place Text (Right Click: Color / Size)"
+                ToolTip="{l:Loc overlay.tool_text_tooltip}"
                 Click="ToolTextButton_Click"
                 PreviewMouseRightButtonDown="ToolTextButton_RightClick">
                                 <Image Source="pack://application:,,,/icons/text.png"/>
@@ -2368,7 +2369,7 @@ Click="BtnToggleMiniMap_Click"/>
                             <!-- Icons -->
                             <Button x:Name="ToolIconButton"
                 Width="32" Height="32"
-                ToolTip="Place Icon (Right Click: Pick Icon)"
+                ToolTip="{l:Loc overlay.tool_icon_tooltip}"
                 Click="ToolIconButton_Click"
                 PreviewMouseRightButtonDown="ToolIconButton_RightClick">
                                 <Image Source="pack://application:,,,/icons/pin.png"/>
@@ -2377,7 +2378,7 @@ Click="BtnToggleMiniMap_Click"/>
                             <!-- Radierer -->
                             <Button x:Name="ToolEraseButton"
                 Width="32" Height="32"
-                ToolTip="Eraser (hold or click)"
+                ToolTip="{l:Loc overlay.tool_erase_tooltip}"
                 Click="ToolEraseButton_Click"
                 PreviewMouseRightButtonDown="ToolEraseButton_RightClick">
                                 <Image Source="pack://application:,,,/icons/eraser.png"/>
@@ -2388,7 +2389,7 @@ Click="BtnToggleMiniMap_Click"/>
                             <!-- Löschen  -->
                             <Button x:Name="ToolTrashButton"
                 Width="32" Height="32"
-                ToolTip="Delete own overlay"
+                ToolTip="{l:Loc overlay.tool_delete_tooltip}"
                 Click="ToolTrashButton_Click">
                                 <Image Source="pack://application:,,,/icons/trash.png"/>
                             </Button>
@@ -2396,7 +2397,7 @@ Click="BtnToggleMiniMap_Click"/>
                             <!-- Upload / Teilen -->
                             <Button x:Name="ToolUploadButton"
                 Width="32" Height="32"
-                ToolTip="Upload own Overlay / share"
+                ToolTip="{l:Loc overlay.tool_upload_tooltip}"
                 Click="ToolUploadButton_Click">
                                 <Image Source="pack://application:,,,/icons/upload.png"/>
                             </Button>

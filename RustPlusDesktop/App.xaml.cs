@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using RustPlusDesk.Views;
 using RustPlusDesk.Services;
+using RustPlusDesk.Localization;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -30,6 +31,9 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
+        // Apply saved UI language before any window is created so initial render is localized.
+        try { LocalizationManager.Instance.SetLanguage(TrackingService.Language); } catch { /* falls back to English */ }
 
         EnsureUrlProtocolRegistered();
 
@@ -94,30 +98,30 @@ public partial class App : Application
     {
         _trayIcon = new System.Windows.Forms.NotifyIcon();
         _trayIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Diagnostics.Process.GetCurrentProcess().MainModule!.FileName!);
-        _trayIcon.Text = "Rust+ Desk Tracker";
+        _trayIcon.Text = Loc.T("tray.tooltip");
         _trayIcon.Visible = true;
 
         var menu = new System.Windows.Forms.ContextMenuStrip();
-        
+
         // Dynamic update on open
         menu.Opening += (s, e) =>
         {
             menu.Items.Clear();
-            var status = TrackingService.IsTracking ? "Active" : "Idle";
+            var status = TrackingService.IsTracking ? Loc.T("tray.status.active") : Loc.T("tray.status.idle");
             var last = TrackingService.LastPullTime?.ToString("HH:mm:ss") ?? "--:--:--";
-            
-            var statusItem = new System.Windows.Forms.ToolStripMenuItem($"Tracking: {status}");
+
+            var statusItem = new System.Windows.Forms.ToolStripMenuItem(Loc.T("tray.tracking_status", status));
             statusItem.Enabled = false;
             menu.Items.Add(statusItem);
-            
-            var lastItem = new System.Windows.Forms.ToolStripMenuItem($"Last update: {last}");
+
+            var lastItem = new System.Windows.Forms.ToolStripMenuItem(Loc.T("tray.last_update", last));
             lastItem.Enabled = false;
             menu.Items.Add(lastItem);
-            
+
             menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            menu.Items.Add("Open Rust+ Desk", null, (s, ex) => ShowMainWindow());
+            menu.Items.Add(Loc.T("tray.open"), null, (s, ex) => ShowMainWindow());
             menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            menu.Items.Add("Exit", null, (s, ex) => {
+            menu.Items.Add(Loc.T("tray.exit"), null, (s, ex) => {
                 _trayIcon.Visible = false;
                 Current.Shutdown();
             });
@@ -149,7 +153,7 @@ public partial class App : Application
         TrackingService.OnOnlinePlayersUpdated += () => {
             var last = TrackingService.LastPullTime?.ToString("HH:mm:ss") ?? "--:--";
             if (_trayIcon != null)
-                _trayIcon.Text = $"Rust+ Desk (Tracking {last})";
+                _trayIcon.Text = Loc.T("tray.tooltip_with_time", last);
         };
     }
 

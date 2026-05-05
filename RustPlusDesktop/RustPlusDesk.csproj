@@ -206,6 +206,14 @@
     <PackageReference Include="RustPlusApi" Version="1.3.0" />
   </ItemGroup>
 
+  <!-- Localization JSON files: copied next to the .exe so users can edit / drop in new languages without recompiling. -->
+  <ItemGroup>
+    <Content Include="Languages\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
   <ItemGroup>
     <Content Include="cash.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

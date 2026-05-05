@@ -1,7 +1,8 @@
 <Window x:Class="RustPlusDesk.Views.MigrationNoticeWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Rust+ Desktop — v4.3 Update"
+        xmlns:l="clr-namespace:RustPlusDesk.Localization"
+        Title="{l:Loc migration.window_title}"
         Width="480" Height="420"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
@@ -79,7 +80,7 @@
                         <TextBlock Text="v4.3.1" FontSize="11" FontWeight="Bold" Foreground="White"/>
                     </Border>
                     <TextBlock Text="Tracking &amp; Stability" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
-                    <TextBlock Text=" — Update Notice" FontSize="15" Foreground="#5A6A7A" VerticalAlignment="Center"/>
+                    <TextBlock Text="{l:Loc migration.subtitle}" FontSize="15" Foreground="#5A6A7A" VerticalAlignment="Center"/>
                 </StackPanel>
             </Border>
 
@@ -129,10 +130,10 @@
             <Border Grid.Row="2" Background="#161B22" CornerRadius="0,0,12,12" Padding="20,12">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button x:Name="BtnSkip" Style="{StaticResource SecondaryBtn}"
-                            Content="No, later" Margin="0,0,10,0"
+                            Content="{l:Loc migration.btn_later}" Margin="0,0,10,0"
                             Click="BtnSkip_Click"/>
                     <Button x:Name="BtnReset" Style="{StaticResource PrimaryBtn}"
-                            Content="Yes, activate now"
+                            Content="{l:Loc migration.btn_activate}"
                             Click="BtnReset_Click"/>
                 </StackPanel>
             </Border>

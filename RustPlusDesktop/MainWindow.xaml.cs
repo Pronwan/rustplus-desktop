@@ -1,5 +1,6 @@
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
+using RustPlusDesk.Localization;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
 using RustPlusDesk.ViewModels;
@@ -903,7 +904,7 @@ public partial class MainWindow : Window
             CenterMapOnWorld(x, y);
             return;
         }
-        MessageBox.Show("Keine Position verfügbar (offline oder nicht gespawnt).");
+        MessageBox.Show(Loc.T("main.no_position_available"));
     }
 
     private bool TryResolvePosFromDynMarkers(ulong sid, out double x, out double y)
@@ -2883,7 +2884,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         else
         {
-            MessageBox.Show("Only missing devices can be deleted.");
+            MessageBox.Show(Loc.T("main.only_missing_can_be_deleted"));
         }
     }
 
@@ -3045,7 +3046,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         catch (Exception ex)
         {
             AppendLog("RustPlus-Link-Error: " + ex.Message);
-            MessageBox.Show("Unable to read RustPlus-Link: " + ex.Message + "\n\nFormat: rustplus://IP:PORT");
+            MessageBox.Show(Loc.T("main.rustplus_link_error", ex.Message));
         }
     }
 
@@ -3733,13 +3734,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (_rust is not RustPlusClientReal real)
         {
-            MessageBox.Show("Not connected.");
+            MessageBox.Show(Loc.T("chat.err_not_connected"));
             return;
         }
 
         if (!(_vm.Selected?.IsConnected ?? false))
         {
-            MessageBox.Show("Please connect to a server first.");
+            MessageBox.Show(Loc.T("chat.err_please_connect"));
             return;
         }
 
@@ -3751,13 +3752,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         catch (InvalidOperationException)
         {
-            MessageBox.Show("Please connect to a server first.");
+            MessageBox.Show(Loc.T("chat.err_please_connect"));
             return;
         }
         catch (Exception ex)
         {
             AppendLog("PrimeChat failed: " + ex.Message);
-            MessageBox.Show("Chat is not available right now.");
+            MessageBox.Show(Loc.T("chat.err_unavailable"));
             return;
         }
 
@@ -9070,8 +9071,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 _vm.IsBusy = false; _vm.BusyText = "";
                 System.Windows.MessageBox.Show(
-                    "Could not query latest release. Please try again or open Releases page.",
-                    "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Loc.T("update.query_failed"),
+                    Loc.T("update.title"), MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -9081,7 +9082,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (latest <= curr)
             {
                 _vm.IsBusy = false; _vm.BusyText = "";
-                System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                System.Windows.MessageBox.Show(Loc.T("update.up_to_date"), Loc.T("update.title"), MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -9090,16 +9091,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 _vm.IsBusy = false; _vm.BusyText = "";
                 var open = System.Windows.MessageBox.Show(
-                    $"New version available: {tag}\nOpen Releases page?",
-                    "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    Loc.T("update.new_version_open_releases", tag),
+                    Loc.T("update.title_available"), MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (open == MessageBoxResult.Yes)
                     Process.Start(new ProcessStartInfo($"https://github.com/{RepoOwner}/{RepoName}/releases/latest") { UseShellExecute = true });
                 return;
             }
 
             var ask = System.Windows.MessageBox.Show(
-                $"New version available: {tag}\nDownload and install now?",
-                "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                Loc.T("update.new_version_download", tag),
+                Loc.T("update.title_available"), MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (ask != MessageBoxResult.Yes)
             {
@@ -9110,7 +9111,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             // Download mit einfachem Progress in BusyText
             var prog = new Progress<double>(p =>
             {
-                _vm.BusyText = $"Downloading installer … {(int)(p * 100)}%";
+                _vm.BusyText = Loc.T("update.downloading_progress", (int)(p * 100));
             });
             var path = await DownloadInstallerAsync(dlUrl!, prog);
 
@@ -9118,7 +9119,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (path == null)
             {
-                System.Windows.MessageBox.Show("Download failed.", "Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(Loc.T("update.download_failed"), Loc.T("update.title"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -9129,7 +9130,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsBusy = false;
             _vm.BusyText = "";
             AppendLog("❌ Update check failed: " + ex.Message);
-            System.Windows.MessageBox.Show("Update check failed.\n" + ex.Message, "Update", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show(Loc.T("update.check_failed", ex.Message), Loc.T("update.title"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -9407,7 +9408,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         DeactivateHotkeys();
 
         IEnumerable? src = (ListDevices.ItemsSource as IEnumerable) ?? (DataContext as IEnumerable);
-        if (src == null) { MessageBox.Show("No devices."); return; }
+        if (src == null) { MessageBox.Show(Loc.T("hotkeys.no_devices")); return; }
         
         var flatAssignable = GetHotkeyAssignableDevices(src.OfType<SmartDevice>());
 
@@ -11061,13 +11062,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             var count = await UploadDevicesSnapshotForCurrentServerAsync();
             AppendLog($"[dev/export] Exported {count} devices for server '{_vm.Selected.Name}'.");
-            MessageBox.Show($"Exported {count} devices to your team share.", "Device Export",
+            MessageBox.Show(Loc.T("device_export.success", count), Loc.T("device_export.title"),
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch (Exception ex)
         {
             AppendLog("[dev/export] Error: " + ex.Message);
-            MessageBox.Show("Device export failed:\n" + ex.Message, "Device Export",
+            MessageBox.Show(Loc.T("device_export.failed", ex.Message), Loc.T("device_export.title"),
                 MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
@@ -11208,8 +11209,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (items.Count == 0)
             {
-                MessageBox.Show("No device exports found for your team / server.",
-                    "Device Import", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(Loc.T("device_import.none_found"),
+                    Loc.T("device_import.title"), MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -11265,8 +11266,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         catch (Exception ex)
         {
             AppendLog("[dev/import] Error: " + ex.Message);
-            MessageBox.Show("Device import failed:\n" + ex.Message,
-                "Device Import", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(Loc.T("device_import.failed", ex.Message),
+                Loc.T("device_import.title"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 

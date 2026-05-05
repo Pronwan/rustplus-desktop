@@ -1,3 +1,4 @@
+using RustPlusDesk.Localization;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
 using System;
@@ -102,11 +103,7 @@ public partial class MainWindow
     private async void BtnHardReset_Click(object sender, RoutedEventArgs e)
     {
         var ask = MessageBox.Show(
-            "ARE YOU SURE YOU WANT TO RESET EVERYTHING (WIPE)?\n\n" +
-            "- All servers will be deleted\n" +
-            "- Your Steam Login will be removed\n" +
-            "- The pairing config will be deleted\n\n" +
-            "Continue?", "FULL WIPE DATA", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            Loc.T("conn.full_wipe_prompt"), Loc.T("conn.full_wipe_title"), MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
         if (ask != MessageBoxResult.Yes) return;
 
