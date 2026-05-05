@@ -7,8 +7,6 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
-    private bool _mapReady;
-
     private void SetupMapScene(BitmapSource bmp)
     {
         double wDip = bmp.PixelWidth * (96.0 / bmp.DpiX);
@@ -32,7 +30,6 @@ public partial class MainWindow
         Overlay.Height = hDip + padPx * 2;
         Overlay.IsHitTestVisible = true;
         Overlay.Background = Brushes.Transparent;
-        EnsureShopsHoverPopup();
 
         _scene ??= new Grid();
         _scene.Width = wDip + padPx * 2;
@@ -63,7 +60,6 @@ public partial class MainWindow
     private void ResetMapDisplay()
     {
         _mapBaseBmp = null;
-        _mapReady = false;
 
         ImgMap.Source = null;
         GridLayer.Children.Clear();
@@ -84,7 +80,6 @@ public partial class MainWindow
         if (_webView != null) _webView.Visibility = Visibility.Collapsed;
 
         _mapBaseBmp = bmp;
-        _mapReady = true;
         if (MapPlaceholder != null) MapPlaceholder.Visibility = Visibility.Collapsed;
         if (_mapView != null) _mapView.Visibility = Visibility.Visible;
         _staticMarkers.Clear();            // << keine Testpunkte

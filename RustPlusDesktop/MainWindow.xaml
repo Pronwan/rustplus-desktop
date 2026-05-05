@@ -1229,235 +1229,131 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                     <ColumnDefinition Width="Auto" SharedSizeGroup="ColToggle"/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <!-- Spalte 1: Display -->
-                                                <!-- Spalte 1: Icon + (#id) [state] für bekannte Kinds; sonst: alter Display-Text -->
-                                                <Grid Grid.Column="0">
-                                                    <Grid.Resources>
-                                                        <!-- Sichtbar-Style für bekannte Kinds -->
-                                                        <Style x:Key="DeviceLineSmallText" TargetType="TextBlock">
-                                                            <Setter Property="Foreground" Value="LightSkyBlue"/>
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                    <Setter Property="Foreground" Value="Red"/>
-                                                                    <Setter Property="FontStyle"   Value="Italic"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-
-                                                        <!-- Verstecken-Style für den Fallback-Text, wenn bekanntes Kind -->
-                                                        <Style x:Key="UnknownFallback" TargetType="TextBlock">
-                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                <!-- Spalte 1: Icon -->
+                                                <Image Grid.Column="0"
+                                                       Width="18"
+                                                       Height="18"
+                                                       Margin="0,2,0,0"
+                                                       VerticalAlignment="Top">
+                                                    <Image.Style>
+                                                        <Style TargetType="Image">
+                                                            <Setter Property="Source" Value="{StaticResource IconSmartSwitch}"/>
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
-                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    <Setter Property="Source" Value="{StaticResource IconStorageMonitor}"/>
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding Kind}" Value="Storage Monitor">
-                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
-                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding Kind}" Value="Smart Switch">
-                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    <Setter Property="Source" Value="{StaticResource IconStorageMonitor}"/>
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
-                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    <Setter Property="Source" Value="{StaticResource IconSmartAlarm}"/>
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
-                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    <Setter Property="Source" Value="{StaticResource IconSmartAlarm}"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding IsGroup}" Value="True">
+                                                                    <Setter Property="Source" Value="{StaticResource IconGroup}"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
-                                                    </Grid.Resources>
+                                                    </Image.Style>
+                                                </Image>
 
-                                                    <!-- MODE A: bekannte Kinds -> Icon + (#id) [state] -->
-                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                        <StackPanel.Style>
-                                                            <Style TargetType="StackPanel">
-                                                                <!-- Standard: versteckt + Standardfarbe -->
-                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                <Setter Property="TextElement.Foreground" Value="LightSkyBlue"/>
-
-                                                                <Style.Triggers>
-                                                                    <!-- Sichtbar nur bei bekannten Kinds -->
-                                                                    <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
-                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding Kind}" Value="Storage Monitor">
-                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
-                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding Kind}" Value="Smart Switch">
-                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
-                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
-                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                    </DataTrigger>
-
-                                                                    <!-- Missing: Rot + Kursiv -->
-                                                                    <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                        <Setter Property="TextElement.Foreground" Value="Red"/>
-                                                                        <Setter Property="TextElement.FontStyle"   Value="Italic"/>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </StackPanel.Style>
-                                                        <!-- Icon -->
-                                                        <Image Width="18" Height="18" Margin="0,0,6,0">
-                                                            <Image.Style>
-                                                                <Style TargetType="Image">
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
-                                                                            <Setter Property="Source" Value="{StaticResource IconStorageMonitor}"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding Kind}" Value="Storage Monitor">
-                                                                            <Setter Property="Source" Value="{StaticResource IconStorageMonitor}"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
-                                                                            <Setter Property="Source" Value="{StaticResource IconSmartSwitch}"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding Kind}" Value="Smart Switch">
-                                                                            <Setter Property="Source" Value="{StaticResource IconSmartSwitch}"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
-                                                                            <Setter Property="Source" Value="{StaticResource IconSmartAlarm}"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
-                                                                            <Setter Property="Source" Value="{StaticResource IconSmartAlarm}"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </Image.Style>
-                                                        </Image>
-
-                                                        <!-- (#id) [state] -->
-                                                        <TextBlock VerticalAlignment="Center"
-           Style="{StaticResource DeviceLineSmallText}">
-      <Run Text="{Binding EntityId, StringFormat=#\{0\}}"/>
-      <Run Text=" [" />
-
-      <!-- Variante für SmartAlarm: ACTIVE/INACTIVE -->
-      <TextBlock>
-                                                                <TextBlock.Style>
-                                                                    <Style TargetType="TextBlock">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
-                                                                                <Setter Property="Visibility" Value="Visible"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
-                                                                                <Setter Property="Visibility" Value="Visible"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding IsOn}"  Value="True">
-                                                                                <Setter Property="Text" Value="ACTIVE"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding IsOn}"  Value="False">
-                                                                                <Setter Property="Text" Value="INACTIVE"/>
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </TextBlock.Style>
-      </TextBlock>
-
-      <!-- Variante für alle anderen: ON/OFF -->
-      <TextBlock>
-                                                                <TextBlock.Style>
-                                                                    <Style TargetType="TextBlock">
-                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding IsOn}" Value="True">
-                                                                                <Setter Property="Text" Value="ON"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding IsOn}" Value="False">
-                                                                                <Setter Property="Text" Value="OFF"/>
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </TextBlock.Style>
-      </TextBlock>
-
-      <Run Text="]"/>
-    </TextBlock>
-                                                    </StackPanel>
-
-                                                    <!-- MODE B: unbekannter Typ -> alter kompletter Display-Text -->
-                                                    <!-- MODE B: unbekannter Typ -> alter kompletter Display-Text -->
-                                                    <TextBlock Text="{Binding Display}"
-           Foreground="White"
-           VerticalAlignment="Center"
-           ToolTip="{Binding Kind}">
+                                                <!-- Spalte 2: strukturierte Device-Infos -->
+                                                <StackPanel Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Name, TargetNullValue=Device}"
+                                                               FontSize="14"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="#EAECEE"
+                                                               ToolTip="Right click to rename">
                                                         <TextBlock.Style>
                                                             <Style TargetType="TextBlock">
-                                                                <Setter Property="Visibility" Value="Visible"/>
                                                                 <Style.Triggers>
-                                                                    <!-- ausblenden bei bekannten Kinds -->
-                                                                    <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding Kind}" Value="Storage Monitor">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding Kind}" Value="Smart Switch">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding Kind}" Value="Group">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                    </DataTrigger>
-
-                                                                    <!-- Missing-Optik -->
                                                                     <DataTrigger Binding="{Binding IsMissing}" Value="True">
                                                                         <Setter Property="Foreground" Value="Red"/>
-                                                                        <Setter Property="FontStyle"   Value="Italic"/>
+                                                                        <Setter Property="FontStyle" Value="Italic"/>
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </TextBlock.Style>
+                                                        <TextBlock.ContextMenu>
+                                                            <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                                                <MenuItem Header="Rename device" Click="Device_Rename_Click"/>
+                                                            </ContextMenu>
+                                                        </TextBlock.ContextMenu>
                                                     </TextBlock>
-                                                </Grid>
 
-                                                <!-- Spalte 2: Alias -->
-                                                <TextBlock Grid.Column="1"
-                         VerticalAlignment="Center"
-                         ToolTip="Right click to rename" FontSize="14" FontWeight="SemiBold" Margin="16,0,0,0" Foreground="#EAECEE">
-                                                    <TextBlock.Text>
-                                                        <Binding Path="Alias" TargetNullValue="(no custom name)"/>
-                                                    </TextBlock.Text>
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                    <Setter Property="Foreground" Value="Red"/>
-                                                                    <Setter Property="FontStyle" Value="Italic"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBlock.Style>
-                                                    <TextBlock.ContextMenu>
-                                                        <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                                            <MenuItem Header="Rename device" Click="Device_Rename_Click"/>
-                                                        </ContextMenu>
-                                                    </TextBlock.ContextMenu>
-                                                </TextBlock>
+                                                    <TextBlock Text="{Binding EntityId, StringFormat=#\{0\}}"
+                                                               Margin="0,2,0,0"
+                                                               Foreground="#8D98A8"
+                                                               FontSize="11"/>
+
+                                                    <Border Margin="0,8,0,0"
+                                                            Padding="8,3"
+                                                            CornerRadius="10"
+                                                            HorizontalAlignment="Left"
+                                                            BorderThickness="1"
+                                                            Background="#2E3646"
+                                                            BorderBrush="#4A5670">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Background" Value="#2E3646"/>
+                                                                <Setter Property="BorderBrush" Value="#4A5670"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsOn}" Value="True">
+                                                                        <Setter Property="Background" Value="#193F2A"/>
+                                                                        <Setter Property="BorderBrush" Value="#2B7A4E"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                        <Setter Property="Background" Value="#412226"/>
+                                                                        <Setter Property="BorderBrush" Value="#8E3B45"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+
+                                                        <TextBlock FontSize="10"
+                                                                   FontWeight="SemiBold"
+                                                                   Foreground="#EAF2FF">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Text" Value="OFFLINE"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
+                                                                            <Setter Property="Text" Value="INACTIVE"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
+                                                                            <Setter Property="Text" Value="INACTIVE"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding IsOn}" Value="True">
+                                                                            <Setter Property="Text" Value="ONLINE"/>
+                                                                        </DataTrigger>
+                                                                        <MultiDataTrigger>
+                                                                            <MultiDataTrigger.Conditions>
+                                                                                <Condition Binding="{Binding Kind}" Value="SmartAlarm"/>
+                                                                                <Condition Binding="{Binding IsOn}" Value="True"/>
+                                                                            </MultiDataTrigger.Conditions>
+                                                                            <Setter Property="Text" Value="ACTIVE"/>
+                                                                        </MultiDataTrigger>
+                                                                        <MultiDataTrigger>
+                                                                            <MultiDataTrigger.Conditions>
+                                                                                <Condition Binding="{Binding Kind}" Value="Smart Alarm"/>
+                                                                                <Condition Binding="{Binding IsOn}" Value="True"/>
+                                                                            </MultiDataTrigger.Conditions>
+                                                                            <Setter Property="Text" Value="ACTIVE"/>
+                                                                        </MultiDataTrigger>
+                                                                        <DataTrigger Binding="{Binding IsGroup}" Value="True">
+                                                                            <Setter Property="Text" Value="GROUP"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                            <Setter Property="Text" Value="MISSING"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                    </Border>
+                                                </StackPanel>
 
                                                 <!-- Spalte 3: Toggle NUR für SmartSwitch -->
                                                 <ToggleButton Grid.Column="2"

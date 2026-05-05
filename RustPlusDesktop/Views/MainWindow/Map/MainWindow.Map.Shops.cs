@@ -18,6 +18,7 @@ public partial class MainWindow
     private DateTime? _deepSeaSpawnTime = null;       // when we witnessed the spawn (null = mid-event or not yet)
     private DateTime? _deepSeaDespawnTime = null;     // when we witnessed the despawn (null = active or unknown)
     private bool _deepSeaMidEvent = false;            // shops enabled / connected while Deep Sea already active
+    private readonly HashSet<FrameworkElement> _shopIconSet = new();
 
     // Known Deep Sea NPC shop names — filtered from New Shop chat notifications
     private static readonly HashSet<string> _deepSeaNpcShopNames = new(StringComparer.OrdinalIgnoreCase)

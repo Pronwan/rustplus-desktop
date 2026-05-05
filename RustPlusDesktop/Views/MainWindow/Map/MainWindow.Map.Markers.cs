@@ -140,82 +140,13 @@ public partial class MainWindow
         }
     }
 
-    private void EnsureShopsHoverPopup()
+    private void ApplyMonumentScale(FrameworkElement el)
     {
-        // Legacy multi-shop popup disabled in favor of new clustering and interactive details panel.
-        /*
-        if (_shopsHoverPopup != null) return;
-        ...
-        */
-    }
-
-    private FrameworkElement? FindShopIconRoot(DependencyObject? d)
-    {
-        while (d != null)
-        {
-            if (d is FrameworkElement fe && _shopIconSet.Contains(fe))
-                return fe;
-            d = VisualTreeHelper.GetParent(d);
-        }
-        return null;
-    }
-
-    private void Overlay_MouseMove_ShowMultiShopCards(object? sender, MouseEventArgs e)
-    {
-        if (_shopsHoverPopup == null || _shopsHoverWrap == null) return;
-
-        var pt = e.GetPosition(Overlay);
-        var hits = new List<FrameworkElement>();
-
-        VisualTreeHelper.HitTest(
-            Overlay,
-            d =>
-            {
-                if (d is UIElement uie && uie.Visibility != Visibility.Visible)
-                    return HitTestFilterBehavior.ContinueSkipSelfAndChildren;
-                return HitTestFilterBehavior.Continue;
-            },
-            r =>
-            {
-                var root = FindShopIconRoot(r.VisualHit);
-                if (root != null && !hits.Contains(root)) hits.Add(root);
-                return HitTestResultBehavior.Continue;
-            },
-            new PointHitTestParameters(pt)
-        );
-
-        if (hits.Count > 1)
-        {
-            EnableSingleShopTooltips(false);
-            _shopsHoverWrap.Children.Clear();
-
-            foreach (var fe in hits)
-            {
-                if (fe.Tag is RustPlusClientReal.ShopMarker s)
-                {
-                    var offers = s.Orders ?? Enumerable.Empty<RustPlusClientReal.ShopOrder>();
-                    var card = BuildShopSearchCard(s, offers, compact: true);
-                    card.Width = SHOP_CARD_WIDTH;
-                    ToolTipService.SetIsEnabled(card, false);
-                    _shopsHoverWrap.Children.Add(card);
-                }
-            }
-
-            _shopsHoverPopup.HorizontalOffset = pt.X + 16;
-            _shopsHoverPopup.VerticalOffset = pt.Y + 16;
-            _shopsHoverPopup.IsOpen = true;
-        }
-        else
-        {
-            _shopsHoverPopup.IsOpen = false;
-            EnableSingleShopTooltips(true);
-        }
-    }
-
-    private void EnableSingleShopTooltips(bool on)
-    {
-        foreach (var fe in _shopIconSet)
-            ToolTipService.SetIsEnabled(fe, on);
+        if (el == null) return;
+        double eff = GetEffectiveZoom();
+        double scale = CalcOverlayScale(eff, MON_SIZE_EXP, MON_BASE_MULT);
+        el.RenderTransformOrigin = new Point(0.5, 0.5);
+        el.RenderTransform = new ScaleTransform(scale, scale);
     }
 
     private async Task LoadMapAsync()
