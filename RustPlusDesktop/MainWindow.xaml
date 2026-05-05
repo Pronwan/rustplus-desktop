@@ -2006,6 +2006,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                             <ColumnDefinition Width="Auto"/>
                                                             <ColumnDefinition Width="Auto"/>
                                                             <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
                                                         </Grid.ColumnDefinitions>
                                                         <StackPanel Orientation="Horizontal" Grid.Column="0">
                                                             <Ellipse Width="8" Height="8"
@@ -2015,7 +2016,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                             <TextBlock Text="{Binding Name}" FontWeight="SemiBold"
                                                                        VerticalAlignment="Center"
                                                                        TextTrimming="CharacterEllipsis"
-                                                                       MaxWidth="140"
+                                                                       MaxWidth="120"
                                                                        ToolTip="{Binding Name}"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="1" Text="{Binding PlayTimeStr}"
@@ -2034,7 +2035,13 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                                 Padding="6,2" FontSize="10"
                                                                 Margin="0,0,4,0" Tag="{Binding}"
                                                                 ToolTip="Add to tracked players"/>
-                                                        <Button Grid.Column="4" Content="Group ▾"
+                                                        <Button Grid.Column="4" Content="Report"
+                                                                Click="BtnOnlineReport_Click"
+                                                                Style="{StaticResource GhostButton}"
+                                                                Padding="6,2" FontSize="10"
+                                                                Margin="0,0,4,0" Tag="{Binding}"
+                                                                ToolTip="Activity Intelligence Report"/>
+                                                        <Button Grid.Column="5" Content="Group ▾"
                                                                 Click="BtnAssignGroup_Click"
                                                                 Style="{StaticResource GhostButton}"
                                                                 Padding="6,2" FontSize="10"
@@ -2230,6 +2237,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                             <ColumnDefinition Width="Auto"/>
                                                             <ColumnDefinition Width="Auto"/>
                                                             <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
                                                         </Grid.ColumnDefinitions>
                                                         <StackPanel Orientation="Horizontal" Grid.Column="0">
                                                             <Ellipse Width="8" Height="8"
@@ -2239,7 +2247,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                                        FontWeight="SemiBold"
                                                                        VerticalAlignment="Center"
                                                                        TextTrimming="CharacterEllipsis"
-                                                                       MaxWidth="140"
+                                                                       MaxWidth="120"
                                                                        ToolTip="{Binding Name}"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="1" Text="{Binding StatusText}"
@@ -2251,7 +2259,13 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                                 Style="{StaticResource GhostButton}"
                                                                 Padding="4,2" FontSize="10"
                                                                 Margin="0,0,4,0" Tag="{Binding}"/>
-                                                        <Button Grid.Column="3" Content="✕"
+                                                        <Button Grid.Column="3" Content="Report"
+                                                                Click="BtnGroupMemberReport_Click"
+                                                                Style="{StaticResource GhostButton}"
+                                                                Padding="6,2" FontSize="10"
+                                                                Margin="0,0,4,0" Tag="{Binding}"
+                                                                ToolTip="Activity Intelligence Report"/>
+                                                        <Button Grid.Column="4" Content="✕"
                                                                 Click="BtnRemoveFromGroup_Click"
                                                                 Style="{StaticResource GhostButton}"
                                                                 Padding="6,1" FontSize="10"
@@ -2754,6 +2768,42 @@ Click="BtnToggleMiniMap_Click"/>
                          Height="100"
                          IsReadOnly="True" TextWrapping="Wrap"
                          VerticalScrollBarVisibility="Auto"/>
+
+                <!-- Slide-in player report overlay: covers all 3 rows of the right column -->
+                <Border x:Name="ReportPanel" Grid.RowSpan="3"
+                        Background="{DynamicResource AppBg}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        Visibility="Collapsed"
+                        SizeChanged="ReportPanel_SizeChanged">
+                    <Border.RenderTransform>
+                        <TranslateTransform x:Name="ReportPanelTransform" X="0"/>
+                    </Border.RenderTransform>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Background="{DynamicResource Surface}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="TxtReportTitle" Grid.Column="0"
+                                       Text="Player Activity Report"
+                                       FontWeight="SemiBold" FontSize="14"
+                                       Foreground="{DynamicResource TextPrimary}"
+                                       VerticalAlignment="Center"
+                                       Margin="14,10"/>
+                            <Button Grid.Column="1" Content="✕"
+                                    Click="BtnCloseReport_Click"
+                                    Style="{StaticResource GhostButton}"
+                                    Padding="10,4" Margin="6"
+                                    ToolTip="Close report (Esc)"/>
+                        </Grid>
+                        <wv2:WebView2 x:Name="ReportWebView" Grid.Row="1"/>
+                    </Grid>
+                </Border>
             </Grid>
         </Border>
         <Grid Background="#80000000"

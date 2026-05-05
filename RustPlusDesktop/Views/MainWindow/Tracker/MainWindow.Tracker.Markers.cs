@@ -50,13 +50,35 @@ public partial class MainWindow
             Panel.SetZIndex(el, 850);
 
             var p = WorldToImagePx(pin.X, pin.Y);
-            const double r = 14.0;
+            const double r = 11.0;
             Canvas.SetLeft(el, p.X - r);
             Canvas.SetTop(el, p.Y - r);
 
-            ApplyCurrentOverlayScale(el);
+            ApplyGroupMarkerScale(el);
             _groupMarkerEls[group.Id] = el;
         }
+    }
+
+    /// <summary>
+    /// Custom scaling for group markers — tighter than the default SHOP/CalcOverlayScale
+    /// formula so they don't blow up at the initial zoomed-out map view.
+    /// </summary>
+    private void ApplyGroupMarkerScale(FrameworkElement el)
+    {
+        if (el == null) return;
+        double eff = GetEffectiveZoom();
+        const double exp = 0.5;     // tighter than SHOP_SIZE_EXP (0.8)
+        const double mult = 0.85;   // smaller than SHOP_BASE_MULT (1.3)
+        double scale = Math.Clamp(Math.Pow(Math.Max(eff, 0.01), -exp) * mult, 0.5, 2.5);
+        el.RenderTransformOrigin = new Point(0.5, 0.5);
+        el.RenderTransform = new ScaleTransform(scale, scale);
+    }
+
+    /// <summary>Re-scale all live group markers — wired into RefreshAllOverlayScales.</summary>
+    private void RefreshGroupMarkerScales()
+    {
+        foreach (var el in _groupMarkerEls.Values)
+            ApplyGroupMarkerScale(el);
     }
 
     /// <summary>Just updates each marker's tooltip text (cheap; no re-layout).</summary>
@@ -75,12 +97,12 @@ public partial class MainWindow
         var letter = string.IsNullOrEmpty(g.Name) ? "?" : g.Name.Substring(0, 1).ToUpper();
         var dot = new Border
         {
-            Width = 28,
-            Height = 28,
-            CornerRadius = new CornerRadius(14),
+            Width = 22,
+            Height = 22,
+            CornerRadius = new CornerRadius(11),
             Background = BrushFromHex(g.ColorHex),
             BorderBrush = Brushes.White,
-            BorderThickness = new Thickness(2),
+            BorderThickness = new Thickness(1.5),
             Tag = g.Id,
             Cursor = Cursors.Hand,
             Child = new TextBlock
@@ -88,7 +110,7 @@ public partial class MainWindow
                 Text = letter,
                 Foreground = Brushes.White,
                 FontWeight = FontWeights.Bold,
-                FontSize = 13,
+                FontSize = 11,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 Effect = new System.Windows.Media.Effects.DropShadowEffect
@@ -96,13 +118,47 @@ public partial class MainWindow
                     BlurRadius = 2,
                     ShadowDepth = 0,
                     Color = Colors.Black,
-                    Opacity = 0.7
+                    Opacity = 0.6
                 }
             }
         };
         ToolTipService.SetToolTip(dot, BuildGroupMarkerTooltip(g));
         ToolTipService.SetInitialShowDelay(dot, 200);
+
+        // Click → jump to the Tracker → Groups sub-tab with this group selected.
+        string capturedGroupId = g.Id;
+        dot.MouseLeftButtonDown += (_, e) =>
+        {
+            e.Handled = true;
+            NavigateToGroupInTracker(capturedGroupId);
+        };
+
         return dot;
+    }
+
+    /// <summary>Switch main tab to Tracker, sub-tab to Groups, and select the given group.</summary>
+    private void NavigateToGroupInTracker(string groupId)
+    {
+        // Pre-select the group BEFORE switching tabs so the detail panel renders the right one.
+        if (CmbGroupSelector?.Items != null)
+        {
+            foreach (var item in CmbGroupSelector.Items)
+            {
+                if (item is PlayerGroup pg && pg.Id == groupId)
+                {
+                    CmbGroupSelector.SelectedItem = pg;
+                    _tracker_selectedGroupId = groupId;
+                    break;
+                }
+            }
+        }
+
+        if (MainTabs != null && TabTracker != null)
+            MainTabs.SelectedItem = TabTracker;
+        if (TrackerSubTabs != null)
+            TrackerSubTabs.SelectedIndex = 2; // 0=Online, 1=Tracked, 2=Groups
+
+        RefreshSelectedGroupDetail();
     }
 
     private FrameworkElement BuildGroupMarkerTooltip(PlayerGroup g)

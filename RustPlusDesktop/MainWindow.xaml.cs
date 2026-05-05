@@ -4947,6 +4947,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         // Shops (falls du sie weiter separat halten willst)
         RefreshShopIconScales();
+
+        // Group base markers (tracker)
+        RefreshGroupMarkerScales();
     }
     private FrameworkElement BuildDeathPin(ulong sid, string name, ImageSource? avatarFromCaller = null)
     {
@@ -8578,7 +8581,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void ShowPlayerAnalysis(string bmId, string name)
     {
-        ShowTrackingAnalysisWindow(bmId);
+        OpenInlineReport(bmId, name);
     }
 
     private void RebaselineAllAlertRulesFromCurrentShops(IReadOnlyList<RustPlusClientReal.ShopMarker> shops)

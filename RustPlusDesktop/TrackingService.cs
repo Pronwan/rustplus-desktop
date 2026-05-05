@@ -630,7 +630,42 @@ public static class TrackingService
         catch { }
         return null;
     }
-    public static string GetAnalysisReport(string? targetBmId = null)
+    /// <summary>
+    /// Build an ad-hoc HTML report for a single BM ID, fetching their name and last session
+    /// from BattleMetrics if we don't already have them in the tracked-players DB. Doesn't persist.
+    /// </summary>
+    public static async Task<string> GetAnalysisReportForBMIdAsync(string bmId, string fallbackName = "")
+    {
+        if (string.IsNullOrEmpty(bmId)) return GetAnalysisReport();
+        if (_trackedPlayers.ContainsKey(bmId))
+            return GetAnalysisReport(bmId);
+
+        string name;
+        try
+        {
+            name = await FetchPlayerNameAsync(bmId);
+            if (string.IsNullOrEmpty(name) || name == "Unknown Player")
+                name = string.IsNullOrEmpty(fallbackName) ? "Unknown Player" : fallbackName;
+        }
+        catch { name = string.IsNullOrEmpty(fallbackName) ? "Unknown Player" : fallbackName; }
+
+        PlayerSession? last = null;
+        try { last = await FetchPlayerLastSessionAsync(bmId); } catch { /* tolerant */ }
+
+        var sessions = new List<PlayerSession>();
+        if (last != null) sessions.Add(last);
+
+        var adhoc = new TrackedPlayer
+        {
+            BMId = bmId,
+            Name = name,
+            LastServerName = LastServer.name ?? string.Empty,
+            Sessions = sessions
+        };
+        return GetAnalysisReport(bmId, new[] { adhoc });
+    }
+
+    public static string GetAnalysisReport(string? targetBmId = null, IEnumerable<TrackedPlayer>? adHocPlayers = null)
     {
         var sb = new System.Text.StringBuilder();
         sb.AppendLine("<!DOCTYPE html><html><head><meta charset='utf-8'>");
@@ -681,13 +716,22 @@ public static class TrackingService
 
         sb.AppendLine("<h1>Activity Intelligence Report</h1>");
         
-        var playersToReport = targetBmId == null 
-            ? _trackedPlayers.Values.ToList() 
-            : _trackedPlayers.Values.Where(p => p.BMId == targetBmId).ToList();
+        // Combine tracked players with any ad-hoc ones (for untracked-player report views).
+        // De-dupe by BMId, preferring tracked entries since they have richer session history.
+        IEnumerable<TrackedPlayer> allPlayers = _trackedPlayers.Values;
+        if (adHocPlayers != null)
+        {
+            var trackedIds = new HashSet<string>(_trackedPlayers.Keys);
+            allPlayers = allPlayers.Concat(adHocPlayers.Where(p => !trackedIds.Contains(p.BMId)));
+        }
+
+        var playersToReport = targetBmId == null
+            ? allPlayers.ToList()
+            : allPlayers.Where(p => p.BMId == targetBmId).ToList();
 
         if (!playersToReport.Any())
         {
-            sb.AppendLine("<p>No players in tracking database. Start by tracking players from the server list.</p>");
+            sb.AppendLine("<p>No data available for this player. They may have no recent BattleMetrics history.</p>");
         }
 
         var groupedPlayers = playersToReport.GroupBy(p => string.IsNullOrEmpty(p.LastServerName) ? "Global / Legacy" : p.LastServerName);
