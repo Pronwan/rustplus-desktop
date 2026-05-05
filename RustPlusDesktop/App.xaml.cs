@@ -159,6 +159,19 @@ public partial class App : Application
         base.OnExit(e);
     }
 
+    /// <summary>Show a balloon-tip notification via the tray icon. Safe to call from any thread.</summary>
+    public static void ShowTrayToast(string title, string body, int timeoutMs = 5000)
+    {
+        try
+        {
+            if (Current is App app && app._trayIcon != null && app._trayIcon.Visible)
+            {
+                app._trayIcon.ShowBalloonTip(timeoutMs, title, body, System.Windows.Forms.ToolTipIcon.Info);
+            }
+        }
+        catch { /* tray may not be initialised yet */ }
+    }
+
     private static void EnsureUrlProtocolRegistered()
     {
         try

@@ -1049,8 +1049,10 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                 FontSize="9" FontWeight="Bold" Style="{StaticResource GhostButton}"
                                 ToolTip="Open Server on BattleMetrics" Click="BtnServerBM_Click" Visibility="Collapsed"/>
 
-                        <ToggleButton x:Name="BtnShowOnline" Content="▼" Margin="4,0,0,0" Width="18" Height="18" 
-                                      Background="Transparent" BorderThickness="0" Foreground="White" 
+                        <!-- Old popup trigger hidden; superseded by the Tracker tab. Kept x:Name so existing handler logic still binds. -->
+                        <ToggleButton x:Name="BtnShowOnline" Content="▼" Margin="4,0,0,0" Width="18" Height="18"
+                                      Background="Transparent" BorderThickness="0" Foreground="White"
+                                      Visibility="Collapsed"
                                       ToolTip="Show Online Players" Click="BtnShowOnline_Click" />
                         
                         <Popup x:Name="PopupOnlinePlayers" PlacementTarget="{Binding ElementName=BtnShowOnline}" 
@@ -1945,6 +1947,206 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                     </StackPanel>
                                 </Grid>
                             </ScrollViewer>
+                        </DockPanel>
+                    </TabItem>
+
+                    <!-- ===== TRACKER ===== -->
+                    <TabItem Header="Tracker" x:Name="TabTracker" Style="{StaticResource PrettyTabItem}">
+                        <DockPanel LastChildFill="True">
+                            <TabControl x:Name="TrackerSubTabs" Style="{StaticResource PrettyTabControl}">
+
+                                <!-- ===== ONLINE SUB-TAB ===== -->
+                                <TabItem Header="Online" Style="{StaticResource PrettyTabItem}">
+                                    <DockPanel LastChildFill="True">
+                                        <TextBox x:Name="TxtTrackerOnlineFilter" DockPanel.Dock="Top"
+                                                 Margin="0,0,0,6" Padding="6,3" FontSize="11"
+                                                 Background="#1a1c1e" Foreground="Gray"
+                                                 BorderThickness="1" BorderBrush="#333"
+                                                 Text="Filter players..."
+                                                 GotFocus="TxtTrackerOnlineFilter_GotFocus"
+                                                 LostFocus="TxtTrackerOnlineFilter_LostFocus"
+                                                 TextChanged="TxtTrackerOnlineFilter_TextChanged"/>
+
+                                        <Grid x:Name="PnlTrackerOnlineStatus" DockPanel.Dock="Top"
+                                              Visibility="Collapsed" Margin="0,12,0,0">
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <ProgressBar x:Name="PbTrackerOnlineLoading" IsIndeterminate="True"
+                                                             Height="2" Width="120" Margin="0,0,0,8"
+                                                             Background="#111" BorderThickness="0"
+                                                             Foreground="{DynamicResource CbAccent}"/>
+                                                <TextBlock x:Name="TxtTrackerOnlineStatus"
+                                                           Text="Connect to a server to load online players"
+                                                           Foreground="{DynamicResource TextSubtle}"
+                                                           FontSize="11" TextWrapping="Wrap"
+                                                           TextAlignment="Center" MaxWidth="240"/>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <ListBox x:Name="ListTrackerOnline" Background="Transparent"
+                                                 BorderThickness="0"
+                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="0,3">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <StackPanel Orientation="Horizontal" Grid.Column="0">
+                                                            <Ellipse Width="8" Height="8"
+                                                                     Fill="{DynamicResource CbAccent}"
+                                                                     Margin="0,0,6,0" VerticalAlignment="Center"
+                                                                     x:Name="StatusDot"/>
+                                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold"
+                                                                       VerticalAlignment="Center"
+                                                                       TextTrimming="CharacterEllipsis"
+                                                                       MaxWidth="140"
+                                                                       ToolTip="{Binding Name}"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="1" Text="{Binding PlayTimeStr}"
+                                                                   Foreground="{DynamicResource TextSubtle}"
+                                                                   VerticalAlignment="Center"
+                                                                   Margin="6,0,8,0" FontSize="11"/>
+                                                        <Button Grid.Column="2" Content="BM"
+                                                                Click="BtnPlayerBM_Click"
+                                                                Style="{StaticResource GhostButton}"
+                                                                Padding="4,2" FontSize="10"
+                                                                Margin="0,0,4,0" Tag="{Binding}"/>
+                                                        <Button Grid.Column="3" Content="Track"
+                                                                Click="BtnTrackPlayer_Click"
+                                                                Style="{StaticResource GhostButton}"
+                                                                Padding="6,2" FontSize="10"
+                                                                Margin="0,0,4,0" Tag="{Binding}"/>
+                                                        <Button Grid.Column="4" Content="Group ▾"
+                                                                Click="BtnAssignGroup_Click"
+                                                                Style="{StaticResource GhostButton}"
+                                                                Padding="6,2" FontSize="10"
+                                                                Tag="{Binding}"
+                                                                ToolTip="Assign to a group"/>
+                                                    </Grid>
+                                                    <DataTemplate.Triggers>
+                                                        <DataTrigger Binding="{Binding IsTracked}" Value="True">
+                                                            <Setter TargetName="StatusDot" Property="Fill" Value="#FFD166"/>
+                                                        </DataTrigger>
+                                                    </DataTemplate.Triggers>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </DockPanel>
+                                </TabItem>
+
+                                <!-- ===== GROUPS SUB-TAB ===== -->
+                                <TabItem Header="Groups" Style="{StaticResource PrettyTabItem}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+
+                                        <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,0,6">
+                                            <Button DockPanel.Dock="Right" Content="+ New"
+                                                    Click="BtnNewGroup_Click"
+                                                    Style="{StaticResource PrimaryButton}"
+                                                    Padding="8,3" Margin="6,0,0,0"/>
+                                            <ComboBox x:Name="CmbGroupSelector"
+                                                      Style="{StaticResource DarkComboBox}"
+                                                      SelectionChanged="CmbGroupSelector_SelectionChanged"
+                                                      DisplayMemberPath="Name"/>
+                                        </DockPanel>
+
+                                        <Grid Grid.Row="1" x:Name="PnlGroupHeader" Visibility="Collapsed"
+                                              Margin="0,0,0,6">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border x:Name="GroupColorSwatch" Grid.Column="0"
+                                                    Width="14" Height="14" CornerRadius="3"
+                                                    Margin="0,0,8,0" VerticalAlignment="Center"
+                                                    Background="#FF6B35"/>
+                                            <TextBlock Grid.Column="1" x:Name="TxtSelectedGroupName"
+                                                       VerticalAlignment="Center"
+                                                       FontWeight="Bold" FontSize="13"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                <CheckBox x:Name="ChkGroupNotify" Content="Notify"
+                                                          VerticalAlignment="Center"
+                                                          Margin="0,0,8,0"
+                                                          Click="ChkGroupNotify_Click"
+                                                          ToolTip="Toast when a member comes online"/>
+                                                <Button Content="Color" Click="BtnGroupColor_Click"
+                                                        Style="{StaticResource GhostButton}"
+                                                        Padding="6,2" FontSize="10" Margin="0,0,2,0"/>
+                                                <Button Content="Rename" Click="BtnGroupRename_Click"
+                                                        Style="{StaticResource GhostButton}"
+                                                        Padding="6,2" FontSize="10" Margin="0,0,2,0"/>
+                                                <Button Content="Delete" Click="BtnGroupDelete_Click"
+                                                        Style="{StaticResource GhostButton}"
+                                                        Padding="6,2" FontSize="10"/>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <TextBlock Grid.Row="2" x:Name="TxtGroupOnlineCount"
+                                                   Visibility="Collapsed"
+                                                   Foreground="{DynamicResource TextSubtle}"
+                                                   FontSize="10" Margin="0,0,0,4"/>
+
+                                        <ListBox Grid.Row="3" x:Name="ListGroupMembers"
+                                                 Background="Transparent" BorderThickness="0">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="0,3">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <StackPanel Orientation="Horizontal" Grid.Column="0">
+                                                            <Ellipse Width="8" Height="8"
+                                                                     Fill="{Binding StatusBrush}"
+                                                                     Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                            <TextBlock Text="{Binding Name}"
+                                                                       FontWeight="SemiBold"
+                                                                       VerticalAlignment="Center"
+                                                                       TextTrimming="CharacterEllipsis"
+                                                                       MaxWidth="140"
+                                                                       ToolTip="{Binding Name}"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="1" Text="{Binding StatusText}"
+                                                                   Foreground="{DynamicResource TextSubtle}"
+                                                                   VerticalAlignment="Center"
+                                                                   Margin="6,0,8,0" FontSize="11"/>
+                                                        <Button Grid.Column="2" Content="BM"
+                                                                Click="BtnGroupMemberBM_Click"
+                                                                Style="{StaticResource GhostButton}"
+                                                                Padding="4,2" FontSize="10"
+                                                                Margin="0,0,4,0" Tag="{Binding}"/>
+                                                        <Button Grid.Column="3" Content="✕"
+                                                                Click="BtnRemoveFromGroup_Click"
+                                                                Style="{StaticResource GhostButton}"
+                                                                Padding="6,1" FontSize="10"
+                                                                Tag="{Binding}"
+                                                                ToolTip="Remove from group"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+
+                                        <TextBlock Grid.Row="3" x:Name="TxtNoGroup"
+                                                   Text="No groups yet — click + New to create one"
+                                                   Foreground="{DynamicResource TextSubtle}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   FontSize="11"/>
+                                    </Grid>
+                                </TabItem>
+                            </TabControl>
                         </DockPanel>
                     </TabItem>
                 </TabControl>

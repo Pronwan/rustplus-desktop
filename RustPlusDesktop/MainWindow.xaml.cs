@@ -983,6 +983,7 @@ public partial class MainWindow : Window
         if (FindName("TxtVersion") is TextBlock txt)
             txt.Text = $"v{AppInfo.VersionShort}";
         InitCameraUi();
+        InitTrackerTab();
         ApplySettings();
         _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
         AppendLog($"[items-new] baseDir={baseDir}");
@@ -8035,6 +8036,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         Dispatcher.Invoke(() =>
         {
             RefreshOnlinePlayersList();
+            // Tracker tab mirrors
+            RefreshTrackerOnlineList();
+            RefreshSelectedGroupDetail();
+            NotifyGroupCameOnlineIfAny();
             // Update tracking status indicator
             bool anyTracked = TrackingService.GetTrackedPlayers().Count > 0;
             _vm.IsTrackingActive = TrackingService.IsTracking;
