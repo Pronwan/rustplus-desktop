@@ -724,19 +724,27 @@ public partial class MainWindow : Window
     {
         try
         {
-            // Online/Offline (wenn dieser Part auch vom Button abhängen soll, ebenfalls mit _announceSpawns verknüpfen)
-            if (prev.online != now.online  && _announceSpawns )
+            // Online/Offline. Chat side stays gated by _announceSpawns; Discord runs independently.
+            if (prev.online != now.online)
             {
-                bool isSelf = (vm.SteamId == _mySteamId);
-                bool shouldAnnounce = now.online ? TrackingService.AnnouncePlayerOnline : TrackingService.AnnouncePlayerOffline;
+                var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : "unknown";
 
-                if (shouldAnnounce)
+                if (_announceSpawns)
                 {
-                    var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : "unknown";
-                    var txt = now.online ? $"{vm.Name} came online @ {where}"
-                                         : $"{vm.Name} went offline";
-                    await SendTeamChatSafeAsync(txt);
+                    bool shouldAnnounceChat = now.online ? TrackingService.AnnouncePlayerOnline : TrackingService.AnnouncePlayerOffline;
+                    if (shouldAnnounceChat)
+                    {
+                        var txt = now.online ? $"{vm.Name} came online @ {where}"
+                                             : $"{vm.Name} went offline";
+                        await SendTeamChatSafeAsync(txt);
+                    }
                 }
+
+                string tag = now.online ? "PlayerOnline" : "PlayerOffline";
+                string title = now.online ? $"{vm.Name} came online" : $"{vm.Name} went offline";
+                string desc = now.online ? $"Last seen at **{where}**" : "Logged off";
+                int color = now.online ? Services.DiscordColors.Online : Services.DiscordColors.Offline;
+                DiscordSendEvent(tag, title, desc, color, where);
             }
 
             // Death/Respawn
@@ -747,25 +755,30 @@ public partial class MainWindow : Window
                 if ((!px.HasValue || !py.HasValue) && TryResolvePosFromDynMarkers(vm.SteamId, out var dx, out var dy))
                 { px = dx; py = dy; }
 
-                // ---> Meldung nur senden, wenn Button aktiv
+                bool isSelfPlayer = (vm.SteamId == _mySteamId);
+                var whereDeath = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : "unknown";
+
+                // Chat alert: gated by master + per-event toggle (existing behavior).
                 if (_announceSpawns)
                 {
-                    bool isSelf = (vm.SteamId == _mySteamId);
-                    bool shouldAnnounce = false;
-
-                    if (prev.dead != now.dead)
-                    {
-                        if (now.dead) shouldAnnounce = isSelf ? TrackingService.AnnouncePlayerDeathSelf : TrackingService.AnnouncePlayerDeathTeam;
-                        else shouldAnnounce = isSelf ? TrackingService.AnnouncePlayerRespawnSelf : TrackingService.AnnouncePlayerRespawnTeam;
-                    }
+                    bool shouldAnnounce = now.dead
+                        ? (isSelfPlayer ? TrackingService.AnnouncePlayerDeathSelf : TrackingService.AnnouncePlayerDeathTeam)
+                        : (isSelfPlayer ? TrackingService.AnnouncePlayerRespawnSelf : TrackingService.AnnouncePlayerRespawnTeam);
 
                     if (shouldAnnounce)
                     {
-                        var where = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : "unknown";
-                        var txt = now.dead ? $"{vm.Name} died @ {where}" : $"{vm.Name} respawned @ {where}";
+                        var txt = now.dead ? $"{vm.Name} died @ {whereDeath}" : $"{vm.Name} respawned @ {whereDeath}";
                         await SendTeamChatSafeAsync(txt);
                     }
                 }
+
+                // Discord: independent of chat toggles.
+                string deathTag = now.dead
+                    ? (isSelfPlayer ? "PlayerDeathSelf" : "PlayerDeathTeam")
+                    : (isSelfPlayer ? "PlayerRespawnSelf" : "PlayerRespawnTeam");
+                string deathTitle = now.dead ? $"{vm.Name} died" : $"{vm.Name} respawned";
+                int deathColor = now.dead ? Services.DiscordColors.Death : Services.DiscordColors.Online;
+                DiscordSendEvent(deathTag, deathTitle, $"Location: **{whereDeath}**", deathColor, whereDeath);
 
                 // Death-Pin weiter unabhängig vom Toggle behandeln
                 if (_showDeathMarkers && now.dead && px.HasValue && py.HasValue)
@@ -1026,6 +1039,12 @@ public partial class MainWindow : Window
         
         UpdateMasterToggleState();
         SyncAlertMenuItems();
+        UpdateDiscordMasterToggleState();
+        SyncDiscordMenuItems();
+
+        // Start the Discord webhook worker. Logs (without URLs) flow to the in-app console.
+        Services.DiscordWebhookService.OnLog += msg => Dispatcher.InvokeAsync(() => AppendLog(msg));
+        Services.DiscordWebhookService.Start();
 
         // One-time migration notice for v4.3 — Tracking & Stability improvements
         const string CurrentVersion = "4.3.1";
@@ -1180,16 +1199,24 @@ public partial class MainWindow : Window
 
         _monumentWatcher.OnOilRigTriggered += (s, monumentName) =>
         {
-            if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
-            Dispatcher.InvokeAsync(async () =>
-                await SendTeamChatSafeAsync($"[{monumentName}] triggered! Crate unlocks in ~15m."));
+            if (TrackingService.AnnounceSpawnsMaster && TrackingService.AnnounceOilRig)
+            {
+                Dispatcher.InvokeAsync(async () =>
+                    await SendTeamChatSafeAsync($"[{monumentName}] triggered! Crate unlocks in ~15m."));
+            }
+            Dispatcher.InvokeAsync(() => DiscordSendEvent("OilRig",
+                $"{monumentName} triggered",
+                "Crate unlocks in ~15 minutes.",
+                Services.DiscordColors.EventOrange));
         };
 
         // NEU: Update Events (10m / 5m Warnungen)
         _monumentWatcher.OnOilRigChatUpdate += (s, message) =>
         {
-            if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
-            Dispatcher.InvokeAsync(async () => await SendTeamChatSafeAsync(message));
+            if (TrackingService.AnnounceSpawnsMaster && TrackingService.AnnounceOilRig)
+                Dispatcher.InvokeAsync(async () => await SendTeamChatSafeAsync(message));
+            Dispatcher.InvokeAsync(() => DiscordSendEvent("OilRig", "Oil Rig update",
+                message, Services.DiscordColors.EventOrange));
         };
         
         _monumentWatcher.OnDebug += (s, msg) => Dispatcher.BeginInvoke(new Action(() => AppendLog(msg)));
@@ -4597,6 +4624,145 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             };
             mi.Click += TradeAlertSubItem_Click;
             TradeAlertsMenuItem.Items.Add(mi);
+        }
+    }
+
+    // --------------------------------------------------------------------
+    // Discord webhook UI: master toggle, per-event toggles, per-server mute,
+    // and the central send helper. Mirrors the chat-alerts pattern but
+    // routes to DiscordWebhookService instead of team chat.
+    // --------------------------------------------------------------------
+
+    private static readonly string[] DiscordEventTags = new[]
+    {
+        "CargoSpawn","CargoDock","CargoEgress","CargoArrival",
+        "Heli","Chinook","Vendor","OilRig","DeepSea",
+        "PlayerOnline","PlayerOffline","PlayerDeathSelf","PlayerDeathTeam",
+        "PlayerRespawnSelf","PlayerRespawnTeam","NewShops","SuspiciousShops"
+    };
+
+    private void DiscordAnnounce_Toggle(object sender, RoutedEventArgs e)
+    {
+        bool? current = DiscordAnnounce.IsChecked;
+        if (current == true)
+        {
+            TrackingService.DiscordMaster = true;
+            foreach (var tag in DiscordEventTags) TrackingService.SetDiscordEventEnabled(tag, true);
+        }
+        else
+        {
+            TrackingService.DiscordMaster = false;
+            foreach (var tag in DiscordEventTags) TrackingService.SetDiscordEventEnabled(tag, false);
+            if (current == null) DiscordAnnounce.IsChecked = false;
+        }
+        UpdateDiscordMasterToggleState();
+        SyncDiscordMenuItems();
+    }
+
+    private void DiscordAlert_MenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is string tag)
+        {
+            TrackingService.SetDiscordEventEnabled(tag, mi.IsChecked);
+            if (mi.IsChecked) TrackingService.DiscordMaster = true;
+            UpdateDiscordMasterToggleState();
+            SyncDiscordMenuItems();
+        }
+    }
+
+    private void UpdateDiscordMasterToggleState()
+    {
+        if (DiscordAnnounce == null) return;
+        int onCount = 0, total = DiscordEventTags.Length;
+        foreach (var tag in DiscordEventTags)
+            if (TrackingService.DiscordEventToggles.TryGetValue(tag, out var v) && v) onCount++;
+
+        if (!TrackingService.DiscordMaster || onCount == 0)
+        {
+            DiscordAnnounce.IsChecked = false;
+            if (onCount == 0) TrackingService.DiscordMaster = false;
+        }
+        else if (onCount == total)
+        {
+            DiscordAnnounce.IsChecked = true;
+        }
+        else
+        {
+            DiscordAnnounce.IsChecked = null; // partial
+        }
+    }
+
+    private void SyncDiscordMenuItems()
+    {
+        if (DiscordAnnounce?.ContextMenu == null) return;
+        bool masterOn = TrackingService.DiscordMaster;
+        foreach (var item in DiscordAnnounce.ContextMenu.Items)
+            if (item is MenuItem mi) SyncDiscordMenuItemRecursive(mi, masterOn);
+    }
+
+    private void SyncDiscordMenuItemRecursive(MenuItem mi, bool masterOn)
+    {
+        if (mi.Tag is string tag && DiscordEventTags.Contains(tag))
+        {
+            mi.IsEnabled = masterOn;
+            mi.IsChecked = masterOn && TrackingService.DiscordEventToggles.TryGetValue(tag, out var v) && v;
+        }
+        if (mi.HasItems)
+        {
+            foreach (var sub in mi.Items)
+                if (sub is MenuItem smi) SyncDiscordMenuItemRecursive(smi, masterOn);
+        }
+    }
+
+    /// <summary>
+    /// Per-server "Send Discord alerts" toggle in the server list right-click menu.
+    /// Wires the menu's check state from TrackingService whenever the menu opens.
+    /// </summary>
+    private void ServerCtx_Opened(object sender, RoutedEventArgs e)
+    {
+        if (sender is ContextMenu cm && cm.Items.Count > 0)
+        {
+            foreach (var item in cm.Items)
+            {
+                if (item is MenuItem mi && mi.Header?.ToString() == "Send Discord alerts")
+                {
+                    var prof = mi.Tag as ServerProfile;
+                    bool enabled = prof != null && !TrackingService.IsDiscordServerMuted(prof.Host);
+                    mi.IsChecked = enabled;
+                    break;
+                }
+            }
+        }
+    }
+
+    private void Server_DiscordMute_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is ServerProfile prof)
+        {
+            // mi.IsChecked AFTER the click is the new desired state ("Send Discord alerts" = on).
+            // Mute = NOT IsChecked.
+            TrackingService.SetDiscordServerMuted(prof.Host, !mi.IsChecked);
+        }
+    }
+
+    /// <summary>
+    /// Central send helper. Call this from any event site that already fires a
+    /// chat alert. The service drops the message silently if the URL is empty,
+    /// the per-server mute is on, or the per-event toggle is off.
+    /// </summary>
+    private void DiscordSendEvent(string eventTag, string title, string description, int colorRgb, string? gridCoord = null)
+    {
+        try
+        {
+            var prof = _vm?.Selected;
+            var host = prof?.Host ?? "";
+            var name = prof?.Name ?? "";
+            Services.DiscordWebhookService.QueueEvent(host, name, eventTag, title, description, colorRgb, gridCoord);
+        }
+        catch (Exception ex)
+        {
+            // Never let a webhook send break game-event handling.
+            AppendLog("[discord] send helper error: " + ex.Message);
         }
     }
 

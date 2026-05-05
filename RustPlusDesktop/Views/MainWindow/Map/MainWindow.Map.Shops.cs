@@ -48,6 +48,9 @@ public partial class MainWindow
                     string dir = GetDeepSeaDirection(deepSeaShop.X, deepSeaShop.Y);
                     if (_announceSpawns && TrackingService.AnnounceDeepSea)
                         _ = SendTeamChatSafeAsync($"Deep Sea will spawn soon! (Direction: {dir})");
+                    DiscordSendEvent("DeepSea", "Deep Sea Event incoming",
+                        $"Direction: **{dir}**",
+                        Services.DiscordColors.EventBlue);
                     AppendLog($"[DEEPSEA] Spawn detected at {deepSeaShop.X:F0},{deepSeaShop.Y:F0} ({dir})");
                 }
                 else
@@ -210,8 +213,7 @@ public partial class MainWindow
             return;
         }
 
-        if (!_announceSpawns || !TrackingService.AnnounceNewShops)
-            return;
+        bool chatNewShops = _announceSpawns && TrackingService.AnnounceNewShops;
 
         foreach (var s in shops)
         {
@@ -239,10 +241,19 @@ public partial class MainWindow
                 ? string.Join(", ", preview)
                 : "no stock";
 
-            string msg =
-                $"New shop {(s.Label ?? "Shop")} [{GetGridLabel(s)}]: {offersShort}";
-            AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert [new shop] {(s.Label ?? "Shop")} [{GetGridLabel(s)}]: {offersShort}");
-            await SendTeamChatSafeAsync(msg);
+            string label = s.Label ?? "Shop";
+            string grid = GetGridLabel(s);
+
+            if (chatNewShops)
+            {
+                string msg = $"New shop {label} [{grid}]: {offersShort}";
+                AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert [new shop] {label} [{grid}]: {offersShort}");
+                await SendTeamChatSafeAsync(msg);
+            }
+
+            DiscordSendEvent("NewShops", $"New shop: {label}",
+                $"Grid **{grid}**\nOffers: {offersShort}",
+                Services.DiscordColors.Shop, grid);
         }
     }
 
@@ -277,7 +288,7 @@ public partial class MainWindow
 
             if (life.LastSeenUtc == null)
             {
-                if (_announceSpawns && TrackingService.AnnounceSuspiciousShops && !life.AnnouncedSuspicious)
+                if (!life.AnnouncedSuspicious)
                 {
                     string grid = life.LastSnapshot != null ? GetGridLabel(life.LastSnapshot) : "unknown";
                     AppendLog($"[dbg] Shop {life.LastSnapshot?.Label ?? "(no label)"} [{grid}] offline after {(DateTime.UtcNow - life.FirstSeenUtc).TotalSeconds:0}s");
@@ -302,11 +313,20 @@ public partial class MainWindow
                                 ? string.Join(", ", preview)
                                 : "nothing in stock";
 
-                            string msg =
-                                $"Suspicious shop {(snap.Label ?? "Shop")} " +
-                                $"[{GetGridLabel(snap)}] was online {Math.Round(lived.TotalSeconds)}s, sold {firstFew}";
+                            string label = snap.Label ?? "Shop";
+                            string snapGrid = GetGridLabel(snap);
 
-                            _ = SendTeamChatSafeAsync(msg);
+                            if (_announceSpawns && TrackingService.AnnounceSuspiciousShops)
+                            {
+                                string msg =
+                                    $"Suspicious shop {label} " +
+                                    $"[{snapGrid}] was online {Math.Round(lived.TotalSeconds)}s, sold {firstFew}";
+                                _ = SendTeamChatSafeAsync(msg);
+                            }
+
+                            DiscordSendEvent("SuspiciousShops", $"Suspicious shop: {label}",
+                                $"Grid **{snapGrid}** — online {Math.Round(lived.TotalSeconds)}s\nSold: {firstFew}",
+                                Services.DiscordColors.Suspicious, snapGrid);
                         }
 
                         life.AnnouncedSuspicious = true;
