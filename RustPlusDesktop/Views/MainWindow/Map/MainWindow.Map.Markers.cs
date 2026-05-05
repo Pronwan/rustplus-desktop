@@ -463,18 +463,20 @@ public partial class MainWindow
         }
 
         // Docking announcement with 5s delay — only from real markers to avoid rate-limiting from ghost false-positives
-        if (!isGhost && state.IsDocked && !state.AnnouncedDock && TrackingService.AnnounceCargoDocking && _announceSpawns && state.DockTime.HasValue)
+        if (!isGhost && state.IsDocked && !state.AnnouncedDock && state.DockTime.HasValue
+            && (DateTime.UtcNow - state.DockTime.Value).TotalSeconds >= 5)
         {
-            if ((DateTime.UtcNow - state.DockTime.Value).TotalSeconds >= 5)
-            {
-                string grid = GetGridLabel(m.X, m.Y);
+            string grid = GetGridLabel(m.X, m.Y);
+            if (TrackingService.AnnounceCargoDocking && _announceSpawns)
                 _ = SendTeamChatSafeAsync($"Cargo Ship docked at {state.HarborName} ({grid})");
-                state.AnnouncedDock = true;
-            }
+            DiscordSendEvent("CargoDock", "Cargo Ship docked",
+                $"Anchored at **{state.HarborName}** ({grid})",
+                Services.DiscordColors.EventOrange, grid);
+            state.AnnouncedDock = true;
         }
 
         // Arrival Warning — only from real markers
-        if (!isGhost && !state.IsDocked && !state.AnnouncedArrivalWarning && TrackingService.AnnounceCargoArrival && _announceSpawns)
+        if (!isGhost && !state.IsDocked && !state.AnnouncedArrivalWarning)
         {
             var harbors = _monData.Where(mon => mon.Name?.Contains("Harbor", StringComparison.OrdinalIgnoreCase) == true);
             foreach (var h in harbors)
@@ -491,7 +493,12 @@ public partial class MainWindow
                         if (dToH < dLastToH) // Approaching
                         {
                             string grid = GetGridLabel(h.X, h.Y);
-                            _ = SendTeamChatSafeAsync($"Cargo Ship expected to dock at {Beautify(h.Name!)} ({grid}) in approx. 5 minutes.");
+                            string harborPretty = Beautify(h.Name!);
+                            if (TrackingService.AnnounceCargoArrival && _announceSpawns)
+                                _ = SendTeamChatSafeAsync($"Cargo Ship expected to dock at {harborPretty} ({grid}) in approx. 5 minutes.");
+                            DiscordSendEvent("CargoArrival", "Cargo Ship arriving soon",
+                                $"Expected to dock at **{harborPretty}** ({grid}) in approx. 5 minutes.",
+                                Services.DiscordColors.EventOrange, grid);
                             state.AnnouncedArrivalWarning = true;
                             break;
                         }
@@ -501,24 +508,21 @@ public partial class MainWindow
         }
 
         // Egress warning — only from real markers
-        if (!isGhost && state.IsDocked && state.DockTime.HasValue && !state.AnnouncedEgressWarning && _announceSpawns)
+        if (!isGhost && state.IsDocked && state.DockTime.HasValue && !state.AnnouncedEgressWarning)
         {
             int duration = TrackingService.GetLearnedDockingDuration(host);
             var elapsed = DateTime.UtcNow - state.DockTime.Value;
             if (elapsed.TotalMinutes >= (duration - 5) && duration > 5)
             {
-                if (!TrackingService.AnnounceCargoEgress)
-                {
-                    // Log once when threshold is met but setting is off (one-shot via flag)
-                    AppendLog($"[Egress] BLOCKED: AnnounceCargoEgress=False (duration={duration}m, elapsed={elapsed.TotalMinutes:F1}m)");
-                    state.AnnouncedEgressWarning = true; // Set flag to avoid log spam
-                }
-                else
-                {
-                    string grid = GetGridLabel(m.X, m.Y);
+                string grid = GetGridLabel(m.X, m.Y);
+                if (_announceSpawns && TrackingService.AnnounceCargoEgress)
                     _ = SendTeamChatSafeAsync($"Cargo Ship departing from {state.HarborName} in 5 minutes ({grid})");
-                    state.AnnouncedEgressWarning = true;
-                }
+                else if (_announceSpawns && !TrackingService.AnnounceCargoEgress)
+                    AppendLog($"[Egress] BLOCKED: AnnounceCargoEgress=False (duration={duration}m, elapsed={elapsed.TotalMinutes:F1}m)");
+                DiscordSendEvent("CargoEgress", "Cargo Ship departing soon",
+                    $"Leaving **{state.HarborName}** in 5 minutes ({grid})",
+                    Services.DiscordColors.EventOrange, grid);
+                state.AnnouncedEgressWarning = true;
             }
         }
 
@@ -1183,11 +1187,35 @@ public partial class MainWindow
                             _ => true 
                         };
 
-                        if (_announceSpawns && shouldAnnounce && _firstMarkerPollDone && !_firstPollDyn)
+                        if (_firstMarkerPollDone && !_firstPollDyn)
                         {
                             var grid = GetGridLabel(m.X, m.Y);
                             var kind = EventKindText(m.Type);
-                            _ = SendTeamChatSafeAsync($"{kind} spawned in at {grid}");
+                            if (_announceSpawns && shouldAnnounce)
+                                _ = SendTeamChatSafeAsync($"{kind} spawned in at {grid}");
+
+                            // Mirror to Discord. Each event maps to its own toggle so users
+                            // can pick a different subset for Discord vs team chat.
+                            string? dTag = m.Type switch
+                            {
+                                5 => "CargoSpawn",
+                                8 => "Heli",
+                                4 => "Chinook",
+                                6 => "Vendor",
+                                _ => null
+                            };
+                            int dColor = m.Type switch
+                            {
+                                5 => Services.DiscordColors.EventOrange,
+                                8 => Services.DiscordColors.Death,
+                                4 => Services.DiscordColors.EventBlue,
+                                6 => Services.DiscordColors.Vendor,
+                                _ => Services.DiscordColors.EventBlue
+                            };
+                            if (dTag != null)
+                                DiscordSendEvent(dTag, $"{kind} spawned",
+                                    $"Detected at **{grid}**",
+                                    dColor, grid);
                         }
                     }
 
@@ -1425,6 +1453,9 @@ public partial class MainWindow
                     _ = Dispatcher.InvokeAsync(() => site.MapElement = PlaceHeliCrashSite(site));
                     if (_announceSpawns && TrackingService.AnnounceHeli)
                         _ = SendTeamChatSafeAsync($"Patrol Heli shot down at {crashGrid}");
+                    DiscordSendEvent("Heli", "Patrol Heli shot down",
+                        $"Crash site at **{crashGrid}**",
+                        Services.DiscordColors.Death, crashGrid);
                     AppendLog($"[HeliCrash] Crash detected at {crashGrid} (last real pos {cx:F0},{cy:F0})");
                 }
 

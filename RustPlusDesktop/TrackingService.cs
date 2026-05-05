@@ -70,6 +70,12 @@ public class TrackingSettings
     public bool AnnounceSpawnsMaster { get; set; } = false;
     public bool SaveAlertSelection { get; set; } = true;
     public string LastSeenVersion { get; set; } = "";
+
+    // Discord webhook integration. One global URL, per-server mute, per-event toggle.
+    public string DiscordWebhookUrl { get; set; } = "";
+    public bool DiscordMaster { get; set; } = false;
+    public Dictionary<string, bool> DiscordEventEnabled { get; set; } = new();
+    public Dictionary<string, bool> DiscordServerMuted { get; set; } = new();
 }
 
 
@@ -276,6 +282,50 @@ public static class TrackingService
     {
         get => _settings.HideConsole;
         set { _settings.HideConsole = value; SaveDB(); }
+    }
+
+    // Discord webhook URL. Stored as a credential; redact from logs at all call sites.
+    public static string DiscordWebhookUrl
+    {
+        get => _settings.DiscordWebhookUrl ?? "";
+        set { _settings.DiscordWebhookUrl = value ?? ""; SaveDB(); }
+    }
+
+    // Master switch for Discord alerts. The "Discord" checkbox in the map controls bar.
+    public static bool DiscordMaster
+    {
+        get => _settings.DiscordMaster;
+        set { _settings.DiscordMaster = value; SaveDB(); }
+    }
+
+    public static bool IsDiscordEventEnabled(string tag)
+    {
+        if (!_settings.DiscordMaster) return false;
+        if (string.IsNullOrEmpty(tag)) return false;
+        return _settings.DiscordEventEnabled.TryGetValue(tag, out var v) && v;
+    }
+
+    public static void SetDiscordEventEnabled(string tag, bool enabled)
+    {
+        if (string.IsNullOrEmpty(tag)) return;
+        _settings.DiscordEventEnabled[tag] = enabled;
+        SaveDB();
+    }
+
+    public static IReadOnlyDictionary<string, bool> DiscordEventToggles => _settings.DiscordEventEnabled;
+
+    public static bool IsDiscordServerMuted(string serverHost)
+    {
+        if (string.IsNullOrEmpty(serverHost)) return false;
+        return _settings.DiscordServerMuted.TryGetValue(serverHost, out var muted) && muted;
+    }
+
+    public static void SetDiscordServerMuted(string serverHost, bool muted)
+    {
+        if (string.IsNullOrEmpty(serverHost)) return;
+        if (muted) _settings.DiscordServerMuted[serverHost] = true;
+        else _settings.DiscordServerMuted.Remove(serverHost);
+        SaveDB();
     }
 
     public static double SidebarWidth

@@ -822,8 +822,18 @@
                           SelectionChanged="ListServers_SelectionChanged">
 
                             <ListBox.Resources>
-                                <ContextMenu x:Key="ServerCtx" Foreground="White" Style="{StaticResource DarkContextMenu}">
+                                <ContextMenu x:Key="ServerCtx" Foreground="White" Style="{StaticResource DarkContextMenu}"
+                                             Opened="ServerCtx_Opened">
                                     <!-- Der Trick: den aktuellen Server ins Tag binden -->
+                                    <MenuItem x:Name="MenuServerDiscordMute"
+                                              Header="Send Discord alerts"
+                                              Foreground="Black"
+                                              IsCheckable="True"
+                                              StaysOpenOnClick="True"
+                                              Click="Server_DiscordMute_Click"
+                                              Tag="{Binding PlacementTarget.DataContext,
+                                                    RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    <Separator/>
                                     <MenuItem Header="Delete server…"
                                       Foreground="Black"
                                       Click="Server_Delete_Click"
@@ -2016,6 +2026,42 @@ Margin="12,0,0,0"
                                 <MenuItem Header="New Shops" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="NewShops"/>
                                 <MenuItem Header="Suspicious Shops" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="Alert_MenuItem_Click" Tag="SuspiciousShops"/>
                                 <MenuItem x:Name="TradeAlertsMenuItem" Header="Trade Alerts" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}"/>
+                            </ContextMenu>
+                        </CheckBox.ContextMenu>
+                    </CheckBox>
+                    <CheckBox Style="{StaticResource DotCheckBox}" x:Name="DiscordAnnounce"
+          Content="Discord"
+          ToolTip="Right-click to pick which events go to Discord. Configure the webhook URL in Settings."
+          IsChecked="False"
+          Margin="8,0,0,0"
+          IsThreeState="True"
+          Click="DiscordAnnounce_Toggle">
+                        <CheckBox.ContextMenu>
+                            <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                <MenuItem Header="Events" IsHitTestVisible="False" FontWeight="Bold" Foreground="{StaticResource TextBrushMuted}"/>
+                                <MenuItem Header="Cargo Ship" Style="{StaticResource DarkMenuItem}">
+                                    <MenuItem Header="Spawn" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="CargoSpawn"/>
+                                    <MenuItem Header="Harbor Docking" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="CargoDock"/>
+                                    <MenuItem Header="Departure (5m Warning)" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="CargoEgress"/>
+                                    <MenuItem Header="Arrival Warning (5m before Dock)" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="CargoArrival" x:Name="MenuDiscordCargoArrival"/>
+                                </MenuItem>
+                                <MenuItem Header="Patrol Helicopter" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="Heli"/>
+                                <MenuItem Header="Chinook (CH47)" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="Chinook"/>
+                                <MenuItem Header="Travelling Vendor" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="Vendor"/>
+                                <MenuItem Header="Oil Rig Trigger" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="OilRig"/>
+                                <MenuItem Header="Deep Sea Event" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="DeepSea"/>
+                                <Separator Style="{StaticResource DarkSeparator}"/>
+                                <MenuItem Header="Players" IsHitTestVisible="False" FontWeight="Bold" Foreground="{StaticResource TextBrushMuted}"/>
+                                <MenuItem Header="Online Status" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="PlayerOnline"/>
+                                <MenuItem Header="Offline Status" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="PlayerOffline"/>
+                                <MenuItem Header="Self Death" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="PlayerDeathSelf"/>
+                                <MenuItem Header="Team Death" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="PlayerDeathTeam"/>
+                                <MenuItem Header="Self Respawn" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="PlayerRespawnSelf"/>
+                                <MenuItem Header="Team Respawn" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="PlayerRespawnTeam"/>
+                                <Separator Style="{StaticResource DarkSeparator}"/>
+                                <MenuItem Header="Shops" IsHitTestVisible="False" FontWeight="Bold" Foreground="{StaticResource TextBrushMuted}"/>
+                                <MenuItem Header="New Shops" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="NewShops"/>
+                                <MenuItem Header="Suspicious Shops" IsCheckable="True" StaysOpenOnClick="True" Style="{StaticResource DarkMenuItem}" Click="DiscordAlert_MenuItem_Click" Tag="SuspiciousShops"/>
                             </ContextMenu>
                         </CheckBox.ContextMenu>
                     </CheckBox>

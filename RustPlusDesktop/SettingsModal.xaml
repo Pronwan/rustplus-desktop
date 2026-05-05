@@ -1,8 +1,8 @@
 <Window x:Class="RustPlusDesk.Views.SettingsModal"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Application Settings" 
-        Width="500" Height="480"
+        Title="Application Settings"
+        Width="500" Height="600"
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True" 
         WindowStyle="None"
@@ -100,10 +100,45 @@
                                Checked="OnSettingChanged" Unchecked="OnSettingChanged"
                                ToolTip="Automatically starts polling shops and alerts when connected to a server."/>
 
+                    <TextBlock Text="Discord Webhook" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
+                    <TextBlock Text="Send alerts (Cargo, Heli, deaths, etc.) to a Discord channel via webhook. The same URL is used for every server you pair, the message shows which server fired it. Mute a single server with right-click on the server in the list."
+                               Foreground="{DynamicResource TextSubtle}"
+                               FontSize="11"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,8"/>
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="TxtDiscordUrl"
+                                 Grid.Column="0"
+                                 Padding="6,4"
+                                 FontSize="12"
+                                 Background="{DynamicResource Surface}"
+                                 Foreground="{DynamicResource TextPrimary}"
+                                 BorderBrush="{DynamicResource CardBorder}"
+                                 BorderThickness="1"
+                                 ToolTip="Paste your Discord channel webhook URL (Server Settings → Integrations → Webhooks → New → Copy URL)"
+                                 LostFocus="TxtDiscordUrl_LostFocus"/>
+                        <Button x:Name="BtnDiscordTest"
+                                Grid.Column="1"
+                                Content="Test"
+                                Width="64"
+                                Margin="8,0,0,0"
+                                Style="{StaticResource GhostButton}"
+                                Click="BtnDiscordTest_Click"
+                                ToolTip="Send a test message to the configured webhook"/>
+                    </Grid>
+                    <TextBlock x:Name="TxtDiscordStatus"
+                               Foreground="{DynamicResource TextSubtle}"
+                               FontSize="11"
+                               Margin="0,0,0,4"/>
+
                     <TextBlock Text="Steam Account" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
-                    <TextBlock Text="Manage your linked Steam account in the main window." 
-                               Foreground="{DynamicResource TextSubtle}" 
-                               FontSize="12" 
+                    <TextBlock Text="Manage your linked Steam account in the main window."
+                               Foreground="{DynamicResource TextSubtle}"
+                               FontSize="12"
                                FontStyle="Italic"
                                TextWrapping="Wrap"/>
                 </StackPanel>
