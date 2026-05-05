@@ -18,12 +18,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>4.3</Version>
+		<Version>4.3.1</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>4.3</AssemblyVersion>
-		<FileVersion>4.3</FileVersion>
-		<InformationalVersion>4.3</InformationalVersion>
+		<AssemblyVersion>4.3.1</AssemblyVersion>
+		<FileVersion>4.3.1</FileVersion>
+		<InformationalVersion>4.3.1</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
