@@ -1,7 +1,7 @@
 <Window x:Class="RustPlusDesk.Views.MigrationNoticeWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Rust+ Desktop — v4.2 Update"
+        Title="Rust+ Desktop — v4.3 Update"
         Width="480" Height="420"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
@@ -76,7 +76,7 @@
             <Border Grid.Row="0" Background="#161B22" CornerRadius="12,12,0,0" Padding="20,14">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Border Background="#E8611A" CornerRadius="5" Padding="6,3" Margin="0,0,10,0">
-                        <TextBlock Text="v4.3" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="v4.3.1" FontSize="11" FontWeight="Bold" Foreground="White"/>
                     </Border>
                     <TextBlock Text="Tracking &amp; Stability" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
                     <TextBlock Text=" — Update Notice" FontSize="15" Foreground="#5A6A7A" VerticalAlignment="Center"/>

@@ -1028,8 +1028,10 @@ public partial class MainWindow : Window
         SyncAlertMenuItems();
 
         // One-time migration notice for v4.3 — Tracking & Stability improvements
-        const string CurrentVersion = "4.3";
-        if (TrackingService.LastSeenVersion != CurrentVersion)
+        const string CurrentVersion = "4.3.1";
+        bool alreadySawV43 = (TrackingService.LastSeenVersion == "4.3" || TrackingService.LastSeenVersion == "4.3.1");
+
+        if (!alreadySawV43)
         {
             TrackingService.LastSeenVersion = CurrentVersion;
             Dispatcher.InvokeAsync(() =>
