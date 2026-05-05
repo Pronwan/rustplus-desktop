@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
@@ -23,6 +25,18 @@ public partial class MainWindow
         public Brush StatusBrush { get; set; } = Brushes.Gray;
     }
 
+    private sealed class TrackedRow
+    {
+        public string BMId { get; set; } = "";
+        public string Name { get; set; } = "";
+        public bool IsOnline { get; set; }
+        public string StatusText { get; set; } = "";
+        public Brush StatusBrush { get; set; } = Brushes.Gray;
+        public string GroupName { get; set; } = "";
+        public Brush GroupColorBrush { get; set; } = Brushes.Transparent;
+        public Visibility GroupVisibility { get; set; } = Visibility.Collapsed;
+    }
+
     // ─── STATE ──────────────────────────────────────────────────────────────
 
     private HashSet<string> _prevOnlineBMIds = new();
@@ -40,7 +54,10 @@ public partial class MainWindow
         PlayerGroupsService.OnGroupsChanged += () => Dispatcher.Invoke(() =>
         {
             RefreshGroupsList();
+            RefreshTrackedTabList();
+            RebuildGroupMarkers();
         });
+        InitGroupMarkers();
 
         // Fetch online players whenever the Tracker tab becomes the active main tab.
         if (MainTabs != null) MainTabs.SelectionChanged += MainTabs_SelectionChanged_Tracker;
@@ -49,22 +66,28 @@ public partial class MainWindow
 
         RefreshGroupsList();
         RefreshTrackerOnlineList();
+        RefreshTrackedTabList();
     }
 
     private void MainTabs_SelectionChanged_Tracker(object sender, SelectionChangedEventArgs e)
     {
         if (e.OriginalSource != MainTabs) return; // ignore bubbled events from inner tabs
-        if (MainTabs.SelectedItem == TabTracker) TriggerOnlineFetchIfPossible();
+        if (MainTabs.SelectedItem == TabTracker) _ = TriggerOnlineFetchIfPossibleAsync();
     }
 
     private void TrackerSubTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (e.OriginalSource != TrackerSubTabs) return;
-        // Sub-tab index 0 == Online (XAML order).
-        if (TrackerSubTabs.SelectedIndex == 0) TriggerOnlineFetchIfPossible();
+        // Sub-tab order (XAML): 0 = Online, 1 = Tracked, 2 = Groups.
+        switch (TrackerSubTabs.SelectedIndex)
+        {
+            case 0: _ = TriggerOnlineFetchIfPossibleAsync(); break;
+            case 1: RefreshTrackedTabList(); break;
+            case 2: RefreshSelectedGroupDetail(); break;
+        }
     }
 
-    private async void TriggerOnlineFetchIfPossible()
+    private async System.Threading.Tasks.Task TriggerOnlineFetchIfPossibleAsync()
     {
         if (_tracker_fetchInFlight) return;
         if (_vm?.Selected == null || string.IsNullOrEmpty(_vm.Selected.Host)) return;
@@ -88,13 +111,48 @@ public partial class MainWindow
         finally
         {
             _tracker_fetchInFlight = false;
+            UpdateTrackerLastPullText();
         }
+    }
+
+    private async void BtnTrackerRefresh_Click(object sender, RoutedEventArgs e)
+    {
+        if (BtnTrackerRefresh == null) return;
+        if (_tracker_fetchInFlight) return;
+        if (_vm?.Selected == null || string.IsNullOrEmpty(_vm.Selected.Host))
+        {
+            AppendLog("[tracking] Cannot refresh — no server selected.");
+            return;
+        }
+
+        var origContent = BtnTrackerRefresh.Content;
+        BtnTrackerRefresh.IsEnabled = false;
+        BtnTrackerRefresh.Content = "…";
+        try
+        {
+            await TriggerOnlineFetchIfPossibleAsync();
+        }
+        finally
+        {
+            BtnTrackerRefresh.Content = origContent;
+            BtnTrackerRefresh.IsEnabled = true;
+        }
+    }
+
+    private void UpdateTrackerLastPullText()
+    {
+        if (TxtTrackerLastPull == null) return;
+        var t = TrackingService.LastPullTime;
+        TxtTrackerLastPull.Text = t.HasValue
+            ? $"updated {t.Value.ToLocalTime():HH:mm:ss}"
+            : "never refreshed";
     }
 
     // ─── ONLINE SUB-TAB ──────────────────────────────────────────────────────
 
     private void RefreshTrackerOnlineList()
     {
+        UpdateTrackerLastPullText();
         if (ListTrackerOnline == null) return;
 
         var players = TrackingService.LastOnlinePlayers;
@@ -158,14 +216,33 @@ public partial class MainWindow
     {
         if (sender is not Button btn) return;
         if (btn.Tag is not OnlinePlayerBM player) return;
+        ShowGroupAssignMenu(btn, player.BMId, player.Name, ensureTrackedOnAssign: true,
+                            liveOnlinePlayer: player);
+    }
 
+    private void BtnTrackedAssignGroup_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button btn) return;
+        if (btn.Tag is not TrackedRow row) return;
+        // Tracked-tab rows are already-tracked players, so no need to "ensure tracked".
+        ShowGroupAssignMenu(btn, row.BMId, row.Name, ensureTrackedOnAssign: false,
+                            liveOnlinePlayer: null);
+    }
+
+    /// <summary>
+    /// Shared "Group ▾" context menu used by Online and Tracked sub-tabs.
+    /// </summary>
+    private void ShowGroupAssignMenu(Button placementTarget, string bmId, string playerName,
+                                     bool ensureTrackedOnAssign,
+                                     OnlinePlayerBM? liveOnlinePlayer)
+    {
         var menu = new ContextMenu();
         if (TryFindResource("DarkContextMenu") is Style ctxStyle) menu.Style = ctxStyle;
         var darkMenuItem = TryFindResource("DarkMenuItem") as Style;
         var darkSeparator = TryFindResource("DarkSeparator") as Style;
 
         var groups = PlayerGroupsService.Groups;
-        var current = PlayerGroupsService.GetGroupForPlayer(player.BMId);
+        var current = PlayerGroupsService.GetGroupForPlayer(bmId);
 
         MenuItem MakeItem(string header)
         {
@@ -179,6 +256,24 @@ public partial class MainWindow
             var s = new Separator();
             if (darkSeparator != null) s.Style = darkSeparator;
             return s;
+        }
+
+        void AfterMutation()
+        {
+            RefreshTrackerOnlineList();
+            RefreshTrackedTabList();
+            RefreshSelectedGroupDetail();
+        }
+
+        void EnsureTrackedIfNeeded()
+        {
+            if (!ensureTrackedOnAssign) return;
+            if (liveOnlinePlayer != null && !liveOnlinePlayer.IsTracked)
+            {
+                TrackingService.TrackPlayer(liveOnlinePlayer.BMId, liveOnlinePlayer.Name,
+                                            _vm?.Selected?.Name ?? "Unknown");
+                liveOnlinePlayer.IsTracked = true;
+            }
         }
 
         if (groups.Count == 0)
@@ -204,9 +299,9 @@ public partial class MainWindow
             string capturedId = g.Id;
             item.Click += (_, __) =>
             {
-                PlayerGroupsService.AssignPlayerToGroup(player.BMId, capturedId);
-                EnsurePlayerTracked(player);
-                RefreshTrackerOnlineList();
+                PlayerGroupsService.AssignPlayerToGroup(bmId, capturedId);
+                EnsureTrackedIfNeeded();
+                AfterMutation();
             };
             menu.Items.Add(item);
         }
@@ -217,8 +312,8 @@ public partial class MainWindow
             var removeItem = MakeItem("Remove from group");
             removeItem.Click += (_, __) =>
             {
-                PlayerGroupsService.RemovePlayerFromGroup(player.BMId);
-                RefreshTrackerOnlineList();
+                PlayerGroupsService.RemovePlayerFromGroup(bmId);
+                AfterMutation();
             };
             menu.Items.Add(removeItem);
         }
@@ -230,13 +325,13 @@ public partial class MainWindow
             var name = PromptForString("New group", "Group name:");
             if (string.IsNullOrWhiteSpace(name)) return;
             var newGroup = PlayerGroupsService.CreateGroup(name!);
-            PlayerGroupsService.AssignPlayerToGroup(player.BMId, newGroup.Id);
-            EnsurePlayerTracked(player);
-            RefreshTrackerOnlineList();
+            PlayerGroupsService.AssignPlayerToGroup(bmId, newGroup.Id);
+            EnsureTrackedIfNeeded();
+            AfterMutation();
         };
         menu.Items.Add(newItem);
 
-        menu.PlacementTarget = btn;
+        menu.PlacementTarget = placementTarget;
         menu.IsOpen = true;
     }
 
@@ -247,6 +342,236 @@ public partial class MainWindow
             TrackingService.TrackPlayer(player.BMId, player.Name, _vm.Selected?.Name ?? "Unknown");
             player.IsTracked = true;
         }
+    }
+
+    /// <summary>Toggle: tracked → untrack (removes from any group); not tracked → track.</summary>
+    private void BtnTrackToggle_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as Button)?.Tag is not OnlinePlayerBM player) return;
+        if (player.IsTracked)
+        {
+            TrackingService.UntrackPlayer(player.BMId);
+            PlayerGroupsService.RemovePlayerFromGroup(player.BMId);
+            player.IsTracked = false;
+            AppendLog($"[tracking] Untracked {player.Name}");
+        }
+        else
+        {
+            TrackingService.TrackPlayer(player.BMId, player.Name, _vm.Selected?.Name ?? "Unknown");
+            player.IsTracked = true;
+            AppendLog($"[tracking] Now tracking {player.Name}");
+        }
+        RefreshTrackerOnlineList();
+        RefreshTrackedTabList();
+    }
+
+    // ─── TRACKED SUB-TAB ────────────────────────────────────────────────────
+
+    private void RefreshTrackedTabList()
+    {
+        if (ListTracked == null) return;
+
+        var tracked = TrackingService.GetTrackedPlayers();
+        var onlineByBMId = TrackingService.LastOnlinePlayers.ToDictionary(p => p.BMId, p => p);
+
+        var rows = tracked.Select(t =>
+        {
+            bool isOnline = onlineByBMId.ContainsKey(t.BMId);
+            var group = PlayerGroupsService.GetGroupForPlayer(t.BMId);
+
+            string statusText;
+            if (isOnline)
+            {
+                statusText = $"online · {onlineByBMId[t.BMId].PlayTimeStr}";
+            }
+            else
+            {
+                var lastSession = t.Sessions != null && t.Sessions.Count > 0
+                    ? t.Sessions[t.Sessions.Count - 1] : null;
+                if (lastSession != null && lastSession.DisconnectTime.HasValue)
+                    statusText = $"offline · last seen {RelativeTime(lastSession.DisconnectTime.Value)}";
+                else
+                    statusText = "offline";
+            }
+
+            return new TrackedRow
+            {
+                BMId = t.BMId,
+                Name = t.Name,
+                IsOnline = isOnline,
+                StatusText = statusText,
+                StatusBrush = isOnline
+                    ? Brushes.LimeGreen
+                    : new SolidColorBrush(Color.FromRgb(0x55, 0x5a, 0x60)),
+                GroupName = group?.Name ?? "",
+                GroupColorBrush = group != null ? BrushFromHex(group.ColorHex) : Brushes.Transparent,
+                GroupVisibility = group != null ? Visibility.Visible : Visibility.Collapsed
+            };
+        })
+        .OrderByDescending(r => r.IsOnline)
+        .ThenBy(r => r.Name, StringComparer.OrdinalIgnoreCase)
+        .ToList();
+
+        ListTracked.ItemsSource = null;
+        ListTracked.ItemsSource = rows;
+
+        if (TxtTrackedHeader != null)
+        {
+            int onlineCount = rows.Count(r => r.IsOnline);
+            TxtTrackedHeader.Text = rows.Count == 0
+                ? ""
+                : $"{rows.Count} tracked · {onlineCount} online";
+        }
+
+        if (TxtNoTracked != null)
+            TxtNoTracked.Visibility = rows.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        if (ListTracked != null)
+            ListTracked.Visibility = rows.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    private void BtnTrackedBM_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as Button)?.Tag is not TrackedRow row) return;
+        if (string.IsNullOrEmpty(row.BMId)) return;
+        try
+        {
+            Process.Start(new ProcessStartInfo($"https://www.battlemetrics.com/players/{row.BMId}")
+            { UseShellExecute = true });
+        }
+        catch { /* swallow */ }
+    }
+
+    private void BtnTrackedReport_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as Button)?.Tag is not TrackedRow row) return;
+        ShowPlayerAnalysis(row.BMId, row.Name);
+    }
+
+    // ─── MANUAL ADD (numeric ID or full BM URL) ──────────────────────────────
+
+    private static readonly Regex _bmUrlRegex =
+        new(@"battlemetrics\.com/players/(\d+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    private static string? ParseBmId(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return null;
+        var trimmed = input.Trim();
+        if (trimmed.All(char.IsDigit)) return trimmed;
+        var m = _bmUrlRegex.Match(trimmed);
+        return m.Success ? m.Groups[1].Value : null;
+    }
+
+    private void TxtAddTrackedBMId_GotFocus(object sender, RoutedEventArgs e)
+    {
+        if (TxtAddTrackedBMId.Text == "BM ID or URL...")
+        {
+            TxtAddTrackedBMId.Text = "";
+            TxtAddTrackedBMId.Foreground = Brushes.White;
+        }
+    }
+
+    private void TxtAddTrackedBMId_LostFocus(object sender, RoutedEventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(TxtAddTrackedBMId.Text))
+        {
+            TxtAddTrackedBMId.Text = "BM ID or URL...";
+            TxtAddTrackedBMId.Foreground = Brushes.Gray;
+        }
+    }
+
+    private void TxtAddTrackedBMId_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            BtnAddTrackedManual_Click(BtnAddTrackedManual, e);
+            e.Handled = true;
+        }
+    }
+
+    private async void BtnAddTrackedManual_Click(object sender, RoutedEventArgs e)
+    {
+        if (TxtAddTrackedBMId == null || BtnAddTrackedManual == null) return;
+
+        var raw = TxtAddTrackedBMId.Text?.Trim() ?? "";
+        if (string.IsNullOrEmpty(raw) || raw == "BM ID or URL...") return;
+
+        var bmId = ParseBmId(raw);
+        if (bmId == null)
+        {
+            AppendLog("[tracking] Could not parse BM ID — paste a numeric ID or full battlemetrics.com/players/… URL.");
+            return;
+        }
+
+        if (TrackingService.GetTrackedPlayers().Any(p => p.BMId == bmId))
+        {
+            AppendLog($"[tracking] Already tracking {bmId}");
+            return;
+        }
+
+        var origContent = BtnAddTrackedManual.Content;
+        BtnAddTrackedManual.Content = "...";
+        BtnAddTrackedManual.IsEnabled = false;
+        TxtAddTrackedBMId.IsEnabled = false;
+
+        try
+        {
+            var name = await TrackingService.FetchPlayerNameAsync(bmId);
+            var lastSession = await TrackingService.FetchPlayerLastSessionAsync(bmId);
+
+            var serverName = _vm?.Selected?.Name;
+            if (string.IsNullOrEmpty(serverName))
+            {
+                var (_, _, lastName) = TrackingService.LastServer;
+                serverName = !string.IsNullOrEmpty(lastName) ? lastName : "Manual";
+            }
+
+            TrackingService.TrackPlayer(bmId, name, serverName, lastSession);
+
+            string sessionMsg = lastSession != null
+                ? $" (last seen {lastSession.ConnectTime.ToLocalTime():g})"
+                : "";
+            AppendLog($"[tracking] Manually added {name} ({bmId}){sessionMsg}");
+
+            TxtAddTrackedBMId.Text = "BM ID or URL...";
+            TxtAddTrackedBMId.Foreground = Brushes.Gray;
+
+            RefreshTrackedTabList();
+            RefreshTrackerOnlineList();
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[tracking] Manual add failed: {ex.Message}");
+        }
+        finally
+        {
+            BtnAddTrackedManual.Content = origContent;
+            BtnAddTrackedManual.IsEnabled = true;
+            TxtAddTrackedBMId.IsEnabled = true;
+        }
+    }
+
+    private void BtnTrackedRemove_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as Button)?.Tag is not TrackedRow row) return;
+        TrackingService.UntrackPlayer(row.BMId);
+        PlayerGroupsService.RemovePlayerFromGroup(row.BMId);
+        // If the player is currently visible on the Online list, flip its IsTracked flag
+        // so the Track button in that template re-evaluates its trigger.
+        var liveRow = TrackingService.LastOnlinePlayers.FirstOrDefault(p => p.BMId == row.BMId);
+        if (liveRow != null) liveRow.IsTracked = false;
+        AppendLog($"[tracking] Untracked {row.Name}");
+        RefreshTrackedTabList();
+        RefreshTrackerOnlineList();
+    }
+
+    private static string RelativeTime(DateTime t)
+    {
+        var span = DateTime.UtcNow - t.ToUniversalTime();
+        if (span.TotalMinutes < 1) return "just now";
+        if (span.TotalMinutes < 60) return $"{(int)span.TotalMinutes}m ago";
+        if (span.TotalHours < 24) return $"{(int)span.TotalHours}h ago";
+        if (span.TotalDays < 30) return $"{(int)span.TotalDays}d ago";
+        return t.ToLocalTime().ToString("yyyy-MM-dd");
     }
 
     // ─── GROUPS SUB-TAB ──────────────────────────────────────────────────────
@@ -306,6 +631,15 @@ public partial class MainWindow
         if (TxtSelectedGroupName != null) TxtSelectedGroupName.Text = group.Name;
         if (GroupColorSwatch != null) GroupColorSwatch.Background = BrushFromHex(group.ColorHex);
         if (ChkGroupNotify != null) ChkGroupNotify.IsChecked = group.NotifyOnOnline;
+
+        // Pin / Clear-pin buttons reflect current-server pin state.
+        var serverName = _vm?.Selected?.Name;
+        bool hasPin = !string.IsNullOrEmpty(serverName)
+                      && PlayerGroupsService.GetMapPin(group.Id, serverName!) != null;
+        if (BtnGroupPin != null)
+            BtnGroupPin.Content = hasPin ? "📍 Move" : "📍 Pin";
+        if (BtnGroupUnpin != null)
+            BtnGroupUnpin.Visibility = hasPin ? Visibility.Visible : Visibility.Collapsed;
 
         var trackedByBMId = TrackingService.GetTrackedPlayers().ToDictionary(p => p.BMId, p => p);
         var onlineByBMId = TrackingService.LastOnlinePlayers.ToDictionary(p => p.BMId, p => p);

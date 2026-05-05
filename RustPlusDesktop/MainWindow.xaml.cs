@@ -8038,6 +8038,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             RefreshOnlinePlayersList();
             // Tracker tab mirrors
             RefreshTrackerOnlineList();
+            RefreshTrackedTabList();
             RefreshSelectedGroupDetail();
             NotifyGroupCameOnlineIfAny();
             // Update tracking status indicator

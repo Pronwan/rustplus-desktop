@@ -236,6 +236,7 @@ public partial class MainWindow
             int s = map.WorldSize;
             _monData = map.Monuments.ToList();
             BuildMonumentOverlays();
+            RebuildGroupMarkers();
             var worldRectPx = ComputeWorldRectFromWorldSize(imgW, imgH, s, padWorld: 2000);
             AppendLog($"worldRectPx(fromS)=[{(int)worldRectPx.X},{(int)worldRectPx.Y},{(int)worldRectPx.Width}x{(int)worldRectPx.Height}] img={imgW}x{imgH} S={s}");
 

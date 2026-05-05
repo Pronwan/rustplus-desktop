@@ -1953,6 +1953,18 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                     <!-- ===== TRACKER ===== -->
                     <TabItem Header="Tracker" x:Name="TabTracker" Style="{StaticResource PrettyTabItem}">
                         <DockPanel LastChildFill="True">
+                            <DockPanel DockPanel.Dock="Top" LastChildFill="False" Margin="0,0,0,4">
+                                <Button DockPanel.Dock="Right" x:Name="BtnTrackerRefresh"
+                                        Content="↻" FontSize="13" Width="26" Height="22"
+                                        Padding="0"
+                                        Style="{StaticResource GhostButton}"
+                                        Click="BtnTrackerRefresh_Click"
+                                        ToolTip="Refresh online players from BattleMetrics now"/>
+                                <TextBlock DockPanel.Dock="Right" x:Name="TxtTrackerLastPull"
+                                           Foreground="{DynamicResource TextSubtle}" FontSize="10"
+                                           VerticalAlignment="Center" Margin="0,0,6,0"
+                                           Text="never refreshed"/>
+                            </DockPanel>
                             <TabControl x:Name="TrackerSubTabs" Style="{StaticResource PrettyTabControl}">
 
                                 <!-- ===== ONLINE SUB-TAB ===== -->
@@ -2015,11 +2027,13 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                                 Style="{StaticResource GhostButton}"
                                                                 Padding="4,2" FontSize="10"
                                                                 Margin="0,0,4,0" Tag="{Binding}"/>
-                                                        <Button Grid.Column="3" Content="Track"
-                                                                Click="BtnTrackPlayer_Click"
+                                                        <Button Grid.Column="3" x:Name="BtnTrackToggle"
+                                                                Content="Track"
+                                                                Click="BtnTrackToggle_Click"
                                                                 Style="{StaticResource GhostButton}"
                                                                 Padding="6,2" FontSize="10"
-                                                                Margin="0,0,4,0" Tag="{Binding}"/>
+                                                                Margin="0,0,4,0" Tag="{Binding}"
+                                                                ToolTip="Add to tracked players"/>
                                                         <Button Grid.Column="4" Content="Group ▾"
                                                                 Click="BtnAssignGroup_Click"
                                                                 Style="{StaticResource GhostButton}"
@@ -2030,8 +2044,108 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                     <DataTemplate.Triggers>
                                                         <DataTrigger Binding="{Binding IsTracked}" Value="True">
                                                             <Setter TargetName="StatusDot" Property="Fill" Value="#FFD166"/>
+                                                            <Setter TargetName="BtnTrackToggle" Property="Content" Value="✕"/>
+                                                            <Setter TargetName="BtnTrackToggle" Property="ToolTip" Value="Untrack player"/>
                                                         </DataTrigger>
                                                     </DataTemplate.Triggers>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </DockPanel>
+                                </TabItem>
+
+                                <!-- ===== TRACKED SUB-TAB ===== -->
+                                <TabItem Header="Tracked" Style="{StaticResource PrettyTabItem}">
+                                    <DockPanel LastChildFill="True">
+                                        <DockPanel DockPanel.Dock="Top" LastChildFill="True" Margin="0,0,0,6">
+                                            <Button DockPanel.Dock="Right" x:Name="BtnAddTrackedManual"
+                                                    Content="+ Add" Click="BtnAddTrackedManual_Click"
+                                                    Style="{StaticResource PrimaryButton}"
+                                                    Padding="8,3" Margin="6,0,0,0"
+                                                    ToolTip="Add a player by BattleMetrics ID or URL"/>
+                                            <TextBox x:Name="TxtAddTrackedBMId"
+                                                     Padding="6,3" FontSize="11"
+                                                     Background="#1a1c1e" Foreground="Gray"
+                                                     BorderThickness="1" BorderBrush="#333"
+                                                     Text="BM ID or URL..."
+                                                     GotFocus="TxtAddTrackedBMId_GotFocus"
+                                                     LostFocus="TxtAddTrackedBMId_LostFocus"
+                                                     KeyDown="TxtAddTrackedBMId_KeyDown"
+                                                     ToolTip="Numeric ID or full https://www.battlemetrics.com/players/&#8230; URL"/>
+                                        </DockPanel>
+                                        <TextBlock x:Name="TxtTrackedHeader" DockPanel.Dock="Top"
+                                                   Margin="0,0,0,6"
+                                                   Foreground="{DynamicResource TextSubtle}"
+                                                   FontSize="11"/>
+                                        <TextBlock x:Name="TxtNoTracked" DockPanel.Dock="Top"
+                                                   Visibility="Collapsed"
+                                                   Text="No tracked players yet. Add one above, or use the Online tab."
+                                                   Foreground="{DynamicResource TextSubtle}"
+                                                   HorizontalAlignment="Center" Margin="0,32,0,0"
+                                                   FontSize="11" TextWrapping="Wrap"
+                                                   TextAlignment="Center" MaxWidth="240"/>
+
+                                        <ListBox x:Name="ListTracked" Background="Transparent"
+                                                 BorderThickness="0"
+                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="0,3">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <StackPanel Orientation="Horizontal" Grid.Column="0">
+                                                            <Ellipse Width="8" Height="8"
+                                                                     Fill="{Binding StatusBrush}"
+                                                                     Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold"
+                                                                       VerticalAlignment="Center"
+                                                                       TextTrimming="CharacterEllipsis"
+                                                                       MaxWidth="100"
+                                                                       ToolTip="{Binding Name}"/>
+                                                            <Border Width="8" Height="8" CornerRadius="2"
+                                                                    Background="{Binding GroupColorBrush}"
+                                                                    Margin="6,0,4,0" VerticalAlignment="Center"
+                                                                    Visibility="{Binding GroupVisibility}"/>
+                                                            <TextBlock Text="{Binding GroupName}"
+                                                                       Foreground="{DynamicResource TextSubtle}"
+                                                                       FontSize="10" VerticalAlignment="Center"
+                                                                       Visibility="{Binding GroupVisibility}"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="1" Text="{Binding StatusText}"
+                                                                   Foreground="{DynamicResource TextSubtle}"
+                                                                   VerticalAlignment="Center"
+                                                                   Margin="6,0,8,0" FontSize="11"/>
+                                                        <Button Grid.Column="2" Content="BM"
+                                                                Click="BtnTrackedBM_Click"
+                                                                Style="{StaticResource GhostButton}"
+                                                                Padding="4,2" FontSize="10"
+                                                                Margin="0,0,4,0" Tag="{Binding}"
+                                                                ToolTip="Open on BattleMetrics"/>
+                                                        <Button Grid.Column="3" Content="Group ▾"
+                                                                Click="BtnTrackedAssignGroup_Click"
+                                                                Style="{StaticResource GhostButton}"
+                                                                Padding="6,2" FontSize="10"
+                                                                Margin="0,0,4,0" Tag="{Binding}"
+                                                                ToolTip="Assign to a group"/>
+                                                        <Button Grid.Column="4" Content="Report"
+                                                                Click="BtnTrackedReport_Click"
+                                                                Style="{StaticResource GhostButton}"
+                                                                Padding="6,2" FontSize="10"
+                                                                Margin="0,0,4,0" Tag="{Binding}"
+                                                                ToolTip="Activity Intelligence Report"/>
+                                                        <Button Grid.Column="5" Content="✕"
+                                                                Click="BtnTrackedRemove_Click"
+                                                                Style="{StaticResource GhostButton}"
+                                                                Padding="6,1" FontSize="10"
+                                                                Tag="{Binding}"
+                                                                ToolTip="Untrack player"/>
+                                                    </Grid>
                                                 </DataTemplate>
                                             </ListBox.ItemTemplate>
                                         </ListBox>
@@ -2080,6 +2194,15 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                           Margin="0,0,8,0"
                                                           Click="ChkGroupNotify_Click"
                                                           ToolTip="Toast when a member comes online"/>
+                                                <Button x:Name="BtnGroupPin" Content="📍 Pin" Click="BtnGroupPin_Click"
+                                                        Style="{StaticResource GhostButton}"
+                                                        Padding="6,2" FontSize="10" Margin="0,0,2,0"
+                                                        ToolTip="Pin this group's base on the map"/>
+                                                <Button x:Name="BtnGroupUnpin" Content="Clear pin" Click="BtnGroupUnpin_Click"
+                                                        Style="{StaticResource GhostButton}"
+                                                        Padding="6,2" FontSize="10" Margin="0,0,2,0"
+                                                        Visibility="Collapsed"
+                                                        ToolTip="Remove this group's pin from the map"/>
                                                 <Button Content="Color" Click="BtnGroupColor_Click"
                                                         Style="{StaticResource GhostButton}"
                                                         Padding="6,2" FontSize="10" Margin="0,0,2,0"/>

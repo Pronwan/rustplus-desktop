@@ -117,6 +117,74 @@ public static class PlayerGroupsService
         return changed;
     }
 
+    // ─── MAP PINS (per server) ───────────────────────────────────────────────
+
+    public static GroupMapPin? GetMapPin(string groupId, string serverName)
+    {
+        if (string.IsNullOrEmpty(groupId) || string.IsNullOrEmpty(serverName)) return null;
+        lock (_lock)
+        {
+            var g = _groups.FirstOrDefault(x => x.Id == groupId);
+            return g?.MapPins.FirstOrDefault(p =>
+                string.Equals(p.Server, serverName, StringComparison.OrdinalIgnoreCase));
+        }
+    }
+
+    public static IReadOnlyList<(PlayerGroup Group, GroupMapPin Pin)> GetMapPinsForServer(string serverName)
+    {
+        if (string.IsNullOrEmpty(serverName)) return Array.Empty<(PlayerGroup, GroupMapPin)>();
+        lock (_lock)
+        {
+            var result = new List<(PlayerGroup, GroupMapPin)>();
+            foreach (var g in _groups)
+            {
+                var pin = g.MapPins.FirstOrDefault(p =>
+                    string.Equals(p.Server, serverName, StringComparison.OrdinalIgnoreCase));
+                if (pin != null) result.Add((g, pin));
+            }
+            return result;
+        }
+    }
+
+    /// <summary>Adds or updates the pin for (group, server).</summary>
+    public static bool SetMapPin(string groupId, string serverName, double x, double y)
+    {
+        if (string.IsNullOrEmpty(groupId) || string.IsNullOrEmpty(serverName)) return false;
+        lock (_lock)
+        {
+            var g = _groups.FirstOrDefault(x => x.Id == groupId);
+            if (g == null) return false;
+            var existing = g.MapPins.FirstOrDefault(p =>
+                string.Equals(p.Server, serverName, StringComparison.OrdinalIgnoreCase));
+            if (existing != null)
+            {
+                existing.X = x;
+                existing.Y = y;
+            }
+            else
+            {
+                g.MapPins.Add(new GroupMapPin { Server = serverName, X = x, Y = y });
+            }
+        }
+        SaveAndNotify();
+        return true;
+    }
+
+    public static bool ClearMapPin(string groupId, string serverName)
+    {
+        if (string.IsNullOrEmpty(groupId) || string.IsNullOrEmpty(serverName)) return false;
+        bool changed;
+        lock (_lock)
+        {
+            var g = _groups.FirstOrDefault(x => x.Id == groupId);
+            if (g == null) return false;
+            changed = g.MapPins.RemoveAll(p =>
+                string.Equals(p.Server, serverName, StringComparison.OrdinalIgnoreCase)) > 0;
+        }
+        if (changed) SaveAndNotify();
+        return changed;
+    }
+
     private static void Load()
     {
         try
