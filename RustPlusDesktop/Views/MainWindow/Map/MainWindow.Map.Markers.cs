@@ -42,6 +42,23 @@ public partial class MainWindow
     }
     private readonly Dictionary<uint, CargoDockInfo> _cargoDockStates = new();
     private bool _firstPollDyn = true;
+    private int _pollFailCount = 0;
+    private bool _isAutoReconnecting = false;
+
+    private class HeliCrashSite
+    {
+        public uint HeliId;
+        public double X, Y;
+        public DateTime CrashedAt;
+        public FrameworkElement? MapElement;
+        public TextBlock? TimerLabel;
+    }
+    private readonly List<HeliCrashSite> _heliCrashSites = new();
+
+    private bool IsInsideMap(double x, double y)
+        => _worldSizeS > 0 && x > 0 && x < _worldSizeS && y > 0 && y < _worldSizeS;
+
+
     private void BuildMonumentOverlays()
     {
         if (Overlay == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0) return;
@@ -213,7 +230,10 @@ public partial class MainWindow
             ShowMapBasic(map.Bitmap);
             SetupMapScene(map.Bitmap);
             _worldSizeS = map.WorldSize;
-            _worldRectPx = ComputeWorldRectFromWorldSize(map.PixelWidth, map.PixelHeight, _worldSizeS, 2000);
+
+            double wDip = map.Bitmap.PixelWidth * (96.0 / map.Bitmap.DpiX);
+            double hDip = map.Bitmap.PixelHeight * (96.0 / map.Bitmap.DpiY);
+            _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, 2000);
             ResetMapZoom();
             RedrawGrid();
             Dispatcher.InvokeAsync(() =>
@@ -231,14 +251,14 @@ public partial class MainWindow
 
             RedrawGrid();
 
-            int imgW = map.PixelWidth;
-            int imgH = map.PixelHeight;
+            double wDip2 = map.Bitmap.PixelWidth * (96.0 / map.Bitmap.DpiX);
+            double hDip2 = map.Bitmap.PixelHeight * (96.0 / map.Bitmap.DpiY);
             int s = map.WorldSize;
             _monData = map.Monuments.ToList();
             BuildMonumentOverlays();
             RebuildGroupMarkers();
-            var worldRectPx = ComputeWorldRectFromWorldSize(imgW, imgH, s, padWorld: 2000);
-            AppendLog($"worldRectPx(fromS)=[{(int)worldRectPx.X},{(int)worldRectPx.Y},{(int)worldRectPx.Width}x{(int)worldRectPx.Height}] img={imgW}x{imgH} S={s}");
+            var worldRectPx = ComputeWorldRectFromWorldSize(wDip2, hDip2, s, padWorld: 2000);
+            AppendLog($"worldRectDip(fromS)=[{(int)worldRectPx.X},{(int)worldRectPx.Y},{(int)worldRectPx.Width}x{(int)worldRectPx.Height}] dipSize={wDip2:F0}x{hDip2:F0} S={s}");
 
             var mons = map.Monuments.Where(m => !string.IsNullOrWhiteSpace(m.Name)).ToList();
 
@@ -340,7 +360,7 @@ public partial class MainWindow
         return host;
     }
 
-    private void ProcessCargoDocking(RustPlusClientReal.DynMarker m)
+    private void ProcessCargoDocking(RustPlusClientReal.DynMarker m, bool isGhost = false)
     {
         if (m.Type != 5) return;
         
@@ -350,9 +370,10 @@ public partial class MainWindow
         {
             state = new CargoDockInfo { Id = m.Id, LastX = m.X, LastY = m.Y, FirstSeen = DateTime.UtcNow };
             
-            // Check if it's near the edge (Spawn detection)
+            // Only mark as "seen at edge" (fresh spawn) if we were already connected —
+            // not on the first poll after connect, where cargo may already be mid-route.
             double distFromCenter = Math.Sqrt(m.X * m.X + m.Y * m.Y);
-            if (distFromCenter > (_worldSizeS * 0.42)) // Approx edge of map
+            if (!_firstPollDyn && distFromCenter > (_worldSizeS * 0.42))
             {
                 state.SeenAtEdge = true;
             }
@@ -373,10 +394,10 @@ public partial class MainWindow
         double distMoved = Math.Sqrt(dx * dx + dy * dy);
         
         // Threshold for stationary (approx < 0.5m per poll)
-        bool isStationary = distMoved < 0.5; 
+        bool isStationary = distMoved < 0.5;
         if (!isStationary) state.EverMoved = true;
         
-        if (isStationary && !state.IsDocked)
+        if (isStationary && !state.IsDocked && !isGhost) // Ghost markers cannot trigger docking
         {
             var harbor = _monData.FirstOrDefault(mon => 
                 (mon.Name?.Contains("Harbor", StringComparison.OrdinalIgnoreCase) == true) && 
@@ -442,8 +463,8 @@ public partial class MainWindow
             state.AnnouncedArrivalWarning = false; // Reset for next harbor
         }
 
-        // Docking announcement with 5s delay
-        if (state.IsDocked && !state.AnnouncedDock && TrackingService.AnnounceCargoDocking && _announceSpawns && state.DockTime.HasValue)
+        // Docking announcement with 5s delay — only from real markers to avoid rate-limiting from ghost false-positives
+        if (!isGhost && state.IsDocked && !state.AnnouncedDock && TrackingService.AnnounceCargoDocking && _announceSpawns && state.DockTime.HasValue)
         {
             if ((DateTime.UtcNow - state.DockTime.Value).TotalSeconds >= 5)
             {
@@ -453,8 +474,8 @@ public partial class MainWindow
             }
         }
 
-        // Arrival Warning (Trigger Point Detection)
-        if (!state.IsDocked && !state.AnnouncedArrivalWarning && TrackingService.AnnounceCargoArrival && _announceSpawns)
+        // Arrival Warning — only from real markers
+        if (!isGhost && !state.IsDocked && !state.AnnouncedArrivalWarning && TrackingService.AnnounceCargoArrival && _announceSpawns)
         {
             var harbors = _monData.Where(mon => mon.Name?.Contains("Harbor", StringComparison.OrdinalIgnoreCase) == true);
             foreach (var h in harbors)
@@ -480,22 +501,38 @@ public partial class MainWindow
             }
         }
 
-        // Egress warning (5 minutes before expected departure)
-        if (state.IsDocked && state.DockTime.HasValue && !state.AnnouncedEgressWarning && TrackingService.AnnounceCargoEgress && _announceSpawns)
+        // Egress warning — only from real markers
+        if (!isGhost && state.IsDocked && state.DockTime.HasValue && !state.AnnouncedEgressWarning && _announceSpawns)
         {
             int duration = TrackingService.GetLearnedDockingDuration(host);
             var elapsed = DateTime.UtcNow - state.DockTime.Value;
             if (elapsed.TotalMinutes >= (duration - 5) && duration > 5)
             {
-                string grid = GetGridLabel(m.X, m.Y);
-               // _ = SendTeamChatSafeAsync($"Cargo Ship departing from Harbor in 5 minutes ({grid})");
-                _ = SendTeamChatSafeAsync($"Cargo Ship departing from {state.HarborName} in 5 minutes ({grid})");
-                state.AnnouncedEgressWarning = true;
+                if (!TrackingService.AnnounceCargoEgress)
+                {
+                    // Log once when threshold is met but setting is off (one-shot via flag)
+                    AppendLog($"[Egress] BLOCKED: AnnounceCargoEgress=False (duration={duration}m, elapsed={elapsed.TotalMinutes:F1}m)");
+                    state.AnnouncedEgressWarning = true; // Set flag to avoid log spam
+                }
+                else
+                {
+                    string grid = GetGridLabel(m.X, m.Y);
+                    _ = SendTeamChatSafeAsync($"Cargo Ship departing from {state.HarborName} in 5 minutes ({grid})");
+                    state.AnnouncedEgressWarning = true;
+                }
             }
         }
 
         state.LastX = m.X;
         state.LastY = m.Y;
+    }
+
+    /// <summary>Formats a TimeSpan as a human-readable "1h 23m" or "45m" string for event dock tooltips.</summary>
+    private static string FormatAgo(TimeSpan ts)
+    {
+        if (ts.TotalHours >= 1)
+            return $"{(int)ts.TotalHours}h {ts.Minutes}m";
+        return $"{(int)ts.TotalMinutes}m";
     }
 
     private void CleanupCargoDockStates()
@@ -573,6 +610,7 @@ public partial class MainWindow
             UpdateEventDock(combinedList);
 
             _firstMarkerPollDone = true;
+            _pollFailCount = 0; // Connection is healthy
 
 
 
@@ -580,6 +618,19 @@ public partial class MainWindow
         }
         catch
         {
+            _pollFailCount++;
+            // After 5 consecutive failures the WebSocket is likely dead — auto-reconnect
+            if (_pollFailCount >= 5 && !_isAutoReconnecting && _vm?.Selected != null)
+            {
+                _isAutoReconnecting = true;
+                _pollFailCount = 0;
+                AppendLog("[AutoReconnect] Connection lost — reconnecting...");
+                _ = Dispatcher.InvokeAsync(async () =>
+                {
+                    await PerformConnectAsync(true);
+                    _isAutoReconnecting = false;
+                });
+            }
         }
     }
 
@@ -673,7 +724,29 @@ public partial class MainWindow
         activeEvents.Add(new EventDockItem { Name = "Travelling Vendor", Icon = "pack://application:,,,/icons/vendor.png", Active = vendor.Id != 0, Id = vendor.Id, X = vendor.X, Y = vendor.Y, Trackable = true, Type = 6 });
  
         // 5. Deep Sea (Using native _deepSeaActive logic)
-        activeEvents.Add(new EventDockItem { Name = "Deep Sea Event", Icon = "pack://application:,,,/icons/ds_event.png", Active = _deepSeaActive, Id = 0, X = 0, Y = 0, Trackable = false, Type = 0 });
+        string? dsTimer = null;
+        string? dsTip = null;
+        if (_deepSeaActive)
+        {
+            if (_deepSeaSpawnTime.HasValue)
+            {
+                var dsElapsed = DateTime.UtcNow - _deepSeaSpawnTime.Value;
+                dsTimer = $"{(int)dsElapsed.TotalHours:D1}:{dsElapsed.Minutes:D2}";
+                dsTip = $"Spawned {FormatAgo(dsElapsed)} ago";
+            }
+            else
+            {
+                dsTimer = "??:??";
+                dsTip = _deepSeaMidEvent ? "Shops enabled mid-event \u2014 spawn time unknown" : "Spawn time unknown";
+            }
+        }
+        else if (_deepSeaDespawnTime.HasValue)
+        {
+            var dsInactive = DateTime.UtcNow - _deepSeaDespawnTime.Value;
+            dsTimer = $"{(int)dsInactive.TotalHours:D1}:{dsInactive.Minutes:D2}";
+            dsTip = $"Inactive since {FormatAgo(dsInactive)} ago";
+        }
+        activeEvents.Add(new EventDockItem { Name = "Deep Sea Event", Icon = "pack://application:,,,/icons/ds_event.png", Active = _deepSeaActive, Id = 0, X = 0, Y = 0, Trackable = false, Type = 0, TimerText = dsTimer, ToolTip = dsTip });
 
         Dispatcher.Invoke(() =>
         {
@@ -989,6 +1062,26 @@ public partial class MainWindow
             state.History.Add((m.X, m.Y));
             if (state.History.Count > 5) state.History.RemoveAt(0);
             state.MissingCount = 0;
+            state.LastRealX = m.X; // Track last real (non-ghost) position for crash detection
+            state.LastRealY = m.Y;
+
+            // False alarm: if a crash site exists for this heli but heli is back, retract it
+            if (m.Type == 8)
+            {
+                var existing = _heliCrashSites.FirstOrDefault(cs => cs.HeliId == key);
+                if (existing != null)
+                {
+                    var site = existing;
+                    _ = Dispatcher.InvokeAsync(() =>
+                    {
+                        if (site.MapElement != null) Overlay.Children.Remove(site.MapElement);
+                    });
+                    _heliCrashSites.Remove(existing);
+                    if (_announceSpawns && TrackingService.AnnounceHeli)
+                        _ = SendTeamChatSafeAsync($"Crash detected due to server lag — Heli is still on map at {GetGridLabel(m.X, m.Y)}");
+                    AppendLog($"[HeliCrash] False alarm retracted — Heli {key} reappeared at {GetGridLabel(m.X, m.Y)}");
+                }
+            }
 
             bool online = false, dead = false;
             if (_lastPresence.TryGetValue(m.SteamId, out var pr)) { online = pr.Item1; dead = pr.Item2; }
@@ -1081,7 +1174,7 @@ public partial class MainWindow
                             8 => TrackingService.AnnounceHeli,
                             4 => TrackingService.AnnounceChinook,
                             6 => TrackingService.AnnounceVendor,
-                            9 => TrackingService.AnnounceOilRig,
+                            9 => false, // Oil Rig handled by MonumentWatcher (sends its own triggered message)
                             _ => true 
                         };
 
@@ -1235,9 +1328,9 @@ public partial class MainWindow
                                 }
                                 else
                                 {
-                                    // Connected mid-route — duration known but elapsed unknown
-                                    pmtTimer.TimerText.Text = "??:??";
-                                    pmtTimer.TimerContainer.Visibility = Visibility.Visible;
+                                    // Connected mid-route — hide the timer on the marker,
+                                    // the Event Dock already shows ??:?? with the tooltip
+                                    pmtTimer.TimerContainer.Visibility = Visibility.Collapsed;
                                 }
                             }
                             else pmtTimer.TimerContainer.Visibility = Visibility.Collapsed;
@@ -1299,9 +1392,17 @@ public partial class MainWindow
 
                         if (state.Type == 5)
                         {
-                            // Maintain docking state during ghosting with a fake marker at predicted position
-                            var ghost = new RustPlusClientReal.DynMarker(id, 5, "CargoShip", nextX, nextY, "Cargo Ship", null, 0);
-                            ProcessCargoDocking(ghost);
+                            // When docked: use last real position to prevent ghost velocity
+                            // from triggering a false departure (which resets DockTime, breaking the 5s chat threshold)
+                            double ghostX = nextX;
+                            double ghostY = nextY;
+                            if (_cargoDockStates.TryGetValue(id, out var cds) && cds.IsDocked)
+                            {
+                                ghostX = cds.LastX;
+                                ghostY = cds.LastY;
+                            }
+                            var ghost = new RustPlusClientReal.DynMarker(id, 5, "CargoShip", ghostX, ghostY, "Cargo Ship", null, 0);
+                            ProcessCargoDocking(ghost, isGhost: true);
                         }
 
                         AnimateMarker(el, p.X - off, p.Y - off);
@@ -1314,10 +1415,23 @@ public partial class MainWindow
             // Real removal after 5 missing polls or if no state
             if (_dynEls.TryGetValue(id, out var oldEl))
             {
+                // Heli crash detection: if Type==8 and last real position was inside the map, it was shot down
+                if (state != null && state.Type == 8 && IsInsideMap(state.LastRealX, state.LastRealY))
+                {
+                    double cx = state.LastRealX, cy = state.LastRealY;
+                    string crashGrid = GetGridLabel(cx, cy);
+                    var site = new HeliCrashSite { HeliId = id, X = cx, Y = cy, CrashedAt = DateTime.UtcNow };
+                    _heliCrashSites.Add(site);
+                    _ = Dispatcher.InvokeAsync(() => site.MapElement = PlaceHeliCrashSite(site));
+                    if (_announceSpawns && TrackingService.AnnounceHeli)
+                        _ = SendTeamChatSafeAsync($"Patrol Heli shot down at {crashGrid}");
+                    AppendLog($"[HeliCrash] Crash detected at {crashGrid} (last real pos {cx:F0},{cy:F0})");
+                }
+
                 Overlay.Children.Remove(oldEl);
                 _dynEls.Remove(id);
                 _dynStates.Remove(id);
-                if (_trackingEntityId == id) _trackingEntityId = null; 
+                if (_trackingEntityId == id) _trackingEntityId = null;
             }
         }
 
@@ -1332,6 +1446,7 @@ public partial class MainWindow
         }
 
         CleanupCargoDockStates();
+        UpdateHeliCrashSites();
     }
 
     private void AttachTrackingHandler(FrameworkElement el, uint id)
@@ -1352,6 +1467,56 @@ public partial class MainWindow
             }
         };
     }
+    private FrameworkElement PlaceHeliCrashSite(HeliCrashSite site)
+    {
+        var container = new StackPanel { Orientation = Orientation.Vertical, HorizontalAlignment = HorizontalAlignment.Center };
+
+        var img = new Image { Width = 28, Height = 28, HorizontalAlignment = HorizontalAlignment.Center };
+        RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
+        try { img.Source = new BitmapImage(new Uri("pack://application:,,,/icons/explosion.png")); } catch { }
+        container.Children.Add(img);
+
+        var lbl = new TextBlock
+        {
+            Text = "0m ago",
+            Foreground = new SolidColorBrush(Color.FromRgb(255, 160, 60)),
+            FontSize = 10,
+            FontWeight = FontWeights.Bold,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Effect = new System.Windows.Media.Effects.DropShadowEffect { BlurRadius = 4, ShadowDepth = 1, Opacity = 0.8, Color = Colors.Black }
+        };
+        container.Children.Add(lbl);
+        site.TimerLabel = lbl;
+
+        ToolTipService.SetToolTip(container, $"Patrol Heli crash site");
+
+        var p = WorldToImagePx(site.X, site.Y);
+        Canvas.SetLeft(container, p.X - 14);
+        Canvas.SetTop(container, p.Y - 14);
+        Panel.SetZIndex(container, 910);
+        Overlay.Children.Add(container);
+        return container;
+    }
+
+    private void UpdateHeliCrashSites()
+    {
+        var expired = _heliCrashSites.Where(cs => (DateTime.UtcNow - cs.CrashedAt).TotalMinutes >= 10).ToList();
+        foreach (var cs in expired)
+        {
+            if (cs.MapElement != null) Overlay.Children.Remove(cs.MapElement);
+            _heliCrashSites.Remove(cs);
+        }
+
+        foreach (var cs in _heliCrashSites)
+        {
+            if (cs.TimerLabel != null)
+            {
+                int mins = (int)(DateTime.UtcNow - cs.CrashedAt).TotalMinutes;
+                cs.TimerLabel.Text = mins == 0 ? "just now" : $"{mins}m ago";
+            }
+        }
+    }
+
     private FrameworkElement BuildAnimatedAirVehicleMarker(RustPlusClientReal.DynMarker m)
     {
         var grid = new Grid { Width = 128, Height = 128, ClipToBounds = false };

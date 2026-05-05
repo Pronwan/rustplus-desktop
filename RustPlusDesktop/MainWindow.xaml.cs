@@ -182,7 +182,7 @@ public partial class MainWindow : Window
 
         // Um den Spieler zentrieren …
         double vx = pHost.X - side / 2.0;
-        double vy = pHost.Y - side / 4.0;
+        double vy = pHost.Y - side / 2.0;
 
         // … innerhalb des Hosts clampen
         vx = Math.Max(0, Math.Min(vx, hostW - side));
@@ -1202,18 +1202,21 @@ public partial class MainWindow : Window
         { OverlayToolMode.Erase, ToolEraseButton }
     };
 
-        _monumentWatcher.OnOilRigTriggered += async (s, monumentName) =>
+        _monumentWatcher.OnOilRigTriggered += (s, monumentName) =>
         {
-            await SendTeamChatSafeAsync($"[{monumentName}] triggered! Crate unlocks in ~15m.");
+            if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
+            Dispatcher.InvokeAsync(async () =>
+                await SendTeamChatSafeAsync($"[{monumentName}] triggered! Crate unlocks in ~15m."));
         };
 
         // NEU: Update Events (10m / 5m Warnungen)
-        _monumentWatcher.OnOilRigChatUpdate += async (s, message) =>
-        { 
-             await SendTeamChatSafeAsync(message);
+        _monumentWatcher.OnOilRigChatUpdate += (s, message) =>
+        {
+            if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
+            Dispatcher.InvokeAsync(async () => await SendTeamChatSafeAsync(message));
         };
         
-        _monumentWatcher.OnDebug += (s, msg) => AppendLog(msg);
+        _monumentWatcher.OnDebug += (s, msg) => Dispatcher.BeginInvoke(new Action(() => AppendLog(msg)));
 
         // Auto-connect if enabled
         if (TrackingService.AutoConnectEnabled && _vm.Selected != null)
@@ -1614,6 +1617,7 @@ public partial class MainWindow : Window
         public double LastVX, LastVY;
         public double LastCalculatedAngle;
         public bool SeenAtEdge;
+        public double LastRealX, LastRealY; // last confirmed non-ghost position (for crash detection)
     }
     private readonly Dictionary<uint, DynMarkerState> _dynStates = new();
     private readonly HashSet<uint> _dynKnown = new();                      // “already spawned” for chat announcements
@@ -1816,6 +1820,12 @@ public partial class MainWindow : Window
         // Reset state for specific server logic
         _monumentWatcher.Reset();
         _deepSeaActive = false;
+        _firstShopPollDone = false;
+        _deepSeaSpawnTime = null;
+        _deepSeaDespawnTime = null;
+        _deepSeaMidEvent = false;
+        foreach (var cs in _heliCrashSites) { if (cs.MapElement != null) Overlay?.Children.Remove(cs.MapElement); }
+        _heliCrashSites.Clear();
 
         if (_rust is RustPlusClientReal real)
         {
@@ -4255,11 +4265,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     // From worldSize and image size compute the centered playable square in IMAGE PIXELS.
     // The "2000" is the UI canvas padding used by Rust's own Map code (1000 per side).
-    private static Rect ComputeWorldRectFromWorldSize(int imgW, int imgH, int worldSize, int padWorld = 2000)
+    private static Rect ComputeWorldRectFromWorldSize(double imgW, double imgH, double worldSize, double padWorld = 2000)
     {
         if (worldSize <= 0) return new Rect(0, 0, imgW, imgH); // fallback
 
-        int minSidePx = Math.Min(imgW, imgH);
+        double minSidePx = Math.Min(imgW, imgH);
         double scale = (double)worldSize / (worldSize + padWorld); // fraction of the image occupied by the world
         double sidePx = minSidePx * scale;
 
@@ -4726,7 +4736,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 Radius = 5,
                 IsDot = true,
                 ScaleExp = 1.05,
-                ScaleBaseMult = 1.0
+                ScaleBaseMult = 1.0,
+                ScaleTarget = sp,
+                ScaleCenterX = 5.0,
+                ScaleCenterY = 5.0
             };
             Panel.SetZIndex(sp, 905);
             ApplyCurrentOverlayScale(sp);
@@ -5068,28 +5081,29 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private async Task SendTeamChatSafeAsync(string text)
     {
+        // Thread-safe: called from both UI thread (DynEvents) and background threads (MonumentWatcher)
         try
         {
             if (_rust == null) return;
             var t = _rust.GetType();
-            // try the common ones
             var m =
                 t.GetMethod("SendTeamMessageAsync", new[] { typeof(string), typeof(CancellationToken) }) ??
                 t.GetMethod("SendTeamMessageAsync", new[] { typeof(string) }) ??
                 t.GetMethod("SendChatMessageAsync", new[] { typeof(string) }) ??
                 t.GetMethod("SendMessageAsync", new[] { typeof(string) });
 
-            if (m != null)
-            {
-                object? ret = (m.GetParameters().Length == 2)
-                    ? m.Invoke(_rust, new object[] { text, CancellationToken.None })
-                    : m.Invoke(_rust, new object[] { text });
+            if (m == null) return;
 
-                if (ret is Task task) await task.ConfigureAwait(false);
-            }
+            object? ret = (m.GetParameters().Length == 2)
+                ? m.Invoke(_rust, new object[] { text, CancellationToken.None })
+                : m.Invoke(_rust, new object[] { text });
+
+            if (ret is Task task) await task.ConfigureAwait(false);
         }
-        catch { /* ignore */ }
+        catch { /* ignore send errors */ }
     }
+
+
     private static string EventKindText(int type) => type switch
     {
         5 => "Cargo Ship",
@@ -5141,7 +5155,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         double exp = SHOP_SIZE_EXP, baseMult = SHOP_BASE_MULT;
 
         FrameworkElement target = el;
-        double centerX = 0.0, centerY = 0.0;
+        double centerX = -1.0, centerY = -1.0;
 
         if (el.Tag is PlayerMarkerTag pt)
         {
@@ -5170,7 +5184,25 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         double scale = CalcOverlayScale(eff, exp, baseMult);
         double rotation = (el.Tag is PlayerMarkerTag ptRot) ? ptRot.Rotation : 0;
 
-        target.RenderTransformOrigin = new Point(0.5, 0.5); 
+        // Pivot-Logik: Falls wir explizite Center-Koordinaten haben, nutzen wir diese
+        if (centerX >= 0 && centerY >= 0)
+        {
+            double w = target.ActualWidth > 0 ? target.ActualWidth : target.Width;
+            double h = target.ActualHeight > 0 ? target.ActualHeight : target.Height;
+
+            if (w > 0 && h > 0)
+            {
+                target.RenderTransformOrigin = new Point(centerX / w, centerY / h);
+            }
+            else
+            {
+                target.RenderTransformOrigin = new Point(0.5, 0.5);
+            }
+        }
+        else
+        {
+            target.RenderTransformOrigin = new Point(0.5, 0.5); 
+        }
         
         var group = target.RenderTransform as TransformGroup;
         if (group == null || group.Children.Count < 2 || !(group.Children[0] is ScaleTransform) || !(group.Children[1] is RotateTransform))

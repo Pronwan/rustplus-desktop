@@ -14,6 +14,21 @@ namespace RustPlusDesk.Views;
 public partial class MainWindow
 {
     private bool _deepSeaActive = false;
+    private bool _firstShopPollDone = false;         // true after first successful shop poll
+    private DateTime? _deepSeaSpawnTime = null;       // when we witnessed the spawn (null = mid-event or not yet)
+    private DateTime? _deepSeaDespawnTime = null;     // when we witnessed the despawn (null = active or unknown)
+    private bool _deepSeaMidEvent = false;            // shops enabled / connected while Deep Sea already active
+
+    // Known Deep Sea NPC shop names — filtered from New Shop chat notifications
+    private static readonly HashSet<string> _deepSeaNpcShopNames = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Main Food Shop", "Farming shop", "Attire shop", "Bandit Weapons Shop",
+        "Boat Vendor", "Fishing shop", "Medical shop", "Casino Bar Shopkeeper", "Weapons Shop"
+    };
+
+    // Returns true if this is a Deep Sea event NPC shop (known name + outside the playable grid)
+    private bool IsDeepSeaNpcShop(RustPlusClientReal.ShopMarker s)
+        => s.Label != null && _deepSeaNpcShopNames.Contains(s.Label) && s.X < 0;
 
     private void CheckDeepSeaEvent(IEnumerable<RustPlusClientReal.ShopMarker> shops)
     {
@@ -22,19 +37,46 @@ public partial class MainWindow
 
         if (deepSeaShop != null)
         {
-            if (!_deepSeaActive)
+            if (!_deepSeaActive) // State change: inactive → active
             {
-                _deepSeaActive = true;
-                string dir = GetDeepSeaDirection(deepSeaShop.X, deepSeaShop.Y);
-                if (_announceSpawns && TrackingService.AnnounceDeepSea)
-                    _ = SendTeamChatSafeAsync($"Deep Sea Event started! (Direction: {dir})");
-                AppendLog($"[DEEPSEA] Event detected at {deepSeaShop.X:F0},{deepSeaShop.Y:F0} ({dir})");
+                if (_firstShopPollDone)
+                {
+                    // Genuine spawn detected while shop tracking was already running
+                    _deepSeaSpawnTime = DateTime.UtcNow;
+                    _deepSeaDespawnTime = null;
+                    _deepSeaMidEvent = false;
+                    string dir = GetDeepSeaDirection(deepSeaShop.X, deepSeaShop.Y);
+                    if (_announceSpawns && TrackingService.AnnounceDeepSea)
+                        _ = SendTeamChatSafeAsync($"Deep Sea will spawn soon! (Direction: {dir})");
+                    AppendLog($"[DEEPSEA] Spawn detected at {deepSeaShop.X:F0},{deepSeaShop.Y:F0} ({dir})");
+                }
+                else
+                {
+                    // First poll — Deep Sea was already active when shops loaded
+                    _deepSeaSpawnTime = null;
+                    _deepSeaMidEvent = true;
+                    string dir = GetDeepSeaDirection(deepSeaShop.X, deepSeaShop.Y);
+                    AppendLog($"[DEEPSEA] Active on first poll (mid-event) at {deepSeaShop.X:F0},{deepSeaShop.Y:F0} ({dir})");
+                }
             }
+            _deepSeaActive = true;
         }
-        else if (_deepSeaActive)
+        else if (_deepSeaActive) // State change: active → inactive
         {
+            if (_firstShopPollDone)
+            {
+                // Genuine despawn witnessed while shop tracking was running
+                _deepSeaDespawnTime = DateTime.UtcNow;
+                AppendLog("[DEEPSEA] Despawn detected.");
+            }
+            else
+            {
+                // First poll — Deep Sea was already inactive, despawn time unknown
+                _deepSeaDespawnTime = null;
+                AppendLog("[DEEPSEA] Inactive on first poll — despawn time unknown.");
+            }
             _deepSeaActive = false;
-            AppendLog("[DEEPSEA] Event ended (shop disappeared).");
+            _deepSeaMidEvent = false;
         }
     }
 
@@ -150,6 +192,8 @@ public partial class MainWindow
 
             if (ShopSearchContent.Visibility == Visibility.Visible)
                 RefreshShopSearchResults();
+
+            _firstShopPollDone = true; // Mark first poll complete (after all processing)
         }
         catch (Exception)
         {
@@ -175,6 +219,10 @@ public partial class MainWindow
                 continue;
 
             _knownShopIds.Add(s.Id);
+
+            // Skip Deep Sea NPC shops — they re-spawn every few hours and would spam chat
+            if (IsDeepSeaNpcShop(s))
+                continue;
 
             var preview = s.Orders?
                 .Where(o => o.Stock > 0)
