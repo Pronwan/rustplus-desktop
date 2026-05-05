@@ -1027,8 +1027,8 @@ public partial class MainWindow : Window
         UpdateMasterToggleState();
         SyncAlertMenuItems();
 
-        // One-time migration notice for v4.2 — new cargo notification types were added
-        const string CurrentVersion = "4.2";
+        // One-time migration notice for v4.3 — Tracking & Stability improvements
+        const string CurrentVersion = "4.3";
         if (TrackingService.LastSeenVersion != CurrentVersion)
         {
             TrackingService.LastSeenVersion = CurrentVersion;

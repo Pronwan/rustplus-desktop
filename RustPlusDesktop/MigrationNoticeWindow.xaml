@@ -76,9 +76,9 @@
             <Border Grid.Row="0" Background="#161B22" CornerRadius="12,12,0,0" Padding="20,14">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Border Background="#E8611A" CornerRadius="5" Padding="6,3" Margin="0,0,10,0">
-                        <TextBlock Text="v4.2" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="v4.3" FontSize="11" FontWeight="Bold" Foreground="White"/>
                     </Border>
-                    <TextBlock Text="Cargo Ship Overhaul" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock Text="Tracking &amp; Stability" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
                     <TextBlock Text=" — Update Notice" FontSize="15" Foreground="#5A6A7A" VerticalAlignment="Center"/>
                 </StackPanel>
             </Border>
@@ -86,31 +86,31 @@
             <!-- Content -->
             <StackPanel Grid.Row="1" Margin="22,18,22,10">
 
-                <TextBlock Text="New Chat Notifications" FontSize="13" FontWeight="SemiBold"
+                <TextBlock Text="Tracking &amp; Stability Improvements" FontSize="13" FontWeight="SemiBold"
                            Foreground="#E8611A" Margin="0,0,0,10"/>
 
                 <!-- Feature list -->
                 <Border Background="#161B22" BorderBrush="#2A3040" BorderThickness="1" CornerRadius="8" Padding="14,12" Margin="0,0,0,14">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                            <TextBlock Text="⚓" FontSize="14" Margin="0,0,8,0"/>
+                            <TextBlock Text="🎯" FontSize="14" Margin="0,0,8,0"/>
                             <TextBlock TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Foreground="White">Harbor Docking</Run>
-                                <Run Foreground="#8090A0"> — notification when Cargo docks at Harbor</Run>
+                                <Run FontWeight="SemiBold" Foreground="White">Pixel-Perfect Tracking</Run>
+                                <Run Foreground="#8090A0"> — Fixed marker drift &amp; mini-map alignment</Run>
                             </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                            <TextBlock Text="🚢" FontSize="14" Margin="0,0,8,0"/>
+                            <TextBlock Text="💥" FontSize="14" Margin="0,0,8,0"/>
                             <TextBlock TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Foreground="White">Departure Warning</Run>
-                                <Run Foreground="#8090A0"> — 5 min before departure</Run>
+                                <Run FontWeight="SemiBold" Foreground="White">Heli Crash Detection</Run>
+                                <Run Foreground="#8090A0"> — Track where the Patrol Heli was shot down</Run>
                             </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="📍" FontSize="14" Margin="0,0,8,0"/>
+                            <TextBlock Text="🌊" FontSize="14" Margin="0,0,8,0"/>
                             <TextBlock TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Foreground="White">Arrival Warning</Run>
-                                <Run Foreground="#8090A0"> — 5 min before docking</Run>
+                                <Run FontWeight="SemiBold" Foreground="White">Deep Sea Timers</Run>
+                                <Run Foreground="#8090A0"> — Improved spawn timers &amp; alert stability</Run>
                             </TextBlock>
                         </StackPanel>
                     </StackPanel>
