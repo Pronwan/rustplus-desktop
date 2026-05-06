@@ -10396,47 +10396,32 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
+    // Tool buttons: a single left-click both activates the tool and opens its
+    // settings popup (size / colour / icon picker), so the user doesn't have
+    // to know about the right-click menu trick. The Show*SettingsContextMenu
+    // helpers below are still callable individually if any future entry point
+    // wants the menu without flipping the active tool.
     private void ToolDrawButton_Click(object sender, RoutedEventArgs e)
     {
         SetCurrentTool(OverlayToolMode.Draw);
-    }
-
-    private void ToolDrawButton_RightClick(object sender, MouseButtonEventArgs e)
-    {
-        e.Handled = true;
         ShowDrawSettingsContextMenu(sender as FrameworkElement);
     }
 
     private void ToolTextButton_Click(object sender, RoutedEventArgs e)
     {
         SetCurrentTool(OverlayToolMode.Text);
-    }
-
-    private void ToolTextButton_RightClick(object sender, MouseButtonEventArgs e)
-    {
-        e.Handled = true;
         ShowTextSettingsContextMenu(sender as FrameworkElement);
     }
 
     private void ToolIconButton_Click(object sender, RoutedEventArgs e)
     {
         SetCurrentTool(OverlayToolMode.Icon);
-    }
-
-    private void ToolIconButton_RightClick(object sender, MouseButtonEventArgs e)
-    {
-        e.Handled = true;
         ShowIconSelectContextMenu(sender as FrameworkElement);
     }
 
     private void ToolEraseButton_Click(object sender, RoutedEventArgs e)
     {
         SetCurrentTool(OverlayToolMode.Erase);
-    }
-
-    private void ToolEraseButton_RightClick(object sender, MouseButtonEventArgs e)
-    {
-        e.Handled = true;
         ShowEraserSettingsContextMenu(sender as FrameworkElement);
     }
 

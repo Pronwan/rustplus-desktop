@@ -2678,13 +2678,27 @@ Click="BtnToggleMiniMap_Click"/>
            Opacity="0.95"
            Source="pack://application:,,,/TitleScreen-rust-plus-desktop.png"/>
                     <Image x:Name="ImgMap" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="HighQuality"/>
-                    <!-- LIVE EVENT DOCK (Top Right) -->
-                    <StackPanel x:Name="EventDock" 
-                                Orientation="Vertical" 
-                                VerticalAlignment="Top" 
-                                HorizontalAlignment="Right" 
-                                Margin="15" 
-                                Panel.ZIndex="100"/>
+                    <!--
+                        LIVE EVENT DOCK (Top Right)
+                        Wrapped in a Border that matches the OverlayToolbox below it,
+                        so the right edge reads as two sibling panels with the same
+                        chrome instead of a freeform stack of tiles next to a styled box.
+                        Code-behind keeps adding to EventDock.Children directly — wrapping
+                        in a Border doesn't change that contract.
+                    -->
+                    <Border x:Name="EventDockHost"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            Margin="15"
+                            Background="#CC1E1E1E"
+                            BorderBrush="#27272A"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="6"
+                            Panel.ZIndex="100">
+                        <StackPanel x:Name="EventDock"
+                                    Orientation="Vertical"/>
+                    </Border>
 
                     <Canvas x:Name="GridLayer" IsHitTestVisible="False"/>
                     <Canvas x:Name="Overlay"   IsHitTestVisible="True"/>
@@ -2852,59 +2866,63 @@ Click="BtnToggleMiniMap_Click"/>
                     </Border>
 
                     <!--
-                        Toolbox is anchored top-right on the same column as EventDock
-                        (Margin="15" matches the dock's right inset) and slid down by
-                        a TranslateTransform whose Y is bound to EventDock.ActualHeight.
-                        That keeps the toolbox tucked immediately below the dock no
-                        matter how many event/team icons are showing.
+                        Toolbox mirrors EventDockHost's styling (background / border /
+                        radius / padding) so the right edge reads as two sibling panels
+                        with matching chrome. Translate-Y is bound to the host Border's
+                        ActualHeight (not the inner StackPanel) so a 6 px gap sits
+                        between them regardless of how many event icons are docked.
                     -->
                     <Border x:Name="OverlayToolbox"
         Background="#CC1E1E1E"
-        CornerRadius="6"
+        BorderBrush="#27272A"
+        BorderThickness="1"
+        CornerRadius="8"
         Padding="6"
         HorizontalAlignment="Right"
         VerticalAlignment="Top"
-        Margin="15,18,15,0"
+        Margin="15,21,15,0"
         Visibility="Collapsed"
         Panel.ZIndex="9000">
                         <Border.RenderTransform>
-                            <TranslateTransform Y="{Binding ActualHeight, ElementName=EventDock}"/>
+                            <TranslateTransform Y="{Binding ActualHeight, ElementName=EventDockHost}"/>
                         </Border.RenderTransform>
                         <StackPanel>
 
+                            <!--
+                                Click activates the tool AND opens its settings popup
+                                (size / colour / icon picker). Settings used to be hidden
+                                behind a right-click — moved to left-click for
+                                discoverability.
+                            -->
                             <!-- Zeichnen -->
                             <Button x:Name="ToolDrawButton"
                 Width="32" Height="32"
-                ToolTip="Draw (Right Click: Size / Color)"
-                Click="ToolDrawButton_Click"
-                PreviewMouseRightButtonDown="ToolDrawButton_RightClick">
+                ToolTip="Draw — click to activate &amp; pick size / colour"
+                Click="ToolDrawButton_Click">
                                 <Image Source="pack://application:,,,/icons/pen.png"/>
                             </Button>
 
                             <!-- Text -->
                             <Button x:Name="ToolTextButton"
                 Width="32" Height="32"
-                ToolTip="Place Text (Right Click: Color / Size)"
-                Click="ToolTextButton_Click"
-                PreviewMouseRightButtonDown="ToolTextButton_RightClick">
+                ToolTip="Place text — click to activate &amp; pick colour / size"
+                Click="ToolTextButton_Click">
                                 <Image Source="pack://application:,,,/icons/text.png"/>
                             </Button>
 
                             <!-- Icons -->
                             <Button x:Name="ToolIconButton"
                 Width="32" Height="32"
-                ToolTip="Place Icon (Right Click: Pick Icon)"
-                Click="ToolIconButton_Click"
-                PreviewMouseRightButtonDown="ToolIconButton_RightClick">
+                ToolTip="Place icon — click to pick which icon to drop"
+                Click="ToolIconButton_Click">
                                 <Image Source="pack://application:,,,/icons/pin.png"/>
                             </Button>
 
                             <!-- Radierer -->
                             <Button x:Name="ToolEraseButton"
                 Width="32" Height="32"
-                ToolTip="Eraser (hold or click)"
-                Click="ToolEraseButton_Click"
-                PreviewMouseRightButtonDown="ToolEraseButton_RightClick">
+                ToolTip="Eraser — click to activate &amp; pick size"
+                Click="ToolEraseButton_Click">
                                 <Image Source="pack://application:,,,/icons/eraser.png"/>
                             </Button>
 
