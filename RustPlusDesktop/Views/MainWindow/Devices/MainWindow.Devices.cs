@@ -87,6 +87,9 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
         if (targetDevice == null || ReferenceEquals(_draggedDevice, targetDevice))
             return;
 
+        if (IsDescendant(_draggedDevice, targetDevice))
+            return;
+
         if (_vm.Selected?.Devices == null) return;
 
         Point dropPosition = e.GetPosition(targetContainer);
@@ -158,6 +161,18 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
         _vm.Save();
         _draggedDevice = null;
         _draggedItemContainer = null;
+    }
+
+    private bool IsDescendant(SmartDevice potentialParent, SmartDevice potentialChild)
+    {
+        if (potentialParent.Children == null) return false;
+        if (potentialParent.Children.Contains(potentialChild)) return true;
+        foreach (var child in potentialParent.Children)
+        {
+            if (child.IsGroup && IsDescendant(child, potentialChild))
+                return true;
+        }
+        return false;
     }
 
     private bool RemoveDeviceFromHierarchy(System.Collections.ObjectModel.ObservableCollection<SmartDevice> col, SmartDevice toRemove)

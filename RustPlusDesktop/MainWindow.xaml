@@ -21,6 +21,7 @@
         <BitmapImage x:Key="IconStorageMonitor" UriSource="pack://application:,,,/Assets/icons/storagemonitor.png"/>
         <BitmapImage x:Key="IconSmartSwitch"    UriSource="pack://application:,,,/Assets/icons/smartswitch.png"/>
         <BitmapImage x:Key="IconSmartAlarm"     UriSource="pack://application:,,,/Assets/icons/smartalarm.png"/>
+        <BitmapImage x:Key="IconGroup"          UriSource="pack://application:,,,/Assets/icons/cabins.png"/>
         <!-- Palette -->
         <SolidColorBrush x:Key="AppBg"         Color="#121417"/>
         <SolidColorBrush x:Key="Surface"       Color="#1C1F24"/>
