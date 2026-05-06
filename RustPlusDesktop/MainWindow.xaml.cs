@@ -10564,13 +10564,28 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     //      return null;
     // }
 
+    /// <summary>
+    /// Build a shadcn-style popover ContextMenu anchored to the LEFT of the
+    /// passed tool button (i.e. the menu pops out into the map area, away
+    /// from the right-edge toolbox column). Shared so all four tool popovers
+    /// land at the same offset and can't visually drift apart.
+    /// </summary>
+    private ContextMenu BuildToolPopover(FrameworkElement? anchor)
+    {
+        return new ContextMenu
+        {
+            Style = (Style)FindResource("DarkContextMenu"),
+            Placement = System.Windows.Controls.Primitives.PlacementMode.Left,
+            PlacementTarget = anchor,
+            HorizontalOffset = -6,
+            HasDropShadow = true,
+            StaysOpen = false,
+        };
+    }
+
     private void ShowDrawSettingsContextMenu(FrameworkElement? fe)
     {
-        var m = new ContextMenu()
-        {
-            // wichtig: dein Style aus App.xaml anwenden
-            Style = (Style)FindResource("DarkContextMenu")
-        };
+        var m = BuildToolPopover(fe);
 
         // Farbe ändern (nur ein Beispiel)
         var miRed = new MenuItem { Header = "Red" };
@@ -10599,7 +10614,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void ShowTextSettingsContextMenu(FrameworkElement? fe)
     {
-        var m = new ContextMenu() { Style = (Style)FindResource("DarkContextMenu") };
+        var m = BuildToolPopover(fe);
 
         var miWhite = new MenuItem { Header = "White" };
         miWhite.Click += (_, __) => { _textColor = Colors.White; };
@@ -10623,11 +10638,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void ShowIconSelectContextMenu(FrameworkElement? fe)
     {
-        var m = new ContextMenu()
-        {
-            // wichtig: dein Style aus App.xaml anwenden
-            Style = (Style)FindResource("DarkContextMenu")
-        };
+        var m = BuildToolPopover(fe);
 
         // map-icons aus deinem Projekt
         m.Items.Add(BuildIconMenuItem("Base #1", "pack://application:,,,/icons/map-icons/base1.png"));
@@ -10648,7 +10659,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void ShowEraserSettingsContextMenu(FrameworkElement? fe)
     {
-        var m = new ContextMenu() { Style = (Style)FindResource("DarkContextMenu") };
+        var m = BuildToolPopover(fe);
 
         var miSmall = new MenuItem { Header = "Eraser small (5px)" };
         miSmall.Click += (_, __) => { _eraserSize = 5.0; };
