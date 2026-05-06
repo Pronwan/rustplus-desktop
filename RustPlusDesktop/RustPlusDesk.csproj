@@ -18,13 +18,17 @@
 	</ItemGroup>
 
 	<PropertyGroup>
-		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>4.2</Version>
-		<Title>Rust+ Desk (Ryyott)</Title>
-		<Authors>Pronwan</Authors>
-		<AssemblyVersion>4.2</AssemblyVersion>
-		<FileVersion>4.2</FileVersion>
-		<InformationalVersion>4.2</InformationalVersion>
+		<!--
+			Fork version: AppInfo.VersionShort strips anything after "-" / "+",
+			so System.Version comparison sees "1.0.0" while the title bar /
+			update card shows the friendly "v1.0.0-Ryyott" via InformationalVersion.
+		-->
+		<Version>1.0.0-Ryyott</Version>
+		<Title>RustPlusDesk-Ryyott</Title>
+		<Authors>Pronwan (original), Ryyott (fork)</Authors>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0.0</FileVersion>
+		<InformationalVersion>1.0.0-Ryyott</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->

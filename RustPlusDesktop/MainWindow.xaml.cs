@@ -8855,7 +8855,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     // CHECK FOR UPDATES
 
     // --- Konfiguration ---
-    private const string RepoOwner = "Pronwan";
+    // Update checker queries this fork's releases — Pronwan's upstream is at a
+    // higher version number, so pointing at it would falsely report an "update"
+    // and route users at his installer instead of the Ryyott build.
+    private const string RepoOwner = "ryyott";
     private const string RepoName = "rustplus-desktop";
     private const string InstallerAssetName = "RustPlusDesk-Setup.exe";
 

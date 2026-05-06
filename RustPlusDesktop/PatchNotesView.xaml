@@ -13,7 +13,78 @@
     -->
     <StackPanel Margin="0,0,12,12">
         <!-- UPDATE VERSION NUMBER HERE -->
-        <TextBlock Text="Current Version: 4.2" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,12"/>
+        <TextBlock Text="Current Version: 1.0.0-Ryyott (forked from Pronwan v4.3.1)"
+                   Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,12"/>
+
+        <!-- ============================================== -->
+        <!-- RYYOTT FORK — v1.0.0 -->
+        <!-- ============================================== -->
+        <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+            <StackPanel>
+                <TextBlock Text="v1.0.0-Ryyott  |  Tracker, Team-sync, Modern UI"
+                           FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4"
+                           Foreground="{DynamicResource Accent}"/>
+
+                <TextBlock TextWrapping="Wrap" Margin="0,0,0,12">
+                    <Span Foreground="{DynamicResource TextSubtle}">First release of the Ryyott fork. Built on top of </Span>
+                    <Hyperlink NavigateUri="https://github.com/Pronwan/rustplus-desktop" RequestNavigate="Hyperlink_RequestNavigate" Foreground="{DynamicResource Accent}">Pronwan/rustplus-desktop</Hyperlink>
+                    <Span Foreground="{DynamicResource TextSubtle}"> v4.3.1 — all credit for the underlying Rust+ Desktop app goes to Pronwan.</Span>
+                </TextBlock>
+
+                <TextBlock Text="• Tracker tab" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                <TextBlock Text="New top-level tab with Online / Tracked / Groups sub-tabs powered by BattleMetrics. Track players across sessions, group them (H1, H3, …), and pin each group's base on the map with a hover tooltip."
+                           TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                <TextBlock Text="• Activity Intelligence Report" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBlock Text="Slide-in panel over the map with a 90-day BattleMetrics session backfill: 12-week activity heatmap, 24h forecast, &quot;most likely to play&quot; prediction, total tracked time, average session length and last-seen relative time. Available as a Report button on every tracked / online / group-member row."
+                           TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                <TextBlock Text="• Tracker Expand overlay" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBlock Text="Click ⛶ Expand on the Tracker top bar to pop the whole tab into a 750 px-wide slide-in over the map. Press Esc or click ✕ to close — the tab content is reparented in / out so x:Names, bindings and event handlers all survive."
+                           TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                <TextBlock Text="• Team-sync" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBlock Text="Opt-in via Settings — share tracked players + groups (incl. map pins) across teammates within ~30 seconds. Reuses Pronwan's existing overlay-sync server with HMAC-signed payloads, last-write-wins per row, and tombstones so deletes propagate."
+                           TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                <TextBlock Text="• Inline team chat" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBlock Text="Replaced the standalone chat popup with an inline panel in the Team tab. Click any teammate tile to open their Steam profile in your default browser. Chat input + Send disable themselves when not connected so messages never get optimistically rendered and silently dropped."
+                           TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                <TextBlock Text="• shadcn-flavoured theme" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBlock Text="Full zinc palette swap (zinc-950 bg, zinc-900 surfaces, zinc-800 borders), restyled button variants (Ghost / Primary / Secondary / Destructive), modernised inputs, cards, tabs, scrollbars and dialogs. Maps Pronwan's underlying tokens so the rest of the app picks the new look up automatically."
+                           TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                <TextBlock Text="• Modal modernisation" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBlock Text="Custom shadcn-themed TextInputModal + ConfirmModal replace Microsoft.VisualBasic.Interaction.InputBox and stock MessageBox.Show prompts. Used for camera add, group create / rename / delete, reset connection, and the update-checker. Hotkeys window restyled to match."
+                           TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                <TextBlock Text="• Patch Notes &amp; Update flows as slide-ins" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBlock Text="The patch-notes window is gone — opens as a slide-in over the map (this very panel). The update-checker uses ConfirmModal for &quot;new version available&quot; and ShowInfo for the up-to-date / error paths."
+                           TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                <TextBlock Text="• Sidebar restructure" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBlock Text="Server stats (Players / Queue / Server Time) inlined into the Connection card. Reset Connection moved to the top toolbar next to Settings. Footer slimmed; Tracker / map controls reclaim the height."
+                           TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                <TextBlock Text="• Map overlay polish" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBlock Text="Drawing toolbox repositioned below the EventDock, matched chrome (border / radius / padding), shrink-to-fit on shorter windows. Tool popovers (size / colour / icon picker) open to the left as shadcn-style menus on left-click — no more right-click hunt."
+                           TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                <TextBlock Text="• Bug fixes" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBlock Text="• Chat duplicate-render bug — outgoing messages no longer rendered twice • Steam display name now flows from team data into the chat instead of always saying &quot;you&quot; • WebView2 airspace fix — slide-in panels (Patch Notes / Tracker / Report) now respond to mouse-wheel and middle-click drag from cold start, no longer dead until you connect to a server • Multiple white-on-white button text fixes (Connect / Send / + Add / + New / Camera). • Cherry-picked Pronwan's 1535a17 (player centering, MonumentWatcher thread-safety, DPI-aware sizing, auto-reconnect, heli crash sites, Deep Sea timing)."
+                           TextWrapping="Wrap" Margin="0,0,0,4"/>
+            </StackPanel>
+        </Border>
+
+                <!-- ============================================== -->
+                <!-- UPSTREAM (Pronwan) PATCH NOTES — preserved verbatim -->
+                <!-- ============================================== -->
+                <TextBlock Text="Upstream history (Pronwan)"
+                           FontWeight="SemiBold" FontSize="14"
+                           Foreground="{DynamicResource TextSubtle}"
+                           Margin="0,8,0,8"/>
+
                 <!-- ============================================== -->
                 <!-- NEW v4.2 PATCH NOTES -->
                 <!-- ============================================== -->
