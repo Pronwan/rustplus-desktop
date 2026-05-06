@@ -885,17 +885,15 @@
                 Margin="0,0,0,0"
                 ToolTip="Login with Steam (or hard-reset the connection if already paired)"/>
                                     <Button x:Name="BtnCheckUpdates"
-                Content=" Check for Updates "
+                Content="Check for Updates"
                 Click="BtnCheckUpdates_Click"
-                Background="{DynamicResource AccentDark}"
-                BorderBrush="{DynamicResource Accent}"
+                Style="{StaticResource GhostButton}"
                 Margin="8,0,0,0"
                 ToolTip="Check GitHub for a newer version"/>
                                     <Button x:Name="BtnPatchNotes"
-                Content=" Patch Notes "
+                Content="Patch Notes"
                 Click="BtnPatchNotes_Click"
-                Background="{DynamicResource SurfaceAlt}"
-                BorderBrush="{DynamicResource CardBorder}"
+                Style="{StaticResource GhostButton}"
                 Margin="8,0,0,0"
                 ToolTip="Show latest changes"/>
                                     <Button x:Name="BtnSettings" 
@@ -1072,8 +1070,9 @@
                                              window's implicit white-text TextBlock style. -->
                                         <TextBlock Text="Connect to Server" Foreground="#18181B" Padding="6,0"/>
                                     </Button>
-                                    <Button Content=" Disconnect " Click="BtnDisconnect_Click"
-                                            Background="#D32F2F" BorderBrush="#B71C1C" Foreground="White"
+                                    <Button Content="Disconnect" Click="BtnDisconnect_Click"
+                                            Style="{StaticResource DestructiveButton}"
+                                            Padding="14,5"
                                             Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}}"/>
                                 </StackPanel>
                             </DockPanel>
