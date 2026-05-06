@@ -1647,7 +1647,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                 
                                 <Border Background="#101217" BorderBrush="#1C202A" BorderThickness="1" CornerRadius="16" Padding="32,24" HorizontalAlignment="Center">
                                     <StackPanel>
-                                        <TextBlock Text="ðŸ“¡" FontSize="36" HorizontalAlignment="Center" Margin="0,0,0,12" Opacity="0.8"/>
+                                        <TextBlock Text="📡" FontSize="36" HorizontalAlignment="Center" Margin="0,0,0,12" Opacity="0.8"/>
                                         <TextBlock Text="No devices found" Foreground="#EAECEE" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,6"/>
                                         <TextBlock Text="Pair a smart device, switch or alarm to see it here" Foreground="#7F8A96" FontSize="12" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="200" TextAlignment="Center"/>
                                     </StackPanel>

@@ -516,6 +516,9 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
     {
         if (_rust is not RustPlusClientReal real) return;
 
+        // Skip refreshing if it's a Group, because Groups don't exist on the Rust server
+        if (dev.IsGroup) return;
+
         if (RustPlusClientReal.IsStorageDevice(dev))
         {
             try
@@ -1053,27 +1056,12 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         {
             if (!d.IsGroup)
             {
-                var r = await _rust.ProbeEntityAsync(d.EntityId);
-
-                d.Kind = r.Kind ?? d.Kind;
-                d.IsMissing = !r.Exists;
-                if ((d.Kind ?? r.Kind)?.Equals("SmartAlarm", StringComparison.OrdinalIgnoreCase) == true)
-                {
-                    d.IsOn = false; // Alarm → null als „aus“ deuten
-                }
-                else
-                {
-                    d.IsOn = r.IsOn;
-                }
-
-                if (!r.Exists)
-                    AppendLog($"#{d.EntityId}: not reachable / removed");
-                else
-                    AppendLog($"#{d.EntityId} ({d.Kind ?? "?"}): {(r.IsOn is bool b ? (b ? "ON" : "OFF") : "–")}");
+                await RefreshDeviceStateAsync(d, log: true, forcePull: true);
             }
             else
             {
                 // Gruppen haben keinen direkten Status, aber wir refreshen Kinder
+                d.IsMissing = false; // groups are never missing
                 if (d.Children != null)
                 {
                     foreach (var child in d.Children)
@@ -1122,7 +1110,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             Name = dto.Name,
             Alias = dto.Alias,
             IsGroup = dto.IsGroup,
-            IsMissing = true
+            IsMissing = dto.IsGroup ? false : true
         };
 
         if (dto.Children != null && dto.Children.Count > 0)
