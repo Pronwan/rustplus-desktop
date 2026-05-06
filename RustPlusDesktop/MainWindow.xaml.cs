@@ -842,13 +842,13 @@ public partial class MainWindow : Window
     // tiny map from type → icon (pack URIs). Put your icons in /icons as Resource.
     private static readonly Dictionary<int, string> sDynIconByType = new()
 {
-    { 5, "pack://application:,,,/icons/cargo.png"  },
-    { 6, "pack://application:,,,/icons/vendor.png"  },
-    { 7, "pack://application:,,,/icons/blocked.png"   }, // Building areas
-    { 8, "pack://application:,,,/icons/patrol.png" },
-    { 9, "pack://application:,,,/icons/crate.png"  }, // alt crate id seen on some builds
-    { 4, "pack://application:,,,/icons/ch47.png"   }, // optional safety
-    { 2, "pack://application:,,,/icons/explosion.png"   }, // optional safety
+    { 5, "pack://application:,,,/Assets/icons/cargo.png"  },
+    { 6, "pack://application:,,,/Assets/icons/vendor.png"  },
+    { 7, "pack://application:,,,/Assets/icons/blocked.png"   }, // Building areas
+    { 8, "pack://application:,,,/Assets/icons/patrol.png" },
+    { 9, "pack://application:,,,/Assets/icons/crate.png"  }, // alt crate id seen on some builds
+    { 4, "pack://application:,,,/Assets/icons/ch47.png"   }, // optional safety
+    { 2, "pack://application:,,,/Assets/icons/explosion.png"   }, // optional safety
 };
     private static readonly Brush PopupBg = new SolidColorBrush(Color.FromRgb(32, 36, 40));   // dunkel
     private static readonly Brush PopupBrd = new SolidColorBrush(Color.FromArgb(40, 255, 255, 255));
@@ -1075,6 +1075,7 @@ public partial class MainWindow : Window
         // häufige Ordner:
         System.IO.Path.Combine(baseDir, "assets", "rust-item-list.json"),
         System.IO.Path.Combine(baseDir, "data",   "rust-item-list.json"),
+        System.IO.Path.Combine(baseDir, "Assets", "Data", "rust-item-list.json"),
     }.Where(p => !string.IsNullOrWhiteSpace(p)).Cast<string>();
 
         foreach (var path in diskCandidates)
@@ -1104,9 +1105,11 @@ public partial class MainWindow : Window
             "pack://application:,,,/rust-item-list.json",
             "pack://application:,,,/assets/rust-item-list.json",
             "pack://application:,,,/data/rust-item-list.json",
+            "pack://application:,,,/Assets/Data/rust-item-list.json",
             $"pack://application:,,,/{asmName};component/rust-item-list.json",
             $"pack://application:,,,/{asmName};component/assets/rust-item-list.json",
             $"pack://application:,,,/{asmName};component/data/rust-item-list.json",
+            $"pack://application:,,,/{asmName};component/Assets/Data/rust-item-list.json",
         };
 
             foreach (var uri in packUris)
@@ -1258,45 +1261,45 @@ public partial class MainWindow : Window
     private static readonly Dictionary<string, string> sMonIconByKeyRaw = new(StringComparer.OrdinalIgnoreCase)
 {
     // nur Beispiele – ergänze frei:
-    { "stone quarry",            "pack://application:,,,/icons/stonequarry.png" },
-    { "hqm quarry",              "pack://application:,,,/icons/hqmquarry.png" },
-    { "sulfur quarry",           "pack://application:,,,/icons/sulfurquarry.png" },
-    { "excavator",               "pack://application:,,,/icons/excavator.png" },
-    { "train tunnel",            "pack://application:,,,/icons/traintunnel2.png" },
-    { "train tunnel link",       "pack://application:,,,/icons/traintunnel.png" },
-    { "supermarket",             "pack://application:,,,/icons/supermarket.png" },
-    { "abandoned military base", "pack://application:,,,/icons/militarybase.png" },
-    { "large fishing village",   "pack://application:,,,/icons/fishingvillagelarge.png" },
-    { "power plant",             "pack://application:,,,/icons/powerplant.png" },
-    { "mining outpost",          "pack://application:,,,/icons/miningoutpost.png" },
-    { "military tunnel",         "pack://application:,,,/icons/militarytunnel.png" },
-    { "gas station",             "pack://application:,,,/icons/gasstation.png" },
-    { "arctic base",             "pack://application:,,,/icons/arcticresearch.png" },
-    { "sewer branch",            "pack://application:,,,/icons/sewerbranch.png" },
-    { "airfield",                "pack://application:,,,/icons/airfield.png" },
-    { "radtown",                 "pack://application:,,,/icons/radtown.png" },
-    { "stables a",               "pack://application:,,,/icons/stable.png" },
-    { "stables b",               "pack://application:,,,/icons/barn.png" },
-    { "dome",                    "pack://application:,,,/icons/dome.png" },
-    { "harbor",                  "pack://application:,,,/icons/harbour.png" },
-    { "harbor 2",                "pack://application:,,,/icons/harbour2.png" },
-    { "lighthouse",              "pack://application:,,,/icons/lighthouse.png" },
-    { "fishing village",         "pack://application:,,,/icons/fishingvillage.png" },
-    { "missile silo",            "pack://application:,,,/icons/missilesilo.png" },
-    { "ferry terminal",          "pack://application:,,,/icons/ferryterminal.png" },
-    { "train yard",              "pack://application:,,,/icons/trainyard.png" },
-    { "satellite dish",          "pack://application:,,,/icons/satellitedish.png" },
-    { "outpost",                 "pack://application:,,,/icons/outpost.png" },
-    { "launch site",             "pack://application:,,,/icons/launchsite.png" },
-    { "water treatment plant",   "pack://application:,,,/icons/watertreatment.png" },
-    { "large oil rig",           "pack://application:,,,/icons/largeoilrig.png" },
-    { "small oil rig",           "pack://application:,,,/icons/oilrig.png" },
-    { "underwater lab",          "pack://application:,,,/icons/underwater.png" },
-    { "underwater lab b",          "pack://application:,,,/icons/underwater.png" },
-    { "junkyard",                "pack://application:,,,/icons/junkyard.png" },
-    { "bandit camp",             "pack://application:,,,/icons/banditcamp.png" },
-    { "swamp",                   "pack://application:,,,/icons/swamp.png" },
-    { "jungle ziggurat",         "pack://application:,,,/icons/jungle.png" },
+    { "stone quarry",            "pack://application:,,,/Assets/icons/stonequarry.png" },
+    { "hqm quarry",              "pack://application:,,,/Assets/icons/hqmquarry.png" },
+    { "sulfur quarry",           "pack://application:,,,/Assets/icons/sulfurquarry.png" },
+    { "excavator",               "pack://application:,,,/Assets/icons/excavator.png" },
+    { "train tunnel",            "pack://application:,,,/Assets/icons/traintunnel2.png" },
+    { "train tunnel link",       "pack://application:,,,/Assets/icons/traintunnel.png" },
+    { "supermarket",             "pack://application:,,,/Assets/icons/supermarket.png" },
+    { "abandoned military base", "pack://application:,,,/Assets/icons/militarybase.png" },
+    { "large fishing village",   "pack://application:,,,/Assets/icons/fishingvillagelarge.png" },
+    { "power plant",             "pack://application:,,,/Assets/icons/powerplant.png" },
+    { "mining outpost",          "pack://application:,,,/Assets/icons/miningoutpost.png" },
+    { "military tunnel",         "pack://application:,,,/Assets/icons/militarytunnel.png" },
+    { "gas station",             "pack://application:,,,/Assets/icons/gasstation.png" },
+    { "arctic base",             "pack://application:,,,/Assets/icons/arcticresearch.png" },
+    { "sewer branch",            "pack://application:,,,/Assets/icons/sewerbranch.png" },
+    { "airfield",                "pack://application:,,,/Assets/icons/airfield.png" },
+    { "radtown",                 "pack://application:,,,/Assets/icons/radtown.png" },
+    { "stables a",               "pack://application:,,,/Assets/icons/stable.png" },
+    { "stables b",               "pack://application:,,,/Assets/icons/barn.png" },
+    { "dome",                    "pack://application:,,,/Assets/icons/dome.png" },
+    { "harbor",                  "pack://application:,,,/Assets/icons/harbour.png" },
+    { "harbor 2",                "pack://application:,,,/Assets/icons/harbour2.png" },
+    { "lighthouse",              "pack://application:,,,/Assets/icons/lighthouse.png" },
+    { "fishing village",         "pack://application:,,,/Assets/icons/fishingvillage.png" },
+    { "missile silo",            "pack://application:,,,/Assets/icons/missilesilo.png" },
+    { "ferry terminal",          "pack://application:,,,/Assets/icons/ferryterminal.png" },
+    { "train yard",              "pack://application:,,,/Assets/icons/trainyard.png" },
+    { "satellite dish",          "pack://application:,,,/Assets/icons/satellitedish.png" },
+    { "outpost",                 "pack://application:,,,/Assets/icons/outpost.png" },
+    { "launch site",             "pack://application:,,,/Assets/icons/launchsite.png" },
+    { "water treatment plant",   "pack://application:,,,/Assets/icons/watertreatment.png" },
+    { "large oil rig",           "pack://application:,,,/Assets/icons/largeoilrig.png" },
+    { "small oil rig",           "pack://application:,,,/Assets/icons/oilrig.png" },
+    { "underwater lab",          "pack://application:,,,/Assets/icons/underwater.png" },
+    { "underwater lab b",          "pack://application:,,,/Assets/icons/underwater.png" },
+    { "junkyard",                "pack://application:,,,/Assets/icons/junkyard.png" },
+    { "bandit camp",             "pack://application:,,,/Assets/icons/banditcamp.png" },
+    { "swamp",                   "pack://application:,,,/Assets/icons/swamp.png" },
+    { "jungle ziggurat",         "pack://application:,,,/Assets/icons/jungle.png" },
 };
 
     private static double CalcOverlayScale(double effZoom, double exp, double baseMult = 1.0)
@@ -1490,6 +1493,8 @@ public partial class MainWindow : Window
         foreach (var path in new[] {
         System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "rust_items.json"),
         System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "items-map.json"),
+        System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Data", "rust_items.json"),
+        System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Data", "items-map.json"),
     })
         {
             if (System.IO.File.Exists(path))
@@ -1509,6 +1514,8 @@ public partial class MainWindow : Window
             foreach (var uri in new[] {
             "pack://application:,,,/rust_items.json",
             "pack://application:,,,/items-map.json",
+            "pack://application:,,,/Assets/Data/rust_items.json",
+            "pack://application:,,,/Assets/Data/items-map.json",
         })
             {
                 try

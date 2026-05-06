@@ -611,7 +611,7 @@ public partial class MainWindow
 
         // 1. Patrol Heli (Type 8)
         var heli = GetPersistentEvent(markers, 8);
-        activeEvents.Add(new EventDockItem { Name = "Patrol Heli", Icon = "pack://application:,,,/icons/animat-Icons/patrol_helicopter.png", Active = heli.Id != 0, Id = heli.Id, X = heli.X, Y = heli.Y, Trackable = true, Type = 8 });
+        activeEvents.Add(new EventDockItem { Name = "Patrol Heli", Icon = "pack://application:,,,/Assets/icons/animat-Icons/patrol_helicopter.png", Active = heli.Id != 0, Id = heli.Id, X = heli.X, Y = heli.Y, Trackable = true, Type = 8 });
  
         // 2. Cargo Ship (Type 5)
         var cargo = GetPersistentEvent(markers, 5);
@@ -649,15 +649,15 @@ public partial class MainWindow
             }
         }
 
-        activeEvents.Add(new EventDockItem { Name = "Cargo Ship", Icon = "pack://application:,,,/icons/cargo.png", Active = cargo.Id != 0, Id = cargo.Id, X = cargo.X, Y = cargo.Y, Trackable = true, Type = 5, TimerText = cargoTimer, ToolTip = cargoTip });
+        activeEvents.Add(new EventDockItem { Name = "Cargo Ship", Icon = "pack://application:,,,/Assets/icons/cargo.png", Active = cargo.Id != 0, Id = cargo.Id, X = cargo.X, Y = cargo.Y, Trackable = true, Type = 5, TimerText = cargoTimer, ToolTip = cargoTip });
  
         // 3. Chinook (Type 4)
         var chinook = GetPersistentEvent(markers, 4);
-        activeEvents.Add(new EventDockItem { Name = "Chinook", Icon = "pack://application:,,,/icons/ch47.png", Active = chinook.Id != 0, Id = chinook.Id, X = chinook.X, Y = chinook.Y, Trackable = true, Type = 4 });
+        activeEvents.Add(new EventDockItem { Name = "Chinook", Icon = "pack://application:,,,/Assets/icons/ch47.png", Active = chinook.Id != 0, Id = chinook.Id, X = chinook.X, Y = chinook.Y, Trackable = true, Type = 4 });
  
         // 4. Vendor (Type 6)
         var vendor = GetPersistentEvent(markers, 6);
-        activeEvents.Add(new EventDockItem { Name = "Travelling Vendor", Icon = "pack://application:,,,/icons/vendor.png", Active = vendor.Id != 0, Id = vendor.Id, X = vendor.X, Y = vendor.Y, Trackable = true, Type = 6 });
+        activeEvents.Add(new EventDockItem { Name = "Travelling Vendor", Icon = "pack://application:,,,/Assets/icons/vendor.png", Active = vendor.Id != 0, Id = vendor.Id, X = vendor.X, Y = vendor.Y, Trackable = true, Type = 6 });
  
         // 5. Deep Sea (Using native _deepSeaActive logic)
         string? dsTimer = null;
@@ -682,7 +682,7 @@ public partial class MainWindow
             dsTimer = $"{(int)dsInactive.TotalHours:D1}:{dsInactive.Minutes:D2}";
             dsTip = $"Inactive since {FormatAgo(dsInactive)} ago";
         }
-        activeEvents.Add(new EventDockItem { Name = "Deep Sea Event", Icon = "pack://application:,,,/icons/ds_event.png", Active = _deepSeaActive, Id = 0, X = 0, Y = 0, Trackable = false, Type = 0, TimerText = dsTimer, ToolTip = dsTip });
+        activeEvents.Add(new EventDockItem { Name = "Deep Sea Event", Icon = "pack://application:,,,/Assets/icons/ds_event.png", Active = _deepSeaActive, Id = 0, X = 0, Y = 0, Trackable = false, Type = 0, TimerText = dsTimer, ToolTip = dsTip });
 
         Dispatcher.Invoke(() =>
         {
@@ -828,7 +828,7 @@ public partial class MainWindow
                         {
                             Width = 24,
                             Height = 24,
-                            Source = new BitmapImage(new Uri("pack://application:,,,/icons/animat-Icons/chinook_map_blades.png")),
+                            Source = new BitmapImage(new Uri("pack://application:,,,/Assets/icons/animat-Icons/chinook_map_blades.png")),
                             RenderTransformOrigin = new Point(0.5, 0.5),
                             RenderTransform = new RotateTransform(0),
                             IsHitTestVisible = false
@@ -1045,7 +1045,7 @@ public partial class MainWindow
                 {
                     if (m.Type == 150)
                     {
-                        var img = MakeIcon("pack://application:,,,/icons/crate3.png", 48);
+                        var img = MakeIcon("pack://application:,,,/Assets/icons/crate3.png", 48);
                         var host = BuildEventIconHost(img, m.Label, 48);
                         el = host;
                     }
@@ -1404,7 +1404,7 @@ public partial class MainWindow
 
         var img = new Image { Width = 28, Height = 28, HorizontalAlignment = HorizontalAlignment.Center };
         RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
-        try { img.Source = new BitmapImage(new Uri("pack://application:,,,/icons/explosion.png")); } catch { }
+        try { img.Source = new BitmapImage(new Uri("pack://application:,,,/Assets/icons/explosion.png")); } catch { }
         container.Children.Add(img);
 
         var lbl = new TextBlock
@@ -1454,8 +1454,8 @@ public partial class MainWindow
         if (m.Label != null) ToolTipService.SetToolTip(grid, m.Label);
 
         bool isChinook = m.Type == 4;
-        var bodyUri = isChinook ? "pack://application:,,,/icons/animat-Icons/chinook_animate.png" : "pack://application:,,,/icons/animat-Icons/patrol_helicopter.png";
-        var bladesUri = "pack://application:,,,/icons/animat-Icons/chinook_map_blades.png";
+        var bodyUri = isChinook ? "pack://application:,,,/Assets/icons/animat-Icons/chinook_animate.png" : "pack://application:,,,/Assets/icons/animat-Icons/patrol_helicopter.png";
+        var bladesUri = "pack://application:,,,/Assets/icons/animat-Icons/chinook_map_blades.png";
 
         var body = MakeIcon(bodyUri, isChinook ? 64 : 48);
         body.HorizontalAlignment = HorizontalAlignment.Center;

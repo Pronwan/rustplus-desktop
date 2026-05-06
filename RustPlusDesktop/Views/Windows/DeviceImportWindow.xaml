@@ -143,16 +143,16 @@
                                             <Image.Style>
                                                 <Style TargetType="Image">
                                                     <!-- fallback, falls Kind null/unbekannt -->
-                                                    <Setter Property="Source" Value="/icons/smartswitch.png" />
+                                                    <Setter Property="Source" Value="/Assets/icons/smartswitch.png" />
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
-                                                            <Setter Property="Source" Value="/icons/smartalarm.png" />
+                                                            <Setter Property="Source" Value="/Assets/icons/smartalarm.png" />
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
-                                                            <Setter Property="Source" Value="/icons/smartswitch.png" />
+                                                            <Setter Property="Source" Value="/Assets/icons/smartswitch.png" />
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
-                                                            <Setter Property="Source" Value="/icons/storagemonitor.png" />
+                                                            <Setter Property="Source" Value="/Assets/icons/storagemonitor.png" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>

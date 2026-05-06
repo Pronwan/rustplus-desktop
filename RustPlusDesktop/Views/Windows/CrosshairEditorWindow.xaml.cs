@@ -7,8 +7,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace RustPlusDesk
-{
+using RustPlusDesk.Services;
+
+namespace RustPlusDesk;
+
     public partial class CrosshairEditorWindow : Window
     {
         private enum ToolType { Pixel, Pen, Line, Rectangle, Ellipse }
@@ -449,4 +451,4 @@ namespace RustPlusDesk
             }
         }
     }
-}
+
