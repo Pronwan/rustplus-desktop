@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
 using System;
@@ -49,9 +49,44 @@ namespace RustPlusDesk.Views
 
                 int probedCount = 0;
 
-                foreach (var group in groups)
+                // Flatten all devices including children of groups to check them
+                var allDevicesToCheck = new List<DeviceImportItem>();
+                foreach (var item in Devices)
+                {
+                    if (item.OriginalDto?.IsGroup == true || item.Kind == "Group")
+                    {
+                        item.ExistsState = "ok"; // Groups are always ok
+                        // We also need to check the children of the group
+                        if (item.OriginalDto?.Children != null)
+                        {
+                            foreach (var childDto in item.OriginalDto.Children)
+                            {
+                                // Create a temporary import item just for checking
+                                allDevicesToCheck.Add(new DeviceImportItem
+                                {
+                                    EntityId = childDto.EntityId,
+                                    Kind = childDto.Kind,
+                                    OriginalDto = childDto,
+                                    // Keep reference to parent item to update its state if child is missing
+                                    Name = item.EntityId.ToString() // Use Name as a hack to store parent ID
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        allDevicesToCheck.Add(item);
+                    }
+                }
+
+                var groupsToCheck = allDevicesToCheck
+                    .GroupBy(d => d.EntityId)
+                    .ToList();
+
+                foreach (var group in groupsToCheck)
                 {
                     var id = group.Key;
+
                     EntityProbeResult result;
 
                     if (!cache.TryGetValue(id, out result))
@@ -82,7 +117,21 @@ namespace RustPlusDesk.Views
                     var state = result.Exists ? "ok" : "missing";
 
                     foreach (var item in group)
-                        item.ExistsState = state;
+                    {
+                        if (item.OriginalDto != null && uint.TryParse(item.Name, out var parentId))
+                        {
+                            // This was a child, update parent's state if child is missing
+                            var parentItem = Devices.FirstOrDefault(d => d.EntityId == parentId);
+                            if (parentItem != null && state == "missing")
+                            {
+                                parentItem.ExistsState = "missing";
+                            }
+                        }
+                        else
+                        {
+                            item.ExistsState = state;
+                        }
+                    }
                 }
             }
             finally
