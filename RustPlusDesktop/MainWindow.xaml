@@ -1942,14 +1942,18 @@
                                     <Button DockPanel.Dock="Right" x:Name="BtnTeamChatSend"
                                             Width="64" Margin="6,0,0,0"
                                             Style="{StaticResource PrimaryButton}"
-                                            Click="BtnTeamChatSend_Click">
+                                            Click="BtnTeamChatSend_Click"
+                                            IsEnabled="{Binding Selected.IsConnected}"
+                                            ToolTip="Send to team chat (disabled until connected to a server)">
                                         <TextBlock Text="Send" Foreground="#18181B"/>
                                     </Button>
                                     <TextBox x:Name="TxtTeamChatInput"
                                              Padding="8,5" FontSize="12"
                                              Background="#1a1c1e" Foreground="White"
                                              BorderThickness="1" BorderBrush="#333"
-                                             KeyDown="TxtTeamChatInput_KeyDown"/>
+                                             KeyDown="TxtTeamChatInput_KeyDown"
+                                             IsEnabled="{Binding Selected.IsConnected}"
+                                             ToolTip="Connect to a server first to send team-chat messages"/>
                                 </DockPanel>
                                 <ScrollViewer x:Name="TeamChatScroll"
                                               VerticalScrollBarVisibility="Auto"

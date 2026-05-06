@@ -193,6 +193,15 @@ public partial class MainWindow
         var text = TxtTeamChatInput.Text?.Trim() ?? "";
         if (string.IsNullOrEmpty(text)) return;
 
+        // Guard: never optimistically render a message we can't actually deliver.
+        // The Send button + input TextBox are also IsEnabled-bound to Selected.IsConnected
+        // in XAML, so this is mainly defense-in-depth for keyboard / programmatic paths.
+        if (!(_vm?.Selected?.IsConnected ?? false))
+        {
+            AppendLog("[chat] not connected — message not sent.");
+            return;
+        }
+
         TxtTeamChatInput.Text = "";
 
         // Normal message: optimistically render locally, then send to game team chat.
