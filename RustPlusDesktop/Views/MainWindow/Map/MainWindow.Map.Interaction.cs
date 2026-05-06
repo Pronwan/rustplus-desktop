@@ -12,8 +12,6 @@ public partial class MainWindow
     private const double MAP_FOCUS_ZOOM   = 6.0;
  
     private Point _panLastHost;
-    private Point _lastHost;
-    private Point _panLastWorld;
 
     // Host (Maus) -> Scene-VOR-MapTransform (Pivot-Koordinaten fuer ScaleAt)
     private Point HostToScenePreTransform(Point hostPt)

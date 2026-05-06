@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace RustPlusDesk
+namespace RustPlusDesk.Services
 {
     public sealed class MonitorInfo
     {

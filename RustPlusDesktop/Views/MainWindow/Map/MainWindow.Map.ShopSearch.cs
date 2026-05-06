@@ -558,7 +558,7 @@ public partial class MainWindow
     {
         try
         {
-            var uri = new Uri("pack://application:,,,/ShopSearch.html");
+            var uri = new Uri("pack://application:,,,/Assets/Data/ShopSearch.html");
             var streamInfo = Application.GetResourceStream(uri);
             if (streamInfo != null)
             {
@@ -569,7 +569,7 @@ public partial class MainWindow
         catch { }
 
         // Fallback for local development if resource loading fails
-        string localPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ShopSearch.html");
+        string localPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Data", "ShopSearch.html");
         if (File.Exists(localPath)) return File.ReadAllText(localPath);
 
         return FallbackHtml();

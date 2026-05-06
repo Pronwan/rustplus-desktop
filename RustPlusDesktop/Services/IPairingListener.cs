@@ -1,7 +1,9 @@
-﻿using RustPlusDesk.Models;
+using RustPlusDesk.Models;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+
+namespace RustPlusDesk.Services;
 
 public interface IPairingListener
 {
