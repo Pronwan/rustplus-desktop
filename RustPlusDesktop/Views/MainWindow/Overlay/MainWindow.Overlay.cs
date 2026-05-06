@@ -33,7 +33,7 @@ private bool _overlayToolsVisible = false;
     private double _eraserSize = 10.0;
     private Color _textColor = Colors.White;
     private double _textSize = 16.0;
-    private string _currentIconPath = "pack://application:,,,/icons/map-icons/base1.png";
+    private string _currentIconPath = "pack://application:,,,/Assets/icons/map-icons/base1.png";
 
     // Für Draggen von platzierten Icons/Text
     private FrameworkElement? _draggingElement = null;
@@ -502,7 +502,7 @@ private bool _overlayToolsVisible = false;
             var bi = new BitmapImage();
             bi.BeginInit();
             bi.CacheOption = BitmapCacheOption.OnLoad;
-            bi.UriSource = new Uri(icon.IconPath, UriKind.RelativeOrAbsolute);
+            bi.UriSource = new Uri(icon.IconPath.Replace("/icons/", "/Assets/icons/"), UriKind.RelativeOrAbsolute);
             bi.EndInit();
             bi.Freeze();
 
@@ -1199,10 +1199,10 @@ private bool _overlayToolsVisible = false;
         };
 
         // map-icons aus deinem Projekt
-        m.Items.Add(BuildIconMenuItem("Base #1", "pack://application:,,,/icons/map-icons/base1.png"));
-        m.Items.Add(BuildIconMenuItem("Base #2", "pack://application:,,,/icons/map-icons/base2.png"));
-        m.Items.Add(BuildIconMenuItem("SAM Site", "pack://application:,,,/icons/map-icons/sam-site.png"));
-        m.Items.Add(BuildIconMenuItem("Turret", "pack://application:,,,/icons/map-icons/turret.png"));
+        m.Items.Add(BuildIconMenuItem("Base #1", "pack://application:,,,/Assets/icons/map-icons/base1.png"));
+        m.Items.Add(BuildIconMenuItem("Base #2", "pack://application:,,,/Assets/icons/map-icons/base2.png"));
+        m.Items.Add(BuildIconMenuItem("SAM Site", "pack://application:,,,/Assets/icons/map-icons/sam-site.png"));
+        m.Items.Add(BuildIconMenuItem("Turret", "pack://application:,,,/Assets/icons/map-icons/turret.png"));
 
         fe!.ContextMenu = m;
         m.IsOpen = true;

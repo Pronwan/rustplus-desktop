@@ -4,7 +4,7 @@
 		<TargetFramework>net8.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
-		<ApplicationIcon>rustplus-desktop-icon.ico</ApplicationIcon>
+		<ApplicationIcon>Assets\rustplus-desktop-icon.ico</ApplicationIcon>
 		
 		<!-- Fixes for Single-File Publish and Cleanup -->
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
@@ -58,145 +58,145 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-	  <None Remove="1-76fc6c7e.ico" />
-	  <None Remove="cash.wav" />
-	  <None Remove="icons\airfield.png" />
-	  <None Remove="icons\animat-Icons\chinook_animate.png" />
-	  <None Remove="icons\arcticresearch.png" />
-	  <None Remove="icons\banditcamp.png" />
-	  <None Remove="icons\barn.png" />
-	  <None Remove="icons\blocked.png" />
-	  <None Remove="icons\cabins.png" />
-	  <None Remove="icons\cargo.png" />
-	  <None Remove="icons\cave.png" />
-	  <None Remove="icons\ch47.png" />
-	  <None Remove="icons\cloud-download.png" />
-	  <None Remove="icons\cloud-upload.png" />
-	  <None Remove="icons\crate.png" />
-	  <None Remove="icons\crate3.png" />
-	  <None Remove="icons\ds_event.png" />
-	  <None Remove="icons\dome.png" />
-	  <None Remove="icons\eraser.png" />
-	  <None Remove="icons\excavator.png" />
-	  <None Remove="icons\explosion.png" />
-	  <None Remove="icons\ferryterminal.png" />
-	  <None Remove="icons\fishingvillage.png" />
-	  <None Remove="icons\fishingvillagelarge.png" />
-	  <None Remove="icons\gasstation.png" />
-	  <None Remove="icons\harbour.png" />
-	  <None Remove="icons\harbour2.png" />
-	  <None Remove="icons\hqmquarry.png" />
-	  <None Remove="icons\jungle.png" />
-	  <None Remove="icons\junkyard.png" />
-	  <None Remove="icons\largeoilrig.png" />
-	  <None Remove="icons\launchsite.png" />
-	  <None Remove="icons\lighthouse.png" />
-	  <None Remove="icons\map-icons\base1.png" />
-	  <None Remove="icons\map-icons\base2.png" />
-	  <None Remove="icons\map-icons\sam-site.png" />
-	  <None Remove="icons\map-icons\turret.png" />
-	  <None Remove="icons\militarybase.png" />
-	  <None Remove="icons\militarytunnel.png" />
-	  <None Remove="icons\miningoutpost.png" />
-	  <None Remove="icons\miningoutpost2.png" />
-	  <None Remove="icons\missilesilo.png" />
-	  <None Remove="icons\oilrig.png" />
-	  <None Remove="icons\outpost.png" />
-	  <None Remove="icons\patrol.png" />
-	  <None Remove="icons\pen.png" />
-	  <None Remove="icons\pencil.png" />
-	  <None Remove="icons\pin.png" />
-	  <None Remove="icons\powerplant.png" />
-	  <None Remove="icons\powerstation.png" />
-	  <None Remove="icons\radtown.png" />
-	  <None Remove="icons\rust-c4.mp3" />
-	  <None Remove="icons\satellitedish.png" />
-	  <None Remove="icons\save.png" />
-	  <None Remove="icons\sewerbranch.png" />
-	  <None Remove="icons\smartalarm.png" />
-	  <None Remove="icons\smartswitch.png" />
-	  <None Remove="icons\stable.png" />
-	  <None Remove="icons\stonequarry.png" />
-	  <None Remove="icons\storagemonitor.png" />
-	  <None Remove="icons\sulfurquarry.png" />
-	  <None Remove="icons\supermarket.png" />
-	  <None Remove="icons\swamp.png" />
-	  <None Remove="icons\text.png" />
-	  <None Remove="icons\traintunnel.png" />
-	  <None Remove="icons\traintunnel2.png" />
-	  <None Remove="icons\trainyard.png" />
-	  <None Remove="icons\trash.png" />
-	  <None Remove="icons\underwater.png" />
-	  <None Remove="icons\upload.png" />
-	  <None Remove="icons\vending.png" />
-	  <None Remove="icons\vending2.png" />
-	  <None Remove="icons\vendor.png" />
-	  <None Remove="icons\watertreatment.png" />
-	  <None Remove="icons\waterwell.png" />
-	  <None Remove="rust-item-list.json" />
-	  <None Remove="rustplus-desktop-icon.ico" />
-	  <None Remove="rust_items.json" />
-	  <None Remove="Screenshots\3.0_1.png" />
-	  <None Remove="Screenshots\3.0_2.png" />
-	  <None Remove="Screenshots\3.0_3.png" />
-	  <None Remove="Screenshots\3.0_4.png" />
-	  <None Remove="Screenshots\3.0_5.png" />
-	  <None Remove="Screenshots\3.0_6.png" />
-	  <None Remove="Screenshots\3.1.0.png" />
-	  <None Remove="Screenshots\3.2.0.png" />
-	  <None Remove="Screenshots\3.3.0_1.png" />
-	  <None Remove="Screenshots\3.3.0_2.png" />
-	  <None Remove="Screenshots\3_5A.png" />
-	  <None Remove="Screenshots\3_5B.png" />
-	  <None Remove="Screenshots\Cargo_docked_countdown.png" />
-	  <None Remove="Screenshots\Cargo_notification_settings.png" />
-	  <None Remove="Screenshots\Cargo_remaining-on-map.png" />
-	  <None Remove="Screenshots\v4_map_overhaul.png" />
-	  <None Remove="Screenshots\v4_shop_hover.png" />
-	  <None Remove="TitleScreen-rust-plus-desktop.png" />
+	  <None Remove="Assets\1-76fc6c7e.ico" />
+	  <None Remove="Assets\cash.wav" />
+	  <None Remove="Assets\icons\airfield.png" />
+	  <None Remove="Assets\icons\animat-Icons\chinook_animate.png" />
+	  <None Remove="Assets\icons\arcticresearch.png" />
+	  <None Remove="Assets\icons\banditcamp.png" />
+	  <None Remove="Assets\icons\barn.png" />
+	  <None Remove="Assets\icons\blocked.png" />
+	  <None Remove="Assets\icons\cabins.png" />
+	  <None Remove="Assets\icons\cargo.png" />
+	  <None Remove="Assets\icons\cave.png" />
+	  <None Remove="Assets\icons\ch47.png" />
+	  <None Remove="Assets\icons\cloud-download.png" />
+	  <None Remove="Assets\icons\cloud-upload.png" />
+	  <None Remove="Assets\icons\crate.png" />
+	  <None Remove="Assets\icons\crate3.png" />
+	  <None Remove="Assets\icons\ds_event.png" />
+	  <None Remove="Assets\icons\dome.png" />
+	  <None Remove="Assets\icons\eraser.png" />
+	  <None Remove="Assets\icons\excavator.png" />
+	  <None Remove="Assets\icons\explosion.png" />
+	  <None Remove="Assets\icons\ferryterminal.png" />
+	  <None Remove="Assets\icons\fishingvillage.png" />
+	  <None Remove="Assets\icons\fishingvillagelarge.png" />
+	  <None Remove="Assets\icons\gasstation.png" />
+	  <None Remove="Assets\icons\harbour.png" />
+	  <None Remove="Assets\icons\harbour2.png" />
+	  <None Remove="Assets\icons\hqmquarry.png" />
+	  <None Remove="Assets\icons\jungle.png" />
+	  <None Remove="Assets\icons\junkyard.png" />
+	  <None Remove="Assets\icons\largeoilrig.png" />
+	  <None Remove="Assets\icons\launchsite.png" />
+	  <None Remove="Assets\icons\lighthouse.png" />
+	  <None Remove="Assets\icons\map-icons\base1.png" />
+	  <None Remove="Assets\icons\map-icons\base2.png" />
+	  <None Remove="Assets\icons\map-icons\sam-site.png" />
+	  <None Remove="Assets\icons\map-icons\turret.png" />
+	  <None Remove="Assets\icons\militarybase.png" />
+	  <None Remove="Assets\icons\militarytunnel.png" />
+	  <None Remove="Assets\icons\miningoutpost.png" />
+	  <None Remove="Assets\icons\miningoutpost2.png" />
+	  <None Remove="Assets\icons\missilesilo.png" />
+	  <None Remove="Assets\icons\oilrig.png" />
+	  <None Remove="Assets\icons\outpost.png" />
+	  <None Remove="Assets\icons\patrol.png" />
+	  <None Remove="Assets\icons\pen.png" />
+	  <None Remove="Assets\icons\pencil.png" />
+	  <None Remove="Assets\icons\pin.png" />
+	  <None Remove="Assets\icons\powerplant.png" />
+	  <None Remove="Assets\icons\powerstation.png" />
+	  <None Remove="Assets\icons\radtown.png" />
+	  <None Remove="Assets\icons\rust-c4.mp3" />
+	  <None Remove="Assets\icons\satellitedish.png" />
+	  <None Remove="Assets\icons\save.png" />
+	  <None Remove="Assets\icons\sewerbranch.png" />
+	  <None Remove="Assets\icons\smartalarm.png" />
+	  <None Remove="Assets\icons\smartswitch.png" />
+	  <None Remove="Assets\icons\stable.png" />
+	  <None Remove="Assets\icons\stonequarry.png" />
+	  <None Remove="Assets\icons\storagemonitor.png" />
+	  <None Remove="Assets\icons\sulfurquarry.png" />
+	  <None Remove="Assets\icons\supermarket.png" />
+	  <None Remove="Assets\icons\swamp.png" />
+	  <None Remove="Assets\icons\text.png" />
+	  <None Remove="Assets\icons\traintunnel.png" />
+	  <None Remove="Assets\icons\traintunnel2.png" />
+	  <None Remove="Assets\icons\trainyard.png" />
+	  <None Remove="Assets\icons\trash.png" />
+	  <None Remove="Assets\icons\underwater.png" />
+	  <None Remove="Assets\icons\upload.png" />
+	  <None Remove="Assets\icons\vending.png" />
+	  <None Remove="Assets\icons\vending2.png" />
+	  <None Remove="Assets\icons\vendor.png" />
+	  <None Remove="Assets\icons\watertreatment.png" />
+	  <None Remove="Assets\icons\waterwell.png" />
+	  <None Remove="Assets\Data\rust-item-list.json" />
+	  <None Remove="Assets\rustplus-desktop-icon.ico" />
+	  <None Remove="Assets\Data\rust_items.json" />
+	  <None Remove="Assets\Screenshots\3.0_1.png" />
+	  <None Remove="Assets\Screenshots\3.0_2.png" />
+	  <None Remove="Assets\Screenshots\3.0_3.png" />
+	  <None Remove="Assets\Screenshots\3.0_4.png" />
+	  <None Remove="Assets\Screenshots\3.0_5.png" />
+	  <None Remove="Assets\Screenshots\3.0_6.png" />
+	  <None Remove="Assets\Screenshots\3.1.0.png" />
+	  <None Remove="Assets\Screenshots\3.2.0.png" />
+	  <None Remove="Assets\Screenshots\3.3.0_1.png" />
+	  <None Remove="Assets\Screenshots\3.3.0_2.png" />
+	  <None Remove="Assets\Screenshots\3_5A.png" />
+	  <None Remove="Assets\Screenshots\3_5B.png" />
+	  <None Remove="Assets\Screenshots\Cargo_docked_countdown.png" />
+	  <None Remove="Assets\Screenshots\Cargo_notification_settings.png" />
+	  <None Remove="Assets\Screenshots\Cargo_remaining-on-map.png" />
+	  <None Remove="Assets\Screenshots\v4_map_overhaul.png" />
+	  <None Remove="Assets\Screenshots\v4_shop_hover.png" />
+	  <None Remove="Assets\TitleScreen-rust-plus-desktop.png" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Resource Include="icons\animat-Icons\chinook_animate.png" />
-	  <Resource Include="icons\cloud-download.png" />
-	  <Resource Include="icons\cloud-upload.png" />
-	  <Resource Include="icons\crate3.png" />
-	  <Resource Include="icons\eraser.png">
+	  <Resource Include="Assets\icons\animat-Icons\chinook_animate.png" />
+	  <Resource Include="Assets\icons\cloud-download.png" />
+	  <Resource Include="Assets\icons\cloud-upload.png" />
+	  <Resource Include="Assets\icons\crate3.png" />
+	  <Resource Include="Assets\icons\eraser.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
-	  <Resource Include="icons\pen.png">
+	  <Resource Include="Assets\icons\pen.png">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>
-	  <Resource Include="icons\pin.png">
+	  <Resource Include="Assets\icons\pin.png">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>
-	  <Content Include="icons\rust-c4.mp3">
+	  <Content Include="Assets\icons\rust-c4.mp3">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Content>
-	  <Resource Include="icons\save.png">
+	  <Resource Include="Assets\icons\save.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
-	  <Resource Include="icons\smartalarm.png" />
-	  <Resource Include="icons\smartswitch.png" />
-	  <Resource Include="icons\storagemonitor.png" />
-	  <Resource Include="icons\text.png">
+	  <Resource Include="Assets\icons\smartalarm.png" />
+	  <Resource Include="Assets\icons\smartswitch.png" />
+	  <Resource Include="Assets\icons\storagemonitor.png" />
+	  <Resource Include="Assets\icons\text.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
-	  <Resource Include="icons\trash.png">
+	  <Resource Include="Assets\icons\trash.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
-	  <Resource Include="icons\upload.png">
+	  <Resource Include="Assets\icons\upload.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
-	  <Content Include="1-76fc6c7e.ico">
+	  <Content Include="Assets\1-76fc6c7e.ico">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
-	  <Content Include="rustplus-desktop-icon.ico">
+	  <Content Include="Assets\rustplus-desktop-icon.ico">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	</ItemGroup>
@@ -207,119 +207,113 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="cash.wav">
+    <Content Include="Assets\cash.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <Resource Include="icons\airfield.png" />
-    <Resource Include="icons\arcticresearch.png" />
-    <Resource Include="icons\banditcamp.png" />
-    <Resource Include="icons\barn.png" />
-    <Resource Include="icons\blocked.png" />
-    <Resource Include="icons\cabins.png" />
-    <Resource Include="icons\cargo.png" />
-    <Resource Include="icons\cave.png" />
-    <Resource Include="icons\ch47.png" />
-    <Resource Include="icons\crate.png" />
-    <Resource Include="icons\ds_event.png" />
-    <Resource Include="icons\dome.png" />
-    <Resource Include="icons\excavator.png" />
-    <Resource Include="icons\explosion.png" />
-    <Resource Include="icons\ferryterminal.png" />
-    <Resource Include="icons\fishingvillage.png" />
-    <Resource Include="icons\fishingvillagelarge.png" />
-    <Resource Include="icons\gasstation.png" />
-    <Resource Include="icons\harbour.png" />
-    <Resource Include="icons\harbour2.png" />
-    <Resource Include="icons\hqmquarry.png" />
-    <Resource Include="icons\jungle.png" />
-    <Resource Include="icons\junkyard.png" />
-    <Resource Include="icons\largeoilrig.png" />
-    <Resource Include="icons\launchsite.png" />
-    <Resource Include="icons\lighthouse.png" />
-    <Resource Include="icons\map-icons\base1.png">
+    <Resource Include="Assets\icons\airfield.png" />
+    <Resource Include="Assets\icons\arcticresearch.png" />
+    <Resource Include="Assets\icons\banditcamp.png" />
+    <Resource Include="Assets\icons\barn.png" />
+    <Resource Include="Assets\icons\blocked.png" />
+    <Resource Include="Assets\icons\cabins.png" />
+    <Resource Include="Assets\icons\cargo.png" />
+    <Resource Include="Assets\icons\cave.png" />
+    <Resource Include="Assets\icons\ch47.png" />
+    <Resource Include="Assets\icons\crate.png" />
+    <Resource Include="Assets\icons\ds_event.png" />
+    <Resource Include="Assets\icons\dome.png" />
+    <Resource Include="Assets\icons\excavator.png" />
+    <Resource Include="Assets\icons\explosion.png" />
+    <Resource Include="Assets\icons\ferryterminal.png" />
+    <Resource Include="Assets\icons\fishingvillage.png" />
+    <Resource Include="Assets\icons\fishingvillagelarge.png" />
+    <Resource Include="Assets\icons\gasstation.png" />
+    <Resource Include="Assets\icons\harbour.png" />
+    <Resource Include="Assets\icons\harbour2.png" />
+    <Resource Include="Assets\icons\hqmquarry.png" />
+    <Resource Include="Assets\icons\jungle.png" />
+    <Resource Include="Assets\icons\junkyard.png" />
+    <Resource Include="Assets\icons\largeoilrig.png" />
+    <Resource Include="Assets\icons\launchsite.png" />
+    <Resource Include="Assets\icons\lighthouse.png" />
+    <Resource Include="Assets\icons\map-icons\base1.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="icons\map-icons\base2.png">
+    <Resource Include="Assets\icons\map-icons\base2.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="icons\map-icons\sam-site.png">
+    <Resource Include="Assets\icons\map-icons\sam-site.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="icons\map-icons\turret.png">
+    <Resource Include="Assets\icons\map-icons\turret.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="icons\militarybase.png" />
-    <Resource Include="icons\militarytunnel.png" />
-    <Resource Include="icons\miningoutpost.png" />
-    <Resource Include="icons\miningoutpost2.png" />
-    <Resource Include="icons\missilesilo.png" />
-    <Resource Include="icons\oilrig.png" />
-    <Resource Include="icons\outpost.png" />
-    <Resource Include="icons\patrol.png" />
-    <Resource Include="icons\pencil.png">
+    <Resource Include="Assets\icons\militarybase.png" />
+    <Resource Include="Assets\icons\militarytunnel.png" />
+    <Resource Include="Assets\icons\miningoutpost.png" />
+    <Resource Include="Assets\icons\miningoutpost2.png" />
+    <Resource Include="Assets\icons\missilesilo.png" />
+    <Resource Include="Assets\icons\oilrig.png" />
+    <Resource Include="Assets\icons\outpost.png" />
+    <Resource Include="Assets\icons\patrol.png" />
+    <Resource Include="Assets\icons\pencil.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="icons\powerplant.png" />
-    <Resource Include="icons\powerstation.png" />
-    <Resource Include="icons\radtown.png" />
-    <Resource Include="icons\satellitedish.png" />
-    <Resource Include="icons\sewerbranch.png" />
-    <Resource Include="icons\stable.png" />
-    <Resource Include="icons\stonequarry.png" />
-    <Resource Include="icons\sulfurquarry.png" />
-    <Resource Include="icons\supermarket.png" />
-    <Resource Include="icons\swamp.png" />
-    <Resource Include="icons\traintunnel.png" />
-    <Resource Include="icons\traintunnel2.png" />
-    <Resource Include="icons\trainyard.png" />
-    <Resource Include="icons\underwater.png" />
-    <Resource Include="icons\vending.png" />
-    <Resource Include="icons\vending2.png" />
-    <Resource Include="icons\vending_orange.png" />
-    <Resource Include="icons\animat-Icons\patrol_helicopter.png" />
-    <Resource Include="icons\animat-Icons\chinook_map_blades.png" />
-    <Resource Include="icons\vendor.png" />
-    <Resource Include="icons\watertreatment.png" />
-    <Resource Include="icons\waterwell.png" />
-    <Resource Include="rust-item-list.json" />
-    <Resource Include="rustplus-desktop-icon.ico" />
-    <Resource Include="Screenshots\3.0_1.png" />
-    <Resource Include="Screenshots\3.0_2.png" />
-    <Resource Include="Screenshots\3.0_3.png" />
-    <Resource Include="Screenshots\3.0_4.png" />
-    <Resource Include="Screenshots\3.0_5.png" />
-    <Resource Include="Screenshots\3.0_6.png" />
-    <Resource Include="Screenshots\3.1.0.png" />
-    <Resource Include="Screenshots\3.2.0.png" />
-    <Resource Include="Screenshots\3.3.0_1.png" />
-    <Resource Include="Screenshots\3.3.0_2.png" />
-    <Resource Include="Screenshots\3_5A.png" />
-    <Resource Include="Screenshots\3_5B.png" />
-    <Resource Include="Screenshots\Cargo_docked_countdown.png" />
-    <Resource Include="Screenshots\Cargo_notification_settings.png" />
-    <Resource Include="Screenshots\Cargo_remaining-on-map.png" />
-    <Resource Include="Screenshots\v4_map_overhaul.png" />
-    <Resource Include="Screenshots\v4_shop_hover.png" />
-    <Resource Include="Screenshots\v4_5.png">
+    <Resource Include="Assets\icons\powerplant.png" />
+    <Resource Include="Assets\icons\powerstation.png" />
+    <Resource Include="Assets\icons\radtown.png" />
+    <Resource Include="Assets\icons\satellitedish.png" />
+    <Resource Include="Assets\icons\sewerbranch.png" />
+    <Resource Include="Assets\icons\stable.png" />
+    <Resource Include="Assets\icons\stonequarry.png" />
+    <Resource Include="Assets\icons\sulfurquarry.png" />
+    <Resource Include="Assets\icons\supermarket.png" />
+    <Resource Include="Assets\icons\swamp.png" />
+    <Resource Include="Assets\icons\traintunnel.png" />
+    <Resource Include="Assets\icons\traintunnel2.png" />
+    <Resource Include="Assets\icons\trainyard.png" />
+    <Resource Include="Assets\icons\underwater.png" />
+    <Resource Include="Assets\icons\vending.png" />
+    <Resource Include="Assets\icons\vending2.png" />
+    <Resource Include="Assets\icons\vending_orange.png" />
+    <Resource Include="Assets\icons\animat-Icons\patrol_helicopter.png" />
+    <Resource Include="Assets\icons\animat-Icons\chinook_map_blades.png" />
+    <Resource Include="Assets\icons\vendor.png" />
+    <Resource Include="Assets\icons\watertreatment.png" />
+    <Resource Include="Assets\icons\waterwell.png" />
+    <Resource Include="Assets\Data\rust-item-list.json" />
+    <Resource Include="Assets\rustplus-desktop-icon.ico" />
+    <Resource Include="Assets\Screenshots\3.0_1.png" />
+    <Resource Include="Assets\Screenshots\3.0_2.png" />
+    <Resource Include="Assets\Screenshots\3.0_3.png" />
+    <Resource Include="Assets\Screenshots\3.0_4.png" />
+    <Resource Include="Assets\Screenshots\3.0_5.png" />
+    <Resource Include="Assets\Screenshots\3.0_6.png" />
+    <Resource Include="Assets\Screenshots\3.1.0.png" />
+    <Resource Include="Assets\Screenshots\3.2.0.png" />
+    <Resource Include="Assets\Screenshots\3.3.0_1.png" />
+    <Resource Include="Assets\Screenshots\3.3.0_2.png" />
+    <Resource Include="Assets\Screenshots\3_5A.png" />
+    <Resource Include="Assets\Screenshots\3_5B.png" />
+    <Resource Include="Assets\Screenshots\Cargo_docked_countdown.png" />
+    <Resource Include="Assets\Screenshots\Cargo_notification_settings.png" />
+    <Resource Include="Assets\Screenshots\Cargo_remaining-on-map.png" />
+    <Resource Include="Assets\Screenshots\v4_map_overhaul.png" />
+    <Resource Include="Assets\Screenshots\v4_shop_hover.png" />
+    <Resource Include="Assets\Screenshots\v4_5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Screenshots\Notifications.png" />
-    <Resource Include="TitleScreen-rust-plus-desktop.png" />
-    <Resource Include="rust_items.json" />
-    <Resource Include="ShopSearch.html" />
+    <Resource Include="Assets\Screenshots\Notifications.png" />
+    <Resource Include="Assets\TitleScreen-rust-plus-desktop.png" />
+    <Resource Include="Assets\Data\rust_items.json" />
+    <Resource Include="Assets\Data\ShopSearch.html" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="AlarmNotification.cs">
+    <Compile Update="Models\AlarmNotification.cs">
       <CustomToolNamespace></CustomToolNamespace>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="AlarmPopupWindow.xaml">
-      <CustomToolNamespace>RustPlusDeskt.Views</CustomToolNamespace>
-    </Page>
   </ItemGroup>
 
 

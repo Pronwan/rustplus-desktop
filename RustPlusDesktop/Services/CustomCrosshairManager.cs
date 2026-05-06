@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace RustPlusDesk
+namespace RustPlusDesk.Services
 {
     public class CustomCrosshair
     {

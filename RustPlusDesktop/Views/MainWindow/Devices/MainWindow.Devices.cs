@@ -349,7 +349,7 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
         }
         else
         {
-            audioFile = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "rust-c4.mp3");
+            audioFile = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "icons", "rust-c4.mp3");
         }
 
         if (System.IO.File.Exists(audioFile))

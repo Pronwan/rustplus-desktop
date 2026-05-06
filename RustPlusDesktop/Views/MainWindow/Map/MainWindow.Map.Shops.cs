@@ -381,7 +381,7 @@ public partial class MainWindow
                 var grid = new Grid { Tag = cluster, Cursor = Cursors.Hand };
                 
                 bool allEmpty = cluster.All(s => IsShopEmpty(s));
-                string iconUri = allEmpty ? "pack://application:,,,/icons/vending_orange.png" : "pack://application:,,,/icons/vending.png";
+                string iconUri = allEmpty ? "pack://application:,,,/Assets/icons/vending_orange.png" : "pack://application:,,,/Assets/icons/vending.png";
                 var circleColor = allEmpty ? Color.FromRgb(255, 140, 0) : Color.FromRgb(140, 186, 48);
 
               
@@ -422,7 +422,7 @@ public partial class MainWindow
                 if (el is Grid g)
                 {
                     bool allEmpty = cluster.All(s => IsShopEmpty(s));
-                    string iconUri = allEmpty ? "pack://application:,,,/icons/vending_orange.png" : "pack://application:,,,/icons/vending.png";
+                    string iconUri = allEmpty ? "pack://application:,,,/Assets/icons/vending_orange.png" : "pack://application:,,,/Assets/icons/vending.png";
                     var circleColor = allEmpty ? Color.FromRgb(255, 140, 0) : Color.FromRgb(140, 186, 48);
 
                     var circle = g.Children.OfType<Border>().FirstOrDefault();
