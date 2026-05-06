@@ -281,20 +281,27 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
+                        <!--
+                            Unselected tabs now have a visible zinc-800 fill and a
+                            zinc-700 border so the whole tab strip reads as a row of
+                            tabs even when none is hovered. Selected tab merges with
+                            the card content (zinc-900) for the classic "active tab
+                            connects to its panel" look.
+                        -->
                         <Border x:Name="TabHeader"
-                        Background="Transparent"
-                        BorderBrush="Transparent"
-                        BorderThickness="1,1,1,0"
-                            CornerRadius="6,6,0,0"
-                            Padding="12,6"
-                        SnapsToDevicePixels="True">
+                                Background="#27272A"
+                                BorderBrush="#3F3F46"
+                                BorderThickness="1,1,1,0"
+                                CornerRadius="6,6,0,0"
+                                Padding="14,7"
+                                SnapsToDevicePixels="True">
                             <ContentPresenter ContentSource="Header"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"/>
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="TabHeader" Property="Background" Value="#27272A"/>
+                                <Setter TargetName="TabHeader" Property="Background" Value="#3F3F46"/>
                                 <Setter Property="Foreground" Value="#FAFAFA"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">

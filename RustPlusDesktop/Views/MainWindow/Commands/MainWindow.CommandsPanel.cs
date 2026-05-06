@@ -32,6 +32,7 @@ public partial class MainWindow
 
         AnimateCommandsPanelTo(0);
         _commandsPanelOpen = true;
+        OnSlideInPanelOpened();
     }
 
     private void CloseCommandsPanel()
@@ -44,6 +45,7 @@ public partial class MainWindow
         });
         this.PreviewKeyDown -= CommandsPanel_PreviewKeyDown;
         _commandsPanelOpen = false;
+        OnSlideInPanelClosed();
     }
 
     private void CommandsPanel_SizeChanged(object sender, SizeChangedEventArgs e)

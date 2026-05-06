@@ -40,6 +40,7 @@ public partial class MainWindow
 
         AnimateTrackerPanelTo(0);
         _trackerPanelOpen = true;
+        OnSlideInPanelOpened();
     }
 
     private void CloseTrackerPanel()
@@ -58,6 +59,7 @@ public partial class MainWindow
         });
         this.PreviewKeyDown -= TrackerPanel_PreviewKeyDown;
         _trackerPanelOpen = false;
+        OnSlideInPanelClosed();
     }
 
     private void TrackerPanel_PreviewKeyDown(object sender, KeyEventArgs e)

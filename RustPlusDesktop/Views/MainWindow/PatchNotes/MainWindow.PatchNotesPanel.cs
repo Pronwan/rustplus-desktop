@@ -38,6 +38,7 @@ public partial class MainWindow
 
         AnimatePatchNotesPanelTo(0);
         _patchNotesPanelOpen = true;
+        OnSlideInPanelOpened();
     }
 
     private void ClosePatchNotesPanel()
@@ -51,6 +52,7 @@ public partial class MainWindow
         });
         this.PreviewKeyDown -= PatchNotesPanel_PreviewKeyDown;
         _patchNotesPanelOpen = false;
+        OnSlideInPanelClosed();
     }
 
     private void BtnClosePatchNotesPanel_Click(object sender, RoutedEventArgs e) => ClosePatchNotesPanel();

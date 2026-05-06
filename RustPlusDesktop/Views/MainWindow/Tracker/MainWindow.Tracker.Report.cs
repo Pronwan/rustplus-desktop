@@ -47,6 +47,7 @@ public partial class MainWindow
 
         AnimatePanelTo(0);
         _reportPanelOpen = true;
+        OnSlideInPanelOpened();
 
         try
         {
@@ -131,6 +132,7 @@ public partial class MainWindow
         });
         this.PreviewKeyDown -= ReportPanel_PreviewKeyDown;
         _reportPanelOpen = false;
+        OnSlideInPanelClosed();
     }
 
     private void ReportPanel_SizeChanged(object sender, SizeChangedEventArgs e)
