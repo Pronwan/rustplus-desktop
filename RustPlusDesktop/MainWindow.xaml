@@ -2886,64 +2886,72 @@ Click="BtnToggleMiniMap_Click"/>
                         <Border.RenderTransform>
                             <TranslateTransform Y="{Binding ActualHeight, ElementName=EventDockHost}"/>
                         </Border.RenderTransform>
+                        <!--
+                            Tool buttons are sized to match the EventDock tiles above
+                            (~46 px square with 4 px vertical spacing) so the right-edge
+                            stack reads as a single visual rhythm. Click activates the
+                            tool AND opens its settings popup (size / colour / icon
+                            picker) — moved off right-click so the menu is discoverable.
+                        -->
                         <StackPanel>
+                            <StackPanel.Resources>
+                                <Style TargetType="Button" x:Key="OverlayToolboxButton">
+                                    <Setter Property="Width" Value="46"/>
+                                    <Setter Property="Height" Value="46"/>
+                                    <Setter Property="Margin" Value="0,2"/>
+                                    <Setter Property="Padding" Value="6"/>
+                                </Style>
+                            </StackPanel.Resources>
 
-                            <!--
-                                Click activates the tool AND opens its settings popup
-                                (size / colour / icon picker). Settings used to be hidden
-                                behind a right-click — moved to left-click for
-                                discoverability.
-                            -->
                             <!-- Zeichnen -->
                             <Button x:Name="ToolDrawButton"
-                Width="32" Height="32"
-                ToolTip="Draw — click to activate &amp; pick size / colour"
-                Click="ToolDrawButton_Click">
+                                    Style="{StaticResource OverlayToolboxButton}"
+                                    ToolTip="Draw — click to activate &amp; pick size / colour"
+                                    Click="ToolDrawButton_Click">
                                 <Image Source="pack://application:,,,/icons/pen.png"/>
                             </Button>
 
                             <!-- Text -->
                             <Button x:Name="ToolTextButton"
-                Width="32" Height="32"
-                ToolTip="Place text — click to activate &amp; pick colour / size"
-                Click="ToolTextButton_Click">
+                                    Style="{StaticResource OverlayToolboxButton}"
+                                    ToolTip="Place text — click to activate &amp; pick colour / size"
+                                    Click="ToolTextButton_Click">
                                 <Image Source="pack://application:,,,/icons/text.png"/>
                             </Button>
 
                             <!-- Icons -->
                             <Button x:Name="ToolIconButton"
-                Width="32" Height="32"
-                ToolTip="Place icon — click to pick which icon to drop"
-                Click="ToolIconButton_Click">
+                                    Style="{StaticResource OverlayToolboxButton}"
+                                    ToolTip="Place icon — click to pick which icon to drop"
+                                    Click="ToolIconButton_Click">
                                 <Image Source="pack://application:,,,/icons/pin.png"/>
                             </Button>
 
                             <!-- Radierer -->
                             <Button x:Name="ToolEraseButton"
-                Width="32" Height="32"
-                ToolTip="Eraser — click to activate &amp; pick size"
-                Click="ToolEraseButton_Click">
+                                    Style="{StaticResource OverlayToolboxButton}"
+                                    ToolTip="Eraser — click to activate &amp; pick size"
+                                    Click="ToolEraseButton_Click">
                                 <Image Source="pack://application:,,,/icons/eraser.png"/>
                             </Button>
 
-                            <Separator/>
+                            <Separator Margin="4,4"/>
 
                             <!-- Löschen  -->
                             <Button x:Name="ToolTrashButton"
-                Width="32" Height="32"
-                ToolTip="Delete own overlay"
-                Click="ToolTrashButton_Click">
+                                    Style="{StaticResource OverlayToolboxButton}"
+                                    ToolTip="Delete own overlay"
+                                    Click="ToolTrashButton_Click">
                                 <Image Source="pack://application:,,,/icons/trash.png"/>
                             </Button>
 
                             <!-- Upload / Teilen -->
                             <Button x:Name="ToolUploadButton"
-                Width="32" Height="32"
-                ToolTip="Upload own Overlay / share"
-                Click="ToolUploadButton_Click">
+                                    Style="{StaticResource OverlayToolboxButton}"
+                                    ToolTip="Upload own Overlay / share"
+                                    Click="ToolUploadButton_Click">
                                 <Image Source="pack://application:,,,/icons/upload.png"/>
                             </Button>
-
                         </StackPanel>
                     </Border>
 
