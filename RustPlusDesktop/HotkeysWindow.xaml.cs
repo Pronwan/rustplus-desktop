@@ -44,6 +44,15 @@ namespace RustPlusDesk.Views
             DataContext = _rows;
         }
 
+        // Borderless window (WindowStyle=None) — let the user drag by clicking
+        // the surrounding chrome. Same pattern as the other shadcn modals.
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            if (e.ButtonState == MouseButtonState.Pressed)
+                DragMove();
+        }
+
         public bool ActivateOnClose { get; private set; }
 
         private void BtnCloseActivate_Click(object sender, RoutedEventArgs e)

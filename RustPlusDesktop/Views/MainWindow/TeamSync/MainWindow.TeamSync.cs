@@ -86,17 +86,19 @@ public partial class MainWindow
     }
 
     // ─── Manual sync button (rendered from XAML) ─────────────────────────────
+    // The single right-side refresh in the Tracker top bar now drives both
+    // BattleMetrics online-players refresh AND team-sync upload+pull, so the
+    // user gets one button that "refreshes everything". Team sync is skipped
+    // silently when disabled in Settings.
     private async void BtnTeamSyncNow_Click(object sender, RoutedEventArgs e)
     {
-        if (!TrackingService.TeamSyncEnabled)
-        {
-            AppendLog("[team-sync] disabled — enable in Settings first.");
-            return;
-        }
         if (BtnTeamSyncNow != null) BtnTeamSyncNow.IsEnabled = false;
         try
         {
-            await TeamSyncService.ForceSyncAsync();
+            BtnTrackerRefresh_Click(sender, e);
+
+            if (TrackingService.TeamSyncEnabled)
+                await TeamSyncService.ForceSyncAsync();
         }
         finally
         {

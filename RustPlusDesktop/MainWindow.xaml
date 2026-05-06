@@ -36,8 +36,8 @@
         <!-- ========== TAB STYLES (einfügen in <Window.Resources>) ========== -->
         <SolidColorBrush x:Key="CardBrush" Color="#171A21"/>
         <SolidColorBrush x:Key="CardBorderBrush" Color="#222734"/>
-        <SolidColorBrush x:Key="PrimaryBrush" Color="#4C8BF5"/>
-        <SolidColorBrush x:Key="PrimaryBrushMuted" Color="#375FA8"/>
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#FAFAFA"/>
+        <SolidColorBrush x:Key="PrimaryBrushMuted" Color="#E4E4E7"/>
         <SolidColorBrush x:Key="TextBrush" Color="#E8ECF3"/>
         <SolidColorBrush x:Key="TextBrushMuted" Color="#AAB6CF"/>
 
@@ -61,14 +61,14 @@
                     IsItemsHost="True"
                     Margin="8,8,8,0"/>
 
-                            <!-- Inhalt -->
+                            <!-- Tab content card — shadcn-style 8px radius, 16px pad. -->
                             <Border Grid.Row="1"
-                  Background="{StaticResource CardBrush}"
-                  BorderBrush="{StaticResource CardBorderBrush}"
+                  Background="#18181B"
+                  BorderBrush="#27272A"
                   BorderThickness="1"
-                  CornerRadius="14"
+                  CornerRadius="8"
                   Margin="8,0,8,8"
-                  Padding="12">
+                  Padding="16">
                                 <ContentPresenter x:Name="PART_SelectedContentHost"
                               ContentSource="SelectedContent"/>
                             </Border>
@@ -270,21 +270,22 @@
         </Style>
 
         <!-- TabItem: echte „Reiter“-Optik mit eckigem Fuß, bündig zur Card -->
+        <!-- shadcn-flavoured folder tab: muted by default, hover/selected → zinc surface. -->
         <Style x:Key="PrettyTabItem" TargetType="TabItem">
-            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="Foreground" Value="#A1A1AA"/>
             <Setter Property="Padding" Value="14,8"/>
-            <Setter Property="Margin" Value="0"/>
-            <!-- kein Abstand zwischen Reitern -->
+            <Setter Property="Margin" Value="0,0,4,0"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="Medium"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
                         <Border x:Name="TabHeader"
-                        Background="#11151B"
-                        BorderBrush="{StaticResource CardBorderBrush}"
-                        BorderThickness="1,1,1,0"  
-                            CornerRadius="10,10,0,0"
-                            
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        BorderThickness="1,1,1,0"
+                            CornerRadius="6,6,0,0"
                             Padding="12,6"
                         SnapsToDevicePixels="True">
                             <ContentPresenter ContentSource="Header"
@@ -293,18 +294,18 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="TabHeader" Property="Background" Value="#151A22"/>
+                                <Setter TargetName="TabHeader" Property="Background" Value="#27272A"/>
+                                <Setter Property="Foreground" Value="#FAFAFA"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter Property="Panel.ZIndex" Value="1"/>
-
                                 <Setter TargetName="TabHeader" Property="Margin" Value="0,0,0,-1"/>
-                                <Setter TargetName="TabHeader" Property="Background" Value="{StaticResource CardBrush}"/>
-                                <Setter TargetName="TabHeader" Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
-                                <Setter Property="Foreground" Value="White"/>
+                                <Setter TargetName="TabHeader" Property="Background" Value="#18181B"/>
+                                <Setter TargetName="TabHeader" Property="BorderBrush" Value="#27272A"/>
+                                <Setter Property="Foreground" Value="#FAFAFA"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.6"/>
+                                <Setter Property="Opacity" Value="0.5"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -313,29 +314,38 @@
         </Style>
 
         <!-- Sekundär-Button (unten im Tab) -->
+        <!-- shadcn outline / ghost-ish button. -->
         <Style x:Key="GhostButton" TargetType="Button">
             <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
-            <Setter Property="Background" Value="#141821"/>
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Padding" Value="10,5"/>
             <Setter Property="Margin" Value="8,0,0,0"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="BtnBg" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="10">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border x:Name="BtnBg"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="BtnBg" Property="Background" Value="#1A2130"/>
+                                <Setter TargetName="BtnBg" Property="Background" Value="#27272A"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="BtnBg" Property="Background" Value="#0F1320"/>
+                                <Setter TargetName="BtnBg" Property="Background" Value="#3F3F46"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.55"/>
+                                <Setter Property="Opacity" Value="0.5"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -343,18 +353,55 @@
             </Setter>
         </Style>
 
-        <!-- Primär-Button (CHAT) -->
-        <Style x:Key="PrimaryButton" BasedOn="{StaticResource GhostButton}" TargetType="Button">
+        <!-- shadcn primary: near-white surface, dark text.
+             The Border.Resources scope a local TextBlock style override that beats the
+             global implicit `<Style TargetType="TextBlock">` defined in App.xaml. Without
+             this, a string Button.Content gets auto-wrapped in a TextBlock that picks up
+             the global Foreground (TextPrimary = near-white), making the text invisible
+             on the white-ish primary surface. -->
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource GhostButton}">
             <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
             <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrushMuted}"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="#18181B"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="BtnBg"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <Border.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground"
+                                            Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                                </Style>
+                            </Border.Resources>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="BtnBg" Property="Background" Value="#E4E4E7"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="BtnBg" Property="Background" Value="#D4D4D8"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <!-- ========= Ultra-Slim Scrollbars ========= -->
-        <SolidColorBrush x:Key="ScrollbarTrackBrush" Color="#141820"/>
-        <SolidColorBrush x:Key="ScrollbarThumbBrush" Color="#2C3548"/>
-        <SolidColorBrush x:Key="ScrollbarThumbBrushHover" Color="#3A4663"/>
-        <SolidColorBrush x:Key="ScrollbarThumbBrushActive" Color="#4C5A7A"/>
+        <SolidColorBrush x:Key="ScrollbarTrackBrush" Color="Transparent"/>
+        <SolidColorBrush x:Key="ScrollbarThumbBrush" Color="#3F3F46"/>
+        <SolidColorBrush x:Key="ScrollbarThumbBrushHover" Color="#52525B"/>
+        <SolidColorBrush x:Key="ScrollbarThumbBrushActive" Color="#71717A"/>
 
         <Style x:Key="SlimThumb" TargetType="{x:Type Thumb}">
             <Setter Property="Background" Value="{StaticResource ScrollbarThumbBrush}"/>
@@ -606,18 +653,70 @@
             <Setter Property="Height" Value="32"/>
         </Style>
 
-        <!-- CheckBox dunkel -->
+        <!-- shadcn checkbox: 16px square, 1px zinc-700 border, fills white when checked. -->
         <Style TargetType="CheckBox">
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Grid Background="Transparent" SnapsToDevicePixels="True">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="Box"
+                                    Width="16" Height="16"
+                                    Margin="0,0,8,0"
+                                    VerticalAlignment="Center"
+                                    Background="#18181B"
+                                    BorderBrush="#3F3F46"
+                                    BorderThickness="1"
+                                    CornerRadius="4">
+                                <Path x:Name="Check"
+                                      Data="M 2 6 L 6 10 L 12 3"
+                                      Stroke="#18181B"
+                                      StrokeThickness="2"
+                                      StrokeStartLineCap="Round"
+                                      StrokeEndLineCap="Round"
+                                      StrokeLineJoin="Round"
+                                      Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter Grid.Column="1"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Box" Property="BorderBrush" Value="#52525B"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Box" Property="Background" Value="#FAFAFA"/>
+                                <Setter TargetName="Box" Property="BorderBrush" Value="#FAFAFA"/>
+                                <Setter TargetName="Check" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
-        <!-- TextBox dunkel -->
+        <!-- shadcn input: zinc-900 fill, zinc-800 border, focus lifts to zinc-600 ring. -->
         <Style TargetType="TextBox">
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
-            <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+            <Setter Property="CaretBrush" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="SelectionBrush" Value="#3F3F46"/>
+            <Setter Property="Background" Value="#18181B"/>
+            <Setter Property="BorderBrush" Value="#27272A"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
@@ -625,12 +724,17 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{DynamicResource Radius}">
-                            <ScrollViewer x:Name="PART_ContentHost"/>
+                            CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#3F3F46"/>
+                            </Trigger>
                             <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#52525B"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="Bd" Property="Opacity" Value="0.5"/>
@@ -641,29 +745,32 @@
             </Setter>
         </Style>
 
-        <!-- ListBox dunkel + dezente Auswahl -->
+        <!-- shadcn list: dark zinc-900 surface, subtle hover + zinc-700 selection. -->
         <Style TargetType="ListBox">
-            <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+            <Setter Property="Background" Value="#18181B"/>
+            <Setter Property="BorderBrush" Value="#27272A"/>
             <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="4"/>
         </Style>
         <Style TargetType="ListBoxItem">
-            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="Padding" Value="8,6"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,1"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
                         <Border x:Name="Bd" CornerRadius="6" Background="{TemplateBinding Background}">
-                            <ContentPresenter Margin="4,2"/>
+                            <ContentPresenter Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#264FC3F7"/>
-                                <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
-                            </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#1AFFFFFF"/>
+                                <Setter TargetName="Bd" Property="Background" Value="#27272A"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#3F3F46"/>
+                                <Setter Property="Foreground" Value="#FAFAFA"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -676,13 +783,18 @@
             <Setter Property="Background" Value="Transparent"/>
         </Style>
 
-        <!-- Card-Container zum Wiederverwenden -->
+        <!-- shadcn card: zinc-900 surface, 1px border, 8px radius, 16px pad. -->
         <Style x:Key="Card" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource Surface}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+            <Setter Property="Background" Value="#18181B"/>
+            <Setter Property="BorderBrush" Value="#27272A"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="{DynamicResource Radius}"/>
-            <Setter Property="Padding" Value="12"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="16"/>
+        </Style>
+
+        <!-- Inset card for nested panels. -->
+        <Style x:Key="MutedCard" TargetType="Border" BasedOn="{StaticResource Card}">
+            <Setter Property="Background" Value="#0F0F11"/>
         </Style>
 
         <!-- Abschnittstitel -->
@@ -760,6 +872,18 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Orientation="Horizontal"
                 HorizontalAlignment="Right">
+                                    <!--
+                                        Dual-purpose: "Login with Steam" when not paired yet,
+                                        "Reset Connection" once a Steam ID is on file. Code-behind
+                                        (UpdateLoginOrResetButton) flips the label and the click
+                                        handler dispatches to the right inner action.
+                                    -->
+                                    <Button x:Name="BtnLoginOrReset"
+                Content="Login with Steam"
+                Click="BtnLoginOrReset_Click"
+                Style="{StaticResource GhostButton}"
+                Margin="0,0,0,0"
+                ToolTip="Login with Steam (or hard-reset the connection if already paired)"/>
                                     <Button x:Name="BtnCheckUpdates"
                 Content=" Check for Updates "
                 Click="BtnCheckUpdates_Click"
@@ -796,11 +920,16 @@
 
 
                     <StackPanel Orientation="Horizontal">
+                        <!-- Login flow now lives on the dual-purpose BtnLoginOrReset button
+                             below; we still need BtnSteamLogin in the visual tree because
+                             the bottom button's click handler dispatches to it, but it's
+                             hidden from view. -->
                         <Button x:Name="BtnSteamLogin"
-                        Content="Login with Steam"
-                        Width="180"
-                        Click="BtnSteamLogin_Click"
-                        Margin="0,0,8,0"/>
+                                Content="Login with Steam"
+                                Width="180"
+                                Click="BtnSteamLogin_Click"
+                                Visibility="Collapsed"
+                                Margin="0,0,8,0"/>
                         <TextBlock Text="SteamID64:" VerticalAlignment="Center" Margin="0,0,6,0"/>
                         <TextBlock x:Name="TxtSteamId" VerticalAlignment="Center" FontWeight="SemiBold"/>
                         <!-- Avatar -->
@@ -859,8 +988,8 @@
                         </TextBlock>
                     </Grid>
 
-                    <!-- Connection Card -->
-                    <Border Background="{StaticResource SurfaceAlt}" Margin="0,8,0,0">
+                    <!-- Connection Card — extra top gap so it visually separates from the paired-list. -->
+                    <Border Background="{StaticResource SurfaceAlt}" Margin="0,18,0,0">
                         <Border.Style>
                             <Style TargetType="Border" BasedOn="{StaticResource Card}">
                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -935,14 +1064,37 @@
                                 </StackPanel>
 
                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-                                    <Button Content=" Connect to Server " Click="BtnConnect_Click" 
-                                            Style="{StaticResource PrimaryButton}" 
-                                            Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}"/>
-                                    <Button Content=" Disconnect " Click="BtnDisconnect_Click" 
+                                    <Button Click="BtnConnect_Click"
+                                            Style="{StaticResource PrimaryButton}"
+                                            Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}">
+                                        <!-- Explicit TextBlock with hard-coded dark Foreground so the
+                                             auto-wrap-into-TextBlock behaviour can't pick up the
+                                             window's implicit white-text TextBlock style. -->
+                                        <TextBlock Text="Connect to Server" Foreground="#18181B" Padding="6,0"/>
+                                    </Button>
+                                    <Button Content=" Disconnect " Click="BtnDisconnect_Click"
                                             Background="#D32F2F" BorderBrush="#B71C1C" Foreground="White"
                                             Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}}"/>
                                 </StackPanel>
                             </DockPanel>
+
+                            <!--
+                                Server stats row — moved out of the bottom footer so the card
+                                gathers everything about the active server in one place. Only
+                                meaningful when actually connected; thin separator above keeps
+                                the visual grouping clear.
+                            -->
+                            <Separator Background="{StaticResource CardBorder}" Margin="0,10,0,8"
+                                       Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}}"/>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                                        Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}}">
+                                <TextBlock Text="Players:" Foreground="{StaticResource TextSubtle}" FontSize="12" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding ServerPlayers}" FontWeight="SemiBold" FontSize="12" Margin="4,0,0,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="  |  Queue:" Foreground="{StaticResource TextSubtle}" FontSize="12" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding ServerQueue}" FontWeight="SemiBold" FontSize="12" Margin="4,0,0,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="  |  Server Time:" Foreground="{StaticResource TextSubtle}" FontSize="12" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding ServerTime}" FontWeight="SemiBold" FontSize="12" Margin="4,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
                         </StackPanel>
                     </Border>
 
@@ -971,94 +1123,41 @@
                                    FontSize="9" VerticalAlignment="Center" FontStyle="Italic"/>
                     </StackPanel>
 
-                    <Separator Margin="0,12,0,12"/>
+                    <Separator Margin="0,12,0,8"/>
 
-                    <Grid Margin="0,4,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal">
-                            <Ellipse x:Name="TrackingPulse" Width="8" Height="8" Fill="#62D38B" Margin="0,0,8,0" VerticalAlignment="Center">
-                                <Ellipse.Style>
-                                    <Style TargetType="Ellipse">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsTrackingActive}" Value="True">
-                                                <DataTrigger.EnterActions>
-                                                    <BeginStoryboard x:Name="Pulse">
-                                                        <Storyboard>
-                                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.3" Duration="0:0:1" AutoReverse="True" RepeatBehavior="Forever"/>
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </DataTrigger.EnterActions>
-                                                <DataTrigger.ExitActions>
-                                                    <StopStoryboard BeginStoryboardName="Pulse"/>
-                                                </DataTrigger.ExitActions>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Ellipse.Style>
-                            </Ellipse>
-                            <TextBlock x:Name="TxtTrackingStatus" Text="Tracking Active" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
-                        </StackPanel>
-                        <TextBlock x:Name="TxtLastPull" Grid.Column="1" Text="Last pull: --:--" Foreground="{DynamicResource TextSubtle}" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                    </Grid>
-
-                    <Separator Margin="0,12,0,12"/>
+                    <!--
+                        Tracking-status row + heavy separators were eating ~60 px of
+                        sidebar height and duplicating the Tracker tab's own status
+                        indicator. Collapsed (not removed) so the code-behind that
+                        drives TxtTrackingStatus / TxtLastPull / TrackingPulse keeps
+                        working without extra null-checks.
+                    -->
+                    <StackPanel Visibility="Collapsed">
+                        <Ellipse x:Name="TrackingPulse" Width="8" Height="8" Fill="#62D38B"/>
+                        <TextBlock x:Name="TxtTrackingStatus" Text="Tracking Active"/>
+                        <TextBlock x:Name="TxtLastPull" Text="Last pull: --:--"/>
+                    </StackPanel>
                 </StackPanel>
 
-                <!-- BOTTOM: Footer (Donate + Serverdaten) andocken -->
-                <Grid DockPanel.Dock="Bottom" Margin="0,8,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                <!--
+                    BtnLoginOrReset moved to the top toolbar; Donate (upstream-Pronwan)
+                    is gone; server-stats moved into the Connection Card. Nothing is
+                    rendered down here, so the whole footer block is Collapsed —
+                    every pixel of reclaimed height goes to the MainTabs DockFill.
 
-                    <!-- Donate (links) -->
-                    <Button x:Name="BtnDonate"
-                    Grid.Column="0"
-                    Style="{StaticResource DonateButton}"
-                    Click="BtnDonate_Click"
-                    ToolTip="Support (Opens in Browser)"
-                    Margin="0,0,10,0">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="❤" Foreground="Red" FontSize="14" Margin="2,0,6,0"/>
-                            <TextBlock Text="Donate" Foreground="Red" Margin="2,0,6,0"/>
-                        </StackPanel>
-                    </Button>
-
-                    <!-- Spacer -->
-                    <Border Grid.Column="1">
-                        <Button Content="Reset Connection"
-Width="100"
-Click="BtnHardReset_Click"
-Margin="0,0,8,0"
-Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
-
-                    </Border>
-
-                    <!-- Serverdaten (rechtsbündig, gleiche Zeile) -->
-                    <StackPanel Grid.Column="2"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Right">
-                        <TextBlock Text="Players:"/>
-                        <TextBlock Text="{Binding ServerPlayers}" FontWeight="SemiBold" Margin="4,0,0,0"/>
-
-                        <Button x:Name="BtnServerBM" Content="BM" Width="24" Height="18" Padding="0" Margin="6,0,0,0"
-                                FontSize="9" FontWeight="Bold" Style="{StaticResource GhostButton}"
-                                ToolTip="Open Server on BattleMetrics" Click="BtnServerBM_Click" Visibility="Collapsed"/>
-
-                        <!-- Old popup trigger hidden; superseded by the Tracker tab. Kept x:Name so existing handler logic still binds. -->
-                        <ToggleButton x:Name="BtnShowOnline" Content="▼" Margin="4,0,0,0" Width="18" Height="18"
-                                      Background="Transparent" BorderThickness="0" Foreground="White"
-                                      Visibility="Collapsed"
-                                      ToolTip="Show Online Players" Click="BtnShowOnline_Click" />
-                        
-                        <Popup x:Name="PopupOnlinePlayers" PlacementTarget="{Binding ElementName=BtnShowOnline}" 
-                               IsOpen="{Binding IsChecked, ElementName=BtnShowOnline}" StaysOpen="False" 
-                               AllowsTransparency="True" PopupAnimation="Fade" VerticalOffset="20">
-                            <Border Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="6" MaxHeight="350" Width="320">
+                    The shell still hosts the legacy named elements (BtnServerBM,
+                    BtnShowOnline, PopupOnlinePlayers, …) so code-behind handlers
+                    that still bind to them keep compiling without churn.
+                -->
+                <DockPanel DockPanel.Dock="Bottom" Visibility="Collapsed" LastChildFill="False">
+                    <StackPanel Visibility="Collapsed">
+                        <Button x:Name="BtnServerBM" Content="BM" Click="BtnServerBM_Click"/>
+                        <ToggleButton x:Name="BtnShowOnline" Content="▼" Click="BtnShowOnline_Click"/>
+                        <Popup x:Name="PopupOnlinePlayers"
+                               PlacementTarget="{Binding ElementName=BtnShowOnline}"
+                               IsOpen="{Binding IsChecked, ElementName=BtnShowOnline}"
+                               StaysOpen="False" AllowsTransparency="True">
+                            <Border Background="{DynamicResource Surface}" Padding="6" Width="320" MaxHeight="350">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
@@ -1066,79 +1165,30 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Text="Online Players" FontWeight="Bold" Margin="0,0,0,6" Grid.Row="0"/>
-                                    
-                                    <!-- Manual Add Section -->
-                                    <DockPanel Grid.Row="1" Margin="0,0,0,8">
-                                        <Button x:Name="BtnAddManual" DockPanel.Dock="Right" Content="Track ID" 
-                                                Style="{StaticResource GhostButton}" FontSize="10" Padding="4,0" 
-                                                Click="BtnAddManual_Click" Margin="4,0,0,0"/>
-                                        <TextBox x:Name="TxtManualBMId" Padding="4,1" FontSize="10" 
-                                                 Background="#25272a" Foreground="Gray" BorderThickness="1" 
-                                                 BorderBrush="#333" Text="Manual BM ID..."
+                                    <DockPanel Grid.Row="1">
+                                        <Button x:Name="BtnAddManual" DockPanel.Dock="Right" Content="Track ID" Click="BtnAddManual_Click"/>
+                                        <TextBox x:Name="TxtManualBMId" Text="Manual BM ID..."
                                                  GotFocus="TxtManualBMId_GotFocus" LostFocus="TxtManualBMId_LostFocus"/>
                                     </DockPanel>
-                                    <!-- Online List Filter -->
-                                    <TextBox x:Name="TxtOnlineFilter" Grid.Row="1" Margin="0,0,0,6" Visibility="Collapsed" 
-                                             Padding="4,2" FontSize="10" Background="#1a1c1e" Foreground="White" 
-                                             BorderThickness="1" BorderBrush="#333" GotFocus="TxtOnlineFilter_GotFocus" 
-                                             LostFocus="TxtOnlineFilter_LostFocus" TextChanged="TxtOnlineFilter_TextChanged"/>
-
-                                    <Grid x:Name="PnlOnlineStatus" Grid.Row="2" Visibility="Collapsed" Margin="20" VerticalAlignment="Center">
+                                    <TextBox x:Name="TxtOnlineFilter" Grid.Row="1"
+                                             GotFocus="TxtOnlineFilter_GotFocus"
+                                             LostFocus="TxtOnlineFilter_LostFocus"
+                                             TextChanged="TxtOnlineFilter_TextChanged"/>
+                                    <Grid x:Name="PnlOnlineStatus" Grid.Row="2">
                                         <StackPanel>
-                                            <ProgressBar x:Name="PbOnlineLoading" IsIndeterminate="True" Height="2" Width="120" 
-                                                         Margin="0,0,0,12" Background="#111" BorderThickness="0"
-                                                         Foreground="{DynamicResource CbAccent}"/>
-                                            <TextBlock x:Name="TxtOnlinePlayersStatus" Text="Loading players..." 
-                                                       HorizontalAlignment="Center" Foreground="{DynamicResource TextSubtle}" 
-                                                       FontSize="11" TextWrapping="Wrap" TextAlignment="Center"/>
+                                            <ProgressBar x:Name="PbOnlineLoading" IsIndeterminate="True"/>
+                                            <TextBlock x:Name="TxtOnlinePlayersStatus" Text="Loading players..."/>
                                         </StackPanel>
                                     </Grid>
-                                    <ListBox x:Name="ListOnlinePlayers" Grid.Row="2" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Margin="0,2">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <StackPanel Orientation="Horizontal" Grid.Column="0">
-                                                        <Ellipse Width="8" Height="8" Fill="{DynamicResource CbAccent}" Margin="0,0,6,0" VerticalAlignment="Center" x:Name="StatusDot"/>
-                                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Width="130" ToolTip="{Binding Name}"/>
-                                                    </StackPanel>
-                                                    <TextBlock Grid.Column="1" Text="{Binding PlayTimeStr}" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" Margin="0,0,8,0" FontSize="11" Width="50"/>
-                                                    <Button Grid.Column="2" x:Name="BtnPlayerBM" Content="BM" Click="BtnPlayerBM_Click" Style="{StaticResource GhostButton}" Padding="4,2" FontSize="10" Margin="0,0,4,0" Tag="{Binding}"/>
-                                                    <Button Grid.Column="3" x:Name="BtnAction" Content="Track" Click="BtnTrackPlayer_Click" Style="{StaticResource GhostButton}" Padding="6,2" FontSize="10" Margin="0" Tag="{Binding}" Width="50"/>
-                                                </Grid>
-                                                <DataTemplate.Triggers>
-                                                    <DataTrigger Binding="{Binding IsTracked}" Value="True">
-                                                        <Setter TargetName="StatusDot" Property="Fill" Value="#FFD166"/>
-                                                        <Setter TargetName="BtnAction" Property="Content" Value="Details"/>
-                                                    </DataTrigger>
-                                                    <!-- Invisible button until hover -->
-                                                    <Trigger Property="IsMouseOver" Value="False">
-                                                        <Setter TargetName="BtnAction" Property="Opacity" Value="0.2"/>
-                                                    </Trigger>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="BtnAction" Property="Opacity" Value="1"/>
-                                                    </Trigger>
-                                                </DataTemplate.Triggers>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                    <Button x:Name="BtnViewTracking" Grid.Row="3" Content="View tracker players list" Margin="0,6,0,0" Style="{StaticResource PrimaryButton}" Click="BtnViewTracking_Click" />
+                                    <ListBox x:Name="ListOnlinePlayers" Grid.Row="2"/>
+                                    <Button x:Name="BtnViewTracking" Grid.Row="3"
+                                            Content="View tracker players list"
+                                            Click="BtnViewTracking_Click"/>
                                 </Grid>
                             </Border>
                         </Popup>
-
-                        <TextBlock Text="  |  Queue:" Margin="6,0,0,0"/>
-                        <TextBlock Text="{Binding ServerQueue}" FontWeight="SemiBold" Margin="4,0,0,0"/>
-                        <TextBlock Text="  |  Server Time:" Margin="6,0,0,0"/>
-                        <TextBlock Text="{Binding ServerTime}" FontWeight="SemiBold" Margin="4,0,0,0"/>
                     </StackPanel>
-                </Grid>
+                </DockPanel>
 
                 <!-- CENTER: TabControl füllt den Rest, mit Mindesthöhe -->
                 <TabControl x:Name="MainTabs"
@@ -1884,9 +1934,11 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                        Visibility="Collapsed" Background="#FF141821">
                                 <DockPanel DockPanel.Dock="Bottom" Margin="6,4,6,6" LastChildFill="True">
                                     <Button DockPanel.Dock="Right" x:Name="BtnTeamChatSend"
-                                            Content="Send" Width="64" Margin="6,0,0,0"
+                                            Width="64" Margin="6,0,0,0"
                                             Style="{StaticResource PrimaryButton}"
-                                            Click="BtnTeamChatSend_Click"/>
+                                            Click="BtnTeamChatSend_Click">
+                                        <TextBlock Text="Send" Foreground="#18181B"/>
+                                    </Button>
                                     <TextBox x:Name="TxtTeamChatInput"
                                              Padding="8,5" FontSize="12"
                                              Background="#1a1c1e" Foreground="White"
@@ -1963,7 +2015,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
                                 <Button x:Name="BtnAddCam" Style="{StaticResource PrimaryButton}">
                                     <StackPanel Orientation="Horizontal" Margin="6,1">
-                                        <TextBlock Text="🎥 Add Camera"/>
+                                        <TextBlock Text="🎥 Add Camera" Foreground="#18181B"/>
                                     </StackPanel>
                                 </Button>
                             </StackPanel>
@@ -1999,24 +2051,48 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
 
                     <!-- ===== TRACKER ===== -->
                     <TabItem Header="Tracker" x:Name="TabTracker" Style="{StaticResource PrettyTabItem}">
+                        <!--
+                            TrackerHostInTab + TrackerContent let us reparent the entire
+                            Tracker subtree into the slide-in overlay panel (TrackerPanel)
+                            without duplicating XAML or breaking x:Name registrations.
+                            See Views/MainWindow/Tracker/MainWindow.Tracker.Panel.cs.
+                        -->
+                        <ContentControl x:Name="TrackerHostInTab">
+                            <Border x:Name="TrackerContent" Background="Transparent">
                         <DockPanel LastChildFill="True">
                             <DockPanel DockPanel.Dock="Top" LastChildFill="False" Margin="0,0,0,4">
-                                <Button DockPanel.Dock="Right" x:Name="BtnTrackerRefresh"
-                                        Content="↻" FontSize="13" Width="26" Height="22"
-                                        Padding="0"
-                                        Style="{StaticResource GhostButton}"
-                                        Click="BtnTrackerRefresh_Click"
-                                        ToolTip="Refresh online players from BattleMetrics now"/>
+                                <Button DockPanel.Dock="Right" x:Name="BtnExpandTracker"
+                                        Content="⛶ Expand" FontSize="11" Padding="8,4"
+                                        Margin="0,0,6,0"
+                                        Style="{StaticResource SecondaryButton}"
+                                        Click="BtnExpandTracker_Click"
+                                        ToolTip="Pop the Tracker out into a full-height overlay over the map (Esc to close)"/>
+                                <!--
+                                    Single right-side refresh: triggers BOTH the BattleMetrics
+                                    online-players refresh and the team-sync upload+pull. Replaces
+                                    the previous icon-only "↻" button. The handler is wired in
+                                    code-behind to call both BtnTrackerRefresh_Click and
+                                    BtnTeamSyncNow_Click for backwards compatibility.
+                                -->
+                                <Button DockPanel.Dock="Right" x:Name="BtnTeamSyncNow"
+                                        Content="⟳ Team" FontSize="11" Padding="8,4"
+                                        Margin="0,0,6,0"
+                                        Style="{StaticResource SecondaryButton}"
+                                        Click="BtnTeamSyncNow_Click"
+                                        ToolTip="Refresh BattleMetrics online players + sync tracked players / groups with teammates"/>
                                 <TextBlock DockPanel.Dock="Right" x:Name="TxtTrackerLastPull"
-                                           Foreground="{DynamicResource TextSubtle}" FontSize="10"
+                                           Foreground="{DynamicResource TextSubtle}" FontSize="11"
                                            VerticalAlignment="Center" Margin="0,0,6,0"
                                            Text="never refreshed"/>
-                                <Button DockPanel.Dock="Left" x:Name="BtnTeamSyncNow"
-                                        Content="⟳ Team" FontSize="10" Padding="6,2"
-                                        Margin="0,0,8,0"
-                                        Style="{StaticResource GhostButton}"
-                                        Click="BtnTeamSyncNow_Click"
-                                        ToolTip="Sync tracked players + groups with teammates now"/>
+                                <!--
+                                    Hidden BtnTrackerRefresh stub: the original icon-only refresh
+                                    button is gone from the UI but the x:Name is preserved so any
+                                    code-behind / pollers that still expect it (e.g. setting its
+                                    enabled state) continue to compile.
+                                -->
+                                <Button x:Name="BtnTrackerRefresh"
+                                        Visibility="Collapsed"
+                                        Click="BtnTrackerRefresh_Click"/>
                                 <CheckBox DockPanel.Dock="Left" x:Name="ChkTeamSyncEnabled"
                                           Content="Team sync" FontSize="10"
                                           VerticalAlignment="Center" Margin="0,0,8,0"
@@ -2058,7 +2134,11 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
 
                                         <ListBox x:Name="ListTrackerOnline" Background="Transparent"
                                                  BorderThickness="0"
-                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                                 Padding="0"
+                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                 ScrollViewer.CanContentScroll="False"
+                                                 VirtualizingStackPanel.IsVirtualizing="False">
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <Grid Margin="0,3">
@@ -2128,10 +2208,12 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                     <DockPanel LastChildFill="True">
                                         <DockPanel DockPanel.Dock="Top" LastChildFill="True" Margin="0,0,0,6">
                                             <Button DockPanel.Dock="Right" x:Name="BtnAddTrackedManual"
-                                                    Content="+ Add" Click="BtnAddTrackedManual_Click"
+                                                    Click="BtnAddTrackedManual_Click"
                                                     Style="{StaticResource PrimaryButton}"
                                                     Padding="8,3" Margin="6,0,0,0"
-                                                    ToolTip="Add a player by BattleMetrics ID or URL"/>
+                                                    ToolTip="Add a player by BattleMetrics ID or URL">
+                                                <TextBlock Text="+ Add" Foreground="#18181B" Padding="4,0"/>
+                                            </Button>
                                             <TextBox x:Name="TxtAddTrackedBMId"
                                                      Padding="6,3" FontSize="11"
                                                      Background="#1a1c1e" Foreground="Gray"
@@ -2156,7 +2238,11 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
 
                                         <ListBox x:Name="ListTracked" Background="Transparent"
                                                  BorderThickness="0"
-                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                                 Padding="0"
+                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                 ScrollViewer.CanContentScroll="False"
+                                                 VirtualizingStackPanel.IsVirtualizing="False">
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <Grid Margin="0,3">
@@ -2232,10 +2318,12 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                         </Grid.RowDefinitions>
 
                                         <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,0,6">
-                                            <Button DockPanel.Dock="Right" Content="+ New"
+                                            <Button DockPanel.Dock="Right"
                                                     Click="BtnNewGroup_Click"
                                                     Style="{StaticResource PrimaryButton}"
-                                                    Padding="8,3" Margin="6,0,0,0"/>
+                                                    Padding="8,3" Margin="6,0,0,0">
+                                                <TextBlock Text="+ New" Foreground="#18181B" Padding="4,0"/>
+                                            </Button>
                                             <ComboBox x:Name="CmbGroupSelector"
                                                       Style="{StaticResource DarkComboBox}"
                                                       SelectionChanged="CmbGroupSelector_SelectionChanged"
@@ -2290,7 +2378,12 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                    FontSize="10" Margin="0,0,0,4"/>
 
                                         <ListBox Grid.Row="3" x:Name="ListGroupMembers"
-                                                 Background="Transparent" BorderThickness="0">
+                                                 Background="Transparent" BorderThickness="0"
+                                                 Padding="0"
+                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                 ScrollViewer.CanContentScroll="False"
+                                                 VirtualizingStackPanel.IsVirtualizing="False">
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <Grid Margin="0,3">
@@ -2347,6 +2440,8 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                 </TabItem>
                             </TabControl>
                         </DockPanel>
+                            </Border>
+                        </ContentControl>
                     </TabItem>
                 </TabControl>
 
@@ -2430,6 +2525,16 @@ Margin="12,0,0,0"
 Width="80"
 Style="{StaticResource GhostButton}"
 Click="BtnToggleMiniMap_Click"/>
+
+                    <!-- Commands sits between Mini and the icon buttons so the two
+                         icon-only controls (crosshair + pencil) cluster at the end. -->
+                    <Button x:Name="BtnCommandsHelp"
+                            Content="Commands"
+                            Padding="10,4"
+                            Margin="6,0,0,0"
+                            Style="{StaticResource GhostButton}"
+                            ToolTip="Show team-chat commands"
+                            Click="BtnCommandsHelp_Click"/>
 
                     <Button x:Name="BtnCrosshair" Margin="4,0,0,0"
         Style="{StaticResource IconButton}"
@@ -2516,15 +2621,6 @@ Click="BtnToggleMiniMap_Click"/>
                             Click="BtnToggleOverlayTools_Click">
                         <Image Source="pack://application:,,,/icons/pencil.png"/>
                     </Button>
-
-                    <Button x:Name="BtnCommandsHelp"
-                            Content="Commands"
-                            Padding="10,4"
-                            Margin="6,0,0,0"
-                            Style="{StaticResource GhostButton}"
-                            ToolTip="Show team-chat commands"
-                            Click="BtnCommandsHelp_Click"/>
-
 
                     <!-- StackPanel with Heli Demo removed -->
                     <StackPanel Orientation="Horizontal" Margin="12,0,0,0">
@@ -2840,12 +2936,17 @@ Click="BtnToggleMiniMap_Click"/>
                          IsReadOnly="True" TextWrapping="Wrap"
                          VerticalScrollBarVisibility="Auto"/>
 
-                <!-- Slide-in commands reference: covers all 3 rows of the right column -->
+                <!--
+                    Slide-in commands reference: covers all 3 rows of the right column.
+                    ZIndex 100 to layer above the Tracker overlay (Z=50) so the same
+                    "modal on top" interaction the Report panel uses applies here too.
+                -->
                 <Border x:Name="CommandsPanel" Grid.RowSpan="3"
                         Background="{DynamicResource AppBg}"
                         BorderBrush="{DynamicResource CardBorderBrush}"
                         BorderThickness="1"
                         Visibility="Collapsed"
+                        Panel.ZIndex="100"
                         SizeChanged="CommandsPanel_SizeChanged">
                     <Border.RenderTransform>
                         <TranslateTransform x:Name="CommandsPanelTransform" X="0"/>
@@ -2907,12 +3008,19 @@ Click="BtnToggleMiniMap_Click"/>
                     </Grid>
                 </Border>
 
-                <!-- Slide-in player report overlay: covers all 3 rows of the right column -->
+                <!--
+                    Slide-in player report overlay: covers all 3 rows of the right column.
+                    ZIndex 100 puts the Report's header (and its ✕ button) above the
+                    TrackerPanel (Z=50), so when both are open the Report is the visible
+                    modal and clicking ✕ closes the Report — leaving the Tracker open
+                    behind it.
+                -->
                 <Border x:Name="ReportPanel" Grid.RowSpan="3"
                         Background="{DynamicResource AppBg}"
                         BorderBrush="{DynamicResource CardBorderBrush}"
                         BorderThickness="1"
                         Visibility="Collapsed"
+                        Panel.ZIndex="100"
                         SizeChanged="ReportPanel_SizeChanged">
                     <Border.RenderTransform>
                         <TranslateTransform x:Name="ReportPanelTransform" X="0"/>
@@ -2940,6 +3048,47 @@ Click="BtnToggleMiniMap_Click"/>
                                     ToolTip="Close report (Esc)"/>
                         </Grid>
                         <wv2:WebView2 x:Name="ReportWebView" Grid.Row="1"/>
+                    </Grid>
+                </Border>
+
+                <!--
+                    Slide-in Tracker overlay: same scaffold as ReportPanel/CommandsPanel.
+                    Covers all 3 rows of the right column. The actual Tracker UI is reparented
+                    in/out of TrackerHostInPanel by Views/MainWindow/Tracker/MainWindow.Tracker.Panel.cs.
+                -->
+                <Border x:Name="TrackerPanel" Grid.RowSpan="3"
+                        Background="{DynamicResource AppBg}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        Visibility="Collapsed"
+                        Panel.ZIndex="50">
+                    <Border.RenderTransform>
+                        <TranslateTransform x:Name="TrackerPanelTransform" X="0"/>
+                    </Border.RenderTransform>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Background="{DynamicResource Surface}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="Tracker"
+                                       FontWeight="SemiBold" FontSize="14"
+                                       Foreground="{DynamicResource TextPrimary}"
+                                       VerticalAlignment="Center"
+                                       Margin="14,10"/>
+                            <Button Grid.Column="1" Content="✕"
+                                    Click="BtnCloseTrackerPanel_Click"
+                                    Style="{StaticResource GhostButton}"
+                                    Padding="10,4" Margin="6"
+                                    ToolTip="Close tracker (Esc)"/>
+                        </Grid>
+                        <ContentControl x:Name="TrackerHostInPanel" Grid.Row="1"
+                                        Margin="14,8,14,14"/>
                     </Grid>
                 </Border>
             </Grid>

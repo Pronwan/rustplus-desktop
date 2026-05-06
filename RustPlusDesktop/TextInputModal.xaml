@@ -1,0 +1,68 @@
+<Window x:Class="RustPlusDesk.Views.TextInputModal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Input"
+        Width="440" Height="220"
+        WindowStartupLocation="CenterOwner"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        Topmost="True">
+
+    <Border Background="#18181B"
+            BorderBrush="#27272A"
+            BorderThickness="1"
+            CornerRadius="8">
+        <DockPanel Margin="20">
+            <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+                <DockPanel>
+                    <TextBlock x:Name="TxtTitle"
+                               Text="Add camera"
+                               Foreground="White"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"/>
+                    <Button Content="✕"
+                            HorizontalAlignment="Right"
+                            Width="30" Height="30"
+                            Style="{StaticResource GhostButton}"
+                            Click="BtnCancel_Click"
+                            Cursor="Hand"
+                            FontSize="18"
+                            Foreground="{DynamicResource TextSubtle}"/>
+                </DockPanel>
+                <Separator Background="{DynamicResource CardBorder}" Margin="0,10,0,0"/>
+            </StackPanel>
+
+            <StackPanel DockPanel.Dock="Bottom"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Margin="0,12,0,0">
+                <Button Content="Cancel"
+                        Width="90" Height="34"
+                        Style="{StaticResource SecondaryButton}"
+                        Click="BtnCancel_Click"
+                        Margin="0,0,8,0"/>
+                <Button Width="90" Height="34"
+                        Style="{StaticResource PrimaryButton}"
+                        Click="BtnOk_Click"
+                        IsDefault="True">
+                    <TextBlock Text="OK" Foreground="#18181B"/>
+                </Button>
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock x:Name="TxtPrompt"
+                           Text="Camera identifier"
+                           Foreground="{DynamicResource TextSubtle}"
+                           FontSize="12"
+                           Margin="0,0,0,6"/>
+                <TextBox x:Name="TxtInput"
+                         FontSize="14"
+                         Padding="10,8"
+                         KeyDown="TxtInput_KeyDown"/>
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</Window>

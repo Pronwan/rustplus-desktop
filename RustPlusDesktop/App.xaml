@@ -3,17 +3,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
     
-        <!-- Palette -->
-        <SolidColorBrush x:Key="AppBg"         Color="#121417"/>
-        <SolidColorBrush x:Key="Surface"       Color="#1C1F24"/>
-        <SolidColorBrush x:Key="SurfaceAlt"    Color="#23272E"/>
-        <SolidColorBrush x:Key="CardBorder"    Color="#33414850"/>
-        <SolidColorBrush x:Key="Accent"        Color="#4FC3F7"/>
-        <SolidColorBrush x:Key="AccentDark"    Color="#FF1E576F"/>
+        <!-- ============================================================
+             Palette — shadcn-flavoured (zinc / neutral) dark theme.
+             Token names kept stable; only colour values swapped so anything
+             using DynamicResource picks up the new look automatically.
+             - background  #09090B  (zinc-950)
+             - card        #18181B  (zinc-900)
+             - secondary   #27272A  (zinc-800)
+             - border      #27272A  (zinc-800)
+             - foreground  #FAFAFA  (zinc-50)
+             - muted-fg    #A1A1AA  (zinc-400)
+             ============================================================ -->
+        <SolidColorBrush x:Key="AppBg"         Color="#09090B"/>
+        <SolidColorBrush x:Key="Surface"       Color="#18181B"/>
+        <SolidColorBrush x:Key="SurfaceAlt"    Color="#27272A"/>
+        <SolidColorBrush x:Key="CardBorder"    Color="#27272A"/>
+        <SolidColorBrush x:Key="Accent"        Color="#FAFAFA"/>
+        <SolidColorBrush x:Key="AccentDark"    Color="#A1A1AA"/>
 
-        <SolidColorBrush x:Key="TextPrimary"   Color="#ECEFF1"/>
-        <SolidColorBrush x:Key="TextSubtle"    Color="#B0BEC5"/>
-        <CornerRadius    x:Key="Radius">10</CornerRadius>
+        <SolidColorBrush x:Key="TextPrimary"   Color="#FAFAFA"/>
+        <SolidColorBrush x:Key="TextSubtle"    Color="#A1A1AA"/>
+        <CornerRadius    x:Key="Radius">6</CornerRadius>
 
         <Style TargetType="ToggleButton">
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
@@ -51,21 +61,21 @@
         </Style>
 
         <Style TargetType="ToolTip">
-            <Setter Property="Background" Value="#1C1F24"/>
-            <Setter Property="Foreground" Value="#ECEFF1"/>
-            <Setter Property="BorderBrush" Value="#33414850"/>
+            <Setter Property="Background" Value="#18181B"/>
+            <Setter Property="Foreground" Value="#FAFAFA"/>
+            <Setter Property="BorderBrush" Value="#27272A"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="6,4"/>
             <Setter Property="HasDropShadow" Value="True"/>
         </Style>
 
-        <!-- ========== TAB STYLES (einfügen in <Window.Resources>) ========== -->
-        <SolidColorBrush x:Key="CardBrush" Color="#171A21"/>
-        <SolidColorBrush x:Key="CardBorderBrush" Color="#222734"/>
-        <SolidColorBrush x:Key="PrimaryBrush" Color="#4C8BF5"/>
-        <SolidColorBrush x:Key="PrimaryBrushMuted" Color="#375FA8"/>
-        <SolidColorBrush x:Key="TextBrush" Color="#E8ECF3"/>
-        <SolidColorBrush x:Key="TextBrushMuted" Color="#AAB6CF"/>
+        <!-- shadcn second token group -->
+        <SolidColorBrush x:Key="CardBrush"          Color="#18181B"/>
+        <SolidColorBrush x:Key="CardBorderBrush"    Color="#27272A"/>
+        <SolidColorBrush x:Key="PrimaryBrush"       Color="#FAFAFA"/>
+        <SolidColorBrush x:Key="PrimaryBrushMuted"  Color="#E4E4E7"/>
+        <SolidColorBrush x:Key="TextBrush"          Color="#FAFAFA"/>
+        <SolidColorBrush x:Key="TextBrushMuted"     Color="#A1A1AA"/>
         
 
         <Style x:Key="PrettyTabControl" TargetType="{x:Type TabControl}">
@@ -88,14 +98,14 @@
                  IsItemsHost="True"
                  Margin="8,8,8,0"/>
 
-                            <!-- Inhalt -->
+                            <!-- Tab content card — shadcn-style 8px radius, 16px pad. -->
                             <Border Grid.Row="1"
-               Background="{StaticResource CardBrush}"
-               BorderBrush="{StaticResource CardBorderBrush}"
+               Background="#18181B"
+               BorderBrush="#27272A"
                BorderThickness="1"
-               CornerRadius="14"
+               CornerRadius="8"
                Margin="8,0,8,8"
-               Padding="12">
+               Padding="16">
                                 <ContentPresenter x:Name="PART_SelectedContentHost"
                            ContentSource="SelectedContent"/>
                             </Border>
@@ -333,22 +343,27 @@
             </Setter>
         </Style>
 
-        <!-- TabItem: echte „Reiter“-Optik mit eckigem Fuß, bündig zur Card -->
+        <!--
+            shadcn-flavoured folder tab: transparent at rest with muted text, hover
+            lifts the surface to zinc-800, selected attaches to the content card
+            (zinc-900) with a top-rounded border. Cleaner zinc tones replace the old
+            deep-blue tints; selected text becomes white for clear active affordance.
+        -->
         <Style x:Key="PrettyTabItem" TargetType="TabItem">
-            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="Foreground" Value="#A1A1AA"/>
             <Setter Property="Padding" Value="14,8"/>
-            <Setter Property="Margin" Value="0"/>
-            <!-- kein Abstand zwischen Reitern -->
+            <Setter Property="Margin" Value="0,0,4,0"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="Medium"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
                         <Border x:Name="TabHeader"
-                     Background="#11151B"
-                     BorderBrush="{StaticResource CardBorderBrush}"
-                     BorderThickness="1,1,1,0"  
-                         CornerRadius="10,10,0,0"
-                         
+                     Background="Transparent"
+                     BorderBrush="Transparent"
+                     BorderThickness="1,1,1,0"
+                         CornerRadius="6,6,0,0"
                          Padding="12,6"
                      SnapsToDevicePixels="True">
                             <ContentPresenter ContentSource="Header"
@@ -357,18 +372,18 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="TabHeader" Property="Background" Value="#151A22"/>
+                                <Setter TargetName="TabHeader" Property="Background" Value="#27272A"/>
+                                <Setter Property="Foreground" Value="#FAFAFA"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter Property="Panel.ZIndex" Value="1"/>
-
                                 <Setter TargetName="TabHeader" Property="Margin" Value="0,0,0,-1"/>
-                                <Setter TargetName="TabHeader" Property="Background" Value="{StaticResource CardBrush}"/>
-                                <Setter TargetName="TabHeader" Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
-                                <Setter Property="Foreground" Value="White"/>
+                                <Setter TargetName="TabHeader" Property="Background" Value="#18181B"/>
+                                <Setter TargetName="TabHeader" Property="BorderBrush" Value="#27272A"/>
+                                <Setter Property="Foreground" Value="#FAFAFA"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.6"/>
+                                <Setter Property="Opacity" Value="0.5"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -377,29 +392,43 @@
         </Style>
 
         <!-- Sekundär-Button (unten im Tab) -->
+        <!--
+            shadcn outline / ghost-ish button: transparent surface, 1px border, subtle hover.
+            Tighter padding + 6px radius matches shadcn's button proportions.
+        -->
         <Style x:Key="GhostButton" TargetType="Button">
             <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
-            <Setter Property="Background" Value="#141821"/>
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Padding" Value="10,5"/>
             <Setter Property="Margin" Value="8,0,0,0"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="BtnBg" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="10">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border x:Name="BtnBg"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="BtnBg" Property="Background" Value="#1A2130"/>
+                                <!-- accent on hover (zinc-800) -->
+                                <Setter TargetName="BtnBg" Property="Background" Value="#27272A"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="BtnBg" Property="Background" Value="#0F1320"/>
+                                <!-- pressed = slightly deeper (zinc-700) -->
+                                <Setter TargetName="BtnBg" Property="Background" Value="#3F3F46"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.55"/>
+                                <Setter Property="Opacity" Value="0.5"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -407,18 +436,122 @@
             </Setter>
         </Style>
 
-        <!-- Primär-Button (CHAT) -->
-        <Style x:Key="PrimaryButton" BasedOn="{StaticResource GhostButton}" TargetType="Button">
+        <!--
+            shadcn primary button: solid white-ish surface, dark text. Hover dims to
+            zinc-200, pressed to zinc-300 — matches the standard shadcn button.tsx variants.
+            The Border.Resources scope a local TextBlock style override that beats the
+            global implicit `<Style TargetType="TextBlock">` (which would otherwise force
+            child text to TextPrimary, i.e. near-white-on-white = invisible).
+        -->
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource GhostButton}">
             <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
             <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrushMuted}"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="#18181B"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="BtnBg"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <Border.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground"
+                                            Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                                </Style>
+                            </Border.Resources>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="BtnBg" Property="Background" Value="#E4E4E7"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="BtnBg" Property="Background" Value="#D4D4D8"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
-        <!-- ========= Ultra-Slim Scrollbars ========= -->
-        <SolidColorBrush x:Key="ScrollbarTrackBrush" Color="#141820"/>
-        <SolidColorBrush x:Key="ScrollbarThumbBrush" Color="#2C3548"/>
-        <SolidColorBrush x:Key="ScrollbarThumbBrushHover" Color="#3A4663"/>
-        <SolidColorBrush x:Key="ScrollbarThumbBrushActive" Color="#4C5A7A"/>
+        <!-- shadcn secondary button: zinc-800 surface, light text. Hover slightly lighter. -->
+        <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource GhostButton}">
+            <Setter Property="Background" Value="#27272A"/>
+            <Setter Property="BorderBrush" Value="#27272A"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="BtnBg"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="BtnBg" Property="Background" Value="#3F3F46"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="BtnBg" Property="Background" Value="#52525B"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- shadcn destructive button: red-900 surface for clear "do not click by accident" affordance. -->
+        <Style x:Key="DestructiveButton" TargetType="Button" BasedOn="{StaticResource GhostButton}">
+            <Setter Property="Background" Value="#7F1D1D"/>
+            <Setter Property="BorderBrush" Value="#7F1D1D"/>
+            <Setter Property="Foreground" Value="#FAFAFA"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="BtnBg"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="BtnBg" Property="Background" Value="#991B1B"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="BtnBg" Property="Background" Value="#B91C1C"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- shadcn ultra-slim scrollbar tokens (zinc tones, transparent track). -->
+        <SolidColorBrush x:Key="ScrollbarTrackBrush" Color="Transparent"/>
+        <SolidColorBrush x:Key="ScrollbarThumbBrush" Color="#3F3F46"/>
+        <SolidColorBrush x:Key="ScrollbarThumbBrushHover" Color="#52525B"/>
+        <SolidColorBrush x:Key="ScrollbarThumbBrushActive" Color="#71717A"/>
 
         <Style x:Key="SlimThumb" TargetType="{x:Type Thumb}">
             <Setter Property="Background" Value="{StaticResource ScrollbarThumbBrush}"/>
@@ -485,12 +618,13 @@
         <Style TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
         </Style>
-        <SolidColorBrush x:Key="CbBg"       Color="#202428"/>
-        <SolidColorBrush x:Key="CbBorder"   Color="#5A6672"/>
-        <SolidColorBrush x:Key="CbHover"    Color="#7F8A96"/>
-        <SolidColorBrush x:Key="CbAccent"   Color="#62D38B"/>
-        <SolidColorBrush x:Key="CbDisabled" Color="#334049"/>
-        <SolidColorBrush x:Key="CbText"     Color="#EAEFF3"/>
+        <!-- DotCheckBox palette aligned to shadcn (zinc-700 stroke, white accent dot). -->
+        <SolidColorBrush x:Key="CbBg"       Color="#18181B"/>
+        <SolidColorBrush x:Key="CbBorder"   Color="#3F3F46"/>
+        <SolidColorBrush x:Key="CbHover"    Color="#52525B"/>
+        <SolidColorBrush x:Key="CbAccent"   Color="#FAFAFA"/>
+        <SolidColorBrush x:Key="CbDisabled" Color="#27272A"/>
+        <SolidColorBrush x:Key="CbText"     Color="#FAFAFA"/>
 
         <SolidColorBrush x:Key="DonateYellow"        Color="#FFD166"/>
         <SolidColorBrush x:Key="DonateYellowHover"   Color="#FFDE89"/>
@@ -578,14 +712,14 @@
                                         <Storyboard>
                                             <ColorAnimation Storyboard.TargetName="Circle"
                                Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)"
-                               To="#7F8A96" Duration="0:0:0.08"/>
+                               To="#52525B" Duration="0:0:0.08"/>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Disabled">
                                         <Storyboard>
                                             <ColorAnimation Storyboard.TargetName="Circle"
                                Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)"
-                               To="#334049" Duration="0:0:0"/>
+                               To="#27272A" Duration="0:0:0"/>
                                             <DoubleAnimation Storyboard.TargetName="DotScale"
                                 Storyboard.TargetProperty="ScaleX" To="0" Duration="0:0:0"/>
                                             <DoubleAnimation Storyboard.TargetName="DotScale"
@@ -602,7 +736,7 @@
                                         <Storyboard>
                                             <ColorAnimation Storyboard.TargetName="Circle"
                                Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)"
-                               To="#62D38B" Duration="0:0:0.08"/>
+                               To="#FAFAFA" Duration="0:0:0.08"/>
                                             <DoubleAnimation Storyboard.TargetName="DotScale"
                                 Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.10"/>
                                             <DoubleAnimation Storyboard.TargetName="DotScale"
@@ -613,7 +747,7 @@
                                         <Storyboard>
                                             <ColorAnimation Storyboard.TargetName="Circle"
                                Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)"
-                               To="#62D38B" Duration="0:0:0.08"/>
+                               To="#FAFAFA" Duration="0:0:0.08"/>
                                             <DoubleAnimation Storyboard.TargetName="DotScale"
                                 Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.10"/>
                                             <DoubleAnimation Storyboard.TargetName="DotScale"
@@ -670,18 +804,78 @@
             <Setter Property="Height" Value="32"/>
         </Style>
 
-        <!-- CheckBox dunkel -->
+        <!--
+            shadcn checkbox: 16px square, 1px border, fills white with dark checkmark
+            when checked. Replaces the WPF default (system theme) so checkboxes match
+            the rest of the dark theme without each call-site needing DotCheckBox.
+        -->
         <Style TargetType="CheckBox">
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Grid Background="Transparent" SnapsToDevicePixels="True">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="Box"
+                                    Width="16" Height="16"
+                                    Margin="0,0,8,0"
+                                    VerticalAlignment="Center"
+                                    Background="#18181B"
+                                    BorderBrush="#3F3F46"
+                                    BorderThickness="1"
+                                    CornerRadius="4">
+                                <Path x:Name="Check"
+                                      Data="M 2 6 L 6 10 L 12 3"
+                                      Stroke="#18181B"
+                                      StrokeThickness="2"
+                                      StrokeStartLineCap="Round"
+                                      StrokeEndLineCap="Round"
+                                      StrokeLineJoin="Round"
+                                      Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter Grid.Column="1"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Box" Property="BorderBrush" Value="#52525B"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Box" Property="Background" Value="#FAFAFA"/>
+                                <Setter TargetName="Box" Property="BorderBrush" Value="#FAFAFA"/>
+                                <Setter TargetName="Check" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
-        <!-- TextBox dunkel -->
+        <!--
+            shadcn input: dark zinc-900 fill, 1px zinc-800 border, 6px radius. On focus
+            the border lifts to zinc-500 (subtle ring) — not pure white, to avoid the
+            harsh "selected = stark white outline" look the previous style had.
+        -->
         <Style TargetType="TextBox">
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
-            <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+            <Setter Property="CaretBrush" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="SelectionBrush" Value="#3F3F46"/>
+            <Setter Property="Background" Value="#18181B"/>
+            <Setter Property="BorderBrush" Value="#27272A"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
@@ -689,12 +883,17 @@
                          Background="{TemplateBinding Background}"
                          BorderBrush="{TemplateBinding BorderBrush}"
                          BorderThickness="{TemplateBinding BorderThickness}"
-                         CornerRadius="{DynamicResource Radius}">
-                            <ScrollViewer x:Name="PART_ContentHost"/>
+                         CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#3F3F46"/>
+                            </Trigger>
                             <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#52525B"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="Bd" Property="Opacity" Value="0.5"/>
@@ -705,29 +904,71 @@
             </Setter>
         </Style>
 
-        <!-- ListBox dunkel + dezente Auswahl -->
-        <Style TargetType="ListBox">
-            <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+        <!-- shadcn password input mirrors the TextBox treatment. -->
+        <Style TargetType="PasswordBox">
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="CaretBrush" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="SelectionBrush" Value="#3F3F46"/>
+            <Setter Property="Background" Value="#18181B"/>
+            <Setter Property="BorderBrush" Value="#27272A"/>
             <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PasswordBox">
+                        <Border x:Name="Bd"
+                         Background="{TemplateBinding Background}"
+                         BorderBrush="{TemplateBinding BorderBrush}"
+                         BorderThickness="{TemplateBinding BorderThickness}"
+                         CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#3F3F46"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#52525B"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bd" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- shadcn list: dark zinc-900 surface, subtle hover + zinc-800 selection. -->
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="#18181B"/>
+            <Setter Property="BorderBrush" Value="#27272A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="4"/>
         </Style>
         <Style TargetType="ListBoxItem">
-            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="Padding" Value="8,6"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,1"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
                         <Border x:Name="Bd" CornerRadius="6" Background="{TemplateBinding Background}">
-                            <ContentPresenter Margin="4,2"/>
+                            <ContentPresenter Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#264FC3F7"/>
-                                <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
-                            </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#1AFFFFFF"/>
+                                <Setter TargetName="Bd" Property="Background" Value="#27272A"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#3F3F46"/>
+                                <Setter Property="Foreground" Value="#FAFAFA"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -740,13 +981,22 @@
             <Setter Property="Background" Value="Transparent"/>
         </Style>
 
-        <!-- Card-Container zum Wiederverwenden -->
+        <!--
+            shadcn card: zinc-900 surface, 1px zinc-800 border, 8px radius, 16px pad.
+            Slightly larger radius/padding than the prior style to feel less cramped
+            and match shadcn's native card.tsx proportions.
+        -->
         <Style x:Key="Card" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource Surface}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+            <Setter Property="Background" Value="#18181B"/>
+            <Setter Property="BorderBrush" Value="#27272A"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="{DynamicResource Radius}"/>
-            <Setter Property="Padding" Value="12"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="16"/>
+        </Style>
+
+        <!-- Inset card for nested panels — slightly darker so it visually recedes. -->
+        <Style x:Key="MutedCard" TargetType="Border" BasedOn="{StaticResource Card}">
+            <Setter Property="Background" Value="#0F0F11"/>
         </Style>
 
         <!-- Abschnittstitel -->

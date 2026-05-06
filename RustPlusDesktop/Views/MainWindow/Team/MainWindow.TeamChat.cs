@@ -196,9 +196,11 @@ public partial class MainWindow
         TxtTeamChatInput.Text = "";
 
         // Normal message: optimistically render locally, then send to game team chat.
+        // AppendChatIfNew already routes through AppendInlineChat for the inline view
+        // (see MainWindow.xaml.cs); calling AppendInlineChat again here was double-rendering
+        // every outgoing message. Dedup handles the polled echo from PollOwnInGameCommandsAsync.
         var outgoing = new TeamChatMessage(DateTime.UtcNow, _selfDisplayName ?? "you", 0, text);
-        AppendChatIfNew(outgoing);     // adds to _chatHistoryLog (with dedup) + chat-window legacy hook
-        AppendInlineChat(outgoing);    // shows it in the inline UI immediately
+        AppendChatIfNew(outgoing);
 
         try
         {

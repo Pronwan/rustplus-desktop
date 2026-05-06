@@ -10,10 +10,10 @@
         ShowInTaskbar="False"
         Topmost="True">
     
-    <Border Background="{DynamicResource SurfaceAlt}" 
-            BorderBrush="{DynamicResource CardBorder}" 
-            BorderThickness="2" 
-            CornerRadius="12">
+    <Border Background="#18181B"
+            BorderBrush="#27272A"
+            BorderThickness="1"
+            CornerRadius="8">
         <DockPanel Margin="20">
             <!-- Header -->
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,20">
@@ -36,14 +36,15 @@
             </StackPanel>
 
             <!-- Footer -->
-            <Button DockPanel.Dock="Bottom" 
-                    Content="Close" 
-                    Width="100" 
+            <Button DockPanel.Dock="Bottom"
+                    Width="100"
                     Height="35"
                     HorizontalAlignment="Right"
                     Style="{StaticResource PrimaryButton}"
                     Click="BtnClose_Click"
-                    Margin="0,15,0,0"/>
+                    Margin="0,15,0,0">
+                <TextBlock Text="Close" Foreground="#18181B"/>
+            </Button>
 
             <!-- Content -->
             <ScrollViewer VerticalScrollBarVisibility="Auto">

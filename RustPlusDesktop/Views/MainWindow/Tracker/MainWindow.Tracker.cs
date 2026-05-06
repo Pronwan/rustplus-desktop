@@ -717,10 +717,11 @@ public partial class MainWindow
     private void BtnGroupDelete_Click(object sender, RoutedEventArgs e)
     {
         if (CmbGroupSelector?.SelectedItem is not PlayerGroup g) return;
-        var result = MessageBox.Show(
+        var ok = ConfirmModal.Show(this,
+            "Delete group",
             $"Delete group \"{g.Name}\"?\n\nMembers will not be untracked, just ungrouped.",
-            "Delete group", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-        if (result != MessageBoxResult.OK) return;
+            okLabel: "Delete");
+        if (!ok) return;
         PlayerGroupsService.DeleteGroup(g.Id);
         _tracker_selectedGroupId = null;
     }
@@ -841,65 +842,14 @@ public partial class MainWindow
         }
     }
 
-    /// <summary>Modal text-input dialog. Returns null if cancelled.</summary>
+    /// <summary>
+    /// Modal text-input prompt. Returns null if cancelled, otherwise the trimmed
+    /// non-empty string. Renders the shared shadcn-themed TextInputModal so the
+    /// "+ New group" / "Rename group" prompts match the rest of the app's style.
+    /// </summary>
     private string? PromptForString(string title, string label, string initial = "")
     {
-        var win = new Window
-        {
-            Title = title,
-            Width = 320,
-            Height = 150,
-            ResizeMode = ResizeMode.NoResize,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Owner = this,
-            Background = (Brush)FindResource("AppBg"),
-            Foreground = (Brush)FindResource("TextPrimary")
-        };
-
-        var grid = new Grid { Margin = new Thickness(12) };
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-        grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-
-        grid.Children.Add(new TextBlock
-        {
-            Text = label,
-            Margin = new Thickness(0, 0, 0, 6)
-        });
-        var txt = new TextBox
-        {
-            Text = initial,
-            Padding = new Thickness(6, 3, 6, 3),
-            Background = new SolidColorBrush(Color.FromRgb(0x1a, 0x1c, 0x1e)),
-            Foreground = Brushes.White,
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Color.FromRgb(0x33, 0x33, 0x33))
-        };
-        Grid.SetRow(txt, 1);
-        grid.Children.Add(txt);
-
-        var btnPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Margin = new Thickness(0, 12, 0, 0)
-        };
-        var ok = new Button { Content = "OK", Width = 70, IsDefault = true, Margin = new Thickness(0, 0, 6, 0) };
-        var cancel = new Button { Content = "Cancel", Width = 70, IsCancel = true };
-        btnPanel.Children.Add(ok);
-        btnPanel.Children.Add(cancel);
-        Grid.SetRow(btnPanel, 3);
-        grid.Children.Add(btnPanel);
-
-        win.Content = grid;
-
-        string? result = null;
-        ok.Click += (_, __) => { result = txt.Text; win.Close(); };
-        cancel.Click += (_, __) => { result = null; win.Close(); };
-
-        win.Loaded += (_, __) => { txt.Focus(); txt.SelectAll(); };
-        win.ShowDialog();
-        return result;
+        var dlg = new TextInputModal(title, label, initial) { Owner = this };
+        return dlg.ShowDialog() == true ? dlg.Value : null;
     }
 }

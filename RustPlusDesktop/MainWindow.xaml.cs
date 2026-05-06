@@ -112,9 +112,9 @@ public partial class MainWindow : Window
     {
         if (_rust is not RustPlusClientReal real) return;
 
-        // simpler Prompt statt TextBox:
-        var id = Microsoft.VisualBasic.Interaction.InputBox(
-            "Camera identifier:", "Open camera", "");
+        var dlg = new RustPlusDesk.Views.TextInputModal("Open camera", "Camera identifier") { Owner = this };
+        if (dlg.ShowDialog() != true) return;
+        var id = dlg.Value;
         if (string.IsNullOrWhiteSpace(id)) return;
 
         var w = new RustPlusDesk.Views.CameraWindow(real, id) { Owner = this };
@@ -132,7 +132,9 @@ public partial class MainWindow : Window
     {
         BtnAddCam.Click += (_, __) =>
         {
-            var input = Microsoft.VisualBasic.Interaction.InputBox("Camera identifier:", "Add camera", "");
+            var dlg = new RustPlusDesk.Views.TextInputModal("Add camera", "Camera identifier") { Owner = this };
+            if (dlg.ShowDialog() != true) return;
+            var input = dlg.Value;
             if (string.IsNullOrWhiteSpace(input)) return;
             if (_cameraIds.Any(s => string.Equals(s, input, StringComparison.OrdinalIgnoreCase))) return;
 
@@ -682,6 +684,13 @@ public partial class MainWindow : Window
                 var hadPrev = _lastPresence.TryGetValue(sid, out var prev);
 
                 vm.Name = string.IsNullOrWhiteSpace(m.Name) ? "(player)" : m.Name!;
+
+                // Cache the local player's display name for chat. The team blob is
+                // the only authoritative source we get here; previously this was
+                // never wired so the inline chat always rendered self-messages as "you".
+                if (sid == _mySteamId && !string.IsNullOrWhiteSpace(m.Name))
+                    SetSelfDisplayName(m.Name);
+
                 vm.IsLeader = (leaderId != 0 && sid == leaderId);
                 vm.IsOnline = m.Online;
                 vm.IsDead = m.Dead;
@@ -853,8 +862,19 @@ public partial class MainWindow : Window
     // Linksklick: auf Karte zentrieren
     private void TeamItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        if ((sender as FrameworkElement)?.DataContext is TeamMemberVM vm)
-            CenterOnMember(vm);
+        // Click-to-open Steam profile. Centering on the map is still available
+        // via the right-click context menu (Team_Center_Click).
+        if ((sender as FrameworkElement)?.DataContext is not TeamMemberVM vm) return;
+        if (vm.SteamId == 0) return;
+        try
+        {
+            var url = $"https://steamcommunity.com/profiles/{vm.SteamId}";
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[team] failed to open Steam profile: {ex.Message}");
+        }
     }
 
     // Kontextmenü – Zentrieren
@@ -986,6 +1006,7 @@ public partial class MainWindow : Window
         InitTrackerTab();
         InitTeamChat();
         InitTeamSync();
+        InitLoginOrResetButton();
         if (ChkTeamSyncEnabled != null)
             ChkTeamSyncEnabled.IsChecked = TrackingService.TeamSyncEnabled;
         ApplySettings();
