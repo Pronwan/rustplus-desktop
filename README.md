@@ -1,6 +1,6 @@
-![Headline](./headlineGIT.jpg)  
+![Headline](RustPlusDesktop/Assets/Images/headlineGIT.jpg)  
 
-[![Donate](./donate.png)](https://www.patreon.com/c/Pronwan)
+[![Donate](./RustPlusDesktop/Assets/Images/donate.png)](https://www.patreon.com/c/Pronwan)
 
 
 # Rust+ Desktop App (Unofficial)
@@ -24,7 +24,7 @@ The **Rust+ Desktop App** is a Windows application built on the official Rust+ C
 
 It lets you pair Rust servers, monitor in-game events, control Smart Devices, and view dynamic map markers — all on your PC.
 By now it's more than 'just' Rust Plus. It's Rust² you could say... That's why this is our new icon ;) Was about time.
-![Update](./icon.png)  
+![Update](./RustPlusDesktop/Assets/Images/icon.png)  
 
 
 The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, RustPlusAPI, etc.), so you don’t have to install dependencies manually.
@@ -44,7 +44,7 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 *(I publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
 
-[![YouTube Video](./RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
+[![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
 ## Update 4.2 — Cargo Ship Overhaul (May 5th)
@@ -85,7 +85,7 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 - **Interactive Event Dock**: A new real-time sidebar for active events (Patrol Heli, Cargo Ship, Chinook, etc.). Click any event to **auto-lock and track** it dynamically across the map.
 - **Smart Shop Clustering**: Multiple vending machines in one base are now grouped into clean cluster icons. Hovering over them reveals a redesigned, scrollable list of all items without map clutter.
 
-![V4 Map Overhaul](./RustPlusDesktop/Screenshots/v4_map_overhaul.png)
+![V4 Map Overhaul](./RustPlusDesktop/Assets/Screenshots/v4_map_overhaul.png)
 
 **🛠 Improvements**
 - **60 FPS Map Animations**: Butter-smooth zooming and panning with a new cinematic "Overview Dip" when jumping across the map.
@@ -166,9 +166,9 @@ Version 3.1.2 brings full Storage Monitor integration and the following optimiza
 - Notifications in Chat for Deaths, Spawns, Online, Offline
 - added fetching icon symbols from rusthelp.com (including Blueprint Fragments)
 
-![Update](./V2-1.png)  
-![Update](./V2-2.png) 
-![Update](./V2-3.png) 
+![Update](./RustPlusDesktop/Assets/Images/V2-1.png)  
+![Update](./RustPlusDesktop/Assets/Images/V2-2.png) 
+![Update](./RustPlusDesktop/Assets/Images/V2-3.png) 
 
 Enjoy! :) 
 ---
@@ -374,27 +374,27 @@ On next launch the registration will run again.
 
 ### Main Screenshots
 
-![Main Background](./RustPlusDesktop/rustplusbg.png)  
+![Main Background](./RustPlusDesktop/Assets/Images/rustplusbg.png)  
 
-![Background 2](./RustPlusDesktop/rustplusbg2.png)  
+![Background 2](./RustPlusDesktop/Assets/Images/rustplusbg2.png)  
 
-![Background 3](./RustPlusDesktop/rustplusbg3.png)  
+![Background 3](./RustPlusDesktop/Assets/Images/rustplusbg3.png)  
 
-![Background 4](./RustPlusDesktop/rustplusbg4.png)  
+![Background 4](./RustPlusDesktop/Assets/Images/rustplusbg4.png)  
 
-![Background 5](./RustPlusDesktop/rustplusbg5.png)  
+![Background 5](./RustPlusDesktop/Assets/Images/rustplusbg5.png)  
 
-![Background 6](./RustPlusDesktop/rustplusbg6.png)  
+![Background 6](./RustPlusDesktop/Assets/Images/rustplusbg6.png)  
 
-![Background 7](./RustPlusDesktop/rustplusbg7.png)  
+![Background 7](./RustPlusDesktop/Assets/Images/rustplusbg7.png)  
 
-![Background 8](./RustPlusDesktop/rustplusbg8.png)
+![Background 8](./RustPlusDesktop/Assets/Images/rustplusbg8.png)
 
 
 
 ### Video Overview
 
-[![YouTube Video](./RustPlusDesktop/rustplusbg.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)  
+[![YouTube Video](./RustPlusDesktop/Assets/Images/rustplusbg.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)  
 
 *(click the image to watch on YouTube)*
 
