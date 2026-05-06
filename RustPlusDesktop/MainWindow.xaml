@@ -3127,7 +3127,11 @@ Click="BtnToggleMiniMap_Click"/>
                                     Padding="10,4" Margin="6"
                                     ToolTip="Close (Esc)"/>
                         </Grid>
-                        <views:PatchNotesView Grid.Row="1" Margin="14,8,14,14"/>
+                        <ScrollViewer Grid.Row="1" Margin="14,8,14,14"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled">
+                            <views:PatchNotesView/>
+                        </ScrollViewer>
                     </Grid>
                 </Border>
             </Grid>

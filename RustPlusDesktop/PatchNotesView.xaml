@@ -5,15 +5,15 @@
              Foreground="{DynamicResource TextPrimary}">
 
     <!--
-        ScrollViewer at the root (not nested inside a DockPanel) so the height
-        constraint flowing down from the parent panel reaches it directly. The
-        previous DockPanel wrapper was swallowing the constraint, leaving the
+        Pure content (no ScrollViewer) — the parent slide-in panel wraps this
+        in its own ScrollViewer. UserControls can swallow the height constraint
+        flowing down from the panel's Grid.Row="*" cell, leaving an inner
         ScrollViewer measured with infinite height and unable to overflow.
+        Hosting the ScrollViewer one level up sidesteps that.
     -->
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="0,0,12,12">
-            <!-- UPDATE VERSION NUMBER HERE -->
-            <TextBlock Text="Current Version: 4.2" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,12"/>
+    <StackPanel Margin="0,0,12,12">
+        <!-- UPDATE VERSION NUMBER HERE -->
+        <TextBlock Text="Current Version: 4.2" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,12"/>
                 <!-- ============================================== -->
                 <!-- NEW v4.2 PATCH NOTES -->
                 <!-- ============================================== -->
@@ -205,6 +205,5 @@
                         <TextBlock Text="• Camera monitoring, Team management, Death markers, and more." Margin="0,4,0,0" FontStyle="Italic"/>
                     </StackPanel>
                 </Border>
-        </StackPanel>
-    </ScrollViewer>
+    </StackPanel>
 </UserControl>
