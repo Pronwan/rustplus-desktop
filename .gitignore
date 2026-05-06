@@ -43,3 +43,6 @@ installer/Output/*
 !RustPlusDesktop/*.jpg
 RustPlusDesktop/RustPlusDesk_lbvqmzga_wpftmp.csproj
 RustPlusDesktop/Setup.iss
+
+# Claude Code local state (memory, settings, transcripts)
+.claude/

@@ -2,6 +2,8 @@
 
 A fork of [Pronwan/rustplus-desktop](https://github.com/Pronwan/rustplus-desktop) — the unofficial Rust+ Companion app for Windows — with extra tooling for organised teams.
 
+![RustPlusDesk-Ryyott — main view with shadcn theme](docs/images/overview.png)
+
 > **All credit for the original Rust+ Desktop app goes to [Pronwan](https://github.com/Pronwan).**
 > If you find this useful, please consider supporting the original author at [patreon.com/Pronwan](https://www.patreon.com/c/Pronwan) or [streamelements.com/pronwan/tip](https://streamelements.com/pronwan/tip). This fork stands entirely on his work.
 
@@ -22,6 +24,35 @@ A fork of [Pronwan/rustplus-desktop](https://github.com/Pronwan/rustplus-desktop
 - **Cherry-picks upstream regularly** — most recent: Pronwan's `1535a17` "Player centering + stability + map marker addons".
 
 For everything the original app does (smart devices, map controls, shop search, pairing, alarms, hotkeys, etc.), see [Pronwan's README](https://github.com/Pronwan/rustplus-desktop#readme).
+
+---
+
+## Screenshots
+
+### New Tracker tab
+A fourth tab alongside Devices / Team / Cameras, with Online / Tracked / Groups sub-tabs. Team-sync toggle at the top keeps everything in step with your group.
+
+![New Tracker tab](docs/images/tracker-tab.png)
+
+### Tracked players
+Persistent watchlist with live online status, session timers, and per-row BM / Group / Report actions. Counter at the top shows tracked vs. currently online.
+
+![Tracked players sub-tab](docs/images/tracker-tracked.png)
+
+### Groups
+Organise tracked players into groups (H1, H3, …) with notify toggles, map-pin colour, and rename / delete controls. Group bases pin onto the map.
+
+![Groups sub-tab with H3 expanded](docs/images/tracker-groups.png)
+
+### Activity Intelligence Report
+Slide-in panel with a 90-day BattleMetrics session backfill: total tracked time, last 7 days, session count, average length, a 12-week activity heatmap, a 24h forecast, and a "most likely to play / sleep" prediction with confidence rating.
+
+![Activity Intelligence Report](docs/images/activity-report.png)
+
+### Tracker Expand overlay
+Pop the entire Tracker tab into a full-height slide-in over the map for dense work without losing the sidebar layout.
+
+![Tracker Expand overlay](docs/images/tracker-expanded.png)
 
 ---
 
