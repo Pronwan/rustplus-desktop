@@ -49,5 +49,17 @@ public class RustPlusClientStub : IRustPlusClient
         return Task.CompletedTask;
     }
 
+    public Task<bool?> GetSmartSwitchStateAsync(uint entityId)
+    {
+        _log($"[Stub] GetSmartSwitchState for {entityId}");
+        return Task.FromResult<bool?>(null);
+    }
+
+    public Task<EntityProbeResult> ProbeEntityAsync(uint entityId, CancellationToken ct = default)
+    {
+        _log($"[Stub] ProbeEntity for {entityId}");
+        return Task.FromResult(new EntityProbeResult { Exists = false });
+    }
+
     public string? Host => "stub";
 }
