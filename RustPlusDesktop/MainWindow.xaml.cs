@@ -9052,7 +9052,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             var ask = ConfirmModal.Show(this,
                 "Update available",
                 $"A newer version is available: {tag}\n\nDownload and install now?",
-                okLabel: "Download & install");
+                okLabel: "Update");
 
             if (!ask)
             {

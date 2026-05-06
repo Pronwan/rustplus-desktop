@@ -108,7 +108,7 @@ public partial class MainWindow
             "• Your Steam login will be removed\n" +
             "• The pairing config will be wiped\n\n" +
             "You'll need to pair again from scratch after this.",
-            okLabel: "Reset everything");
+            okLabel: "Reset");
 
         if (!ok) return;
 

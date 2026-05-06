@@ -4,14 +4,16 @@
              Background="Transparent"
              Foreground="{DynamicResource TextPrimary}">
 
-    <DockPanel LastChildFill="True">
-        <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+    <!--
+        ScrollViewer at the root (not nested inside a DockPanel) so the height
+        constraint flowing down from the parent panel reaches it directly. The
+        previous DockPanel wrapper was swallowing the constraint, leaving the
+        ScrollViewer measured with infinite height and unable to overflow.
+    -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="0,0,12,12">
             <!-- UPDATE VERSION NUMBER HERE -->
-            <TextBlock Text="Current Version: 4.2" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
-        </StackPanel>
-
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <StackPanel Margin="0,0,0,12">
+            <TextBlock Text="Current Version: 4.2" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,12"/>
                 <!-- ============================================== -->
                 <!-- NEW v4.2 PATCH NOTES -->
                 <!-- ============================================== -->
@@ -203,7 +205,6 @@
                         <TextBlock Text="• Camera monitoring, Team management, Death markers, and more." Margin="0,4,0,0" FontStyle="Italic"/>
                     </StackPanel>
                 </Border>
-            </StackPanel>
-        </ScrollViewer>
-    </DockPanel>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>
