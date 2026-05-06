@@ -11,21 +11,30 @@ namespace RustPlusDesk.Views;
 /// </summary>
 public partial class ConfirmModal : Window
 {
-    public ConfirmModal(string title, string message, string okLabel = "OK")
+    public ConfirmModal(string title, string message, string okLabel = "OK", bool showCancel = true)
     {
         InitializeComponent();
         Title = title;
         TxtTitle.Text = title;
         TxtMessage.Text = message;
         TxtOkLabel.Text = okLabel;
+        if (!showCancel) BtnCancel.Visibility = Visibility.Collapsed;
     }
 
-    /// <summary>Convenience helper. Centers on owner, shows modally, returns true on confirm.</summary>
+    /// <summary>Confirm dialog (OK + Cancel). Returns true on confirm.</summary>
     public static bool Show(Window? owner, string title, string message, string okLabel = "OK")
     {
-        var dlg = new ConfirmModal(title, message, okLabel);
+        var dlg = new ConfirmModal(title, message, okLabel, showCancel: true);
         if (owner != null) dlg.Owner = owner;
         return dlg.ShowDialog() == true;
+    }
+
+    /// <summary>Info dialog (single button, no cancel). Use for "you are up to date" / error messages.</summary>
+    public static void ShowInfo(Window? owner, string title, string message, string okLabel = "OK")
+    {
+        var dlg = new ConfirmModal(title, message, okLabel, showCancel: false);
+        if (owner != null) dlg.Owner = owner;
+        dlg.ShowDialog();
     }
 
     private void BtnOk_Click(object sender, RoutedEventArgs e)

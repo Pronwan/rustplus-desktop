@@ -101,14 +101,16 @@ public partial class MainWindow
 
     private async void BtnHardReset_Click(object sender, RoutedEventArgs e)
     {
-        var ask = MessageBox.Show(
-            "ARE YOU SURE YOU WANT TO RESET EVERYTHING (WIPE)?\n\n" +
-            "- All servers will be deleted\n" +
-            "- Your Steam Login will be removed\n" +
-            "- The pairing config will be deleted\n\n" +
-            "Continue?", "FULL WIPE DATA", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+        var ok = ConfirmModal.Show(this,
+            "Reset connection (full wipe)",
+            "Are you sure you want to reset everything?\n\n" +
+            "• All paired servers will be deleted\n" +
+            "• Your Steam login will be removed\n" +
+            "• The pairing config will be wiped\n\n" +
+            "You'll need to pair again from scratch after this.",
+            okLabel: "Reset everything");
 
-        if (ask != MessageBoxResult.Yes) return;
+        if (!ok) return;
 
         await FullWipeResetAsync();
     }

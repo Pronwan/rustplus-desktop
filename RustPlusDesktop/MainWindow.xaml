@@ -3090,6 +3090,46 @@ Click="BtnToggleMiniMap_Click"/>
                                         Margin="14,8,14,14"/>
                     </Grid>
                 </Border>
+
+                <!--
+                    Slide-in patch-notes overlay. Same scaffold as ReportPanel /
+                    TrackerPanel. Body content lives in views:PatchNotesView so
+                    edits to version history only touch one file.
+                -->
+                <Border x:Name="PatchNotesPanel" Grid.RowSpan="3"
+                        Background="{DynamicResource AppBg}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        Visibility="Collapsed"
+                        Panel.ZIndex="100">
+                    <Border.RenderTransform>
+                        <TranslateTransform x:Name="PatchNotesPanelTransform" X="0"/>
+                    </Border.RenderTransform>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Background="{DynamicResource Surface}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="Patch Notes &amp; Version History"
+                                       FontWeight="SemiBold" FontSize="14"
+                                       Foreground="{DynamicResource TextPrimary}"
+                                       VerticalAlignment="Center"
+                                       Margin="14,10"/>
+                            <Button Grid.Column="1" Content="✕"
+                                    Click="BtnClosePatchNotesPanel_Click"
+                                    Style="{StaticResource GhostButton}"
+                                    Padding="10,4" Margin="6"
+                                    ToolTip="Close (Esc)"/>
+                        </Grid>
+                        <views:PatchNotesView Grid.Row="1" Margin="14,8,14,14"/>
+                    </Grid>
+                </Border>
             </Grid>
         </Border>
         <Grid Background="#80000000"

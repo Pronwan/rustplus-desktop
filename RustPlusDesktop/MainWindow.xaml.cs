@@ -8963,15 +8963,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return false;
         }
     }
-    private void BtnPatchNotes_Click(object sender, RoutedEventArgs e)
-    {
-        var win = new Views.PatchNotesWindow
-        {
-            Owner = this
-        };
-        win.Show();
-        win.Activate();
-    }
+    private void BtnPatchNotes_Click(object sender, RoutedEventArgs e) => OpenPatchNotesPanel();
 
     private void BtnSettings_Click(object sender, RoutedEventArgs e)
     {
@@ -9024,9 +9016,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (latestInfo is null)
             {
                 _vm.IsBusy = false; _vm.BusyText = "";
-                System.Windows.MessageBox.Show(
-                    "Could not query latest release. Please try again or open Releases page.",
-                    "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                ConfirmModal.ShowInfo(this,
+                    "Update check failed",
+                    "Could not query the latest release. Please try again, or open the Releases page in your browser.",
+                    okLabel: "Close");
                 return;
             }
 
@@ -9036,7 +9029,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (latest <= curr)
             {
                 _vm.IsBusy = false; _vm.BusyText = "";
-                System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                ConfirmModal.ShowInfo(this,
+                    "Up to date",
+                    $"You're running the latest version ({AppInfo.VersionShort}).",
+                    okLabel: "Close");
                 return;
             }
 
@@ -9044,19 +9040,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (string.IsNullOrWhiteSpace(dlUrl))
             {
                 _vm.IsBusy = false; _vm.BusyText = "";
-                var open = System.Windows.MessageBox.Show(
-                    $"New version available: {tag}\nOpen Releases page?",
-                    "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (open == MessageBoxResult.Yes)
+                var openRel = ConfirmModal.Show(this,
+                    "Update available",
+                    $"A newer version is available: {tag}\n\nOpen the Releases page in your browser to download it manually?",
+                    okLabel: "Open Releases");
+                if (openRel)
                     Process.Start(new ProcessStartInfo($"https://github.com/{RepoOwner}/{RepoName}/releases/latest") { UseShellExecute = true });
                 return;
             }
 
-            var ask = System.Windows.MessageBox.Show(
-                $"New version available: {tag}\nDownload and install now?",
-                "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var ask = ConfirmModal.Show(this,
+                "Update available",
+                $"A newer version is available: {tag}\n\nDownload and install now?",
+                okLabel: "Download & install");
 
-            if (ask != MessageBoxResult.Yes)
+            if (!ask)
             {
                 _vm.IsBusy = false; _vm.BusyText = "";
                 return;
@@ -9073,7 +9071,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (path == null)
             {
-                System.Windows.MessageBox.Show("Download failed.", "Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                ConfirmModal.ShowInfo(this, "Download failed", "The installer download failed. Please try again.", okLabel: "Close");
                 return;
             }
 
@@ -9084,7 +9082,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsBusy = false;
             _vm.BusyText = "";
             AppendLog("❌ Update check failed: " + ex.Message);
-            System.Windows.MessageBox.Show("Update check failed.\n" + ex.Message, "Update", MessageBoxButton.OK, MessageBoxImage.Error);
+            ConfirmModal.ShowInfo(this, "Update check failed", ex.Message, okLabel: "Close");
         }
     }
 
