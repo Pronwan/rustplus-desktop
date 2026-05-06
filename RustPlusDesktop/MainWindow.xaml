@@ -2448,7 +2448,7 @@
         </Border>
 
         <!-- Rechte Spalte: Login/Status + WebViewHost -->
-        <Border Grid.Column="2" Style="{StaticResource Card}" MinWidth="800">
+        <Border x:Name="RightColumnBorder" Grid.Column="2" Style="{StaticResource Card}" MinWidth="800">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -3127,39 +3127,55 @@ Click="BtnToggleMiniMap_Click"/>
                                     Padding="10,4" Margin="6"
                                     ToolTip="Close (Esc)"/>
                         </Grid>
-                        <ScrollViewer Grid.Row="1" Margin="14,8,14,14"
+                        <!--
+                            MaxHeight is hard-bound to the right-column's ActualHeight,
+                            so the ScrollViewer always has a finite viewport regardless
+                            of how the inner Grid.Row="*" cell sizes during the first
+                            measure pass. Without this, the scroll didn't kick in until
+                            something else (like connecting to a server) forced a fresh
+                            layout pass on the right column.
+                        -->
+                        <ScrollViewer x:Name="PatchNotesScroll"
+                                      Grid.Row="1" Margin="14,8,14,14"
                                       VerticalScrollBarVisibility="Auto"
-                                      HorizontalScrollBarVisibility="Disabled">
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      MaxHeight="{Binding ActualHeight, ElementName=RightColumnBorder}">
                             <views:PatchNotesView/>
                         </ScrollViewer>
                     </Grid>
                 </Border>
             </Grid>
         </Border>
+        <!--
+            Busy overlay: shown while a long-running action (update check,
+            installer download, etc.) is in flight. Single instance — there
+            were two stacked Grids using the old teal palette before; the
+            zinc-900 card here matches the rest of the shadcn modals.
+        -->
         <Grid Background="#80000000"
-          Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}"
-          IsHitTestVisible="True"   
-            Panel.ZIndex="9999">
-            <Border Background="#F2FFFFFF" CornerRadius="8"
-                Padding="20" Width="320" HorizontalAlignment="Center" VerticalAlignment="Center">
+              Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}"
+              IsHitTestVisible="True"
+              Panel.ZIndex="9999">
+            <Border Background="#18181B"
+                    BorderBrush="#27272A"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="24"
+                    Width="320"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
                 <StackPanel>
-                    <TextBlock Text="{Binding BusyText}" FontSize="16" FontWeight="SemiBold"
-                           TextAlignment="Center" Margin="0,0,0,10"/>
-                    <ProgressBar IsIndeterminate="True" Height="6"/>
-                </StackPanel>
-            </Border>
-        </Grid>
-
-        <Grid Background="#80000000"
-      Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}"
-      IsHitTestVisible="True"
-      Panel.ZIndex="9999">
-            <Border Background="{DynamicResource AccentDark}" CornerRadius="8" Padding="20"
-          Width="320" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <StackPanel>
-                    <TextBlock Text="{Binding BusyText}" FontSize="16" FontWeight="SemiBold"
-                 TextAlignment="Center" Margin="0,0,0,10"/>
-                    <ProgressBar IsIndeterminate="True" Height="6"/>
+                    <TextBlock Text="{Binding BusyText}"
+                               FontSize="14"
+                               FontWeight="SemiBold"
+                               Foreground="#FAFAFA"
+                               TextAlignment="Center"
+                               Margin="0,0,0,12"/>
+                    <ProgressBar IsIndeterminate="True"
+                                 Height="4"
+                                 Background="#27272A"
+                                 BorderThickness="0"
+                                 Foreground="#FAFAFA"/>
                 </StackPanel>
             </Border>
         </Grid>

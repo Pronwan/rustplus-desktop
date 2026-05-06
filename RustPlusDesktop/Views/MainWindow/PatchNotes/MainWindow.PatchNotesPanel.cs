@@ -21,7 +21,15 @@ public partial class MainWindow
         if (_trackerPanelOpen) CloseTrackerPanel();
 
         PatchNotesPanel.Visibility = Visibility.Visible;
+        // Invalidate-then-update so the inner ScrollViewer measures against
+        // the *current* right-column height. Visibility=Collapsed elements
+        // skip layout entirely and can come back with stale cached extents,
+        // which left the patch-notes scroll dead until something else (like
+        // a server connect) forced a fresh layout pass.
+        PatchNotesPanel.InvalidateMeasure();
         PatchNotesPanel.UpdateLayout();
+        PatchNotesScroll?.InvalidateMeasure();
+
         var w = PatchNotesPanel.ActualWidth > 0 ? PatchNotesPanel.ActualWidth : 720;
         if (PatchNotesPanelTransform != null) PatchNotesPanelTransform.X = w;
 
