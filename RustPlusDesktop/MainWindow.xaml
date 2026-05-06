@@ -814,6 +814,7 @@
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityInv" Invert="True"/>
         <conv:NotNullToBoolConverter   x:Key="NotNull"/>
+        <conv:AvailableHeightConverter x:Key="AvailableHeight"/>
 
     </Window.Resources>
 
@@ -2883,21 +2884,37 @@ Click="BtnToggleMiniMap_Click"/>
         Margin="15,21,15,0"
         Visibility="Collapsed"
         Panel.ZIndex="9000">
+                        <!--
+                            MaxHeight = WebViewHost.ActualHeight - EventDockHost.ActualHeight
+                            - 60 px (top margin + dock margin + bottom inset). Combined with
+                            the inner Viewbox (StretchDirection=DownOnly) this lets the toolbox
+                            shrink when the right-column shortens, but keep its natural size
+                            on a tall window.
+                        -->
+                        <Border.MaxHeight>
+                            <MultiBinding Converter="{StaticResource AvailableHeight}" ConverterParameter="60">
+                                <Binding Path="ActualHeight" ElementName="WebViewHost"/>
+                                <Binding Path="ActualHeight" ElementName="EventDockHost"/>
+                            </MultiBinding>
+                        </Border.MaxHeight>
                         <Border.RenderTransform>
                             <TranslateTransform Y="{Binding ActualHeight, ElementName=EventDockHost}"/>
                         </Border.RenderTransform>
                         <!--
-                            Tool buttons are sized to match the EventDock tiles above
-                            (~46 px square with 4 px vertical spacing) so the right-edge
-                            stack reads as a single visual rhythm. Click activates the
-                            tool AND opens its settings popup (size / colour / icon
-                            picker) — moved off right-click so the menu is discoverable.
+                            Tool buttons render at 38×38 by default, but the whole stack
+                            is wrapped in a Viewbox with StretchDirection="DownOnly" so
+                            on a tall window we keep the natural size, while on a short
+                            window the toolbox scales down to fit the space left by
+                            EventDockHost. Click activates the tool AND opens its
+                            settings popup (size / colour / icon picker) — moved off
+                            right-click so the menu is discoverable.
                         -->
+                        <Viewbox Stretch="Uniform" StretchDirection="DownOnly">
                         <StackPanel>
                             <StackPanel.Resources>
                                 <Style TargetType="Button" x:Key="OverlayToolboxButton">
-                                    <Setter Property="Width" Value="46"/>
-                                    <Setter Property="Height" Value="46"/>
+                                    <Setter Property="Width" Value="38"/>
+                                    <Setter Property="Height" Value="38"/>
                                     <Setter Property="Margin" Value="0,2"/>
                                     <Setter Property="Padding" Value="6"/>
                                 </Style>
@@ -2953,6 +2970,7 @@ Click="BtnToggleMiniMap_Click"/>
                                 <Image Source="pack://application:,,,/icons/upload.png"/>
                             </Button>
                         </StackPanel>
+                        </Viewbox>
                     </Border>
 
                     <Border x:Name="OverlayTeamBar"
