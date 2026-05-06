@@ -74,7 +74,7 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 **𖦏 Custom Crosshairs**
 - **Draw your own**: intuitive pixel-art style editor. Supports drawing tools (Pen, Pixel, Line, Square, Circle), custom colors, adjustable thickness and opacity, and full Undo/Redo support.
 - **Upload PNGs**: Upload existing PNG images to use as crosshairs. The editor automatically scales them to fit the pixel grid. You can also right-click to erase individual pixels and easily rename or delete your creations.
-![CrosshairEditor](./RustPlusDesktop/Screenshots/v4_5.png)
+![CrosshairEditor](./RustPlusDesktop/Assets/Screenshots/v4_5.png)
 ---
 
 ## Update 4.0.0 - The Evolution Update | Major Map & Stability Overhaul (April 30th)
@@ -134,7 +134,7 @@ A massive shout-out to [JawadYzbk](https://github.com/JawadYzbk) for contributin
 
 ## Update Notes 3.1.2 (November 17th 25)
 Version 3.1.2 brings full Storage Monitor integration and the following optimizations:
-![Update](./3.1.0.png)  
+![Update](./RustPlusDesktop/Assets/Screenshots/3.1.0.png)  
 - Shop alerts now also trigger when item was sold out and then comes back online
 - Storage Monitor shows traffic light upkeep indicator (from 1 hr. and less)
 - Map can be zoomed with NUM +/-
