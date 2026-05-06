@@ -1200,7 +1200,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                         <StackPanel Margin="0,2,0,0">
 
                                             <!-- ===== Zeile ===== -->
-                                            <Border CornerRadius="10" Padding="14,12" Margin="0,4,8,4">
+                                            <Border CornerRadius="8" Padding="12,6" Margin="0,2,8,2">
                                                 <Border.Style>
                                                     <Style TargetType="Border">
                                                         <Setter Property="Background" Value="#171A21"/>
@@ -1222,7 +1222,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Border.Style>
-                                            <Grid>
+                                            <Grid VerticalAlignment="Center">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" SharedSizeGroup="ColTypeID"/>
                                                     <ColumnDefinition Width="*"    SharedSizeGroup="ColAlias"/>
@@ -1231,10 +1231,9 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
 
                                                 <!-- Spalte 1: Icon -->
                                                 <Image Grid.Column="0"
-                                                       Width="18"
-                                                       Height="18"
-                                                       Margin="0,2,0,0"
-                                                       VerticalAlignment="Top">
+                                                       Width="16"
+                                                       Height="16"
+                                                       VerticalAlignment="Center">
                                                     <Image.Style>
                                                         <Style TargetType="Image">
                                                             <Setter Property="Source" Value="{StaticResource IconSmartSwitch}"/>
@@ -1260,11 +1259,12 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                 </Image>
 
                                                 <!-- Spalte 2: strukturierte Device-Infos -->
-                                                <StackPanel Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Center">
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="12,0" VerticalAlignment="Center">
                                                     <TextBlock Text="{Binding Name, TargetNullValue=Device}"
-                                                               FontSize="14"
+                                                               FontSize="13"
                                                                FontWeight="SemiBold"
                                                                Foreground="#EAECEE"
+                                                               VerticalAlignment="Center"
                                                                ToolTip="Right click to rename">
                                                         <TextBlock.Style>
                                                             <Style TargetType="TextBlock">
@@ -1284,14 +1284,15 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                     </TextBlock>
 
                                                     <TextBlock Text="{Binding EntityId, StringFormat=#\{0\}}"
-                                                               Margin="0,2,0,0"
+                                                               Margin="8,0,0,0"
                                                                Foreground="#8D98A8"
-                                                               FontSize="11"/>
+                                                               FontSize="10"
+                                                               VerticalAlignment="Center"/>
 
-                                                    <Border Margin="0,8,0,0"
-                                                            Padding="8,3"
-                                                            CornerRadius="10"
-                                                            HorizontalAlignment="Left"
+                                                    <Border Margin="12,0,0,0"
+                                                            Padding="6,2"
+                                                            CornerRadius="8"
+                                                            VerticalAlignment="Center"
                                                             BorderThickness="1"
                                                             Background="#2E3646"
                                                             BorderBrush="#4A5670">
@@ -1312,7 +1313,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                             </Style>
                                                         </Border.Style>
 
-                                                        <TextBlock FontSize="10"
+                                                        <TextBlock FontSize="9"
                                                                    FontWeight="SemiBold"
                                                                    Foreground="#EAF2FF">
                                                             <TextBlock.Style>
@@ -1357,15 +1358,16 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
 
                                                 <!-- Spalte 3: Toggle NUR fÃ¼r SmartSwitch -->
                                                 <ToggleButton Grid.Column="2"
-                            Width="64" Height="26" Margin="8,0,0,0"
-                            IsChecked="{Binding IsOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            Width="60" Height="22" Margin="8,0,0,0"
+                            IsChecked="{Binding IsOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            VerticalAlignment="Center">
                                                     <ToggleButton.Style>
                                                         <Style TargetType="ToggleButton">
                                                             <Setter Property="Template">
                                                                 <Setter.Value>
                                                                     <ControlTemplate TargetType="ToggleButton">
                                                                         <Border x:Name="Bd" Background="{TemplateBinding Background}"
-                                  CornerRadius="13" BorderBrush="#66000000" BorderThickness="1" Padding="4">
+                                  CornerRadius="11" BorderBrush="#66000000" BorderThickness="1" Padding="2">
                                                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                                         </Border>
                                                                         <ControlTemplate.Triggers>
@@ -1383,6 +1385,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                             <Setter Property="Foreground" Value="White"/>
                                                             <Setter Property="Background" Value="IndianRed"/>
                                                             <Setter Property="Content" Value="OFF"/>
+                                                            <Setter Property="FontSize" Value="10"/>
                                                             <Setter Property="FontWeight" Value="SemiBold"/>
                                                             <Setter Property="Cursor" Value="Hand"/>
 
@@ -1405,16 +1408,17 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
 
                                                 <!-- Spalte 3: Toggle NUR fÃ¼r Gruppen -->
                                                 <Button Grid.Column="2" Content="TOGGLE"
-                                                    Width="64" Height="26" Margin="8,0,0,0"
+                                                    Width="60" Height="22" Margin="8,0,0,0"
                                                     Click="GroupToggle_Click"
-                                                    Tag="{Binding}">
+                                                    Tag="{Binding}"
+                                                    VerticalAlignment="Center">
                                                     <Button.Style>
                                                         <Style TargetType="Button">
                                                             <Setter Property="Template">
                                                                 <Setter.Value>
                                                                     <ControlTemplate TargetType="Button">
                                                                         <Border x:Name="Bd" Background="{TemplateBinding Background}"
-                                                                          CornerRadius="13" BorderBrush="#66000000" BorderThickness="1" Padding="4">
+                                                                          CornerRadius="11" BorderBrush="#66000000" BorderThickness="1" Padding="2">
                                                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                                         </Border>
                                                                     </ControlTemplate>
@@ -1423,6 +1427,7 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
                                                             <Setter Property="Visibility" Value="Collapsed"/>
                                                             <Setter Property="Foreground" Value="White"/>
                                                             <Setter Property="Background" Value="#E67E22"/>
+                                                            <Setter Property="FontSize" Value="10"/>
                                                             <Setter Property="FontWeight" Value="SemiBold"/>
                                                             <Setter Property="Cursor" Value="Hand"/>
                                                             <Style.Triggers>
@@ -1474,12 +1479,13 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
 
                                                 <!-- Spalte 3: Pill NUR bei StorageMonitor -->
                                                 <Border Grid.Column="2"
-        Padding="6,3"
-        Margin="8,0,0,0"
-        CornerRadius="13"
-         Background="{Binding Storage, Converter={StaticResource UpkeepBackgroundConverter}}"
-        BorderBrush="#55FFFFFF"
-        BorderThickness="1"
+                                                        Padding="6,2"
+                                                        Margin="8,0,0,0"
+                                                        CornerRadius="11"
+                                                        VerticalAlignment="Center"
+                                                        Background="{Binding Storage, Converter={StaticResource UpkeepBackgroundConverter}}"
+                                                        BorderBrush="#55FFFFFF"
+                                                        BorderThickness="1"
         Visibility="{Binding Kind, Converter={StaticResource KindToStorageVisibility}}"
         ToolTipService.Placement="Mouse"
         ToolTipService.InitialShowDelay="250"
