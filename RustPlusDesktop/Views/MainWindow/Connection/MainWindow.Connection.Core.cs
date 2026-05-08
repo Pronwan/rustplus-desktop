@@ -208,7 +208,6 @@ public partial class MainWindow
 
             AppendLog($"Connecting to ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
             await _rust.ConnectAsync(_vm.Selected);
-            _vm.Selected.IsConnected = true;
             AppendLog("Connected.");
             _connectedProfile = _vm.Selected;
 
@@ -237,17 +236,18 @@ public partial class MainWindow
 
             _vm.IsBusy = false;
             _vm.BusyText = "";
+            _vm.IsInitializing = true;
 
             // Start atomic parallel loading block to prevent UI "stuttering" during sequential awaits
             var initTasks = new List<Task>();
             
             initTasks.Add(LoadMapAsync());
-            initTasks.Add(StartPairingListenerUiAsync());
             initTasks.Add(UpdateServerStatusAsync());
             initTasks.Add(LoadTeamAsync());
             
             // Rehydrate local cache immediately (sync)
             RehydrateDevicesFromStorageInto(_vm.Selected);
+
             RehydrateCamerasFromStorageInto(_vm.Selected);
             SwitchCameraSourceTo(_vm.Selected);
             
@@ -266,6 +266,9 @@ public partial class MainWindow
             // Wait for core initialization to complete
             await Task.WhenAll(initTasks);
             
+            _vm.IsInitializing = false;
+            _vm.Selected.IsConnected = true;
+
             _vm.NotifyDevicesChanged();
             AppendLog($"Connection initialization complete. Server: {_vm.Selected.Name}");
 
@@ -298,6 +301,7 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
+            _vm.IsInitializing = false;
             _vm.IsBusy = false;
             _vm.BusyText = "";
             AppendLog("Fehler: " + ex.Message);

@@ -115,6 +115,13 @@ public class MainViewModel : INotifyPropertyChanged
         set { _isBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
     }
 
+    private bool _isInitializing;
+    public bool IsInitializing
+    {
+        get => _isInitializing;
+        set { _isInitializing = value; OnPropertyChanged(); }
+    }
+
     public bool IsPairingBusy
     {
         get => _isPairingBusy;
