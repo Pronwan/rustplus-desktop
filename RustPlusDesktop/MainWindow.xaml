@@ -1047,15 +1047,19 @@
                                         Margin="0,0,10,0">
                                         <Ellipse.Style>
                                             <Style TargetType="Ellipse">
-                                                <Setter Property="Fill" Value="#EF5350" /> 
+                                                <Setter Property="Fill" Value="#EF5350" />
                                                 <!--  Disconnected: Red  -->
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsBusy}" Value="True">
-                                                        <Setter Property="Fill" Value="#FFCA28" /> 
-                                                        <!--  Pairing/Connecting: Yellow  -->
+                                                        <Setter Property="Fill" Value="#FFCA28" />
+                                                        <!--  Connecting: Yellow  -->
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsInitializing}" Value="True">
+                                                        <Setter Property="Fill" Value="#FFCA28" />
+                                                        <!--  Initializing: Yellow  -->
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True">
-                                                        <Setter Property="Fill" Value="#66BB6A" /> 
+                                                        <Setter Property="Fill" Value="#66BB6A" />
                                                         <!--  Connected: Green  -->
                                                     </DataTrigger>
                                                 </Style.Triggers>
@@ -1073,6 +1077,10 @@
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsBusy}" Value="True">
                                                         <Setter Property="Text" Value="CONNECTING..." />
+                                                        <Setter Property="Foreground" Value="#FFCA28" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsInitializing}" Value="True">
+                                                        <Setter Property="Text" Value="INITIALIZING..." />
                                                         <Setter Property="Foreground" Value="#FFCA28" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True">
