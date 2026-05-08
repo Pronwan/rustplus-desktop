@@ -223,90 +223,83 @@ public partial class MainWindow
             }
 
             _lastChatTsForCurrentServer = null;
+
+            if (real != null)
+            {
+                try { await real.PrimeTeamChatAsync(); }
+                catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
+            }
+
             _vm.IsBusy = false;
             _vm.BusyText = "";
 
-            // ── PHASE 1: fast local-only setup (no network, instant) ──────────
+            await LoadMapAsync();
+            await StartPairingListenerUiAsync();
+
+            if (TrackingService.AutoLoadShops)
+            {
+                Dispatcher.Invoke(() => ChkShops.IsChecked = true);
+            }
+
             ClearUserOverlayElements();
             _visibleOverlayOwners.Add(_mySteamId);
             LoadOverlayFromDiskForPlayer(_mySteamId);
 
             RehydrateDevicesFromStorageInto(_vm.Selected);
-            RehydrateCamerasFromStorageInto(_vm.Selected);
-            SwitchCameraSourceTo(_vm.Selected);
-            _vm.NotifyDevicesChanged();
-            AppendLog($"Devices rehydrated: {_vm.Selected.Devices?.Count ?? 0}");
-            AppendLog($"Cams rehydrated: {_vm.Selected.CameraIds?.Count ?? 0}");
-
-            // ── PHASE 2: fire all heavy network fetches in parallel ───────────
-            _vm.BusyText = "Loading …";
-
-            var mapTask    = LoadMapAsync();
-            var statusTask = UpdateServerStatusAsync();
-            var teamTask   = LoadTeamAsync();
-
-            // Chat prime
-            var chatTask = real != null
-                ? real.PrimeTeamChatAsync().ContinueWith(t =>
-                    { if (t.IsFaulted) AppendLog("[chat] prime error: " + (t.Exception?.InnerException?.Message ?? t.Exception?.Message)); },
-                    TaskContinuationOptions.None)
-                : Task.CompletedTask;
-
-            // Device priming — only if devices exist
-            Task deviceTask = Task.CompletedTask;
             if (real != null && _vm.Selected?.Devices?.Any() == true)
             {
                 var storageIds = _vm.Selected.Devices
                     .Where(d => string.Equals(d.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
-                    .Select(d => d.EntityId).ToList();
+                    .Select(d => d.EntityId)
+                    .ToList();
 
-                var allIds = _vm.Selected.Devices.Select(d => d.EntityId);
-
-                deviceTask = Task.Run(async () =>
+                if (storageIds.Count > 0)
                 {
                     try
                     {
-                        await PrimeDeviceKindsAsync();
+                        await real.PrimeSubscriptionsAsync(storageIds);
+                        AppendLog($"PrimeSubscriptions: {storageIds.Count} StorageMonitors.");
                     }
-                    catch (Exception ex) { AppendLog("PrimeDeviceKinds Error: " + ex.Message); }
-
-                    if (storageIds.Count > 0)
+                    catch (Exception ex)
                     {
-                        try
-                        {
-                            await real.PrimeSubscriptionsAsync(storageIds);
-                            AppendLog($"PrimeSubscriptions: {storageIds.Count} StorageMonitors.");
-                        }
-                        catch (Exception ex) { AppendLog("PrimeSubscriptions (storage) Error: " + ex.Message); }
+                        AppendLog("PrimeSubscriptions Error: " + ex.Message);
                     }
-
-                    try
-                    {
-                        await real.PrimeSubscriptionsAsync(allIds);
-                        AppendLog($"PrimeSubscriptions: {_vm.Selected?.Devices?.Count ?? 0} IDs.");
-                    }
-                    catch (Exception ex) { AppendLog("PrimeSubscriptions Error: " + ex.Message); }
-                });
+                }
             }
 
-            // Wait for all network work to finish at the same time
-            await Task.WhenAll(mapTask, statusTask, teamTask, chatTask, deviceTask);
+            await PrimeDeviceKindsAsync();
+            _vm.NotifyDevicesChanged();
+            AppendLog($"Devices rehydrated: {_vm.Selected.Devices?.Count ?? 0}");
 
-            _vm.BusyText = "";
+            RehydrateCamerasFromStorageInto(_vm.Selected);
+            SwitchCameraSourceTo(_vm.Selected);
+            AppendLog($"Cams rehydrated: {_vm.Selected.CameraIds?.Count ?? 0}");
 
-            // ── PHASE 3: start polling loops now that initial data is ready ───
+            if (real != null && _vm.Selected?.Devices?.Any() == true)
+            {
+                try
+                {
+                    await real.PrimeSubscriptionsAsync(_vm.Selected.Devices.Select(d => d.EntityId));
+                    AppendLog($"PrimeSubscriptions: {_vm.Selected.Devices.Count} IDs.");
+                }
+                catch (Exception ex)
+                {
+                    AppendLog("PrimeSubscriptions Error: " + ex.Message);
+                }
+            }
+
             _statusCts?.Cancel();
             _statusCts = new CancellationTokenSource();
             _ = PollServerStatusLoopAsync(_statusCts.Token);
+            await UpdateServerStatusAsync();
+            _statusTimer.Start();
 
             StartTeamPolling();
+            await LoadTeamAsync();
             if (_overlayToolsVisible)
+            {
                 RebuildOverlayTeamBar();
-
-            await StartPairingListenerUiAsync();
-
-            if (TrackingService.AutoLoadShops)
-                Dispatcher.Invoke(() => ChkShops.IsChecked = true);
+            }
         }
         catch (Exception ex)
         {
