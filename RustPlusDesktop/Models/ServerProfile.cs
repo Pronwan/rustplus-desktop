@@ -31,7 +31,16 @@ public class ServerProfile : INotifyPropertyChanged
     public bool IsConnected
     {
         get => _isConnected;
-        set { _isConnected = value; OnProp(); }
+        set 
+        { 
+            if (_isConnected != value)
+            {
+                _isConnected = value; 
+                OnProp();
+                // Debug log to trace what sets this
+                // System.Diagnostics.Debug.WriteLine($"[DEBUG] IsConnected set to {value} for {Name}");
+            }
+        }
     }
 
     public bool UseFacepunchProxy { get; set; } = false;

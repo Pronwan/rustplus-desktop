@@ -91,14 +91,16 @@ public class MainViewModel : INotifyPropertyChanged
     public ObservableCollection<ServerProfile> Servers { get; } = new();
 
     private bool _isBusy;
+    private bool _isPairingBusy;
     private bool _isPairingRunning;
+
     public bool IsPairingRunning
     {
         get => _isPairingRunning;
         set { _isPairingRunning = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
     }
 
-    public bool CanStartPairing => !_isPairingRunning && !IsBusy;
+    public bool CanStartPairing => !_isPairingRunning && !IsBusy && !IsPairingBusy;
 
     private bool _isTrackingActive;
     public bool IsTrackingActive
@@ -110,7 +112,13 @@ public class MainViewModel : INotifyPropertyChanged
     public bool IsBusy
     {
         get => _isBusy;
-        set { _isBusy = value; OnPropertyChanged(); }
+        set { _isBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
+    }
+
+    public bool IsPairingBusy
+    {
+        get => _isPairingBusy;
+        set { _isPairingBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
     }
 
     private string _busyText = "Bitte warten …";

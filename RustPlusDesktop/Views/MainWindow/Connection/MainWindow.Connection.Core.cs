@@ -234,7 +234,6 @@ public partial class MainWindow
             _vm.BusyText = "";
 
             await LoadMapAsync();
-            await StartPairingListenerUiAsync();
 
             if (TrackingService.AutoLoadShops)
             {
