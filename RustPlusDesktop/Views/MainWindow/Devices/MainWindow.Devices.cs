@@ -1198,24 +1198,38 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
     {
         if (_vm?.Selected?.Devices == null || _vm.Selected.Devices.Count == 0) return;
 
-        AppendLog("[prime] probing device kinds …");
-        foreach (var d in _vm.Selected.Devices)
+        // Collect devices that actually need probing (no kind yet)
+        var toProbe = _vm.Selected.Devices.Where(d => string.IsNullOrEmpty(d.Kind) && !d.IsGroup).ToList();
+        if (toProbe.Count == 0) return;
+
+        AppendLog($"[prime] probing {toProbe.Count} device kinds (parallel) …");
+        
+        // Limit concurrency to 3 simultaneous probes to avoid overwhelming the socket
+        using var semaphore = new SemaphoreSlim(3);
+        var tasks = toProbe.Select(async d =>
         {
+            await semaphore.WaitAsync();
             try
             {
                 var r = await _rust.ProbeEntityAsync(d.EntityId);
                 if (!string.IsNullOrWhiteSpace(r.Kind))
                     d.Kind = r.Kind;
                 d.IsMissing = !r.Exists;
-                AppendLog($"[prime] #{d.EntityId} kind={d.Kind ?? "?"} exists={r.Exists}");
+                // AppendLog($"[prime] #{d.EntityId} kind={d.Kind ?? "?"} exists={r.Exists}");
             }
             catch (Exception ex)
             {
                 AppendLog($"[prime] #{d.EntityId} err: {ex.Message}");
             }
-            // Throttle requests to avoid flooding/disconnects
-            await Task.Delay(250);
-        }
+            finally
+            {
+                semaphore.Release();
+                // Minimal spacing per slot
+                await Task.Delay(150);
+            }
+        });
+
+        await Task.WhenAll(tasks);
         _vm?.NotifyDevicesChanged();
     }
 

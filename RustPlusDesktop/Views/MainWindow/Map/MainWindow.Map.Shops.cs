@@ -169,7 +169,18 @@ public partial class MainWindow
 
         try
         {
-            var shops = await real.GetVendingShopsAsync();
+            List<RustPlusClientReal.ShopMarker> shops = null;
+            int retries = 0;
+            while (retries < 3)
+            {
+                shops = await real.GetVendingShopsAsync();
+                if (shops != null && (shops.Count > 0 || _firstShopPollDone)) break;
+
+                AppendLog($"[shops] Initial poll returned 0 shops, retrying in 2s ({retries + 1}/3)...");
+                retries++;
+                await Task.Delay(2000);
+            }
+            if (shops == null) return;
 
             UpdateShopsUI(shops);
             _lastShops = shops;

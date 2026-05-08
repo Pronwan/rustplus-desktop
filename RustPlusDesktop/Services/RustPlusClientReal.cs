@@ -3615,7 +3615,15 @@ rp.connect();
             }
 
             var r = RProp(resp, "Response") ?? resp;
-            var mm = RProp(r, "MapMarkers") ?? r;
+            var mm = RProp(r, "MapMarkers");
+            
+            if (mm == null)
+            {
+                if (RProp(r, "Markers") != null || RProp(r, "Marker") != null || RProp(r, "Crates") != null)
+                    mm = r;
+                else
+                    return LoadFromCache<List<DynMarker>>("markers") ?? list;
+            }
 
             // Primärliste: "Markers" (alle dynamischen, inkl. Player/Events)
             object? markers = RProp(mm, "Markers") ?? RProp(mm, "Marker");
@@ -3909,10 +3917,21 @@ rp.connect();
             }
 
             var data = Prop(result, "Data") ?? result;
-
+            var mm = Prop(data, "MapMarkers") ?? data;
+            
             // prefer explicit vending list if present
-            var vend = Prop(data, "VendingMachines") ?? Prop(data, "Vending");
+            var vend = Prop(mm, "VendingMachines") ?? Prop(mm, "Vending");
             if (vend != null) ExtractFromCollection(vend, shops);
+            else if (mm != null && (Prop(mm, "Markers") != null || Prop(mm, "Marker") != null))
+            {
+                // Legit response, but no explicit VendingMachines list - generic scan will handle it
+            }
+            else if (mm != null)
+            {
+                // Unlegit response - missing expected containers
+                var cached = LoadFromCache<List<ShopMarker>>("shops");
+                if (cached != null && cached.Count > 0) return cached;
+            }
 
             // otherwise generic scan – but still needs type==3 inside ExtractFromCollection
             if (shops.Count == 0 && data != null)
@@ -4653,12 +4672,22 @@ rp.connect();
     {
         HookEventsIfNeeded();
 
-        foreach (var id in entityIds.Distinct())
+        var ids = entityIds.Distinct().ToList();
+        if (ids.Count == 0) return;
+
+        using var semaphore = new SemaphoreSlim(5);
+        var tasks = ids.Select(async id =>
         {
-            await EnsureSubOnceAsync(id);     // sorgt fürs Event
-           // await PokeEntityAsync(id, ct);      // triggert erstes Update
-            await Task.Delay(150, ct);
-        }
+            await semaphore.WaitAsync(ct);
+            try
+            {
+                await EnsureSubOnceAsync(id);
+                await Task.Delay(100, ct);
+            }
+            catch { }
+            finally { semaphore.Release(); }
+        });
+        await Task.WhenAll(tasks);
     }
 
     public async Task ConnectAsync(ServerProfile profile, CancellationToken ct)
