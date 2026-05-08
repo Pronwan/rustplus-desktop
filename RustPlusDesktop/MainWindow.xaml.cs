@@ -252,11 +252,14 @@ public partial class MainWindow : Window
 
         // MapTransform.Changed += (_, __) => UpdateMarkerPositions();
         HydrateSteamUiFromStorage();   // <= HIER
-        _statusTimer.Tick += async (_, __) => await UpdateServerStatusAsync();
+        // _statusTimer.Tick += async (_, __) => await UpdateServerStatusAsync();
         ListServers.ItemsSource = _vm.Servers;
         
         UpdateMasterToggleState();
         SyncAlertMenuItems();
+
+        // Auto-start FCM listener silently in background on app open
+        Loaded += (_, __) => _ = Task.Delay(1500).ContinueWith(_ => Dispatcher.Invoke(() => StartPairingSilent()));
 
         // One-time migration notice for v4.3 — Tracking & Stability improvements
         const string CurrentVersion = "4.3.1";
@@ -303,7 +306,6 @@ public partial class MainWindow : Window
         // Status → UI
         _pairing.Listening += (_, __) => Dispatcher.Invoke(() =>
         {
-            _vm.IsBusy = false; _vm.BusyText = "";
             _vm.IsPairingRunning = true;
             TxtPairingState.Text = "Pairing: listening…";
         });
@@ -314,10 +316,11 @@ public partial class MainWindow : Window
         });
         _pairing.Failed += (_, msg) => Dispatcher.Invoke(() =>
         {
-            _vm.IsBusy = false; _vm.BusyText = "";
             _vm.IsPairingRunning = false;
-            TxtPairingState.Text = "Pairing: error";
+            TxtPairingState.Text = "Pairing: listening…"; // retry silently
             AppendLog("[listener] " + msg);
+            // Auto-retry after a short delay
+            _ = Task.Delay(5000).ContinueWith(_ => Dispatcher.Invoke(() => StartPairingSilent()));
         });
 
 
@@ -1786,16 +1789,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return (s, offX, offY);
     }
 
-    private async void StatusTimer_Tick(object? sender, EventArgs e)
-    {
-        if (Interlocked.Exchange(ref _statusBusy, 1) == 1) return;
-        try
-        {
-            await UpdateServerStatusAsync();
-        }
-        finally { Interlocked.Exchange(ref _statusBusy, 0); }
-    }
-
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
         if (TrackingService.CloseToTrayEnabled)
@@ -2109,64 +2102,25 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     }
 
 
+    /// <summary>Starts the FCM pairing listener silently — no busy overlay, no blocking.</summary>
+    private void StartPairingSilent()
+    {
+        if (_pairing.IsRunning || _listenerStarting) return;
+        _listenerStarting = true;
+        TxtPairingState.Text = "Pairing: listening…";
+        _ = Task.Run(async () =>
+        {
+            try { await _pairing.StartAsync(); }
+            catch (Exception ex) { AppendLog("[pairing] silent start error: " + ex.Message); }
+            finally { Dispatcher.Invoke(() => _listenerStarting = false); }
+        });
+    }
+
     private async Task StartPairingListenerUiAsync()
     {
-        // Wenn schon gestartet: Busy sicherheitshalber runter + Status setzen
-        if (_pairing.IsRunning)
-        {
-            _vm.IsBusy = false;
-            _vm.BusyText = "";
-            TxtPairingState.Text = "Pairing: listening…";
-            AppendLog("Listener already running.");
-            return;
-        }
-        if (_listenerStarting) return;
-
-        try
-        {
-            _listenerStarting = true;
-            _vm.IsBusy = true;
-            _vm.BusyText = "Starting Pairing-Listener …";
-
-            var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-            EventHandler onListen = null!; 
-            onListen = (_, __) => { _pairing.Listening -= onListen; tcs.TrySetResult(true); };
-            EventHandler<string> onFail = null!;
-            onFail = (_, msg) => { _pairing.Failed -= onFail; AppendLog("[pairing] Listener failed: " + msg); tcs.TrySetResult(false); };
-
-            _pairing.Listening += onListen;
-            _pairing.Failed += onFail;
-
-            try
-            {
-                await _pairing.StartAsync();
-            }
-            catch (Exception exStart)
-            {
-                _pairing.Listening -= onListen;
-                _pairing.Failed -= onFail;
-                AppendLog("[pairing] StartAsync exception: " + exStart.Message);
-                tcs.TrySetResult(false);
-            }
-
-            // Kleines Safety-Timeout, damit das Overlay nie hängen bleibt
-            var completed = await Task.WhenAny(tcs.Task, Task.Delay(10000));
-            bool ok = (completed == tcs.Task) && await tcs.Task;
-
-            _vm.IsBusy = false;
-            _vm.BusyText = "";
-            if (ok) TxtPairingState.Text = "Pairing: listening…";
-            else TxtPairingState.Text = "Pairing: failed";
-        }
-        catch (Exception ex)
-        {
-            AppendLog("[pairing] UI Handler Error: " + ex.Message);
-            _vm.IsBusy = false;
-        }
-        finally
-        {
-            _listenerStarting = false;
-        }
+        // Delegate to silent start — no more busy overlay
+        StartPairingSilent();
+        await Task.CompletedTask;
     }
 
     // TRY PAIRING WITH EDGE METHOD (Right Click on Listener)
