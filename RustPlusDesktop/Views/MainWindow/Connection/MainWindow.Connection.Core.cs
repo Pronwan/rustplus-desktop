@@ -3,6 +3,7 @@ using Microsoft.Web.WebView2.Wpf;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -71,7 +72,9 @@ public partial class MainWindow
                 {
                     _vm.ServerPlayers = $"{st.Players}/{st.MaxPlayers}";
                     _vm.ServerQueue = (st.Queue >= 0) ? st.Queue.ToString() : "0";
-                    _vm.ServerTime = string.IsNullOrWhiteSpace(st.TimeString) ? "–" : st.TimeString;
+                    
+                    if (!string.IsNullOrWhiteSpace(st.TimeString))
+                        _vm.ServerTime = st.TimeString;
                 }
             }
         }
@@ -146,7 +149,9 @@ public partial class MainWindow
                     {
                         _vm.ServerPlayers = $"{st.Players}/{st.MaxPlayers}";
                         _vm.ServerQueue = (st.Queue >= 0) ? st.Queue.ToString() : "0";
-                        _vm.ServerTime = string.IsNullOrWhiteSpace(st.TimeString) ? "–" : st.TimeString;
+                        
+                        if (!string.IsNullOrWhiteSpace(st.TimeString))
+                            _vm.ServerTime = st.TimeString;
                     }
                 }
             }
@@ -233,8 +238,21 @@ public partial class MainWindow
             _vm.IsBusy = false;
             _vm.BusyText = "";
 
-            await LoadMapAsync();
-            await StartPairingListenerUiAsync();
+            // Start atomic parallel loading block to prevent UI "stuttering" during sequential awaits
+            var initTasks = new List<Task>();
+            
+            initTasks.Add(LoadMapAsync());
+            initTasks.Add(StartPairingListenerUiAsync());
+            initTasks.Add(UpdateServerStatusAsync());
+            initTasks.Add(LoadTeamAsync());
+            
+            // Rehydrate local cache immediately (sync)
+            RehydrateDevicesFromStorageInto(_vm.Selected);
+            RehydrateCamerasFromStorageInto(_vm.Selected);
+            SwitchCameraSourceTo(_vm.Selected);
+            
+            // Start probing device kinds in parallel (optimized in MainWindow.Devices.cs)
+            initTasks.Add(PrimeDeviceKindsAsync());
 
             if (TrackingService.AutoLoadShops)
             {
@@ -245,42 +263,21 @@ public partial class MainWindow
             _visibleOverlayOwners.Add(_mySteamId);
             LoadOverlayFromDiskForPlayer(_mySteamId);
 
-            RehydrateDevicesFromStorageInto(_vm.Selected);
-            if (real != null && _vm.Selected?.Devices?.Any() == true)
-            {
-                var storageIds = _vm.Selected.Devices
-                    .Where(d => string.Equals(d.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
-                    .Select(d => d.EntityId)
-                    .ToList();
-
-                if (storageIds.Count > 0)
-                {
-                    try
-                    {
-                        await real.PrimeSubscriptionsAsync(storageIds);
-                        AppendLog($"PrimeSubscriptions: {storageIds.Count} StorageMonitors.");
-                    }
-                    catch (Exception ex)
-                    {
-                        AppendLog("PrimeSubscriptions Error: " + ex.Message);
-                    }
-                }
-            }
-
-            await PrimeDeviceKindsAsync();
+            // Wait for core initialization to complete
+            await Task.WhenAll(initTasks);
+            
             _vm.NotifyDevicesChanged();
-            AppendLog($"Devices rehydrated: {_vm.Selected.Devices?.Count ?? 0}");
+            AppendLog($"Connection initialization complete. Server: {_vm.Selected.Name}");
 
-            RehydrateCamerasFromStorageInto(_vm.Selected);
-            SwitchCameraSourceTo(_vm.Selected);
-            AppendLog($"Cams rehydrated: {_vm.Selected.CameraIds?.Count ?? 0}");
-
+            // Finally, prime subscriptions for all devices to receive real-time updates
             if (real != null && _vm.Selected?.Devices?.Any() == true)
             {
                 try
                 {
-                    await real.PrimeSubscriptionsAsync(_vm.Selected.Devices.Select(d => d.EntityId));
-                    AppendLog($"PrimeSubscriptions: {_vm.Selected.Devices.Count} IDs.");
+                    // Batching all entity subscriptions into one call
+                    var allIds = _vm.Selected.Devices.Select(d => d.EntityId).Distinct().ToList();
+                    await real.PrimeSubscriptionsAsync(allIds);
+                    AppendLog($"Subscribed to {allIds.Count} entities.");
                 }
                 catch (Exception ex)
                 {
@@ -291,11 +288,9 @@ public partial class MainWindow
             _statusCts?.Cancel();
             _statusCts = new CancellationTokenSource();
             _ = PollServerStatusLoopAsync(_statusCts.Token);
-            await UpdateServerStatusAsync();
             _statusTimer.Start();
 
             StartTeamPolling();
-            await LoadTeamAsync();
             if (_overlayToolsVisible)
             {
                 RebuildOverlayTeamBar();
