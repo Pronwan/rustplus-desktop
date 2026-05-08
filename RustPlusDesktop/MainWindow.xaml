@@ -1,4 +1,4 @@
-﻿<Window x:Class="RustPlusDesk.Views.MainWindow"
+<Window x:Class="RustPlusDesk.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -18,6 +18,8 @@
         <conv:UpkeepBackgroundConverter x:Key="UpkeepBackgroundConverter" />
         <conv:StorageChipConverter x:Key="StorageChipConverter"/>
         <conv:KindToStorageVisibilityConverter x:Key="KindToStorageVisibility"/>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityInv" Invert="True" />
         <BitmapImage x:Key="IconStorageMonitor" UriSource="pack://application:,,,/Assets/icons/storagemonitor.png"/>
         <BitmapImage x:Key="IconSmartSwitch"    UriSource="pack://application:,,,/Assets/icons/smartswitch.png"/>
         <BitmapImage x:Key="IconSmartAlarm"     UriSource="pack://application:,,,/Assets/icons/smartalarm.png"/>
@@ -693,8 +695,6 @@
             <Setter Property="Margin" Value="0,0,0,8"/>
         </Style>
 
-        <conv:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
-        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityInv" Invert="True"/>
         <conv:NotNullToBoolConverter   x:Key="NotNull"/>
 
     </Window.Resources>
@@ -1134,8 +1134,6 @@ Background="DarkSlateGray"  BorderBrush="DarkGoldenrod"/>
 
                         <TextBlock Text="  |  Queue:" Margin="6,0,0,0"/>
                         <TextBlock Text="{Binding ServerQueue}" FontWeight="SemiBold" Margin="4,0,0,0"/>
-                        <TextBlock Text="  |  Server Time:" Margin="6,0,0,0"/>
-                        <TextBlock Text="{Binding ServerTime}" FontWeight="SemiBold" Margin="4,0,0,0"/>
                     </StackPanel>
                 </Grid>
 
@@ -2065,6 +2063,123 @@ Click="BtnToggleMiniMap_Click"/>
            Opacity="0.95"
            Source="pack://application:,,,/Assets/Images/TitleScreen-rust-plus-desktop.png"/>
                     <Image x:Name="ImgMap" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    
+                    <!-- TIME OVERLAY (Top Left) -->
+                    <Border x:Name="TimeOverlay" 
+                            VerticalAlignment="Top" 
+                            HorizontalAlignment="Left" 
+                            Margin="15" 
+                            Panel.ZIndex="1000"
+                            Background="#AA16181C"
+                            BorderBrush="#40FFFFFF"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="8,4">
+                        <StackPanel Orientation="Horizontal">
+                            <!-- Unknown Time Icon (Clock) -->
+                            <TextBlock Text="&#xE916;" 
+                                       FontFamily="Segoe MDL2 Assets" 
+                                       Foreground="#8D98A8" 
+                                       FontSize="14" 
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,6,0">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ServerTime}" Value="-">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ServerTime}" Value="–">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ServerTime}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ServerTime}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <!-- Day Icon -->
+                            <TextBlock Text="&#xE706;" 
+                                       FontFamily="Segoe MDL2 Assets" 
+                                       Foreground="#FFD166" 
+                                       FontSize="14" 
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,6,0">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsDay}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                            <!-- Hide if unknown -->
+                                            <DataTrigger Binding="{Binding ServerTime}" Value="-">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ServerTime}" Value="–">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <!-- Night Icon -->
+                            <TextBlock Text="&#xE708;" 
+                                       FontFamily="Segoe MDL2 Assets" 
+                                       Foreground="#A5B4FC" 
+                                       FontSize="14" 
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,6,0">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsDay}" Value="False">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                            <!-- Hide if unknown -->
+                                            <DataTrigger Binding="{Binding ServerTime}" Value="-">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ServerTime}" Value="–">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{Binding ServerTime}" 
+                                           Foreground="White" 
+                                           FontSize="12" 
+                                           FontWeight="Bold"/>
+                                <TextBlock Text="{Binding TimeUntilNextPhase}" 
+                                           Foreground="#8D98A8" 
+                                           FontSize="9" 
+                                           Margin="0,-1,0,0">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding TimeUntilNextPhase}" Value="">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    
                     <!-- LIVE EVENT DOCK (Top Right) -->
                     <StackPanel x:Name="EventDock" 
                                 Orientation="Vertical" 
