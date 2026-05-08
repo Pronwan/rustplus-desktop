@@ -259,7 +259,19 @@ public partial class MainWindow : Window
         SyncAlertMenuItems();
 
         // Auto-start FCM listener silently in background on app open
-        Loaded += (_, __) => _ = Task.Delay(1500).ContinueWith(_ => Dispatcher.Invoke(() => StartPairingSilent()));
+        Loaded += (_, __) => _ = Task.Delay(1500).ContinueWith(_ => Dispatcher.Invoke(() => 
+        {
+            StartPairingSilent();
+            
+            // Auto-connect if enabled and not already connected
+            if (TrackingService.AutoConnectEnabled && _vm.Selected != null && !_vm.Selected.IsConnected)
+            {
+                _ = Task.Run(async () => {
+                    await Task.Delay(1000); // Give Pairing Listener a head start
+                    await Dispatcher.InvokeAsync(async () => await PerformConnectAsync(true));
+                });
+            }
+        }));
 
         // One-time migration notice for v4.3 — Tracking & Stability improvements
         const string CurrentVersion = "4.3.1";
@@ -428,14 +440,6 @@ public partial class MainWindow : Window
         
         _monumentWatcher.OnDebug += (s, msg) => Dispatcher.BeginInvoke(new Action(() => AppendLog(msg)));
 
-        // Auto-connect if enabled
-        if (TrackingService.AutoConnectEnabled && _vm.Selected != null)
-        {
-            _ = Task.Run(async () => {
-                await Task.Delay(2000); // Give UI/WebView time to settle
-                await Dispatcher.InvokeAsync(async () => await PerformConnectAsync(true));
-            });
-        }
     }
 
     // CROSSHAIR \\
@@ -2105,14 +2109,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     /// <summary>Starts the FCM pairing listener silently — no busy overlay, no blocking.</summary>
     private void StartPairingSilent()
     {
-        if (_pairing.IsRunning || _listenerStarting) return;
+        if (_listenerStarting || _pairing.IsRunning) return;
         _listenerStarting = true;
+        _vm.IsPairingBusy = true;
         TxtPairingState.Text = "Pairing: listening…";
         _ = Task.Run(async () =>
         {
             try { await _pairing.StartAsync(); }
             catch (Exception ex) { AppendLog("[pairing] silent start error: " + ex.Message); }
-            finally { Dispatcher.Invoke(() => _listenerStarting = false); }
+            finally { Dispatcher.Invoke(() => { _listenerStarting = false; _vm.IsPairingBusy = false; }); }
         });
     }
 
@@ -2135,7 +2140,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (_pairing.IsRunning)
         {
-            _vm.IsBusy = false; _vm.BusyText = "";
+            _vm.IsPairingBusy = false; _vm.BusyText = "";
             TxtPairingState.Text = "Pairing: listening…";
             AppendLog("Listener already running.");
             return;
@@ -2145,7 +2150,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         try
         {
             _listenerStarting = true;
-            _vm.IsBusy = true;
+            _vm.IsPairingBusy = true;
             _vm.BusyText = "Starting Pairing-Listener (Edge) …";
 
             var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -2163,7 +2168,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _pairing.Listening -= onListen;
             _pairing.Failed -= onFail;
 
-            _vm.IsBusy = false; _vm.BusyText = "";
+            _vm.IsPairingBusy = false; _vm.BusyText = "";
             if (ok) TxtPairingState.Text = "Pairing: listening…";
         }
         finally { _listenerStarting = false; }
