@@ -2149,7 +2149,8 @@
                         x:Name="TabTeam"
                         Header="Team"
                         Style="{StaticResource PrettyTabItem}">
-                        <Grid Background="#181A1E">
+                        <Grid>
+                            <Grid Background="#181A1E">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="Auto" />
@@ -2289,38 +2290,30 @@
                             </ListBox>
 
                             <!--  Buttonleiste unten  -->
-                            <!--  Buttonleiste unten  -->
-                            <StackPanel
-                                Grid.Row="1"
-                                Margin="0,10,0,0"
-                                HorizontalAlignment="Right"
-                                Orientation="Horizontal">
-                                <!--  Profile marker toggle (default ON)  -->
-                                <CheckBox
-                                    x:Name="ChkProfileMarkers"
-                                    Margin="0,0,12,0"
-                                    Checked="ChkProfileMarkers_Toggled"
-                                    Content="Profile markers"
-                                    IsChecked="True"
-                                    Unchecked="ChkProfileMarkers_Toggled" />
+                            <Grid Grid.Row="1" Margin="0,10,0,0">
+                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                    <!--  Profile marker toggle (default ON)  -->
+                                    <CheckBox
+                                        x:Name="ChkProfileMarkers"
+                                        Margin="0,0,12,0"
+                                        Checked="ChkProfileMarkers_Toggled"
+                                        Content="Profile markers"
+                                        IsChecked="True"
+                                        Unchecked="ChkProfileMarkers_Toggled" />
 
-                                <!--  Death markers toggle (default OFF)  -->
-                                <CheckBox
-                                    x:Name="ChkDeathMarkers"
-                                    Margin="0,0,12,0"
-                                    Checked="ChkDeathMarkers_Toggled"
-                                    Content="Death markers"
-                                    IsChecked="False"
-                                    Unchecked="ChkDeathMarkers_Toggled" />
-
-                                <Button
-                                    Width="80"
-                                    Click="BtnOpenChat_Click"
-                                    Content="CHAT"
-                                    Style="{StaticResource GhostButton}" />
-                            </StackPanel>
+                                    <!--  Death markers toggle (default OFF)  -->
+                                    <CheckBox
+                                        x:Name="ChkDeathMarkers"
+                                        Margin="0,0,12,0"
+                                        Checked="ChkDeathMarkers_Toggled"
+                                        Content="Death markers"
+                                        IsChecked="False"
+                                        Unchecked="ChkDeathMarkers_Toggled" />
+                                </StackPanel>
+                            </Grid>
                         </Grid>
-                    </TabItem>
+                    </Grid>
+                </TabItem>
 
                     <!--  ===== CAMERAS =====  -->
                     <TabItem Header="Cameras" Style="{StaticResource PrettyTabItem}">
@@ -3200,6 +3193,255 @@
                                             FontSize="11"
                                             FontWeight="SemiBold"
                                             Text="Shop Search" />
+                                    </StackPanel>
+                                </Button>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!--  Integrated Chat Overlay (Roll-up)  -->
+                    <Border
+                        x:Name="ChatOverlayPanel"
+                        Width="450"
+                        Margin="12,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        Panel.ZIndex="1000"
+                        Background="Transparent">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Border
+                                x:Name="ChatContentBorder"
+                                Grid.Row="0"
+                                Height="420"
+                                Background="#16181C"
+                                BorderBrush="#40FFFFFF"
+                                BorderThickness="1"
+                                CornerRadius="12"
+                                RenderTransformOrigin="0.5,1"
+                                Visibility="Collapsed">
+                                <Border.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform x:Name="ChatScale" ScaleY="1" />
+                                        <TranslateTransform x:Name="ChatTranslate" Y="0" />
+                                    </TransformGroup>
+                                </Border.RenderTransform>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <!--  Header / Drag / Close Area  -->
+                                    <Grid Grid.Row="0" Background="#1E2126">
+                                        <TextBlock
+                                            Margin="12,0,0,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            FontSize="10"
+                                            FontWeight="Bold"
+                                            Foreground="#60FFFFFF"
+                                            Text="TEAM CHAT" />
+
+                                        <Button
+                                            x:Name="BtnCloseChatOverlay"
+                                            Width="26"
+                                            Height="26"
+                                            Margin="0,0,4,0"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Click="BtnCloseChatOverlay_Click"
+                                            Content="&#x2715;"
+                                            Cursor="Hand"
+                                            FontSize="12"
+                                            Foreground="#99FFFFFF"
+                                            ToolTip="Close Chat">
+                                            <Button.Resources>
+                                                <Style BasedOn="{StaticResource GhostButton}" TargetType="Button">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Foreground" Value="White" />
+                                                            <Setter Property="Background" Value="#20FFFFFF" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Resources>
+                                        </Button>
+                                    </Grid>
+
+                                    <!-- Chat-History -->
+                                    <ListBox x:Name="ChatList" 
+                                             Grid.Row="1"
+                                             Background="Transparent" 
+                                             BorderThickness="0"
+                                             ItemsSource="{Binding ChatMessages, RelativeSource={RelativeSource AncestorType=Window}}"
+                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                             HorizontalContentAlignment="Stretch">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <!-- Day Separator -->
+                                                    <Border Visibility="{Binding ShowSeparator, Converter={StaticResource BoolToVisibility}}"
+                                                            Background="#141A22"
+                                                            Padding="8,4" Margin="0,8,0,8" CornerRadius="8"
+                                                            HorizontalAlignment="Center">
+                                                        <TextBlock Text="{Binding SeparatorText}" 
+                                                                   FontSize="11" FontWeight="Bold"
+                                                                   Foreground="{DynamicResource TextSecondary}"/>
+                                                    </Border>
+
+                                                    <!-- Message Entry -->
+                                                    <Grid Margin="10,4,10,4">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="36"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        
+                                                        <Ellipse Width="28" Height="28" VerticalAlignment="Top" Margin="0,2,0,0">
+                                                            <Ellipse.Fill>
+                                                                <ImageBrush ImageSource="{Binding Avatar}" Stretch="UniformToFill"/>
+                                                            </Ellipse.Fill>
+                                                        </Ellipse>
+                                                        
+                                                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                                            <DockPanel>
+                                                                <TextBlock Text="{Binding Author}" FontWeight="Bold" Foreground="{DynamicResource Accent}"/>
+                                                                <TextBlock Text="{Binding Timestamp, StringFormat=HH:mm}" Margin="8,0,0,0" 
+                                                                           Foreground="{DynamicResource TextSecondary}" FontSize="10" VerticalAlignment="Bottom"/>
+                                                            </DockPanel>
+                                                            <TextBlock Text="{Binding Text}" TextWrapping="Wrap" Margin="0,2,0,0" Foreground="{DynamicResource TextPrimary}"/>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="ListBoxItem">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="ListBoxItem">
+                                                            <ContentPresenter />
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                    </ListBox>
+
+                                    <!-- Input-Bar -->
+                                    <StackPanel Grid.Row="2" Background="#141A22" Margin="0,0,0,12">
+                                        <!-- Inline Error Box -->
+                                        <Border x:Name="ChatErrorBox" 
+                                                Background="#33FF0000" 
+                                                BorderBrush="Red" 
+                                                BorderThickness="1" 
+                                                Margin="12,12,12,0" 
+                                                Padding="6" 
+                                                CornerRadius="4" 
+                                                Visibility="Collapsed">
+                                            <TextBlock x:Name="ChatErrorText" 
+                                                       Foreground="White" 
+                                                       FontSize="11" 
+                                                       TextWrapping="Wrap" 
+                                                       Text="Error message here"/>
+                                        </Border>
+                                        
+                                        <DockPanel Margin="12,12,12,0">
+                                            <Border DockPanel.Dock="Right" Margin="8,0,0,0" VerticalAlignment="Bottom">
+                                                <Button x:Name="BtnSendChat"
+                                                        Content="Send"
+                                                        Style="{StaticResource PrimaryButton}"
+                                                        Width="70"
+                                                        Height="36"
+                                                        Background="{DynamicResource Accent}"
+                                                        Foreground="White"
+                                                        BorderThickness="0"
+                                                        Click="BtnSendChat_Click"/>
+                                            </Border>
+                                            
+                                            <Border Background="#1E2126"
+                                                    BorderBrush="#40FFFFFF"
+                                                    BorderThickness="1"
+                                                    CornerRadius="6"
+                                                    Padding="6"
+                                                    Height="36">
+                                                <TextBox x:Name="TxtChatInput"
+                                                         Background="Transparent"
+                                                         BorderThickness="0"
+                                                         Foreground="{DynamicResource TextPrimary}"
+                                                         VerticalContentAlignment="Center"
+                                                         MaxLength="128"
+                                                         MaxLines="1"
+                                                         KeyDown="TxtChatInput_KeyDown"/>
+                                            </Border>
+                                        </DockPanel>
+
+                                        <Button x:Name="BtnOpenChatCommands" Click="BtnOpenChatCommands_Click" HorizontalAlignment="Left" Background="Transparent" BorderThickness="0" ToolTip="Chat Commands Settings" Padding="4" Margin="12,4,0,0">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="⚙" FontSize="16" Foreground="#888" VerticalAlignment="Center" />
+                                                <TextBlock Text="Chat Commands" FontSize="10" Foreground="#888" VerticalAlignment="Center" Margin="4,0,0,0" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+
+                                    <!--  Chat Commands Overlay  -->
+                                    <views:ChatCommandsOverlay x:Name="ChatCommandsOverlay" Grid.RowSpan="3" Visibility="Collapsed" CloseRequested="BtnCloseChatCommands_Click" Panel.ZIndex="2000" />
+                                </Grid>
+                            </Border>
+
+                            <Border
+                                x:Name="BtnChatToggleBorder"
+                                Grid.Row="1"
+                                Width="160"
+                                Height="26"
+                                HorizontalAlignment="Left"
+                                Background="#16181C"
+                                BorderBrush="#40FFFFFF"
+                                BorderThickness="1,1,1,0"
+                                CornerRadius="8,8,0,0">
+                                <Button
+                                    x:Name="BtnChatToggle"
+                                    Padding="0"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Click="BtnToggleChat_Click">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border
+                                                x:Name="border"
+                                                Background="{TemplateBinding Background}"
+                                                CornerRadius="8,8,0,0">
+                                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="border" Property="Background" Value="#30FFFFFF" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock
+                                            Margin="0,0,6,0"
+                                            VerticalAlignment="Center"
+                                            FontFamily="Segoe MDL2 Assets"
+                                            FontSize="12"
+                                            Text="&#xE8F2;" />
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            FontSize="11"
+                                            FontWeight="SemiBold"
+                                            Text="Team Chat" />
                                     </StackPanel>
                                 </Button>
                             </Border>

@@ -345,17 +345,9 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
 
     private void PlayAlarmAudio(SmartDevice? dev)
     {
-        if (dev == null)
-        {
-            AppendLog("[audio/debug] Skipping: dev is null");
-            return;
-        }
-        if (!dev.AudioEnabled)
-        {
-            AppendLog($"[audio/debug] Skipping: AudioEnabled is false for #{dev.EntityId}");
-            return;
-        }
+        if (dev == null || !dev.AudioEnabled) return;
         
+        string baseDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
         string audioFile = "";
         
         if (!string.IsNullOrWhiteSpace(dev.AudioFilePath))
@@ -364,11 +356,18 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
         }
         else
         {
-            audioFile = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "icons", "rust-c4.mp3");
+            // Standard-Pfad unter Assets
+            audioFile = System.IO.Path.Combine(baseDir, "Assets", "icons", "rust-c4.mp3");
+            if (!System.IO.File.Exists(audioFile))
+            {
+                // Fallback für alte Ordnerstruktur
+                audioFile = System.IO.Path.Combine(baseDir, "icons", "rust-c4.mp3");
+            }
         }
 
         if (System.IO.File.Exists(audioFile))
         {
+            var fullPath = System.IO.Path.GetFullPath(audioFile);
             try
             {
                 Dispatcher.Invoke(() =>
@@ -376,16 +375,18 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
                     if (_alarmPlayer == null)
                     {
                         _alarmPlayer = new System.Windows.Media.MediaPlayer();
+                        _alarmPlayer.MediaFailed += (s, e) => AppendLog($"[audio] Media Failed: {e.ErrorException?.Message}");
+                        // Erst abspielen, wenn der Stream bereit ist, um "Kratzen" zu vermeiden
+                        _alarmPlayer.MediaOpened += (s, e) => _alarmPlayer.Play();
                     }
-                    AppendLog($"[audio] Playing: {audioFile}");
-                    _alarmPlayer.Open(new Uri(audioFile, UriKind.Absolute));
+                    AppendLog($"[audio] Loading: {fullPath}");
+                    _alarmPlayer.Open(new Uri(fullPath, UriKind.Absolute));
                     _alarmPlayer.Volume = 1.0;
-                    _alarmPlayer.Play();
                 });
             }
             catch (Exception ex)
             {
-                AppendLog($"[audio] Error playing alarm audio: {ex.Message}");
+                AppendLog($"[audio] Error playing: {ex.Message}");
             }
         }
         else

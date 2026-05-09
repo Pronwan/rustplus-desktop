@@ -26,7 +26,16 @@ public class MainViewModel : INotifyPropertyChanged
     {
         if (_lastStatusRealTime.HasValue && _lastStatusGameTime.HasValue)
         {
-            double elapsedRealMins = (DateTime.UtcNow - _lastStatusRealTime.Value).TotalMinutes;
+            var now = DateTime.UtcNow;
+            
+            // Timeout: if no server update for > 2 mins, reset display
+            if ((now - _lastStatusRealTime.Value).TotalMinutes > 2.0)
+            {
+                ServerTime = "–"; // This will clear baseline via UpdateInGameTimeProperties
+                return;
+            }
+
+            double elapsedRealMins = (now - _lastStatusRealTime.Value).TotalMinutes;
             double currentHours = _lastStatusGameTime.Value;
             
             // Use observed speed to extrapolate
@@ -213,6 +222,8 @@ public class MainViewModel : INotifyPropertyChanged
         if (string.IsNullOrWhiteSpace(timeStr) || timeStr == "-" || timeStr == "–")
         {
             TimeUntilNextPhase = "";
+            _lastStatusRealTime = null;
+            _lastStatusGameTime = null;
             return;
         }
 
