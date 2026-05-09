@@ -223,6 +223,11 @@ public partial class MainWindow
                 real.StorageSnapshotReceived += OnStorageSnapshot;
                 real.ConnectionLost -= OnConnectionLost;
                 real.ConnectionLost += OnConnectionLost;
+                
+                // Add global chat subscription for background bot commands
+                real.TeamChatReceived -= Real_TeamChatReceived;
+                real.TeamChatReceived += Real_TeamChatReceived;
+
                 real.EnsureEventsHooked();
             }
 

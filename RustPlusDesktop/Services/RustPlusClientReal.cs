@@ -1730,6 +1730,7 @@ rp.connect();
     // ---------- END DUMP MAP INFO BUTTON -------------- //
 
     private bool _eventsHooked;
+    private bool _isChatPrimed;
 
     // Rust+ feuert dieses Event, sobald der Chat „geprimed“ wurde.
     // Wir mappen es auf unser eigenes DTO und reichen es weiter.
@@ -2346,6 +2347,7 @@ rp.connect();
     public async Task PrimeTeamChatAsync(CancellationToken ct = default)
     {
         if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+        if (_isChatPrimed) return; // Bereits geprimed für diese Verbindung
 
         // Event einmalig verdrahten
         try
@@ -2356,7 +2358,12 @@ rp.connect();
         catch { /* tolerant */ }
 
         // Einmaliger „Prime“-Call, damit Events danach geliefert werden
-        try { _ = await GetTeamChatHistoryAsync(ct: ct).ConfigureAwait(false); } catch { /* egal */ }
+        try 
+        { 
+            _ = await GetTeamChatHistoryAsync(ct: ct).ConfigureAwait(false); 
+            _isChatPrimed = true; 
+        } 
+        catch { /* egal */ }
     }
 
     // Kleiner Helfer wie an anderer Stelle bereits genutzt:
@@ -4315,8 +4322,8 @@ rp.connect();
             }
         }
 
-        // Fallbacks glätten (lieber "–" als 0/0)
-        var tStr = string.IsNullOrWhiteSpace(timeStr) ? "–" : timeStr;
+        // Fallbacks glätten (lieber null als 0/0, damit UI-Poll es ignoriert)
+        var tStr = string.IsNullOrWhiteSpace(timeStr) ? null : timeStr;
         return new ServerStatus(players, maxPlayers, queue, tStr);
     }
 
@@ -4692,7 +4699,7 @@ rp.connect();
 
     public async Task ConnectAsync(ServerProfile profile, CancellationToken ct)
     {
-        
+        _isChatPrimed = false; // Reset bei Neuverbindung
         if (profile is null) throw new ArgumentNullException(nameof(profile));
         if (!ulong.TryParse(profile.SteamId64, out var steamId))
             throw new ArgumentException("Ungültige SteamID64.", nameof(profile));
