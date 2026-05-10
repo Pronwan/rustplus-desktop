@@ -67,13 +67,8 @@ public partial class MainWindow : Window
     private readonly System.Windows.Threading.DispatcherTimer _statusTimer =
     new() { Interval = TimeSpan.FromSeconds(30) };
     // Chat-Inkrement-Marker pro Fenster
-    private long _chatLastTicks = 0;          // zuletzt gesehener Timestamp (Ticks)
-    private string? _chatLastKey = null;      // Fallback bei exakt gleichem Timestamp
     private int _statusBusy = 0;
-    private ChatWindow? _chatWin;
-    private CancellationTokenSource? _chatCts;
-    private readonly List<TeamChatMessage> _chatHistoryLog = new();
-    private DateTime? _lastChatTsForCurrentServer = null;
+
     private Viewbox? _mapView;
     private Grid? _scene;
     private bool _isPanning;
@@ -169,17 +164,17 @@ public partial class MainWindow : Window
             ?? Assembly.GetExecutingAssembly().GetName().Version?.ToString()      // 4-teilig
             ?? "0.0.0";
 
-        public static string VersionShort => Normalize(VersionRaw);
+        public static string VersionShort => NormalizeVer(VersionRaw);
 
         public static Version VersionForCompare =>
             Version.TryParse(VersionShort, out var v) ? v : new Version(0, 0, 0);
 
-        private static string Normalize(string s)
+        private static string NormalizeVer(string s)
         {
             if (string.IsNullOrWhiteSpace(s)) return "0.0.0";
             s = s.Trim();
             if (s.StartsWith("v", StringComparison.OrdinalIgnoreCase)) s = s[1..];
-            int cut = s.IndexOfAny(new[] { '-', '+' }); // "-rc1" oder "+commit"
+            int cut = s.IndexOfAny(new[] { '-', '+' }); 
             return cut > 0 ? s[..cut] : s;
         }
     }
@@ -209,10 +204,10 @@ public partial class MainWindow : Window
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
         InitializeComponent();
-        this.Title = $"RustPlusDesk v{AppInfo.VersionShort}";
+        this.Title = $"RustPlusDesk v{AppInfo.VersionRaw}";
         
         if (FindName("TxtVersion") is TextBlock txt)
-            txt.Text = $"v{AppInfo.VersionShort}";
+            txt.Text = $"v{AppInfo.VersionRaw}";
         InitCameraUi();
         ApplySettings();
         _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
@@ -273,27 +268,25 @@ public partial class MainWindow : Window
             }
         }));
 
-        // One-time migration notice for v4.3 — Tracking & Stability improvements
-        const string CurrentVersion = "4.3.1";
-        bool alreadySawV43 = (TrackingService.LastSeenVersion == "4.3" || TrackingService.LastSeenVersion == "4.3.1");
+        // One-time migration notice for v4.4 — Chat Commands & API Optimizations
+        const string AppVersion = "4.4.0-beta1";
+        bool alreadySawV44 = (TrackingService.LastSeenVersion == AppVersion);
+        
+        // Popup anzeigen, wenn wir upgraden (vorherige Version vorhanden und ungleich der aktuellen)
+        bool isUpgrade = !string.IsNullOrEmpty(TrackingService.LastSeenVersion) && TrackingService.LastSeenVersion != AppVersion;
 
-        if (!alreadySawV43)
+        if (!alreadySawV44)
         {
-            TrackingService.LastSeenVersion = CurrentVersion;
-            Dispatcher.InvokeAsync(() =>
+            TrackingService.LastSeenVersion = AppVersion;
+
+            if (isUpgrade)
             {
-                var dlg = new Views.MigrationNoticeWindow { Owner = this };
-                dlg.ShowDialog();
-                if (dlg.ShouldReset)
+                Dispatcher.InvokeAsync(() =>
                 {
-                    SetAllAlerts(false);
-                    TrackingService.AnnounceSpawnsMaster = false;
-                    SetAllAlerts(true);
-                    TrackingService.AnnounceSpawnsMaster = true;
-                    UpdateMasterToggleState();
-                    SyncAlertMenuItems();
-                }
-            }, System.Windows.Threading.DispatcherPriority.Loaded);
+                    var dlg = new Views.MigrationNoticeWindow { Owner = this };
+                    dlg.ShowDialog();
+                }, System.Windows.Threading.DispatcherPriority.Loaded);
+            }
         }
 
         // Initial tracking status update and hook global events
@@ -954,12 +947,8 @@ public partial class MainWindow : Window
 
         _lastChatTsForCurrentServer = null;
 
-        // UI leeren
-        if (_chatWin != null)
-        {
-             try { _chatWin.Close(); } catch { }
-             _chatWin = null;
-        }
+        // UI leeren - Overlay handled by ChatMessages clearing
+        ChatMessages.Clear();
 
         if (p == null) return;
 
@@ -1664,6 +1653,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
         }
 
+        // FUZZY MATCH: If we couldn't map the device via ID (e.g. generic FCM push without ID),
+        // check if there is EXACTLY ONE Smart Alarm registered across all servers.
+        // If so, we can safely assume this alarm belongs to it and respect its settings.
+        if (dev == null)
+        {
+            var allAlarms = _vm.Servers.SelectMany(s => s.Devices).Where(d => d.Kind == "SmartAlarm").ToList();
+            if (allAlarms.Count == 1)
+            {
+                dev = allAlarms[0];
+                n = n with { EntityId = dev.EntityId };
+                AppendLog($"[alarm/debug] ({source}) Fuzzy matched single alarm device: {dev.Name} (ID: {dev.EntityId})");
+            }
+        }
+
         // Metadaten cachen (FCM liefert Text, WS liefert ID)
         if (source == "FCM" && n.Message != "Alarm activated!")
         {
@@ -2261,149 +2264,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     // death pins per player
     private readonly Dictionary<ulong, FrameworkElement> _deathPins = new();
 
-    private async void BtnOpenChat_Click(object sender, RoutedEventArgs e)
-    {
-        if (_rust is not RustPlusClientReal real)
-        {
-            MessageBox.Show("Not connected.");
-            return;
-        }
 
-        if (!(_vm.Selected?.IsConnected ?? false))
-        {
-            MessageBox.Show("Please connect to a server first.");
-            return;
-        }
-
-        try
-        {
-            real.TeamChatReceived -= Real_TeamChatReceived;
-            real.TeamChatReceived += Real_TeamChatReceived;
-            await real.PrimeTeamChatAsync();
-        }
-        catch (InvalidOperationException)
-        {
-            MessageBox.Show("Please connect to a server first.");
-            return;
-        }
-        catch (Exception ex)
-        {
-            AppendLog("PrimeChat failed: " + ex.Message);
-            MessageBox.Show("Chat is not available right now.");
-            return;
-        }
-
-        // Fenster öffnen
-        if (_chatWin == null || !_chatWin.IsLoaded)
-        {
-            _chatWin = new Views.ChatWindow(async msg => await real.SendTeamMessageAsync(msg))
-            {
-                Owner = this
-            };
-            _chatWin.Closed += (_, __) => _chatWin = null;
-
-            // WICHTIG: Hier spielen wir den alten Verlauf ab (Replay)
-            // Da wir die gespeicherten Messages nutzen, stimmen die Uhrzeiten (Timestamp)!
-            lock (_chatHistoryLog)
-            {
-                foreach (var m in _chatHistoryLog.OrderBy(x => x.Timestamp))
-                {
-                    _chatWin.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime());
-                }
-            }
-
-            _chatWin.Show();
-        }
-        else
-        {
-            _chatWin.Activate();
-        }
-
-        // Fehlende History vom Server nachladen
-        try
-        {
-            var history = await real.GetTeamChatHistoryAsync(_lastChatTsForCurrentServer, limit: 120);
-            foreach (var m in history.OrderBy(m => m.Timestamp))
-                AppendChatIfNew(m);
-
-            if (history.Count > 0)
-                _lastChatTsForCurrentServer = history.Max(x => x.Timestamp);
-        }
-        catch (Exception ex)
-        {
-            AppendLog("Chat-History Error: " + ex.Message);
-        }
-    }
-    private void Real_TeamChatReceived(object? sender, TeamChatMessage m)
-    {
-        Dispatcher.Invoke(() =>
-        {
-            // Robust Check: Ist diese Nachricht (Inhalt + Autor) bereits in den letzten 100 Zeilen?
-            lock (_chatHistoryLog)
-            {
-                var normAuthor = (m.Author ?? "").Trim().ToLowerInvariant();
-                var normText = (m.Text ?? "").Trim().ToLowerInvariant();
-
-                int start = Math.Max(0, _chatHistoryLog.Count - 100);
-                for (int i = _chatHistoryLog.Count - 1; i >= start; i--)
-                {
-                    var existing = _chatHistoryLog[i];
-                    if (string.Equals(existing.Author, normAuthor, StringComparison.OrdinalIgnoreCase) && 
-                        string.Equals(existing.Text, normText, StringComparison.OrdinalIgnoreCase)) 
-                        return; // Duplikat ignorieren
-                }
-                _chatHistoryLog.Add(m);
-            }
-
-            // ab hier gilt sie als "neu"
-            if (m.Text.Trim().Equals("!leader", StringComparison.OrdinalIgnoreCase))
-            {
-                if (m.SteamId != 0 && _rust is RustPlusClientReal client)
-                {
-                    _ = client.PromoteToLeaderAsync(m.SteamId);
-                    AppendLog($"[Auto-Promote] {m.Author} ({m.SteamId}) requested promotion.");
-                }
-            }
-
-            _chatWin?.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime());
-            
-            // Timestamp für History-Anfragen aktuell halten
-            if (!_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value)
-                _lastChatTsForCurrentServer = m.Timestamp;
-        });
-    }
-
-    private bool AppendChatIfNew(TeamChatMessage m)
-    {
-        lock (_chatHistoryLog)
-        {
-            var normAuthor = (m.Author ?? "").Trim().ToLowerInvariant();
-            var normText = (m.Text ?? "").Trim().ToLowerInvariant();
-
-            // Robust Check: Ist diese Nachricht (Inhalt + Autor) bereits in den letzten 100 Zeilen?
-            int start = Math.Max(0, _chatHistoryLog.Count - 100);
-            for (int i = _chatHistoryLog.Count - 1; i >= start; i--)
-            {
-                var existing = _chatHistoryLog[i];
-                if (string.Equals(existing.Author, normAuthor, StringComparison.OrdinalIgnoreCase) && 
-                    string.Equals(existing.Text, normText, StringComparison.OrdinalIgnoreCase)) 
-                    return false; // Duplikat ignorieren
-            }
-            _chatHistoryLog.Add(m);
-        }
-
-        if (!_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value)
-            _lastChatTsForCurrentServer = m.Timestamp;
-
-        _chatWin?.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime());
-        return true;
-    }
-
-    private void OnTeamChatReceived(object? _, RustPlusDesk.Models.TeamChatMessage m)
-    {
-        if (_chatWin is null || !_chatWin.IsLoaded) return;
-        Dispatcher.Invoke(() => _chatWin.AddIncoming(m.Author, m.Text, m.Timestamp));
-    }
 
     private void Monuments_Checked(object sender, RoutedEventArgs e)
     {
@@ -2421,12 +2282,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             fe.Visibility = on ? Visibility.Visible : Visibility.Collapsed;
     }
 
-    private void OnChatReceived(object? sender, TeamChatMessage e)
-    {
-        // Nur anzeigen, wenn das Chatfenster offen ist
-        if (_chatWin is { IsLoaded: true })
-            _chatWin.AddIncoming(e.Author, e.Text);
-    }
+
 
     private void HydrateSteamUiFromStorage()
     {
@@ -3015,29 +2871,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    private async Task SendTeamChatSafeAsync(string text)
-    {
-        // Thread-safe: called from both UI thread (DynEvents) and background threads (MonumentWatcher)
-        try
-        {
-            if (_rust == null) return;
-            var t = _rust.GetType();
-            var m =
-                t.GetMethod("SendTeamMessageAsync", new[] { typeof(string), typeof(CancellationToken) }) ??
-                t.GetMethod("SendTeamMessageAsync", new[] { typeof(string) }) ??
-                t.GetMethod("SendChatMessageAsync", new[] { typeof(string) }) ??
-                t.GetMethod("SendMessageAsync", new[] { typeof(string) });
-
-            if (m == null) return;
-
-            object? ret = (m.GetParameters().Length == 2)
-                ? m.Invoke(_rust, new object[] { text, CancellationToken.None })
-                : m.Invoke(_rust, new object[] { text });
-
-            if (ret is Task task) await task.ConfigureAwait(false);
-        }
-        catch { /* ignore send errors */ }
-    }
 
 
     private static string EventKindText(int type) => type switch
@@ -4222,15 +4055,30 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
 
     // ====== HILFE-FUNKTION SOUND ======
+    private System.Media.SoundPlayer? _shopSoundPlayer;
+
     private void PlayShopAlertSound()
     {
         try
         {
-            string path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cash.wav");
+            string baseDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
+            string path = System.IO.Path.Combine(baseDir, "Assets", "cash.wav");
+            if (!System.IO.File.Exists(path)) path = System.IO.Path.Combine(baseDir, "cash.wav");
+
             if (System.IO.File.Exists(path))
             {
-                var player = new System.Media.SoundPlayer(path);
-                player.Play();
+                var fullPath = System.IO.Path.GetFullPath(path);
+                // SoundPlayer ist für WAV-Dateien effizienter und verhindert Knirschen
+                if (_shopSoundPlayer == null)
+                {
+                    _shopSoundPlayer = new System.Media.SoundPlayer(fullPath);
+                }
+                else if (_shopSoundPlayer.SoundLocation != fullPath)
+                {
+                    _shopSoundPlayer.SoundLocation = fullPath;
+                }
+                
+                _shopSoundPlayer.Play();
             }
         }
         catch { /* ignore */ }
@@ -4631,11 +4479,30 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             var (latest, tag, dlUrl) = latestInfo.Value;
             AppendLog($"Current: {AppInfo.VersionShort} | Latest: {latest} ({tag})");
 
-            if (latest <= curr)
+            if (latest < curr)
             {
                 _vm.IsBusy = false; _vm.BusyText = "";
                 System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
+            }
+
+            if (latest == curr)
+            {
+                // Spezialfall: Wenn wir eine Beta haben (Raw enthält '-') und GitHub den exakt gleichen numerischen Tag hat,
+                // aber der GitHub-Tag KEIN '-' enthält, dann ist GitHub neuer (Final Release).
+                bool localIsBeta = AppInfo.VersionRaw.Contains("-", StringComparison.OrdinalIgnoreCase);
+                bool remoteIsBeta = tag.Contains("-", StringComparison.OrdinalIgnoreCase);
+
+                if (localIsBeta && !remoteIsBeta)
+                {
+                    // GitHub ist Final, wir sind Beta -> Update verfügbar!
+                }
+                else
+                {
+                    _vm.IsBusy = false; _vm.BusyText = "";
+                    System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
             }
 
             // neuere Version vorhanden

@@ -4,7 +4,7 @@
 ; =============================================
 
 #define MyAppName      "RustPlusDesk"
-#define MyAppVersion   "4.3.1"
+#define MyAppVersion   "4.4.0-beta1"
 #define MyAppPublisher "Pronwan" 
 #define MyAppURL       "https://github.com/Pronwan/rustplus-desktop"
 #define MyAppExeName   "RustPlusDesk.exe"
@@ -45,7 +45,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "..\bin\Installer\publish\*"; DestDir: "{app}"; Flags: ignoreversion
 
 ; 2. Die Unterordner direkt aus dem Release-Verzeichnis
-Source: "..\bin\Installer\publish\icons\*";    DestDir: "{app}\icons";    Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\bin\Installer\publish\Assets\icons\*";    DestDir: "{app}\Assets\icons";    Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\bin\Installer\publish\runtime\*";  DestDir: "{app}\runtime";  Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]

@@ -45,11 +45,109 @@ public class ServerProfile : INotifyPropertyChanged
 
     public bool UseFacepunchProxy { get; set; } = false;
 
+    public ServerProfile()
+    {
+        Devices.CollectionChanged += (s, e) => NotifySmartSwitchesChanged();
+    }
+
     public ObservableCollection<SmartDevice> Devices { get; set; } = new();
     public ObservableCollection<string> CameraIds { get; set; } = new();
 
     public double LearnedDaySpeed { get; set; } = 12.0 / 50.0;
     public double LearnedNightSpeed { get; set; } = 12.0 / 10.0;
+
+    // --- CHAT COMMANDS SETTINGS ---
+    private bool _chatCommandsEnabled;
+    public bool ChatCommandsEnabled
+    {
+        get => _chatCommandsEnabled;
+        set { _chatCommandsEnabled = value; OnProp(); }
+    }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public System.Collections.Generic.IEnumerable<SmartDevice> SmartSwitches 
+    {
+        get
+        {
+            var list = new System.Collections.Generic.List<SmartDevice>();
+            list.Add(new SmartDevice { Name = "(None)", EntityId = 0 });
+            list.AddRange(System.Linq.Enumerable.Where(Devices, d => d.Kind == "SmartSwitch"));
+            return list;
+        }
+    }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool HasSmartSwitches => System.Linq.Enumerable.Any(SmartSwitches);
+
+    public void NotifySmartSwitchesChanged()
+    {
+        OnProp(nameof(SmartSwitches));
+        OnProp(nameof(HasSmartSwitches));
+    }
+
+
+    private string _cmdPop = "pop";
+    public string CmdPop
+    {
+        get => _cmdPop;
+        set { _cmdPop = value?.TrimStart('!') ?? ""; OnProp(); }
+    }
+
+    private string _cmdTime = "time";
+    public string CmdTime
+    {
+        get => _cmdTime;
+        set { _cmdTime = value?.TrimStart('!') ?? ""; OnProp(); }
+    }
+
+    private string _cmdPromote = "promote";
+    public string CmdPromote
+    {
+        get => _cmdPromote;
+        set { _cmdPromote = value?.TrimStart('!') ?? ""; OnProp(); }
+    }
+
+    private string _cmdDeepSea = "deepsea";
+    public string CmdDeepSea
+    {
+        get => _cmdDeepSea;
+        set { _cmdDeepSea = value?.TrimStart('!') ?? ""; OnProp(); }
+    }
+
+    private string _cmdCargo = "cargo";
+    public string CmdCargo
+    {
+        get => _cmdCargo;
+        set { _cmdCargo = value?.TrimStart('!') ?? ""; OnProp(); }
+    }
+
+    private string _cmdSwitch1 = "switch1";
+    public string CmdSwitch1
+    {
+        get => _cmdSwitch1;
+        set { _cmdSwitch1 = value?.TrimStart('!') ?? ""; OnProp(); }
+    }
+
+    private uint? _boundSwitchId1;
+    public uint? BoundSwitchId1
+    {
+        get => _boundSwitchId1;
+        set { _boundSwitchId1 = value; OnProp(); }
+    }
+
+    private string _cmdSwitch2 = "switch2";
+    public string CmdSwitch2
+    {
+        get => _cmdSwitch2;
+        set { _cmdSwitch2 = value?.TrimStart('!') ?? ""; OnProp(); }
+    }
+
+    private uint? _boundSwitchId2;
+    public uint? BoundSwitchId2
+    {
+        get => _boundSwitchId2;
+        set { _boundSwitchId2 = value; OnProp(); }
+    }
 
     public event PropertyChangedEventHandler? PropertyChanged;
     protected void OnProp([CallerMemberName] string? n = null)
