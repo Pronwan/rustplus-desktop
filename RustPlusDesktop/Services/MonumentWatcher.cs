@@ -1,4 +1,4 @@
-﻿using RustPlusDesk.Models;
+using RustPlusDesk.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +24,8 @@ namespace RustPlusDesk.Services
 
             public double LastX { get; set; }       // Letzte Position (für Vektor)
             public double LastY { get; set; }
+            public DateTime LastSeen { get; set; }  // Wann zuletzt gesehen?
+            public int MissingCount { get; set; }
             public bool DebugLogged { get; set; }
         }
 
@@ -94,26 +96,40 @@ namespace RustPlusDesk.Services
                             FirstX = ch47.X,
                             FirstY = ch47.Y,
                             LastX = ch47.X,
-                            LastY = ch47.Y
+                            LastY = ch47.Y,
+                            LastSeen = now,
+                            MissingCount = 0
                         };
                         _chinookStates[ch47.Id] = state;
                     }
 
+                    // Reset missing count
+                    state.MissingCount = 0;
+
                     // 2. Trigger prüfen (Hover Logic)
                     if (!_activeEvents.ContainsKey("Small Oil Rig"))
-                        CheckAndTriggerHover(ch47, state, _smallOilPos, "Small Oil Rig");
+                        CheckAndTriggerHover(ch47, state, _smallOilPos, "Small Oil Rig", now);
 
                     if (!_activeEvents.ContainsKey("Large Oil Rig"))
-                        CheckAndTriggerHover(ch47, state, _largeOilPos, "Large Oil Rig");
+                        CheckAndTriggerHover(ch47, state, _largeOilPos, "Large Oil Rig", now);
 
                     // Position für nächsten Tick merken
                     state.LastX = ch47.X;
                     state.LastY = ch47.Y;
+                    state.LastSeen = now;
                 }
 
-                // Veraltete States aufräumen
+                // Veraltete States aufräumen (mit Toleranz für laggy Server)
                 var oldIds = _chinookStates.Keys.Where(k => !currentChinookIds.Contains(k)).ToList();
-                foreach (var id in oldIds) _chinookStates.Remove(id);
+                foreach (var id in oldIds)
+                {
+                    var state = _chinookStates[id];
+                    state.MissingCount++;
+                    if (state.MissingCount > 15) // Keep alive for ~15 seconds of missing data
+                    {
+                        _chinookStates.Remove(id);
+                    }
+                }
             }
 
             // --- Events Updaten & Aufräumen (Timer Logic) ---
@@ -174,7 +190,7 @@ namespace RustPlusDesk.Services
             return virtualMarkers;
         }
 
-        private void CheckAndTriggerHover(RustPlusClientReal.DynMarker chinook, ChinookState state, (double X, double Y)? rigPos, string rigName)
+        private void CheckAndTriggerHover(RustPlusClientReal.DynMarker chinook, ChinookState state, (double X, double Y)? rigPos, string rigName, DateTime now)
         {
             if (rigPos == null) return;
 
@@ -186,7 +202,13 @@ namespace RustPlusDesk.Services
             // 2. Geschwindigkeit (Weg seit letztem Tick)
             double moveX = chinook.X - state.LastX;
             double moveY = chinook.Y - state.LastY;
-            double speed = Math.Sqrt(moveX * moveX + moveY * moveY);
+            double moveDist = Math.Sqrt(moveX * moveX + moveY * moveY);
+            
+            // Reale Geschwindigkeit berechnen (Units pro Sekunde), um Lags auszugleichen
+            double elapsedSeconds = (now - state.LastSeen).TotalSeconds;
+            if (elapsedSeconds <= 0) elapsedSeconds = 1.0; // Fallback für selben Tick
+
+            double speed = moveDist / elapsedSeconds;
 
             // LOGIK: Wenn er nah ist (<200m) UND langsam (<2.0)
             if (dist < TriggerRadius && speed < MaxHoverSpeed)

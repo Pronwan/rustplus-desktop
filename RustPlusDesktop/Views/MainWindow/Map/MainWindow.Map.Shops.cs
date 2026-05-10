@@ -48,8 +48,8 @@ public partial class MainWindow
                     _deepSeaMidEvent = false;
                     string dir = GetDeepSeaDirection(deepSeaShop.X, deepSeaShop.Y);
                     if (_announceSpawns && TrackingService.AnnounceDeepSea)
-                        _ = SendTeamChatSafeAsync($"Deep Sea will spawn soon! (Direction: {dir})");
-                    AppendLog($"[DEEPSEA] Spawn detected at {deepSeaShop.X:F0},{deepSeaShop.Y:F0} ({dir})");
+                        _ = SendTeamChatSafeAsync("Deep Sea will spawn soon, Aye!");
+                    AppendLog($"[DEEPSEA] Spawn detected at {deepSeaShop.X:F0},{deepSeaShop.Y:F0} (Direction: {dir})");
                 }
                 else
                 {
