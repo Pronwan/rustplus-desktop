@@ -356,6 +356,8 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
             object? resp = call;
             if (call is Task t) { await t.ConfigureAwait(false); resp = t.GetType().GetProperty("Result")?.GetValue(t); }
 
+            if (!IsResponseValid(resp)) { L("invalid response"); return; }
+
             var r = P(resp, "Response") ?? resp;
             var mm = P(r, "MapMarkers") ?? r;
 
@@ -590,6 +592,8 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                 await t.ConfigureAwait(false);
                 resp = t.GetType().GetProperty("Result")?.GetValue(t);
             }
+
+            if (!IsResponseValid(resp)) return resultList;
 
             var r = P(resp, "Response") ?? resp;
             var mm = P(r, "MapMarkers") ?? r;
@@ -2871,6 +2875,8 @@ rp.connect();
             await task.ConfigureAwait(false);
 
             var result = task.GetType().GetProperty("Result")?.GetValue(task);
+            if (!IsResponseValid(result)) return null;
+
             var data = result?.GetType().GetProperty("Data")?.GetValue(result) ?? result;
             if (data is null) return null;
 
@@ -3075,6 +3081,8 @@ rp.connect();
                     await task.ConfigureAwait(false);
                     resultObj = task.GetType().GetProperty("Result")?.GetValue(task);
                 }
+
+                if (!IsResponseValid(resultObj)) return null;
 
                 // häufig: result.Data oder direkt result
                 var data = GetProp(resultObj!, "Data") ?? resultObj;
@@ -3351,6 +3359,8 @@ rp.connect();
             resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk);
         }
 
+        if (!IsResponseValid(resp)) return LoadFromCache<TeamInfo>("team");
+
         var r  = P(resp, "Response") ?? resp;
         var ti = P(r, "TeamInfo") ?? r;
 
@@ -3613,6 +3623,8 @@ rp.connect();
                 await tsk.ConfigureAwait(false);
                 resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk);
             }
+
+            if (!IsResponseValid(resp)) return LoadFromCache<List<DynMarker>>("markers") ?? list;
 
             var r = RProp(resp, "Response") ?? resp;
             var mm = RProp(r, "MapMarkers");
@@ -3975,18 +3987,21 @@ rp.connect();
                             resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk);
                         }
 
-                        var r = Prop(resp, "Response") ?? resp;
-                        var mm = Prop(r, "MapMarkers") ?? r;
-
-                        var vend = Prop(mm, "VendingMachines") ?? Prop(mm, "Vending");
-                        if (vend != null) ExtractFromCollection(vend, shops);
-                        if (shops.Count == 0 && mm != null)
+                        if (IsResponseValid(resp))
                         {
-                            foreach (var p in mm.GetType().GetProperties())
+                            var r = Prop(resp, "Response") ?? resp;
+                            var mm = Prop(r, "MapMarkers") ?? r;
+
+                            var vend = Prop(mm, "VendingMachines") ?? Prop(mm, "Vending");
+                            if (vend != null) ExtractFromCollection(vend, shops);
+                            if (shops.Count == 0 && mm != null)
                             {
-                                var v = p.GetValue(mm);
-                                if (v is System.Collections.IEnumerable en && v is not string)
-                                    ExtractFromCollection(v, shops);
+                                foreach (var p in mm.GetType().GetProperties())
+                                {
+                                    var v = p.GetValue(mm);
+                                    if (v is System.Collections.IEnumerable en && v is not string)
+                                        ExtractFromCollection(v, shops);
+                                }
                             }
                         }
                     }
@@ -4272,13 +4287,16 @@ rp.connect();
                             object? resp = taskObj;
                             if (taskObj is Task tsk) { await tsk.ConfigureAwait(false); resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk); }
 
-                            var r = Prop(resp, "Response") ?? resp;
-                            var info = Prop(r, "Info") ?? r;
+                            if (IsResponseValid(resp))
+                            {
+                                var r = Prop(resp, "Response") ?? resp;
+                                var info = Prop(r, "Info") ?? r;
 
-                            players = ReadIntCI(info, "Players", "PlayerCount", "Population", "Online", "CurrentPlayers") ?? players;
-                            maxPlayers = ReadIntCI(info, "MaxPlayers", "MaxPopulation", "Slots", "Max") ?? maxPlayers;
-                            queue = ReadIntCI(info, "Queue", "Queued", "QueuedPlayers", "QueuePlayers") ?? queue;
-                            //L($"info(B): players={players} max={maxPlayers} queue={queue}");
+                                players = ReadIntCI(info, "Players", "PlayerCount", "Population", "Online", "CurrentPlayers") ?? players;
+                                maxPlayers = ReadIntCI(info, "MaxPlayers", "MaxPopulation", "Slots", "Max") ?? maxPlayers;
+                                queue = ReadIntCI(info, "Queue", "Queued", "QueuedPlayers", "QueuePlayers") ?? queue;
+                                //L($"info(B): players={players} max={maxPlayers} queue={queue}");
+                            }
                         }
                     }
 
@@ -4300,10 +4318,13 @@ rp.connect();
                             object? resp = taskObj;
                             if (taskObj is Task tsk) { await tsk.ConfigureAwait(false); resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk); }
 
-                            var r = Prop(resp, "Response") ?? resp;
-                            var time = Prop(r, "Time") ?? r;
-                            if (TryReadTimeHHMM(time, out var tB, out var usedB)) { timeStr = tB; }// L($"time(B): {tB} via {usedB}"); }
-                            //else L("time(B): (not found)");
+                            if (IsResponseValid(resp))
+                            {
+                                var r = Prop(resp, "Response") ?? resp;
+                                var time = Prop(r, "Time") ?? r;
+                                if (TryReadTimeHHMM(time, out var tB, out var usedB)) { timeStr = tB; }// L($"time(B): {tB} via {usedB}"); }
+                                //else L("time(B): (not found)");
+                            }
                         }
                     }
                 }
@@ -4533,6 +4554,8 @@ rp.connect();
             var taskObj = send.Invoke(_api, new object[] { req });
             object? resp = taskObj;
             if (taskObj is Task t) { await t.ConfigureAwait(false); resp = t.GetType().GetProperty("Result")?.GetValue(t); }
+
+            if (!IsResponseValid(resp)) return null;
 
             var r = P(resp, "Response") ?? resp;
             var ti = P(r, "TeamInfo") ?? P(r, "Team") ?? r;
@@ -5366,6 +5389,8 @@ rp.connect();
                 resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk);
             }
 
+            if (!IsResponseValid(resp)) return list;
+
             // Response -> Map -> Monuments
             var r = RProp(resp, "Response") ?? resp;
             var map = RProp(r, "Map");
@@ -5450,6 +5475,7 @@ rp.connect();
                 {
                     await task.ConfigureAwait(false);
                     var result = task.GetType().GetProperty("Result")?.GetValue(task);
+                    if (!IsResponseValid(result)) return null;
                     var data = result?.GetType().GetProperty("Data")?.GetValue(result);
                     if (data != null)
                     {
@@ -5602,6 +5628,7 @@ rp.connect();
                         await task.ConfigureAwait(false);
                         if (!TryGetTaskResult(task, out result))
                             _log?.Invoke("[stor/pull] GetEntityInfoAsync returned non-generic Task or no Result");
+                        if (!IsResponseValid(result)) return null;
                     }
                     catch (Exception ex)
                     {
@@ -6422,6 +6449,47 @@ rp.connect();
         if (s < 3600) return $"{s / 60}m";
         if (s < 86400) return $"{s / 3600}h";
         return $"{s / 86400}d";
+    }
+
+    /// <summary>Validates an API response and logs appropriate error messages.</summary>
+    private bool IsResponseValid(object? response)
+    {
+        if (response is null)
+        {
+            _log("[ERROR] Response is undefined/null");
+            return false;
+        }
+
+        var responseStr = response.ToString();
+        if (responseStr == "Error: Timeout reached while waiting for response")
+        {
+            _log("[ERROR] Response timeout reached");
+            return false;
+        }
+
+        var errorProp = TryGetProp(response, "Error");
+        if (errorProp != null)
+        {
+            var errorMsg = errorProp.ToString() ?? "Unknown error";
+            _log($"[ERROR] Response contains error: {errorMsg}");
+            return false;
+        }
+
+        var responseDict = response as System.Collections.IDictionary;
+        if (responseDict != null && responseDict.Count == 0)
+        {
+            _log("[ERROR] Response is empty");
+            return false;
+        }
+
+        var properties = response.GetType().GetProperties();
+        if (properties.Length == 0)
+        {
+            _log("[ERROR] Response is empty (no properties)");
+            return false;
+        }
+
+        return true;
     }
 
 }
