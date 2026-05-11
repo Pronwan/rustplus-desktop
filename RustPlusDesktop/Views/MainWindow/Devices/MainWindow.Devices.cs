@@ -1064,8 +1064,12 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         }
     }
 
+    private int _refreshAllBusy = 0;
     private async Task RefreshAllDevicesStatusAsync(int maxRetries = 3)
     {
+        if (Interlocked.Exchange(ref _refreshAllBusy, 1) == 1) return;
+        try
+        {
         if (_vm.Selected is null)
         {
             AppendLog("No Server Selected.");
@@ -1082,14 +1086,31 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             return;
         }
 
-        AppendLog("Updating Device Status…");
-        foreach (var d in list)
+        AppendLog("Updating Device Status (parallel)…");
+        
+        using var semaphore = new SemaphoreSlim(3);
+        var tasks = list.Select(async d =>
         {
-            await RefreshDeviceRecursiveAsync(d, maxRetries);
-        }
+            await semaphore.WaitAsync();
+            try
+            {
+                await RefreshDeviceRecursiveAsync(d, maxRetries);
+            }
+            finally
+            {
+                semaphore.Release();
+            }
+        });
 
+        await Task.WhenAll(tasks);
+        
         _vm.Save();
         AppendLog("Refresh completed.");
+        }
+        finally
+        {
+            Interlocked.Exchange(ref _refreshAllBusy, 0);
+        }
     }
 
     private async Task RefreshDeviceRecursiveAsync(SmartDevice d, int maxRetries = 3)
