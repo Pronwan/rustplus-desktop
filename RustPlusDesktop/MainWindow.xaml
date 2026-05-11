@@ -1795,6 +1795,10 @@
                                                                             <Setter Property="IsEnabled" Value="False" />
                                                                             <Setter Property="Opacity" Value="0.4" />
                                                                         </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding IsToggleBusy}" Value="True">
+                                                                            <Setter Property="IsEnabled" Value="False" />
+                                                                            <Setter Property="Opacity" Value="0.6" />
+                                                                        </DataTrigger>
                                                                         <Trigger Property="IsChecked" Value="True">
                                                                             <Setter Property="Background" Value="SeaGreen" />
                                                                             <Setter Property="Content" Value="ON" />

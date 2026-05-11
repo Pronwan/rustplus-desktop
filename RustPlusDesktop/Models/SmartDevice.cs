@@ -172,6 +172,14 @@ public class SmartDevice : INotifyPropertyChanged
         set { if (_isMissing != value) { _isMissing = value; OnProp(); OnProp(nameof(Display)); OnProp(nameof(DisplayName)); } }
     }
 
+    private bool _isToggleBusy;
+    [JsonIgnore]
+    public bool IsToggleBusy
+    {
+        get => _isToggleBusy;
+        set { if (_isToggleBusy != value) { _isToggleBusy = value; OnProp(); } }
+    }
+
     public string? _alias;
     public string? Alias
     {

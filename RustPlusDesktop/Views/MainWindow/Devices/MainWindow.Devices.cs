@@ -475,12 +475,18 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
 
         // Lock erst NACH erfolgreichem Connect setzen? → dein Flow kann bleiben,
         // ABER ganz wichtig: Timeout um das Toggle, damit der Task nicht hängt.
+        if (_globalToggleBusy) return;
         if (!TryMarkToggleBusy(dev.EntityId))
         {
             AppendLog($"(skip) Toggle #{dev.EntityId} already in progress");
             return;
         }
 
+        _globalToggleBusy = true;
+
+        dev.IsToggleBusy = true;
+        int attempts = 0;
+        bool success = false;
         try
         {
             if (!await EnsureConnectedAsync()) return;
@@ -493,16 +499,15 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
 
             AppendLog($"Sending {(on ? "ON" : "OFF")} to #{dev.EntityId} …");
 
-            int attempts = 0;
             const int maxAttempts = 3;
-            bool success = false;
 
             while (attempts < maxAttempts && !success)
             {
                 attempts++;
                 try
                 {
-                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(8));
+                    // Shorter timeout (5s) for toggling to avoid clogging the queue
+                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                     await _rust.ToggleSmartSwitchAsync(dev.EntityId, on, cts.Token);
                     success = true;
                 }
@@ -515,8 +520,9 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                     }
                     else
                     {
-                        AppendLog($"Device #{dev.EntityId}: Toggle attempt {attempts} failed, retrying in 1s …");
-                        await Task.Delay(1000);
+                        // More breathing room between retries (2s)
+                        AppendLog($"Device #{dev.EntityId}: Toggle attempt {attempts} failed, retrying in 2s …");
+                        await Task.Delay(2000);
                         if (!await EnsureConnectedAsync()) break;
                     }
                 }
@@ -524,11 +530,19 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
         }
         finally
         {
-            await RefreshDeviceStateAsync(dev);
+            // REMOVED: Aggressive RefreshDeviceStateAsync probe.
+            // If success is false, dev.IsMissing was already set in the catch block.
+            // We don't want to flood the API with more probes if the toggle already failed.
+            
             UnmarkToggleBusy(dev.EntityId);
+            dev.IsToggleBusy = false;
+            
+            // Release global lock after a small cooldown to prevent spamming different switches
+            _ = Task.Delay(500).ContinueWith(_ => _globalToggleBusy = false);
         }
     }
 
+    private bool _globalToggleBusy = false;
     private readonly Dictionary<uint, StorageSnap> _storageCache = new();
 
     private void CacheStorage(uint id, StorageSnap? snap)
@@ -539,10 +553,10 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
 
     private bool TryGetCachedStorage(uint id, out StorageSnap? snap)
         => _storageCache.TryGetValue(id, out snap);
-    private async Task<EntityProbeResult> ProbeWithRetryAsync(uint entityId, bool log = true)
+    private async Task<EntityProbeResult> ProbeWithRetryAsync(uint entityId, bool log = true, int maxAttempts = 3)
     {
         int attempts = 0;
-        const int max = 3;
+        int max = Math.Max(1, maxAttempts);
         while (attempts < max)
         {
             attempts++;
@@ -565,7 +579,7 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
         return new EntityProbeResult(false, null, null);
     }
 
-    private async Task RefreshDeviceStateAsync(SmartDevice dev, bool log = true, bool forcePull = false)
+    private async Task RefreshDeviceStateAsync(SmartDevice dev, bool log = true, bool forcePull = false, int maxRetries = 3)
     {
         if (_rust is not RustPlusClientReal real) return;
 
@@ -635,7 +649,7 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
         // ===== Generisch (SmartAlarm & Co.) =====
         try
         {
-            var r = await ProbeWithRetryAsync(dev.EntityId, log);
+            var r = await ProbeWithRetryAsync(dev.EntityId, log, maxRetries);
 
             // Kind nur setzen, NIE SmartAlarm überschreiben
             if (!string.IsNullOrWhiteSpace(r.Kind) &&
@@ -1050,7 +1064,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         }
     }
 
-    private async Task RefreshAllDevicesStatusAsync()
+    private async Task RefreshAllDevicesStatusAsync(int maxRetries = 3)
     {
         if (_vm.Selected is null)
         {
@@ -1071,20 +1085,20 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         AppendLog("Updating Device Status…");
         foreach (var d in list)
         {
-            await RefreshDeviceRecursiveAsync(d);
+            await RefreshDeviceRecursiveAsync(d, maxRetries);
         }
 
         _vm.Save();
         AppendLog("Refresh completed.");
     }
 
-    private async Task RefreshDeviceRecursiveAsync(SmartDevice d)
+    private async Task RefreshDeviceRecursiveAsync(SmartDevice d, int maxRetries = 3)
     {
         try
         {
             if (!d.IsGroup)
             {
-                await RefreshDeviceStateAsync(d, log: true, forcePull: true);
+                await RefreshDeviceStateAsync(d, log: true, forcePull: true, maxRetries: maxRetries);
             }
             else
             {

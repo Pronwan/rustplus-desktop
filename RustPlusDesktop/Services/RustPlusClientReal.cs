@@ -4989,11 +4989,13 @@ rp.connect();
             }
         }
 
-        var confirmed = await WaitForSwitchStateAsync(id, on, 3000, ct);
+        var confirmed = await WaitForSwitchStateAsync(id, on, 6000, ct);
         if (confirmed)
             _log($"SmartSwitch {id}: State confirmed → {(on ? "ON" : "OFF")}.");
+        else if (sent)
+            _log($"Smart Device {id}: Command sent, but confirmation timed out (server lag).");
         else
-            _log($"Smart Device {id}: Switching failed – Timeout (no confirmation or not a Smart Switch).");
+            _log($"Smart Device {id}: Switching failed – could not send command.");
     }
 
 

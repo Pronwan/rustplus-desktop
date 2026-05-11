@@ -303,6 +303,13 @@ public partial class MainWindow
             {
                 RebuildOverlayTeamBar();
             }
+
+            // Initial status refresh for all devices (light: maxRetries=1)
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(2000);
+                await Dispatcher.InvokeAsync(() => RefreshAllDevicesStatusAsync(maxRetries: 1));
+            });
         }
         catch (Exception ex)
         {
