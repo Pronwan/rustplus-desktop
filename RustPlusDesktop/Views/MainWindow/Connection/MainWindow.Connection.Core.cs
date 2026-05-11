@@ -124,16 +124,66 @@ public partial class MainWindow
         }
     }
 
-    private void ListServers_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    private async void ListServers_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
         _lastChatTsForCurrentServer = null;
 
-        if (_vm.Selected is { } prof && !string.IsNullOrWhiteSpace(prof.SteamId64))
-            _vm.SteamId64 = prof.SteamId64;
+        if (_vm.Selected is { } prof)
+        {
+            if (!string.IsNullOrWhiteSpace(prof.SteamId64))
+                _vm.SteamId64 = prof.SteamId64;
+
+            // Trigger soft connect to devices only if there are any devices to control
+            if (!prof.IsConnected && prof.Devices.Any())
+            {
+                await PerformConnectDevicesOnlyAsync(prof);
+            }
+        }
 
         HydrateSteamUiFromStorage();
         RegisterAllHotkeys();
         ActivateHotkeysForCurrentServer();
+    }
+
+    private async Task PerformConnectDevicesOnlyAsync(ServerProfile profile)
+    {
+        if (profile == null) return;
+        try
+        {
+            AppendLog($"Soft-connecting to {profile.Name} (Devices Only)...");
+            await _rust.ConnectAsync(profile);
+            profile.IsConnected = true;
+            profile.IsFullConnected = false;
+
+            if (_rust is RustPlusClientReal real)
+            {
+                real.EnsureEventsHooked();
+                
+                // Hook local handlers
+                real.ConnectionLost -= OnConnectionLost;
+                real.ConnectionLost += OnConnectionLost;
+
+                var allIds = profile.Devices.Select(d => d.EntityId).Distinct().ToList();
+                if (allIds.Any())
+                {
+                    await real.PrimeSubscriptionsAsync(allIds);
+                }
+                
+                // Refresh device status in background
+                _ = RefreshAllDevicesStatusAsync(maxRetries: 1);
+            }
+            
+            // Start the server status loop (players/time) even for soft connect
+            _statusCts?.Cancel();
+            _statusCts = new CancellationTokenSource();
+            _ = PollServerStatusLoopAsync(_statusCts.Token);
+            
+            AppendLog("Soft-connect complete.");
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"Soft-connect failed: {ex.Message}");
+        }
     }
 
     private async Task PollServerStatusLoopAsync(CancellationToken ct)

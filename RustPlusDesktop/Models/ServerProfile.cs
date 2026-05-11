@@ -37,7 +37,8 @@ public class ServerProfile : INotifyPropertyChanged
             {
                 _isConnected = value; 
                 OnProp();
-                if (!value) IsFullConnected = false; // If API disconnects, full connect is also gone
+                OnProp(nameof(IsFullConnected));
+                if (!value) IsFullConnected = false; 
             }
         }
     }
@@ -46,7 +47,15 @@ public class ServerProfile : INotifyPropertyChanged
     public bool IsFullConnected
     {
         get => _isFullConnected;
-        set { if (_isFullConnected != value) { _isFullConnected = value; OnProp(); } }
+        set 
+        { 
+            if (_isFullConnected != value) 
+            { 
+                _isFullConnected = value; 
+                OnProp(); 
+                OnProp(nameof(IsConnected));
+            } 
+        }
     }
 
     public bool UseFacepunchProxy { get; set; } = false;

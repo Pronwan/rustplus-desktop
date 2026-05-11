@@ -41,6 +41,7 @@ public partial class MainWindow
         try { _lastPresence.Clear(); } catch { }
         try { ClearAllDeathPins(); } catch { }
         try { ClearAllToggleBusy(); } catch { }
+        try { ResetAllBusyStates(); } catch { }
 
         // Shopspezifisch, wie du es im Connect auch machst
         try { _lastShops.Clear(); } catch { }
