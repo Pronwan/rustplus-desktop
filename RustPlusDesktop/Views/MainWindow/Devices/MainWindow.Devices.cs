@@ -300,16 +300,15 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
 
     private void BtnDeleteDevice_Click(object sender, RoutedEventArgs e)
     {
-        if (ListDevices.SelectedItem is SmartDevice dev && dev.IsMissing)
+        if (ListDevices.SelectedItem is SmartDevice dev)
         {
-            _vm.Selected?.Devices?.Remove(dev);
-            _vm.NotifyDevicesChanged();
-            _vm.Save();
-            AppendLog($"Device #{dev.EntityId} removed.");
-        }
-        else
-        {
-            MessageBox.Show("Only missing devices can be deleted.");
+            if (_vm.Selected?.Devices != null)
+            {
+                RemoveDeviceFromHierarchy(_vm.Selected.Devices, dev);
+                _vm.NotifyDevicesChanged();
+                _vm.Save();
+                AppendLog($"Device #{dev.EntityId} removed.");
+            }
         }
     }
 
@@ -479,7 +478,8 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
             }
             catch (Exception ex)
             {
-                AppendLog($"{(on ? "ON" : "OFF")} Error: " + ex.Message);
+                AppendLog($"Device #{dev.EntityId}: Switching failed – {ex.Message}");
+                dev.IsMissing = true;
 
                 // Optional: einmaliger Reconnect-Retry bei „nicht verbunden“
                 if (LooksLikeNotConnected(ex) && await EnsureConnectedAsync())
@@ -539,7 +539,6 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                             uiSnap.Items.Add(it);
 
                         dev.Storage = uiSnap;
-                        dev.IsMissing = false;
                     });
                 }
                 else
@@ -554,7 +553,7 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                 }
                 catch (Exception subEx)
                 {
-                    if (log) AppendLog($"[stor/sub+poke] #{dev.EntityId} failed: {subEx.Message}");
+                    if (log) AppendLog($"[stor/sub] #{dev.EntityId} failed: {subEx.Message}");
                 }
 
                 // (3) bei forcePull denselben Weg wie Refresh nutzen
@@ -562,48 +561,22 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                 {
                     try
                     {
-                        // wir brauchen das Ergebnis nicht – wichtig ist der Side-Effekt:
-                        // DecodeEntityInfo / Events aktualisieren den Storage-Cache
-                        await _rust.ProbeEntityAsync(dev.EntityId);
-                       // if (log)
-                        //    AppendLog($"[stor/poll] probe #{dev.EntityId} queued");
+                        var rStor = await _rust.ProbeEntityAsync(dev.EntityId);
+                        dev.IsMissing = !rStor.Exists;
+                        if (!rStor.Exists && log) AppendLog($"#{dev.EntityId}: not reachable / demoted");
                     }
                     catch (Exception pullEx)
                     {
+                        dev.IsMissing = true;
                         if (log) AppendLog($"[stor/poll] #{dev.EntityId} probe EX: {pullEx.Message}");
                     }
                 }
-                else
-                {
-                    // optionaler Fallback nur, wenn noch kein Cache existiert
-                    _ = Task.Run(async () =>
-                    {
-                        await Task.Delay(500);
-                        if (real.TryGetCachedStorage(dev.EntityId, out _))
-                            return;
-
-                        try
-                        {
-                            // hier kannst du dein GetStorageMonitorAsync ruhig behalten,
-                            // falls es für den Erst-Snapshot funktioniert
-                            await real.GetStorageMonitorAsync(dev.EntityId);
-                            if (log)
-                                AppendLog($"[stor/pull] #{dev.EntityId} queued fallback pull");
-                        }
-                        catch (Exception ex2)
-                        {
-                            AppendLog($"[stor/pull] #{dev.EntityId} fallback EX: {ex2.Message}");
-                        }
-                    });
-                }
-
-                return;
             }
             catch (Exception ex)
             {
                 dev.Storage ??= new StorageSnapshot();
+                dev.IsMissing = true;
                 if (log) AppendLog($"[stor/refresh] #{dev.EntityId} EX: {ex.Message}");
-                return;
             }
         }
 
@@ -644,6 +617,8 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
         }
         catch (Exception ex)
         {
+            dev.IsMissing = true;
+            _vm?.NotifyDevicesChanged();
             if (log) AppendLog("Probe-Error: " + ex.Message);
         }
     }

@@ -89,14 +89,14 @@ public class SmartDevice : INotifyPropertyChanged
     public string? Name
     {
         get => _name;
-        set { if (_name != value) { _name = value; OnProp(); OnProp(nameof(Display)); } }
+        set { if (_name != value) { _name = value; OnProp(); OnProp(nameof(Display)); OnProp(nameof(DisplayName)); } }
     }
 
     private string? _kind;
     public string? Kind
     {
         get => _kind;
-        set { if (_kind != value) { _kind = value; OnProp(); OnProp(nameof(Display)); } }
+        set { if (_kind != value) { _kind = value; OnProp(); OnProp(nameof(Display)); OnProp(nameof(DisplayName)); } }
     }
 
     private bool? _isOn;
@@ -169,14 +169,14 @@ public class SmartDevice : INotifyPropertyChanged
     public bool IsMissing
     {
         get => _isMissing;
-        set { if (_isMissing != value) { _isMissing = value; OnProp(); OnProp(nameof(Display)); } }
+        set { if (_isMissing != value) { _isMissing = value; OnProp(); OnProp(nameof(Display)); OnProp(nameof(DisplayName)); } }
     }
 
     public string? _alias;
     public string? Alias
     {
         get => _alias;
-        set { if (_alias != value) { _alias = value; OnProp(); } }
+        set { if (_alias != value) { _alias = value; OnProp(); OnProp(nameof(Display)); OnProp(nameof(DisplayName)); } }
     }
 
     private bool _popupEnabled = true;
@@ -208,13 +208,20 @@ public class SmartDevice : INotifyPropertyChanged
     }
 
 
+    public string DisplayName
+    {
+        get
+        {
+            var label = string.IsNullOrWhiteSpace(Alias) ? (string.IsNullOrWhiteSpace(Name) ? (Kind ?? "Device") : Name) : Alias;
+            if (IsMissing) label = "❌ " + label;
+            return label;
+        }
+    }
+
     public string Display
     {
         get
         {
-            var label = string.IsNullOrWhiteSpace(Name) ? (Kind ?? "Device") : Name;
-            if (IsMissing) label = "❌ " + label;
-
             string state = "–";
             if (IsOn is bool b)
             {
@@ -222,7 +229,7 @@ public class SmartDevice : INotifyPropertyChanged
                     ? (b ? "ACTIVE" : "INACTIVE")
                     : (b ? "ON" : "OFF");
             }
-            return $"{label}  (#{EntityId}) [{state}]";
+            return $"{DisplayName}  (#{EntityId}) [{state}]";
         }
     }
 
