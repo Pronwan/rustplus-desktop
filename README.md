@@ -66,8 +66,9 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 - All three can be toggled individually via right-click on the Chat Alerts button.
 
 **🛢️ Oil Rig Crate Countdown**
-- The app detects when a Chinook hovers over an Oil Rig and automatically starts a crate countdown on the map.
-<img width="651" height="223" alt="grafik" src="https://github.com/user-attachments/assets/1435999f-e06e-4f1e-9695-92d9df78e429" />
+~~- The app detects when a Chinook hovers over an Oil Rig and automatically starts a crate countdown on the map.~~
+<img width="651" height="223" alt="grafik" src="https://github.com/user-attachments/assets/1435999f-e06e-4f1e-9695-92d9df78e429" /> 
+(fixed by FP - we'll try to bring it back in)
 
 
 ## Update 4.1.0 - Crosshair Editor (Right Click Crosshair icon to access) (May 1st)
@@ -122,7 +123,8 @@ A massive shout-out to [JawadYzbk](https://github.com/JawadYzbk) for contributin
 - Enhanced Team Uploads: Device uploads for team members now fully support hierarchical group structures. No matter how many devices you manage, everything stays organized and easy to navigate.
 
 ## Update Notes 3.3.1 (February 16th 26)
-- **New Pre Deep Sea Notification:** Before Deep Sea is triggered, you can get a notification in Team Chat (around 3 minutes ahead of actual spawn) -> note that the direction will always be shown in West - this is not the actual spawn location. It's just coming from the fact that Deep Sea shops have negative X-coordinates. 
+~~- **New Pre Deep Sea Notification:** Before Deep Sea is triggered, you can get a notification in Team Chat (around 3 minutes ahead of actual spawn) -> note that the direction will always be shown in West - this is not the actual spawn location. It's just coming from the fact that Deep Sea shops have negative X-coordinates.~~
+(Fixed by Facepunch)
 - **Stability Patch:** Even on weak servers the connection should now be more stable and smart devices should work more reliably. Reduced duplicate chat fetches, made shop search and shops more stable with caching icons to local drive.
 
 ## Update Notes 3.3.0 (January 18th 26)
