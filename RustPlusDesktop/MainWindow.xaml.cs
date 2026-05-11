@@ -214,6 +214,18 @@ public partial class MainWindow : Window
         AppendLog($"[items-new] baseDir={baseDir}");
         EnsureNewItemDbLoaded();
         AppendLog($"[items-new] source={sNewDbSource} items={sItemsById.Count} byShort={sItemsByShort.Count}");
+
+        // NEU: Hintergrund-Update der Item-Liste von rusthelp.com
+        _ = Task.Run(async () =>
+        {
+            if (await TryUpdateItemDbAsync())
+            {
+                Dispatcher.Invoke(() => {
+                    EnsureNewItemDbLoaded(force: true);
+                    AppendLog($"[items-update] Updated from web! New count: {sItemsById.Count}");
+                });
+            }
+        });
         // GridLayer.RenderTransform = MapTransform;
         // Overlay.RenderTransform   = MapTransform;
         // bei Host-Resize: nur Markerpositionen neu berechnen
@@ -1048,9 +1060,9 @@ public partial class MainWindow : Window
     private static bool sNewDbLoaded = false;
     private static string sNewDbSource = "(unbekannt)";
 
-    private static void EnsureNewItemDbLoaded()
+    private static void EnsureNewItemDbLoaded(bool force = false)
     {
-        if (sNewDbLoaded) return;
+        if (sNewDbLoaded && !force) return;
 
         sItemsById.Clear();
         sItemsByShort.Clear();
@@ -1441,6 +1453,39 @@ public partial class MainWindow : Window
         }
 
         return g;
+    }
+
+    private static async Task<bool> TryUpdateItemDbAsync()
+    {
+        const string url = "https://rusthelp.com/downloads/admin-item-list-public.json";
+        try
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("RustPlusDesktop/1.0");
+            client.Timeout = TimeSpan.FromSeconds(15);
+            
+            var response = await client.GetAsync(url);
+            if (!response.IsSuccessStatusCode) return false;
+
+            var json = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrWhiteSpace(json) || !json.Trim().StartsWith("[")) return false;
+
+            // Grobe Validierung: ist es ein JSON Array mit Items?
+            if (!json.Contains("shortName") || !json.Contains("displayName")) return false;
+
+            // Pfad bestimmen: Wir speichern direkt ins Root-Verzeichnis, da dies die höchste Priorität beim Laden hat
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string targetPath = System.IO.Path.Combine(baseDir, "rust-item-list.json");
+
+            // Sicherstellen, dass Ordner existiert
+            string? dir = System.IO.Path.GetDirectoryName(targetPath);
+            if (!string.IsNullOrEmpty(dir) && !System.IO.Directory.Exists(dir))
+                System.IO.Directory.CreateDirectory(dir);
+
+            await System.IO.File.WriteAllTextAsync(targetPath, json);
+            return true;
+        }
+        catch { return false; }
     }
 
     private static bool TryParseNewItemList(string json)
@@ -4456,6 +4501,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             TrackingService.SidebarWidth = ColSidebar.ActualWidth;
         }
     }
+    private void BtnDiscord_Click(object sender, RoutedEventArgs e)
+    {
+        try { Process.Start(new ProcessStartInfo("https://discord.gg/v4X584wye4") { UseShellExecute = true }); }
+        catch { }
+    }
+
     private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
     {
         if (_listenerStarting) return;

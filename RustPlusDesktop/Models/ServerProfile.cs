@@ -37,10 +37,16 @@ public class ServerProfile : INotifyPropertyChanged
             {
                 _isConnected = value; 
                 OnProp();
-                // Debug log to trace what sets this
-                // System.Diagnostics.Debug.WriteLine($"[DEBUG] IsConnected set to {value} for {Name}");
+                if (!value) IsFullConnected = false; // If API disconnects, full connect is also gone
             }
         }
+    }
+
+    private bool _isFullConnected;
+    public bool IsFullConnected
+    {
+        get => _isFullConnected;
+        set { if (_isFullConnected != value) { _isFullConnected = value; OnProp(); } }
     }
 
     public bool UseFacepunchProxy { get; set; } = false;

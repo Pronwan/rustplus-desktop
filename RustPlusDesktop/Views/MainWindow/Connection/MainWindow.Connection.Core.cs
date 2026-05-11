@@ -259,10 +259,7 @@ public partial class MainWindow
             // Start probing device kinds in parallel (optimized in MainWindow.Devices.cs)
             initTasks.Add(PrimeDeviceKindsAsync());
 
-            if (TrackingService.AutoLoadShops)
-            {
-                Dispatcher.Invoke(() => ChkShops.IsChecked = true);
-            }
+
 
             ClearUserOverlayElements();
             _visibleOverlayOwners.Add(_mySteamId);
@@ -271,8 +268,15 @@ public partial class MainWindow
             // Wait for core initialization to complete
             await Task.WhenAll(initTasks);
             
+            // Core data is now loaded (_worldSizeS is available)
+            if (TrackingService.AutoLoadShops)
+            {
+                Dispatcher.Invoke(() => ChkShops.IsChecked = true);
+            }
+            
             _vm.IsInitializing = false;
             _vm.Selected.IsConnected = true;
+            _vm.Selected.IsFullConnected = true;
 
             _vm.NotifyDevicesChanged();
             AppendLog($"Connection initialization complete. Server: {_vm.Selected.Name}");
