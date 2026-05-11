@@ -879,6 +879,18 @@
                                         Content=" Check for Updates "
                                         ToolTip="Check GitHub for a newer version" />
                                     <Button
+                                        x:Name="BtnDiscord"
+                                        Margin="8,0,0,0"
+                                        Background="#5865F2"
+                                        BorderBrush="{DynamicResource Accent}"
+                                        Click="BtnDiscord_Click"
+                                        ToolTip="Join our Discord community">
+                                        <StackPanel Orientation="Horizontal" Margin="4,0,4,0">
+                                            <Image Source="pack://application:,,,/Assets/icons/discord.png" Width="14" Height="14" Margin="0,0,6,0"/>
+                                            <TextBlock Text="Rust+Desktop" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button
                                         x:Name="BtnPatchNotes"
                                         Margin="8,0,0,0"
                                         Background="{DynamicResource SurfaceAlt}"
@@ -1060,7 +1072,7 @@
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True">
                                                         <Setter Property="Fill" Value="#66BB6A" />
-                                                        <!--  Connected: Green  -->
+                                                        <!--  Connected (at least devices): Green  -->
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -1084,6 +1096,10 @@
                                                         <Setter Property="Foreground" Value="#FFCA28" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True">
+                                                        <Setter Property="Text" Value="CONNECTED (DEVICES ONLY)" />
+                                                        <Setter Property="Foreground" Value="#66BB6A" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Selected.IsFullConnected}" Value="True">
                                                         <Setter Property="Text" Value="CONNECTED" />
                                                         <Setter Property="Foreground" Value="#66BB6A" />
                                                     </DataTrigger>
@@ -1094,11 +1110,19 @@
                                 </StackPanel>
 
                                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-                                    <Button
-                                        Click="BtnConnect_Click"
-                                        Content=" Connect to Server "
-                                        Style="{StaticResource PrimaryButton}"
-                                        Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}" />
+                                    <Button Click="BtnConnect_Click">
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+                                                <Setter Property="Content" Value=" Connect to Server " />
+                                                <Setter Property="Visibility" Value="{Binding Selected.IsFullConnected, Converter={StaticResource BoolToVisibilityInv}}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True">
+                                                        <Setter Property="Content" Value=" Full Connect " />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
                                     <Button
                                         Background="#D32F2F"
                                         BorderBrush="#B71C1C"

@@ -32,7 +32,8 @@ public partial class MainWindow
         // 2) Timer stoppen
         try { _statusTimer?.Stop(); } catch { }
         try { _shopTimer?.Stop(); _shopTimer = null; } catch { }
-        try { _storageTimer?.Stop(); _shopTimer = null; } catch { }
+        try { _storageTimer?.Stop(); _storageTimer = null; } catch { }
+        try { Dispatcher.Invoke(() => ChkShops.IsChecked = false); } catch { }
 
         // 3) UI-/In-Memory-State leeren
         try { TeamMembers.Clear(); } catch { }
@@ -45,6 +46,7 @@ public partial class MainWindow
         try { _lastShops.Clear(); } catch { }
         try { _shopLifetimes.Clear(); } catch { }
         try { _knownShopIds.Clear(); } catch { }
+        _firstShopPollDone = false;
         _initialShopSnapshotTimeUtc = DateTime.MinValue;
         _alertsNeedRebaseline = true;
         _lastChatSendUtc = DateTime.MinValue;
@@ -77,6 +79,7 @@ public partial class MainWindow
         if (_vm?.Selected != null)
         {
             _vm.Selected.IsConnected = false;
+            _vm.Selected.IsFullConnected = false;
         }
         if (_vm != null)
         {
@@ -164,6 +167,7 @@ public partial class MainWindow
         if (_isReconnecting) return;
         _isReconnecting = true;
 
+        Dispatcher.Invoke(() => ChkShops.IsChecked = false);
         AppendLog("[auto-reconnect] Connection lost detected. Starting recovery...");
 
         int delay = 2000;

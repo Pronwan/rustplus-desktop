@@ -48,7 +48,7 @@ public partial class MainWindow
                     _deepSeaMidEvent = false;
                     string dir = GetDeepSeaDirection(deepSeaShop.X, deepSeaShop.Y);
                     if (_announceSpawns && TrackingService.AnnounceDeepSea)
-                        _ = SendTeamChatSafeAsync("Deep Sea will spawn soon, Aye!");
+                        _ = SendTeamChatSafeAsync("Deep Sea is up");
                     AppendLog($"[DEEPSEA] Spawn detected at {deepSeaShop.X:F0},{deepSeaShop.Y:F0} (Direction: {dir})");
                 }
                 else
@@ -634,6 +634,6 @@ public partial class MainWindow
     private bool IsShopEmpty(RustPlusClientReal.ShopMarker s)
     {
         if (s.Orders == null || s.Orders.Count == 0) return true;
-        return s.Orders.All(o => o.Quantity <= 0);
+        return s.Orders.All(o => o.Stock <= 0);
     }
 }
