@@ -21,6 +21,9 @@ public partial class MainWindow
         _vm.Save(); // Save the new configuration settings
     }
 
+    private DateTime _lastChatCommandTime = DateTime.MinValue;
+    private const int ChatCommandCooldownSeconds = 2; // 2s cooldown for system stability
+
     private async Task ProcessChatCommands(TeamChatMessage m)
     {
         var profile = _vm.Selected;
@@ -28,7 +31,16 @@ public partial class MainWindow
 
         var cmd = m.Text.Trim().ToLowerInvariant();
         if (string.IsNullOrEmpty(cmd) || !cmd.StartsWith("!")) return;
+
+        // Global cooldown to prevent spam-induced API deadlocks
+        if ((DateTime.UtcNow - _lastChatCommandTime).TotalSeconds < ChatCommandCooldownSeconds)
+        {
+            AppendLog($"[ChatCommand] Ignoring '{cmd}' from {m.Author} (Cooldown active)");
+            return;
+        }
+
         cmd = cmd.Substring(1); // Remove the '!' prefix for matching
+        _lastChatCommandTime = DateTime.UtcNow;
 
         if (_rust is not RustPlusClientReal real) return;
 
