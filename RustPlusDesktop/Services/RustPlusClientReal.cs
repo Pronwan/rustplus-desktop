@@ -2568,7 +2568,7 @@ rp.connect();
                 else if (ps.Length == 1 && ps[0].ParameterType.Name.Contains("CancellationToken"))
                     args = new object?[] { ct };
 
-                resObj = await UnwrapTaskAsync(mHist.Invoke(_api, args));
+                resObj = await UnwrapTaskAsync(mHist.Invoke(_api, args), ct);
             }
             else
             {
@@ -2579,7 +2579,7 @@ rp.connect();
                     var ps = mInfo.GetParameters();
                     object?[] args = (ps.Length == 1 && ps[0].ParameterType == typeof(CancellationToken))
                                      ? new object?[] { ct } : Array.Empty<object?>();
-                    resObj = await UnwrapTaskAsync(mInfo.Invoke(_api, args));
+                    resObj = await UnwrapTaskAsync(mInfo.Invoke(_api, args), ct);
                 }
             }
 
@@ -2616,20 +2616,17 @@ rp.connect();
     => o?.GetType().GetProperty(name)?.GetValue(o);
 
     // Task/ValueTask dynamisch entpacken
-    private static async Task<object?> UnwrapTaskAsync(object? taskOrValue)
+    private static async Task<object?> UnwrapTaskAsync(object? taskOrValue, CancellationToken ct)
     {
         if (taskOrValue is null) return null;
-        switch (taskOrValue)
+        if (taskOrValue is Task t)
         {
-            case Task t when t.GetType().IsGenericType:
-                await t.ConfigureAwait(false);
+            await t.WaitAsync(ct).ConfigureAwait(false);
+            if (t.GetType().IsGenericType)
                 return t.GetType().GetProperty("Result")?.GetValue(t);
-            case Task t:
-                await t.ConfigureAwait(false);
-                return null;
-            default:
-                return taskOrValue;
+            return null;
         }
+        return taskOrValue;
     }
 
 
@@ -2943,7 +2940,7 @@ rp.connect();
 
                         if (callInfo is Task tInfo)
                         {
-                            await tInfo.ConfigureAwait(false);
+                            await tInfo.WaitAsync(ct).ConfigureAwait(false);
                             var res = tInfo.GetType().GetProperty("Result")?.GetValue(tInfo);
                             var info = res?.GetType().GetProperty("Data")?.GetValue(res) ?? res;
                             world = Convert.ToInt32(
@@ -3362,7 +3359,7 @@ rp.connect();
         object? resp = taskObj;
         if (taskObj is Task tsk)
         {
-            await tsk.ConfigureAwait(false);
+            await tsk.WaitAsync(ct).ConfigureAwait(false);
             resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk);
         }
 
@@ -3622,12 +3619,12 @@ rp.connect();
             var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
             if (send == null) return list;
 
-            await AcquireTokenAsync(CancellationToken.None);
+            await AcquireTokenAsync(ct);
             var taskObj = send.Invoke(_api, new object[] { req });
             object? resp = taskObj;
             if (taskObj is Task tsk)
             {
-                await tsk.ConfigureAwait(false);
+                await tsk.WaitAsync(ct).ConfigureAwait(false);
                 resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk);
             }
 
@@ -4251,7 +4248,7 @@ rp.connect();
 
                 if (call is Task task)
                 {
-                    await task.ConfigureAwait(false);
+                    await task.WaitAsync(ct).ConfigureAwait(false);
                     var res = task.GetType().GetProperty("Result")?.GetValue(task);
                     var data = Prop(res, "Data") ?? Prop(res, "Time") ?? res;
                     if (TryReadTimeHHMM(data, out var tA, out var usedA)) { timeStr = tA; }// L($"time(A): {tA} via {usedA}"); }
@@ -4292,7 +4289,11 @@ rp.connect();
                             await AcquireTokenAsync(ct);
                             var taskObj = send.Invoke(_api, new object[] { reqInfo });
                             object? resp = taskObj;
-                            if (taskObj is Task tsk) { await tsk.ConfigureAwait(false); resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk); }
+                            if (taskObj is Task tsk) 
+                            { 
+                                await tsk.WaitAsync(ct).ConfigureAwait(false); 
+                                resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk); 
+                            }
 
                             if (IsResponseValid(resp))
                             {
@@ -4972,7 +4973,7 @@ rp.connect();
         else
         {
             _log($"[toggle:{id}] path=explicit ✗");
-            var compat = await TrySetEntityValueCompatAsync(id, on);
+            var compat = await TrySetEntityValueCompatAsync(id, on, ct);
             if (compat == true) { _log($"[toggle:{id}] path=setEntityValue ✔"); sent = true; }
             else
             {
@@ -5186,7 +5187,7 @@ rp.connect();
                 var res = m.Invoke(_api, args);
                 if (res is Task task)
                 {
-                    await task;
+                    await task.WaitAsync(ct).ConfigureAwait(false);
                     var ok = TryGetTaskResultSuccess(task);
                     if (ok.HasValue) return ok.Value;
                     return true; // Task lief ohne Exception → vermutlich ok
@@ -5229,7 +5230,7 @@ rp.connect();
     }
 
     // ---- Anpassung: TrySetEntityValueCompatAsync gibt jetzt bool? (null = Methode fehlt)
-    private async Task<bool?> TrySetEntityValueCompatAsync(uint entityId, bool on)
+    private async Task<bool?> TrySetEntityValueCompatAsync(uint entityId, bool on, CancellationToken ct)
     {
         var t = _api!.GetType();
 
@@ -5251,13 +5252,13 @@ rp.connect();
             {
                 var p = m.GetParameters();
                 var args = (p.Length >= 3 && p[2].ParameterType == typeof(CancellationToken))
-                    ? new object[] { Convert.ChangeType(entityId, p[0].ParameterType), on, CancellationToken.None }
+                    ? new object[] { Convert.ChangeType(entityId, p[0].ParameterType), on, ct }
                     : new object[] { Convert.ChangeType(entityId, p[0].ParameterType), on };
 
                 var res = m.Invoke(_api, args);
                 if (res is Task task)
                 {
-                    await task;
+                    await task.WaitAsync(ct).ConfigureAwait(false);
                     var ok = TryGetTaskResultSuccess(task);
                     return ok ?? true; // wenn kein IsSuccess → trotzdem als „gesendet“ werten
                 }

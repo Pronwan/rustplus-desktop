@@ -418,7 +418,8 @@ public partial class MainWindow : Window
 
         this.Closing += MainWindow_Closing;
         _ = EnsureWebView2Async();
-        ClearAllToggleBusy();
+        try { ClearAllToggleBusy(); } catch { }
+        try { ResetAllBusyStates(); } catch { }
         this.Closed += MainWindow_Closed;
 
         _toolButtons = new Dictionary<OverlayToolMode, Button>
@@ -4869,6 +4870,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private void ClearAllToggleBusy()
     {
         lock (_toggleBusy) { _toggleBusy.Clear(); }
+        _globalToggleBusy = false;
+    }
+
+    private void ResetAllBusyStates()
+    {
+        _globalToggleBusy = false;
+        _isDynPollBusy = false;
+        _storageTickBusy = false;
+        _apiConsecutiveTimeouts = 0;
+        System.Threading.Interlocked.Exchange(ref _teamPollBusy, 0);
+        System.Threading.Interlocked.Exchange(ref _camThumbBusy, 0);
+        AppendLog("[reset] All busy flags cleared.");
     }
 
     private void BtnHotkeys_Click(object sender, RoutedEventArgs e)
