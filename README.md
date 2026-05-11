@@ -277,6 +277,7 @@ Enjoy! :)
    - Go to your installation folder (e.g. -> a: -> cd programs -> cd RustPlusDesk)
    - Then copy paste this Power Shell code to the console. (Press enter twice) This should pair manually and open a popup in browser:
 
+```powershell
 $node = ".\runtime\node-win-x64\node.exe"
 $cli  = "$env:LOCALAPPDATA\RustPlusDesk\runtime\rustplus-cli\node_modules\@liamcottle\rustplus.js\cli\index.js"
 $cfg  = "$env:APPDATA\RustPlusDesk\rustplusjs-config.json"
@@ -287,6 +288,7 @@ if (!(Test-Path $cli)) {
     New-Item -ItemType Directory -Force -Path $dst | Out-Null
     Expand-Archive -Path $zip -DestinationPath $dst -Force
 }
+```
 
 & $node $cli fcm-register --config-file "$cfg"
 
