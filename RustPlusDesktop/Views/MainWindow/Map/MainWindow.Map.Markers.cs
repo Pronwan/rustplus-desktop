@@ -2,6 +2,7 @@ using RustPlusDesk.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -541,11 +542,14 @@ public partial class MainWindow
         return BuildEventIconHost(dot, tooltip, size, scaleExp, baseMult);
     }
 
+    private bool _isDynPollBusy = false;
     private async Task PollDynMarkersOnceAsync()
     {
+        if (_isDynPollBusy) return;
         if (_rust is not RustPlusClientReal real) return;
         if (_worldSizeS <= 0 || _worldRectPx.Width <= 0) return;
 
+        _isDynPollBusy = true;
         try
         {
             if (!_monumentWatcher.HasMonuments)
@@ -557,7 +561,8 @@ public partial class MainWindow
                 }
             }
 
-            var list = await real.GetDynamicMapMarkersAsync();
+            using var ctsMarkers = new CancellationTokenSource(8000);
+            var list = await real.GetDynamicMapMarkersAsync(ctsMarkers.Token);
             var virtualMarkers = _monumentWatcher.UpdateAndGetVirtualMarkers(list, _dynKnown);
 
             var combinedList = new List<RustPlusClientReal.DynMarker>(list.Count + virtualMarkers.Count);
@@ -598,6 +603,10 @@ public partial class MainWindow
                     _isAutoReconnecting = false;
                 });
             }
+        }
+        finally
+        {
+            _isDynPollBusy = false;
         }
     }
 

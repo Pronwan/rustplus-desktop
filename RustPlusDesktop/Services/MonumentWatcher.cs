@@ -26,6 +26,8 @@ namespace RustPlusDesk.Services
             public double LastY { get; set; }
             public DateTime LastSeen { get; set; }  // Wann zuletzt gesehen?
             public int MissingCount { get; set; }
+            public int TickCount { get; set; }
+            public bool TrajectoryTriggered { get; set; }
             public bool DebugLogged { get; set; }
         }
 
@@ -111,10 +113,16 @@ namespace RustPlusDesk.Services
 
                     // 2. Trigger prüfen (Hover Logic)
                     if (!_activeEvents.ContainsKey("Small Oil Rig"))
+                    {
                         CheckAndTriggerHover(ch47, state, _smallOilPos, "Small Oil Rig", now);
+                        CheckAndTriggerTrajectory(ch47, state, _smallOilPos, "Small Oil Rig", now);
+                    }
 
                     if (!_activeEvents.ContainsKey("Large Oil Rig"))
+                    {
                         CheckAndTriggerHover(ch47, state, _largeOilPos, "Large Oil Rig", now);
+                        CheckAndTriggerTrajectory(ch47, state, _largeOilPos, "Large Oil Rig", now);
+                    }
 
                     // Position für nächsten Tick merken
                     state.LastX = ch47.X;
@@ -221,17 +229,69 @@ namespace RustPlusDesk.Services
             }
             else
             {
-                // Debugging (nur wenn nah dran)
                 if (dist < 500 && !state.DebugLogged)
                 {
-                     // Wir loggen nur einmal, wenn er in die Nähe kommt, damit wir sehen, was passiert
-                    OnDebug?.Invoke(this, $"[MON] CH={chinook.Id} near {rigName} (Dist={dist:F0}), Speed={speed:F2} (Req < {MaxHoverSpeed})");
-                    // Wir resetten das Log flag, wenn er weit weg ist, aber hier speichern wir es, damit wir nicht spammen während er vorbeifliegt.
-                    // Bei Hover Logic ist "state.DebugLogged" etwas schwieriger zu managen.
-                    // Wir loggen es einfach alle paar Sekunden via Random oder Counter wäre besser, aber state.DebugLogged hilft für 'einmal pro Anflug'.
-                    state.DebugLogged = true; 
+                    OnDebug?.Invoke(this, $"[MON] CH={chinook.Id} near {rigName} (Dist={dist:F0}), Speed={speed:F2}");
+                    state.DebugLogged = true;
                 }
             }
+        }
+        
+        private void CheckAndTriggerTrajectory(RustPlusClientReal.DynMarker chinook, ChinookState state, (double X, double Y)? rigPos, string rigName, DateTime now)
+        {
+            if (rigPos == null || state.TrajectoryTriggered) return;
+
+            // 1. Distanz vom Rig beim Spawn
+            double dxS = state.FirstX - rigPos.Value.X;
+            double dyS = state.FirstY - rigPos.Value.Y;
+            double spawnDist = Math.Sqrt(dxS * dxS + dyS * dyS);
+
+            // 2. Aktuelle Distanz zum Rig
+            double dxC = chinook.X - rigPos.Value.X;
+            double dyC = chinook.Y - rigPos.Value.Y;
+            double currentDist = Math.Sqrt(dxC * dxC + dyC * dyC);
+
+            // LOGIK: Chinook taucht "nahe" am Rig auf (aber nicht direkt drauf) 
+            // und fliegt dann weg. Radius: zwischen 150m und 1200m beim Spawn.
+            if (spawnDist > 150 && spawnDist < 1200)
+            {
+                state.TickCount++;
+
+                // Wir warten ~4 Ticks (ca. 12 Sek), um die Flugrichtung zu bestätigen
+                if (state.TickCount >= 4)
+                {
+                    double moveX = chinook.X - state.FirstX;
+                    double moveY = chinook.Y - state.FirstY;
+                    double totalMoved = Math.Sqrt(moveX * moveX + moveY * moveY);
+
+                    // Er muss sich mindestens 150m vom Spawn wegbewegt haben 
+                    // UND die Distanz zum Rig muss deutlich zugenommen haben.
+                    if (totalMoved > 150 && currentDist > spawnDist + 100)
+                    {
+                        // Winkelprüfung: Bewegt er sich in einer Linie "weg vom Rig"?
+                        // Vektor Rig->Spawn vs Vektor Spawn->Chinook
+                        double angle = GetAngle(dxS, dyS, moveX, moveY);
+                        
+                        if (Math.Abs(angle) < 25) // Innerhalb von 25 Grad Abweichung von der radialen Linie
+                        {
+                            state.TrajectoryTriggered = true;
+                            TriggerEvent(rigName, 750); // 12 Minuten 30 Sekunden
+                            OnDebug?.Invoke(this, $"[MON] Trajectory Trigger! CH={chinook.Id} Rig={rigName} SpawnDist={spawnDist:F0} Moved={totalMoved:F0} Angle={angle:F1}");
+                        }
+                    }
+                }
+            }
+        }
+
+        private double GetAngle(double x1, double y1, double x2, double y2)
+        {
+            double dot = x1 * x2 + y1 * y2;
+            double mag1 = Math.Sqrt(x1 * x1 + y1 * y1);
+            double mag2 = Math.Sqrt(x2 * x2 + y2 * y2);
+            if (mag1 < 0.001 || mag2 < 0.001) return 0;
+            double cos = dot / (mag1 * mag2);
+            if (cos > 1) cos = 1; if (cos < -1) cos = -1;
+            return Math.Acos(cos) * (180.0 / Math.PI);
         }
 
         /// <summary>Returns when the given rig was last triggered this session, or null if never.</summary>
@@ -257,11 +317,11 @@ namespace RustPlusDesk.Services
             _largeOilPos = null;
         }
 
-        private void TriggerEvent(string rigName)
+        private void TriggerEvent(string rigName, int durationSeconds = HackDurationSeconds)
         {
             var evt = new ActiveEvent
             {
-                EndTime = DateTime.UtcNow.AddSeconds(HackDurationSeconds),
+                EndTime = DateTime.UtcNow.AddSeconds(durationSeconds),
                 Announce10Min = false,
                 Announce5Min = false
             };
