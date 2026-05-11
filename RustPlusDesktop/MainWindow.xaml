@@ -1651,7 +1651,7 @@
                                                                 FontSize="13"
                                                                 FontWeight="SemiBold"
                                                                 Foreground="#EAECEE"
-                                                                Text="{Binding Name, TargetNullValue=Device}"
+                                                                Text="{Binding DisplayName, TargetNullValue=Device}"
                                                                 ToolTip="Right click to rename">
                                                                 <TextBlock.Style>
                                                                     <Style TargetType="TextBlock">
@@ -1946,7 +1946,7 @@
                                                                                     FontSize="13"
                                                                                     FontWeight="SemiBold"
                                                                                     Foreground="#EAECEE"
-                                                                                    Text="{Binding Name, TargetNullValue=Storage Monitor}" />
+                                                                                    Text="{Binding DisplayName, TargetNullValue=Storage Monitor}" />
                                                                             </DockPanel>
 
                                                                             <!--  Upkeep line (compact)  -->
