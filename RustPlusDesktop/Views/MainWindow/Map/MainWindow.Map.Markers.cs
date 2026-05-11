@@ -38,9 +38,13 @@ public partial class MainWindow
         public DateTime? LastDeparted;
         public int HarborCount;
         public bool AnnouncedArrivalWarning;
+        public DateTime? ArrivalWarnedAt; // When the 5min-pre-dock warning was sent (for accuracy learning)
         public List<(DateTime Ts, double X, double Y)> History = new();
     }
     private readonly Dictionary<uint, CargoDockInfo> _cargoDockStates = new();
+    private DateTime? _cargoLastDespawnUtc; // Session memory: when did cargo last despawn?
+    private DateTime? _heliLastEventUtc;   // Session memory: last crash or despawn
+    private bool _heliLastEventWasCrash;    // Was the last event a crash (shot down)?
     private bool _firstPollDyn = true;
     private int _pollFailCount = 0;
     private bool _isAutoReconnecting = false;
@@ -302,10 +306,21 @@ public partial class MainWindow
             
             // Only mark as "seen at edge" (fresh spawn) if we were already connected —
             // not on the first poll after connect, where cargo may already be mid-route.
-            double distFromCenter = Math.Sqrt(m.X * m.X + m.Y * m.Y);
-            if (!_firstPollDyn && distFromCenter > (_worldSizeS * 0.42))
+            // Rust+ world coords: 0..worldSize. Map center is at (worldSize/2, worldSize/2).
+            // Cargo spawns at the outer edge, so distance from CENTER must be > ~42% of half-worldSize.
+            double half = _worldSizeS * 0.5;
+            double cx = m.X - half;
+            double cy = m.Y - half;
+            double distFromCenter = Math.Sqrt(cx * cx + cy * cy);
+            if (!_firstPollDyn && distFromCenter > (half * 0.85))
             {
                 state.SeenAtEdge = true;
+                AppendLog($"[cargo] Spawn detected (dist from center: {distFromCenter:F0}, threshold: {half * 0.85:F0})");
+                if (_announceSpawns && TrackingService.AnnounceCargo)
+                {
+                    string grid = GetGridLabel(m.X, m.Y);
+                    _ = SendTeamChatSafeAsync($"Cargo Ship spawned ({grid})");
+                }
             }
 
             _cargoDockStates[m.Id] = state;
@@ -366,9 +381,9 @@ public partial class MainWindow
                     }
                 }
 
-                if (_announceSpawns && TrackingService.AnnounceCargoDocking && !state.WasAlreadyDocked)
+                if (_announceSpawns && TrackingService.AnnounceCargo && !state.WasAlreadyDocked)
                 {
-                    // Will be announced after 5s stationary delay to prevent spam
+                    // Announce immediately on dock (5s delay is handled in the docking announcement below)
                 }
             }
         }
@@ -424,6 +439,7 @@ public partial class MainWindow
                             string grid = GetGridLabel(h.X, h.Y);
                             _ = SendTeamChatSafeAsync($"Cargo Ship expected to dock at {Beautify(h.Name!)} ({grid}) in approx. 5 minutes.");
                             state.AnnouncedArrivalWarning = true;
+                            state.ArrivalWarnedAt = DateTime.UtcNow; // Record for accuracy validation
                             break;
                         }
                     }
@@ -477,6 +493,9 @@ public partial class MainWindow
             // Grace period: 60 seconds before we forget the ship
             if ((now - state.LastSeen).TotalSeconds > 60)
             {
+                _cargoLastDespawnUtc = now;
+                AppendLog($"[cargo] Despawn detected – last seen {(now - state.LastSeen).TotalSeconds:F0}s ago.");
+
                 if (state.FirstSeen.HasValue && state.HarborCount >= 1 && state.SeenAtEdge) 
                 {
                     // Only learn full life if we saw it come in from the edge
@@ -486,6 +505,24 @@ public partial class MainWindow
                         TrackingService.SetLearnedCargoFullLife(host, total);
                     }
                 }
+
+                // Validate arrival warning accuracy: if ArrivalWarnedAt is set and IsDocked happened,
+                // check how long after the warning it actually docked. If wildly off, invalidate the trigger point.
+                if (state.ArrivalWarnedAt.HasValue && state.DockTime.HasValue && state.HarborName != null)
+                {
+                    var warnToDock = (state.DockTime.Value - state.ArrivalWarnedAt.Value).TotalMinutes;
+                    if (warnToDock < 2.0 || warnToDock > 8.0)
+                    {
+                        // Warning fired too early (<2m) or too late (>8m) — discard the trigger point
+                        AppendLog($"[cargo] Trigger point for {state.HarborName} discarded (warn-to-dock: {warnToDock:F1}m, expected ~5m). Will re-learn on next run.");
+                        TrackingService.SetCargoTriggerPoint(host, state.HarborName, 0, 0); // Clear
+                    }
+                    else
+                    {
+                        AppendLog($"[cargo] Trigger point for {state.HarborName} confirmed (warn-to-dock: {warnToDock:F1}m).");
+                    }
+                }
+
                 _cargoDockStates.Remove(key);
             }
         }
@@ -611,7 +648,22 @@ public partial class MainWindow
 
         // 1. Patrol Heli (Type 8)
         var heli = GetPersistentEvent(markers, 8);
-        activeEvents.Add(new EventDockItem { Name = "Patrol Heli", Icon = "pack://application:,,,/Assets/icons/animat-Icons/patrol_helicopter.png", Active = heli.Id != 0, Id = heli.Id, X = heli.X, Y = heli.Y, Trackable = true, Type = 8 });
+        string? heliTimer = null;
+        string? heliTip = null;
+        if (heli.Id != 0)
+        {
+            heliTip = "Patrol Heli active on map";
+        }
+        else if (_heliLastEventUtc.HasValue)
+        {
+            var ago = DateTime.UtcNow - _heliLastEventUtc.Value;
+            heliTimer = $"-{(int)ago.TotalMinutes}:{ago.Seconds:D2}";
+            heliTip = _heliLastEventWasCrash 
+                ? $"Patrol Heli shot down {(int)ago.TotalMinutes}m {ago.Seconds}s ago this session"
+                : $"Patrol Heli left the map {(int)ago.TotalMinutes}m {ago.Seconds}s ago this session";
+        }
+        activeEvents.Add(new EventDockItem { Name = "Patrol Heli", Icon = "pack://application:,,,/Assets/icons/animat-Icons/patrol_helicopter.png", Active = heli.Id != 0, Id = heli.Id, X = heli.X, Y = heli.Y, Trackable = true, Type = 8, TimerText = heliTimer, ToolTip = heliTip });
+
  
         // 2. Cargo Ship (Type 5)
         var cargo = GetPersistentEvent(markers, 5);
@@ -622,34 +674,51 @@ public partial class MainWindow
 
         if (cargo.Id != 0 && _cargoDockStates.TryGetValue(cargo.Id, out var ds))
         {
-            if (cargoLife > 0)
+            if (ds.IsDocked && ds.DockTime.HasValue)
             {
-                if (ds.SeenAtEdge && ds.FirstSeen.HasValue)
+                // Docked: show docking countdown if we know the duration
+                int dockDuration = TrackingService.GetLearnedDockingDuration(host);
+                if (dockDuration > 0 && !ds.WasAlreadyDocked)
                 {
-                    // We saw the spawn — remaining time is accurate
-                    var remain = TimeSpan.FromMinutes(cargoLife) - (DateTime.UtcNow - ds.FirstSeen.Value);
-                    if (remain.TotalSeconds > 0)
-                    {
-                        cargoTimer = $"{(int)remain.TotalMinutes}:{remain.Seconds:D2}";
-                        cargoTip = "Total time remaining on map";
-                    }
+                    var dockRemain = TimeSpan.FromMinutes(dockDuration) - (DateTime.UtcNow - ds.DockTime.Value);
+                    cargoTimer = dockRemain.TotalSeconds > 0 ? $"{(int)dockRemain.TotalMinutes}:{dockRemain.Seconds:D2}" : "0:00";
+                    cargoTip = $"Docked at {ds.HarborName ?? "harbor"} – departs in ~{cargoTimer}";
                 }
                 else
                 {
-                    // Connected mid-route — we know the total duration but not how far along cargo is
                     cargoTimer = "??:??";
-                    cargoTip = $"Route learned (~{cargoLife}m total), connected mid-event";
+                    cargoTip = ds.WasAlreadyDocked ? "Already docked on connect – depart time unknown" : $"Docked at {ds.HarborName ?? "harbor"} (dock duration not yet learned)";
                 }
             }
-            else
+            else if (ds.SeenAtEdge && cargoLife > 0 && ds.FirstSeen.HasValue)
             {
-                // Unlearned route
-                cargoTimer = "??:??";
-                cargoTip = "Total time remaining unknown (not yet learned on this server)";
+                // Spawned fresh this session – show accurate countdown
+                var remain = TimeSpan.FromMinutes(cargoLife) - (DateTime.UtcNow - ds.FirstSeen.Value);
+                if (remain.TotalSeconds > 0)
+                {
+                    cargoTimer = $"{(int)remain.TotalMinutes}:{remain.Seconds:D2}";
+                    cargoTip = "Time remaining on map (from spawn)";
+                }
             }
+            else if (!ds.SeenAtEdge)
+            {
+                // Connected mid-route: we don't know how long it's been on the map
+                cargoTimer = null; // No timer — we can't know
+                cargoTip = cargoLife > 0
+                    ? $"Connected mid-route – time unknown (route ~{cargoLife}m total)"
+                    : "Connected mid-route – time unknown";
+            }
+        }
+        else if (cargo.Id == 0 && _cargoLastDespawnUtc.HasValue)
+        {
+            // Cargo is gone but we saw it despawn this session
+            var ago = DateTime.UtcNow - _cargoLastDespawnUtc.Value;
+            cargoTimer = $"-{(int)ago.TotalMinutes}:{ago.Seconds:D2}";
+            cargoTip = $"Cargo Ship despawned {(int)ago.TotalMinutes}m {ago.Seconds}s ago this session";
         }
 
         activeEvents.Add(new EventDockItem { Name = "Cargo Ship", Icon = "pack://application:,,,/Assets/icons/cargo.png", Active = cargo.Id != 0, Id = cargo.Id, X = cargo.X, Y = cargo.Y, Trackable = true, Type = 5, TimerText = cargoTimer, ToolTip = cargoTip });
+
  
         // 3. Chinook (Type 4)
         var chinook = GetPersistentEvent(markers, 4);
@@ -667,20 +736,24 @@ public partial class MainWindow
             if (_deepSeaSpawnTime.HasValue)
             {
                 var dsElapsed = DateTime.UtcNow - _deepSeaSpawnTime.Value;
-                dsTimer = $"{(int)dsElapsed.TotalHours:D1}:{dsElapsed.Minutes:D2}";
-                dsTip = $"Spawned {FormatAgo(dsElapsed)} ago";
+                // Show elapsed time since spawn (upward counting)
+                dsTimer = dsElapsed.TotalHours >= 1
+                    ? $"{(int)dsElapsed.TotalHours}h {dsElapsed.Minutes:D2}m"
+                    : $"{(int)dsElapsed.TotalMinutes}m {dsElapsed.Seconds:D2}s";
+                dsTip = $"Deep Sea active – running for {FormatAgo(dsElapsed)}";
             }
             else
             {
                 dsTimer = "??:??";
-                dsTip = _deepSeaMidEvent ? "Shops enabled mid-event \u2014 spawn time unknown" : "Spawn time unknown";
+                dsTip = _deepSeaMidEvent ? "Connected mid-event \u2014 spawn time unknown" : "Deep Sea active (spawn time unknown)";
             }
         }
         else if (_deepSeaDespawnTime.HasValue)
         {
             var dsInactive = DateTime.UtcNow - _deepSeaDespawnTime.Value;
-            dsTimer = $"{(int)dsInactive.TotalHours:D1}:{dsInactive.Minutes:D2}";
-            dsTip = $"Inactive since {FormatAgo(dsInactive)} ago";
+            // Negative timer = time since despawn (matching Cargo style)
+            dsTimer = $"-{(int)dsInactive.TotalMinutes}:{dsInactive.Seconds:D2}";
+            dsTip = $"Deep Sea ended {FormatAgo(dsInactive)} ago this session";
         }
         activeEvents.Add(new EventDockItem { Name = "Deep Sea Event", Icon = "pack://application:,,,/Assets/icons/ds_event.png", Active = _deepSeaActive, Id = 0, X = 0, Y = 0, Trackable = false, Type = 0, TimerText = dsTimer, ToolTip = dsTip });
 
@@ -1246,10 +1319,10 @@ public partial class MainWindow
                                 pmtTimer.TimerText.Text = remain.TotalSeconds > 0 ? $"{(int)remain.TotalMinutes}:{remain.Seconds:D2}" : "0:00";
                             }
                         }
-                        else if (ds.FirstSeen.HasValue)
+                        else if (ds.FirstSeen.HasValue && ds.SeenAtEdge)
                         {
                             int fullLife = TrackingService.GetLearnedCargoFullLife(host);
-                            if (fullLife > 0 && ds.SeenAtEdge)
+                            if (fullLife > 0)
                             {
                                 var remain = TimeSpan.FromMinutes(fullLife) - (DateTime.UtcNow - ds.FirstSeen.Value);
                                 if (remain.TotalSeconds > 0)
@@ -1261,7 +1334,7 @@ public partial class MainWindow
                             }
                             else
                             {
-                                // Connected mid-route or unlearned — show question marks
+                                // Unlearned route
                                 pmtTimer.TimerText.Text = "??:??";
                                 pmtTimer.TimerContainer.Visibility = Visibility.Visible;
                             }
@@ -1346,17 +1419,28 @@ public partial class MainWindow
             // Real removal after 5 missing polls or if no state
             if (_dynEls.TryGetValue(id, out var oldEl))
             {
-                // Heli crash detection: if Type==8 and last real position was inside the map, it was shot down
-                if (state != null && state.Type == 8 && IsInsideMap(state.LastRealX, state.LastRealY))
+                // Heli crash detection: if Type==8, it either left the map or was shot down
+                if (state != null && state.Type == 8)
                 {
-                    double cx = state.LastRealX, cy = state.LastRealY;
-                    string crashGrid = GetGridLabel(cx, cy);
-                    var site = new HeliCrashSite { HeliId = id, X = cx, Y = cy, CrashedAt = DateTime.UtcNow };
-                    _heliCrashSites.Add(site);
-                    _ = Dispatcher.InvokeAsync(() => site.MapElement = PlaceHeliCrashSite(site));
-                    if (_announceSpawns && TrackingService.AnnounceHeli)
-                        _ = SendTeamChatSafeAsync($"Patrol Heli shot down at {crashGrid}");
-                    AppendLog($"[HeliCrash] Crash detected at {crashGrid} (last real pos {cx:F0},{cy:F0})");
+                    bool crashed = IsInsideMap(state.LastRealX, state.LastRealY);
+                    _heliLastEventUtc = DateTime.UtcNow;
+                    _heliLastEventWasCrash = crashed;
+
+                    if (crashed)
+                    {
+                        double cx = state.LastRealX, cy = state.LastRealY;
+                        string crashGrid = GetGridLabel(cx, cy);
+                        var site = new HeliCrashSite { HeliId = id, X = cx, Y = cy, CrashedAt = DateTime.UtcNow };
+                        _heliCrashSites.Add(site);
+                        _ = Dispatcher.InvokeAsync(() => site.MapElement = PlaceHeliCrashSite(site));
+                        if (_announceSpawns && TrackingService.AnnounceHeli)
+                            _ = SendTeamChatSafeAsync($"Patrol Heli shot down at {crashGrid}");
+                        AppendLog($"[HeliCrash] Crash detected at {crashGrid} (last real pos {cx:F0},{cy:F0})");
+                    }
+                    else
+                    {
+                        AppendLog($"[Heli] Patrol Heli left the map area.");
+                    }
                 }
 
                 Overlay.Children.Remove(oldEl);

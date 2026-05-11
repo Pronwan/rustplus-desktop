@@ -30,7 +30,7 @@ public partial class MainWindow
     // Low-priority polls (shops, storage) skip their tick while active.
     // =========================================================
     private int _apiConsecutiveTimeouts = 0;
-    private const int ApiPressureThreshold = 3;
+    private const int ApiPressureThreshold = 5;
     private bool IsApiUnderPressure => _apiConsecutiveTimeouts >= ApiPressureThreshold;
 
     private void OnApiPollSuccess()
@@ -493,37 +493,39 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
 
             AppendLog($"Sending {(on ? "ON" : "OFF")} to #{dev.EntityId} …");
 
-            try
-            {
-                // *** WICHTIG: immer mit Timeout aufrufen ***
-                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(8));
-                await _rust.ToggleSmartSwitchAsync(dev.EntityId, on, cts.Token);
-            }
-            catch (OperationCanceledException)
-            {
-                AppendLog("Toggle timeout (8s).");
-            }
-            catch (Exception ex)
-            {
-                AppendLog($"Device #{dev.EntityId}: Switching failed – {ex.Message}");
-                dev.IsMissing = true;
+            int attempts = 0;
+            const int maxAttempts = 3;
+            bool success = false;
 
-                // Optional: einmaliger Reconnect-Retry bei „nicht verbunden“
-                if (LooksLikeNotConnected(ex) && await EnsureConnectedAsync())
-                {
-                    using var cts2 = new CancellationTokenSource(TimeSpan.FromSeconds(6));
-                    try { await _rust.ToggleSmartSwitchAsync(dev.EntityId, on, cts2.Token); }
-                    catch (Exception ex2) { AppendLog("Retry failed: " + ex2.Message); }
-                }
-            }
-            finally
+            while (attempts < maxAttempts && !success)
             {
-                await RefreshDeviceStateAsync(dev);
+                attempts++;
+                try
+                {
+                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(8));
+                    await _rust.ToggleSmartSwitchAsync(dev.EntityId, on, cts.Token);
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    if (attempts >= maxAttempts)
+                    {
+                        AppendLog($"Device #{dev.EntityId}: Switching failed after {attempts} attempts – {ex.Message}");
+                        dev.IsMissing = true;
+                    }
+                    else
+                    {
+                        AppendLog($"Device #{dev.EntityId}: Toggle attempt {attempts} failed, retrying in 1s …");
+                        await Task.Delay(1000);
+                        if (!await EnsureConnectedAsync()) break;
+                    }
+                }
             }
         }
         finally
         {
-            UnmarkToggleBusy(dev.EntityId); // <<< wird garantiert ausgeführt
+            await RefreshDeviceStateAsync(dev);
+            UnmarkToggleBusy(dev.EntityId);
         }
     }
 
@@ -537,9 +539,32 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
 
     private bool TryGetCachedStorage(uint id, out StorageSnap? snap)
         => _storageCache.TryGetValue(id, out snap);
-    // Ein Gerät *generisch* neu einlesen (wie der Info-Button).
-    // - Für SmartSwitch: schneller Pfad über GetSmartSwitchStateAsync
-    // - Für alle anderen (oder Fallback): ProbeEntityAsync (setzt auch Kind/IsMissing)
+    private async Task<EntityProbeResult> ProbeWithRetryAsync(uint entityId, bool log = true)
+    {
+        int attempts = 0;
+        const int max = 3;
+        while (attempts < max)
+        {
+            attempts++;
+            try
+            {
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(6));
+                var r = await _rust.ProbeEntityAsync(entityId, cts.Token);
+                if (r.Exists) return r;
+
+                if (attempts < max) await Task.Delay(500);
+            }
+            catch (Exception ex)
+            {
+                if (attempts >= max) throw;
+                if (log) AppendLog($"[probe] #{entityId} attempt {attempts} failed: {ex.Message} – retrying …");
+                await Task.Delay(1000);
+                await EnsureConnectedAsync();
+            }
+        }
+        return new EntityProbeResult(false, null, null);
+    }
+
     private async Task RefreshDeviceStateAsync(SmartDevice dev, bool log = true, bool forcePull = false)
     {
         if (_rust is not RustPlusClientReal real) return;
@@ -588,7 +613,7 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                 {
                     try
                     {
-                        var rStor = await _rust.ProbeEntityAsync(dev.EntityId);
+                        var rStor = await ProbeWithRetryAsync(dev.EntityId, log);
                         dev.IsMissing = !rStor.Exists;
                         if (!rStor.Exists && log) AppendLog($"#{dev.EntityId}: not reachable / demoted");
                     }
@@ -610,7 +635,7 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
         // ===== Generisch (SmartAlarm & Co.) =====
         try
         {
-            var r = await _rust.ProbeEntityAsync(dev.EntityId);
+            var r = await ProbeWithRetryAsync(dev.EntityId, log);
 
             // Kind nur setzen, NIE SmartAlarm überschreiben
             if (!string.IsNullOrWhiteSpace(r.Kind) &&
@@ -1214,11 +1239,10 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
             await semaphore.WaitAsync();
             try
             {
-                var r = await _rust.ProbeEntityAsync(d.EntityId);
+                var r = await ProbeWithRetryAsync(d.EntityId, false);
                 if (!string.IsNullOrWhiteSpace(r.Kind))
                     d.Kind = r.Kind;
                 d.IsMissing = !r.Exists;
-                // AppendLog($"[prime] #{d.EntityId} kind={d.Kind ?? "?"} exists={r.Exists}");
             }
             catch (Exception ex)
             {
@@ -1227,10 +1251,10 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
             finally
             {
                 semaphore.Release();
-                // Minimal spacing per slot
                 await Task.Delay(150);
             }
         });
+
 
         await Task.WhenAll(tasks);
         _vm?.NotifyDevicesChanged();

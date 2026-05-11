@@ -121,6 +121,13 @@ public class ServerProfile : INotifyPropertyChanged
         set { _cmdCargo = value?.TrimStart('!') ?? ""; OnProp(); }
     }
 
+    private string _cmdOilRig = "oilrig";
+    public string CmdOilRig
+    {
+        get => _cmdOilRig;
+        set { _cmdOilRig = value?.TrimStart('!') ?? ""; OnProp(); }
+    }
+
     private string _cmdSwitch1 = "switch1";
     public string CmdSwitch1
     {

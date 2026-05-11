@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
+
 
 namespace RustPlusDesk.Views;
 
@@ -65,15 +67,27 @@ public partial class MainWindow
         // Command: Deep Sea
         if (cmd == profile.CmdDeepSea.ToLowerInvariant())
         {
-            string msg = "Deep Sea event status unknown.";
-            if (_deepSeaActive) 
+            string msg;
+            if (_deepSeaActive)
             {
-                msg = "Deep Sea is currently active!";
+                if (_deepSeaSpawnTime.HasValue)
+                {
+                    var elapsed = DateTime.UtcNow - _deepSeaSpawnTime.Value;
+                    msg = $"Deep Sea is active! Running for {(int)elapsed.TotalHours}h {elapsed.Minutes}m.";
+                }
+                else
+                {
+                    msg = "Deep Sea is currently active (connected mid-event – spawn time unknown).";
+                }
             }
-            else if (_deepSeaDespawnTime.HasValue) 
+            else if (_deepSeaDespawnTime.HasValue)
             {
                 var ago = DateTime.UtcNow - _deepSeaDespawnTime.Value;
-                msg = $"Deep Sea ended {(int)ago.TotalMinutes} minutes ago.";
+                msg = $"Deep Sea ended {(int)ago.TotalMinutes} minutes ago this session.";
+            }
+            else
+            {
+                msg = "Deep Sea event status unknown (not seen this session).";
             }
             _ = SendTeamChatSafeAsync(msg);
             AppendLog($"[ChatCommand] DeepSea executed by {m.Author}");
@@ -83,26 +97,86 @@ public partial class MainWindow
         // Command: Cargo
         if (cmd == profile.CmdCargo.ToLowerInvariant())
         {
-            string msg = "Cargo Ship not active / remaining time unknown.";
+            string msg = "Cargo Ship not active.";
             var activeCargo = _cargoDockStates.Values.FirstOrDefault();
             if (activeCargo != null)
             {
-                int fullLife = TrackingService.GetLearnedCargoFullLife(profile.Host);
-                if (fullLife > 0 && activeCargo.FirstSeen.HasValue)
+                if (activeCargo.IsDocked && activeCargo.DockTime.HasValue)
                 {
-                    var remain = TimeSpan.FromMinutes(fullLife) - (DateTime.UtcNow - activeCargo.FirstSeen.Value);
-                    if (remain.TotalMinutes > 0)
-                        msg = $"Cargo Ship active. Leaves in approx. {(int)remain.TotalMinutes} minutes.";
+                    int dockDuration = TrackingService.GetLearnedDockingDuration(profile.Host);
+                    if (dockDuration > 0 && !activeCargo.WasAlreadyDocked)
+                    {
+                        var dockRemain = TimeSpan.FromMinutes(dockDuration) - (DateTime.UtcNow - activeCargo.DockTime.Value);
+                        if (dockRemain.TotalMinutes > 0)
+                            msg = $"Cargo Ship docked at {activeCargo.HarborName ?? "harbor"}. Departs in approx. {(int)dockRemain.TotalMinutes} minutes.";
+                        else
+                            msg = $"Cargo Ship docked at {activeCargo.HarborName ?? "harbor"} and preparing to depart.";
+                    }
                     else
-                        msg = "Cargo Ship active and preparing to leave soon.";
+                    {
+                        msg = $"Cargo Ship docked at {activeCargo.HarborName ?? "harbor"} (departure time unknown).";
+                    }
+                }
+                else if (activeCargo.SeenAtEdge)
+                {
+                    // We saw the spawn this session — time estimate is reliable
+                    int fullLife = TrackingService.GetLearnedCargoFullLife(profile.Host);
+                    if (fullLife > 0 && activeCargo.FirstSeen.HasValue)
+                    {
+                        var remain = TimeSpan.FromMinutes(fullLife) - (DateTime.UtcNow - activeCargo.FirstSeen.Value);
+                        if (remain.TotalMinutes > 0)
+                            msg = $"Cargo Ship active. Leaves in approx. {(int)remain.TotalMinutes} minutes.";
+                        else
+                            msg = "Cargo Ship active and preparing to leave soon.";
+                    }
+                    else
+                    {
+                        msg = "Cargo Ship active (route duration not yet learned for this server).";
+                    }
                 }
                 else
                 {
-                    msg = "Cargo Ship active (remaining time unknown).";
+                    // Mid-connect — we don't know how long it's been on the map
+                    msg = "Cargo Ship active (connected after spawn – remaining time unknown).";
                 }
+            }
+            else if (_cargoLastDespawnUtc.HasValue)
+            {
+                var ago = DateTime.UtcNow - _cargoLastDespawnUtc.Value;
+                msg = $"Cargo Ship not active. Despawned {(int)ago.TotalMinutes} minutes ago this session.";
             }
             _ = SendTeamChatSafeAsync(msg);
             AppendLog($"[ChatCommand] Cargo executed by {m.Author}");
+            return;
+        }
+
+        // Command: Oil Rig
+        if (cmd == profile.CmdOilRig.ToLowerInvariant())
+        {
+            var parts = new List<string>();
+            foreach (var rigName in new[] { "Small Oil Rig", "Large Oil Rig" })
+            {
+                var timeLeft = _monumentWatcher.GetActiveEventTimeLeft(rigName);
+                if (timeLeft.HasValue)
+                {
+                    parts.Add($"{rigName}: crate in {(int)timeLeft.Value.TotalMinutes}m {timeLeft.Value.Seconds}s");
+                }
+                else
+                {
+                    var lastTrig = _monumentWatcher.GetLastTriggered(rigName);
+                    if (lastTrig.HasValue)
+                    {
+                        var ago = DateTime.UtcNow - lastTrig.Value;
+                        parts.Add($"{rigName}: last called {(int)ago.TotalMinutes}m ago");
+                    }
+                    else
+                    {
+                        parts.Add($"{rigName}: not called this session");
+                    }
+                }
+            }
+            _ = SendTeamChatSafeAsync(string.Join(" | ", parts));
+            AppendLog($"[ChatCommand] OilRig executed by {m.Author}");
             return;
         }
 
