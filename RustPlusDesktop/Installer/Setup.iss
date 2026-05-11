@@ -4,7 +4,7 @@
 ; =============================================
 
 #define MyAppName      "RustPlusDesk"
-#define MyAppVersion   "4.4.0-beta1"
+#define MyAppVersion   "4.4.5-beta1"
 #define MyAppPublisher "Pronwan" 
 #define MyAppURL       "https://github.com/Pronwan/rustplus-desktop"
 #define MyAppExeName   "RustPlusDesk.exe"
@@ -45,8 +45,9 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "..\bin\Installer\publish\*"; DestDir: "{app}"; Flags: ignoreversion
 
 ; 2. Die Unterordner direkt aus dem Release-Verzeichnis
-Source: "..\bin\Installer\publish\Assets\icons\*";    DestDir: "{app}\Assets\icons";    Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\bin\Installer\publish\runtime\*";  DestDir: "{app}\runtime";  Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\bin\Installer\publish\Assets\*";    DestDir: "{app}\Assets";    Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\bin\Installer\publish\runtimes\*";  DestDir: "{app}\runtimes";  Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\bin\Installer\publish\runtime\*";   DestDir: "{app}\runtime";   Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -56,8 +57,9 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
+Type: filesandordirs; Name: "{app}\runtimes"
 Type: filesandordirs; Name: "{app}\runtime"
-Type: filesandordirs; Name: "{app}\icons"
+Type: filesandordirs; Name: "{app}\Assets"
 
 [Code]
 // Jawads Aufräum-Logik (Sehr nützlich!)
