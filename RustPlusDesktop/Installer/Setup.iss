@@ -46,7 +46,6 @@ Source: "..\bin\Installer\publish\*"; DestDir: "{app}"; Flags: ignoreversion
 
 ; 2. Die Unterordner direkt aus dem Release-Verzeichnis
 Source: "..\bin\Installer\publish\Assets\*";    DestDir: "{app}\Assets";    Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\bin\Installer\publish\runtimes\*";  DestDir: "{app}\runtimes";  Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\bin\Installer\publish\runtime\*";   DestDir: "{app}\runtime";   Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
