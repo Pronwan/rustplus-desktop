@@ -167,6 +167,13 @@ public partial class MainWindow
     {
         if (_rust is not RustPlusClientReal real) return;
 
+        // Skip low-priority poll when server is under stress
+        if (IsApiUnderPressure)
+        {
+            AppendLog("[shops] Skipping poll – API under pressure.");
+            return;
+        }
+
         try
         {
             List<RustPlusClientReal.ShopMarker> shops = null;

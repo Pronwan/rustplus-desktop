@@ -322,6 +322,13 @@ public partial class MainWindow
             _storageTickBusy = true;
             try
             {
+                // Skip low-priority storage poll when API is under stress
+                if (IsApiUnderPressure)
+                {
+                    AppendLog("[storage] Skipping poll – API under pressure.");
+                    return;
+                }
+
                 var sel = _connectedProfile ?? _vm?.Selected;
                 var devs = sel?.Devices;
 
@@ -352,7 +359,8 @@ public partial class MainWindow
                 _storageTickBusy = false;
             }
         };
-        _storageTimer.Start();
+        // Stagger storage timer start by 7s to avoid overlap with other timers at connect
+        _ = Task.Delay(TimeSpan.FromSeconds(7)).ContinueWith(_ => Dispatcher.Invoke(() => _storageTimer?.Start()));
         return true;
     }
 
