@@ -99,7 +99,8 @@ public partial class MainWindow
             Interval = TimeSpan.FromSeconds(5)
         };
         _teamTimer.Tick += TeamTimer_Tick;
-        _teamTimer.Start();
+        // Stagger start by 3s to avoid timer burst at connect time
+        _ = Task.Delay(TimeSpan.FromSeconds(3)).ContinueWith(_ => Dispatcher.Invoke(() => _teamTimer?.Start()));
     }
 
     private void StopTeamPolling()

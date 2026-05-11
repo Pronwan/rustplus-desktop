@@ -216,7 +216,7 @@ public partial class MainWindow
     private void StartDynPolling()
     {
         _dynTimer?.Stop();
-        _dynTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+        _dynTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
         _dynTimer.Tick += async (_, __) => await PollDynMarkersOnceAsync();
         _firstPollDyn = true; // Suppress announcements on the very first poll of a new connection
         _dynTimer.Start();
@@ -541,14 +541,14 @@ public partial class MainWindow
 
             _firstMarkerPollDone = true;
             _pollFailCount = 0; // Connection is healthy
-
-
+            OnApiPollSuccess();
 
             _ = Dispatcher.InvokeAsync(() => RefreshAllOverlayScales(), DispatcherPriority.Loaded);
         }
         catch
         {
             _pollFailCount++;
+            OnApiPollTimeout();
             // After 5 consecutive failures the WebSocket is likely dead — auto-reconnect
             if (_pollFailCount >= 5 && !_isAutoReconnecting && _vm?.Selected != null)
             {
@@ -1539,9 +1539,9 @@ public partial class MainWindow
             return;
         }
 
-        // 1000ms animation for 1.0s polling interval to achieve flawless constant velocity
-        var animX = new DoubleAnimation(targetLeft, TimeSpan.FromMilliseconds(1000));
-        var animY = new DoubleAnimation(targetTop, TimeSpan.FromMilliseconds(1000));
+        // 2000ms animation for 2.0s polling interval to achieve flawless constant velocity
+        var animX = new DoubleAnimation(targetLeft, TimeSpan.FromMilliseconds(2000));
+        var animY = new DoubleAnimation(targetTop, TimeSpan.FromMilliseconds(2000));
 
         el.BeginAnimation(Canvas.LeftProperty, animX);
         el.BeginAnimation(Canvas.TopProperty, animY);

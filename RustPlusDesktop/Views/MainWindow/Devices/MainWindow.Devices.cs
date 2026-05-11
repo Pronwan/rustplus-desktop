@@ -24,6 +24,33 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
+    // =========================================================
+    // API Backpressure Tracker
+    // Incremented on consecutive poll failures, decremented on success.
+    // Low-priority polls (shops, storage) skip their tick while active.
+    // =========================================================
+    private int _apiConsecutiveTimeouts = 0;
+    private const int ApiPressureThreshold = 3;
+    private bool IsApiUnderPressure => _apiConsecutiveTimeouts >= ApiPressureThreshold;
+
+    private void OnApiPollSuccess()
+    {
+        if (_apiConsecutiveTimeouts > 0)
+        {
+            _apiConsecutiveTimeouts = Math.Max(0, _apiConsecutiveTimeouts - 1);
+            if (_apiConsecutiveTimeouts < ApiPressureThreshold)
+                AppendLog("[pressure] API pressure relieved.");
+        }
+    }
+
+    private void OnApiPollTimeout()
+    {
+        _apiConsecutiveTimeouts = Math.Min(10, _apiConsecutiveTimeouts + 1);
+        if (_apiConsecutiveTimeouts == ApiPressureThreshold)
+            AppendLog("[pressure] API under pressure – low-priority polls paused.");
+    }
+    // =========================================================
+
 private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
     {
         if (_vm != null)
