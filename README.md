@@ -128,7 +128,7 @@ A massive shout-out to [JawadYzbk](https://github.com/JawadYzbk) for contributin
 - **Stability Patch:** Even on weak servers the connection should now be more stable and smart devices should work more reliably. Reduced duplicate chat fetches, made shop search and shops more stable with caching icons to local drive.
 
 ## Update Notes 3.3.0 (January 18th 26)
-- **New Oilrig Countdown:** When Oilrig is triggered, a crate icon with the remaining time appears on the map. Optional Team Chat notifications remind your team every 5 minutes until the crate unlocks.
+~~- **New Oilrig Countdown:** When Oilrig is triggered, a crate icon with the remaining time appears on the map. Optional Team Chat notifications remind your team every 5 minutes until the crate unlocks.~~ (Fixed by FP)
 - **Leader Auto-Promote:** No more AFK leaders! Team members can now type `!leader` in chat to be instantly promoted to team leader (requires current leader to have the app open).
 
 ## Update Notes 3.2.1 (November 21st 25)
