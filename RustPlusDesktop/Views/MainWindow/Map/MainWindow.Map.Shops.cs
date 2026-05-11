@@ -170,7 +170,6 @@ public partial class MainWindow
         // Skip low-priority poll when server is under stress
         if (IsApiUnderPressure)
         {
-            AppendLog("[shops] Skipping poll – API under pressure.");
             return;
         }
 
@@ -212,7 +211,10 @@ public partial class MainWindow
             if (ShopSearchContent.Visibility == Visibility.Visible)
                 RefreshShopSearchResults();
 
-            _firstShopPollDone = true; // Mark first poll complete (after all processing)
+            if (shops.Count > 0)
+            {
+                _firstShopPollDone = true; // Mark first poll complete ONLY if we actually got data
+            }
         }
         catch (Exception)
         {

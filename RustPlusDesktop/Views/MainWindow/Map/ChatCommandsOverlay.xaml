@@ -49,11 +49,17 @@
                         <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
                         <TextBox Grid.Column="2" Text="{Binding CmdDeepSea}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
                     </Grid>
-                    <Grid Margin="0,0,0,15">
+                    <Grid Margin="0,0,0,5">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="100"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                         <TextBlock Text="Cargo Ship:" VerticalAlignment="Center" Foreground="White" />
                         <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
                         <TextBox Grid.Column="2" Text="{Binding CmdCargo}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
+                    </Grid>
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="100"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <TextBlock Text="Oil Rig:" VerticalAlignment="Center" Foreground="White" />
+                        <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                        <TextBox Grid.Column="2" Text="{Binding CmdOilRig}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
                     </Grid>
                     
                     <StackPanel IsEnabled="{Binding HasSmartSwitches}">

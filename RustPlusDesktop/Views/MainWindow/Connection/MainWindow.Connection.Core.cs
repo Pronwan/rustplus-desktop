@@ -315,7 +315,7 @@ public partial class MainWindow
         }
 
         _storageTimer?.Stop();
-        _storageTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(10) };
+        _storageTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(60) };
         _storageTimer.Tick += async (_, __) =>
         {
             if (_storageTickBusy) return;
@@ -325,9 +325,9 @@ public partial class MainWindow
                 // Skip low-priority storage poll when API is under stress
                 if (IsApiUnderPressure)
                 {
-                    AppendLog("[storage] Skipping poll – API under pressure.");
                     return;
                 }
+
 
                 var sel = _connectedProfile ?? _vm?.Selected;
                 var devs = sel?.Devices;

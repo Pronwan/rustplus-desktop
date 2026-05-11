@@ -39,6 +39,9 @@ namespace RustPlusDesk.Services
         // Wir tracken jetzt kompletten State pro Chinook-ID
         private Dictionary<uint, ChinookState> _chinookStates = new();
 
+        // Wann wurde welches Rig zuletzt getriggert (Session-Memory für !oilrig)
+        private readonly Dictionary<string, DateTime> _lastTriggeredTimes = new();
+
         // --- KONFIGURATION ---
 
         // 1. Maximale Distanz zum Rig für Trigger (Hover-Radius)
@@ -231,6 +234,21 @@ namespace RustPlusDesk.Services
             }
         }
 
+        /// <summary>Returns when the given rig was last triggered this session, or null if never.</summary>
+        public DateTime? GetLastTriggered(string rigName)
+            => _lastTriggeredTimes.TryGetValue(rigName, out var t) ? t : null;
+
+        /// <summary>Returns the remaining time on the active hack timer for the given rig, or null if not active.</summary>
+        public TimeSpan? GetActiveEventTimeLeft(string rigName)
+        {
+            if (_activeEvents.TryGetValue(rigName, out var evt))
+            {
+                var remaining = evt.EndTime - DateTime.UtcNow;
+                return remaining.TotalSeconds > 0 ? remaining : TimeSpan.Zero;
+            }
+            return null;
+        }
+
         public void Reset()
         {
             _activeEvents.Clear();
@@ -249,6 +267,7 @@ namespace RustPlusDesk.Services
             };
 
             _activeEvents[rigName] = evt;
+            _lastTriggeredTimes[rigName] = DateTime.UtcNow;
             OnOilRigTriggered?.Invoke(this, rigName);
         }
     }
