@@ -375,53 +375,6 @@ public partial class MainWindow
             return false;
         }
 
-        _storageTimer?.Stop();
-        _storageTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(60) };
-        _storageTimer.Tick += async (_, __) =>
-        {
-            if (_storageTickBusy) return;
-            _storageTickBusy = true;
-            try
-            {
-                // Skip low-priority storage poll when API is under stress
-                if (IsApiUnderPressure)
-                {
-                    return;
-                }
-
-
-                var sel = _connectedProfile ?? _vm?.Selected;
-                var devs = sel?.Devices;
-
-                if (devs == null || devs.Count == 0)
-                    return;
-
-                var snapshot = devs
-                    .Where(sd => RustPlusClientReal.IsStorageDevice(sd))
-                    .ToList();
-
-                if (snapshot.Count == 0)
-                    return;
-
-                foreach (var sd in snapshot)
-                {
-                    try
-                    {
-                        await RefreshDeviceStateAsync(sd, log: true, forcePull: true);
-                    }
-                    catch (Exception ex)
-                    {
-                        AppendLog($"[stor/poll] #{sd.EntityId} err: {ex.Message}");
-                    }
-                }
-            }
-            finally
-            {
-                _storageTickBusy = false;
-            }
-        };
-        // Stagger storage timer start by 7s to avoid overlap with other timers at connect
-        _ = Task.Delay(TimeSpan.FromSeconds(7)).ContinueWith(_ => Dispatcher.Invoke(() => _storageTimer?.Start()));
         return true;
     }
 
