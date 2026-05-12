@@ -167,7 +167,7 @@ public partial class MainWindow
     {
         if (_isReconnecting) return;
         _isReconnecting = true;
-
+        await _rust.DisconnectAsync(); 
         Dispatcher.Invoke(() => ChkShops.IsChecked = false);
         AppendLog("[auto-reconnect] Connection lost detected. Starting recovery...");
 

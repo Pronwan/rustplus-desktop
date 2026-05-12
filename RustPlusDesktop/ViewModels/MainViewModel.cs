@@ -151,6 +151,34 @@ public class MainViewModel : INotifyPropertyChanged
         set { _steamId64 = value; OnPropertyChanged(); }
     }
 
+    private ulong? _followingSteamId;
+    public ulong? FollowingSteamId
+    {
+        get => _followingSteamId;
+        set 
+        { 
+            _followingSteamId = value; 
+            OnPropertyChanged(); 
+            OnPropertyChanged(nameof(IsFollowing));
+        }
+    }
+
+    public bool IsFollowing => _followingSteamId.HasValue;
+
+    private string _followingPlayerName = "";
+    public string FollowingPlayerName
+    {
+        get => _followingPlayerName;
+        set { _followingPlayerName = value; OnPropertyChanged(); }
+    }
+
+    private ImageSource? _followingPlayerAvatar;
+    public ImageSource? FollowingPlayerAvatar
+    {
+        get => _followingPlayerAvatar;
+        set { _followingPlayerAvatar = value; OnPropertyChanged(); }
+    }
+
     private ServerProfile? _selected;
     public ServerProfile? Selected
     {

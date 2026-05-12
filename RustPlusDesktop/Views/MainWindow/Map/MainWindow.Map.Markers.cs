@@ -1460,12 +1460,40 @@ public partial class MainWindow
         }
 
         // AUTO-FOLLOW TRACKING LOGIC
-        if (_trackingEntityId.HasValue && !_isAnimatingMap)
+        if (!_isAnimatingMap)
         {
-            var target = markers.FirstOrDefault(m => m.Id == _trackingEntityId.Value);
-            if (target.Id != 0)
+            if (_trackingEntityId.HasValue)
             {
-                CenterMapOnWorldAnimated(target.X, target.Y, allowDip: false, fast: true, keepTracking: true);
+                var target = markers.FirstOrDefault(m => m.Id == _trackingEntityId.Value);
+                if (target.Id != 0)
+                {
+                    CenterMapOnWorldAnimated(target.X, target.Y, allowDip: false, fast: true, keepTracking: true);
+                }
+            }
+            else if (_vm.IsFollowing)
+            {
+                double px = 0, py = 0;
+                bool found = false;
+
+                // Try dyn markers first (faster updates)
+                if (TryResolvePosFromDynMarkers(_vm.FollowingSteamId!.Value, out var dx, out var dy))
+                {
+                    px = dx; py = dy; found = true;
+                }
+                else
+                {
+                    // Fallback to TeamMembers
+                    var member = TeamMembers.FirstOrDefault(t => t.SteamId == _vm.FollowingSteamId.Value);
+                    if (member != null && member.X.HasValue && member.Y.HasValue)
+                    {
+                        px = member.X.Value; py = member.Y.Value; found = true;
+                    }
+                }
+
+                if (found)
+                {
+                    CenterMapOnWorld(px, py);
+                }
             }
         }
 
