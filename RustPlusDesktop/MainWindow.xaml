@@ -1714,10 +1714,19 @@
                                                                         <Setter Property="Background" Value="#2E3646" />
                                                                         <Setter Property="BorderBrush" Value="#4A5670" />
                                                                         <Style.Triggers>
+                                                                            <!-- ON / ACTIVE / ONLINE Status (Grün) -->
                                                                             <DataTrigger Binding="{Binding IsOn}" Value="True">
                                                                                 <Setter Property="Background" Value="#193F2A" />
                                                                                 <Setter Property="BorderBrush" Value="#2B7A4E" />
                                                                             </DataTrigger>
+                                                                            
+                                                                            <!-- Storage Monitor & Others: Immer grün wenn da -->
+                                                                            <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
+                                                                                <Setter Property="Background" Value="#193F2A" />
+                                                                                <Setter Property="BorderBrush" Value="#2B7A4E" />
+                                                                            </DataTrigger>
+                                                                            
+                                                                            <!-- MISSING / DISCONNECTED (Rot) -->
                                                                             <DataTrigger Binding="{Binding IsMissing}" Value="True">
                                                                                 <Setter Property="Background" Value="#412226" />
                                                                                 <Setter Property="BorderBrush" Value="#8E3B45" />
@@ -1732,16 +1741,41 @@
                                                                     Foreground="#EAF2FF">
                                                                     <TextBlock.Style>
                                                                         <Style TargetType="TextBlock">
-                                                                            <Setter Property="Text" Value="OFFLINE" />
+                                                                            <Setter Property="Text" Value="ONLINE" />
                                                                             <Style.Triggers>
+                                                                                <!-- MISSING -->
+                                                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                                    <Setter Property="Text" Value="OFFLINE" />
+                                                                                </DataTrigger>
+
+                                                                                <!-- Smart Switch -->
+                                                                                <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
+                                                                                    <Setter Property="Text" Value="OFF" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding Kind}" Value="Smart Switch">
+                                                                                    <Setter Property="Text" Value="OFF" />
+                                                                                </DataTrigger>
+                                                                                <MultiDataTrigger>
+                                                                                    <MultiDataTrigger.Conditions>
+                                                                                        <Condition Binding="{Binding Kind}" Value="SmartSwitch" />
+                                                                                        <Condition Binding="{Binding IsOn}" Value="True" />
+                                                                                    </MultiDataTrigger.Conditions>
+                                                                                    <Setter Property="Text" Value="ON" />
+                                                                                </MultiDataTrigger>
+                                                                                <MultiDataTrigger>
+                                                                                    <MultiDataTrigger.Conditions>
+                                                                                        <Condition Binding="{Binding Kind}" Value="Smart Switch" />
+                                                                                        <Condition Binding="{Binding IsOn}" Value="True" />
+                                                                                    </MultiDataTrigger.Conditions>
+                                                                                    <Setter Property="Text" Value="ON" />
+                                                                                </MultiDataTrigger>
+
+                                                                                <!-- Smart Alarm -->
                                                                                 <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
                                                                                     <Setter Property="Text" Value="INACTIVE" />
                                                                                 </DataTrigger>
                                                                                 <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
                                                                                     <Setter Property="Text" Value="INACTIVE" />
-                                                                                </DataTrigger>
-                                                                                <DataTrigger Binding="{Binding IsOn}" Value="True">
-                                                                                    <Setter Property="Text" Value="ONLINE" />
                                                                                 </DataTrigger>
                                                                                 <MultiDataTrigger>
                                                                                     <MultiDataTrigger.Conditions>
@@ -1757,11 +1791,10 @@
                                                                                     </MultiDataTrigger.Conditions>
                                                                                     <Setter Property="Text" Value="ACTIVE" />
                                                                                 </MultiDataTrigger>
+
+                                                                                <!-- Group -->
                                                                                 <DataTrigger Binding="{Binding IsGroup}" Value="True">
                                                                                     <Setter Property="Text" Value="GROUP" />
-                                                                                </DataTrigger>
-                                                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                                    <Setter Property="Text" Value="MISSING" />
                                                                                 </DataTrigger>
                                                                             </Style.Triggers>
                                                                         </Style>

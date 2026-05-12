@@ -305,22 +305,25 @@ public partial class MainWindow
         {
             state = new CargoDockInfo { Id = m.Id, LastX = m.X, LastY = m.Y, FirstSeen = DateTime.UtcNow };
             
-            // Only mark as "seen at edge" (fresh spawn) if we were already connected —
-            // not on the first poll after connect, where cargo may already be mid-route.
-            // Rust+ world coords: 0..worldSize. Map center is at (worldSize/2, worldSize/2).
-            // Cargo spawns at the outer edge, so distance from CENTER must be > ~42% of half-worldSize.
-            double half = _worldSizeS * 0.5;
-            double cx = m.X - half;
-            double cy = m.Y - half;
-            double distFromCenter = Math.Sqrt(cx * cx + cy * cy);
-            if (!_firstPollDyn && distFromCenter > (half * 0.85))
+            if (!_firstPollDyn)
             {
-                state.SeenAtEdge = true;
-                AppendLog($"[cargo] Spawn detected (dist from center: {distFromCenter:F0}, threshold: {half * 0.85:F0})");
+                // Rust+ world coords: 0..worldSize. Map center is at (worldSize/2, worldSize/2).
+                // Cargo spawns at the outer edge, so distance from CENTER must be > ~42% of half-worldSize.
+                double half = _worldSizeS * 0.5;
+                double cx = m.X - half;
+                double cy = m.Y - half;
+                double distFromCenter = Math.Sqrt(cx * cx + cy * cy);
+                
+                state.SeenAtEdge = distFromCenter > (half * 0.85);
+
                 if (_announceSpawns && TrackingService.AnnounceCargo)
                 {
                     string grid = GetGridLabel(m.X, m.Y);
-                    _ = SendTeamChatSafeAsync($"Cargo Ship spawned ({grid})");
+                    string locStr = distFromCenter > (half * 1.05) ? $"far out at sea (near {grid})" : grid;
+                    _ = SendTeamChatSafeAsync($"Cargo Ship spawned {locStr}");
+                    
+                    if (state.SeenAtEdge)
+                        AppendLog($"[cargo] Spawn detected at edge (dist: {distFromCenter:F0}, threshold: {half * 0.85:F0})");
                 }
             }
 
@@ -1188,7 +1191,7 @@ public partial class MainWindow
 
                         bool shouldAnnounce = m.Type switch
                         {
-                            5 => TrackingService.AnnounceCargo && (state.MissingCount > 0 || state.SeenAtEdge),
+                            5 => false, // Handled exclusively by ProcessCargoDocking to avoid duplicates
                             8 => TrackingService.AnnounceHeli,
                             4 => TrackingService.AnnounceChinook,
                             6 => TrackingService.AnnounceVendor,
