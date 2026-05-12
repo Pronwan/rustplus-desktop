@@ -48,6 +48,20 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+## Update 4.5.0 — The Intelligence Update (May 12th)
+<img width="595" height="331" alt="grafik" src="RustPlusDesktop/Assets/Screenshots/4.5.0.png" />
+
+**📍 Smart Map Follow**
+- **Player Tracking**: Lock the camera onto any teammate or yourself. The map smoothly centers on the target, making it ideal for tracking raids or roams in real-time.
+
+**💬 Chat Command Automation**
+- **Switch Control**: Control your base from anywhere by assigning aliases to Smart Switches. Use !toggle, !on, or !off in team chat.
+- **Direct Setup**: Manage all your chat command bindings directly within the Team Chat Overlay.
+
+**🛡️ Stability Overhaul**
+- **Reliable Sync**: Fixed "ghost" devices and stale data by implementing a complete session reset on disconnect.
+- **Fast Probing**: Optimized device checks to prevent UI hangs during server lag or when devices are missing.
+
 ## Update 4.2 — Cargo Ship Overhaul (May 5th)
 <img width="595" height="331" alt="grafik" src="https://github.com/user-attachments/assets/5e19a7b3-9231-4dc3-8c3b-0a6d14bad1d3" />
 
