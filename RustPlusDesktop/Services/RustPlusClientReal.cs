@@ -3959,7 +3959,6 @@ rp.connect();
             else if (mm != null)
             {
                 // Legit response, but missing expected containers - don't fallback to stale cache here
-                L("Response received but no shops found in expected containers.");
             }
 
             // otherwise generic scan – but still needs type==3 inside ExtractFromCollection
@@ -4004,7 +4003,11 @@ rp.connect();
                             resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk);
                         }
 
-                        if (IsResponseValid(resp))
+                        if (!IsResponseValid(resp))
+                        {
+                            return null;
+                        }
+
                         {
                             var r = Prop(resp, "Response") ?? resp;
                             var mm = Prop(r, "MapMarkers") ?? r;
@@ -4024,18 +4027,16 @@ rp.connect();
                     }
                 }
             }
-            catch { /* ignore */ }
+            catch (Exception ex)
+            {
+                L("Error in GetVendingShopsAsync: " + ex.Message);
+                return null;
+            }
         }
 
         if (shops.Count > 0) 
         {
             SaveToCache("shops", shops);
-        }
-        else 
-        {
-             // If we are connected and got an empty list, it means there are truly no shops (or polling failed).
-             // We return the empty list to reflect reality, instead of showing 8-hour old stale data.
-             L("No shops found in current poll.");
         }
         return shops;
     }

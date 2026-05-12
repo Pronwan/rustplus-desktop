@@ -3484,6 +3484,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 int curStock  = order.Stock;
 
                 // 3) Baseline updaten/erzeugen – wir wollen immer den letzten Stock dort haben
+                bool justCreated = false;
                 if (baseline == null)
                 {
                     baseline = new AlertSeenOrder
@@ -3496,6 +3497,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         Stock         = curStock
                     };
                     rule.Baseline.Add(baseline);
+                    justCreated = true;
                 }
                 else
                 {
@@ -3504,6 +3506,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
                 // 4) Wenn aktuell kein Stock → nie alerten, nur Zustand merken
                 if (curStock <= 0)
+                    continue;
+
+                // NEU: Wenn der Baseline-Eintrag gerade erst erstellt wurde, überspringen wir den Alert diesmal.
+                // Damit verhindern wir Chat-Spam bei neu angelegten Alert-Regeln für bereits existierende Shops.
+                if (justCreated)
                     continue;
 
                 // 5) Entscheiden, ob wir das als "neu" werten
