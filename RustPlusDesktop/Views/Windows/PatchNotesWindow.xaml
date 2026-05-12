@@ -1,4 +1,4 @@
-﻿<Window x:Class="RustPlusDesk.Views.PatchNotesWindow"
+<Window x:Class="RustPlusDesk.Views.PatchNotesWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Rust+ Desk &#x2013; Patch Notes"
@@ -12,13 +12,51 @@
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
                 <TextBlock Text="Patch Notes &amp; Version History" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,2"/>
                 <!-- UPDATE VERSION NUMBER HERE -->
-                <TextBlock Text="Current Version: 4.3.1" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
+                <TextBlock Text="Current Version: 4.5.0" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
             </StackPanel>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v4.3.1 PATCH NOTES -->
+                    <!-- NEW v4.5.0 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v4.5.0  |  The Intelligence Update (May 12, 2026)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+
+                            <!-- Screenshots -->
+                            <Image Source="pack://application:,,,/Assets/Screenshots/4.5.0.png" Stretch="Uniform" MaxHeight="350" Margin="0,0,0,12"/>
+
+                            <!-- Features -->
+                            <TextBlock Text="&#x2022; Smart Map Follow &amp; Player Tracking" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Stay centered! A brand new "Follow" mode allows you to lock the map camera onto yourself or any teammate. The camera smoothly tracks movement in real-time, perfect for second-monitor monitoring during raids or roaming.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Remote Switch Control via Chat Commands" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Complete home automation from the battlefield. You can now assign aliases to your Smart Switches and toggle them directly via Team Chat commands. Setup is now integrated directly into the Team Chat Overlay for maximum convenience.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Enhanced Connection &amp; Reconnect Stability" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Massive under-the-hood overhaul of the connection logic. Stale entity mappings are now cleared on disconnect, and device probes feature an early-exit logic to prevent UI hangs when multiple devices are missing or the server lags.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Smart Timer &amp; Event Intelligence" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Improved trajectory and hover detection for Chinooks ensures Oil Rig crate timers are more reliable than ever. Cargo Ship route learning has been refined to handle mid-event connections without triggering false alerts.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Customizable Chat Alerts &amp; UI Polish" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Right-click the Chat Alerts button to individually customize icons and notification types. The UI has been polished with better-aligned dropdowns, modern dark-themed components, and improved hover feedback for Storage Monitors.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
+                    <!-- v4.3.1 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>

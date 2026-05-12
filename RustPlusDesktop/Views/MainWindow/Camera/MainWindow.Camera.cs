@@ -68,16 +68,38 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         if (_miniMap == null || !_miniMap.IsVisible) return;
         if (WebViewHost == null || Overlay == null) return;
 
-        // Spielerposition besorgen
-        var me = TeamMembers.FirstOrDefault(t => t.SteamId == _mySteamId) ?? TeamMembers.FirstOrDefault();
-        if (me == null || !me.X.HasValue || !me.Y.HasValue) return;
+        Point pHost;
+        if (_vm.IsFollowing)
+        {
+            // If main map is following, the player is already at the center of the viewport.
+            // This allows independent zooming on the minimap without jittery world->screen translations.
+            pHost = new Point(WebViewHost.ActualWidth / 2.0, WebViewHost.ActualHeight / 2.0);
+        }
+        else
+        {
+            // Spielerposition besorgen
+            ulong sid = _vm.FollowingSteamId ?? _mySteamId;
+            var me = TeamMembers.FirstOrDefault(t => t.SteamId == sid) ?? TeamMembers.FirstOrDefault();
+            if (me == null) return;
 
-        // Welt → Bild/Overlay-Koordinaten (so positionierst du auch deine Marker)
-        Point pOverlay = WorldToImagePx(me.X.Value, me.Y.Value);
+            double targetX = 0, targetY = 0;
+            if (TryResolvePosFromDynMarkers(sid, out var dx, out var dy))
+            {
+                targetX = dx; targetY = dy;
+            }
+            else if (me.X.HasValue && me.Y.HasValue)
+            {
+                targetX = me.X.Value; targetY = me.Y.Value;
+            }
+            else return;
 
-        // Overlay → Host-Koordinaten (inkl. ALLER Transforms/Letterboxing)
-        GeneralTransform t = Overlay.TransformToVisual(WebViewHost);
-        Point pHost = t.Transform(pOverlay);
+            // Welt → Bild/Overlay-Koordinaten (so positionierst du auch deine Marker)
+            Point pOverlay = WorldToImagePx(targetX, targetY);
+
+            // Overlay → Host-Koordinaten (inkl. ALLER Transforms/Letterboxing)
+            GeneralTransform t = Overlay.TransformToVisual(WebViewHost);
+            pHost = t.Transform(pOverlay);
+        }
 
         double hostW = Math.Max(1, WebViewHost.ActualWidth);
         double hostH = Math.Max(1, WebViewHost.ActualHeight);

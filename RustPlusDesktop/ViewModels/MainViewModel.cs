@@ -12,6 +12,73 @@ namespace RustPlusDesk.ViewModels;
 
 public class MainViewModel : INotifyPropertyChanged
 {
+    private readonly System.Windows.Threading.DispatcherTimer _clockTimer;
+
+    public MainViewModel()
+    {
+        _clockTimer = new System.Windows.Threading.DispatcherTimer();
+        _clockTimer.Interval = TimeSpan.FromSeconds(1);
+        _clockTimer.Tick += (s, e) => TickClock();
+        _clockTimer.Start();
+    }
+
+    private void TickClock()
+    {
+        if (_lastStatusRealTime.HasValue && _lastStatusGameTime.HasValue)
+        {
+            var now = DateTime.UtcNow;
+            
+            // Timeout: if no server update for > 2 mins, reset display
+            if ((now - _lastStatusRealTime.Value).TotalMinutes > 2.0)
+            {
+                ServerTime = "–"; // This will clear baseline via UpdateInGameTimeProperties
+                return;
+            }
+
+            double elapsedRealMins = (now - _lastStatusRealTime.Value).TotalMinutes;
+            double currentHours = _lastStatusGameTime.Value;
+            
+            // Use observed speed to extrapolate
+            double speed = (currentHours >= 8 && currentHours < 20) ? _observedDaySpeed : _observedNightSpeed;
+            double extrapolatedHours = (currentHours + (elapsedRealMins * speed)) % 24;
+
+            // Update display properties without triggering re-learning
+            UpdateDisplayProperties(extrapolatedHours);
+        }
+    }
+
+    private void UpdateDisplayProperties(double hours)
+    {
+        int h = (int)Math.Floor(hours);
+        int m = (int)Math.Floor((hours - h) * 60);
+        string newTime = $"{h:00}:{m:00}";
+
+        // Update ServerTime string directly if it changed
+        if (_serverTime != newTime && _serverTime != "-" && _serverTime != "–")
+        {
+            _serverTime = newTime;
+            OnPropertyChanged(nameof(ServerTime));
+        }
+
+        // Update countdown
+        if (hours >= 8 && hours < 20)
+        {
+            IsDay = true;
+            double remainingGameHours = 20 - hours;
+            double remainingRealMins = remainingGameHours / _observedDaySpeed;
+            TimeUntilNextPhase = FormatDuration(remainingRealMins / 60.0) + " until night";
+        }
+        else
+        {
+            IsDay = false;
+            double remainingGameHours;
+            if (hours >= 20) remainingGameHours = (24 - hours) + 8;
+            else remainingGameHours = 8 - hours;
+            
+            double remainingRealMins = remainingGameHours / _observedNightSpeed;
+            TimeUntilNextPhase = FormatDuration(remainingRealMins / 60.0) + " until day";
+        }
+    }
     private int _iconsTotal;
     private int _iconsDownloaded;
 
@@ -33,14 +100,16 @@ public class MainViewModel : INotifyPropertyChanged
     public ObservableCollection<ServerProfile> Servers { get; } = new();
 
     private bool _isBusy;
+    private bool _isPairingBusy;
     private bool _isPairingRunning;
+
     public bool IsPairingRunning
     {
         get => _isPairingRunning;
         set { _isPairingRunning = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
     }
 
-    public bool CanStartPairing => !_isPairingRunning && !IsBusy;
+    public bool CanStartPairing => !_isPairingRunning && !IsBusy && !IsPairingBusy;
 
     private bool _isTrackingActive;
     public bool IsTrackingActive
@@ -52,7 +121,20 @@ public class MainViewModel : INotifyPropertyChanged
     public bool IsBusy
     {
         get => _isBusy;
-        set { _isBusy = value; OnPropertyChanged(); }
+        set { _isBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
+    }
+
+    private bool _isInitializing;
+    public bool IsInitializing
+    {
+        get => _isInitializing;
+        set { _isInitializing = value; OnPropertyChanged(); }
+    }
+
+    public bool IsPairingBusy
+    {
+        get => _isPairingBusy;
+        set { _isPairingBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
     }
 
     private string _busyText = "Bitte warten …";
@@ -67,6 +149,34 @@ public class MainViewModel : INotifyPropertyChanged
     {
         get => _steamId64;
         set { _steamId64 = value; OnPropertyChanged(); }
+    }
+
+    private ulong? _followingSteamId;
+    public ulong? FollowingSteamId
+    {
+        get => _followingSteamId;
+        set 
+        { 
+            _followingSteamId = value; 
+            OnPropertyChanged(); 
+            OnPropertyChanged(nameof(IsFollowing));
+        }
+    }
+
+    public bool IsFollowing => _followingSteamId.HasValue;
+
+    private string _followingPlayerName = "";
+    public string FollowingPlayerName
+    {
+        get => _followingPlayerName;
+        set { _followingPlayerName = value; OnPropertyChanged(); }
+    }
+
+    private ImageSource? _followingPlayerAvatar;
+    public ImageSource? FollowingPlayerAvatar
+    {
+        get => _followingPlayerAvatar;
+        set { _followingPlayerAvatar = value; OnPropertyChanged(); }
     }
 
     private ServerProfile? _selected;
@@ -109,7 +219,117 @@ public class MainViewModel : INotifyPropertyChanged
     public string ServerQueue { get => _serverQueue; set { _serverQueue = value; OnPropertyChanged(); } }
 
     private string _serverTime = "-";
-    public string ServerTime { get => _serverTime; set { _serverTime = value; OnPropertyChanged(); } }
+    public string ServerTime 
+    { 
+        get => _serverTime; 
+        set 
+        { 
+            _serverTime = value; 
+            OnPropertyChanged();
+            UpdateInGameTimeProperties(value);
+        } 
+    }
+
+    private bool _isDay;
+    public bool IsDay { get => _isDay; set { _isDay = value; OnPropertyChanged(); } }
+
+    private string _timeUntilNextPhase = "";
+    public string TimeUntilNextPhase { get => _timeUntilNextPhase; set { _timeUntilNextPhase = value; OnPropertyChanged(); } }
+
+    private DateTime? _lastStatusRealTime;
+    private double? _lastStatusGameTime;
+    private string? _lastConnectedServer;
+
+    // Speeds in game-hours per real-minute. 
+    // Defaults for Rust (Day ~50m real, Night ~10m real)
+    private double _observedDaySpeed = 12.0 / 50.0;   
+    private double _observedNightSpeed = 12.0 / 10.0; 
+
+    private void UpdateInGameTimeProperties(string timeStr)
+    {
+        if (string.IsNullOrWhiteSpace(timeStr) || timeStr == "-" || timeStr == "–")
+        {
+            TimeUntilNextPhase = "";
+            _lastStatusRealTime = null;
+            _lastStatusGameTime = null;
+            return;
+        }
+
+        // Reset learning if server changed
+        string currentServer = Selected?.Host ?? "";
+        if (currentServer != _lastConnectedServer)
+        {
+            _lastConnectedServer = currentServer;
+            _lastStatusRealTime = null;
+            _lastStatusGameTime = null;
+
+            if (Selected != null)
+            {
+                _observedDaySpeed = Selected.LearnedDaySpeed > 0 ? Selected.LearnedDaySpeed : (12.0 / 50.0);
+                _observedNightSpeed = Selected.LearnedNightSpeed > 0 ? Selected.LearnedNightSpeed : (12.0 / 10.0);
+            }
+            else
+            {
+                _observedDaySpeed = 12.0 / 50.0;
+                _observedNightSpeed = 12.0 / 10.0;
+            }
+        }
+
+        try
+        {
+            if (TimeSpan.TryParse(timeStr, out var ts))
+            {
+                double currentHours = ts.TotalHours;
+                DateTime now = DateTime.UtcNow;
+
+                if (_lastStatusRealTime.HasValue && _lastStatusGameTime.HasValue)
+                {
+                    double deltaRealMins = (now - _lastStatusRealTime.Value).TotalMinutes;
+                    if (deltaRealMins > 0.05) // update every ~3 seconds is normal
+                    {
+                        double deltaGameHours = currentHours - _lastStatusGameTime.Value;
+                        if (deltaGameHours < -12) deltaGameHours += 24; // midnight wrap
+
+                        // Only learn if the change is positive and reasonable (avoid manual time sets)
+                        if (deltaGameHours > 0 && deltaGameHours < 2) 
+                        {
+                            double speed = deltaGameHours / deltaRealMins;
+                            
+                            // Smooth the observation (exponential moving average)
+                            if (currentHours >= 8 && currentHours < 20)
+                            {
+                                _observedDaySpeed = (_observedDaySpeed * 0.95) + (speed * 0.05);
+                                if (Selected != null) Selected.LearnedDaySpeed = _observedDaySpeed;
+                            }
+                            else
+                            {
+                                _observedNightSpeed = (_observedNightSpeed * 0.95) + (speed * 0.05);
+                                if (Selected != null) Selected.LearnedNightSpeed = _observedNightSpeed;
+                            }
+                        }
+                    }
+                }
+
+                _lastStatusRealTime = now;
+                _lastStatusGameTime = currentHours;
+
+                // Immediately update display
+                UpdateDisplayProperties(currentHours);
+            }
+        }
+        catch { }
+    }
+
+    private string FormatDuration(double realHours)
+    {
+        double totalMins = realHours * 60;
+        int m = (int)Math.Floor(totalMins);
+        int s = (int)Math.Round((totalMins - m) * 60);
+        if (s == 60) { m++; s = 0; }
+        
+        if (m > 0) return $"{m}m {s}s";
+        return $"{s}s";
+    }
 
     private string _serverWipe = "-";
     public string ServerWipe { get => _serverWipe; set { _serverWipe = value; OnPropertyChanged(); } }

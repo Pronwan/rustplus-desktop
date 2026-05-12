@@ -48,8 +48,8 @@ public partial class MainWindow
                     _deepSeaMidEvent = false;
                     string dir = GetDeepSeaDirection(deepSeaShop.X, deepSeaShop.Y);
                     if (_announceSpawns && TrackingService.AnnounceDeepSea)
-                        _ = SendTeamChatSafeAsync($"Deep Sea will spawn soon! (Direction: {dir})");
-                    AppendLog($"[DEEPSEA] Spawn detected at {deepSeaShop.X:F0},{deepSeaShop.Y:F0} ({dir})");
+                        _ = SendTeamChatSafeAsync("Deep Sea is up");
+                    AppendLog($"[DEEPSEA] Spawn detected at {deepSeaShop.X:F0},{deepSeaShop.Y:F0} (Direction: {dir})");
                 }
                 else
                 {
@@ -167,9 +167,26 @@ public partial class MainWindow
     {
         if (_rust is not RustPlusClientReal real) return;
 
+        // Skip low-priority poll when server is under stress
+        if (IsApiUnderPressure)
+        {
+            return;
+        }
+
         try
         {
-            var shops = await real.GetVendingShopsAsync();
+            List<RustPlusClientReal.ShopMarker> shops = null;
+            int retries = 0;
+            while (retries < 3)
+            {
+                shops = await real.GetVendingShopsAsync();
+                if (shops != null && (shops.Count > 0 || _firstShopPollDone)) break;
+
+                AppendLog($"[shops] Initial poll returned 0 shops, retrying in 2s ({retries + 1}/3)...");
+                retries++;
+                await Task.Delay(2000);
+            }
+            if (shops == null) return;
 
             UpdateShopsUI(shops);
             _lastShops = shops;
@@ -194,7 +211,10 @@ public partial class MainWindow
             if (ShopSearchContent.Visibility == Visibility.Visible)
                 RefreshShopSearchResults();
 
-            _firstShopPollDone = true; // Mark first poll complete (after all processing)
+            if (shops.Count > 0)
+            {
+                _firstShopPollDone = true; // Mark first poll complete ONLY if we actually got data
+            }
         }
         catch (Exception)
         {
@@ -614,6 +634,6 @@ public partial class MainWindow
     private bool IsShopEmpty(RustPlusClientReal.ShopMarker s)
     {
         if (s.Orders == null || s.Orders.Count == 0) return true;
-        return s.Orders.All(o => o.Quantity <= 0);
+        return s.Orders.All(o => o.Stock <= 0);
     }
 }

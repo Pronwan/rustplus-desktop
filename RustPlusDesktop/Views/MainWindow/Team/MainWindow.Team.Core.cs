@@ -99,7 +99,8 @@ public partial class MainWindow
             Interval = TimeSpan.FromSeconds(5)
         };
         _teamTimer.Tick += TeamTimer_Tick;
-        _teamTimer.Start();
+        // Stagger start by 3s to avoid timer burst at connect time
+        _ = Task.Delay(TimeSpan.FromSeconds(3)).ContinueWith(_ => Dispatcher.Invoke(() => _teamTimer?.Start()));
     }
 
     private void StopTeamPolling()
@@ -360,6 +361,35 @@ public partial class MainWindow
     {
         if ((sender as FrameworkElement)?.DataContext is TeamMemberVM vm)
             CenterOnMember(vm);
+    }
+
+    private void Team_Follow_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is TeamMemberVM vm)
+        {
+            StartFollowing(vm.SteamId, vm.Name);
+        }
+    }
+
+    private void StartFollowing(ulong steamId, string name)
+    {
+        _vm.FollowingSteamId = steamId;
+        _vm.FollowingPlayerName = name;
+        
+        var member = TeamMembers.FirstOrDefault(t => t.SteamId == steamId);
+        _vm.FollowingPlayerAvatar = member?.Avatar;
+
+        AppendLog($"Following {name} on map.");
+        
+        // Immediate center
+        if (TryResolvePosFromDynMarkers(steamId, out var x, out var y))
+        {
+            CenterMapOnWorld(x, y);
+        }
+        else if (TeamMembers.FirstOrDefault(t => t.SteamId == steamId) is { X: { } tx, Y: { } ty })
+        {
+            CenterMapOnWorld(tx, ty);
+        }
     }
 
     private void Team_OpenProfile_Click(object sender, RoutedEventArgs e)

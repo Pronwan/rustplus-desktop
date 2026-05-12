@@ -3,6 +3,7 @@ using Microsoft.Web.WebView2.Wpf;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -67,18 +68,13 @@ public partial class MainWindow
             if (_rust is RustPlusClientReal real && _vm.Selected?.IsConnected == true)
             {
                 var st = await real.GetServerStatusAsync();
-                if (st != null)
+                if (st != null && st.Players >= 0)
                 {
-                    _vm.ServerPlayers = (st.Players >= 0 && st.MaxPlayers >= 0)
-                        ? $"{st.Players}/{st.MaxPlayers}" : "–";
-
-                    _vm.ServerQueue = (st.Queue >= 0)
-                        ? st.Queue.ToString()
-                        : "–";
-
-                    _vm.ServerTime = string.IsNullOrWhiteSpace(st.TimeString)
-                        ? "–"
-                        : st.TimeString;
+                    _vm.ServerPlayers = $"{st.Players}/{st.MaxPlayers}";
+                    _vm.ServerQueue = (st.Queue >= 0) ? st.Queue.ToString() : "0";
+                    
+                    if (!string.IsNullOrWhiteSpace(st.TimeString))
+                        _vm.ServerTime = st.TimeString;
                 }
             }
         }
@@ -128,16 +124,66 @@ public partial class MainWindow
         }
     }
 
-    private void ListServers_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    private async void ListServers_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
         _lastChatTsForCurrentServer = null;
 
-        if (_vm.Selected is { } prof && !string.IsNullOrWhiteSpace(prof.SteamId64))
-            _vm.SteamId64 = prof.SteamId64;
+        if (_vm.Selected is { } prof)
+        {
+            if (!string.IsNullOrWhiteSpace(prof.SteamId64))
+                _vm.SteamId64 = prof.SteamId64;
+
+            // Trigger soft connect to devices only if there are any devices to control
+            if (!prof.IsConnected && prof.Devices.Any())
+            {
+                await PerformConnectDevicesOnlyAsync(prof);
+            }
+        }
 
         HydrateSteamUiFromStorage();
         RegisterAllHotkeys();
         ActivateHotkeysForCurrentServer();
+    }
+
+    private async Task PerformConnectDevicesOnlyAsync(ServerProfile profile)
+    {
+        if (profile == null) return;
+        try
+        {
+            AppendLog($"Soft-connecting to {profile.Name} (Devices Only)...");
+            await _rust.ConnectAsync(profile);
+            profile.IsConnected = true;
+            profile.IsFullConnected = false;
+
+            if (_rust is RustPlusClientReal real)
+            {
+                real.EnsureEventsHooked();
+                
+                // Hook local handlers
+                real.ConnectionLost -= OnConnectionLost;
+                real.ConnectionLost += OnConnectionLost;
+
+                var allIds = profile.Devices.Select(d => d.EntityId).Distinct().ToList();
+                if (allIds.Any())
+                {
+                    await real.PrimeSubscriptionsAsync(allIds);
+                }
+                
+                // Refresh device status in background
+                _ = RefreshAllDevicesStatusAsync(maxRetries: 1);
+            }
+            
+            // Start the server status loop (players/time) even for soft connect
+            _statusCts?.Cancel();
+            _statusCts = new CancellationTokenSource();
+            _ = PollServerStatusLoopAsync(_statusCts.Token);
+            
+            AppendLog("Soft-connect complete.");
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"Soft-connect failed: {ex.Message}");
+        }
     }
 
     private async Task PollServerStatusLoopAsync(CancellationToken ct)
@@ -153,7 +199,9 @@ public partial class MainWindow
                     {
                         _vm.ServerPlayers = $"{st.Players}/{st.MaxPlayers}";
                         _vm.ServerQueue = (st.Queue >= 0) ? st.Queue.ToString() : "0";
-                        _vm.ServerTime = string.IsNullOrWhiteSpace(st.TimeString) ? "–" : st.TimeString;
+                        
+                        if (!string.IsNullOrWhiteSpace(st.TimeString))
+                            _vm.ServerTime = st.TimeString;
                     }
                 }
             }
@@ -210,13 +258,14 @@ public partial class MainWindow
 
             AppendLog($"Connecting to ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
             await _rust.ConnectAsync(_vm.Selected);
-            _vm.Selected.IsConnected = true;
             AppendLog("Connected.");
             _connectedProfile = _vm.Selected;
 
             TrackingService.StartPolling(_vm.Selected.Host ?? "", _vm.Selected.Port, _vm.Selected.Name ?? "");
 
-            await Task.Delay(1000);
+            // Shorter initial delay — just enough for the WS to be ready
+            await Task.Delay(500);
+
             var real = _rust as RustPlusClientReal;
             if (real != null)
             {
@@ -224,6 +273,11 @@ public partial class MainWindow
                 real.StorageSnapshotReceived += OnStorageSnapshot;
                 real.ConnectionLost -= OnConnectionLost;
                 real.ConnectionLost += OnConnectionLost;
+                
+                // Add global chat subscription for background bot commands
+                real.TeamChatReceived -= Real_TeamChatReceived;
+                real.TeamChatReceived += Real_TeamChatReceived;
+
                 real.EnsureEventsHooked();
             }
 
@@ -231,65 +285,64 @@ public partial class MainWindow
 
             if (real != null)
             {
-                try
-                {
-                    await real.PrimeTeamChatAsync();
-                }
-                catch (Exception ex)
-                {
-                    AppendLog("[chat] prime error: " + ex.Message);
-                }
+                try { await real.PrimeTeamChatAsync(); }
+                catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
             }
+
             _vm.IsBusy = false;
             _vm.BusyText = "";
-            await LoadMapAsync();
-            await StartPairingListenerUiAsync();
+            _vm.IsInitializing = true;
 
-            if (TrackingService.AutoLoadShops)
-            {
-                Dispatcher.Invoke(() => ChkShops.IsChecked = true);
-            }
+            // Start atomic parallel loading block to prevent UI "stuttering" during sequential awaits
+            var initTasks = new List<Task>();
+            
+            initTasks.Add(LoadMapAsync());
+            initTasks.Add(UpdateServerStatusAsync());
+            initTasks.Add(LoadTeamAsync());
+            
+            // Rehydrate local cache immediately (sync)
+            RehydrateDevicesFromStorageInto(_vm.Selected);
+
+            RehydrateCamerasFromStorageInto(_vm.Selected);
+            SwitchCameraSourceTo(_vm.Selected);
+            
+            // Start probing device kinds in parallel (optimized in MainWindow.Devices.cs)
+            initTasks.Add(PrimeDeviceKindsAsync());
+
+
 
             ClearUserOverlayElements();
             _visibleOverlayOwners.Add(_mySteamId);
             LoadOverlayFromDiskForPlayer(_mySteamId);
 
-            RehydrateDevicesFromStorageInto(_vm.Selected);
-            if (real != null && _vm.Selected?.Devices?.Any() == true)
+            // Wait for core initialization to complete
+            await Task.WhenAll(initTasks);
+            
+            // Core data is now loaded (_worldSizeS is available)
+            if (TrackingService.AutoLoadShops)
             {
-                var storageIds = _vm.Selected.Devices
-                    .Where(d => string.Equals(d.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
-                    .Select(d => d.EntityId)
-                    .ToList();
-
-                if (storageIds.Count > 0)
-                {
-                    try
-                    {
-                        await real.PrimeSubscriptionsAsync(storageIds);
-                        AppendLog($"PrimeSubscriptions: {storageIds.Count} StorageMonitors.");
-                    }
-                    catch (Exception ex)
-                    {
-                        AppendLog("PrimeSubscriptions Error: " + ex.Message);
-                    }
-                }
+                Dispatcher.Invoke(() => ChkShops.IsChecked = true);
             }
+            
+            _vm.IsInitializing = false;
+            _vm.Selected.IsConnected = true;
+            _vm.Selected.IsFullConnected = true;
 
-            await PrimeDeviceKindsAsync();
             _vm.NotifyDevicesChanged();
-            AppendLog($"Devices rehydrated: {_vm.Selected.Devices?.Count ?? 0}");
+            AppendLog($"Connection initialization complete. Server: {_vm.Selected.Name}");
 
-            RehydrateCamerasFromStorageInto(_vm.Selected);
-            SwitchCameraSourceTo(_vm.Selected);
-            AppendLog($"Cams rehydrated: {_vm.Selected.CameraIds?.Count ?? 0}");
+            // Finally, refresh all device statuses to ensure the UI reflects the current server state
+            _ = RefreshAllDevicesStatusAsync(maxRetries: 1);
 
+            // Finally, prime subscriptions for all devices to receive real-time updates
             if (real != null && _vm.Selected?.Devices?.Any() == true)
             {
                 try
                 {
-                    await real.PrimeSubscriptionsAsync(_vm.Selected.Devices.Select(d => d.EntityId));
-                    AppendLog($"PrimeSubscriptions: {_vm.Selected.Devices.Count} IDs.");
+                    // Batching all entity subscriptions into one call
+                    var allIds = _vm.Selected.Devices.Select(d => d.EntityId).Distinct().ToList();
+                    await real.PrimeSubscriptionsAsync(allIds);
+                    AppendLog($"Subscribed to {allIds.Count} entities.");
                 }
                 catch (Exception ex)
                 {
@@ -300,18 +353,20 @@ public partial class MainWindow
             _statusCts?.Cancel();
             _statusCts = new CancellationTokenSource();
             _ = PollServerStatusLoopAsync(_statusCts.Token);
-            await UpdateServerStatusAsync();
             _statusTimer.Start();
 
             StartTeamPolling();
-            await LoadTeamAsync();
             if (_overlayToolsVisible)
             {
                 RebuildOverlayTeamBar();
             }
+
+            // Removed redundant 2s delayed RefreshAllDevicesStatusAsync to avoid 'demoted' logs.
+            // Core device status is already fetched during PrimeDeviceKindsAsync.
         }
         catch (Exception ex)
         {
+            _vm.IsInitializing = false;
             _vm.IsBusy = false;
             _vm.BusyText = "";
             AppendLog("Fehler: " + ex.Message);
@@ -319,45 +374,6 @@ public partial class MainWindow
             return false;
         }
 
-        _storageTimer?.Stop();
-        _storageTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(10) };
-        _storageTimer.Tick += async (_, __) =>
-        {
-            if (_storageTickBusy) return;
-            _storageTickBusy = true;
-            try
-            {
-                var sel = _connectedProfile ?? _vm?.Selected;
-                var devs = sel?.Devices;
-
-                if (devs == null || devs.Count == 0)
-                    return;
-
-                var snapshot = devs
-                    .Where(sd => RustPlusClientReal.IsStorageDevice(sd))
-                    .ToList();
-
-                if (snapshot.Count == 0)
-                    return;
-
-                foreach (var sd in snapshot)
-                {
-                    try
-                    {
-                        await RefreshDeviceStateAsync(sd, log: true, forcePull: true);
-                    }
-                    catch (Exception ex)
-                    {
-                        AppendLog($"[stor/poll] #{sd.EntityId} err: {ex.Message}");
-                    }
-                }
-            }
-            finally
-            {
-                _storageTickBusy = false;
-            }
-        };
-        _storageTimer.Start();
         return true;
     }
 

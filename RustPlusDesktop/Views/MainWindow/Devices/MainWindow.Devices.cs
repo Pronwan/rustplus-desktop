@@ -24,6 +24,33 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
+    // =========================================================
+    // API Backpressure Tracker
+    // Incremented on consecutive poll failures, decremented on success.
+    // Low-priority polls (shops, storage) skip their tick while active.
+    // =========================================================
+    private int _apiConsecutiveTimeouts = 0;
+    private const int ApiPressureThreshold = 5;
+    private bool IsApiUnderPressure => _apiConsecutiveTimeouts >= ApiPressureThreshold;
+
+    private void OnApiPollSuccess()
+    {
+        if (_apiConsecutiveTimeouts > 0)
+        {
+            _apiConsecutiveTimeouts = Math.Max(0, _apiConsecutiveTimeouts - 1);
+            if (_apiConsecutiveTimeouts < ApiPressureThreshold)
+                AppendLog("[pressure] API pressure relieved.");
+        }
+    }
+
+    private void OnApiPollTimeout()
+    {
+        _apiConsecutiveTimeouts = Math.Min(10, _apiConsecutiveTimeouts + 1);
+        if (_apiConsecutiveTimeouts == ApiPressureThreshold)
+            AppendLog("[pressure] API under pressure – low-priority polls paused.");
+    }
+    // =========================================================
+
 private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
     {
         if (_vm != null)
@@ -300,16 +327,15 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
 
     private void BtnDeleteDevice_Click(object sender, RoutedEventArgs e)
     {
-        if (ListDevices.SelectedItem is SmartDevice dev && dev.IsMissing)
+        if (ListDevices.SelectedItem is SmartDevice dev)
         {
-            _vm.Selected?.Devices?.Remove(dev);
-            _vm.NotifyDevicesChanged();
-            _vm.Save();
-            AppendLog($"Device #{dev.EntityId} removed.");
-        }
-        else
-        {
-            MessageBox.Show("Only missing devices can be deleted.");
+            if (_vm.Selected?.Devices != null)
+            {
+                RemoveDeviceFromHierarchy(_vm.Selected.Devices, dev);
+                _vm.NotifyDevicesChanged();
+                _vm.Save();
+                AppendLog($"Device #{dev.EntityId} removed.");
+            }
         }
     }
 
@@ -345,17 +371,9 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
 
     private void PlayAlarmAudio(SmartDevice? dev)
     {
-        if (dev == null)
-        {
-            AppendLog("[audio/debug] Skipping: dev is null");
-            return;
-        }
-        if (!dev.AudioEnabled)
-        {
-            AppendLog($"[audio/debug] Skipping: AudioEnabled is false for #{dev.EntityId}");
-            return;
-        }
+        if (dev == null || !dev.AudioEnabled) return;
         
+        string baseDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
         string audioFile = "";
         
         if (!string.IsNullOrWhiteSpace(dev.AudioFilePath))
@@ -364,11 +382,18 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
         }
         else
         {
-            audioFile = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "icons", "rust-c4.mp3");
+            // Standard-Pfad unter Assets
+            audioFile = System.IO.Path.Combine(baseDir, "Assets", "icons", "rust-c4.mp3");
+            if (!System.IO.File.Exists(audioFile))
+            {
+                // Fallback für alte Ordnerstruktur
+                audioFile = System.IO.Path.Combine(baseDir, "icons", "rust-c4.mp3");
+            }
         }
 
         if (System.IO.File.Exists(audioFile))
         {
+            var fullPath = System.IO.Path.GetFullPath(audioFile);
             try
             {
                 Dispatcher.Invoke(() =>
@@ -376,16 +401,18 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
                     if (_alarmPlayer == null)
                     {
                         _alarmPlayer = new System.Windows.Media.MediaPlayer();
+                        _alarmPlayer.MediaFailed += (s, e) => AppendLog($"[audio] Media Failed: {e.ErrorException?.Message}");
+                        // Erst abspielen, wenn der Stream bereit ist, um "Kratzen" zu vermeiden
+                        _alarmPlayer.MediaOpened += (s, e) => _alarmPlayer.Play();
                     }
-                    AppendLog($"[audio] Playing: {audioFile}");
-                    _alarmPlayer.Open(new Uri(audioFile, UriKind.Absolute));
+                    AppendLog($"[audio] Loading: {fullPath}");
+                    _alarmPlayer.Open(new Uri(fullPath, UriKind.Absolute));
                     _alarmPlayer.Volume = 1.0;
-                    _alarmPlayer.Play();
                 });
             }
             catch (Exception ex)
             {
-                AppendLog($"[audio] Error playing alarm audio: {ex.Message}");
+                AppendLog($"[audio] Error playing: {ex.Message}");
             }
         }
         else
@@ -448,12 +475,18 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
 
         // Lock erst NACH erfolgreichem Connect setzen? → dein Flow kann bleiben,
         // ABER ganz wichtig: Timeout um das Toggle, damit der Task nicht hängt.
+        if (_globalToggleBusy) return;
         if (!TryMarkToggleBusy(dev.EntityId))
         {
             AppendLog($"(skip) Toggle #{dev.EntityId} already in progress");
             return;
         }
 
+        _globalToggleBusy = true;
+
+        dev.IsToggleBusy = true;
+        int attempts = 0;
+        bool success = false;
         try
         {
             if (!await EnsureConnectedAsync()) return;
@@ -466,39 +499,53 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
 
             AppendLog($"Sending {(on ? "ON" : "OFF")} to #{dev.EntityId} …");
 
-            try
-            {
-                // *** WICHTIG: immer mit Timeout aufrufen ***
-                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(8));
-                await _rust.ToggleSmartSwitchAsync(dev.EntityId, on, cts.Token);
-            }
-            catch (OperationCanceledException)
-            {
-                AppendLog("Toggle timeout (8s).");
-            }
-            catch (Exception ex)
-            {
-                AppendLog($"{(on ? "ON" : "OFF")} Error: " + ex.Message);
+            const int maxAttempts = 3;
 
-                // Optional: einmaliger Reconnect-Retry bei „nicht verbunden“
-                if (LooksLikeNotConnected(ex) && await EnsureConnectedAsync())
-                {
-                    using var cts2 = new CancellationTokenSource(TimeSpan.FromSeconds(6));
-                    try { await _rust.ToggleSmartSwitchAsync(dev.EntityId, on, cts2.Token); }
-                    catch (Exception ex2) { AppendLog("Retry failed: " + ex2.Message); }
-                }
-            }
-            finally
+            while (attempts < maxAttempts && !success)
             {
-                await RefreshDeviceStateAsync(dev);
+                attempts++;
+                try
+                {
+                    // Shorter timeout (5s) for toggling to avoid clogging the queue
+                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                    await _rust.ToggleSmartSwitchAsync(dev.EntityId, on, cts.Token);
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    if (attempts >= maxAttempts)
+                    {
+                        AppendLog($"Device #{dev.EntityId}: Switching failed after {attempts} attempts – {ex.Message}");
+                        dev.IsMissing = true;
+                        
+                        // Health check: Trigger a direct probe to confirm if it's really missing
+                        _ = Task.Run(async () => await RefreshDeviceStateAsync(dev));
+                    }
+                    else
+                    {
+                        // More breathing room between retries (2s)
+                        AppendLog($"Device #{dev.EntityId}: Toggle attempt {attempts} failed, retrying in 2s …");
+                        await Task.Delay(2000);
+                        if (!await EnsureConnectedAsync()) break;
+                    }
+                }
             }
         }
         finally
         {
-            UnmarkToggleBusy(dev.EntityId); // <<< wird garantiert ausgeführt
+            // REMOVED: Aggressive RefreshDeviceStateAsync probe.
+            // If success is false, dev.IsMissing was already set in the catch block.
+            // We don't want to flood the API with more probes if the toggle already failed.
+            
+            UnmarkToggleBusy(dev.EntityId);
+            dev.IsToggleBusy = false;
+            
+            // Release global lock after a small cooldown to prevent spamming different switches
+            _ = Task.Delay(500).ContinueWith(_ => _globalToggleBusy = false);
         }
     }
 
+    private bool _globalToggleBusy = false;
     private readonly Dictionary<uint, StorageSnap> _storageCache = new();
 
     private void CacheStorage(uint id, StorageSnap? snap)
@@ -509,10 +556,36 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
 
     private bool TryGetCachedStorage(uint id, out StorageSnap? snap)
         => _storageCache.TryGetValue(id, out snap);
-    // Ein Gerät *generisch* neu einlesen (wie der Info-Button).
-    // - Für SmartSwitch: schneller Pfad über GetSmartSwitchStateAsync
-    // - Für alle anderen (oder Fallback): ProbeEntityAsync (setzt auch Kind/IsMissing)
-    private async Task RefreshDeviceStateAsync(SmartDevice dev, bool log = true, bool forcePull = false)
+    private async Task<EntityProbeResult> ProbeWithRetryAsync(uint entityId, bool log = true, int maxAttempts = 3)
+    {
+        int attempts = 0;
+        int max = Math.Max(1, maxAttempts);
+        while (attempts < max)
+        {
+            attempts++;
+            try
+            {
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(6));
+                var r = await _rust.ProbeEntityAsync(entityId, cts.Token);
+                if (r.Exists) return r;
+
+                // If the probe returned successfully but the entity doesn't exist, stop retrying.
+                if (!r.Exists) break;
+
+                if (attempts < max) await Task.Delay(500);
+            }
+            catch (Exception ex)
+            {
+                if (attempts >= max) throw;
+                if (log) AppendLog($"[probe] #{entityId} attempt {attempts} failed: {ex.Message} – retrying …");
+                await Task.Delay(1000);
+                await EnsureConnectedAsync();
+            }
+        }
+        return new EntityProbeResult(false, null, null);
+    }
+
+    private async Task RefreshDeviceStateAsync(SmartDevice dev, bool log = true, bool forcePull = false, int maxRetries = 3)
     {
         if (_rust is not RustPlusClientReal real) return;
 
@@ -538,7 +611,6 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                             uiSnap.Items.Add(it);
 
                         dev.Storage = uiSnap;
-                        dev.IsMissing = false;
                     });
                 }
                 else
@@ -553,63 +625,59 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                 }
                 catch (Exception subEx)
                 {
-                    if (log) AppendLog($"[stor/sub+poke] #{dev.EntityId} failed: {subEx.Message}");
+                    if (log) AppendLog($"[stor/sub] #{dev.EntityId} failed: {subEx.Message}");
                 }
 
                 // (3) bei forcePull denselben Weg wie Refresh nutzen
-                if (forcePull)
+                // OPTIMIERUNG: Wenn wir bereits Daten haben, verzichten wir beim normalen Refresh auf den Probe.
+                // Storage Monitore sind eventbasiert; ein Probe triggert oft unnötige Ratelimits.
+                bool shouldProbe = forcePull || dev.Storage == null || dev.Storage.ItemsCount == 0;
+                
+                if (shouldProbe)
                 {
                     try
                     {
-                        // wir brauchen das Ergebnis nicht – wichtig ist der Side-Effekt:
-                        // DecodeEntityInfo / Events aktualisieren den Storage-Cache
-                        await _rust.ProbeEntityAsync(dev.EntityId);
-                       // if (log)
-                        //    AppendLog($"[stor/poll] probe #{dev.EntityId} queued");
+                        var rStor = await ProbeWithRetryAsync(dev.EntityId, log);
+                        if (rStor.Exists)
+                        {
+                            dev.IsMissing = false;
+                        }
+                        else
+                        {
+                            // Wenn der Probe fehlschlägt, wir aber bereits valide Daten haben, 
+                            // gehen wir von einem ratelimit aus und grauen NICHT aus.
+                            if (dev.Storage != null && dev.Storage.ItemsCount > 0)
+                            {
+                                if (log) AppendLog($"#{dev.EntityId}: probe failed, but keeping existing data (ratelimit?).");
+                            }
+                            else
+                            {
+                                dev.IsMissing = true;
+                                if (log) AppendLog($"#{dev.EntityId}: not reachable / demoted");
+                            }
+                        }
                     }
                     catch (Exception pullEx)
                     {
+                        if (dev.Storage == null || dev.Storage.ItemsCount == 0)
+                            dev.IsMissing = true;
                         if (log) AppendLog($"[stor/poll] #{dev.EntityId} probe EX: {pullEx.Message}");
                     }
                 }
-                else
-                {
-                    // optionaler Fallback nur, wenn noch kein Cache existiert
-                    _ = Task.Run(async () =>
-                    {
-                        await Task.Delay(500);
-                        if (real.TryGetCachedStorage(dev.EntityId, out _))
-                            return;
-
-                        try
-                        {
-                            // hier kannst du dein GetStorageMonitorAsync ruhig behalten,
-                            // falls es für den Erst-Snapshot funktioniert
-                            await real.GetStorageMonitorAsync(dev.EntityId);
-                            if (log)
-                                AppendLog($"[stor/pull] #{dev.EntityId} queued fallback pull");
-                        }
-                        catch (Exception ex2)
-                        {
-                            AppendLog($"[stor/pull] #{dev.EntityId} fallback EX: {ex2.Message}");
-                        }
-                    });
-                }
-
-                return;
             }
             catch (Exception ex)
             {
                 dev.Storage ??= new StorageSnapshot();
+                dev.IsMissing = true;
                 if (log) AppendLog($"[stor/refresh] #{dev.EntityId} EX: {ex.Message}");
-                return;
             }
+            return; // WICHTIG: Nach Storage-Spezialbehandlung nicht in den generischen Block laufen
         }
 
         // ===== Generisch (SmartAlarm & Co.) =====
         try
         {
-            var r = await _rust.ProbeEntityAsync(dev.EntityId);
+            var r = await ProbeWithRetryAsync(dev.EntityId, log, maxRetries);
 
             // Kind nur setzen, NIE SmartAlarm überschreiben
             if (!string.IsNullOrWhiteSpace(r.Kind) &&
@@ -643,6 +711,8 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
         }
         catch (Exception ex)
         {
+            dev.IsMissing = true;
+            _vm?.NotifyDevicesChanged();
             if (log) AppendLog("Probe-Error: " + ex.Message);
         }
     }
@@ -716,14 +786,14 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
                     }
                     else
                     {
-                        ex.Name = s.Name;
-                        ex.Kind = s.Kind;
+                        if (!string.IsNullOrWhiteSpace(s.Name)) ex.Name = s.Name;
+                        if (!string.IsNullOrWhiteSpace(s.Kind)) ex.Kind = s.Kind;
                         ex.IsOn = s.IsOn;
                         // ⚠️ SmartAlarm nie als "true" aus Storage hochholen
                         if (string.Equals(ex.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase))
                             ex.IsOn = false;
                         ex.IsMissing = s.IsMissing;
-                        ex.Alias = s.Alias;
+                        if (!string.IsNullOrWhiteSpace(s.Alias)) ex.Alias = s.Alias;
                     }
                 }
 
@@ -1022,8 +1092,12 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         }
     }
 
-    private async Task RefreshAllDevicesStatusAsync()
+    private int _refreshAllBusy = 0;
+    private async Task RefreshAllDevicesStatusAsync(int maxRetries = 3)
     {
+        if (Interlocked.Exchange(ref _refreshAllBusy, 1) == 1) return;
+        try
+        {
         if (_vm.Selected is null)
         {
             AppendLog("No Server Selected.");
@@ -1040,23 +1114,37 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             return;
         }
 
-        AppendLog("Updating Device Status…");
+        AppendLog("Updating Device Status (sequential).");
+        
         foreach (var d in list)
         {
-            await RefreshDeviceRecursiveAsync(d);
+            try
+            {
+                await RefreshDeviceRecursiveAsync(d, maxRetries);
+                await Task.Delay(100); // Small gap to be extra safe
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"Error refreshing {d.DisplayName}: {ex.Message}");
+            }
         }
-
+        
         _vm.Save();
         AppendLog("Refresh completed.");
+        }
+        finally
+        {
+            Interlocked.Exchange(ref _refreshAllBusy, 0);
+        }
     }
 
-    private async Task RefreshDeviceRecursiveAsync(SmartDevice d)
+    private async Task RefreshDeviceRecursiveAsync(SmartDevice d, int maxRetries = 3)
     {
         try
         {
             if (!d.IsGroup)
             {
-                await RefreshDeviceStateAsync(d, log: true, forcePull: true);
+                await RefreshDeviceStateAsync(d, log: true, forcePull: true, maxRetries: maxRetries);
             }
             else
             {
@@ -1198,24 +1286,69 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
     {
         if (_vm?.Selected?.Devices == null || _vm.Selected.Devices.Count == 0) return;
 
-        AppendLog("[prime] probing device kinds …");
-        foreach (var d in _vm.Selected.Devices)
+        // Collect devices that actually need probing (no kind yet and NOT in storage cache)
+        var toProbe = _vm.Selected.Devices.Where(d => 
+            string.IsNullOrEmpty(d.Kind) && 
+            !d.IsGroup && 
+            (_rust is not RustPlusClientReal rpc || !rpc.TryGetCachedStorage(d.EntityId, out _))
+        ).ToList();
+
+        // Check if some devices can be identified from cache without probing
+        if (_rust is RustPlusClientReal real)
         {
+            foreach (var d in _vm.Selected.Devices.Where(d => string.IsNullOrEmpty(d.Kind) && !d.IsGroup).ToList())
+            {
+                if (real.TryGetCachedStorage(d.EntityId, out _))
+                {
+                    d.Kind = "StorageMonitor"; // If it's in the storage cache, it's definitely a storage monitor
+                }
+            }
+        }
+
+        // Re-calculate toProbe after identifying devices from cache
+        toProbe = _vm.Selected.Devices.Where(d => 
+            string.IsNullOrEmpty(d.Kind) && 
+            !d.IsGroup && 
+            (_rust is not RustPlusClientReal rpc || !rpc.TryGetCachedStorage(d.EntityId, out _))
+        ).ToList();
+
+        if (toProbe.Count == 0) return;
+
+        AppendLog($"[prime] probing {toProbe.Count} device kinds (parallel) …");
+        
+        // Limit concurrency to 3 simultaneous probes to avoid overwhelming the socket
+        using var semaphore = new SemaphoreSlim(3);
+        var tasks = toProbe.Select(async d =>
+        {
+            await semaphore.WaitAsync();
             try
             {
-                var r = await _rust.ProbeEntityAsync(d.EntityId);
+                var r = await ProbeWithRetryAsync(d.EntityId, false);
                 if (!string.IsNullOrWhiteSpace(r.Kind))
                     d.Kind = r.Kind;
                 d.IsMissing = !r.Exists;
-                AppendLog($"[prime] #{d.EntityId} kind={d.Kind ?? "?"} exists={r.Exists}");
+                
+                // Update state immediately from probe
+                if (r.Exists)
+                {
+                    _suppressToggleHandler = true;
+                    d.IsOn = r.IsOn;
+                    _suppressToggleHandler = false;
+                }
             }
             catch (Exception ex)
             {
                 AppendLog($"[prime] #{d.EntityId} err: {ex.Message}");
             }
-            // Throttle requests to avoid flooding/disconnects
-            await Task.Delay(250);
-        }
+            finally
+            {
+                semaphore.Release();
+                await Task.Delay(150);
+            }
+        });
+
+
+        await Task.WhenAll(tasks);
         _vm?.NotifyDevicesChanged();
     }
 
