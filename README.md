@@ -48,7 +48,7 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
-## Update 4.5.0 — The Intelligence Update (May 12th)
+## Update 4.5.1 — The Intelligence Update (May 12th) + Shop Polling Hotfix
 <img width="595" height="331" alt="grafik" src="RustPlusDesktop/Assets/Screenshots/4.5.0.png" />
 
 **📍 Smart Map Follow**
