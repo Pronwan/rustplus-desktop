@@ -37,9 +37,8 @@ public partial class MainWindow
     {
         if (_apiConsecutiveTimeouts > 0)
         {
-            _apiConsecutiveTimeouts = Math.Max(0, _apiConsecutiveTimeouts - 1);
-            if (_apiConsecutiveTimeouts < ApiPressureThreshold)
-                AppendLog("[pressure] API pressure relieved.");
+            _apiConsecutiveTimeouts = 0;
+            AppendLog("[pressure] API pressure relieved.");
         }
     }
 
