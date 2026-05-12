@@ -12,69 +12,45 @@
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
                 <TextBlock Text="Patch Notes &amp; Version History" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,2"/>
                 <!-- UPDATE VERSION NUMBER HERE -->
-                <TextBlock Text="Current Version: 4.4.5-beta1" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
+                <TextBlock Text="Current Version: 4.5.0" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
             </StackPanel>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v4.4.5-beta1 PATCH NOTES -->
+                    <!-- NEW v4.5.0 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="v4.4.5-beta1  |  Stability &amp; Intelligence Update" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
-
-                            <!-- Features -->
-                            <TextBlock Text="&#x2022; Smart Switch Resilience &amp; UI Feedback" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
-                                Integrated global debouncing for Smart Switches. Buttons now visually gray out during 'in-flight' requests to prevent API rate-limiting and connection drops during rapid toggling.
-                            </TextBlock>
-
-                            <TextBlock Text="&#x2022; Smart Item Database Auto-Updates" FontWeight="Bold" Margin="0,0,0,4"/>
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
-                                The app now automatically synchronizes the Rust item database from the web on startup. New items added to the game are recognized instantly without requiring manual file updates.
-                            </TextBlock>
-
-                            <TextBlock Text="&#x2022; Advanced Shop &amp; Event Intelligence" FontWeight="Bold" Margin="0,0,0,4"/>
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
-                                Shops now turn orange if they are out of stock (not just empty), and the 'Shops' button accurately reflects the polling state. Improved Cargo tracking prevents fake spawn alerts when connecting mid-event.
-                            </TextBlock>
-
-                            <TextBlock Text="&#x2022; Enhanced Connection Stability" FontWeight="Bold" Margin="0,0,0,4"/>
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
-                                Refined Token-Management and priority handling to reduce disconnects under high API pressure. Fixed a critical bug where map markers could stop updating after a network timeout.
-                            </TextBlock>
-                        </StackPanel>
-                    </Border>
-
-                    <!-- ============================================== -->
-                    <!-- v4.4.0-beta1 PATCH NOTES -->
-                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
-                        <StackPanel>
-                            <TextBlock Text="v4.4.0-beta1  |  Chat Commands &amp; Map Intelligence" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="v4.5.0  |  The Intelligence Update (May 12, 2026)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
 
                             <!-- Screenshots -->
-                            <Image Source="pack://application:,,,/Assets/Screenshots/4.4_1.png" Stretch="Uniform" MaxHeight="350" Margin="0,0,0,12"/>
+                            <Image Source="pack://application:,,,/Assets/Screenshots/4.5.0.png" Stretch="Uniform" MaxHeight="350" Margin="0,0,0,12"/>
 
                             <!-- Features -->
-                            <TextBlock Text="&#x2022; Team Chat Commands &amp; Automation" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="&#x2022; Smart Map Follow &amp; Player Tracking" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
-                                Integrated a brand new Chat Command system. Teammates can now use commands like !pop, !time, and !cargo directly in team chat. You can also bind specific commands to trigger your Smart Switches remotely.
+                                Stay centered! A brand new "Follow" mode allows you to lock the map camera onto yourself or any teammate. The camera smoothly tracks movement in real-time, perfect for second-monitor monitoring during raids or roaming.
                             </TextBlock>
 
-                            <TextBlock Text="&#x2022; Live Day/Night Cycle Awareness" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="&#x2022; Remote Switch Control via Chat Commands" FontWeight="Bold" Margin="0,0,0,4"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
-                                The map now features a real-time Day/Night indicator with precise countdowns until the next phase change. The !time command has been enhanced to report these countdowns back to your team.
+                                Complete home automation from the battlefield. You can now assign aliases to your Smart Switches and toggle them directly via Team Chat commands. Setup is now integrated directly into the Team Chat Overlay for maximum convenience.
                             </TextBlock>
 
-                            <TextBlock Text="&#x2022; Optimized API Polling &amp; Stability" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="&#x2022; Enhanced Connection &amp; Reconnect Stability" FontWeight="Bold" Margin="0,0,0,4"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
-                                Under-the-hood optimizations to the Rust+ API handling. Priming the chat stream is now smarter and prevents redundant history requests, ensuring maximum stability even on laggy servers.
+                                Massive under-the-hood overhaul of the connection logic. Stale entity mappings are now cleared on disconnect, and device probes feature an early-exit logic to prevent UI hangs when multiple devices are missing or the server lags.
                             </TextBlock>
 
-                            <TextBlock Text="&#x2022; Bugfixes &amp; UI Polish" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="&#x2022; Smart Timer &amp; Event Intelligence" FontWeight="Bold" Margin="0,0,0,4"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
-                                Fixed audio issues with Smart Alarms, improved player tracking to eliminate map flickering, and modernized various UI components with a new premium dark-themed style.
+                                Improved trajectory and hover detection for Chinooks ensures Oil Rig crate timers are more reliable than ever. Cargo Ship route learning has been refined to handle mid-event connections without triggering false alerts.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Customizable Chat Alerts &amp; UI Polish" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Right-click the Chat Alerts button to individually customize icons and notification types. The UI has been polished with better-aligned dropdowns, modern dark-themed components, and improved hover feedback for Storage Monitors.
                             </TextBlock>
                         </StackPanel>
                     </Border>
