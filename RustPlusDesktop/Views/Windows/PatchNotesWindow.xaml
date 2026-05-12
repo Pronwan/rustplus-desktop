@@ -22,7 +22,7 @@
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="v4.5.1  |  Shop Polling Hotfix (May 12, 2026)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="v4.5.2  |  Shop Polling Hotfix (May 12, 2026)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
 
                             <!-- Screenshots -->
                             <Image Source="pack://application:,,,/Assets/Screenshots/4.5.0.png" Stretch="Uniform" MaxHeight="350" Margin="0,0,0,12"/>
