@@ -107,14 +107,14 @@ public class SmartDevice : INotifyPropertyChanged
     public string? Name
     {
         get => _name;
-        set { if (_name != value) { _name = value; OnProp(); OnProp(nameof(Display)); OnProp(nameof(DisplayName)); } }
+        set { if (_name != value) { _name = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); } }
     }
 
     private string? _kind;
     public string? Kind
     {
         get => _kind;
-        set { if (_kind != value) { _kind = value; OnProp(); OnProp(nameof(Display)); OnProp(nameof(DisplayName)); } }
+        set { if (_kind != value) { _kind = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); } }
     }
 
     private bool? _isOn;
@@ -187,7 +187,7 @@ public class SmartDevice : INotifyPropertyChanged
     public bool IsMissing
     {
         get => _isMissing;
-        set { if (_isMissing != value) { _isMissing = value; OnProp(); OnProp(nameof(Display)); OnProp(nameof(DisplayName)); } }
+        set { if (_isMissing != value) { _isMissing = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); } }
     }
 
     private bool _isToggleBusy;
@@ -202,7 +202,7 @@ public class SmartDevice : INotifyPropertyChanged
     public string? Alias
     {
         get => _alias;
-        set { if (_alias != value) { _alias = value; OnProp(); OnProp(nameof(Display)); OnProp(nameof(DisplayName)); } }
+        set { if (_alias != value) { _alias = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); } }
     }
 
     private bool _popupEnabled = true;
@@ -233,6 +233,11 @@ public class SmartDevice : INotifyPropertyChanged
         set { if (_lastAlarmMessage != value) { _lastAlarmMessage = value; OnProp(); } }
     }
 
+
+    public string PureName
+    {
+        get => string.IsNullOrWhiteSpace(Alias) ? (string.IsNullOrWhiteSpace(Name) ? (Kind ?? "Device") : Name) : Alias;
+    }
 
     public string DisplayName
     {

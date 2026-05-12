@@ -4847,7 +4847,7 @@ rp.connect();
     {
         try { if (_api is not null) await _api.DisconnectAsync(); }
         catch { }
-        finally { _api = null; _eventsHooked = false; _subscribed.Clear(); _subOnce.Clear(); }
+        finally { _api = null; _eventsHooked = false; _subscribed.Clear(); _subOnce.Clear(); _seqToEntity.Clear(); }
         _log("Connection Closed.");
     }
 
@@ -5032,11 +5032,19 @@ rp.connect();
 
         var confirmed = await WaitForSwitchStateAsync(id, on, 6000, ct);
         if (confirmed)
+        {
             _log($"SmartSwitch {id}: State confirmed → {(on ? "ON" : "OFF")}.");
+        }
         else if (sent)
+        {
             _log($"Smart Device {id}: Command sent, but confirmation timed out (server lag).");
+            throw new TimeoutException("Command sent, but confirmation timed out (server lag).");
+        }
         else
+        {
             _log($"Smart Device {id}: Switching failed – could not send command.");
+            throw new Exception("Switching failed – could not send command.");
+        }
     }
 
 
