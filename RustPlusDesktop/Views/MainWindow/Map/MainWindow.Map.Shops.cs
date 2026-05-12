@@ -135,7 +135,7 @@ public partial class MainWindow
             _shopTimer.Tick += async (_, __) => await PollShopsOnceAsync();
             _shopTimer.Start();
 
-            await PollShopsOnceAsync();
+            await PollShopsOnceAsync(force: true);
             await Dispatcher.InvokeAsync(() =>
             {
                 RefreshShopIconScales();
@@ -163,12 +163,12 @@ public partial class MainWindow
         }
     }
 
-    private async Task PollShopsOnceAsync()
+    private async Task PollShopsOnceAsync(bool force = false)
     {
         if (_rust is not RustPlusClientReal real) return;
 
-        // Skip low-priority poll when server is under stress
-        if (IsApiUnderPressure)
+        // Skip low-priority poll when server is under stress, UNLESS forced
+        if (IsApiUnderPressure && !force)
         {
             return;
         }
@@ -461,7 +461,8 @@ public partial class MainWindow
                         icon.Opacity = 1.0;
                         icon.Width = icon.Height = 20;
                         // Update source if needed
-                        if (icon.Source is System.Windows.Media.Imaging.BitmapImage bi && !bi.UriSource.ToString().Contains(allEmpty ? "orange" : "vending.png"))
+                        var bi = icon.Source as System.Windows.Media.Imaging.BitmapImage;
+                        if (bi == null || bi.UriSource.ToString() != iconUri)
                         {
                             icon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(iconUri));
                         }
