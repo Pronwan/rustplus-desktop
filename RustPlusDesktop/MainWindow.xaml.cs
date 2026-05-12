@@ -133,7 +133,9 @@ public partial class MainWindow : Window
             }
         }
 
-        BtnFollowPlayer.ContextMenu.IsOpen = true;
+        MenuFollowPlayer.PlacementTarget = BtnFollowPlayer;
+        MenuFollowPlayer.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+        MenuFollowPlayer.IsOpen = true;
     }
 
     // Camera thumbs: Throttling & "in-flight"-Wächter
@@ -485,11 +487,12 @@ public partial class MainWindow : Window
         { OverlayToolMode.Erase, ToolEraseButton }
     };
 
-        _monumentWatcher.OnOilRigTriggered += (s, monumentName) =>
+        _monumentWatcher.OnOilRigTriggered += (s, data) =>
         {
             if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
+            string timeStr = data.Duration >= 800 ? "~15m" : "~12:30m";
             Dispatcher.InvokeAsync(async () =>
-                await SendTeamChatSafeAsync($"[{monumentName}] triggered! Crate unlocks in ~15m."));
+                await SendTeamChatSafeAsync($"[{data.Name}] triggered! Crate unlocks in {timeStr}."));
         };
 
         // NEU: Update Events (10m / 5m Warnungen)

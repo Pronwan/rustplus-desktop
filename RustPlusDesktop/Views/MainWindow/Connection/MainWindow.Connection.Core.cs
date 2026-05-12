@@ -331,6 +331,9 @@ public partial class MainWindow
             _vm.NotifyDevicesChanged();
             AppendLog($"Connection initialization complete. Server: {_vm.Selected.Name}");
 
+            // Finally, refresh all device statuses to ensure the UI reflects the current server state
+            _ = RefreshAllDevicesStatusAsync(maxRetries: 1);
+
             // Finally, prime subscriptions for all devices to receive real-time updates
             if (real != null && _vm.Selected?.Devices?.Any() == true)
             {

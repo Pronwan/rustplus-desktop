@@ -1670,29 +1670,43 @@
                                                             Margin="12,0"
                                                             VerticalAlignment="Center"
                                                             Orientation="Horizontal">
-                                                            <TextBlock
-                                                                VerticalAlignment="Center"
-                                                                FontSize="13"
-                                                                FontWeight="SemiBold"
-                                                                Foreground="#EAECEE"
-                                                                Text="{Binding DisplayName, TargetNullValue=Device}"
-                                                                ToolTip="Right click to rename">
-                                                                <TextBlock.Style>
-                                                                    <Style TargetType="TextBlock">
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                                <Setter Property="Foreground" Value="Red" />
-                                                                                <Setter Property="FontStyle" Value="Italic" />
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </TextBlock.Style>
-                                                                <TextBlock.ContextMenu>
-                                                                    <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                                                        <MenuItem Click="Device_Rename_Click" Header="Rename device" />
-                                                                    </ContextMenu>
-                                                                </TextBlock.ContextMenu>
-                                                            </TextBlock>
+                                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                                <TextBlock Text="✗ " Foreground="#FF4B4B" FontSize="14" FontWeight="Bold" VerticalAlignment="Center">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="TextBlock">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                </TextBlock>
+                                                                <TextBlock
+                                                                    VerticalAlignment="Center"
+                                                                    FontSize="13"
+                                                                    FontWeight="SemiBold"
+                                                                    Foreground="#EAECEE"
+                                                                    Text="{Binding PureName, TargetNullValue=Device}"
+                                                                    ToolTip="Right click to rename">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="TextBlock">
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                                    <Setter Property="Foreground" Value="#888" />
+                                                                                    <Setter Property="FontStyle" Value="Italic" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                    <TextBlock.ContextMenu>
+                                                                        <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                                                            <MenuItem Click="Device_Rename_Click" Header="Rename device" />
+                                                                        </ContextMenu>
+                                                                    </TextBlock.ContextMenu>
+                                                                </TextBlock>
+                                                            </StackPanel>
 
                                                             <TextBlock
                                                                 Margin="8,0,0,0"
@@ -2002,12 +2016,26 @@
                                                                                     Margin="0,0,6,0"
                                                                                     Opacity="0.9"
                                                                                     Source="{StaticResource IconStorageMonitor}" />
-                                                                                <TextBlock
-                                                                                    DockPanel.Dock="Left"
-                                                                                    FontSize="13"
-                                                                                    FontWeight="SemiBold"
-                                                                                    Foreground="#EAECEE"
-                                                                                    Text="{Binding DisplayName, TargetNullValue=Storage Monitor}" />
+                                                                                <StackPanel Orientation="Horizontal">
+                                                                                    <TextBlock Text="✗ " Foreground="#FF4B4B" FontSize="13" FontWeight="Bold" VerticalAlignment="Center">
+                                                                                        <TextBlock.Style>
+                                                                                            <Style TargetType="TextBlock">
+                                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                                                <Style.Triggers>
+                                                                                                    <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                                                    </DataTrigger>
+                                                                                                </Style.Triggers>
+                                                                                            </Style>
+                                                                                        </TextBlock.Style>
+                                                                                    </TextBlock>
+                                                                                    <TextBlock
+                                                                                        DockPanel.Dock="Left"
+                                                                                        FontSize="13"
+                                                                                        FontWeight="SemiBold"
+                                                                                        Foreground="#EAECEE"
+                                                                                        Text="{Binding PureName, TargetNullValue=Storage Monitor}" />
+                                                                                </StackPanel>
                                                                             </DockPanel>
 
                                                                             <!--  Upkeep line (compact)  -->

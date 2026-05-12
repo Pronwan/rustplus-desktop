@@ -517,6 +517,9 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                     {
                         AppendLog($"Device #{dev.EntityId}: Switching failed after {attempts} attempts – {ex.Message}");
                         dev.IsMissing = true;
+                        
+                        // Health check: Trigger a direct probe to confirm if it's really missing
+                        _ = Task.Run(async () => await RefreshDeviceStateAsync(dev));
                     }
                     else
                     {
@@ -565,6 +568,9 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                 using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(6));
                 var r = await _rust.ProbeEntityAsync(entityId, cts.Token);
                 if (r.Exists) return r;
+
+                // If the probe returned successfully but the entity doesn't exist, stop retrying.
+                if (!r.Exists) break;
 
                 if (attempts < max) await Task.Delay(500);
             }
