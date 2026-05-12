@@ -18,12 +18,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>4.3.1</Version>
+		<Version>4.5.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>4.3.1</AssemblyVersion>
-		<FileVersion>4.3.1</FileVersion>
-		<InformationalVersion>4.3.1</InformationalVersion>
+		<AssemblyVersion>4.5.0</AssemblyVersion>
+		<FileVersion>4.5.0</FileVersion>
+		<InformationalVersion>4.5.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -134,6 +134,7 @@
 	  <None Remove="Assets\icons\watertreatment.png" />
 	  <None Remove="Assets\icons\waterwell.png" />
 	  <None Remove="Assets\Data\rust-item-list.json" />
+	  <None Remove="Assets\icons\discord.png" />
 	  <None Remove="Assets\rustplus-desktop-icon.ico" />
 	  <None Remove="Assets\Data\rust_items.json" />
 	  <None Remove="Assets\Screenshots\3.0_1.png" />
@@ -148,6 +149,7 @@
 	  <None Remove="Assets\Screenshots\3.3.0_2.png" />
 	  <None Remove="Assets\Screenshots\3_5A.png" />
 	  <None Remove="Assets\Screenshots\3_5B.png" />
+	  <None Remove="Assets\Screenshots\4.5.0.png" />
 	  <None Remove="Assets\Screenshots\Cargo_docked_countdown.png" />
 	  <None Remove="Assets\Screenshots\Cargo_notification_settings.png" />
 	  <None Remove="Assets\Screenshots\Cargo_remaining-on-map.png" />
@@ -209,6 +211,10 @@
   <ItemGroup>
     <Content Include="Assets\cash.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Assets\Data\rust-item-list.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
     <Resource Include="Assets\icons\airfield.png" />
@@ -283,6 +289,7 @@
     <Resource Include="Assets\icons\watertreatment.png" />
     <Resource Include="Assets\icons\waterwell.png" />
     <Resource Include="Assets\Data\rust-item-list.json" />
+    <Resource Include="Assets\icons\discord.png" />
     <Resource Include="Assets\rustplus-desktop-icon.ico" />
     <Resource Include="Assets\Screenshots\3.0_1.png" />
     <Resource Include="Assets\Screenshots\3.0_2.png" />
@@ -296,6 +303,7 @@
     <Resource Include="Assets\Screenshots\3.3.0_2.png" />
     <Resource Include="Assets\Screenshots\3_5A.png" />
     <Resource Include="Assets\Screenshots\3_5B.png" />
+    <Resource Include="Assets\Screenshots\4.5.0.png" />
     <Resource Include="Assets\Screenshots\Cargo_docked_countdown.png" />
     <Resource Include="Assets\Screenshots\Cargo_notification_settings.png" />
     <Resource Include="Assets\Screenshots\Cargo_remaining-on-map.png" />
@@ -304,6 +312,7 @@
     <Resource Include="Assets\Screenshots\v4_5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Screenshots\4.4_1.png" />
     <Resource Include="Assets\Screenshots\Notifications.png" />
     <Resource Include="Assets\TitleScreen-rust-plus-desktop.png" />
     <Resource Include="Assets\Data\rust_items.json" />

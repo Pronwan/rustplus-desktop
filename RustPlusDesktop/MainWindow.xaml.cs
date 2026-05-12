@@ -66,14 +66,13 @@ public partial class MainWindow : Window
     private bool _listenerStarting; // Schutz gegen Doppelklicks
     private readonly System.Windows.Threading.DispatcherTimer _statusTimer =
     new() { Interval = TimeSpan.FromSeconds(30) };
+
+    private readonly System.Windows.Threading.DispatcherTimer _upkeepTimer =
+    new() { Interval = TimeSpan.FromSeconds(60) };
+
     // Chat-Inkrement-Marker pro Fenster
-    private long _chatLastTicks = 0;          // zuletzt gesehener Timestamp (Ticks)
-    private string? _chatLastKey = null;      // Fallback bei exakt gleichem Timestamp
     private int _statusBusy = 0;
-    private ChatWindow? _chatWin;
-    private CancellationTokenSource? _chatCts;
-    private readonly List<TeamChatMessage> _chatHistoryLog = new();
-    private DateTime? _lastChatTsForCurrentServer = null;
+
     private Viewbox? _mapView;
     private Grid? _scene;
     private bool _isPanning;
@@ -102,6 +101,41 @@ public partial class MainWindow : Window
     public void StopTracking()
     {
         _trackingEntityId = null;
+        _vm.FollowingSteamId = null;
+        _vm.FollowingPlayerName = "";
+        _vm.FollowingPlayerAvatar = null;
+    }
+
+    private void BtnFollowPlayer_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.IsFollowing)
+        {
+            StopTracking();
+            return;
+        }
+
+        // Build dynamic menu
+        MenuFollowPlayer.Items.Clear();
+
+        var miMe = new MenuItem { Header = "Follow Me", Icon = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "\uE77B" } };
+        miMe.Click += (s, ev) => StartFollowing(_mySteamId, "Me");
+        MenuFollowPlayer.Items.Add(miMe);
+
+        if (TeamMembers.Count > 0)
+        {
+            MenuFollowPlayer.Items.Add(new Separator());
+            foreach (var member in TeamMembers)
+            {
+                if (member.SteamId == _mySteamId) continue;
+                var mi = new MenuItem { Header = $"Follow {member.Name}", Tag = member.SteamId };
+                mi.Click += (s, ev) => StartFollowing(member.SteamId, member.Name);
+                MenuFollowPlayer.Items.Add(mi);
+            }
+        }
+
+        MenuFollowPlayer.PlacementTarget = BtnFollowPlayer;
+        MenuFollowPlayer.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+        MenuFollowPlayer.IsOpen = true;
     }
 
     // Camera thumbs: Throttling & "in-flight"-Wächter
@@ -127,7 +161,6 @@ public partial class MainWindow : Window
             // zeig die ersten 6 Marker „roh“
             foreach (var m in list.Take(6))
                 AppendLog("dyn2 sample: " + m.DebugLine);
-
             // (optional) schnelle Heuristik für crate-verdächtige
             var suspects = list.Where(m =>
                 (m.RawType == 7 || m.RawType == 0) &&
@@ -146,6 +179,22 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             AppendLog("dyn2 error: " + ex.Message);
+        }
+    }
+
+    private void RefreshUpkeepUI()
+    {
+        if (_vm.Servers == null) return;
+        foreach (var server in _vm.Servers)
+        {
+            if (server.Devices == null) continue;
+            foreach (var dev in server.Devices)
+            {
+                if (dev.HasStorage)
+                {
+                    dev.NotifyUpkeepChanged();
+                }
+            }
         }
     }
     public class BoolToVisibilityConverter : IValueConverter
@@ -169,17 +218,17 @@ public partial class MainWindow : Window
             ?? Assembly.GetExecutingAssembly().GetName().Version?.ToString()      // 4-teilig
             ?? "0.0.0";
 
-        public static string VersionShort => Normalize(VersionRaw);
+        public static string VersionShort => NormalizeVer(VersionRaw);
 
         public static Version VersionForCompare =>
             Version.TryParse(VersionShort, out var v) ? v : new Version(0, 0, 0);
 
-        private static string Normalize(string s)
+        private static string NormalizeVer(string s)
         {
             if (string.IsNullOrWhiteSpace(s)) return "0.0.0";
             s = s.Trim();
             if (s.StartsWith("v", StringComparison.OrdinalIgnoreCase)) s = s[1..];
-            int cut = s.IndexOfAny(new[] { '-', '+' }); // "-rc1" oder "+commit"
+            int cut = s.IndexOfAny(new[] { '-', '+' }); 
             return cut > 0 ? s[..cut] : s;
         }
     }
@@ -209,16 +258,28 @@ public partial class MainWindow : Window
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
         InitializeComponent();
-        this.Title = $"RustPlusDesk v{AppInfo.VersionShort}";
+        this.Title = $"RustPlusDesk v{AppInfo.VersionRaw}";
         
         if (FindName("TxtVersion") is TextBlock txt)
-            txt.Text = $"v{AppInfo.VersionShort}";
+            txt.Text = $"v{AppInfo.VersionRaw}";
         InitCameraUi();
         ApplySettings();
         _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
         AppendLog($"[items-new] baseDir={baseDir}");
         EnsureNewItemDbLoaded();
         AppendLog($"[items-new] source={sNewDbSource} items={sItemsById.Count} byShort={sItemsByShort.Count}");
+
+        // NEU: Hintergrund-Update der Item-Liste von rusthelp.com
+        _ = Task.Run(async () =>
+        {
+            if (await TryUpdateItemDbAsync())
+            {
+                Dispatcher.Invoke(() => {
+                    EnsureNewItemDbLoaded(force: true);
+                    AppendLog($"[items-update] Updated from web! New count: {sItemsById.Count}");
+                });
+            }
+        });
         // GridLayer.RenderTransform = MapTransform;
         // Overlay.RenderTransform   = MapTransform;
         // bei Host-Resize: nur Markerpositionen neu berechnen
@@ -252,31 +313,50 @@ public partial class MainWindow : Window
 
         // MapTransform.Changed += (_, __) => UpdateMarkerPositions();
         HydrateSteamUiFromStorage();   // <= HIER
-        _statusTimer.Tick += async (_, __) => await UpdateServerStatusAsync();
+        // _statusTimer.Tick += async (_, __) => await UpdateServerStatusAsync();
+        _upkeepTimer.Tick += (_, __) => RefreshUpkeepUI();
+        _upkeepTimer.Start();
+
         ListServers.ItemsSource = _vm.Servers;
         
         UpdateMasterToggleState();
         SyncAlertMenuItems();
 
-        // One-time migration notice for v4.3 — Tracking & Stability improvements
-        const string CurrentVersion = "4.3.1";
-        bool alreadySawV43 = (TrackingService.LastSeenVersion == "4.3" || TrackingService.LastSeenVersion == "4.3.1");
-
-        if (!alreadySawV43)
+        // Auto-start FCM listener silently in background on app open
+        Loaded += (_, __) => _ = Task.Delay(1500).ContinueWith(_ => Dispatcher.Invoke(() => 
         {
-            TrackingService.LastSeenVersion = CurrentVersion;
+            StartPairingSilent();
+            
+            // Auto-connect if enabled and not already connected
+            if (TrackingService.AutoConnectEnabled && _vm.Selected != null && !_vm.Selected.IsConnected)
+            {
+                _ = Task.Run(async () => {
+                    await Task.Delay(1000); // Give Pairing Listener a head start
+                    await Dispatcher.InvokeAsync(async () => await PerformConnectAsync(true));
+                });
+            }
+        }));
+
+        // One-time migration notice for v4.5 — The Intelligence Update
+        const string AppVersion = "4.5.0";
+        
+        if (string.IsNullOrEmpty(TrackingService.LastSeenVersion))
+        {
+            // Erst-Installation: Version setzen, aber kein Popup zeigen
+            TrackingService.LastSeenVersion = AppVersion;
+        }
+        else if (TrackingService.LastSeenVersion != AppVersion)
+        {
+            // Upgrade: Popup zeigen
             Dispatcher.InvokeAsync(() =>
             {
                 var dlg = new Views.MigrationNoticeWindow { Owner = this };
                 dlg.ShowDialog();
-                if (dlg.ShouldReset)
+                
+                // Nur speichern, wenn der User "Don't show again" angehakt hat (Standard ist true)
+                if (dlg.DontShowAgain)
                 {
-                    SetAllAlerts(false);
-                    TrackingService.AnnounceSpawnsMaster = false;
-                    SetAllAlerts(true);
-                    TrackingService.AnnounceSpawnsMaster = true;
-                    UpdateMasterToggleState();
-                    SyncAlertMenuItems();
+                    TrackingService.LastSeenVersion = AppVersion;
                 }
             }, System.Windows.Threading.DispatcherPriority.Loaded);
         }
@@ -303,7 +383,6 @@ public partial class MainWindow : Window
         // Status → UI
         _pairing.Listening += (_, __) => Dispatcher.Invoke(() =>
         {
-            _vm.IsBusy = false; _vm.BusyText = "";
             _vm.IsPairingRunning = true;
             TxtPairingState.Text = "Pairing: listening…";
         });
@@ -314,10 +393,11 @@ public partial class MainWindow : Window
         });
         _pairing.Failed += (_, msg) => Dispatcher.Invoke(() =>
         {
-            _vm.IsBusy = false; _vm.BusyText = "";
             _vm.IsPairingRunning = false;
-            TxtPairingState.Text = "Pairing: error";
+            TxtPairingState.Text = "Pairing: listening…"; // retry silently
             AppendLog("[listener] " + msg);
+            // Auto-retry after a short delay
+            _ = Task.Delay(5000).ContinueWith(_ => Dispatcher.Invoke(() => StartPairingSilent()));
         });
 
 
@@ -398,7 +478,8 @@ public partial class MainWindow : Window
 
         this.Closing += MainWindow_Closing;
         _ = EnsureWebView2Async();
-        ClearAllToggleBusy();
+        try { ClearAllToggleBusy(); } catch { }
+        try { ResetAllBusyStates(); } catch { }
         this.Closed += MainWindow_Closed;
 
         _toolButtons = new Dictionary<OverlayToolMode, Button>
@@ -409,11 +490,12 @@ public partial class MainWindow : Window
         { OverlayToolMode.Erase, ToolEraseButton }
     };
 
-        _monumentWatcher.OnOilRigTriggered += (s, monumentName) =>
+        _monumentWatcher.OnOilRigTriggered += (s, data) =>
         {
             if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
+            string timeStr = data.Duration >= 800 ? "~15m" : "~12:30m";
             Dispatcher.InvokeAsync(async () =>
-                await SendTeamChatSafeAsync($"[{monumentName}] triggered! Crate unlocks in ~15m."));
+                await SendTeamChatSafeAsync($"[{data.Name}] triggered! Crate unlocks in {timeStr}."));
         };
 
         // NEU: Update Events (10m / 5m Warnungen)
@@ -425,14 +507,6 @@ public partial class MainWindow : Window
         
         _monumentWatcher.OnDebug += (s, msg) => Dispatcher.BeginInvoke(new Action(() => AppendLog(msg)));
 
-        // Auto-connect if enabled
-        if (TrackingService.AutoConnectEnabled && _vm.Selected != null)
-        {
-            _ = Task.Run(async () => {
-                await Task.Delay(2000); // Give UI/WebView time to settle
-                await Dispatcher.InvokeAsync(async () => await PerformConnectAsync(true));
-            });
-        }
     }
 
     // CROSSHAIR \\
@@ -947,12 +1021,8 @@ public partial class MainWindow : Window
 
         _lastChatTsForCurrentServer = null;
 
-        // UI leeren
-        if (_chatWin != null)
-        {
-             try { _chatWin.Close(); } catch { }
-             _chatWin = null;
-        }
+        // UI leeren - Overlay handled by ChatMessages clearing
+        ChatMessages.Clear();
 
         if (p == null) return;
 
@@ -1052,9 +1122,9 @@ public partial class MainWindow : Window
     private static bool sNewDbLoaded = false;
     private static string sNewDbSource = "(unbekannt)";
 
-    private static void EnsureNewItemDbLoaded()
+    private static void EnsureNewItemDbLoaded(bool force = false)
     {
-        if (sNewDbLoaded) return;
+        if (sNewDbLoaded && !force) return;
 
         sItemsById.Clear();
         sItemsByShort.Clear();
@@ -1447,6 +1517,39 @@ public partial class MainWindow : Window
         return g;
     }
 
+    private static async Task<bool> TryUpdateItemDbAsync()
+    {
+        const string url = "https://rusthelp.com/downloads/admin-item-list-public.json";
+        try
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("RustPlusDesktop/1.0");
+            client.Timeout = TimeSpan.FromSeconds(15);
+            
+            var response = await client.GetAsync(url);
+            if (!response.IsSuccessStatusCode) return false;
+
+            var json = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrWhiteSpace(json) || !json.Trim().StartsWith("[")) return false;
+
+            // Grobe Validierung: ist es ein JSON Array mit Items?
+            if (!json.Contains("shortName") || !json.Contains("displayName")) return false;
+
+            // Pfad bestimmen: Wir speichern direkt ins Root-Verzeichnis, da dies die höchste Priorität beim Laden hat
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string targetPath = System.IO.Path.Combine(baseDir, "rust-item-list.json");
+
+            // Sicherstellen, dass Ordner existiert
+            string? dir = System.IO.Path.GetDirectoryName(targetPath);
+            if (!string.IsNullOrEmpty(dir) && !System.IO.Directory.Exists(dir))
+                System.IO.Directory.CreateDirectory(dir);
+
+            await System.IO.File.WriteAllTextAsync(targetPath, json);
+            return true;
+        }
+        catch { return false; }
+    }
+
     private static bool TryParseNewItemList(string json)
     {
         try
@@ -1657,6 +1760,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
         }
 
+        // FUZZY MATCH: If we couldn't map the device via ID (e.g. generic FCM push without ID),
+        // check if there is EXACTLY ONE Smart Alarm registered across all servers.
+        // If so, we can safely assume this alarm belongs to it and respect its settings.
+        if (dev == null)
+        {
+            var allAlarms = _vm.Servers.SelectMany(s => s.Devices).Where(d => d.Kind == "SmartAlarm").ToList();
+            if (allAlarms.Count == 1)
+            {
+                dev = allAlarms[0];
+                n = n with { EntityId = dev.EntityId };
+                AppendLog($"[alarm/debug] ({source}) Fuzzy matched single alarm device: {dev.Name} (ID: {dev.EntityId})");
+            }
+        }
+
         // Metadaten cachen (FCM liefert Text, WS liefert ID)
         if (source == "FCM" && n.Message != "Alarm activated!")
         {
@@ -1784,16 +1901,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         double offX = (hostW - contentW * s) * 0.5;
         double offY = (hostH - contentH * s) * 0.5;
         return (s, offX, offY);
-    }
-
-    private async void StatusTimer_Tick(object? sender, EventArgs e)
-    {
-        if (Interlocked.Exchange(ref _statusBusy, 1) == 1) return;
-        try
-        {
-            await UpdateServerStatusAsync();
-        }
-        finally { Interlocked.Exchange(ref _statusBusy, 0); }
     }
 
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
@@ -2109,64 +2216,26 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     }
 
 
+    /// <summary>Starts the FCM pairing listener silently — no busy overlay, no blocking.</summary>
+    private void StartPairingSilent()
+    {
+        if (_listenerStarting || _pairing.IsRunning) return;
+        _listenerStarting = true;
+        _vm.IsPairingBusy = true;
+        TxtPairingState.Text = "Pairing: listening…";
+        _ = Task.Run(async () =>
+        {
+            try { await _pairing.StartAsync(); }
+            catch (Exception ex) { AppendLog("[pairing] silent start error: " + ex.Message); }
+            finally { Dispatcher.Invoke(() => { _listenerStarting = false; _vm.IsPairingBusy = false; }); }
+        });
+    }
+
     private async Task StartPairingListenerUiAsync()
     {
-        // Wenn schon gestartet: Busy sicherheitshalber runter + Status setzen
-        if (_pairing.IsRunning)
-        {
-            _vm.IsBusy = false;
-            _vm.BusyText = "";
-            TxtPairingState.Text = "Pairing: listening…";
-            AppendLog("Listener already running.");
-            return;
-        }
-        if (_listenerStarting) return;
-
-        try
-        {
-            _listenerStarting = true;
-            _vm.IsBusy = true;
-            _vm.BusyText = "Starting Pairing-Listener …";
-
-            var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-            EventHandler onListen = null!; 
-            onListen = (_, __) => { _pairing.Listening -= onListen; tcs.TrySetResult(true); };
-            EventHandler<string> onFail = null!;
-            onFail = (_, msg) => { _pairing.Failed -= onFail; AppendLog("[pairing] Listener failed: " + msg); tcs.TrySetResult(false); };
-
-            _pairing.Listening += onListen;
-            _pairing.Failed += onFail;
-
-            try
-            {
-                await _pairing.StartAsync();
-            }
-            catch (Exception exStart)
-            {
-                _pairing.Listening -= onListen;
-                _pairing.Failed -= onFail;
-                AppendLog("[pairing] StartAsync exception: " + exStart.Message);
-                tcs.TrySetResult(false);
-            }
-
-            // Kleines Safety-Timeout, damit das Overlay nie hängen bleibt
-            var completed = await Task.WhenAny(tcs.Task, Task.Delay(10000));
-            bool ok = (completed == tcs.Task) && await tcs.Task;
-
-            _vm.IsBusy = false;
-            _vm.BusyText = "";
-            if (ok) TxtPairingState.Text = "Pairing: listening…";
-            else TxtPairingState.Text = "Pairing: failed";
-        }
-        catch (Exception ex)
-        {
-            AppendLog("[pairing] UI Handler Error: " + ex.Message);
-            _vm.IsBusy = false;
-        }
-        finally
-        {
-            _listenerStarting = false;
-        }
+        // Delegate to silent start — no more busy overlay
+        StartPairingSilent();
+        await Task.CompletedTask;
     }
 
     // TRY PAIRING WITH EDGE METHOD (Right Click on Listener)
@@ -2181,7 +2250,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (_pairing.IsRunning)
         {
-            _vm.IsBusy = false; _vm.BusyText = "";
+            _vm.IsPairingBusy = false; _vm.BusyText = "";
             TxtPairingState.Text = "Pairing: listening…";
             AppendLog("Listener already running.");
             return;
@@ -2191,7 +2260,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         try
         {
             _listenerStarting = true;
-            _vm.IsBusy = true;
+            _vm.IsPairingBusy = true;
             _vm.BusyText = "Starting Pairing-Listener (Edge) …";
 
             var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -2209,7 +2278,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _pairing.Listening -= onListen;
             _pairing.Failed -= onFail;
 
-            _vm.IsBusy = false; _vm.BusyText = "";
+            _vm.IsPairingBusy = false; _vm.BusyText = "";
             if (ok) TxtPairingState.Text = "Pairing: listening…";
         }
         finally { _listenerStarting = false; }
@@ -2302,149 +2371,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     // death pins per player
     private readonly Dictionary<ulong, FrameworkElement> _deathPins = new();
 
-    private async void BtnOpenChat_Click(object sender, RoutedEventArgs e)
-    {
-        if (_rust is not RustPlusClientReal real)
-        {
-            MessageBox.Show("Not connected.");
-            return;
-        }
 
-        if (!(_vm.Selected?.IsConnected ?? false))
-        {
-            MessageBox.Show("Please connect to a server first.");
-            return;
-        }
-
-        try
-        {
-            real.TeamChatReceived -= Real_TeamChatReceived;
-            real.TeamChatReceived += Real_TeamChatReceived;
-            await real.PrimeTeamChatAsync();
-        }
-        catch (InvalidOperationException)
-        {
-            MessageBox.Show("Please connect to a server first.");
-            return;
-        }
-        catch (Exception ex)
-        {
-            AppendLog("PrimeChat failed: " + ex.Message);
-            MessageBox.Show("Chat is not available right now.");
-            return;
-        }
-
-        // Fenster öffnen
-        if (_chatWin == null || !_chatWin.IsLoaded)
-        {
-            _chatWin = new Views.ChatWindow(async msg => await real.SendTeamMessageAsync(msg))
-            {
-                Owner = this
-            };
-            _chatWin.Closed += (_, __) => _chatWin = null;
-
-            // WICHTIG: Hier spielen wir den alten Verlauf ab (Replay)
-            // Da wir die gespeicherten Messages nutzen, stimmen die Uhrzeiten (Timestamp)!
-            lock (_chatHistoryLog)
-            {
-                foreach (var m in _chatHistoryLog.OrderBy(x => x.Timestamp))
-                {
-                    _chatWin.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime());
-                }
-            }
-
-            _chatWin.Show();
-        }
-        else
-        {
-            _chatWin.Activate();
-        }
-
-        // Fehlende History vom Server nachladen
-        try
-        {
-            var history = await real.GetTeamChatHistoryAsync(_lastChatTsForCurrentServer, limit: 120);
-            foreach (var m in history.OrderBy(m => m.Timestamp))
-                AppendChatIfNew(m);
-
-            if (history.Count > 0)
-                _lastChatTsForCurrentServer = history.Max(x => x.Timestamp);
-        }
-        catch (Exception ex)
-        {
-            AppendLog("Chat-History Error: " + ex.Message);
-        }
-    }
-    private void Real_TeamChatReceived(object? sender, TeamChatMessage m)
-    {
-        Dispatcher.Invoke(() =>
-        {
-            // Robust Check: Ist diese Nachricht (Inhalt + Autor) bereits in den letzten 100 Zeilen?
-            lock (_chatHistoryLog)
-            {
-                var normAuthor = (m.Author ?? "").Trim().ToLowerInvariant();
-                var normText = (m.Text ?? "").Trim().ToLowerInvariant();
-
-                int start = Math.Max(0, _chatHistoryLog.Count - 100);
-                for (int i = _chatHistoryLog.Count - 1; i >= start; i--)
-                {
-                    var existing = _chatHistoryLog[i];
-                    if (string.Equals(existing.Author, normAuthor, StringComparison.OrdinalIgnoreCase) && 
-                        string.Equals(existing.Text, normText, StringComparison.OrdinalIgnoreCase)) 
-                        return; // Duplikat ignorieren
-                }
-                _chatHistoryLog.Add(m);
-            }
-
-            // ab hier gilt sie als "neu"
-            if (m.Text.Trim().Equals("!leader", StringComparison.OrdinalIgnoreCase))
-            {
-                if (m.SteamId != 0 && _rust is RustPlusClientReal client)
-                {
-                    _ = client.PromoteToLeaderAsync(m.SteamId);
-                    AppendLog($"[Auto-Promote] {m.Author} ({m.SteamId}) requested promotion.");
-                }
-            }
-
-            _chatWin?.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime());
-            
-            // Timestamp für History-Anfragen aktuell halten
-            if (!_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value)
-                _lastChatTsForCurrentServer = m.Timestamp;
-        });
-    }
-
-    private bool AppendChatIfNew(TeamChatMessage m)
-    {
-        lock (_chatHistoryLog)
-        {
-            var normAuthor = (m.Author ?? "").Trim().ToLowerInvariant();
-            var normText = (m.Text ?? "").Trim().ToLowerInvariant();
-
-            // Robust Check: Ist diese Nachricht (Inhalt + Autor) bereits in den letzten 100 Zeilen?
-            int start = Math.Max(0, _chatHistoryLog.Count - 100);
-            for (int i = _chatHistoryLog.Count - 1; i >= start; i--)
-            {
-                var existing = _chatHistoryLog[i];
-                if (string.Equals(existing.Author, normAuthor, StringComparison.OrdinalIgnoreCase) && 
-                    string.Equals(existing.Text, normText, StringComparison.OrdinalIgnoreCase)) 
-                    return false; // Duplikat ignorieren
-            }
-            _chatHistoryLog.Add(m);
-        }
-
-        if (!_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value)
-            _lastChatTsForCurrentServer = m.Timestamp;
-
-        _chatWin?.AddIncoming(m.Author, m.Text, m.Timestamp.ToLocalTime());
-        return true;
-    }
-
-    private void OnTeamChatReceived(object? _, RustPlusDesk.Models.TeamChatMessage m)
-    {
-        if (_chatWin is null || !_chatWin.IsLoaded) return;
-        Dispatcher.Invoke(() => _chatWin.AddIncoming(m.Author, m.Text, m.Timestamp));
-    }
 
     private void Monuments_Checked(object sender, RoutedEventArgs e)
     {
@@ -2462,12 +2389,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             fe.Visibility = on ? Visibility.Visible : Visibility.Collapsed;
     }
 
-    private void OnChatReceived(object? sender, TeamChatMessage e)
-    {
-        // Nur anzeigen, wenn das Chatfenster offen ist
-        if (_chatWin is { IsLoaded: true })
-            _chatWin.AddIncoming(e.Author, e.Text);
-    }
+
 
     private void HydrateSteamUiFromStorage()
     {
@@ -3056,29 +2978,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    private async Task SendTeamChatSafeAsync(string text)
-    {
-        // Thread-safe: called from both UI thread (DynEvents) and background threads (MonumentWatcher)
-        try
-        {
-            if (_rust == null) return;
-            var t = _rust.GetType();
-            var m =
-                t.GetMethod("SendTeamMessageAsync", new[] { typeof(string), typeof(CancellationToken) }) ??
-                t.GetMethod("SendTeamMessageAsync", new[] { typeof(string) }) ??
-                t.GetMethod("SendChatMessageAsync", new[] { typeof(string) }) ??
-                t.GetMethod("SendMessageAsync", new[] { typeof(string) });
-
-            if (m == null) return;
-
-            object? ret = (m.GetParameters().Length == 2)
-                ? m.Invoke(_rust, new object[] { text, CancellationToken.None })
-                : m.Invoke(_rust, new object[] { text });
-
-            if (ret is Task task) await task.ConfigureAwait(false);
-        }
-        catch { /* ignore send errors */ }
-    }
 
 
     private static string EventKindText(int type) => type switch
@@ -4263,15 +4162,30 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
 
     // ====== HILFE-FUNKTION SOUND ======
+    private System.Media.SoundPlayer? _shopSoundPlayer;
+
     private void PlayShopAlertSound()
     {
         try
         {
-            string path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cash.wav");
+            string baseDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
+            string path = System.IO.Path.Combine(baseDir, "Assets", "cash.wav");
+            if (!System.IO.File.Exists(path)) path = System.IO.Path.Combine(baseDir, "cash.wav");
+
             if (System.IO.File.Exists(path))
             {
-                var player = new System.Media.SoundPlayer(path);
-                player.Play();
+                var fullPath = System.IO.Path.GetFullPath(path);
+                // SoundPlayer ist für WAV-Dateien effizienter und verhindert Knirschen
+                if (_shopSoundPlayer == null)
+                {
+                    _shopSoundPlayer = new System.Media.SoundPlayer(fullPath);
+                }
+                else if (_shopSoundPlayer.SoundLocation != fullPath)
+                {
+                    _shopSoundPlayer.SoundLocation = fullPath;
+                }
+                
+                _shopSoundPlayer.Play();
             }
         }
         catch { /* ignore */ }
@@ -4649,6 +4563,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             TrackingService.SidebarWidth = ColSidebar.ActualWidth;
         }
     }
+    private void BtnDiscord_Click(object sender, RoutedEventArgs e)
+    {
+        try { Process.Start(new ProcessStartInfo("https://discord.gg/v4X584wye4") { UseShellExecute = true }); }
+        catch { }
+    }
+
     private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
     {
         if (_listenerStarting) return;
@@ -4672,11 +4592,30 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             var (latest, tag, dlUrl) = latestInfo.Value;
             AppendLog($"Current: {AppInfo.VersionShort} | Latest: {latest} ({tag})");
 
-            if (latest <= curr)
+            if (latest < curr)
             {
                 _vm.IsBusy = false; _vm.BusyText = "";
                 System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
+            }
+
+            if (latest == curr)
+            {
+                // Spezialfall: Wenn wir eine Beta haben (Raw enthält '-') und GitHub den exakt gleichen numerischen Tag hat,
+                // aber der GitHub-Tag KEIN '-' enthält, dann ist GitHub neuer (Final Release).
+                bool localIsBeta = AppInfo.VersionRaw.Contains("-", StringComparison.OrdinalIgnoreCase);
+                bool remoteIsBeta = tag.Contains("-", StringComparison.OrdinalIgnoreCase);
+
+                if (localIsBeta && !remoteIsBeta)
+                {
+                    // GitHub ist Final, wir sind Beta -> Update verfügbar!
+                }
+                else
+                {
+                    _vm.IsBusy = false; _vm.BusyText = "";
+                    System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
             }
 
             // neuere Version vorhanden
@@ -4992,6 +4931,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private void ClearAllToggleBusy()
     {
         lock (_toggleBusy) { _toggleBusy.Clear(); }
+        _globalToggleBusy = false;
+    }
+
+    private void ResetAllBusyStates()
+    {
+        _globalToggleBusy = false;
+        _isDynPollBusy = false;
+        _storageTickBusy = false;
+        _apiConsecutiveTimeouts = 0;
+        System.Threading.Interlocked.Exchange(ref _teamPollBusy, 0);
+        System.Threading.Interlocked.Exchange(ref _camThumbBusy, 0);
+        AppendLog("[reset] All busy flags cleared.");
     }
 
     private void BtnHotkeys_Click(object sender, RoutedEventArgs e)

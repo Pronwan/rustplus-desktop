@@ -356,6 +356,8 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
             object? resp = call;
             if (call is Task t) { await t.ConfigureAwait(false); resp = t.GetType().GetProperty("Result")?.GetValue(t); }
 
+            if (!IsResponseValid(resp)) { L("invalid response"); return; }
+
             var r = P(resp, "Response") ?? resp;
             var mm = P(r, "MapMarkers") ?? r;
 
@@ -590,6 +592,8 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                 await t.ConfigureAwait(false);
                 resp = t.GetType().GetProperty("Result")?.GetValue(t);
             }
+
+            if (!IsResponseValid(resp)) return resultList;
 
             var r = P(resp, "Response") ?? resp;
             var mm = P(r, "MapMarkers") ?? r;
@@ -1730,6 +1734,7 @@ rp.connect();
     // ---------- END DUMP MAP INFO BUTTON -------------- //
 
     private bool _eventsHooked;
+    private bool _isChatPrimed;
 
     // Rust+ feuert dieses Event, sobald der Chat „geprimed“ wurde.
     // Wir mappen es auf unser eigenes DTO und reichen es weiter.
@@ -1823,20 +1828,11 @@ rp.connect();
         }
         */
 
-        _api.OnSmartSwitchTriggered += (_, sw) =>
-        {
-            var id = GetEntityId(sw);
-            var on = GetIsActive(sw);
-            DeviceStateEvent?.Invoke(id, on, "SmartSwitch");
-            _log?.Invoke($"[Gerät] {id} → {(on ? "AN" : "AUS")}");
-        };
+        _api.OnSmartSwitchTriggered -= Api_OnSmartSwitchTriggered;
+        _api.OnSmartSwitchTriggered += Api_OnSmartSwitchTriggered;
 
-
-        _api.OnStorageMonitorTriggered += (_, st) =>
-        {
-            // kein Blockieren/Reflection im Event-Thread
-            _ = Task.Run(() => HandleStorageMonitorEvent(st));
-        };
+        _api.OnStorageMonitorTriggered -= Api_OnStorageMonitorTriggered;
+        _api.OnStorageMonitorTriggered += Api_OnStorageMonitorTriggered;
 
         _api.RequestSent += (_, reqObj) =>
         {
@@ -1995,10 +1991,27 @@ rp.connect();
         lock (_hookLock) _eventsHooked = true;
     }
 
-    private void HandleStorageMonitorEvent(object st)
+    private void Api_OnSmartSwitchTriggered(object? sender, object sw)
+    {
+        var id = GetEntityId(sw);
+        var on = GetIsActive(sw);
+        DeviceStateEvent?.Invoke(id, on, "SmartSwitch");
+        _log?.Invoke($"[Gerät] {id} → {(on ? "AN" : "AUS")}");
+    }
+
+    private void Api_OnStorageMonitorTriggered(object? sender, object st)
+    {
+        // kein Blockieren/Reflection im Event-Thread
+        _ = Task.Run(() => HandleStorageMonitorEvent(st));
+    }
+
+    private async void HandleStorageMonitorEvent(object st)
     {
         try
         {
+            // Kurze Pause, da Rust+ oft den Trigger schickt, bevor die Daten (Upkeep) auf dem Server fertig berechnet sind
+            await Task.Delay(150);
+
             uint entityId = 0;
             try
             {
@@ -2069,10 +2082,10 @@ rp.connect();
             StorageSnapshotReceived?.Invoke(entityId, snap);
             _log?.Invoke($"[stor/event] {entityId} items={snap.Items.Count} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")} isTc={isTc}");
 
-            // Fallback nur dann, wenn wir wirklich KEIN Upkeep bekommen haben:
-            if (isTc && snap.UpkeepSeconds is null)
+            // TC-Spezial: Immer kurz nachhaken für den Upkeep, da Rust+ Events oft "einen Schritt hinterher" sind
+            if (isTc)
             {
-                ScheduleEntityInfoPull(entityId, delayMs: 1200);
+                ScheduleEntityInfoPull(entityId, delayMs: 1500);
             }
         }
         catch (Exception ex)
@@ -2154,6 +2167,12 @@ rp.connect();
 
         if (entityId != 0u)
         {
+            // NEW: Fallback für Upkeep aus dem Cache, falls der aktuelle Knoten keine Infos hat (z.B. bei GetEntityInfo)
+            if (upkeep == null && _storageCache.TryGetValue(entityId, out var existing) && existing.UpkeepSeconds != null)
+            {
+                snap.UpkeepSeconds = existing.UpkeepSeconds;
+            }
+
             _storageCache[entityId] = snap;
             StorageSnapshotReceived?.Invoke(entityId, snap);
            // _log?.Invoke($"[stor/resp-{sourceTag}] {entityId} items={snap.Items.Count} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")} isTc={isTc}");
@@ -2346,6 +2365,7 @@ rp.connect();
     public async Task PrimeTeamChatAsync(CancellationToken ct = default)
     {
         if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+        if (_isChatPrimed) return; // Bereits geprimed für diese Verbindung
 
         // Event einmalig verdrahten
         try
@@ -2356,7 +2376,12 @@ rp.connect();
         catch { /* tolerant */ }
 
         // Einmaliger „Prime“-Call, damit Events danach geliefert werden
-        try { _ = await GetTeamChatHistoryAsync(ct: ct).ConfigureAwait(false); } catch { /* egal */ }
+        try 
+        { 
+            _ = await GetTeamChatHistoryAsync(ct: ct).ConfigureAwait(false); 
+            _isChatPrimed = true; 
+        } 
+        catch { /* egal */ }
     }
 
     // Kleiner Helfer wie an anderer Stelle bereits genutzt:
@@ -2557,7 +2582,7 @@ rp.connect();
                 else if (ps.Length == 1 && ps[0].ParameterType.Name.Contains("CancellationToken"))
                     args = new object?[] { ct };
 
-                resObj = await UnwrapTaskAsync(mHist.Invoke(_api, args));
+                resObj = await UnwrapTaskAsync(mHist.Invoke(_api, args), ct);
             }
             else
             {
@@ -2568,7 +2593,7 @@ rp.connect();
                     var ps = mInfo.GetParameters();
                     object?[] args = (ps.Length == 1 && ps[0].ParameterType == typeof(CancellationToken))
                                      ? new object?[] { ct } : Array.Empty<object?>();
-                    resObj = await UnwrapTaskAsync(mInfo.Invoke(_api, args));
+                    resObj = await UnwrapTaskAsync(mInfo.Invoke(_api, args), ct);
                 }
             }
 
@@ -2605,20 +2630,17 @@ rp.connect();
     => o?.GetType().GetProperty(name)?.GetValue(o);
 
     // Task/ValueTask dynamisch entpacken
-    private static async Task<object?> UnwrapTaskAsync(object? taskOrValue)
+    private static async Task<object?> UnwrapTaskAsync(object? taskOrValue, CancellationToken ct)
     {
         if (taskOrValue is null) return null;
-        switch (taskOrValue)
+        if (taskOrValue is Task t)
         {
-            case Task t when t.GetType().IsGenericType:
-                await t.ConfigureAwait(false);
+            await t.WaitAsync(ct).ConfigureAwait(false);
+            if (t.GetType().IsGenericType)
                 return t.GetType().GetProperty("Result")?.GetValue(t);
-            case Task t:
-                await t.ConfigureAwait(false);
-                return null;
-            default:
-                return taskOrValue;
+            return null;
         }
+        return taskOrValue;
     }
 
 
@@ -2871,6 +2893,8 @@ rp.connect();
             await task.ConfigureAwait(false);
 
             var result = task.GetType().GetProperty("Result")?.GetValue(task);
+            if (!IsResponseValid(result)) return null;
+
             var data = result?.GetType().GetProperty("Data")?.GetValue(result) ?? result;
             if (data is null) return null;
 
@@ -2930,7 +2954,7 @@ rp.connect();
 
                         if (callInfo is Task tInfo)
                         {
-                            await tInfo.ConfigureAwait(false);
+                            await tInfo.WaitAsync(ct).ConfigureAwait(false);
                             var res = tInfo.GetType().GetProperty("Result")?.GetValue(tInfo);
                             var info = res?.GetType().GetProperty("Data")?.GetValue(res) ?? res;
                             world = Convert.ToInt32(
@@ -3075,6 +3099,8 @@ rp.connect();
                     await task.ConfigureAwait(false);
                     resultObj = task.GetType().GetProperty("Result")?.GetValue(task);
                 }
+
+                if (!IsResponseValid(resultObj)) return null;
 
                 // häufig: result.Data oder direkt result
                 var data = GetProp(resultObj!, "Data") ?? resultObj;
@@ -3347,9 +3373,11 @@ rp.connect();
         object? resp = taskObj;
         if (taskObj is Task tsk)
         {
-            await tsk.ConfigureAwait(false);
+            await tsk.WaitAsync(ct).ConfigureAwait(false);
             resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk);
         }
+
+        if (!IsResponseValid(resp)) return LoadFromCache<TeamInfo>("team");
 
         var r  = P(resp, "Response") ?? resp;
         var ti = P(r, "TeamInfo") ?? r;
@@ -3605,17 +3633,27 @@ rp.connect();
             var send = _api.GetType().GetMethod("SendRequestAsync", new[] { reqType });
             if (send == null) return list;
 
-            await AcquireTokenAsync(CancellationToken.None);
+            await AcquireTokenAsync(ct);
             var taskObj = send.Invoke(_api, new object[] { req });
             object? resp = taskObj;
             if (taskObj is Task tsk)
             {
-                await tsk.ConfigureAwait(false);
+                await tsk.WaitAsync(ct).ConfigureAwait(false);
                 resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk);
             }
 
+            if (!IsResponseValid(resp)) return LoadFromCache<List<DynMarker>>("markers") ?? list;
+
             var r = RProp(resp, "Response") ?? resp;
-            var mm = RProp(r, "MapMarkers") ?? r;
+            var mm = RProp(r, "MapMarkers");
+            
+            if (mm == null)
+            {
+                if (RProp(r, "Markers") != null || RProp(r, "Marker") != null || RProp(r, "Crates") != null)
+                    mm = r;
+                else
+                    return LoadFromCache<List<DynMarker>>("markers") ?? list;
+            }
 
             // Primärliste: "Markers" (alle dynamischen, inkl. Player/Events)
             object? markers = RProp(mm, "Markers") ?? RProp(mm, "Marker");
@@ -3909,10 +3947,21 @@ rp.connect();
             }
 
             var data = Prop(result, "Data") ?? result;
-
+            var mm = Prop(data, "MapMarkers") ?? data;
+            
             // prefer explicit vending list if present
-            var vend = Prop(data, "VendingMachines") ?? Prop(data, "Vending");
+            var vend = Prop(mm, "VendingMachines") ?? Prop(mm, "Vending");
             if (vend != null) ExtractFromCollection(vend, shops);
+            else if (mm != null && (Prop(mm, "Markers") != null || Prop(mm, "Marker") != null))
+            {
+                // Legit response, but no explicit VendingMachines list - generic scan will handle it
+            }
+            else if (mm != null)
+            {
+                // Unlegit response - missing expected containers
+                var cached = LoadFromCache<List<ShopMarker>>("shops");
+                if (cached != null && cached.Count > 0) return cached;
+            }
 
             // otherwise generic scan – but still needs type==3 inside ExtractFromCollection
             if (shops.Count == 0 && data != null)
@@ -3956,18 +4005,21 @@ rp.connect();
                             resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk);
                         }
 
-                        var r = Prop(resp, "Response") ?? resp;
-                        var mm = Prop(r, "MapMarkers") ?? r;
-
-                        var vend = Prop(mm, "VendingMachines") ?? Prop(mm, "Vending");
-                        if (vend != null) ExtractFromCollection(vend, shops);
-                        if (shops.Count == 0 && mm != null)
+                        if (IsResponseValid(resp))
                         {
-                            foreach (var p in mm.GetType().GetProperties())
+                            var r = Prop(resp, "Response") ?? resp;
+                            var mm = Prop(r, "MapMarkers") ?? r;
+
+                            var vend = Prop(mm, "VendingMachines") ?? Prop(mm, "Vending");
+                            if (vend != null) ExtractFromCollection(vend, shops);
+                            if (shops.Count == 0 && mm != null)
                             {
-                                var v = p.GetValue(mm);
-                                if (v is System.Collections.IEnumerable en && v is not string)
-                                    ExtractFromCollection(v, shops);
+                                foreach (var p in mm.GetType().GetProperties())
+                                {
+                                    var v = p.GetValue(mm);
+                                    if (v is System.Collections.IEnumerable en && v is not string)
+                                        ExtractFromCollection(v, shops);
+                                }
                             }
                         }
                     }
@@ -4210,7 +4262,7 @@ rp.connect();
 
                 if (call is Task task)
                 {
-                    await task.ConfigureAwait(false);
+                    await task.WaitAsync(ct).ConfigureAwait(false);
                     var res = task.GetType().GetProperty("Result")?.GetValue(task);
                     var data = Prop(res, "Data") ?? Prop(res, "Time") ?? res;
                     if (TryReadTimeHHMM(data, out var tA, out var usedA)) { timeStr = tA; }// L($"time(A): {tA} via {usedA}"); }
@@ -4251,15 +4303,22 @@ rp.connect();
                             await AcquireTokenAsync(ct);
                             var taskObj = send.Invoke(_api, new object[] { reqInfo });
                             object? resp = taskObj;
-                            if (taskObj is Task tsk) { await tsk.ConfigureAwait(false); resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk); }
+                            if (taskObj is Task tsk) 
+                            { 
+                                await tsk.WaitAsync(ct).ConfigureAwait(false); 
+                                resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk); 
+                            }
 
-                            var r = Prop(resp, "Response") ?? resp;
-                            var info = Prop(r, "Info") ?? r;
+                            if (IsResponseValid(resp))
+                            {
+                                var r = Prop(resp, "Response") ?? resp;
+                                var info = Prop(r, "Info") ?? r;
 
-                            players = ReadIntCI(info, "Players", "PlayerCount", "Population", "Online", "CurrentPlayers") ?? players;
-                            maxPlayers = ReadIntCI(info, "MaxPlayers", "MaxPopulation", "Slots", "Max") ?? maxPlayers;
-                            queue = ReadIntCI(info, "Queue", "Queued", "QueuedPlayers", "QueuePlayers") ?? queue;
-                            //L($"info(B): players={players} max={maxPlayers} queue={queue}");
+                                players = ReadIntCI(info, "Players", "PlayerCount", "Population", "Online", "CurrentPlayers") ?? players;
+                                maxPlayers = ReadIntCI(info, "MaxPlayers", "MaxPopulation", "Slots", "Max") ?? maxPlayers;
+                                queue = ReadIntCI(info, "Queue", "Queued", "QueuedPlayers", "QueuePlayers") ?? queue;
+                                //L($"info(B): players={players} max={maxPlayers} queue={queue}");
+                            }
                         }
                     }
 
@@ -4281,10 +4340,13 @@ rp.connect();
                             object? resp = taskObj;
                             if (taskObj is Task tsk) { await tsk.ConfigureAwait(false); resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk); }
 
-                            var r = Prop(resp, "Response") ?? resp;
-                            var time = Prop(r, "Time") ?? r;
-                            if (TryReadTimeHHMM(time, out var tB, out var usedB)) { timeStr = tB; }// L($"time(B): {tB} via {usedB}"); }
-                            //else L("time(B): (not found)");
+                            if (IsResponseValid(resp))
+                            {
+                                var r = Prop(resp, "Response") ?? resp;
+                                var time = Prop(r, "Time") ?? r;
+                                if (TryReadTimeHHMM(time, out var tB, out var usedB)) { timeStr = tB; }// L($"time(B): {tB} via {usedB}"); }
+                                //else L("time(B): (not found)");
+                            }
                         }
                     }
                 }
@@ -4296,16 +4358,17 @@ rp.connect();
             }
         }
 
-        // Fallbacks glätten (lieber "–" als 0/0)
-        var tStr = string.IsNullOrWhiteSpace(timeStr) ? "–" : timeStr;
+        // Fallbacks glätten (lieber null als 0/0, damit UI-Poll es ignoriert)
+        var tStr = string.IsNullOrWhiteSpace(timeStr) ? null : timeStr;
         return new ServerStatus(players, maxPlayers, queue, tStr);
     }
 
     public async Task SendTeamMessageAsync(string text, CancellationToken ct = default)
     {
+        if (text == null) throw new ArgumentNullException(nameof(text));
         if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+        
         var t = _api.GetType();
-
         var m = t.GetMethod("SendTeamMessageAsync", new[] { typeof(string), typeof(CancellationToken) }) ??
                 t.GetMethod("SendTeamMessageAsync", new[] { typeof(string) }) ??
                 t.GetMethod("SendTeamMessage", new[] { typeof(string) });
@@ -4313,12 +4376,37 @@ rp.connect();
         if (m is null) throw new NotSupportedException("SendTeamMessage* nicht gefunden.");
 
         await AcquireTokenAsync(ct);
+        
+        // Final null check after potentially long token acquisition
+        if (_api is null) throw new InvalidOperationException("Verbindung wurde während der Wartezeit getrennt.");
+
         var args = m.GetParameters().Length == 2 ? new object[] { text, ct } : new object[] { text };
-        var taskObj = m.Invoke(_api, args);
+        
+        object? taskObj;
+        try
+        {
+            taskObj = m.Invoke(_api, args);
+        }
+        catch (Exception ex)
+        {
+            _log?.Invoke($"[Chat] Invoke error: {ex.Message}");
+            throw;
+        }
+
         if (taskObj is Task task)
         {
             try { await task; }
+            catch (NullReferenceException nre) when (nre.StackTrace?.Contains("SendTeamMessageAsync") == true)
+            {
+                // Internal library bug during response processing. 
+                // Since the message usually goes through anyway, we suppress this to allow the verification loop to check for the echo.
+                _log?.Invoke("[Chat] Library internal NRE (response handling), proceeding to verification...");
+            }
             catch (Exception ex) { CheckConnectionLost(ex); throw; }
+        }
+        else if (taskObj == null)
+        {
+            _log?.Invoke("[Chat] Send method returned null task.");
         }
     }
 
@@ -4515,6 +4603,8 @@ rp.connect();
             object? resp = taskObj;
             if (taskObj is Task t) { await t.ConfigureAwait(false); resp = t.GetType().GetProperty("Result")?.GetValue(t); }
 
+            if (!IsResponseValid(resp)) return null;
+
             var r = P(resp, "Response") ?? resp;
             var ti = P(r, "TeamInfo") ?? P(r, "Team") ?? r;
 
@@ -4653,17 +4743,27 @@ rp.connect();
     {
         HookEventsIfNeeded();
 
-        foreach (var id in entityIds.Distinct())
+        var ids = entityIds.Distinct().ToList();
+        if (ids.Count == 0) return;
+
+        using var semaphore = new SemaphoreSlim(5);
+        var tasks = ids.Select(async id =>
         {
-            await EnsureSubOnceAsync(id);     // sorgt fürs Event
-           // await PokeEntityAsync(id, ct);      // triggert erstes Update
-            await Task.Delay(150, ct);
-        }
+            await semaphore.WaitAsync(ct);
+            try
+            {
+                await EnsureSubOnceAsync(id);
+                await Task.Delay(100, ct);
+            }
+            catch { }
+            finally { semaphore.Release(); }
+        });
+        await Task.WhenAll(tasks);
     }
 
     public async Task ConnectAsync(ServerProfile profile, CancellationToken ct)
     {
-        
+        _isChatPrimed = false; // Reset bei Neuverbindung
         if (profile is null) throw new ArgumentNullException(nameof(profile));
         if (!ulong.TryParse(profile.SteamId64, out var steamId))
             throw new ArgumentException("Ungültige SteamID64.", nameof(profile));
@@ -4747,7 +4847,7 @@ rp.connect();
     {
         try { if (_api is not null) await _api.DisconnectAsync(); }
         catch { }
-        finally { _api = null; _eventsHooked = false; _subscribed.Clear(); _subOnce.Clear(); }
+        finally { _api = null; _eventsHooked = false; _subscribed.Clear(); _subOnce.Clear(); _seqToEntity.Clear(); }
         _log("Connection Closed.");
     }
 
@@ -4913,7 +5013,7 @@ rp.connect();
         else
         {
             _log($"[toggle:{id}] path=explicit ✗");
-            var compat = await TrySetEntityValueCompatAsync(id, on);
+            var compat = await TrySetEntityValueCompatAsync(id, on, ct);
             if (compat == true) { _log($"[toggle:{id}] path=setEntityValue ✔"); sent = true; }
             else
             {
@@ -4930,11 +5030,21 @@ rp.connect();
             }
         }
 
-        var confirmed = await WaitForSwitchStateAsync(id, on, 3000, ct);
+        var confirmed = await WaitForSwitchStateAsync(id, on, 6000, ct);
         if (confirmed)
+        {
             _log($"SmartSwitch {id}: State confirmed → {(on ? "ON" : "OFF")}.");
+        }
+        else if (sent)
+        {
+            _log($"Smart Device {id}: Command sent, but confirmation timed out (server lag).");
+            throw new TimeoutException("Command sent, but confirmation timed out (server lag).");
+        }
         else
-            _log($"Smart Device {id}: Switching failed – Timeout (no confirmation or not a Smart Switch).");
+        {
+            _log($"Smart Device {id}: Switching failed – could not send command.");
+            throw new Exception("Switching failed – could not send command.");
+        }
     }
 
 
@@ -5125,7 +5235,7 @@ rp.connect();
                 var res = m.Invoke(_api, args);
                 if (res is Task task)
                 {
-                    await task;
+                    await task.WaitAsync(ct).ConfigureAwait(false);
                     var ok = TryGetTaskResultSuccess(task);
                     if (ok.HasValue) return ok.Value;
                     return true; // Task lief ohne Exception → vermutlich ok
@@ -5168,7 +5278,7 @@ rp.connect();
     }
 
     // ---- Anpassung: TrySetEntityValueCompatAsync gibt jetzt bool? (null = Methode fehlt)
-    private async Task<bool?> TrySetEntityValueCompatAsync(uint entityId, bool on)
+    private async Task<bool?> TrySetEntityValueCompatAsync(uint entityId, bool on, CancellationToken ct)
     {
         var t = _api!.GetType();
 
@@ -5190,13 +5300,13 @@ rp.connect();
             {
                 var p = m.GetParameters();
                 var args = (p.Length >= 3 && p[2].ParameterType == typeof(CancellationToken))
-                    ? new object[] { Convert.ChangeType(entityId, p[0].ParameterType), on, CancellationToken.None }
+                    ? new object[] { Convert.ChangeType(entityId, p[0].ParameterType), on, ct }
                     : new object[] { Convert.ChangeType(entityId, p[0].ParameterType), on };
 
                 var res = m.Invoke(_api, args);
                 if (res is Task task)
                 {
-                    await task;
+                    await task.WaitAsync(ct).ConfigureAwait(false);
                     var ok = TryGetTaskResultSuccess(task);
                     return ok ?? true; // wenn kein IsSuccess → trotzdem als „gesendet“ werten
                 }
@@ -5337,6 +5447,8 @@ rp.connect();
                 resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk);
             }
 
+            if (!IsResponseValid(resp)) return list;
+
             // Response -> Map -> Monuments
             var r = RProp(resp, "Response") ?? resp;
             var map = RProp(r, "Map");
@@ -5421,6 +5533,7 @@ rp.connect();
                 {
                     await task.ConfigureAwait(false);
                     var result = task.GetType().GetProperty("Result")?.GetValue(task);
+                    if (!IsResponseValid(result)) return null;
                     var data = result?.GetType().GetProperty("Data")?.GetValue(result);
                     if (data != null)
                     {
@@ -5491,7 +5604,7 @@ rp.connect();
                 {
                     var s = await GetSmartSwitchStateAsync(id);
                     if (s == desired) { tcs.TrySetResult(true); break; }
-                    await Task.Delay(250, cts.Token);
+                    await Task.Delay(2000, cts.Token); // Significantly slower fallback polling
                 }
             }
             catch { /* ignore */ }
@@ -5573,6 +5686,7 @@ rp.connect();
                         await task.ConfigureAwait(false);
                         if (!TryGetTaskResult(task, out result))
                             _log?.Invoke("[stor/pull] GetEntityInfoAsync returned non-generic Task or no Result");
+                        if (!IsResponseValid(result)) return null;
                     }
                     catch (Exception ex)
                     {
@@ -6044,12 +6158,14 @@ rp.connect();
 
     public async Task EnsureSubOnceAsync(uint entityId)
     {
-       bool doWire;
-      lock (_subOnce) doWire = _subOnce.Add(entityId); // nur einmal pro Entity
-      if (!doWire) return;
+        bool doWire;
+        lock (_subOnce) doWire = _subOnce.Add(entityId); // nur einmal pro Entity
+        if (!doWire) return;
 
-        await SubscribeEntityAsync(entityId);  // <-- kein _rust hier
-        await PokeEntityAsync(entityId);       // <-- direkt auf this
+        await SubscribeEntityAsync(entityId);
+
+        // Der Rust-Server scheint den Poke zu brauchen, um die aktive Event-Benachrichtigung für diese Session zu starten.
+        await PokeEntityAsync(entityId);
         _log?.Invoke($"[stor/sub+poke] #{entityId} queued");
     }
 
@@ -6393,6 +6509,47 @@ rp.connect();
         if (s < 3600) return $"{s / 60}m";
         if (s < 86400) return $"{s / 3600}h";
         return $"{s / 86400}d";
+    }
+
+    /// <summary>Validates an API response and logs appropriate error messages.</summary>
+    private bool IsResponseValid(object? response)
+    {
+        if (response is null)
+        {
+            _log("[ERROR] Response is undefined/null");
+            return false;
+        }
+
+        var responseStr = response.ToString();
+        if (responseStr == "Error: Timeout reached while waiting for response")
+        {
+            _log("[ERROR] Response timeout reached");
+            return false;
+        }
+
+        var errorProp = TryGetProp(response, "Error");
+        if (errorProp != null)
+        {
+            var errorMsg = errorProp.ToString() ?? "Unknown error";
+            _log($"[ERROR] Response contains error: {errorMsg}");
+            return false;
+        }
+
+        var responseDict = response as System.Collections.IDictionary;
+        if (responseDict != null && responseDict.Count == 0)
+        {
+            _log("[ERROR] Response is empty");
+            return false;
+        }
+
+        var properties = response.GetType().GetProperties();
+        if (properties.Length == 0)
+        {
+            _log("[ERROR] Response is empty (no properties)");
+            return false;
+        }
+
+        return true;
     }
 
 }

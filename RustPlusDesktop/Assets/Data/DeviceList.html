@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Devices List</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #181a1e; color: #eceff1; font: 12px/1.4 'Segoe UI', sans-serif; height: 100vh; overflow: hidden; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.15); }
+  </style>
+</head>
+<body>
+  <div id="app" class="flex flex-col h-full">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-4 py-2 bg-[#141719] border-b border-[#2a2f37]">
+      <span class="text-sm font-semibold text-white">Devices</span>
+      <span id="deviceCount" class="text-xs text-[#7f8a96]">0 devices</span>
+    </div>
+
+    <!-- Device List -->
+    <div id="deviceList" class="flex-1 overflow-y-auto px-2 py-2 space-y-1"></div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="flex-1 flex items-center justify-center hidden">
+      <div class="text-center">
+        <div class="text-4xl mb-2 opacity-50">📡</div>
+        <p class="text-sm text-[#7f8a96]">No devices found</p>
+        <p class="text-xs text-[#5a6672] mt-1">Pair a smart device to see it here</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var allDevices = [];
+
+    // Public API called by C#
+    window.loadDevices = function (devices) {
+      allDevices = devices;
+      render();
+    };
+
+    window.postAction = function (action, data) {
+      if (window.chrome && window.chrome.webview) {
+        window.chrome.webview.postMessage({ action, ...data });
+      }
+    };
+
+    // Render device list
+    function render() {
+      var list = document.getElementById('deviceList');
+      var empty = document.getElementById('emptyState');
+      var count = document.getElementById('deviceCount');
+
+      count.textContent = allDevices.length + ' device' + (allDevices.length !== 1 ? 's' : '');
+
+      if (allDevices.length === 0) {
+        list.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+
+      list.innerHTML = allDevices.map(function (d) {
+        var statusColor = d.isMissing ? 'border-l-red-500' : (d.isOn ? 'border-l-green-500' : 'border-l-[#4a5670]');
+        var statusBg = d.isMissing ? 'bg-[#101217]' : (d.isGroup ? 'bg-[#141f33]' : 'bg-[#171a21]');
+        var statusHover = 'hover:bg-[#1c202a]';
+        var opacity = d.isMissing ? 'opacity-60' : '';
+
+        var iconHtml = '';
+        if (d.isGroup) {
+          iconHtml = '<span class="text-blue-400">📁</span>';
+        } else if (d.kind === 'SmartAlarm' || d.kind === 'Smart Alarm') {
+          iconHtml = '<span class="text-yellow-400">🔔</span>';
+        } else if (d.kind === 'StorageMonitor' || d.kind === 'Storage Monitor') {
+          iconHtml = '<span class="text-purple-400">📦</span>';
+        } else {
+          iconHtml = '<span class="text-green-400">⚡</span>';
+        }
+
+        var onlineBadge = '';
+        if (d.isMissing) {
+          onlineBadge = '<span class="text-[10px] px-1.5 py-0.5 rounded bg-red-900/30 text-red-400 font-medium">MISSING</span>';
+        } else if (d.isGroup) {
+          onlineBadge = '<span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-900/30 text-blue-400 font-medium">GROUP</span>';
+        } else if (d.kind === 'SmartAlarm' || d.kind === 'Smart Alarm') {
+          onlineBadge = '<span class="text-[10px] px-1.5 py-0.5 rounded bg-yellow-900/30 text-yellow-400 font-medium">' + (d.isOn ? 'ACTIVE' : 'INACTIVE') + '</span>';
+        } else {
+          onlineBadge = '<span class="text-[10px] px-1.5 py-0.5 rounded bg-green-900/30 text-green-400 font-medium">' + (d.isOn ? 'ONLINE' : 'OFFLINE') + '</span>';
+        }
+
+        var toggleHtml = '';
+        if (!d.isMissing && d.kind === 'SmartSwitch' || d.kind === 'Smart Switch') {
+          toggleHtml = '<button class="toggle-btn px-2 py-1 rounded text-[10px] font-semibold transition-colors ' +
+            (d.isOn ? 'bg-green-600 text-white' : 'bg-red-600 text-white') + '" data-entity-id="' + d.entityId + '">' +
+            (d.isOn ? 'ON' : 'OFF') + '</button>';
+        } else if (!d.isMissing && d.isGroup && d.hasGroupSwitches) {
+          toggleHtml = '<button class="group-toggle-btn px-2 py-1 rounded text-[10px] font-semibold bg-orange-600 text-white transition-colors" data-entity-id="' + d.entityId + '">TOGGLE</button>';
+        } else if (!d.isMissing && (d.kind === 'SmartAlarm' || d.kind === 'Smart Alarm')) {
+          toggleHtml = '<div class="flex gap-1"><button class="popup-btn px-1.5 py-0.5 rounded text-[10px] ' + (d.popupEnabled ? 'bg-green-600 text-white' : 'bg-[#2e3646] text-[#7f8a96]') + '" data-entity-id="' + d.entityId + '">Popup</button>' +
+            '<button class="audio-btn px-1.5 py-0.5 rounded text-[10px] ' + (d.audioEnabled ? 'bg-green-600 text-white' : 'bg-[#2e3646] text-[#7f8a96]') + '" data-entity-id="' + d.entityId + '">Audio</button></div>';
+        }
+
+        var storageHtml = '';
+        if (d.kind === 'StorageMonitor' || d.kind === 'Storage Monitor') {
+          if (d.storage && d.storage.itemsCount > 0) {
+            storageHtml = '<div class="text-[10px] text-[#7f8a96] mt-1 truncate">' + d.storage.upkeepText + ' · ' + d.storage.itemsCount + ' items</div>';
+          } else {
+            storageHtml = '<div class="text-[10px] text-[#5a6672] mt-1">No items</div>';
+          }
+        }
+
+        var nameHtml = '';
+        if (d.alias) {
+          nameHtml = d.alias + ' <span class="text-[10px] text-[#5a6672]">(' + d.name + ')</span>';
+        } else {
+          nameHtml = d.name;
+        }
+
+        return '<div class="device-row border-l-2 ' + statusColor + ' ' + statusBg + ' ' + statusHover + ' ' + opacity +
+          ' rounded-lg p-2.5 cursor-pointer transition-colors border border-[#222734] border-l-2" data-entity-id="' + d.entityId + '" draggable="true">' +
+          '<div class="flex items-center gap-2">' +
+            '<span class="text-base flex-shrink-0">' + iconHtml + '</span>' +
+            '<div class="flex-1 min-w-0">' +
+              '<div class="text-xs font-semibold text-[#eceef1] truncate">' + escapeHtml(nameHtml) + '</div>' +
+              '<div class="flex items-center gap-1.5 mt-0.5">' +
+                '<span class="text-[10px] text-[#5a6672]">#' + d.entityId + '</span>' +
+                onlineBadge +
+              '</div>' +
+              storageHtml +
+            '</div>' +
+            '<div class="flex-shrink-0">' + toggleHtml + '</div>' +
+          '</div>' +
+          '</div>';
+      }).join('');
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // Handle click on device row
+    document.getElementById('deviceList').addEventListener('click', function (e) {
+      var row = e.target.closest('.device-row');
+      if (row) {
+        var entityId = parseInt(row.dataset.entityId);
+        window.postAction('selectDevice', { entityId: entityId });
+      }
+    });
+
+    // Handle toggle button clicks
+    document.getElementById('deviceList').addEventListener('click', function (e) {
+      if (e.target.classList.contains('toggle-btn')) {
+        var entityId = parseInt(e.target.dataset.entityId);
+        var newState = e.target.textContent === 'ON';
+        window.postAction('toggleDevice', { entityId: entityId, isOn: !newState });
+      }
+      if (e.target.classList.contains('group-toggle-btn')) {
+        var entityId = parseInt(e.target.dataset.entityId);
+        window.postAction('groupToggle', { entityId: entityId });
+      }
+      if (e.target.classList.contains('popup-btn')) {
+        var entityId = parseInt(e.target.dataset.entityId);
+        var newState = !e.target.classList.contains('bg-green-600');
+        window.postAction('togglePopup', { entityId: entityId, enabled: newState });
+        e.target.classList.toggle('bg-green-600', newState);
+        e.target.classList.toggle('bg-[#2e3646]', !newState);
+        e.target.classList.toggle('text-white', newState);
+        e.target.classList.toggle('text-[#7f8a96]', !newState);
+      }
+      if (e.target.classList.contains('audio-btn')) {
+        var entityId = parseInt(e.target.dataset.entityId);
+        var newState = !e.target.classList.contains('bg-green-600');
+        window.postAction('toggleAudio', { entityId: entityId, enabled: newState });
+        e.target.classList.toggle('bg-green-600', newState);
+        e.target.classList.toggle('bg-[#2e3646]', !newState);
+        e.target.classList.toggle('text-white', newState);
+        e.target.classList.toggle('text-[#7f8a96]', !newState);
+      }
+    });
+
+    // Drag and drop support
+    let draggedElement = null;
+    let draggedDeviceId = null;
+
+    document.getElementById('deviceList').addEventListener('dragstart', function (e) {
+      if (e.target.classList.contains('device-row')) {
+        draggedElement = e.target;
+        draggedDeviceId = parseInt(e.target.dataset.entityId);
+        e.dataTransfer.effectAllowed = 'move';
+        e.target.style.opacity = '0.5';
+      }
+    });
+
+    document.getElementById('deviceList').addEventListener('dragend', function (e) {
+      if (e.target.classList.contains('device-row')) {
+        e.target.style.opacity = '1';
+        draggedElement = null;
+        draggedDeviceId = null;
+      }
+    });
+
+    document.getElementById('deviceList').addEventListener('dragover', function (e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+
+      var row = e.target.closest('.device-row');
+      if (row && row !== draggedElement) {
+        // Highlight target
+        document.querySelectorAll('.device-row').forEach(function (r) { r.classList.remove('ring-2', 'ring-blue-500'); });
+        row.classList.add('ring-2', 'ring-blue-500');
+      }
+    });
+
+    document.getElementById('deviceList').addEventListener('dragleave', function (e) {
+      var row = e.target.closest('.device-row');
+      if (row) {
+        row.classList.remove('ring-2', 'ring-blue-500');
+      }
+    });
+
+    document.getElementById('deviceList').addEventListener('drop', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      var targetRow = e.target.closest('.device-row');
+      if (!targetRow || !draggedDeviceId) return;
+
+      var targetDeviceId = parseInt(targetRow.dataset.entityId);
+
+      // Calculate drop position
+      var rect = targetRow.getBoundingClientRect();
+      var y = e.clientY - rect.top;
+      var height = rect.height;
+      var dropInto = y > (height * 0.25) && y < (height * 0.75);
+
+      window.postAction('dropDevice', {
+        draggedDeviceId: draggedDeviceId,
+        targetDeviceId: targetDeviceId,
+        dropInto: dropInto
+      });
+
+      // Clear highlight
+      document.querySelectorAll('.device-row').forEach(function (r) { r.classList.remove('ring-2', 'ring-blue-500'); });
+      draggedElement = null;
+      draggedDeviceId = null;
+    });
+
+    // Prevent default drag behavior on device list
+    document.getElementById('deviceList').addEventListener('drag', function (e) {
+      e.preventDefault();
+    });
+  </script>
+</body>
+</html>
