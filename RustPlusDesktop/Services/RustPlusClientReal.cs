@@ -3903,7 +3903,7 @@ rp.connect();
                 {
                     var vend = Prop(it, "Vending") ?? Prop(it, "Sales") ?? Prop(it, "Shop");
                     ordersObj = Prop(vend, "SellOrders") ?? Prop(vend, "Orders");
-                    if (ordersObj is null) return; // kein Shop → abbrechen (und NICHT outList.Add)
+                    if (ordersObj is null) continue; 
                 }
 
                 // coords
@@ -3958,9 +3958,8 @@ rp.connect();
             }
             else if (mm != null)
             {
-                // Unlegit response - missing expected containers
-                var cached = LoadFromCache<List<ShopMarker>>("shops");
-                if (cached != null && cached.Count > 0) return cached;
+                // Legit response, but missing expected containers - don't fallback to stale cache here
+                L("Response received but no shops found in expected containers.");
             }
 
             // otherwise generic scan – but still needs type==3 inside ExtractFromCollection
@@ -4028,11 +4027,15 @@ rp.connect();
             catch { /* ignore */ }
         }
 
-        if (shops.Count > 0) SaveToCache("shops", shops);
+        if (shops.Count > 0) 
+        {
+            SaveToCache("shops", shops);
+        }
         else 
         {
-             var cached = LoadFromCache<List<ShopMarker>>("shops");
-             if (cached != null && cached.Count > 0) return cached;
+             // If we are connected and got an empty list, it means there are truly no shops (or polling failed).
+             // We return the empty list to reflect reality, instead of showing 8-hour old stale data.
+             L("No shops found in current poll.");
         }
         return shops;
     }
