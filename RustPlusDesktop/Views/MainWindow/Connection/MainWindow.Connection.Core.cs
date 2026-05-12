@@ -358,12 +358,8 @@ public partial class MainWindow
                 RebuildOverlayTeamBar();
             }
 
-            // Initial status refresh for all devices (light: maxRetries=1)
-            _ = Task.Run(async () =>
-            {
-                await Task.Delay(2000);
-                await Dispatcher.InvokeAsync(() => RefreshAllDevicesStatusAsync(maxRetries: 1));
-            });
+            // Removed redundant 2s delayed RefreshAllDevicesStatusAsync to avoid 'demoted' logs.
+            // Core device status is already fetched during PrimeDeviceKindsAsync.
         }
         catch (Exception ex)
         {

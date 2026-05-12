@@ -1828,20 +1828,11 @@ rp.connect();
         }
         */
 
-        _api.OnSmartSwitchTriggered += (_, sw) =>
-        {
-            var id = GetEntityId(sw);
-            var on = GetIsActive(sw);
-            DeviceStateEvent?.Invoke(id, on, "SmartSwitch");
-            _log?.Invoke($"[Gerät] {id} → {(on ? "AN" : "AUS")}");
-        };
+        _api.OnSmartSwitchTriggered -= Api_OnSmartSwitchTriggered;
+        _api.OnSmartSwitchTriggered += Api_OnSmartSwitchTriggered;
 
-
-        _api.OnStorageMonitorTriggered += (_, st) =>
-        {
-            // kein Blockieren/Reflection im Event-Thread
-            _ = Task.Run(() => HandleStorageMonitorEvent(st));
-        };
+        _api.OnStorageMonitorTriggered -= Api_OnStorageMonitorTriggered;
+        _api.OnStorageMonitorTriggered += Api_OnStorageMonitorTriggered;
 
         _api.RequestSent += (_, reqObj) =>
         {
@@ -2000,10 +1991,27 @@ rp.connect();
         lock (_hookLock) _eventsHooked = true;
     }
 
-    private void HandleStorageMonitorEvent(object st)
+    private void Api_OnSmartSwitchTriggered(object? sender, object sw)
+    {
+        var id = GetEntityId(sw);
+        var on = GetIsActive(sw);
+        DeviceStateEvent?.Invoke(id, on, "SmartSwitch");
+        _log?.Invoke($"[Gerät] {id} → {(on ? "AN" : "AUS")}");
+    }
+
+    private void Api_OnStorageMonitorTriggered(object? sender, object st)
+    {
+        // kein Blockieren/Reflection im Event-Thread
+        _ = Task.Run(() => HandleStorageMonitorEvent(st));
+    }
+
+    private async void HandleStorageMonitorEvent(object st)
     {
         try
         {
+            // Kurze Pause, da Rust+ oft den Trigger schickt, bevor die Daten (Upkeep) auf dem Server fertig berechnet sind
+            await Task.Delay(150);
+
             uint entityId = 0;
             try
             {
@@ -2074,10 +2082,10 @@ rp.connect();
             StorageSnapshotReceived?.Invoke(entityId, snap);
             _log?.Invoke($"[stor/event] {entityId} items={snap.Items.Count} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")} isTc={isTc}");
 
-            // Fallback nur dann, wenn wir wirklich KEIN Upkeep bekommen haben:
-            if (isTc && snap.UpkeepSeconds is null)
+            // TC-Spezial: Immer kurz nachhaken für den Upkeep, da Rust+ Events oft "einen Schritt hinterher" sind
+            if (isTc)
             {
-                ScheduleEntityInfoPull(entityId, delayMs: 1200);
+                ScheduleEntityInfoPull(entityId, delayMs: 1500);
             }
         }
         catch (Exception ex)
@@ -2159,6 +2167,12 @@ rp.connect();
 
         if (entityId != 0u)
         {
+            // NEW: Fallback für Upkeep aus dem Cache, falls der aktuelle Knoten keine Infos hat (z.B. bei GetEntityInfo)
+            if (upkeep == null && _storageCache.TryGetValue(entityId, out var existing) && existing.UpkeepSeconds != null)
+            {
+                snap.UpkeepSeconds = existing.UpkeepSeconds;
+            }
+
             _storageCache[entityId] = snap;
             StorageSnapshotReceived?.Invoke(entityId, snap);
            // _log?.Invoke($"[stor/resp-{sourceTag}] {entityId} items={snap.Items.Count} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")} isTc={isTc}");
@@ -4351,9 +4365,10 @@ rp.connect();
 
     public async Task SendTeamMessageAsync(string text, CancellationToken ct = default)
     {
+        if (text == null) throw new ArgumentNullException(nameof(text));
         if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
+        
         var t = _api.GetType();
-
         var m = t.GetMethod("SendTeamMessageAsync", new[] { typeof(string), typeof(CancellationToken) }) ??
                 t.GetMethod("SendTeamMessageAsync", new[] { typeof(string) }) ??
                 t.GetMethod("SendTeamMessage", new[] { typeof(string) });
@@ -4361,12 +4376,37 @@ rp.connect();
         if (m is null) throw new NotSupportedException("SendTeamMessage* nicht gefunden.");
 
         await AcquireTokenAsync(ct);
+        
+        // Final null check after potentially long token acquisition
+        if (_api is null) throw new InvalidOperationException("Verbindung wurde während der Wartezeit getrennt.");
+
         var args = m.GetParameters().Length == 2 ? new object[] { text, ct } : new object[] { text };
-        var taskObj = m.Invoke(_api, args);
+        
+        object? taskObj;
+        try
+        {
+            taskObj = m.Invoke(_api, args);
+        }
+        catch (Exception ex)
+        {
+            _log?.Invoke($"[Chat] Invoke error: {ex.Message}");
+            throw;
+        }
+
         if (taskObj is Task task)
         {
             try { await task; }
+            catch (NullReferenceException nre) when (nre.StackTrace?.Contains("SendTeamMessageAsync") == true)
+            {
+                // Internal library bug during response processing. 
+                // Since the message usually goes through anyway, we suppress this to allow the verification loop to check for the echo.
+                _log?.Invoke("[Chat] Library internal NRE (response handling), proceeding to verification...");
+            }
             catch (Exception ex) { CheckConnectionLost(ex); throw; }
+        }
+        else if (taskObj == null)
+        {
+            _log?.Invoke("[Chat] Send method returned null task.");
         }
     }
 
@@ -5556,7 +5596,7 @@ rp.connect();
                 {
                     var s = await GetSmartSwitchStateAsync(id);
                     if (s == desired) { tcs.TrySetResult(true); break; }
-                    await Task.Delay(250, cts.Token);
+                    await Task.Delay(2000, cts.Token); // Significantly slower fallback polling
                 }
             }
             catch { /* ignore */ }
@@ -6110,12 +6150,14 @@ rp.connect();
 
     public async Task EnsureSubOnceAsync(uint entityId)
     {
-       bool doWire;
-      lock (_subOnce) doWire = _subOnce.Add(entityId); // nur einmal pro Entity
-      if (!doWire) return;
+        bool doWire;
+        lock (_subOnce) doWire = _subOnce.Add(entityId); // nur einmal pro Entity
+        if (!doWire) return;
 
-        await SubscribeEntityAsync(entityId);  // <-- kein _rust hier
-        await PokeEntityAsync(entityId);       // <-- direkt auf this
+        await SubscribeEntityAsync(entityId);
+
+        // Der Rust-Server scheint den Poke zu brauchen, um die aktive Event-Benachrichtigung für diese Session zu starten.
+        await PokeEntityAsync(entityId);
         _log?.Invoke($"[stor/sub+poke] #{entityId} queued");
     }
 

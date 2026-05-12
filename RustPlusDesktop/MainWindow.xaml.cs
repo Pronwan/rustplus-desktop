@@ -66,6 +66,10 @@ public partial class MainWindow : Window
     private bool _listenerStarting; // Schutz gegen Doppelklicks
     private readonly System.Windows.Threading.DispatcherTimer _statusTimer =
     new() { Interval = TimeSpan.FromSeconds(30) };
+
+    private readonly System.Windows.Threading.DispatcherTimer _upkeepTimer =
+    new() { Interval = TimeSpan.FromSeconds(60) };
+
     // Chat-Inkrement-Marker pro Fenster
     private int _statusBusy = 0;
 
@@ -97,6 +101,39 @@ public partial class MainWindow : Window
     public void StopTracking()
     {
         _trackingEntityId = null;
+        _vm.FollowingSteamId = null;
+        _vm.FollowingPlayerName = "";
+        _vm.FollowingPlayerAvatar = null;
+    }
+
+    private void BtnFollowPlayer_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.IsFollowing)
+        {
+            StopTracking();
+            return;
+        }
+
+        // Build dynamic menu
+        MenuFollowPlayer.Items.Clear();
+
+        var miMe = new MenuItem { Header = "Follow Me", Icon = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "\uE77B" } };
+        miMe.Click += (s, ev) => StartFollowing(_mySteamId, "Me");
+        MenuFollowPlayer.Items.Add(miMe);
+
+        if (TeamMembers.Count > 0)
+        {
+            MenuFollowPlayer.Items.Add(new Separator());
+            foreach (var member in TeamMembers)
+            {
+                if (member.SteamId == _mySteamId) continue;
+                var mi = new MenuItem { Header = $"Follow {member.Name}", Tag = member.SteamId };
+                mi.Click += (s, ev) => StartFollowing(member.SteamId, member.Name);
+                MenuFollowPlayer.Items.Add(mi);
+            }
+        }
+
+        BtnFollowPlayer.ContextMenu.IsOpen = true;
     }
 
     // Camera thumbs: Throttling & "in-flight"-Wächter
@@ -122,7 +159,6 @@ public partial class MainWindow : Window
             // zeig die ersten 6 Marker „roh“
             foreach (var m in list.Take(6))
                 AppendLog("dyn2 sample: " + m.DebugLine);
-
             // (optional) schnelle Heuristik für crate-verdächtige
             var suspects = list.Where(m =>
                 (m.RawType == 7 || m.RawType == 0) &&
@@ -141,6 +177,22 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             AppendLog("dyn2 error: " + ex.Message);
+        }
+    }
+
+    private void RefreshUpkeepUI()
+    {
+        if (_vm.Servers == null) return;
+        foreach (var server in _vm.Servers)
+        {
+            if (server.Devices == null) continue;
+            foreach (var dev in server.Devices)
+            {
+                if (dev.HasStorage)
+                {
+                    dev.NotifyUpkeepChanged();
+                }
+            }
         }
     }
     public class BoolToVisibilityConverter : IValueConverter
@@ -260,6 +312,9 @@ public partial class MainWindow : Window
         // MapTransform.Changed += (_, __) => UpdateMarkerPositions();
         HydrateSteamUiFromStorage();   // <= HIER
         // _statusTimer.Tick += async (_, __) => await UpdateServerStatusAsync();
+        _upkeepTimer.Tick += (_, __) => RefreshUpkeepUI();
+        _upkeepTimer.Start();
+
         ListServers.ItemsSource = _vm.Servers;
         
         UpdateMasterToggleState();

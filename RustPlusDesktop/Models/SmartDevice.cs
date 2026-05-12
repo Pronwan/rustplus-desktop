@@ -69,19 +69,37 @@ public class SmartDevice : INotifyPropertyChanged
 
    // public int? UpkeepSeconds => Storage?.UpkeepSeconds;
 
-    public string UpkeepText => HumanizeUpkeep(UpkeepSeconds);
-
-    //public int ItemsCount => Storage?.Items?.Count ?? 0;
-
-    // Humanizer (lokal – oder in Utils-Klasse auslagern)
-    private static string HumanizeUpkeep(int? secs)
+    [JsonIgnore]
+    public string StorageSummary
     {
-        if (secs is null) return "–";
-        var s = secs.Value;
-        if (s < 60) return $"{s}s";
-        if (s < 3600) return $"{s / 60}m";
-        if (s < 86400) return $"{s / 3600}h";
-        return $"{s / 86400}d";
+        get
+        {
+            if (Storage == null) return "–";
+            if (Storage.IsToolCupboard)
+            {
+                var secs = UpkeepSeconds ?? 0;
+                if (secs <= 0) return "Upkeep: 0s";
+
+                int days = secs / 86400;
+                int rem = secs % 86400;
+                int hours = rem / 3600;
+                rem = rem % 3600;
+                int mins = rem / 60;
+                int secsLeft = rem % 60;
+
+                var parts = new System.Collections.Generic.List<string>();
+                if (days > 0) parts.Add($"{days}d");
+                if (hours > 0) parts.Add($"{hours}h");
+                if (mins > 0) parts.Add($"{mins}m");
+                if (parts.Count == 0 && secsLeft > 0) parts.Add($"{secsLeft}s");
+                if (parts.Count == 0) parts.Add("0s");
+
+                return string.Join(" ", parts);
+            }
+            
+            var count = ItemsCount;
+            return count == 1 ? "1 item" : $"{count} items";
+        }
     }
 
 
@@ -123,7 +141,7 @@ public class SmartDevice : INotifyPropertyChanged
                 OnProp(nameof(HasStorage));
                 OnProp(nameof(ItemsCount));      // Proxy: nützlich für XAML
                 OnProp(nameof(UpkeepSeconds));   // Proxy: nützlich für XAML
-                OnProp(nameof(UpkeepText));  
+                OnProp(nameof(StorageSummary));  
 
                 if (_storage != null)
                 {
@@ -137,7 +155,7 @@ public class SmartDevice : INotifyPropertyChanged
     private void StorageItemsChanged(object? s, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         OnProp(nameof(ItemsCount));
-        OnProp(nameof(UpkeepText));
+        OnProp(nameof(StorageSummary));
     }
     // bequeme Proxy-Properties für’s Binding (OneWay):
     public int ItemsCount => Storage?.ItemsCount ?? 0;     // nutzt deine ItemsCount aus StorageSnapshot
@@ -239,6 +257,12 @@ public class SmartDevice : INotifyPropertyChanged
             }
             return $"{DisplayName}  (#{EntityId}) [{state}]";
         }
+    }
+
+    public void NotifyUpkeepChanged()
+    {
+        OnProp(nameof(UpkeepSeconds));
+        OnProp(nameof(StorageSummary));
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

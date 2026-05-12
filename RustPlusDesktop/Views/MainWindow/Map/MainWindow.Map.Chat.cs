@@ -98,6 +98,12 @@ public partial class MainWindow
     private async Task<bool> SendTeamChatReliableAsync(string text)
     {
         if (_rust is not RustPlusClientReal real) return false;
+        
+        if (text == null)
+        {
+            AppendLog("[Chat] Fail to send: text is null");
+            return false;
+        }
 
         AppendLog($"[Chat] Sending: {text}");
         
