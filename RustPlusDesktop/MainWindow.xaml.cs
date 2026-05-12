@@ -337,25 +337,28 @@ public partial class MainWindow : Window
             }
         }));
 
-        // One-time migration notice for v4.4 — Chat Commands & API Optimizations
-        const string AppVersion = "4.4.0-beta1";
-        bool alreadySawV44 = (TrackingService.LastSeenVersion == AppVersion);
+        // One-time migration notice for v4.5 — The Intelligence Update
+        const string AppVersion = "4.5.0";
         
-        // Popup anzeigen, wenn wir upgraden (vorherige Version vorhanden und ungleich der aktuellen)
-        bool isUpgrade = !string.IsNullOrEmpty(TrackingService.LastSeenVersion) && TrackingService.LastSeenVersion != AppVersion;
-
-        if (!alreadySawV44)
+        if (string.IsNullOrEmpty(TrackingService.LastSeenVersion))
         {
+            // Erst-Installation: Version setzen, aber kein Popup zeigen
             TrackingService.LastSeenVersion = AppVersion;
-
-            if (isUpgrade)
+        }
+        else if (TrackingService.LastSeenVersion != AppVersion)
+        {
+            // Upgrade: Popup zeigen
+            Dispatcher.InvokeAsync(() =>
             {
-                Dispatcher.InvokeAsync(() =>
+                var dlg = new Views.MigrationNoticeWindow { Owner = this };
+                dlg.ShowDialog();
+                
+                // Nur speichern, wenn der User "Don't show again" angehakt hat (Standard ist true)
+                if (dlg.DontShowAgain)
                 {
-                    var dlg = new Views.MigrationNoticeWindow { Owner = this };
-                    dlg.ShowDialog();
-                }, System.Windows.Threading.DispatcherPriority.Loaded);
-            }
+                    TrackingService.LastSeenVersion = AppVersion;
+                }
+            }, System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         // Initial tracking status update and hook global events
