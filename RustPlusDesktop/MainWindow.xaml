@@ -854,60 +854,143 @@
             <!--  WICHTIG: DockPanel statt StackPanel, damit die Mitte flexibel ist  -->
             <DockPanel LastChildFill="True">
 
-                <!--  TOP: Account + Serverliste (bleibt unverändert)  -->
+                <!--  TOP: Account + Serverliste  -->
                 <StackPanel DockPanel.Dock="Top">
-                    <!-- Header Split into two parts -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                    <!-- Header -->
+                    <Border 
+                        Background="{DynamicResource SurfaceAlt}" 
+                        BorderBrush="{DynamicResource CardBorder}" 
+                        BorderThickness="1" 
+                        CornerRadius="10" 
+                        Padding="10,8"
+                        Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                        <!-- LEFT: Account Section -->
-                        <Border Grid.Column="0" 
-                                Background="{DynamicResource SurfaceAlt}" 
-                                BorderBrush="{DynamicResource CardBorder}" 
-                                BorderThickness="1" 
-                                CornerRadius="10" 
-                                Padding="10,8"
-                                Margin="0,0,4,0">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
+                            <!-- Profile Picture / Icon -->
+                            <Grid Grid.Column="0" Width="32" Height="32" Margin="0,0,10,0">
+                                <Border CornerRadius="16" Background="#1AFFFFFF" ClipToBounds="True">
+                                    <Grid>
+                                        <ui:SymbolIcon Symbol="Person24" FontSize="18" Opacity="0.4" Foreground="White"/>
+                                        <Image x:Name="ImgSteam" Stretch="UniformToFill" />
+                                    </Grid>
+                                </Border>
+                            </Grid>
 
-                                <!-- Profile Picture / Icon -->
-                                <Grid Grid.Column="0" Width="32" Height="32" Margin="0,0,10,0">
-                                    <Border CornerRadius="16" Background="#1AFFFFFF" ClipToBounds="True">
-                                        <Grid>
-                                            <ui:SymbolIcon Symbol="Person24" FontSize="18" Opacity="0.4" Foreground="White"/>
-                                            <Image x:Name="ImgSteam" Stretch="UniformToFill" />
-                                        </Grid>
-                                    </Border>
-                                </Grid>
-
-                                <!-- Identity -->
-                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <!-- Identity -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <DockPanel>
                                     <TextBlock x:Name="TxtSteamName" 
                                                Text="Steam Account" 
                                                FontWeight="SemiBold" 
                                                FontSize="12" 
                                                Foreground="White"/>
-                                    <TextBlock x:Name="TxtSteamId" 
-                                               FontSize="9" 
-                                               Opacity="0.6" 
+                                    <TextBlock x:Name="TxtAppVersion"
+                                               Margin="8,0,0,0"
+                                               FontSize="10"
+                                               VerticalAlignment="Bottom"
+                                               Opacity="0.4"
                                                Foreground="White"
-                                               Text="Not Logged In"/>
-                                </StackPanel>
+                                               Text="v0.0.0" />
+                                </DockPanel>
+                                <TextBlock x:Name="TxtSteamId" 
+                                           FontSize="9" 
+                                           Opacity="0.6" 
+                                           Foreground="White"
+                                           Text="Not Logged In"/>
+                            </StackPanel>
 
-                                <ui:Button
-                                    x:Name="BtnCheckUpdates"
-                                    Appearance="Transparent"
-                                    Click="BtnCheckUpdates_Click"
-                                    Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"
-                                    ToolTip="Check for Updates" />
+                            <!-- Action Buttons -->
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Grid>
+                                    <ui:Button
+                                        x:Name="BtnCheckUpdates"
+                                        Appearance="Transparent"
+                                        Click="BtnCheckUpdates_Click"
+                                        Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"
+                                        ToolTip="Check for Updates">
+                                        <ui:Button.Style>
+                                            <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsUpdateAvailable}" Value="True">
+                                                        <DataTrigger.EnterActions>
+                                                            <BeginStoryboard x:Name="GlowStoryboard">
+                                                                <Storyboard RepeatBehavior="Forever">
+                                                                    <ColorAnimation
+                                                                        Storyboard.TargetProperty="(ui:Button.Foreground).(SolidColorBrush.Color)"
+                                                                        From="White" To="#FF00CCFF" Duration="0:0:1" AutoReverse="True" />
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetProperty="(ui:Button.Effect).(DropShadowEffect.Opacity)"
+                                                                        From="0" To="1" Duration="0:0:1" AutoReverse="True" />
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </DataTrigger.EnterActions>
+                                                        <DataTrigger.ExitActions>
+                                                            <StopStoryboard BeginStoryboardName="GlowStoryboard" />
+                                                        </DataTrigger.ExitActions>
+                                                        <Setter Property="Effect">
+                                                            <Setter.Value>
+                                                                <DropShadowEffect BlurRadius="15" Color="#FF00CCFF" Opacity="0" ShadowDepth="0" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ui:Button.Style>
+                                    </ui:Button>
+
+                                    <!-- Download Progress Popup -->
+                                    <Popup x:Name="UpdateDownloadPopup"
+                                           AllowsTransparency="True"
+                                           Placement="Bottom"
+                                           PlacementTarget="{Binding ElementName=BtnCheckUpdates}"
+                                           VerticalOffset="5"
+                                           IsOpen="{Binding ElementName=BtnCheckUpdates, Path=IsMouseOver, Mode=OneWay}">
+                                        <Popup.Style>
+                                            <Style TargetType="Popup">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsDownloadingUpdate}" Value="False">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Popup.Style>
+                                        <Border Background="#EE1E1E1E" 
+                                                BorderBrush="#44FFFFFF" 
+                                                BorderThickness="1" 
+                                                CornerRadius="8" 
+                                                Padding="12"
+                                                Width="220">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding UpdateTag, StringFormat='Update: {0}'}" 
+                                                           FontWeight="Bold" Foreground="White" Margin="0,0,0,8"/>
+                                                
+                                                <Grid Margin="0,0,0,4">
+                                                    <TextBlock Text="Downloading..." Foreground="#BBFFFFFF" FontSize="11"/>
+                                                    <TextBlock Text="{Binding UpdateDownloadPercentage}" 
+                                                               Foreground="White" FontWeight="Bold" FontSize="11"
+                                                               HorizontalAlignment="Right"/>
+                                                </Grid>
+                                                
+                                                <ProgressBar Value="{Binding UpdateDownloadProgress}" 
+                                                               Height="4" Margin="0,0,0,10" />
+
+                                                <Grid>
+                                                    <StackPanel>
+                                                        <TextBlock Text="{Binding UpdateDownloadSpeed}" 
+                                                                   Foreground="#FF00CCFF" FontSize="10" FontWeight="SemiBold"/>
+                                                        <TextBlock Text="{Binding UpdateDownloadSize}" 
+                                                                   Foreground="#88FFFFFF" FontSize="10"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+                                    </Popup>
+                                </Grid>
                                 <ui:Button
                                     x:Name="BtnDiscord"
                                     Margin="4,0,0,0"
@@ -922,7 +1005,7 @@
                                 <ui:Button
                                     x:Name="BtnPatchNotes"
                                     Margin="2,0,0,0"
-                                           Padding="6,4"
+                                    Padding="6,4"
                                     Appearance="Transparent"
                                     Click="BtnPatchNotes_Click"
                                     Icon="{ui:SymbolIcon Symbol=DocumentBulletList24}"
@@ -930,110 +1013,42 @@
                                 <ui:Button
                                     x:Name="BtnSettings"
                                     Margin="2,0,0,0"
-                                           Padding="6,4"
+                                    Padding="6,4"
                                     Appearance="Transparent"
                                     Click="BtnSettings_Click"
                                     Icon="{ui:SymbolIcon Symbol=Settings24}"
                                     ToolTip="Settings" />
                             </StackPanel>
                         </Grid>
-
-                        <!--  FCM Token Expiry Badge  -->
-                        <ui:InfoBar
-                            x:Name="FcmExpiryInfoBar"
-                            Title="FCM Credentials"
-                            Margin="0,0,0,10"
-                            IsClosable="False"
-                            IsOpen="True"
-                            Message="{Binding FcmExpiryText}"
-                            Severity="Informational">
-                            <ui:InfoBar.Style>
-                                <Style TargetType="ui:InfoBar">
-                                    <Setter Property="Severity" Value="Informational" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding FcmExpiryDays, Converter={StaticResource LessThanConverter}, ConverterParameter=30}" Value="True">
-                                            <Setter Property="Severity" Value="Warning" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding FcmExpiryDays}" Value="-1">
-                                            <Setter Property="Visibility" Value="Collapsed" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ui:InfoBar.Style>
-                        </ui:InfoBar>
-
-                        <!--  (Rest bleibt wie bei dir)  -->
-                        <StackPanel Orientation="Horizontal">
-                            <!--  Steam Login usw.  -->
-                        </StackPanel>
-
-                        <Border
-                            Height="1"
-                            Margin="0,10,0,10"
-                            Background="#12FFFFFF" />
-
-                    </StackPanel>
-
-
-                    <!--  Account Profile Section  -->
-                    <Border
-                        Margin="0,0,0,4"
-                        Padding="12,10"
-                        Background="{DynamicResource SurfaceAlt}"
-                        BorderBrush="{DynamicResource CardBorder}"
-                        BorderThickness="1"
-                        CornerRadius="10">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <!--  Profile Picture / Icon  -->
-                            <Grid
-                                Grid.Column="0"
-                                Width="36"
-                                Height="36"
-                                Margin="0,0,12,0">
-                                <Border
-                                    Background="#1AFFFFFF"
-                                    ClipToBounds="True"
-                                    CornerRadius="18">
-                                    <Grid>
-                                        <ui:SymbolIcon
-                                            FontSize="20"
-                                            Foreground="White"
-                                            Opacity="0.4"
-                                            Symbol="Person24" />
-                                        <Image x:Name="ImgSteam" Stretch="UniformToFill" />
-                                    </Grid>
-                                </Border>
-                            </Grid>
-
-                            <!--  Identity  -->
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                <TextBlock
-                                    x:Name="TxtSteamName"
-                                    FontSize="13"
-                                    FontWeight="SemiBold"
-                                    Foreground="White"
-                                    Text="Steam Account" />
-                                <TextBlock
-                                    x:Name="TxtSteamId"
-                                    FontSize="10"
-                                    Foreground="White"
-                                    Opacity="0.6"
-                                    Text="Not Logged In" />
-                            </StackPanel>
-
-
-                        </Grid>
                     </Border>
+
+                    <!--  FCM Token Expiry Badge  -->
+                    <ui:InfoBar
+                        x:Name="FcmExpiryInfoBar"
+                        Title="FCM Credentials"
+                        Margin="0,0,0,10"
+                        IsClosable="False"
+                        IsOpen="True"
+                        Message="{Binding FcmExpiryText}"
+                        Severity="Informational">
+                        <ui:InfoBar.Style>
+                            <Style TargetType="ui:InfoBar">
+                                <Setter Property="Severity" Value="Informational" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding FcmExpiryDays, Converter={StaticResource LessThanConverter}, ConverterParameter=30}" Value="True">
+                                        <Setter Property="Severity" Value="Warning" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding FcmExpiryDays}" Value="-1">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ui:InfoBar.Style>
+                    </ui:InfoBar>
 
                     <Border
                         Height="1"
-                        Margin="0,12,0,12"
+                        Margin="0,0,0,12"
                         Background="#12FFFFFF" />
 
                     <TextBlock
@@ -2776,162 +2791,167 @@
                             x:Name="ChatAnnounce"
                             Margin="8,0,0,0"
                             Click="ChatAnnounce_Toggle"
-                            Content="Chat Alerts"
                             IsChecked="False"
                             IsThreeState="True"
                             Style="{StaticResource DotCheckBox}"
                             ToolTip="Right-click to configure">
-                            <CheckBox.ContextMenu>
-                                <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                    <MenuItem
-                                        FontWeight="Bold"
-                                        Foreground="{StaticResource TextBrushMuted}"
-                                        Header="Events"
-                                        IsHitTestVisible="False" />
-                                    <MenuItem
-                                        Header="Cargo Ship"
-                                        Style="{StaticResource DarkMenuItem}"
-                                        Tag="Cargo">
-                                        <MenuItem
-                                            Click="Alert_MenuItem_Click"
-                                            Header="Spawn"
-                                            IsCheckable="True"
-                                            StaysOpenOnClick="True"
-                                            Style="{StaticResource DarkMenuItem}"
-                                            Tag="CargoSpawn" />
-                                        <MenuItem
-                                            Click="Alert_MenuItem_Click"
-                                            Header="Harbor Docking"
-                                            IsCheckable="True"
-                                            StaysOpenOnClick="True"
-                                            Style="{StaticResource DarkMenuItem}"
-                                            Tag="CargoDock" />
-                                        <MenuItem
-                                            Click="Alert_MenuItem_Click"
-                                            Header="Departure (5m Warning)"
-                                            IsCheckable="True"
-                                            StaysOpenOnClick="True"
-                                            Style="{StaticResource DarkMenuItem}"
-                                            Tag="CargoEgress" />
-                                        <MenuItem
-                                            x:Name="MenuCargoArrival"
-                                            Click="Alert_MenuItem_Click"
-                                            Header="Arrival Warning (5m before Dock)"
-                                            IsCheckable="True"
-                                            StaysOpenOnClick="True"
-                                            Style="{StaticResource DarkMenuItem}"
-                                            Tag="CargoArrival" />
-                                    </MenuItem>
-                                    <MenuItem
-                                        Click="Alert_MenuItem_Click"
-                                        Header="Patrol Helicopter"
-                                        IsCheckable="True"
-                                        StaysOpenOnClick="True"
-                                        Style="{StaticResource DarkMenuItem}"
-                                        Tag="Heli" />
-                                    <MenuItem
-                                        Click="Alert_MenuItem_Click"
-                                        Header="Chinook (CH47)"
-                                        IsCheckable="True"
-                                        StaysOpenOnClick="True"
-                                        Style="{StaticResource DarkMenuItem}"
-                                        Tag="Chinook" />
-                                    <MenuItem
-                                        Click="Alert_MenuItem_Click"
-                                        Header="Travelling Vendor"
-                                        IsCheckable="True"
-                                        StaysOpenOnClick="True"
-                                        Style="{StaticResource DarkMenuItem}"
-                                        Tag="Vendor" />
-                                    <MenuItem
-                                        Click="Alert_MenuItem_Click"
-                                        Header="Oil Rig Trigger"
-                                        IsCheckable="True"
-                                        StaysOpenOnClick="True"
-                                        Style="{StaticResource DarkMenuItem}"
-                                        Tag="OilRig" />
-                                    <MenuItem
-                                        Click="Alert_MenuItem_Click"
-                                        Header="Deep Sea Event"
-                                        IsCheckable="True"
-                                        StaysOpenOnClick="True"
-                                        Style="{StaticResource DarkMenuItem}"
-                                        Tag="DeepSea" />
-                                    <Separator Style="{StaticResource DarkSeparator}" />
-                                    <MenuItem
-                                        FontWeight="Bold"
-                                        Foreground="{StaticResource TextBrushMuted}"
-                                        Header="Players"
-                                        IsHitTestVisible="False" />
-                                    <MenuItem
-                                        Click="Alert_MenuItem_Click"
-                                        Header="Online Status"
-                                        IsCheckable="True"
-                                        StaysOpenOnClick="True"
-                                        Style="{StaticResource DarkMenuItem}"
-                                        Tag="PlayerOnline" />
-                                    <MenuItem
-                                        Click="Alert_MenuItem_Click"
-                                        Header="Offline Status"
-                                        IsCheckable="True"
-                                        StaysOpenOnClick="True"
-                                        Style="{StaticResource DarkMenuItem}"
-                                        Tag="PlayerOffline" />
-                                    <MenuItem
-                                        Click="Alert_MenuItem_Click"
-                                        Header="Self Death"
-                                        IsCheckable="True"
-                                        StaysOpenOnClick="True"
-                                        Style="{StaticResource DarkMenuItem}"
-                                        Tag="PlayerDeathSelf" />
-                                    <MenuItem
-                                        Click="Alert_MenuItem_Click"
-                                        Header="Team Death"
-                                        IsCheckable="True"
-                                        StaysOpenOnClick="True"
-                                        Style="{StaticResource DarkMenuItem}"
-                                        Tag="PlayerDeathTeam" />
-                                    <MenuItem
-                                        Click="Alert_MenuItem_Click"
-                                        Header="Self Respawn"
-                                        IsCheckable="True"
-                                        StaysOpenOnClick="True"
-                                        Style="{StaticResource DarkMenuItem}"
-                                        Tag="PlayerRespawnSelf" />
-                                    <MenuItem
-                                        Click="Alert_MenuItem_Click"
-                                        Header="Team Respawn"
-                                        IsCheckable="True"
-                                        StaysOpenOnClick="True"
-                                        Style="{StaticResource DarkMenuItem}"
-                                        Tag="PlayerRespawnTeam" />
-                                    <Separator Style="{StaticResource DarkSeparator}" />
-                                    <MenuItem
-                                        FontWeight="Bold"
-                                        Foreground="{StaticResource TextBrushMuted}"
-                                        Header="Shops"
-                                        IsHitTestVisible="False" />
-                                    <MenuItem
-                                        Click="Alert_MenuItem_Click"
-                                        Header="New Shops"
-                                        IsCheckable="True"
-                                        StaysOpenOnClick="True"
-                                        Style="{StaticResource DarkMenuItem}"
-                                        Tag="NewShops" />
-                                    <MenuItem
-                                        Click="Alert_MenuItem_Click"
-                                        Header="Suspicious Shops"
-                                        IsCheckable="True"
-                                        StaysOpenOnClick="True"
-                                        Style="{StaticResource DarkMenuItem}"
-                                        Tag="SuspiciousShops" />
-                                    <MenuItem
-                                        x:Name="TradeAlertsMenuItem"
-                                        Header="Trade Alerts"
-                                        StaysOpenOnClick="True"
-                                        Style="{StaticResource DarkMenuItem}" />
-                                </ContextMenu>
-                            </CheckBox.ContextMenu>
+                            <CheckBox.Content>
+                                <TextBlock x:Name="ChatAnnounceLabel" 
+                                           Text="Chat Alerts" 
+                                           PreviewMouseLeftButtonDown="ChatAnnounceLabel_Click">
+                                    <TextBlock.ContextMenu>
+                                        <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                            <MenuItem
+                                                FontWeight="Bold"
+                                                Foreground="{StaticResource TextBrushMuted}"
+                                                Header="Events"
+                                                IsHitTestVisible="False" />
+                                            <MenuItem
+                                                Header="Cargo Ship"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="Cargo">
+                                                <MenuItem
+                                                    Click="Alert_MenuItem_Click"
+                                                    Header="Spawn"
+                                                    IsCheckable="True"
+                                                    StaysOpenOnClick="True"
+                                                    Style="{StaticResource DarkMenuItem}"
+                                                    Tag="CargoSpawn" />
+                                                <MenuItem
+                                                    Click="Alert_MenuItem_Click"
+                                                    Header="Harbor Docking"
+                                                    IsCheckable="True"
+                                                    StaysOpenOnClick="True"
+                                                    Style="{StaticResource DarkMenuItem}"
+                                                    Tag="CargoDock" />
+                                                <MenuItem
+                                                    Click="Alert_MenuItem_Click"
+                                                    Header="Departure (5m Warning)"
+                                                    IsCheckable="True"
+                                                    StaysOpenOnClick="True"
+                                                    Style="{StaticResource DarkMenuItem}"
+                                                    Tag="CargoEgress" />
+                                                <MenuItem
+                                                    x:Name="MenuCargoArrival"
+                                                    Click="Alert_MenuItem_Click"
+                                                    Header="Arrival Warning (5m before Dock)"
+                                                    IsCheckable="True"
+                                                    StaysOpenOnClick="True"
+                                                    Style="{StaticResource DarkMenuItem}"
+                                                    Tag="CargoArrival" />
+                                            </MenuItem>
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Patrol Helicopter"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="Heli" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Chinook (CH47)"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="Chinook" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Travelling Vendor"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="Vendor" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Oil Rig Trigger"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="OilRig" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Deep Sea Event"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="DeepSea" />
+                                            <Separator Style="{StaticResource DarkSeparator}" />
+                                            <MenuItem
+                                                FontWeight="Bold"
+                                                Foreground="{StaticResource TextBrushMuted}"
+                                                Header="Players"
+                                                IsHitTestVisible="False" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Online Status"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="PlayerOnline" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Offline Status"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="PlayerOffline" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Self Death"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="PlayerDeathSelf" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Team Death"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="PlayerDeathTeam" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Self Respawn"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="PlayerRespawnSelf" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Team Respawn"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="PlayerRespawnTeam" />
+                                            <Separator Style="{StaticResource DarkSeparator}" />
+                                            <MenuItem
+                                                FontWeight="Bold"
+                                                Foreground="{StaticResource TextBrushMuted}"
+                                                Header="Shops"
+                                                IsHitTestVisible="False" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="New Shops"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="NewShops" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Suspicious Shops"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="SuspiciousShops" />
+                                            <MenuItem
+                                                x:Name="TradeAlertsMenuItem"
+                                                Header="Trade Alerts"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}" />
+                                        </ContextMenu>
+                                    </TextBlock.ContextMenu>
+                                </TextBlock>
+                            </CheckBox.Content>
                         </CheckBox>
                         <Button
                             Width="80"

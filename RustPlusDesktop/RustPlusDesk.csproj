@@ -9,6 +9,7 @@
 		<!-- Fixes for Single-File Publish and Cleanup -->
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
 		<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
 	</PropertyGroup>
 	<ItemGroup>

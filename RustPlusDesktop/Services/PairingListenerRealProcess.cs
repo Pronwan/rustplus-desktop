@@ -1,4 +1,5 @@
 using RustPlusDesk.Models;
+using RustPlusDesk.Helpers;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -93,11 +94,11 @@ namespace RustPlusDesk.Services
                 return;
             }
 
-            var node = FindBundledNode()
-                ?? throw new InvalidOperationException("Node.js Runtime not found (runtime/node-win-x64/node.exe).");
+            var node = RuntimeHelper.FindBundledNode()
+                ?? throw new InvalidOperationException(RuntimeHelper.GetNodeNotFoundMessage());
 
-            var cli = ResolveRustplusCliEntry(out var wd)
-                ?? throw new InvalidOperationException("rustplus-cli not found (rustplus-cli.zip entpackt?).");
+            var cli = RuntimeHelper.ResolveCliEntry(out var wd)
+                ?? throw new InvalidOperationException("rustplus-cli not found (rustplus-cli.zip missing or extraction failed).");
 
             Directory.CreateDirectory(Path.GetDirectoryName(ConfigPath)!);
 
@@ -564,112 +565,6 @@ namespace RustPlusDesk.Services
         }
 
 
-        // ----------------- HELFER: ALLE INNERHALB DER KLASSE! -----------------
-
-
-        // %LOCALAPPDATA%\RustPlusDesk\runtime\rustplus-cli – entpackt die ZIP nur, wenn neu
-        private static string EnsureCliUnpackedRoot()
-        {
-            var target = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                                      "RustPlusDesk", "runtime", "rustplus-cli");
-            Directory.CreateDirectory(target);
-
-            var zip = Path.Combine(AppContext.BaseDirectory, "runtime", "rustplus-cli.zip");
-            if (File.Exists(zip))
-            {
-                var stamp = Path.Combine(target, ".stamp");
-                var sig = $"{new FileInfo(zip).Length}-{File.GetLastWriteTimeUtc(zip).Ticks}";
-                var need = !File.Exists(stamp) || File.ReadAllText(stamp) != sig
-                           || !Directory.Exists(Path.Combine(target, "node_modules"));
-
-                if (need)
-                {
-                    try { Directory.Delete(target, true); } catch { }
-                    Directory.CreateDirectory(target);
-                    ZipFile.ExtractToDirectory(zip, target);
-                    File.WriteAllText(stamp, sig);
-                }
-                return target;
-            }
-
-            // Debug-Fallback: ungezippter Ordner im Projekt
-            var dev = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..",
-                                                    "runtime", "rustplus-cli"));
-            if (Directory.Exists(dev)) return dev;
-
-            throw new FileNotFoundException("rustplus-cli not found gefunden (neither ZIP in output nor Dev Folder).");
-        }
-
-        // findet den eigentlichen CLI-Entry (cli/index.js o. ä.) & gibt workingDir zurück
-        private static string? ResolveRustplusCliEntry(out string workingDir)
-        {
-            workingDir = "";
-            var root = EnsureCliUnpackedRoot();
-
-            var pkgRoot = Path.Combine(root, "node_modules", "@liamcottle", "rustplus.js");
-            if (!Directory.Exists(pkgRoot)) return null;
-
-            var pkgJson = Path.Combine(pkgRoot, "package.json");
-            if (File.Exists(pkgJson))
-            {
-                try
-                {
-                    using var doc = JsonDocument.Parse(File.ReadAllText(pkgJson));
-                    var je = doc.RootElement;
-                    string? rel = null;
-
-                    if (je.TryGetProperty("bin", out var bin))
-                    {
-                        if (bin.ValueKind == JsonValueKind.String) rel = bin.GetString();
-                        else if (bin.ValueKind == JsonValueKind.Object)
-                        {
-                            foreach (var p in bin.EnumerateObject())
-                            {
-                                if (p.NameEquals("rustplus")) { rel = p.Value.GetString(); break; }
-                                rel ??= p.Value.GetString();
-                            }
-                        }
-                    }
-                    if (string.IsNullOrWhiteSpace(rel) &&
-                        je.TryGetProperty("main", out var main) &&
-                        main.ValueKind == JsonValueKind.String)
-                        rel = main.GetString();
-
-                    if (!string.IsNullOrWhiteSpace(rel))
-                    {
-                        var abs = Path.Combine(pkgRoot, rel.Replace('/', Path.DirectorySeparatorChar));
-                        if (File.Exists(abs)) { workingDir = pkgRoot; return abs; }
-                    }
-                }
-                catch { /* tolerant */ }
-            }
-
-            // gängige Fallbacks (deine Version hat cli/index.js)
-            foreach (var c in new[]
-            {
-        Path.Combine(pkgRoot,"cli","index.js"),
-        Path.Combine(pkgRoot,"cli.js"),
-        Path.Combine(pkgRoot,"rustplus.js"),
-        Path.Combine(pkgRoot,"index.js")
-    })
-            {
-                if (File.Exists(c)) { workingDir = pkgRoot; return c; }
-            }
-            return null;
-        }
-
-        private static string? FindBundledNode()
-        {
-            // 1) Release/Publish: neben der EXE
-            var p1 = Path.Combine(AppContext.BaseDirectory, "runtime", "node-win-x64", "node.exe");
-            if (File.Exists(p1)) return p1;
-
-            // 2) Debug: direkt aus dem Projekt
-            var p2 = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..",
-                                                   "runtime", "node-win-x64", "node.exe"));
-            return File.Exists(p2) ? p2 : null;
-        }
-
         private static string PathJoin(params string[] parts) => Path.Combine(parts);
 
 
@@ -869,11 +764,11 @@ namespace RustPlusDesk.Services
             if (_running && _listenProc != null && !_listenProc.HasExited)
             { _log("Listener already running."); return; }
 
-            var node = FindBundledNode()
-                ?? throw new InvalidOperationException("Node.js Runtime not found (runtime/node-win-x64/node.exe).");
+            var node = RuntimeHelper.FindBundledNode()
+                ?? throw new InvalidOperationException(RuntimeHelper.GetNodeNotFoundMessage());
 
-            var cli = ResolveRustplusCliEntry(out var wd)
-                ?? throw new InvalidOperationException("rustplus-cli not found (rustplus-cli.zip entpackt?).");
+            var cli = RuntimeHelper.ResolveCliEntry(out var wd)
+                ?? throw new InvalidOperationException("rustplus-cli not found (rustplus-cli.zip missing or extraction failed).");
 
             Directory.CreateDirectory(Path.GetDirectoryName(ConfigPath)!);
 

@@ -26,7 +26,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Text.RegularExpressions;
 
 using System.Threading;
 using System.Threading.Tasks;
@@ -215,12 +214,29 @@ public partial class MainWindow : ui.FluentWindow
 
     public static class AppInfo
     {
-        public static string VersionRaw =>
-            Assembly.GetExecutingAssembly()
-                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
-            ?? FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion
-            ?? Assembly.GetExecutingAssembly().GetName().Version?.ToString()      // 4-teilig
-            ?? "0.0.0";
+        public static string VersionRaw
+        {
+            get
+            {
+                var attr = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+                if (attr != null && !string.IsNullOrWhiteSpace(attr.InformationalVersion))
+                    return attr.InformationalVersion;
+
+                var path = Environment.ProcessPath;
+                if (!string.IsNullOrEmpty(path))
+                {
+                    try
+                    {
+                        var fvi = FileVersionInfo.GetVersionInfo(path);
+                        if (!string.IsNullOrWhiteSpace(fvi.ProductVersion))
+                            return fvi.ProductVersion;
+                    }
+                    catch { }
+                }
+
+                return Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0";
+            }
+        }
 
         public static string VersionShort => NormalizeVer(VersionRaw);
 
@@ -356,6 +372,9 @@ public partial class MainWindow : ui.FluentWindow
                     await Dispatcher.InvokeAsync(async () => await PerformConnectAsync(true));
                 });
             }
+
+            // Auto-check for updates
+            _ = Task.Run(async () => await AutoCheckUpdatesAsync());
         }));
 
         // One-time migration notice for v4.5 — The Intelligence Update
@@ -1161,7 +1180,7 @@ public partial class MainWindow : ui.FluentWindow
         // 1) Disk-Kandidaten
         string baseDir = AppDomain.CurrentDomain.BaseDirectory;
         string currDir = Environment.CurrentDirectory;
-        string? entryDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()!.Location);
+        string? entryDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath);
 
         var diskCandidates = new[]
         {
@@ -4771,10 +4790,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         try
         {
-            // zuerst Produktversion aus Datei
-            var fvi = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-            if (!string.IsNullOrWhiteSpace(fvi.ProductVersion) && Version.TryParse(NormalizeVer(fvi.ProductVersion), out var v1))
-                return v1;
+            // Zuerst versuchen wir es über unsere robuste AppInfo
+            if (Version.TryParse(AppInfo.VersionShort, out var v0))
+                return v0;
+
+            // Fallback auf ProcessPath
+            var path = Environment.ProcessPath;
+            if (!string.IsNullOrEmpty(path))
+            {
+                var fvi = FileVersionInfo.GetVersionInfo(path);
+                if (!string.IsNullOrWhiteSpace(fvi.ProductVersion) && Version.TryParse(NormalizeVer(fvi.ProductVersion), out var v1))
+                    return v1;
+            }
 
             // dann AssemblyVersion
             var v2 = Assembly.GetExecutingAssembly().GetName().Version;
@@ -4842,7 +4869,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return (latest, tag, dl);
     }
 
-    private async Task<string?> DownloadInstallerAsync(string url, IProgress<double>? progress = null)
+    private async Task<string?> DownloadInstallerAsync(string url, IProgress<DownloadReport>? progress = null)
     {
         var target = System.IO.Path.Combine(System.IO.Path.GetTempPath(), InstallerAssetName);
         try
@@ -4860,11 +4887,28 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             var buffer = new byte[81920];
             long readTotal = 0;
             int read;
+            var sw = Stopwatch.StartNew();
+            var lastReport = sw.ElapsedMilliseconds;
+
             while ((read = await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
             {
                 await file.WriteAsync(buffer, 0, read);
                 readTotal += read;
-                if (total.HasValue) progress?.Report(readTotal / (double)total.Value);
+
+                var now = sw.ElapsedMilliseconds;
+                if (now - lastReport > 200 || readTotal == total)
+                {
+                    lastReport = now;
+                    var report = new DownloadReport
+                    {
+                        Progress = total.HasValue ? (double)readTotal / total.Value : 0,
+                        Percentage = total.HasValue ? $"{(double)readTotal / total.Value:P0}" : "0%",
+                        BytesReceived = FormatBytes(readTotal),
+                        TotalBytes = total.HasValue ? FormatBytes(total.Value) : "Unknown",
+                        Speed = FormatBytes((long)(readTotal / (sw.Elapsed.TotalSeconds > 0 ? sw.Elapsed.TotalSeconds : 1))) + "/s"
+                    };
+                    progress?.Report(report);
+                }
             }
             return target;
         }
@@ -4873,6 +4917,19 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             AppendLog("❌ Download failed: " + ex.Message);
             return null;
         }
+    }
+
+    private static string FormatBytes(long bytes)
+    {
+        string[] Suffix = { "B", "KB", "MB", "GB", "TB" };
+        int i;
+        double dblSByte = bytes;
+        for (i = 0; i < Suffix.Length && bytes >= 1024; i++, bytes /= 1024)
+        {
+            dblSByte = bytes / 1024.0;
+        }
+
+        return $"{dblSByte:0.##} {Suffix[i]}";
     }
 
     private async Task<bool> StartInstallerAndExitAsync(string installerPath)
@@ -4976,6 +5033,38 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         catch { }
     }
 
+    private async Task AutoCheckUpdatesAsync()
+    {
+        try
+        {
+            var latestInfo = await GetLatestReleaseAsync();
+            if (latestInfo is null) return;
+
+            var (latest, tag, _) = latestInfo.Value;
+            var curr = AppInfo.VersionForCompare;
+
+            bool updateAvailable = false;
+            if (latest > curr) updateAvailable = true;
+            else if (latest == curr)
+            {
+                bool localIsBeta = AppInfo.VersionRaw.Contains("-", StringComparison.OrdinalIgnoreCase);
+                bool remoteIsBeta = tag.Contains("-", StringComparison.OrdinalIgnoreCase);
+                if (localIsBeta && !remoteIsBeta) updateAvailable = true;
+            }
+
+            if (updateAvailable)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    _vm.IsUpdateAvailable = true;
+                    _vm.UpdateTag = tag;
+                    AppendLog($"✨ Update found: {tag}");
+                });
+            }
+        }
+        catch { /* silent */ }
+    }
+
     private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
     {
         if (_listenerStarting) return;
@@ -4999,14 +5088,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             var (latest, tag, dlUrl) = latestInfo.Value;
             AppendLog($"Current: {AppInfo.VersionShort} | Latest: {latest} ({tag})");
 
-            if (latest < curr)
+            bool updateAvailable = false;
+            if (latest > curr)
             {
-                _vm.IsBusy = false; _vm.BusyText = "";
-                System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
+                updateAvailable = true;
             }
-
-            if (latest == curr)
+            else if (latest == curr)
             {
                 // Spezialfall: Wenn wir eine Beta haben (Raw enthält '-') und GitHub den exakt gleichen numerischen Tag hat,
                 // aber der GitHub-Tag KEIN '-' enthält, dann ist GitHub neuer (Final Release).
@@ -5015,15 +5102,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
                 if (localIsBeta && !remoteIsBeta)
                 {
-                    // GitHub ist Final, wir sind Beta -> Update verfügbar!
-                }
-                else
-                {
-                    _vm.IsBusy = false; _vm.BusyText = "";
-                    System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
-                    return;
+                    updateAvailable = true;
                 }
             }
+
+            if (!updateAvailable)
+            {
+                _vm.IsBusy = false; _vm.BusyText = "";
+                _vm.IsUpdateAvailable = false;
+                System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            _vm.IsUpdateAvailable = true;
+            _vm.UpdateTag = tag;
 
             // neuere Version vorhanden
             if (string.IsNullOrWhiteSpace(dlUrl))
@@ -5047,13 +5139,19 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 return;
             }
 
-            // Download mit einfachem Progress in BusyText
-            var prog = new Progress<double>(p =>
+            // Download mit detailliertem Progress
+            _vm.IsDownloadingUpdate = true;
+            var prog = new Progress<DownloadReport>(r =>
             {
-                _vm.BusyText = $"Downloading installer … {(int)(p * 100)}%";
+                _vm.BusyText = $"Downloading installer … {r.Percentage}";
+                _vm.UpdateDownloadProgress = r.Progress * 100;
+                _vm.UpdateDownloadSpeed = r.Speed;
+                _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
+                _vm.UpdateDownloadPercentage = r.Percentage;
             });
             var path = await DownloadInstallerAsync(dlUrl!, prog);
 
+            _vm.IsDownloadingUpdate = false;
             _vm.IsBusy = false; _vm.BusyText = "";
 
             if (path == null)
@@ -5066,6 +5164,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         catch (Exception ex)
         {
+            _vm.IsUpdateAvailable = false;
+            _vm.IsDownloadingUpdate = false;
             _vm.IsBusy = false;
             _vm.BusyText = "";
             AppendLog("❌ Update check failed: " + ex.Message);

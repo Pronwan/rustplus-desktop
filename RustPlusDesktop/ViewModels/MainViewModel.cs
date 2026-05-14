@@ -137,6 +137,55 @@ public class MainViewModel : INotifyPropertyChanged
         set { _isPairingBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
     }
 
+    private bool _isUpdateAvailable;
+    public bool IsUpdateAvailable
+    {
+        get => _isUpdateAvailable;
+        set { _isUpdateAvailable = value; OnPropertyChanged(); }
+    }
+
+    private string _updateTag = "";
+    public string UpdateTag
+    {
+        get => _updateTag;
+        set { _updateTag = value; OnPropertyChanged(); }
+    }
+
+    private bool _isDownloadingUpdate;
+    public bool IsDownloadingUpdate
+    {
+        get => _isDownloadingUpdate;
+        set { _isDownloadingUpdate = value; OnPropertyChanged(); }
+    }
+
+    private double _updateDownloadProgress;
+    public double UpdateDownloadProgress
+    {
+        get => _updateDownloadProgress;
+        set { _updateDownloadProgress = value; OnPropertyChanged(); }
+    }
+
+    private string _updateDownloadSpeed = "";
+    public string UpdateDownloadSpeed
+    {
+        get => _updateDownloadSpeed;
+        set { _updateDownloadSpeed = value; OnPropertyChanged(); }
+    }
+
+    private string _updateDownloadSize = "";
+    public string UpdateDownloadSize
+    {
+        get => _updateDownloadSize;
+        set { _updateDownloadSize = value; OnPropertyChanged(); }
+    }
+
+    private string _updateDownloadPercentage = "0%";
+    public string UpdateDownloadPercentage
+    {
+        get => _updateDownloadPercentage;
+        set { _updateDownloadPercentage = value; OnPropertyChanged(); }
+    }
+
     private string _busyText = "Bitte warten …";
     public string BusyText
     {
