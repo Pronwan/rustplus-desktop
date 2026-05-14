@@ -9,54 +9,97 @@ namespace RustPlusDesk.Helpers
     {
         public static string? FindBundledNode()
         {
-            // 1) Release/Publish: neben der EXE
-            var baseDir = AppContext.BaseDirectory;
-            var p1 = Path.Combine(baseDir, "runtime", "node-win-x64", "node.exe");
-            if (File.Exists(p1)) return p1;
+            var candidates = new List<string>();
 
-            // 1b) Fallback: Falls AppContext.BaseDirectory in Single-File nicht das ist, was wir wollen
+            // 1) AppContext.BaseDirectory (Standard in .NET)
+            candidates.Add(AppContext.BaseDirectory);
+
+            // 2) Environment.ProcessPath (Location of the actual EXE)
             try
             {
-                var processPath = Environment.ProcessPath;
-                if (!string.IsNullOrEmpty(processPath))
+                var procPath = Environment.ProcessPath;
+                if (!string.IsNullOrEmpty(procPath))
                 {
-                    var exeDir = Path.GetDirectoryName(processPath);
-                    if (!string.IsNullOrEmpty(exeDir) && exeDir != baseDir)
-                    {
-                        var p1b = Path.Combine(exeDir, "runtime", "node-win-x64", "node.exe");
-                        if (File.Exists(p1b)) return p1b;
-                    }
+                    var dir = Path.GetDirectoryName(procPath);
+                    if (!string.IsNullOrEmpty(dir)) candidates.Add(dir);
                 }
             }
-            catch { /* ignored */ }
+            catch { }
 
-            // 2) Debug: direkt aus dem Projekt
-            var p2 = Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "runtime", "node-win-x64", "node.exe"));
-            if (File.Exists(p2)) return p2;
+            // 3) AppDomain.CurrentDomain.BaseDirectory
+            candidates.Add(AppDomain.CurrentDomain.BaseDirectory);
+
+            // 4) Current Working Directory
+            candidates.Add(Directory.GetCurrentDirectory());
+
+            // Deduplicate and normalize
+            var pathsToTry = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var c in candidates)
+            {
+                if (!string.IsNullOrEmpty(c))
+                {
+                    try { pathsToTry.Add(Path.GetFullPath(c)); } catch { }
+                }
+            }
+
+            foreach (var baseDir in pathsToTry)
+            {
+                // Try subfolder "runtime/node-win-x64/node.exe"
+                var p = Path.Combine(baseDir, "runtime", "node-win-x64", "node.exe");
+                if (File.Exists(p)) return p;
+
+                // Try "node-win-x64/node.exe" (falls runtime-Ordner weggelassen wurde)
+                var p2 = Path.Combine(baseDir, "node-win-x64", "node.exe");
+                if (File.Exists(p2)) return p2;
+
+                // Try "node.exe" directly (falls alles flach liegt)
+                var p3 = Path.Combine(baseDir, "node.exe");
+                if (File.Exists(p3)) return p3;
+            }
+
+            // 5) Debug Fallback: Deep search up for project root
+            try
+            {
+                var cur = AppContext.BaseDirectory;
+                for (int i = 0; i < 5; i++)
+                {
+                    var pDev = Path.Combine(cur, "runtime", "node-win-x64", "node.exe");
+                    if (File.Exists(pDev)) return Path.GetFullPath(pDev);
+                    
+                    var next = Path.GetDirectoryName(cur);
+                    if (string.IsNullOrEmpty(next) || next == cur) break;
+                    cur = next;
+                }
+            }
+            catch { }
 
             return null;
         }
 
         public static string GetNodeNotFoundMessage()
         {
-            var baseDir = AppContext.BaseDirectory;
-            var p1 = Path.Combine(baseDir, "runtime", "node-win-x64", "node.exe");
-            var msg = $"Node.js Runtime not found.\nSearched at: {p1}";
+            var msg = "Node.js Runtime not found.\n\nSearched locations:";
             
-            try
+            var candidates = new List<string>();
+            candidates.Add(AppContext.BaseDirectory);
+            try { var p = Environment.ProcessPath; if (!string.IsNullOrEmpty(p)) candidates.Add(Path.GetDirectoryName(p) ?? ""); } catch { }
+            candidates.Add(Directory.GetCurrentDirectory());
+
+            var pathsToTry = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var c in candidates)
             {
-                var processPath = Environment.ProcessPath;
-                if (!string.IsNullOrEmpty(processPath))
+                if (!string.IsNullOrEmpty(c))
                 {
-                    var exeDir = Path.GetDirectoryName(processPath);
-                    if (!string.IsNullOrEmpty(exeDir) && exeDir != baseDir)
-                    {
-                        var p1b = Path.Combine(exeDir, "runtime", "node-win-x64", "node.exe");
-                        msg += $"\nAlso searched at: {p1b}";
-                    }
+                    try { pathsToTry.Add(Path.GetFullPath(c)); } catch { }
                 }
             }
-            catch { }
+
+            foreach (var b in pathsToTry)
+            {
+                msg += $"\n- {Path.Combine(b, "runtime\\node-win-x64\\node.exe")}";
+            }
+
+            msg += "\n\nPlease ensure that Google Chrome or Microsoft Edge is installed and the 'runtime' folder exists in the application directory.";
             
             return msg;
         }
