@@ -56,7 +56,7 @@ using ui = Wpf.Ui.Controls;
 namespace RustPlusDesk.Views;
 
 
-public partial class MainWindow : Window
+public partial class MainWindow : ui.FluentWindow
 {
 
     private readonly MainViewModel _vm = new();
@@ -269,10 +269,12 @@ public partial class MainWindow : Window
         // ── Wpf.Ui: Apply Fluent dark theme to all controls ───────────────────
         ApplicationThemeManager.Apply(ApplicationTheme.Dark, updateAccent: true);
         
-        this.Title = $"RustPlusDesk v{AppInfo.VersionRaw}";
+        if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
+        this.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
         if (FindName("TxtVersion") is TextBlock txt)
             txt.Text = $"v{AppInfo.VersionRaw}";
         InitCameraUi();
+        InitSmoothFollowLoop();
         ApplySettings();
         _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
         AppendLog($"[items-new] baseDir={baseDir}");
@@ -1785,16 +1787,35 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
 
         // FUZZY MATCH: If we couldn't map the device via ID (e.g. generic FCM push without ID),
-        // check if there is EXACTLY ONE Smart Alarm registered across all servers.
-        // If so, we can safely assume this alarm belongs to it and respect its settings.
+        // we try to find a matching server and check if it has exactly one Smart Alarm.
         if (dev == null)
         {
-            var allAlarms = _vm.Servers.SelectMany(s => s.Devices).Where(d => d.Kind == "SmartAlarm").ToList();
-            if (allAlarms.Count == 1)
+            // 1) Try to find the specific server profile first
+            var profile = _vm.Servers.FirstOrDefault(s => 
+                string.Equals(Regex.Replace(s.Name ?? "", @"\x1B\[[0-9;]*[A-Za-z]", "").Trim(), cleanSrv, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(s.Host, cleanSrv, StringComparison.OrdinalIgnoreCase));
+
+            if (profile != null)
             {
-                dev = allAlarms[0];
-                n = n with { EntityId = dev.EntityId };
-                AppendLog($"[alarm/debug] ({source}) Fuzzy matched single alarm device: {dev.Name} (ID: {dev.EntityId})");
+                var serverAlarms = profile.Devices.Where(d => d.Kind == "SmartAlarm").ToList();
+                if (serverAlarms.Count == 1)
+                {
+                    dev = serverAlarms[0];
+                    n = n with { EntityId = dev.EntityId };
+                    AppendLog($"[alarm/debug] ({source}) Fuzzy matched single alarm on server '{cleanSrv}': {dev.Name} (ID: {dev.EntityId})");
+                }
+            }
+
+            // 2) Global Fallback: check if there is EXACTLY ONE Smart Alarm registered across all servers.
+            if (dev == null)
+            {
+                var allAlarms = _vm.Servers.SelectMany(s => s.Devices).Where(d => d.Kind == "SmartAlarm").ToList();
+                if (allAlarms.Count == 1)
+                {
+                    dev = allAlarms[0];
+                    n = n with { EntityId = dev.EntityId };
+                    AppendLog($"[alarm/debug] ({source}) Fuzzy matched single global alarm device: {dev.Name} (ID: {dev.EntityId})");
+                }
             }
         }
 
@@ -1863,6 +1884,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _lastAnyAlarmTime = now;
         }
 
+        // 4) Play Audio (Respects settings if device is identified, otherwise plays default)
+        PlayAlarmAudio(dev);
+
         if (dev != null)
         {
             AppendLog($"[alarm/debug] ({source}) Device identified: {dev.Name} (Kind: {dev.Kind}, ID: {dev.EntityId})");
@@ -1879,8 +1903,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 });
             }
 
-            PlayAlarmAudio(dev);
-            
             if (!dev.PopupEnabled) 
             {
                 AppendLog($"[alarm/debug] ({source}) Skipping popup window because PopupEnabled is false for this device.");
@@ -2829,6 +2851,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         UpdateShopSearchConfig();
     }
 
+    private void ChatAnnounceLabel_Click(object sender, MouseButtonEventArgs e)
+    {
+        if (ChatAnnounceLabel.ContextMenu != null)
+        {
+            ChatAnnounceLabel.ContextMenu.PlacementTarget = ChatAnnounceLabel;
+            ChatAnnounceLabel.ContextMenu.IsOpen = true;
+            e.Handled = true;
+        }
+    }
+
     private void SetAllAlerts(bool val)
     {
         TrackingService.AnnounceCargo = val;
@@ -2946,12 +2978,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         bool masterOn = TrackingService.AnnounceSpawnsMaster;
         PopulateTradeAlertsSubMenu(masterOn);
 
-        if (ChatAnnounce.ContextMenu == null) return;
+        if (ChatAnnounceLabel.ContextMenu == null) return;
         
         string host = _rust?.Host ?? "unknown";
         bool hasTravelData = TrackingService.HasAnyCargoTrigger(host);
 
-        foreach (var item in ChatAnnounce.ContextMenu.Items)
+        foreach (var item in ChatAnnounceLabel.ContextMenu.Items)
         {
             if (item is MenuItem mi)
             {
@@ -3170,6 +3202,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         // Baseline der schon bekannten Orders beim Anlegen
         public List<AlertSeenOrder> Baseline { get; } = new();
+
+        // NEU: Kennzeichnet, ob der erste Poll nach Erstellung/Laden durch ist.
+        // Falls false, unterdrücken wir Alerts für existierende Shops.
+        public bool InitializationComplete { get; set; } = false;
 
         // Anti-Spam pro Order-Key
         public Dictionary<string, DateTime> LastAnnouncements { get; } = new();
@@ -3584,7 +3620,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 int curStock  = order.Stock;
 
                 // 3) Baseline updaten/erzeugen – wir wollen immer den letzten Stock dort haben
-                bool justCreated = false;
                 if (baseline == null)
                 {
                     baseline = new AlertSeenOrder
@@ -3597,7 +3632,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         Stock         = curStock
                     };
                     rule.Baseline.Add(baseline);
-                    justCreated = true;
                 }
                 else
                 {
@@ -3608,12 +3642,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (curStock <= 0)
                     continue;
 
-                // NEU: Wenn der Baseline-Eintrag gerade erst erstellt wurde, überspringen wir den Alert diesmal.
-                // Damit verhindern wir Chat-Spam bei neu angelegten Alert-Regeln für bereits existierende Shops.
-                if (justCreated)
+                // 5) Wenn die Regel gerade erst initialisiert wird (erster Poll nach Anlage/Start),
+                // unterdrücken wir den Alert, um Massen-Spam beim Programmstart zu vermeiden.
+                // Aber: Ein NEUER Shop, der WÄHREND die Regel schon aktiv ist auftaucht,
+                // soll natürlich TROTZDEM alerten.
+                if (!rule.InitializationComplete)
                     continue;
 
-                // 5) Entscheiden, ob wir das als "neu" werten
+                // 6) Entscheiden, ob wir das als "neu" werten
                 bool isNewDeal   = (baseline != null && prevStock == 0); // entweder ganz neu oder aus 0 kommend
                 bool isRestock   = (prevStock <= 0 && curStock > 0);
                 bool alreadySeenWithStock = (prevStock > 0);
@@ -3660,7 +3696,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 rule.LastAnnouncements[sig] = DateTime.UtcNow;
             }           // end foreach order
             }           // end foreach shop
-        }               // end foreach rule
+
+            // Nach dem ersten Durchlauf markieren wir die Regel als initialisiert
+            rule.InitializationComplete = true;
+        }
     }
     // ─── ONLINE PLAYERS & TRACKING ───────────────────────────────────────────
 
@@ -3769,7 +3808,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (sender is Button b && b.Name == "BtnShowOnline")
         {
-            MainTabs.SelectedIndex = 2; // Players tab
+            MainTabs.SelectedIndex = 3; // Players tab
         }
 
         if (_vm.Selected == null || string.IsNullOrEmpty(_vm.Selected.Host))
@@ -4878,6 +4917,27 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var modal = new SettingsModal { Owner = this };
         modal.ShowDialog();
         ApplySettings();
+
+        if (modal.RequestAction == "ModifyChatAlerts")
+        {
+            Dispatcher.BeginInvoke(new Action(() => {
+                if (ChatAnnounceLabel.ContextMenu != null)
+                {
+                    ChatAnnounceLabel.ContextMenu.PlacementTarget = ChatAnnounceLabel;
+                    ChatAnnounceLabel.ContextMenu.IsOpen = true;
+                }
+            }), System.Windows.Threading.DispatcherPriority.Input);
+        }
+        else if (modal.RequestAction == "ChatCommands")
+        {
+            // Open Chat if closed
+            if (ChatContentBorder.Visibility != Visibility.Visible)
+            {
+                BtnToggleChat_Click(null, null);
+            }
+            // Show commands
+            BtnOpenChatCommands_Click(null, null);
+        }
     }
     
     private void ApplySettings()
@@ -5045,6 +5105,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     protected override void OnSourceInitialized(EventArgs e)
     {
         base.OnSourceInitialized(e);
+
+        // Spätestens hier sollte Windows den Titel im Rahmen akzeptieren
+        if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
+        this.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
 
         var hwnd = new WindowInteropHelper(this).Handle;
         _hotkeyMgr = new GlobalHotkeyManager(hwnd);

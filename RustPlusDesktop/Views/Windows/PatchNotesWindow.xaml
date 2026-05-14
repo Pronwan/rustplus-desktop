@@ -12,17 +12,47 @@
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
                 <TextBlock Text="Patch Notes &amp; Version History" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,2"/>
                 <!-- UPDATE VERSION NUMBER HERE -->
-                <TextBlock Text="Current Version: 4.5.0" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
+                <TextBlock Text="Current Version: 4.6.0" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
             </StackPanel>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v4.5.0 PATCH NOTES -->
+                    <!-- NEW v4.6.0 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="v4.5.2  |  Shop Polling Hotfix (May 12, 2026)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="v4.6.0  |  Stability &amp; Intelligence Overhaul (May 14, 2026)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+
+                            <!-- Features -->
+                            <TextBlock Text="&#x2022; Stabilized FCM Listener &amp; Modern Edge-to-Edge Layout" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Complete architectural hardening of the background Node.js process. Implemented crash protections for FCM listening and transitioned to asynchronous event hooks to prevent UI deadlocks. The main interface now features a sleek, borderless edge-to-edge design.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Dynamic Chat Commands &amp; Automated !Upkeep" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Smart home automation now scales with your base. Support for an arbitrary number of Smart Switches and Tool Cupboard monitors. Use the new <Run FontWeight="Bold">!Upkeep</Run> command in team chat to get a live report of remaining TC time.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Token Expiry Management &amp; UI Polish" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Never miss a notification again. The app now tracks FCM token expiry and warns you proactively. UI artifacts like the green selection highlights have been removed for a unified, premium dark theme experience. Access Chat Alert and Chat Command customization through Settings window.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Intuitive Navigation &amp; Map Center and other Fixes" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Overhauled the Settings window and "Chat Alerts" interaction for better accessibility. Fixed "Center on Map" functionality for team members and improved the transition between follow and manual map control. Audio Smart Alarm alerts now work properly again.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
+                    <!-- v4.5.0 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v4.5.3  |  Audio Smart Alert Hotfix (May 14, 2026)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
 
                             <!-- Screenshots -->
                             <Image Source="pack://application:,,,/Assets/Screenshots/4.5.0.png" Stretch="Uniform" MaxHeight="350" Margin="0,0,0,12"/>
