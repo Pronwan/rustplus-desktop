@@ -18,12 +18,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>4.4.5-beta1</Version>
+		<Version>4.5.2</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>4.4.5.0</AssemblyVersion>
-		<FileVersion>4.4.5.0</FileVersion>
-		<InformationalVersion>4.4.5-beta1</InformationalVersion>
+		<AssemblyVersion>4.5.2</AssemblyVersion>
+		<FileVersion>4.5.2</FileVersion>
+		<InformationalVersion>4.5.2</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -149,6 +149,7 @@
 	  <None Remove="Assets\Screenshots\3.3.0_2.png" />
 	  <None Remove="Assets\Screenshots\3_5A.png" />
 	  <None Remove="Assets\Screenshots\3_5B.png" />
+	  <None Remove="Assets\Screenshots\4.5.0.png" />
 	  <None Remove="Assets\Screenshots\Cargo_docked_countdown.png" />
 	  <None Remove="Assets\Screenshots\Cargo_notification_settings.png" />
 	  <None Remove="Assets\Screenshots\Cargo_remaining-on-map.png" />
@@ -303,6 +304,7 @@
     <Resource Include="Assets\Screenshots\3.3.0_2.png" />
     <Resource Include="Assets\Screenshots\3_5A.png" />
     <Resource Include="Assets\Screenshots\3_5B.png" />
+    <Resource Include="Assets\Screenshots\4.5.0.png" />
     <Resource Include="Assets\Screenshots\Cargo_docked_countdown.png" />
     <Resource Include="Assets\Screenshots\Cargo_notification_settings.png" />
     <Resource Include="Assets\Screenshots\Cargo_remaining-on-map.png" />

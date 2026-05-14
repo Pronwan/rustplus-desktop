@@ -69,14 +69,14 @@
                             <TextBlock Text="Switch 1:" VerticalAlignment="Center" Foreground="White" />
                             <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
                             <TextBox Grid.Column="2" Text="{Binding CmdSwitch1}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" Margin="0,0,10,0" />
-                            <ComboBox Grid.Column="3" ItemsSource="{Binding SmartSwitches}" SelectedValue="{Binding BoundSwitchId1}" SelectedValuePath="EntityId" DisplayMemberPath="Name" Style="{StaticResource DarkComboBox}" />
+                            <ComboBox Grid.Column="3" ItemsSource="{Binding SmartSwitches}" SelectedValue="{Binding BoundSwitchId1}" SelectedValuePath="EntityId" DisplayMemberPath="PureName" Style="{StaticResource DarkComboBox}" />
                         </Grid>
                         <Grid Margin="0,0,0,5">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="100"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="100"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                             <TextBlock Text="Switch 2:" VerticalAlignment="Center" Foreground="White" />
                             <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
                             <TextBox Grid.Column="2" Text="{Binding CmdSwitch2}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" Margin="0,0,10,0" />
-                            <ComboBox Grid.Column="3" ItemsSource="{Binding SmartSwitches}" SelectedValue="{Binding BoundSwitchId2}" SelectedValuePath="EntityId" DisplayMemberPath="Name" Style="{StaticResource DarkComboBox}" />
+                            <ComboBox Grid.Column="3" ItemsSource="{Binding SmartSwitches}" SelectedValue="{Binding BoundSwitchId2}" SelectedValuePath="EntityId" DisplayMemberPath="PureName" Style="{StaticResource DarkComboBox}" />
                         </Grid>
                     </StackPanel>
                 </StackPanel>

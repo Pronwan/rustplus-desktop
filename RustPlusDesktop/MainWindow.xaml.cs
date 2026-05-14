@@ -70,6 +70,10 @@ public partial class MainWindow : Window
     private bool _listenerStarting; // Schutz gegen Doppelklicks
     private readonly System.Windows.Threading.DispatcherTimer _statusTimer =
     new() { Interval = TimeSpan.FromSeconds(30) };
+
+    private readonly System.Windows.Threading.DispatcherTimer _upkeepTimer =
+    new() { Interval = TimeSpan.FromSeconds(60) };
+
     // Chat-Inkrement-Marker pro Fenster
     private int _statusBusy = 0;
 
@@ -101,6 +105,41 @@ public partial class MainWindow : Window
     public void StopTracking()
     {
         _trackingEntityId = null;
+        _vm.FollowingSteamId = null;
+        _vm.FollowingPlayerName = "";
+        _vm.FollowingPlayerAvatar = null;
+    }
+
+    private void BtnFollowPlayer_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.IsFollowing)
+        {
+            StopTracking();
+            return;
+        }
+
+        // Build dynamic menu
+        MenuFollowPlayer.Items.Clear();
+
+        var miMe = new MenuItem { Header = "Follow Me", Icon = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "\uE77B" } };
+        miMe.Click += (s, ev) => StartFollowing(_mySteamId, "Me");
+        MenuFollowPlayer.Items.Add(miMe);
+
+        if (TeamMembers.Count > 0)
+        {
+            MenuFollowPlayer.Items.Add(new Separator());
+            foreach (var member in TeamMembers)
+            {
+                if (member.SteamId == _mySteamId) continue;
+                var mi = new MenuItem { Header = $"Follow {member.Name}", Tag = member.SteamId };
+                mi.Click += (s, ev) => StartFollowing(member.SteamId, member.Name);
+                MenuFollowPlayer.Items.Add(mi);
+            }
+        }
+
+        MenuFollowPlayer.PlacementTarget = BtnFollowPlayer;
+        MenuFollowPlayer.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+        MenuFollowPlayer.IsOpen = true;
     }
 
     // Camera thumbs: Throttling & "in-flight"-Wächter
@@ -126,7 +165,6 @@ public partial class MainWindow : Window
             // zeig die ersten 6 Marker „roh“
             foreach (var m in list.Take(6))
                 AppendLog("dyn2 sample: " + m.DebugLine);
-
             // (optional) schnelle Heuristik für crate-verdächtige
             var suspects = list.Where(m =>
                 (m.RawType == 7 || m.RawType == 0) &&
@@ -145,6 +183,22 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             AppendLog("dyn2 error: " + ex.Message);
+        }
+    }
+
+    private void RefreshUpkeepUI()
+    {
+        if (_vm.Servers == null) return;
+        foreach (var server in _vm.Servers)
+        {
+            if (server.Devices == null) continue;
+            foreach (var dev in server.Devices)
+            {
+                if (dev.HasStorage)
+                {
+                    dev.NotifyUpkeepChanged();
+                }
+            }
         }
     }
     public class BoolToVisibilityConverter : IValueConverter
@@ -270,6 +324,9 @@ public partial class MainWindow : Window
         // MapTransform.Changed += (_, __) => UpdateMarkerPositions();
         HydrateSteamUiFromStorage();   // <= HIER
         // _statusTimer.Tick += async (_, __) => await UpdateServerStatusAsync();
+        _upkeepTimer.Tick += (_, __) => RefreshUpkeepUI();
+        _upkeepTimer.Start();
+
         ListServers.ItemsSource = _vm.Servers;
         
         UpdateMasterToggleState();
@@ -290,25 +347,28 @@ public partial class MainWindow : Window
             }
         }));
 
-        // One-time migration notice for v4.4 — Chat Commands & API Optimizations
-        const string AppVersion = "4.4.0-beta1";
-        bool alreadySawV44 = (TrackingService.LastSeenVersion == AppVersion);
+        // One-time migration notice for v4.5 — The Intelligence Update
+        const string AppVersion = "4.5.0";
         
-        // Popup anzeigen, wenn wir upgraden (vorherige Version vorhanden und ungleich der aktuellen)
-        bool isUpgrade = !string.IsNullOrEmpty(TrackingService.LastSeenVersion) && TrackingService.LastSeenVersion != AppVersion;
-
-        if (!alreadySawV44)
+        if (string.IsNullOrEmpty(TrackingService.LastSeenVersion))
         {
+            // Erst-Installation: Version setzen, aber kein Popup zeigen
             TrackingService.LastSeenVersion = AppVersion;
-
-            if (isUpgrade)
+        }
+        else if (TrackingService.LastSeenVersion != AppVersion)
+        {
+            // Upgrade: Popup zeigen
+            Dispatcher.InvokeAsync(() =>
             {
-                Dispatcher.InvokeAsync(() =>
+                var dlg = new Views.MigrationNoticeWindow { Owner = this };
+                dlg.ShowDialog();
+                
+                // Nur speichern, wenn der User "Don't show again" angehakt hat (Standard ist true)
+                if (dlg.DontShowAgain)
                 {
-                    var dlg = new Views.MigrationNoticeWindow { Owner = this };
-                    dlg.ShowDialog();
-                }, System.Windows.Threading.DispatcherPriority.Loaded);
-            }
+                    TrackingService.LastSeenVersion = AppVersion;
+                }
+            }, System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         // Initial tracking status update and hook global events
@@ -445,11 +505,12 @@ public partial class MainWindow : Window
         { OverlayToolMode.Erase, ToolEraseButton }
     };
 
-        _monumentWatcher.OnOilRigTriggered += (s, monumentName) =>
+        _monumentWatcher.OnOilRigTriggered += (s, data) =>
         {
             if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
+            string timeStr = data.Duration >= 800 ? "~15m" : "~12:30m";
             Dispatcher.InvokeAsync(async () =>
-                await SendTeamChatSafeAsync($"[{monumentName}] triggered! Crate unlocks in ~15m."));
+                await SendTeamChatSafeAsync($"[{data.Name}] triggered! Crate unlocks in {timeStr}."));
         };
 
         // NEU: Update Events (10m / 5m Warnungen)
@@ -3479,6 +3540,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 int curStock  = order.Stock;
 
                 // 3) Baseline updaten/erzeugen – wir wollen immer den letzten Stock dort haben
+                bool justCreated = false;
                 if (baseline == null)
                 {
                     baseline = new AlertSeenOrder
@@ -3491,6 +3553,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         Stock         = curStock
                     };
                     rule.Baseline.Add(baseline);
+                    justCreated = true;
                 }
                 else
                 {
@@ -3499,6 +3562,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
                 // 4) Wenn aktuell kein Stock → nie alerten, nur Zustand merken
                 if (curStock <= 0)
+                    continue;
+
+                // NEU: Wenn der Baseline-Eintrag gerade erst erstellt wurde, überspringen wir den Alert diesmal.
+                // Damit verhindern wir Chat-Spam bei neu angelegten Alert-Regeln für bereits existierende Shops.
+                if (justCreated)
                     continue;
 
                 // 5) Entscheiden, ob wir das als "neu" werten

@@ -1542,29 +1542,43 @@
                                                             Margin="12,0"
                                                             VerticalAlignment="Center"
                                                             Orientation="Horizontal">
-                                                            <TextBlock
-                                                                VerticalAlignment="Center"
-                                                                FontSize="13"
-                                                                FontWeight="SemiBold"
-                                                                Foreground="#EAECEE"
-                                                                Text="{Binding DisplayName, TargetNullValue=Device}"
-                                                                ToolTip="Right click to rename">
-                                                                <TextBlock.Style>
-                                                                    <Style TargetType="TextBlock">
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                                <Setter Property="Foreground" Value="Red" />
-                                                                                <Setter Property="FontStyle" Value="Italic" />
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </TextBlock.Style>
-                                                                <TextBlock.ContextMenu>
-                                                                    <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                                                        <MenuItem Click="Device_Rename_Click" Header="Rename device" />
-                                                                    </ContextMenu>
-                                                                </TextBlock.ContextMenu>
-                                                            </TextBlock>
+                                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                                <TextBlock Text="✗ " Foreground="#FF4B4B" FontSize="14" FontWeight="Bold" VerticalAlignment="Center">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="TextBlock">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                </TextBlock>
+                                                                <TextBlock
+                                                                    VerticalAlignment="Center"
+                                                                    FontSize="13"
+                                                                    FontWeight="SemiBold"
+                                                                    Foreground="#EAECEE"
+                                                                    Text="{Binding PureName, TargetNullValue=Device}"
+                                                                    ToolTip="Right click to rename">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="TextBlock">
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                                    <Setter Property="Foreground" Value="#888" />
+                                                                                    <Setter Property="FontStyle" Value="Italic" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                    <TextBlock.ContextMenu>
+                                                                        <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                                                            <MenuItem Click="Device_Rename_Click" Header="Rename device" />
+                                                                        </ContextMenu>
+                                                                    </TextBlock.ContextMenu>
+                                                                </TextBlock>
+                                                            </StackPanel>
 
                                                             <TextBlock
                                                                 Margin="8,0,0,0"
@@ -1586,10 +1600,19 @@
                                                                         <Setter Property="Background" Value="#2E3646" />
                                                                         <Setter Property="BorderBrush" Value="#4A5670" />
                                                                         <Style.Triggers>
+                                                                            <!-- ON / ACTIVE / ONLINE Status (Grün) -->
                                                                             <DataTrigger Binding="{Binding IsOn}" Value="True">
                                                                                 <Setter Property="Background" Value="#193F2A" />
                                                                                 <Setter Property="BorderBrush" Value="#2B7A4E" />
                                                                             </DataTrigger>
+                                                                            
+                                                                            <!-- Storage Monitor & Others: Immer grün wenn da -->
+                                                                            <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
+                                                                                <Setter Property="Background" Value="#193F2A" />
+                                                                                <Setter Property="BorderBrush" Value="#2B7A4E" />
+                                                                            </DataTrigger>
+                                                                            
+                                                                            <!-- MISSING / DISCONNECTED (Rot) -->
                                                                             <DataTrigger Binding="{Binding IsMissing}" Value="True">
                                                                                 <Setter Property="Background" Value="#412226" />
                                                                                 <Setter Property="BorderBrush" Value="#8E3B45" />
@@ -1604,16 +1627,41 @@
                                                                     Foreground="#EAF2FF">
                                                                     <TextBlock.Style>
                                                                         <Style TargetType="TextBlock">
-                                                                            <Setter Property="Text" Value="OFFLINE" />
+                                                                            <Setter Property="Text" Value="ONLINE" />
                                                                             <Style.Triggers>
+                                                                                <!-- MISSING -->
+                                                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                                    <Setter Property="Text" Value="OFFLINE" />
+                                                                                </DataTrigger>
+
+                                                                                <!-- Smart Switch -->
+                                                                                <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
+                                                                                    <Setter Property="Text" Value="OFF" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding Kind}" Value="Smart Switch">
+                                                                                    <Setter Property="Text" Value="OFF" />
+                                                                                </DataTrigger>
+                                                                                <MultiDataTrigger>
+                                                                                    <MultiDataTrigger.Conditions>
+                                                                                        <Condition Binding="{Binding Kind}" Value="SmartSwitch" />
+                                                                                        <Condition Binding="{Binding IsOn}" Value="True" />
+                                                                                    </MultiDataTrigger.Conditions>
+                                                                                    <Setter Property="Text" Value="ON" />
+                                                                                </MultiDataTrigger>
+                                                                                <MultiDataTrigger>
+                                                                                    <MultiDataTrigger.Conditions>
+                                                                                        <Condition Binding="{Binding Kind}" Value="Smart Switch" />
+                                                                                        <Condition Binding="{Binding IsOn}" Value="True" />
+                                                                                    </MultiDataTrigger.Conditions>
+                                                                                    <Setter Property="Text" Value="ON" />
+                                                                                </MultiDataTrigger>
+
+                                                                                <!-- Smart Alarm -->
                                                                                 <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
                                                                                     <Setter Property="Text" Value="INACTIVE" />
                                                                                 </DataTrigger>
                                                                                 <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
                                                                                     <Setter Property="Text" Value="INACTIVE" />
-                                                                                </DataTrigger>
-                                                                                <DataTrigger Binding="{Binding IsOn}" Value="True">
-                                                                                    <Setter Property="Text" Value="ONLINE" />
                                                                                 </DataTrigger>
                                                                                 <MultiDataTrigger>
                                                                                     <MultiDataTrigger.Conditions>
@@ -1629,11 +1677,10 @@
                                                                                     </MultiDataTrigger.Conditions>
                                                                                     <Setter Property="Text" Value="ACTIVE" />
                                                                                 </MultiDataTrigger>
+
+                                                                                <!-- Group -->
                                                                                 <DataTrigger Binding="{Binding IsGroup}" Value="True">
                                                                                     <Setter Property="Text" Value="GROUP" />
-                                                                                </DataTrigger>
-                                                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                                    <Setter Property="Text" Value="MISSING" />
                                                                                 </DataTrigger>
                                                                             </Style.Triggers>
                                                                         </Style>
@@ -1821,7 +1868,7 @@
                                                                 FontSize="10.5"
                                                                 FontWeight="SemiBold"
                                                                 Foreground="White"
-                                                                Text="{Binding Storage, Converter={StaticResource StorageChipConverter}, Mode=OneWay}" />
+                                                                Text="{Binding StorageSummary, Mode=OneWay}" />
 
                                                             <!--  Hover-Tooltip (ohne StaysOpen)  -->
                                                             <Border.ToolTip>
@@ -1841,12 +1888,26 @@
                                                                                     Margin="0,0,6,0"
                                                                                     Opacity="0.9"
                                                                                     Source="{StaticResource IconStorageMonitor}" />
-                                                                                <TextBlock
-                                                                                    DockPanel.Dock="Left"
-                                                                                    FontSize="13"
-                                                                                    FontWeight="SemiBold"
-                                                                                    Foreground="#EAECEE"
-                                                                                    Text="{Binding DisplayName, TargetNullValue=Storage Monitor}" />
+                                                                                <StackPanel Orientation="Horizontal">
+                                                                                    <TextBlock Text="✗ " Foreground="#FF4B4B" FontSize="13" FontWeight="Bold" VerticalAlignment="Center">
+                                                                                        <TextBlock.Style>
+                                                                                            <Style TargetType="TextBlock">
+                                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                                                <Style.Triggers>
+                                                                                                    <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                                                    </DataTrigger>
+                                                                                                </Style.Triggers>
+                                                                                            </Style>
+                                                                                        </TextBlock.Style>
+                                                                                    </TextBlock>
+                                                                                    <TextBlock
+                                                                                        DockPanel.Dock="Left"
+                                                                                        FontSize="13"
+                                                                                        FontWeight="SemiBold"
+                                                                                        Foreground="#EAECEE"
+                                                                                        Text="{Binding PureName, TargetNullValue=Storage Monitor}" />
+                                                                                </StackPanel>
                                                                             </DockPanel>
 
                                                                             <!--  Upkeep line (compact)  -->
@@ -1958,7 +2019,7 @@
                     <Run Text="Snapshot: "/>
                     <Run Text="{Binding Storage.ItemsCount, Mode=OneWay, FallbackValue=0}" />
                     <Run Text=" Items, Upkeep="/>
-                    <Run Text="{Binding Storage.UpkeepSeconds, Mode=OneWay, TargetNullValue=&#x2014;}"/>
+                    <Run Text="{Binding UpkeepSeconds, Mode=OneWay, TargetNullValue=&#x2014;}"/>
                                                         </TextBlock>
 
                                                         <ItemsControl ItemsSource="{Binding Storage.Items, Mode=OneWay}">
@@ -2083,6 +2144,7 @@
                                 <ListBox.Resources>
                                     <ContextMenu x:Key="TeamContextMenu" Style="{StaticResource DarkContextMenu}">
                                         <MenuItem Click="Team_Center_Click" Header="Center on map" />
+                                        <MenuItem Click="Team_Follow_Click" Header="Follow on Map" />
                                         <MenuItem Click="Team_OpenProfile_Click" Header="Open Steam profile" />
                                         <Separator />
                                         <MenuItem Click="Team_Promote_Click" Header="Promote to Leader" />
@@ -2939,127 +3001,244 @@
                         RenderOptions.BitmapScalingMode="HighQuality"
                         Stretch="None" />
 
-                    <!--  TIME OVERLAY (Top Left)  -->
-                    <Border
-                        x:Name="TimeOverlay"
+                    <StackPanel
                         Margin="15"
-                        Padding="8,4"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        Panel.ZIndex="1000"
-                        Background="#AA16181C"
-                        BorderBrush="#40FFFFFF"
-                        BorderThickness="1"
-                        CornerRadius="8">
-                        <StackPanel Orientation="Horizontal">
-                            <!--  Unknown Time Icon (Clock)  -->
-                            <TextBlock
-                                Margin="0,0,6,0"
-                                VerticalAlignment="Center"
-                                FontFamily="Segoe MDL2 Assets"
-                                FontSize="14"
-                                Foreground="#8D98A8"
-                                Text="&#xE916;">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ServerTime}" Value="-">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding ServerTime}" Value="–">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding ServerTime}" Value="">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding ServerTime}" Value="{x:Null}">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-
-                            <!--  Day Icon  -->
-                            <TextBlock
-                                Margin="0,0,6,0"
-                                VerticalAlignment="Center"
-                                FontFamily="Segoe MDL2 Assets"
-                                FontSize="14"
-                                Foreground="#FFD166"
-                                Text="&#xE706;">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsDay}" Value="True">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </DataTrigger>
-                                            <!--  Hide if unknown  -->
-                                            <DataTrigger Binding="{Binding ServerTime}" Value="-">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding ServerTime}" Value="–">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-
-                            <!--  Night Icon  -->
-                            <TextBlock
-                                Margin="0,0,6,0"
-                                VerticalAlignment="Center"
-                                FontFamily="Segoe MDL2 Assets"
-                                FontSize="14"
-                                Foreground="#A5B4FC"
-                                Text="&#xE708;">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsDay}" Value="False">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </DataTrigger>
-                                            <!--  Hide if unknown  -->
-                                            <DataTrigger Binding="{Binding ServerTime}" Value="-">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding ServerTime}" Value="–">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-
-                            <StackPanel VerticalAlignment="Center">
+                        Orientation="Horizontal"
+                        Panel.ZIndex="1000">
+                        <!--  TIME OVERLAY  -->
+                        <Border
+                            x:Name="TimeOverlay"
+                            Padding="8,4"
+                            Background="#AA16181C"
+                            BorderBrush="#40FFFFFF"
+                            BorderThickness="1"
+                            CornerRadius="8">
+                            <StackPanel Orientation="Horizontal">
+                                <!--  Unknown Time Icon (Clock)  -->
                                 <TextBlock
-                                    FontSize="12"
-                                    FontWeight="Bold"
-                                    Foreground="White"
-                                    Text="{Binding ServerTime}" />
-                                <TextBlock
-                                    Margin="0,-1,0,0"
-                                    FontSize="9"
+                                    Margin="0,0,6,0"
+                                    VerticalAlignment="Center"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    FontSize="14"
                                     Foreground="#8D98A8"
-                                    Text="{Binding TimeUntilNextPhase}">
+                                    Text="&#xE916;">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
-                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="Visibility" Value="Collapsed" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding TimeUntilNextPhase}" Value="">
+                                                <DataTrigger Binding="{Binding ServerTime}" Value="-">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ServerTime}" Value="–">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ServerTime}" Value="">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ServerTime}" Value="{x:Null}">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+
+                                <!--  Day Icon  -->
+                                <TextBlock
+                                    Margin="0,0,6,0"
+                                    VerticalAlignment="Center"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    FontSize="14"
+                                    Foreground="#FFD166"
+                                    Text="&#xE706;">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDay}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                                <!--  Hide if unknown  -->
+                                                <DataTrigger Binding="{Binding ServerTime}" Value="-">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ServerTime}" Value="–">
                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
+
+                                <!--  Night Icon  -->
+                                <TextBlock
+                                    Margin="0,0,6,0"
+                                    VerticalAlignment="Center"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    FontSize="14"
+                                    Foreground="#A5B4FC"
+                                    Text="&#xE708;">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDay}" Value="False">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                                <!--  Hide if unknown  -->
+                                                <DataTrigger Binding="{Binding ServerTime}" Value="-">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ServerTime}" Value="–">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock
+                                        FontSize="12"
+                                        FontWeight="Bold"
+                                        Foreground="White"
+                                        Text="{Binding ServerTime}" />
+                                    <TextBlock
+                                        Margin="0,-1,0,0"
+                                        FontSize="9"
+                                        Foreground="#8D98A8"
+                                        Text="{Binding TimeUntilNextPhase}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding TimeUntilNextPhase}" Value="">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-                    </Border>
+                        </Border>
+
+                        <Border
+                            x:Name="FollowOverlay"
+                            Margin="8,0,0,0"
+                            Padding="2"
+                            Background="#AA16181C"
+                            BorderBrush="#40FFFFFF"
+                            BorderThickness="1"
+                            CornerRadius="8">
+                            <Grid>
+                                <!--  Active Glow  -->
+                                <Ellipse
+                                    Width="32"
+                                    Height="32"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Fill="#4000C8FF">
+                                    <Ellipse.Effect>
+                                        <BlurEffect Radius="15" />
+                                    </Ellipse.Effect>
+                                    <Ellipse.Style>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsFollowing}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                </Ellipse>
+
+                                <Button
+                                    x:Name="BtnFollowPlayer"
+                                    Padding="4"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    Click="BtnFollowPlayer_Click"
+                                    Style="{StaticResource GhostButton}"
+                                    ToolTip="Follow Player on Map">
+                                    <StackPanel Orientation="Horizontal">
+                                        <!--  Avatar or Default Icon  -->
+                                        <Grid Width="24" Height="24">
+                                            <!--  Default Icon (Placeholder)  -->
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                FontFamily="Segoe MDL2 Assets"
+                                                FontSize="14"
+                                                Foreground="#8D98A8"
+                                                Text="&#xE77B;">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsFollowing}" Value="True">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+
+                                            <!--  Real Avatar  -->
+                                            <Image
+                                                Source="{Binding FollowingPlayerAvatar}"
+                                                Stretch="UniformToFill"
+                                                Width="24"
+                                                Height="24"
+                                                ClipToBounds="True">
+                                                <Image.Clip>
+                                                    <EllipseGeometry Center="12,12" RadiusX="12" RadiusY="12" />
+                                                </Image.Clip>
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsFollowing}" Value="True">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                <Setter Property="Effect">
+                                                                    <Setter.Value>
+                                                                        <DropShadowEffect
+                                                                            BlurRadius="8"
+                                                                            Opacity="0.8"
+                                                                            ShadowDepth="0"
+                                                                            Color="Cyan" />
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+
+                                            <!--  Active Icon Overlay (small dot or similar if needed)  -->
+                                        </Grid>
+
+                                        <TextBlock
+                                            x:Name="IconFollow"
+                                            Margin="4,0,0,0"
+                                            VerticalAlignment="Center"
+                                            FontFamily="Segoe MDL2 Assets"
+                                            FontSize="10"
+                                            Foreground="#8D98A8"
+                                            Text="&#xE70D;" />
+                                    </StackPanel>
+                                    <Button.ContextMenu>
+                                        <ContextMenu x:Name="MenuFollowPlayer" Style="{StaticResource DarkContextMenu}">
+                                            <!--  Dynamically filled  -->
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
 
                     <!--  LIVE EVENT DOCK (Top Right)  -->
                     <StackPanel

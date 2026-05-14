@@ -2,6 +2,7 @@ using RustPlusDesk.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,6 +15,7 @@ namespace RustPlusDesk.Views;
 public partial class MainWindow
 {
     private bool _deepSeaActive = false;
+    private int _shopPollLock = 0;
     private bool _firstShopPollDone = false;         // true after first successful shop poll
     private DateTime? _deepSeaSpawnTime = null;       // when we witnessed the spawn (null = mid-event or not yet)
     private DateTime? _deepSeaDespawnTime = null;     // when we witnessed the despawn (null = active or unknown)
@@ -135,7 +137,7 @@ public partial class MainWindow
             _shopTimer.Tick += async (_, __) => await PollShopsOnceAsync();
             _shopTimer.Start();
 
-            await PollShopsOnceAsync();
+            await PollShopsOnceAsync(force: true);
             await Dispatcher.InvokeAsync(() =>
             {
                 RefreshShopIconScales();
@@ -163,30 +165,50 @@ public partial class MainWindow
         }
     }
 
-    private async Task PollShopsOnceAsync()
+    private async Task PollShopsOnceAsync(bool force = false)
     {
         if (_rust is not RustPlusClientReal real) return;
-
-        // Skip low-priority poll when server is under stress
-        if (IsApiUnderPressure)
-        {
-            return;
-        }
+        if (Interlocked.CompareExchange(ref _shopPollLock, 1, 0) != 0) return;
 
         try
         {
+            // Skip low-priority poll when server is under stress, UNLESS forced
+            if (IsApiUnderPressure && !force)
+            {
+                return;
+            }
+
             List<RustPlusClientReal.ShopMarker> shops = null;
             int retries = 0;
             while (retries < 3)
             {
                 shops = await real.GetVendingShopsAsync();
-                if (shops != null && (shops.Count > 0 || _firstShopPollDone)) break;
+                
+                // If we got null, it's a technical error -> retry
+                if (shops == null)
+                {
+                    AppendLog($"[shops] Poll failed (null), retrying in 2s ({retries + 1}/3)...");
+                }
+                // If we got 0 shops but we previously had many, it's likely a truncation/rate-limit error -> retry
+                else if (shops.Count == 0 && _lastShops?.Count > 5)
+                {
+                    AppendLog($"[shops] Poll returned 0 but previously had {_lastShops.Count}, retrying in 2s ({retries + 1}/3)...");
+                }
+                else
+                {
+                    // Legit response (either has shops, or server is truly empty/new)
+                    break;
+                }
 
-                AppendLog($"[shops] Initial poll returned 0 shops, retrying in 2s ({retries + 1}/3)...");
                 retries++;
                 await Task.Delay(2000);
             }
-            if (shops == null) return;
+            
+            if (shops == null) 
+            {
+                AppendLog("[shops] Poll failed after retries. Preserving last known state.");
+                return;
+            }
 
             UpdateShopsUI(shops);
             _lastShops = shops;
@@ -218,6 +240,10 @@ public partial class MainWindow
         }
         catch (Exception)
         {
+        }
+        finally
+        {
+            Interlocked.Exchange(ref _shopPollLock, 0);
         }
     }
 
@@ -327,10 +353,9 @@ public partial class MainWindow
                                 $"Suspicious shop {(snap.Label ?? "Shop")} " +
                                 $"[{GetGridLabel(snap)}] was online {Math.Round(lived.TotalSeconds)}s, sold {firstFew}";
 
+                            life.AnnouncedSuspicious = true; // Set BEFORE sending to prevent race condition spam
                             _ = SendTeamChatSafeAsync(msg);
                         }
-
-                        life.AnnouncedSuspicious = true;
                     }
                 }
 
@@ -461,7 +486,8 @@ public partial class MainWindow
                         icon.Opacity = 1.0;
                         icon.Width = icon.Height = 20;
                         // Update source if needed
-                        if (icon.Source is System.Windows.Media.Imaging.BitmapImage bi && !bi.UriSource.ToString().Contains(allEmpty ? "orange" : "vending.png"))
+                        var bi = icon.Source as System.Windows.Media.Imaging.BitmapImage;
+                        if (bi == null || bi.UriSource.ToString() != iconUri)
                         {
                             icon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(iconUri));
                         }

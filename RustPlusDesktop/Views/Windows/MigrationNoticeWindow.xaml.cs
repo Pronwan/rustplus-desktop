@@ -4,6 +4,7 @@ namespace RustPlusDesk.Views;
 
 public partial class MigrationNoticeWindow : Window
 {
+    public bool DontShowAgain => ChkDontShow.IsChecked == true;
     public bool ShouldReset { get; private set; } = false;
 
     public MigrationNoticeWindow()
@@ -11,7 +12,7 @@ public partial class MigrationNoticeWindow : Window
         InitializeComponent();
     }
 
-    private void BtnReset_Click(object sender, RoutedEventArgs e)
+    private void BtnOk_Click(object sender, RoutedEventArgs e)
     {
         ShouldReset = true;
         Close();
