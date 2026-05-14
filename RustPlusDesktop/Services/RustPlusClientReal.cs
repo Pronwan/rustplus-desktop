@@ -2,6 +2,7 @@
 using RustPlusApi;                 // NuGet: HandyS11.RustPlusApi
 using RustPlusApi.Data.Events;
 using RustPlusDesk.Models;
+using RustPlusDesk.Helpers;
 using RustPlusDesk.Views;
 using System;
 using System.Collections;
@@ -786,8 +787,8 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         }
 
         // ---- Node + rustplus.js Verzeichnis finden ----
-        string? nodeExe = FindBundledNode();
-        if (nodeExe == null) throw new FileNotFoundException("Node Runtime not found (runtime/node-win-x64/node.exe).");
+        string? nodeExe = RuntimeHelper.FindBundledNode();
+        if (nodeExe == null) throw new FileNotFoundException(RuntimeHelper.GetNodeNotFoundMessage());
 
         string? pkgRoot = FindRustplusJsPackageRoot(); // Ordner, der *node_modules* enthält
         if (pkgRoot == null) throw new DirectoryNotFoundException("rustplus.js Package not found (runtime/rustplus-cli/node_modules).");
@@ -1157,43 +1158,8 @@ rp.connect();
         }
 
         // --- lokale Finder ---
-        static string? FindBundledNode()
-        {
-            var p1 = Path.Combine(AppContext.BaseDirectory, "runtime", "node-win-x64", "node.exe");
-            if (File.Exists(p1)) return p1;
-            var p2 = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "runtime", "node-win-x64", "node.exe"));
-            return File.Exists(p2) ? p2 : null;
-        }
-
-        static string? FindRustplusJsPackageRoot()
-        {
-            // wir brauchen den Ordner, der die *node_modules* enthält
-            var candidates = new[]
-            {
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "RustPlusDesk","runtime","rustplus-cli"), // Release (ZIP entpackt)
-            Path.Combine(AppContext.BaseDirectory, "runtime","rustplus-cli"), // neben EXE
-            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..","..","..","runtime","rustplus-cli")) // Dev
-        };
-            foreach (var root in candidates)
-            {
-                if (Directory.Exists(Path.Combine(root, "node_modules", "@liamcottle", "rustplus.js")))
-                    return root;
-            }
-            return null;
-        }
+        static string? FindRustplusJsPackageRoot() => RuntimeHelper.FindRustplusJsPackageRoot();
     }
-
-    // --- minimaler Node-Finder (kopie deiner Pairing-Helfer, gekürzt) ---
-    private static string? FindBundledNode()
-    {
-        var p1 = Path.Combine(AppContext.BaseDirectory, "runtime", "node-win-x64", "node.exe");
-        if (File.Exists(p1)) return p1;
-        var p2 = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "runtime", "node-win-x64", "node.exe"));
-        return File.Exists(p2) ? p2 : null;
-    }
-
-
 
     private static Delegate BuildWildcardHandler(EventInfo ev, Action<object, object> onInvoke)
     {
