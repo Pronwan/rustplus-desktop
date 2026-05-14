@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:services="clr-namespace:RustPlusDesk.Services"
     xmlns:views="clr-namespace:RustPlusDesk.Views"
     xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
     Title="RUST+ DESKTOP"
@@ -793,6 +794,107 @@
 
         <conv:NotNullToBoolConverter x:Key="NotNull" />
 
+        <DataTemplate x:Key="TrackedPlayerTemplate" DataType="{x:Type services:TrackedPlayer}">
+            <Grid
+                x:Name="PlayerRow"
+                Margin="0,2"
+                Background="Transparent">
+                <Grid.ContextMenu>
+                    <ContextMenu Style="{StaticResource DarkContextMenu}">
+                        <MenuItem
+                            Click="BtnViewTracked_Click"
+                            Header="View Profile"
+                            Icon="{ui:SymbolIcon Symbol=Eye24}" />
+                        <MenuItem
+                            Click="BtnGroupTracked_Click"
+                            Header="Change Group"
+                            Icon="{ui:SymbolIcon Symbol=Folder24}" />
+                        <MenuItem
+                            Click="BtnRenameTracked_Click"
+                            Header="Rename"
+                            Icon="{ui:SymbolIcon Symbol=Edit24}" />
+                        <Separator />
+                        <MenuItem
+                            Click="BtnRemoveTracked_Click"
+                            Foreground="{DynamicResource SystemFillColorCriticalBrush}"
+                            Header="Remove Tracked"
+                            Icon="{ui:SymbolIcon Symbol=Delete24}" />
+                    </ContextMenu>
+                </Grid.ContextMenu>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!--  Player Info  -->
+                <StackPanel
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Ellipse
+                        x:Name="StatusDot"
+                        Width="8"
+                        Height="8"
+                        Margin="0,0,8,0"
+                        VerticalAlignment="Center"
+                        Fill="#666666" />
+                    <TextBlock
+                        x:Name="TxtName"
+                        VerticalAlignment="Center"
+                        FontSize="13"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="{Binding Name}"
+                        TextTrimming="CharacterEllipsis"
+                        ToolTip="{Binding Name}" />
+                </StackPanel>
+
+                <!--  Timestamp / Playtime  -->
+                <TextBlock
+                    x:Name="TxtPlayTime"
+                    Grid.Column="1"
+                    Margin="8,0,8,0"
+                    VerticalAlignment="Center"
+                    FontSize="10"
+                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                    Text="{Binding PlayTimeStr}"
+                    Visibility="Collapsed" />
+
+                <!--  Actions  -->
+                <StackPanel
+                    Grid.Column="2"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <ui:Button
+                        Padding="8,2"
+                        Appearance="Transparent"
+                        Click="BtnViewTracked_Click"
+                        Content="View"
+                        FontSize="11"
+                        Tag="{Binding BMId}" />
+
+                    <ui:Button
+                        x:Name="BtnMore"
+                        Padding="4"
+                        Appearance="Transparent"
+                        Click="BtnMore_Click"
+                        Icon="{ui:SymbolIcon Symbol=MoreHorizontal24}"
+                        Opacity="0"
+                        ToolTip="More Options" />
+                </StackPanel>
+            </Grid>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsOnline}" Value="True">
+                    <Setter TargetName="StatusDot" Property="Fill" Value="#62D38B" />
+                    <Setter TargetName="TxtName" Property="Foreground" Value="White" />
+                    <Setter TargetName="TxtPlayTime" Property="Visibility" Value="Visible" />
+                </DataTrigger>
+                <Trigger SourceName="PlayerRow" Property="IsMouseOver" Value="True">
+                    <Setter TargetName="BtnMore" Property="Opacity" Value="1" />
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
     </ui:FluentWindow.Resources>
 
     <Grid>
@@ -1303,7 +1405,7 @@
 
                                 <!--  BattleMetrics  -->
                                 <ui:Button
-                                    x:Name="BtnServerBM"
+                                    x:Name="BtnServerBMHeader"
                                     Margin="4,0,0,0"
                                     Padding="10,4"
                                     Appearance="Secondary"
@@ -2521,8 +2623,8 @@
                             <TabItem Header="Online" Style="{StaticResource PrettyTabItem}">
                                 <Border
                                     Padding="12"
-                                    Background="#801a1c1e"
-                                    BorderBrush="#33ffffff"
+                                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                                     BorderThickness="1"
                                     CornerRadius="8"
                                     TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
@@ -2538,53 +2640,58 @@
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
                                             <TextBlock
                                                 VerticalAlignment="Center"
                                                 FontSize="16"
                                                 FontWeight="Bold"
-                                                Foreground="White"
+                                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                 Text="Online Players" />
-                                            <Button
+
+                                            <ui:Button
+                                                x:Name="BtnServerBMPlayers"
                                                 Grid.Column="1"
+                                                Margin="0,0,8,0"
                                                 Padding="8,4"
+                                                Click="BtnServerBM_Click"
+                                                Content="Battlemetrics"
+                                                Icon="Open24"
+                                                Visibility="Collapsed" />
+
+                                            <ui:Button
+                                                Grid.Column="2"
+                                                Padding="8,4"
+                                                Appearance="Secondary"
                                                 Click="BtnShowOnline_Click"
                                                 Content="Refresh"
-                                                Style="{StaticResource GhostButton}" />
+                                                Icon="ArrowClockwise24" />
                                         </Grid>
 
                                         <DockPanel Grid.Row="1" Margin="0,0,0,8">
-                                            <Button
+                                            <ui:Button
                                                 x:Name="BtnAddManual"
                                                 Margin="4,0,0,0"
                                                 Padding="8,4"
+                                                Appearance="Primary"
                                                 Click="BtnAddManual_Click"
                                                 Content="Track ID"
-                                                DockPanel.Dock="Right"
-                                                Style="{StaticResource GhostButton}" />
-                                            <TextBox
+                                                DockPanel.Dock="Right" />
+                                            <ui:TextBox
                                                 x:Name="TxtManualBMId"
-                                                Padding="6,4"
-                                                Background="#25272a"
-                                                BorderBrush="{DynamicResource CardBorder}"
-                                                BorderThickness="1"
-                                                Foreground="Gray"
                                                 GotFocus="TxtManualBMId_GotFocus"
                                                 LostFocus="TxtManualBMId_LostFocus"
+                                                PlaceholderText="Manual Battlemetrics ID..."
                                                 Text="Manual BM ID..." />
                                         </DockPanel>
 
-                                        <TextBox
+                                        <ui:TextBox
                                             x:Name="TxtOnlineFilter"
                                             Grid.Row="2"
                                             Margin="0,0,0,8"
-                                            Padding="6,4"
-                                            Background="#1a1c1e"
-                                            BorderBrush="{DynamicResource CardBorder}"
-                                            BorderThickness="1"
-                                            Foreground="White"
                                             GotFocus="TxtOnlineFilter_GotFocus"
                                             LostFocus="TxtOnlineFilter_LostFocus"
+                                            PlaceholderText="Filter players..."
                                             TextChanged="TxtOnlineFilter_TextChanged"
                                             Visibility="Collapsed" />
 
@@ -2595,20 +2702,17 @@
                                             VerticalAlignment="Center"
                                             Visibility="Collapsed">
                                             <StackPanel>
-                                                <ProgressBar
+                                                <ui:ProgressRing
                                                     x:Name="PbOnlineLoading"
-                                                    Width="120"
-                                                    Height="2"
+                                                    Width="32"
+                                                    Height="32"
                                                     Margin="0,0,0,12"
-                                                    Background="#111"
-                                                    BorderThickness="0"
-                                                    Foreground="{DynamicResource CbAccent}"
                                                     IsIndeterminate="True" />
                                                 <TextBlock
                                                     x:Name="TxtOnlinePlayersStatus"
                                                     HorizontalAlignment="Center"
-                                                    FontSize="11"
-                                                    Foreground="{DynamicResource TextSubtle}"
+                                                    FontSize="12"
+                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                     Text="Loading players..."
                                                     TextAlignment="Center"
                                                     TextWrapping="Wrap" />
@@ -2623,7 +2727,7 @@
                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Grid Margin="0,2">
+                                                    <Grid Margin="0,4">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="*" />
                                                             <ColumnDefinition Width="Auto" />
@@ -2635,12 +2739,13 @@
                                                                 x:Name="StatusDot"
                                                                 Width="8"
                                                                 Height="8"
-                                                                Margin="0,0,6,0"
+                                                                Margin="0,0,8,0"
                                                                 VerticalAlignment="Center"
-                                                                Fill="{DynamicResource CbAccent}" />
+                                                                Fill="{DynamicResource SystemAccentColorPrimaryBrush}" />
                                                             <TextBlock
                                                                 MaxWidth="160"
                                                                 VerticalAlignment="Center"
+                                                                FontSize="13"
                                                                 FontWeight="SemiBold"
                                                                 Text="{Binding Name}"
                                                                 TextTrimming="CharacterEllipsis"
@@ -2648,44 +2753,46 @@
                                                         </StackPanel>
                                                         <TextBlock
                                                             Grid.Column="1"
-                                                            Width="40"
                                                             Margin="0,0,8,0"
                                                             VerticalAlignment="Center"
-                                                            FontSize="10"
-                                                            Foreground="{DynamicResource TextSubtle}"
+                                                            FontSize="11"
+                                                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
                                                             Text="{Binding PlayTimeStr}" />
-                                                        <Button
+                                                        <ui:Button
                                                             x:Name="BtnPlayerBM"
                                                             Grid.Column="2"
                                                             Margin="0,0,4,0"
-                                                            Padding="4,2"
+                                                            Padding="6,2"
+                                                            Appearance="Secondary"
                                                             Click="BtnPlayerBM_Click"
                                                             Content="BM"
-                                                            FontSize="10"
-                                                            Style="{StaticResource GhostButton}"
+                                                            FontSize="11"
                                                             Tag="{Binding}" />
-                                                        <Button
+                                                        <ui:Button
                                                             x:Name="BtnAction"
                                                             Grid.Column="3"
-                                                            Width="45"
+                                                            Width="60"
                                                             Margin="0"
                                                             Padding="6,2"
+                                                            Appearance="Secondary"
                                                             Click="BtnTrackPlayer_Click"
                                                             Content="Track"
-                                                            FontSize="10"
-                                                            Style="{StaticResource GhostButton}"
+                                                            FontSize="11"
                                                             Tag="{Binding}" />
                                                     </Grid>
                                                     <DataTemplate.Triggers>
                                                         <DataTrigger Binding="{Binding IsTracked}" Value="True">
                                                             <Setter TargetName="StatusDot" Property="Fill" Value="#FFD166" />
                                                             <Setter TargetName="BtnAction" Property="Content" Value="Details" />
+                                                            <Setter TargetName="BtnAction" Property="Appearance" Value="Primary" />
                                                         </DataTrigger>
                                                         <Trigger Property="IsMouseOver" Value="False">
-                                                            <Setter TargetName="BtnAction" Property="Opacity" Value="0.2" />
+                                                            <Setter TargetName="BtnAction" Property="Opacity" Value="0.6" />
+                                                            <Setter TargetName="BtnPlayerBM" Property="Opacity" Value="0.6" />
                                                         </Trigger>
                                                         <Trigger Property="IsMouseOver" Value="True">
                                                             <Setter TargetName="BtnAction" Property="Opacity" Value="1" />
+                                                            <Setter TargetName="BtnPlayerBM" Property="Opacity" Value="1" />
                                                         </Trigger>
                                                     </DataTemplate.Triggers>
                                                 </DataTemplate>
@@ -2699,8 +2806,8 @@
                             <TabItem Header="Tracked" Style="{StaticResource PrettyTabItem}">
                                 <Border
                                     Padding="12"
-                                    Background="#801a1c1e"
-                                    BorderBrush="#33ffffff"
+                                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                                     BorderThickness="1"
                                     CornerRadius="8"
                                     TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
@@ -2721,27 +2828,24 @@
                                                 VerticalAlignment="Center"
                                                 FontSize="16"
                                                 FontWeight="Bold"
-                                                Foreground="White"
+                                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                 Text="Tracked Players" />
-                                            <Button
+                                            <ui:Button
                                                 Grid.Column="1"
                                                 Padding="8,4"
+                                                Appearance="Secondary"
                                                 Click="BtnManageGroups_Click"
                                                 Content="Manage Groups"
-                                                Style="{StaticResource GhostButton}" />
+                                                Icon="Group24" />
                                         </Grid>
 
-                                        <TextBox
+                                        <ui:TextBox
                                             x:Name="TxtTrackedFilter"
                                             Grid.Row="1"
                                             Margin="0,0,0,8"
-                                            Padding="6,4"
-                                            Background="#1a1c1e"
-                                            BorderBrush="{DynamicResource CardBorder}"
-                                            BorderThickness="1"
-                                            Foreground="Gray"
                                             GotFocus="TxtTrackedFilter_GotFocus"
                                             LostFocus="TxtTrackedFilter_LostFocus"
+                                            PlaceholderText="Filter players..."
                                             Text="Filter players..."
                                             TextChanged="TxtTrackedFilter_TextChanged" />
 
@@ -2749,13 +2853,15 @@
                                             <StackPanel x:Name="ListTrackedPlayers" />
                                         </ScrollViewer>
 
-                                        <Button
+                                        <ui:Button
                                             x:Name="BtnViewTracking"
                                             Grid.Row="3"
                                             Margin="0,8,0,0"
+                                            HorizontalAlignment="Stretch"
+                                            Appearance="Primary"
                                             Click="BtnViewAllAnalysis_Click"
-                                            Content="View All Analysis Report"
-                                            Style="{StaticResource PrimaryButton}" />
+                                            Content="View Full Analysis Report"
+                                            Icon="DataHistogram24" />
                                     </Grid>
                                 </Border>
                             </TabItem>
