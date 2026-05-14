@@ -47,6 +47,10 @@ using System.Windows.Threading;
 using System.Xml.Linq;
 using static RustPlusDesk.Services.RustPlusClientReal;
 using IOPath = System.IO.Path;
+using RustPlusDesk.Helpers;
+using Wpf.Ui;
+using Wpf.Ui.Appearance;
+using ui = Wpf.Ui.Controls;
 
 
 namespace RustPlusDesk.Views;
@@ -258,8 +262,14 @@ public partial class MainWindow : Window
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
         InitializeComponent();
-        this.Title = $"RustPlusDesk v{AppInfo.VersionRaw}";
+        _vm.IsInitializing = true;
         
+        // ── WinUI 3: Apply OS-level Mica backdrop via DWM ────────────────────
+        WindowBackdropHelper.Apply(this, WindowBackdropHelper.BackdropType.Mica);
+        // ── Wpf.Ui: Apply Fluent dark theme to all controls ───────────────────
+        ApplicationThemeManager.Apply(ApplicationTheme.Dark, updateAccent: true);
+        
+        this.Title = $"RustPlusDesk v{AppInfo.VersionRaw}";
         if (FindName("TxtVersion") is TextBlock txt)
             txt.Text = $"v{AppInfo.VersionRaw}";
         InitCameraUi();
@@ -367,6 +377,7 @@ public partial class MainWindow : Window
         TrackingService.OnServerInfoUpdated -= OnServerInfoUpdated;
         TrackingService.OnServerInfoUpdated += OnServerInfoUpdated;
         OnOnlinePlayersUpdated();
+        _vm.IsInitializing = false;
         
         // Einmal erzeugen (falls du den Stub behalten willst: try/fallback – aber nur EINMAL zuweisen)
 
@@ -381,24 +392,28 @@ public partial class MainWindow : Window
         }
 
         // Status → UI
-        _pairing.Listening += (_, __) => Dispatcher.Invoke(() =>
+        _pairing.Listening += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
         {
             _vm.IsPairingRunning = true;
+            _vm.IsPairingBusy = true; // Update UI button state
             TxtPairingState.Text = "Pairing: listening…";
-        });
-        _pairing.Stopped += (_, __) => Dispatcher.Invoke(() =>
+        }));
+        _pairing.Stopped += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
         {
             _vm.IsPairingRunning = false;
+            _vm.IsPairingBusy = false; // Update UI button state
             TxtPairingState.Text = "Pairing: stopped";
-        });
-        _pairing.Failed += (_, msg) => Dispatcher.Invoke(() =>
+        }));
+        _pairing.RegistrationCompleted += (_, __) => Dispatcher.BeginInvoke(new Action(() => _vm.NotifyFcmChanged()));
+        _pairing.Failed += (_, msg) => Dispatcher.BeginInvoke(new Action(() =>
         {
             _vm.IsPairingRunning = false;
-            TxtPairingState.Text = "Pairing: listening…"; // retry silently
+            _vm.IsPairingBusy = false; // Error occurred, not busy anymore
+            TxtPairingState.Text = "Pairing: failed"; // show failure text
             AppendLog("[listener] " + msg);
             // Auto-retry after a short delay
-            _ = Task.Delay(5000).ContinueWith(_ => Dispatcher.Invoke(() => StartPairingSilent()));
-        });
+            _ = Task.Delay(5000).ContinueWith(_ => Dispatcher.BeginInvoke(new Action(() => StartPairingSilent())));
+        }));
 
 
         _rust = new RustPlusClientReal(AppendLog);
@@ -2071,6 +2086,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             // Only fallback to _vm.SteamId64 if the payload is missing it.
             var keySteam = !string.IsNullOrEmpty(e.SteamId64) ? e.SteamId64 : _vm.SteamId64;
 
+            // Save SteamID globally if we just received a new one
+            if (!string.IsNullOrEmpty(e.SteamId64) && e.SteamId64 != TrackingService.SteamId64)
+            {
+                TrackingService.SteamId64 = e.SteamId64;
+                _vm.SteamId64 = e.SteamId64;
+                AppendLog($"[pairing] Captured SteamID {e.SteamId64} from pairing response.");
+            }
+
             var prof = _vm.Servers.FirstOrDefault(s =>
                 s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
                 s.Port == keyPort &&
@@ -2241,13 +2264,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (_listenerStarting || _pairing.IsRunning) return;
         _listenerStarting = true;
-        _vm.IsPairingBusy = true;
-        TxtPairingState.Text = "Pairing: listening…";
+        _vm.IsPairingBusy = true; // Tell UI we are trying to start
+        TxtPairingState.Text = "Pairing: starting…";
         _ = Task.Run(async () =>
         {
             try { await _pairing.StartAsync(); }
-            catch (Exception ex) { AppendLog("[pairing] silent start error: " + ex.Message); }
-            finally { Dispatcher.Invoke(() => { _listenerStarting = false; _vm.IsPairingBusy = false; }); }
+            catch (Exception ex) 
+            { 
+                AppendLog("[pairing] silent start error: " + ex.Message); 
+                Dispatcher.Invoke(() => { _vm.IsPairingBusy = false; TxtPairingState.Text = "Pairing: error"; });
+            }
+            finally { Dispatcher.Invoke(() => { _listenerStarting = false; }); }
         });
     }
 
@@ -2367,6 +2394,23 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         await StartPairingListenerUiAsync();
     }
 
+    private async void BtnStopPairing_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (_pairing.IsRunning)
+            {
+                AppendLog("Stopping pairing listener...");
+                await Task.Run(async () => await _pairing.StopAsync());
+                _vm.IsPairingBusy = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("Error on stop: " + ex.Message);
+            _vm.IsPairingBusy = false;
+        }
+    }
 
     private void AppendLog(string line)
     {
@@ -2432,13 +2476,22 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
         }
 
-        // Label setzen + Login-Button ggf. deaktivieren
-        var sidText = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "(not connected)" : _vm.SteamId64;
+        // Update UI Elements
+        var sidText = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Not Logged In" : _vm.SteamId64;
         TxtSteamId.Text = sidText;
-        BtnSteamLogin.IsEnabled = string.IsNullOrWhiteSpace(_vm.SteamId64);
+        TxtSteamName.Text = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Steam Account" : "Logged In";
+        
+        BtnSteamLogin.Content = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Login" : "Switch";
+        BtnSteamLogin.Icon = new Wpf.Ui.Controls.SymbolIcon 
+        { 
+            Symbol = string.IsNullOrWhiteSpace(_vm.SteamId64) ? Wpf.Ui.Controls.SymbolRegular.PersonArrowRight24 : Wpf.Ui.Controls.SymbolRegular.ArrowSwap24 
+        };
 
         // Avatar versuchen zu laden (nur wenn wir eine ID haben)
         _ = TryLoadSteamAvatarAsync(_vm.SteamId64);
+
+        // Notify VM of FCM data (for expiry badge)
+        _vm.NotifyFcmChanged();
     }
 
     private async Task TryLoadSteamAvatarAsync(string? steamId64)
@@ -2473,7 +2526,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 ImgSteam.Visibility = Visibility.Visible;
             }
             if (nameMatch.Success)
+            {
+                TxtSteamName.Text = nameMatch.Groups[1].Value;
                 ImgSteam.ToolTip = nameMatch.Groups[1].Value;
+            }
         }
         catch
         {
@@ -3596,6 +3652,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         Dispatcher.Invoke(() =>
         {
             RefreshOnlinePlayersList();
+            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
             // Update tracking status indicator
             bool anyTracked = TrackingService.GetTrackedPlayers().Count > 0;
             _vm.IsTrackingActive = TrackingService.IsTracking;
@@ -3693,33 +3750,34 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private async void BtnShowOnline_Click(object sender, RoutedEventArgs e)
     {
-        // When user opens the popup, trigger a fresh fetch
-        if (BtnShowOnline.IsChecked == true)
+        if (sender is Button b && b.Name == "BtnShowOnline")
         {
-            if (_vm.Selected == null || string.IsNullOrEmpty(_vm.Selected.Host))
-            {
-                TxtOnlinePlayersStatus.Text = "Connect to a server to load players list";
-                PnlOnlineStatus.Visibility = Visibility.Visible;
-                PbOnlineLoading.Visibility = Visibility.Collapsed;
-                ListOnlinePlayers.ItemsSource = null;
-                return;
-            }
+            MainTabs.SelectedIndex = 2; // Players tab
+        }
 
-            TxtOnlinePlayersStatus.Text = "Synchronizing with Battlemetrics...";
+        if (_vm.Selected == null || string.IsNullOrEmpty(_vm.Selected.Host))
+        {
+            TxtOnlinePlayersStatus.Text = "Connect to a server to load players list";
             PnlOnlineStatus.Visibility = Visibility.Visible;
-            PbOnlineLoading.Visibility = Visibility.Visible;
+            PbOnlineLoading.Visibility = Visibility.Collapsed;
             ListOnlinePlayers.ItemsSource = null;
+            return;
+        }
 
-            try
-            {
-                await TrackingService.FetchOnlinePlayersNowAsync();
-            }
-            catch (Exception ex)
-            {
-                TxtOnlinePlayersStatus.Text = $"Error: {ex.Message}";
-                PnlOnlineStatus.Visibility = Visibility.Visible;
-                PbOnlineLoading.Visibility = Visibility.Collapsed;
-            }
+        TxtOnlinePlayersStatus.Text = "Synchronizing with Battlemetrics...";
+        PnlOnlineStatus.Visibility = Visibility.Visible;
+        PbOnlineLoading.Visibility = Visibility.Visible;
+        ListOnlinePlayers.ItemsSource = null;
+
+        try
+        {
+            await TrackingService.FetchOnlinePlayersNowAsync();
+        }
+        catch (Exception ex)
+        {
+            TxtOnlinePlayersStatus.Text = $"Error: {ex.Message}";
+            PnlOnlineStatus.Visibility = Visibility.Visible;
+            PbOnlineLoading.Visibility = Visibility.Collapsed;
         }
     }
 
@@ -3742,9 +3800,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    private void BtnViewTracking_Click(object sender, RoutedEventArgs e)
+    private void BtnViewAllAnalysis_Click(object sender, RoutedEventArgs e)
     {
-        ShowTrackedPlayersManager();
+        ShowTrackingAnalysisWindow();
     }
 
     private void BtnServerBM_Click(object sender, RoutedEventArgs e)
@@ -3827,113 +3885,98 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    private void ShowTrackedPlayersManager()
+    private void RefreshTrackedPlayersList(string filter = "")
     {
-        var win = new Window
+        if (ListTrackedPlayers == null) return;
+        ListTrackedPlayers.Children.Clear();
+        var players = TrackingService.GetTrackedPlayers();
+        if (!string.IsNullOrEmpty(filter) && filter != "Filter players...") {
+            players = players.Where(p => 
+                p.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) || 
+                p.LastServerName.Contains(filter, StringComparison.OrdinalIgnoreCase)
+            ).ToList();
+        }
+
+        var serversGrouped = players.GroupBy(p => string.IsNullOrEmpty(p.LastServerName) ? "Global / Legacy" : p.LastServerName);
+        foreach(var serverGrp in serversGrouped)
         {
-            Title = "Managed Tracked Players",
-            Width = 500,
-            Height = 700,
-            Background = new SolidColorBrush(Color.FromRgb(18, 20, 23)),
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Owner = this,
-        };
+            ListTrackedPlayers.Children.Add(new TextBlock { 
+                Text = serverGrp.Key, 
+                FontWeight = FontWeights.Bold, 
+                Foreground = new SolidColorBrush(Color.FromRgb(88, 166, 255)),
+                Margin = new Thickness(0, 15, 0, 5),
+                FontSize = 14,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                ToolTip = serverGrp.Key
+            });
 
-        var grid = new Grid { Margin = new Thickness(20) };
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Header
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Search
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Add Player
-        grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }); // List
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Actions
-
-        var header = new TextBlock { Text = "Tracked Players", FontSize = 20, FontWeight = FontWeights.Bold, Foreground = Brushes.White, Margin = new Thickness(0,0,0,10) };
-        grid.Children.Add(header);
-
-        var searchBox = new TextBox { 
-            Margin = new Thickness(0,0,0,10), 
-            Padding = new Thickness(6,4,6,4),
-            Background = new SolidColorBrush(Color.FromRgb(30, 32, 35)),
-            Foreground = Brushes.Gray,
-            BorderBrush = new SolidColorBrush(Color.FromRgb(50, 50, 50)),
-            FontSize = 12,
-            Text = "Filter players..."
-        };
-        searchBox.GotFocus += (s, e) => { if (searchBox.Text == "Filter players...") { searchBox.Text = ""; searchBox.Foreground = Brushes.White; } };
-        searchBox.LostFocus += (s, e) => { if (string.IsNullOrWhiteSpace(searchBox.Text)) { searchBox.Text = "Filter players..."; searchBox.Foreground = Brushes.Gray; } };
-        Grid.SetRow(searchBox, 1);
-        grid.Children.Add(searchBox);
-
-        // Manual Add Section
-        var addGrid = new Grid { Margin = new Thickness(0, 0, 0, 15) };
-        addGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        addGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        
-        var idInput = new TextBox { 
-            Padding = new Thickness(6,4,6,4),
-            Background = new SolidColorBrush(Color.FromRgb(25, 27, 30)),
-            Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.FromRgb(60, 60, 60)),
-            FontSize = 12,
-            Margin = new Thickness(0,0,8,0)
-        };
-        // Poor man's watermark
-        idInput.Text = "Enter BattleMetrics Player ID...";
-        idInput.Foreground = Brushes.Gray;
-        idInput.GotFocus += (s, e) => { if (idInput.Text == "Enter BattleMetrics Player ID...") { idInput.Text = ""; idInput.Foreground = Brushes.White; } };
-        idInput.LostFocus += (s, e) => { if (string.IsNullOrWhiteSpace(idInput.Text)) { idInput.Text = "Enter BattleMetrics Player ID..."; idInput.Foreground = Brushes.Gray; } };
-
-        var addBtn = new Button { Content = "Track Player ID", Padding = new Thickness(15, 0, 15, 0), Height = 30, Background = new SolidColorBrush(Color.FromRgb(63, 185, 80)), Foreground = Brushes.White };
-        
-        Grid.SetColumn(idInput, 0);
-        Grid.SetColumn(addBtn, 1);
-        addGrid.Children.Add(idInput);
-        addGrid.Children.Add(addBtn);
-        
-        Grid.SetRow(addGrid, 2);
-        grid.Children.Add(addGrid);
-
-        var listContainer = new DockPanel();
-        var list = new ListBox { Background = Brushes.Transparent, BorderThickness = new Thickness(0), Foreground = Brushes.White };
-        listContainer.Children.Add(list);
-
-        Grid.SetRow(listContainer, 3);
-        grid.Children.Add(listContainer);
-
-        Action<string> refreshList = null;
-        refreshList = (filter) => {
-            list.Items.Clear();
-            var players = TrackingService.GetTrackedPlayers();
-            if (!string.IsNullOrEmpty(filter) && filter != "Filter players...") {
-                players = players.Where(p => 
-                    p.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) || 
-                    p.LastServerName.Contains(filter, StringComparison.OrdinalIgnoreCase)
-                ).ToList();
-            }
-
-            var grouped = players.GroupBy(p => string.IsNullOrEmpty(p.LastServerName) ? "Global / Legacy" : p.LastServerName);
-            foreach(var group in grouped)
+            var subgroups = serverGrp.GroupBy(p => string.IsNullOrEmpty(p.GroupName) ? "Ungrouped" : p.GroupName)
+                .OrderBy(g => g.Key == "Ungrouped" ? 1 : 0)
+                .ThenBy(g => g.Key);
+            
+            foreach(var group in subgroups)
             {
-                list.Items.Add(new TextBlock { 
-                    Text = group.Key, 
-                    FontWeight = FontWeights.Bold, 
-                    Foreground = new SolidColorBrush(Color.FromRgb(88, 166, 255)),
-                    Margin = new Thickness(0, 10, 0, 5),
-                    FontSize = 14
-                });
-
-                foreach(var p in group)
+                var groupHeaderPanel = new Grid { Margin = new Thickness(5, 5, 0, 5) };
+                groupHeaderPanel.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                groupHeaderPanel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                
+                var headerColor = "None";
+                if (group.Key != "Ungrouped")
                 {
-                    var pGrid = new Grid { Margin = new Thickness(10,5,0,5) };
+                    var firstWithColor = group.FirstOrDefault(x => !string.IsNullOrEmpty(x.GroupColor) && x.GroupColor != "None");
+                    if (firstWithColor != null) headerColor = firstWithColor.GroupColor;
+                    
+                    if (headerColor != "None")
+                    {
+                        try {
+                            var groupColorBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(headerColor);
+                            var dot = new Ellipse {
+                                Width = 10, Height = 10, Fill = groupColorBrush, Margin = new Thickness(0,0,8,0), VerticalAlignment = VerticalAlignment.Center
+                            };
+                            Grid.SetColumn(dot, 0);
+                            groupHeaderPanel.Children.Add(dot);
+                        } catch { }
+                    }
+                }
+                
+                var groupNameTxt = new TextBlock { 
+                    Text = group.Key, 
+                    FontWeight = FontWeights.SemiBold, 
+                    Foreground = group.Key == "Ungrouped" ? Brushes.Gray : new SolidColorBrush(Color.FromRgb(150, 200, 255)),
+                    FontSize = 13,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                    ToolTip = group.Key
+                };
+                Grid.SetColumn(groupNameTxt, 1);
+                groupHeaderPanel.Children.Add(groupNameTxt);
+
+                var expander = new Expander { IsExpanded = true, Margin = new Thickness(10, 0, 0, 5), Foreground = Brushes.White, Header = groupHeaderPanel };
+                var groupStack = new StackPanel();
+
+                var sortedGroup = group
+                    .OrderByDescending(p => TrackingService.LastOnlinePlayers.Any(op => op.BMId == p.BMId))
+                    .ThenByDescending(p => TrackingService.LastOnlinePlayers.FirstOrDefault(op => op.BMId == p.BMId)?.Duration ?? TimeSpan.Zero)
+                    .ThenByDescending(p => p.Sessions.Count > 0 ? p.Sessions.Max(s => s.DisconnectTime ?? s.ConnectTime) : DateTime.MinValue)
+                    .ToList();
+
+                foreach(var p in sortedGroup)
+                {
+                    var pGrid = new Grid { Margin = new Thickness(group.Key == "Ungrouped" ? 10 : 30, 2, 0, 2) };
                     pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // Name
                     pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Playtime
                     pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // View
+                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Group
                     pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Rename
                     pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Remove
 
                     var onlineInfo = TrackingService.LastOnlinePlayers.FirstOrDefault(op => op.BMId == p.BMId);
                     bool isOnline = onlineInfo != null;
 
-                    var namePanel = new StackPanel { Orientation = Orientation.Horizontal };
+                    var namePanel = new Grid();
+                    namePanel.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                    namePanel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                    
                     var dot = new Ellipse { 
                         Width = 8, 
                         Height = 8, 
@@ -3941,13 +3984,19 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         Margin = new Thickness(0, 0, 8, 0),
                         VerticalAlignment = VerticalAlignment.Center
                     };
+                    Grid.SetColumn(dot, 0);
                     namePanel.Children.Add(dot);
-                    namePanel.Children.Add(new TextBlock { 
+                    
+                    var nameTxt = new TextBlock { 
                         Text = p.Name, 
                         VerticalAlignment = VerticalAlignment.Center, 
                         FontSize = 13,
-                        Foreground = isOnline ? Brushes.White : Brushes.Gray
-                    });
+                        Foreground = isOnline ? Brushes.White : Brushes.Gray,
+                        TextTrimming = TextTrimming.CharacterEllipsis,
+                        ToolTip = p.Name
+                    };
+                    Grid.SetColumn(nameTxt, 1);
+                    namePanel.Children.Add(nameTxt);
 
                     Grid.SetColumn(namePanel, 0);
                     pGrid.Children.Add(namePanel);
@@ -3958,91 +4007,82 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                             Text = onlineInfo.PlayTimeStr, 
                             Foreground = new SolidColorBrush(Color.FromRgb(176, 190, 197)), 
                             VerticalAlignment = VerticalAlignment.Center,
-                            Margin = new Thickness(10, 0, 10, 0),
-                            FontSize = 11,
-                            Width = 50,
+                            Margin = new Thickness(8, 0, 8, 0),
+                            FontSize = 10,
                             TextAlignment = TextAlignment.Right
                         };
                         Grid.SetColumn(playTxt, 1);
                         pGrid.Children.Add(playTxt);
                     }
 
-                    var viewBtn = new Button { Content = "View", Width = 45, Margin = new Thickness(5,0,0,0), Tag = p.BMId };
+                    var viewBtn = new Button { Content = "View", Padding = new Thickness(4,2,4,2), FontSize = 10, Margin = new Thickness(2,0,0,0), Tag = p.BMId, Style = (Style)FindResource("GhostButton") };
                     viewBtn.Click += (s, e) => ShowTrackingAnalysisWindow((string)((Button)s).Tag);
                     Grid.SetColumn(viewBtn, 2);
                     pGrid.Children.Add(viewBtn);
 
-                    var renameBtn = new Button { Content = "Rename", Width = 55, Margin = new Thickness(5,0,0,0), Tag = p };
+                    var groupBtn = new Button { Content = "Group", Padding = new Thickness(4,2,4,2), FontSize = 10, Margin = new Thickness(2,0,0,0), Tag = p, Style = (Style)FindResource("GhostButton") };
+                    groupBtn.Click += (s, e) => {
+                        var player = (TrackedPlayer)((Button)s).Tag;
+                        var result = ShowGroupEditorDialog(player);
+                        if (result != null) {
+                            TrackingService.SetPlayerGroup(player.BMId, result.Value.name, result.Value.color);
+                            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+                        }
+                    };
+                    Grid.SetColumn(groupBtn, 3);
+                    pGrid.Children.Add(groupBtn);
+
+                    var renameBtn = new Button { Content = "Rename", Padding = new Thickness(4,2,4,2), FontSize = 10, Margin = new Thickness(2,0,0,0), Tag = p, Style = (Style)FindResource("GhostButton") };
                     renameBtn.Click += (s, e) => {
                         var player = (TrackedPlayer)((Button)s).Tag;
                         var newName = ShowInputBox($"Enter new name for {player.BMId}:", "Rename Player", player.Name);
                         if (!string.IsNullOrWhiteSpace(newName)) {
                             TrackingService.RenameTrackedPlayer(player.BMId, newName);
-                            refreshList(searchBox.Text);
+                            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
                         }
                     };
-                    Grid.SetColumn(renameBtn, 3);
+                    Grid.SetColumn(renameBtn, 4);
                     pGrid.Children.Add(renameBtn);
 
-                    var removeBtn = new Button { Content = "Remove", Width = 55, Margin = new Thickness(5,0,0,0), Tag = p.BMId, Background = Brushes.DarkRed, Foreground = Brushes.White };
+                    var removeBtn = new Button { Content = "Remove", Padding = new Thickness(4,2,4,2), FontSize = 10, Margin = new Thickness(2,0,0,0), Tag = p.BMId, Style = (Style)FindResource("GhostButton"), Foreground = Brushes.Red };
                     removeBtn.Click += (s, e) => {
                         TrackingService.UntrackPlayer((string)((Button)s).Tag);
-                        refreshList(searchBox.Text);
+                        RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
                     };
-                    Grid.SetColumn(removeBtn, 4);
+                    Grid.SetColumn(removeBtn, 5);
                     pGrid.Children.Add(removeBtn);
 
-                    list.Items.Add(pGrid);
+                    groupStack.Children.Add(pGrid);
                 }
+                expander.Content = groupStack;
+                ListTrackedPlayers.Children.Add(expander);
             }
-            if (players.Count == 0 && !string.IsNullOrEmpty(filter)) {
-                list.Items.Add(new TextBlock { Text = "No results found matching filter.", Margin = new Thickness(0,20,0,0), Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center });
-            }
-        };
+        }
+        if (players.Count == 0 && !string.IsNullOrEmpty(filter) && filter != "Filter players...") {
+            ListTrackedPlayers.Children.Add(new TextBlock { Text = "No results found matching filter.", Margin = new Thickness(0,20,0,0), Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center });
+        }
+    }
 
-        addBtn.Click += async (s, e) => {
-            var val = idInput.Text.Trim();
-            if (string.IsNullOrEmpty(val) || val == "Enter BattleMetrics Player ID..." || !val.All(char.IsDigit)) return;
-            
-            addBtn.IsEnabled = false;
-            addBtn.Content = "...";
-            
-            var name = await TrackingService.FetchPlayerNameAsync(val);
-            var lastSession = await TrackingService.FetchPlayerLastSessionAsync(val);
-            
-            var serverName = TrackingService.LastServer.name;
-            if (string.IsNullOrEmpty(serverName)) serverName = _vm.Selected?.Name ?? "Manual Add";
-            
-            TrackingService.TrackPlayer(val, name, serverName, lastSession);
-            
-            var sessionMsg = lastSession != null ? $" (found last session: {lastSession.ConnectTime.ToLocalTime():g})" : "";
-            AppendLog($"[tracking] Manually added {name} ({val}) to tracking list on server: {serverName}{sessionMsg}");
-            
-            idInput.Text = "";
-            idInput.Focus();
-            addBtn.IsEnabled = true;
-            addBtn.Content = "Track Player ID";
-            refreshList(searchBox.Text);
-        };
+    private void TxtTrackedFilter_GotFocus(object sender, RoutedEventArgs e) {
+        if (TxtTrackedFilter.Text == "Filter players...") {
+            TxtTrackedFilter.Text = "";
+            TxtTrackedFilter.Foreground = Brushes.White;
+        }
+    }
+    private void TxtTrackedFilter_LostFocus(object sender, RoutedEventArgs e) {
+        if (string.IsNullOrWhiteSpace(TxtTrackedFilter.Text)) {
+            TxtTrackedFilter.Text = "Filter players...";
+            TxtTrackedFilter.Foreground = Brushes.Gray;
+        }
+    }
+    private void TxtTrackedFilter_TextChanged(object sender, TextChangedEventArgs e) {
+        if (TxtTrackedFilter.Text != "Filter players...") RefreshTrackedPlayersList(TxtTrackedFilter.Text);
+    }
 
-        searchBox.TextChanged += (s, e) => refreshList(searchBox.Text);
-        
-        Action updateList = () => {
-            this.Dispatcher.Invoke(() => refreshList?.Invoke(searchBox.Text));
-        };
-        TrackingService.OnOnlinePlayersUpdated += updateList;
-        win.Closed += (s, e) => TrackingService.OnOnlinePlayersUpdated -= updateList;
-
-        refreshList(""); // Initial load
-        searchBox.Focus();
-
-        var viewAllBtn = new Button { Content = "View All Analysis Report", Height = 35, Margin = new Thickness(0,15,0,0), Background = new SolidColorBrush(Color.FromRgb(76, 139, 245)), Foreground = Brushes.White };
-        viewAllBtn.Click += (s, e) => ShowTrackingAnalysisWindow();
-        Grid.SetRow(viewAllBtn, 4);
-        grid.Children.Add(viewAllBtn);
-
-        win.Content = grid;
-        win.ShowDialog();
+    private void BtnManageGroups_Click(object sender, RoutedEventArgs e) {
+        if (ShowBulkGroupEditorDialog() == true) {
+            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+        }
     }
 
 
@@ -4080,6 +4120,257 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         win.Content = stack;
         input.Focus();
+        
+        win.ShowDialog();
+        return result;
+    }
+
+    private (FrameworkElement UI, Func<string> Getter, Action<string> Setter) CreateColorSelector(string initialColor)
+    {
+        var wrap = new WrapPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 5, 0, 10) };
+        var colors = new[] { "None", "Red", "Green", "Blue", "Yellow", "Purple", "Cyan", "Orange", "Pink", "White", "Gray" };
+        
+        string selectedColor = initialColor;
+        var buttons = new Dictionary<string, Border>();
+
+        foreach (var c in colors)
+        {
+            var btn = new Border { 
+                Width = 28, Height = 28, 
+                Margin = new Thickness(4), 
+                Cursor = Cursors.Hand, 
+                ToolTip = c,
+                CornerRadius = new CornerRadius(14),
+                BorderThickness = new Thickness(2), 
+                BorderBrush = Brushes.Transparent
+            };
+            
+            var brush = c == "None" ? Brushes.Transparent : (SolidColorBrush)new BrushConverter().ConvertFromString(c);
+            btn.Background = brush;
+            
+            if (c == "None") {
+                btn.Child = new ui.SymbolIcon { Symbol = ui.SymbolRegular.Dismiss24, FontSize = 16, Foreground = Brushes.Gray };
+            }
+
+            btn.MouseLeftButtonUp += (s, e) => {
+                selectedColor = c;
+                foreach(var b in buttons.Values) { b.BorderBrush = Brushes.Transparent; }
+                btn.BorderBrush = (Brush)FindResource("Accent");
+            };
+            buttons[c] = btn;
+            wrap.Children.Add(btn);
+        }
+
+        Action<string> setter = (color) => {
+            selectedColor = string.IsNullOrEmpty(color) ? "None" : color;
+            foreach(var loopBtn in buttons.Values) { loopBtn.BorderBrush = Brushes.Transparent; }
+            if (buttons.TryGetValue(selectedColor, out var foundBtn)) {
+                foundBtn.BorderBrush = (Brush)FindResource("Accent");
+            }
+        };
+
+        setter(initialColor);
+
+        return (wrap, () => selectedColor == "None" ? "" : selectedColor, setter);
+    }
+
+    private bool ShowBulkGroupEditorDialog()
+    {
+        var win = new Window
+        {
+            Title = "Create / Manage Group",
+            Width = 450,
+            Height = 600,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Owner = this,
+            Background = Brushes.Transparent,
+            WindowStyle = WindowStyle.None,
+            AllowsTransparency = true
+        };
+        WindowBackdropHelper.Apply(win, WindowBackdropHelper.BackdropType.Mica);
+
+        var root = new Border {
+            Background = (Brush)FindResource("Surface"),
+            CornerRadius = new CornerRadius(12),
+            BorderBrush = (Brush)FindResource("CardBorder"),
+            BorderThickness = new Thickness(1),
+            Padding = new Thickness(24)
+        };
+
+        var grid = new Grid();
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Header
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Name Label
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Name Input
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Existing Groups
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Color Label
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Color Picker
+        grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }); // Players List
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Buttons
+
+        grid.Children.Add(new TextBlock { Text = "Manage Player Group", FontSize = 20, FontWeight = FontWeights.Bold, Margin = new Thickness(0,0,0,16) });
+
+        var nameLabel = new TextBlock { Text = "Group Name", Margin = new Thickness(0, 10, 0, 8), Foreground = (Brush)FindResource("TextSubtle") };
+        Grid.SetRow(nameLabel, 1);
+        grid.Children.Add(nameLabel);
+
+        var nameInput = new ui.TextBox { PlaceholderText = "Enter group name..." };
+        Grid.SetRow(nameInput, 2);
+        grid.Children.Add(nameInput);
+        
+        var existingPanel = new WrapPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 8, 0, 8) };
+        Grid.SetRow(existingPanel, 3);
+        grid.Children.Add(existingPanel);
+
+        var allPlayers = TrackingService.GetTrackedPlayers();
+        var existingGroups = allPlayers.Where(p => !string.IsNullOrEmpty(p.GroupName)).Select(p => p.GroupName).Distinct().ToList();
+
+        var listStack = new StackPanel { Margin = new Thickness(0, 0, 8, 0) };
+        var checkBoxes = new List<(CheckBox cb, TrackedPlayer p)>();
+        foreach(var p in allPlayers.OrderBy(x => x.Name))
+        {
+            var cb = new CheckBox { 
+                Content = $"{p.Name} ({p.BMId})", 
+                IsChecked = false,
+                Margin = new Thickness(0, 4, 0, 4)
+            };
+            checkBoxes.Add((cb, p));
+            listStack.Children.Add(cb);
+        }
+
+        var colorSelector = CreateColorSelector("None");
+
+        foreach(var g in existingGroups)
+        {
+            var gBtn = new ui.Button { 
+                Content = g, 
+                Margin = new Thickness(0,0,4,4), 
+                Padding = new Thickness(8,4,8,4),
+                Appearance = ui.ControlAppearance.Secondary
+            };
+            gBtn.Click += (s, e) => {
+                nameInput.Text = g;
+                var samplePlayer = allPlayers.FirstOrDefault(p => p.GroupName == g);
+                if (samplePlayer != null) {
+                    colorSelector.Setter(samplePlayer.GroupColor);
+                    foreach(var (cb, p) in checkBoxes) {
+                        cb.IsChecked = p.GroupName == g;
+                    }
+                }
+            };
+            existingPanel.Children.Add(gBtn);
+        }
+
+        var colorLabel = new TextBlock { Text = "Group Color", Margin = new Thickness(0, 16, 0, 8), Foreground = (Brush)FindResource("TextSubtle") };
+        Grid.SetRow(colorLabel, 4);
+        grid.Children.Add(colorLabel);
+
+        Grid.SetRow(colorSelector.UI, 5);
+        grid.Children.Add(colorSelector.UI);
+
+        var scroll = new ScrollViewer { VerticalScrollBarVisibility = ScrollBarVisibility.Auto, Margin = new Thickness(0, 16, 0, 16) };
+        scroll.Content = listStack;
+        Grid.SetRow(scroll, 6);
+        grid.Children.Add(scroll);
+
+        var btnPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
+        var okBtn = new ui.Button { Content = "Save Group", Width = 120, Margin = new Thickness(0, 0, 12, 0), Appearance = ui.ControlAppearance.Primary };
+        var cancelBtn = new ui.Button { Content = "Cancel", Width = 90 };
+
+        bool saved = false;
+        okBtn.Click += (s, e) => { 
+            var gName = nameInput.Text.Trim();
+            var gColor = colorSelector.Getter();
+            if (string.IsNullOrEmpty(gName)) {
+                MessageBox.Show("Please enter a group name.");
+                return;
+            }
+            
+            foreach(var (cb, p) in checkBoxes)
+            {
+                if (cb.IsChecked == true)
+                {
+                    TrackingService.SetPlayerGroup(p.BMId, gName, gColor);
+                }
+                else if (p.GroupName == gName) 
+                {
+                    TrackingService.SetPlayerGroup(p.BMId, "", "");
+                }
+            }
+            saved = true;
+            win.DialogResult = true; 
+        };
+        cancelBtn.Click += (s, e) => { win.DialogResult = false; };
+
+        btnPanel.Children.Add(okBtn);
+        btnPanel.Children.Add(cancelBtn);
+        Grid.SetRow(btnPanel, 7);
+        grid.Children.Add(btnPanel);
+
+        root.Child = grid;
+        win.Content = root;
+        win.MouseLeftButtonDown += (s, e) => { try { win.DragMove(); } catch {} };
+        nameInput.Loaded += (s, e) => { nameInput.Focus(); };
+        
+        win.ShowDialog();
+        return saved;
+    }
+
+    private (string name, string color)? ShowGroupEditorDialog(TrackedPlayer player)
+    {
+        var win = new Window
+        {
+            Title = "Assign Group",
+            Width = 400,
+            Height = 350,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Owner = this,
+            Background = Brushes.Transparent,
+            WindowStyle = WindowStyle.None,
+            AllowsTransparency = true
+        };
+        WindowBackdropHelper.Apply(win, WindowBackdropHelper.BackdropType.Mica);
+
+        var root = new Border {
+            Background = (Brush)FindResource("Surface"),
+            CornerRadius = new CornerRadius(12),
+            BorderBrush = (Brush)FindResource("CardBorder"),
+            BorderThickness = new Thickness(1),
+            Padding = new Thickness(24)
+        };
+        
+        var stack = new StackPanel();
+        
+        stack.Children.Add(new TextBlock { Text = $"Group Settings: {player.Name}", FontSize = 20, FontWeight = FontWeights.Bold, Margin = new Thickness(0,0,0,16) });
+        
+        stack.Children.Add(new TextBlock { Text = "Group Name", Foreground = (Brush)FindResource("TextSubtle") });
+        var input = new ui.TextBox { 
+            Text = player.GroupName, 
+            PlaceholderText = "Enter group name..."
+        };
+        stack.Children.Add(input);
+
+        stack.Children.Add(new TextBlock { Text = "Group Color", Margin = new Thickness(0, 8, 0, 0), Foreground = (Brush)FindResource("TextSubtle") });
+        var colorSelector = CreateColorSelector(string.IsNullOrEmpty(player.GroupColor) ? "None" : player.GroupColor);
+        stack.Children.Add(colorSelector.UI);
+
+        var btnPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 12, 0, 0) };
+        
+        (string, string)? result = null;
+
+        var saveBtn = new ui.Button { Content = "Save Changes", Appearance = ui.ControlAppearance.Primary, Width = 130, Margin = new Thickness(0,0,12,0) };
+        saveBtn.Click += (s, e) => { result = (input.Text.Trim(), colorSelector.Getter()); win.DialogResult = true; };
+
+        var cancelBtn = new ui.Button { Content = "Cancel", Width = 90 };
+        cancelBtn.Click += (s, e) => { win.DialogResult = false; };
+
+        btnPanel.Children.Add(saveBtn);
+        btnPanel.Children.Add(cancelBtn);
+        stack.Children.Add(btnPanel);
+
+        root.Child = stack;
+        win.Content = root;
+        win.MouseLeftButtonDown += (s, e) => { try { win.DragMove(); } catch {} };
+        input.Loaded += (s, e) => { input.Focus(); input.SelectAll(); };
         
         win.ShowDialog();
         return result;
@@ -4345,7 +4636,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (stopListenerFirst && _pairing.IsRunning)
             {
                 AppendLog("Stopping pairing listener …");
-                await _pairing.StopAsync();
+                await Task.Run(async () => await _pairing.StopAsync());
                 await Task.Delay(200); // kleine Atempause
             }
 
@@ -4537,7 +4828,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             Process.Start(psi);
 
             // optional: Listener ordentlich stoppen
-            try { if (_pairing?.IsRunning == true) await _pairing.StopAsync(); } catch { }
+            try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
 
             // kleines Delay, dann App schließen
             await Task.Delay(500);
