@@ -187,6 +187,7 @@ public class MainViewModel : INotifyPropertyChanged
             bool hasToken = TrackingService.FcmExpiresAt != null || TrackingService.IsFcmConfigured();
             return !hasToken && !IsBusy && !IsInitializing;
         }
+    }
     private ulong? _followingSteamId;
     public ulong? FollowingSteamId
     {
