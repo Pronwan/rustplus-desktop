@@ -17,6 +17,12 @@ public class TrackedPlayer
     public string GroupName { get; set; } = string.Empty;
     public string GroupColor { get; set; } = string.Empty;
     public List<PlayerSession> Sessions { get; set; } = new();
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool IsOnline { get; set; }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public string PlayTimeStr { get; set; } = string.Empty;
 }
 
 public class HarborInfo
