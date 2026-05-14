@@ -62,60 +62,65 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
     // Wie „nah“ die Mini-Map um den Spieler herum zuschneidet (Anteil der Hauptkarte)
     private const double MINI_VIEW_FRACTION = 0.3; // 40% des sichtbaren Bereichs
 
-    //>>
-    private void CenterMiniMapOnPlayer()
+    private bool TryGetFollowingWorldPos(out double worldX, out double worldY)
     {
-        if (_miniMap == null || !_miniMap.IsVisible) return;
-        if (WebViewHost == null || Overlay == null) return;
+        worldX = 0; worldY = 0;
+        ulong sid = _vm.FollowingSteamId ?? _mySteamId;
+
+        // 1. Check dynamic markers (high priority for movement)
+        if (TryResolvePosFromDynMarkers(sid, out worldX, out worldY)) return true;
+
+        // 2. Check team member state (static/last known)
+        var member = TeamMembers.FirstOrDefault(t => t.SteamId == sid);
+        if (member != null && member.X.HasValue && member.Y.HasValue)
+        {
+            worldX = member.X.Value;
+            worldY = member.Y.Value;
+            return true;
+        }
+
+        return false;
+    }
+
+    public void CenterMiniMapOnPlayer()
+    {
+        if (_miniMap == null || WebViewHost == null || Overlay == null) return;
+
+        double mapX = 0, mapY = 0;
+        if (!TryGetFollowingWorldPos(out mapX, out mapY)) return;
 
         Point pHost;
-        if (_vm.IsFollowing)
+        if (_isSmoothingFollow)
         {
-            // If main map is following, the player is already at the center of the viewport.
-            // This allows independent zooming on the minimap without jittery world->screen translations.
-            pHost = new Point(WebViewHost.ActualWidth / 2.0, WebViewHost.ActualHeight / 2.0);
+            // Während der aktiven Glättung ist das Ziel IMMER exakt in der Mitte des WebViewHost
+            pHost = new Point(WebViewHost.ActualWidth * 0.5, WebViewHost.ActualHeight * 0.5);
         }
         else
         {
-            // Spielerposition besorgen
-            ulong sid = _vm.FollowingSteamId ?? _mySteamId;
-            var me = TeamMembers.FirstOrDefault(t => t.SteamId == sid) ?? TeamMembers.FirstOrDefault();
-            if (me == null) return;
-
-            double targetX = 0, targetY = 0;
-            if (TryResolvePosFromDynMarkers(sid, out var dx, out var dy))
+            // Statisches Zentrieren (Fallback)
+            try
             {
-                targetX = dx; targetY = dy;
+                Point pOverlay = WorldToImagePx(mapX, mapY);
+                pHost = Overlay.TransformToVisual(WebViewHost).Transform(pOverlay);
             }
-            else if (me.X.HasValue && me.Y.HasValue)
-            {
-                targetX = me.X.Value; targetY = me.Y.Value;
-            }
-            else return;
-
-            // Welt → Bild/Overlay-Koordinaten (so positionierst du auch deine Marker)
-            Point pOverlay = WorldToImagePx(targetX, targetY);
-
-            // Overlay → Host-Koordinaten (inkl. ALLER Transforms/Letterboxing)
-            GeneralTransform t = Overlay.TransformToVisual(WebViewHost);
-            pHost = t.Transform(pOverlay);
+            catch { return; }
         }
 
         double hostW = Math.Max(1, WebViewHost.ActualWidth);
         double hostH = Math.Max(1, WebViewHost.ActualHeight);
 
-        // Quadratischen Ausschnitt wählen (keine Verzerrung im runden Fenster)
+        // Quadratischen Ausschnitt wählen
         double side = Math.Min(hostW, hostH) * (MINI_VIEW_FRACTION * Math.Pow(GetEffectiveZoom(), 0.0025));
 
-        // Um den Spieler zentrieren …
+        // Um den Punkt zentrieren
         double vx = pHost.X - side / 2.0;
         double vy = pHost.Y - side / 2.0;
 
-        // … innerhalb des Hosts clampen
+        // Innerhalb des Hosts clampen
         vx = Math.Max(0, Math.Min(vx, hostW - side));
         vy = Math.Max(0, Math.Min(vy, hostH - side));
 
-        _miniMap.SetViewbox(new Rect(vx, vy, side, side));
+        _miniMap.SetViewbox(new Rect(vx, vy, side, side), _isSmoothingFollow);
     }
 
     private MiniMapWindow? _miniMap;
@@ -144,6 +149,22 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
                 Owner = this,                         // optional
                 Left = SystemParameters.WorkArea.Right - 280,
                 Top = SystemParameters.WorkArea.Top + 20
+            };
+
+            _miniMap.OnClicked = () =>
+            {
+                // Wenn wir jemandem folgen -> auf diesen zentrieren
+                if (_vm.IsFollowing && _vm.FollowingSteamId.HasValue)
+                {
+                    if (TryResolvePosFromDynMarkers(_vm.FollowingSteamId.Value, out var fx, out var fy))
+                        CenterMapOnWorldInstant(fx, fy);
+                }
+                else
+                {
+                    // Ansonsten auf mich selbst
+                    if (TryGetMyWorldPos(out var mx, out var my))
+                        CenterMapOnWorldInstant(mx, my);
+                }
             };
 
             _miniMap.Show();
