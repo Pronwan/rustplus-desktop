@@ -47,16 +47,15 @@ namespace RustPlusDesk.Services
         // --- KONFIGURATION ---
 
         // 1. Maximale Distanz zum Rig für Trigger (Hover-Radius)
-        private const double TriggerRadius = 200.0;
+        private const double TriggerRadius = 300.0;
 
-        // 2. Maximale Geschwindigkeit für "Hover" (Einheiten pro Tick)
-        // Chinooks fliegen schnell (>5-10u/tick). Wenn er < 2.0 ist, steht er fast.
-        private const double MaxHoverSpeed = 2.0;
+        // 2. Maximale Geschwindigkeit für "Hover" (Einheiten pro Sekunde)
+        private const double MaxHoverSpeed = 4.0;
 
-        // Timer: 14 Min 15 Sek (855s)
+        // Timer: 14 Min 15 Sek (855s) - Standard for early hover trigger
         private const int HackDurationSeconds = 855;
 
-        public event EventHandler<string> OnOilRigTriggered;
+        public event EventHandler<(string Name, int Duration)> OnOilRigTriggered;
         public event EventHandler<string> OnOilRigChatUpdate;
         public event EventHandler<string>? OnDebug;
 
@@ -83,7 +82,7 @@ namespace RustPlusDesk.Services
 
             if (HasMonuments)
             {
-                var chinooks = currentMarkers.Where(m => m.Type == 4 || m.Kind.Contains("CH47"));
+                var chinooks = currentMarkers.Where(m => m.Type == 4 || (m.Kind?.Contains("CH47") == true));
                 var currentChinookIds = new HashSet<uint>();
 
                 foreach (var ch47 in chinooks)
@@ -224,7 +223,7 @@ namespace RustPlusDesk.Services
             // LOGIK: Wenn er nah ist (<200m) UND langsam (<2.0)
             if (dist < TriggerRadius && speed < MaxHoverSpeed)
             {
-                TriggerEvent(rigName);
+                TriggerEvent(rigName, HackDurationSeconds);
                 OnDebug?.Invoke(this, $"[MON] Triggered {rigName}! Hovering: Dist={dist:F1} Speed={speed:F2}");
             }
             else
@@ -251,9 +250,9 @@ namespace RustPlusDesk.Services
             double dyC = chinook.Y - rigPos.Value.Y;
             double currentDist = Math.Sqrt(dxC * dxC + dyC * dyC);
 
-            // LOGIK: Chinook taucht "nahe" am Rig auf (aber nicht direkt drauf) 
-            // und fliegt dann weg. Radius: zwischen 150m und 1200m beim Spawn.
-            if (spawnDist > 150 && spawnDist < 1200)
+            // LOGIK: Chinook taucht "nahe" am Rig auf (max 3-4 Grids) 
+            // und fliegt dann weg. Radius: zwischen 50m und 500m beim Spawn.
+            if (spawnDist > 50 && spawnDist < 500)
             {
                 state.TickCount++;
 
@@ -272,7 +271,7 @@ namespace RustPlusDesk.Services
                         // Vektor Rig->Spawn vs Vektor Spawn->Chinook
                         double angle = GetAngle(dxS, dyS, moveX, moveY);
                         
-                        if (Math.Abs(angle) < 25) // Innerhalb von 25 Grad Abweichung von der radialen Linie
+                        if (Math.Abs(angle) < 30) // Innerhalb von 30 Grad Abweichung
                         {
                             state.TrajectoryTriggered = true;
                             TriggerEvent(rigName, 750); // 12 Minuten 30 Sekunden
@@ -328,7 +327,7 @@ namespace RustPlusDesk.Services
 
             _activeEvents[rigName] = evt;
             _lastTriggeredTimes[rigName] = DateTime.UtcNow;
-            OnOilRigTriggered?.Invoke(this, rigName);
+            OnOilRigTriggered?.Invoke(this, (rigName, durationSeconds));
         }
     }
 }

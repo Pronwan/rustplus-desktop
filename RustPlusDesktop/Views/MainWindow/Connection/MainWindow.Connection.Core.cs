@@ -331,6 +331,9 @@ public partial class MainWindow
             _vm.NotifyDevicesChanged();
             AppendLog($"Connection initialization complete. Server: {_vm.Selected.Name}");
 
+            // Finally, refresh all device statuses to ensure the UI reflects the current server state
+            _ = RefreshAllDevicesStatusAsync(maxRetries: 1);
+
             // Finally, prime subscriptions for all devices to receive real-time updates
             if (real != null && _vm.Selected?.Devices?.Any() == true)
             {
@@ -358,12 +361,8 @@ public partial class MainWindow
                 RebuildOverlayTeamBar();
             }
 
-            // Initial status refresh for all devices (light: maxRetries=1)
-            _ = Task.Run(async () =>
-            {
-                await Task.Delay(2000);
-                await Dispatcher.InvokeAsync(() => RefreshAllDevicesStatusAsync(maxRetries: 1));
-            });
+            // Removed redundant 2s delayed RefreshAllDevicesStatusAsync to avoid 'demoted' logs.
+            // Core device status is already fetched during PrimeDeviceKindsAsync.
         }
         catch (Exception ex)
         {

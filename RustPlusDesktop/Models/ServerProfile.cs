@@ -62,10 +62,27 @@ public class ServerProfile : INotifyPropertyChanged
 
     public ServerProfile()
     {
-        Devices.CollectionChanged += (s, e) => NotifySmartSwitchesChanged();
+        _devices.CollectionChanged += Devices_CollectionChanged;
     }
 
-    public ObservableCollection<SmartDevice> Devices { get; set; } = new();
+    private ObservableCollection<SmartDevice> _devices = new();
+    public ObservableCollection<SmartDevice> Devices 
+    { 
+        get => _devices;
+        set
+        {
+            if (_devices != null) _devices.CollectionChanged -= Devices_CollectionChanged;
+            _devices = value ?? new();
+            _devices.CollectionChanged += Devices_CollectionChanged;
+            NotifySmartSwitchesChanged();
+            OnProp();
+        }
+    }
+
+    private void Devices_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        NotifySmartSwitchesChanged();
+    }
     public ObservableCollection<string> CameraIds { get; set; } = new();
 
     public double LearnedDaySpeed { get; set; } = 12.0 / 50.0;

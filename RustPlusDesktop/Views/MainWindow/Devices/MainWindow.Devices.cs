@@ -37,9 +37,8 @@ public partial class MainWindow
     {
         if (_apiConsecutiveTimeouts > 0)
         {
-            _apiConsecutiveTimeouts = Math.Max(0, _apiConsecutiveTimeouts - 1);
-            if (_apiConsecutiveTimeouts < ApiPressureThreshold)
-                AppendLog("[pressure] API pressure relieved.");
+            _apiConsecutiveTimeouts = 0;
+            AppendLog("[pressure] API pressure relieved.");
         }
     }
 
@@ -517,6 +516,9 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                     {
                         AppendLog($"Device #{dev.EntityId}: Switching failed after {attempts} attempts – {ex.Message}");
                         dev.IsMissing = true;
+                        
+                        // Health check: Trigger a direct probe to confirm if it's really missing
+                        _ = Task.Run(async () => await RefreshDeviceStateAsync(dev));
                     }
                     else
                     {
@@ -565,6 +567,9 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                 using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(6));
                 var r = await _rust.ProbeEntityAsync(entityId, cts.Token);
                 if (r.Exists) return r;
+
+                // If the probe returned successfully but the entity doesn't exist, stop retrying.
+                if (!r.Exists) break;
 
                 if (attempts < max) await Task.Delay(500);
             }
@@ -623,17 +628,38 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                 }
 
                 // (3) bei forcePull denselben Weg wie Refresh nutzen
-                if (forcePull)
+                // OPTIMIERUNG: Wenn wir bereits Daten haben, verzichten wir beim normalen Refresh auf den Probe.
+                // Storage Monitore sind eventbasiert; ein Probe triggert oft unnötige Ratelimits.
+                bool shouldProbe = forcePull || dev.Storage == null || dev.Storage.ItemsCount == 0;
+                
+                if (shouldProbe)
                 {
                     try
                     {
                         var rStor = await ProbeWithRetryAsync(dev.EntityId, log);
-                        dev.IsMissing = !rStor.Exists;
-                        if (!rStor.Exists && log) AppendLog($"#{dev.EntityId}: not reachable / demoted");
+                        if (rStor.Exists)
+                        {
+                            dev.IsMissing = false;
+                        }
+                        else
+                        {
+                            // Wenn der Probe fehlschlägt, wir aber bereits valide Daten haben, 
+                            // gehen wir von einem ratelimit aus und grauen NICHT aus.
+                            if (dev.Storage != null && dev.Storage.ItemsCount > 0)
+                            {
+                                if (log) AppendLog($"#{dev.EntityId}: probe failed, but keeping existing data (ratelimit?).");
+                            }
+                            else
+                            {
+                                dev.IsMissing = true;
+                                if (log) AppendLog($"#{dev.EntityId}: not reachable / demoted");
+                            }
+                        }
                     }
                     catch (Exception pullEx)
                     {
-                        dev.IsMissing = true;
+                        if (dev.Storage == null || dev.Storage.ItemsCount == 0)
+                            dev.IsMissing = true;
                         if (log) AppendLog($"[stor/poll] #{dev.EntityId} probe EX: {pullEx.Message}");
                     }
                 }
@@ -644,6 +670,7 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                 dev.IsMissing = true;
                 if (log) AppendLog($"[stor/refresh] #{dev.EntityId} EX: {ex.Message}");
             }
+            return; // WICHTIG: Nach Storage-Spezialbehandlung nicht in den generischen Block laufen
         }
 
         // ===== Generisch (SmartAlarm & Co.) =====
@@ -758,14 +785,14 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
                     }
                     else
                     {
-                        ex.Name = s.Name;
-                        ex.Kind = s.Kind;
+                        if (!string.IsNullOrWhiteSpace(s.Name)) ex.Name = s.Name;
+                        if (!string.IsNullOrWhiteSpace(s.Kind)) ex.Kind = s.Kind;
                         ex.IsOn = s.IsOn;
                         // ⚠️ SmartAlarm nie als "true" aus Storage hochholen
                         if (string.Equals(ex.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase))
                             ex.IsOn = false;
                         ex.IsMissing = s.IsMissing;
-                        ex.Alias = s.Alias;
+                        if (!string.IsNullOrWhiteSpace(s.Alias)) ex.Alias = s.Alias;
                     }
                 }
 
@@ -1086,23 +1113,20 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             return;
         }
 
-        AppendLog("Updating Device Status (parallel)…");
+        AppendLog("Updating Device Status (sequential).");
         
-        using var semaphore = new SemaphoreSlim(3);
-        var tasks = list.Select(async d =>
+        foreach (var d in list)
         {
-            await semaphore.WaitAsync();
             try
             {
                 await RefreshDeviceRecursiveAsync(d, maxRetries);
+                await Task.Delay(100); // Small gap to be extra safe
             }
-            finally
+            catch (Exception ex)
             {
-                semaphore.Release();
+                AppendLog($"Error refreshing {d.DisplayName}: {ex.Message}");
             }
-        });
-
-        await Task.WhenAll(tasks);
+        }
         
         _vm.Save();
         AppendLog("Refresh completed.");
@@ -1261,8 +1285,32 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
     {
         if (_vm?.Selected?.Devices == null || _vm.Selected.Devices.Count == 0) return;
 
-        // Collect devices that actually need probing (no kind yet)
-        var toProbe = _vm.Selected.Devices.Where(d => string.IsNullOrEmpty(d.Kind) && !d.IsGroup).ToList();
+        // Collect devices that actually need probing (no kind yet and NOT in storage cache)
+        var toProbe = _vm.Selected.Devices.Where(d => 
+            string.IsNullOrEmpty(d.Kind) && 
+            !d.IsGroup && 
+            (_rust is not RustPlusClientReal rpc || !rpc.TryGetCachedStorage(d.EntityId, out _))
+        ).ToList();
+
+        // Check if some devices can be identified from cache without probing
+        if (_rust is RustPlusClientReal real)
+        {
+            foreach (var d in _vm.Selected.Devices.Where(d => string.IsNullOrEmpty(d.Kind) && !d.IsGroup).ToList())
+            {
+                if (real.TryGetCachedStorage(d.EntityId, out _))
+                {
+                    d.Kind = "StorageMonitor"; // If it's in the storage cache, it's definitely a storage monitor
+                }
+            }
+        }
+
+        // Re-calculate toProbe after identifying devices from cache
+        toProbe = _vm.Selected.Devices.Where(d => 
+            string.IsNullOrEmpty(d.Kind) && 
+            !d.IsGroup && 
+            (_rust is not RustPlusClientReal rpc || !rpc.TryGetCachedStorage(d.EntityId, out _))
+        ).ToList();
+
         if (toProbe.Count == 0) return;
 
         AppendLog($"[prime] probing {toProbe.Count} device kinds (parallel) …");
@@ -1278,6 +1326,14 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
                 if (!string.IsNullOrWhiteSpace(r.Kind))
                     d.Kind = r.Kind;
                 d.IsMissing = !r.Exists;
+                
+                // Update state immediately from probe
+                if (r.Exists)
+                {
+                    _suppressToggleHandler = true;
+                    d.IsOn = r.IsOn;
+                    _suppressToggleHandler = false;
+                }
             }
             catch (Exception ex)
             {
