@@ -1475,48 +1475,46 @@
                                 HorizontalAlignment="Right"
                                 DockPanel.Dock="Bottom"
                                 Orientation="Horizontal">
-                                <Button
+                                <ui:Button
                                     x:Name="BtnHotkeys"
                                     Width="90"
                                     Margin="0,0,10,0"
+                                    Appearance="Secondary"
                                     Click="BtnHotkeys_Click"
-                                    Content="Hotkeys"
-                                    Style="{StaticResource GhostButton}" />
-                                <Button
+                                    Content="Hotkeys" />
+                                <ui:Button
                                     x:Name="BtnDevicesImport"
-                                    Width="32"
-                                    Height="32"
+                                    Width="36"
+                                    Height="36"
                                     Margin="0,0,8,0"
                                     Padding="4"
+                                    Appearance="Secondary"
                                     Click="BtnDevicesImport_Click"
-                                    Style="{StaticResource GhostButton}"
-                                    ToolTip="Import devices from teammates">
-                                    <Image Width="24" Source="pack://application:,,,/Assets/icons/cloud-download.png" />
-                                </Button>
-                                <Button
+                                    Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"
+                                    ToolTip="Import devices from teammates" />
+                                <ui:Button
                                     x:Name="BtnDevicesExport"
-                                    Width="32"
-                                    Height="32"
+                                    Width="36"
+                                    Height="36"
                                     Margin="0,0,16,0"
                                     Padding="4"
+                                    Appearance="Secondary"
                                     Click="BtnDevicesExport_Click"
-                                    Style="{StaticResource GhostButton}"
-                                    ToolTip="Export devices to teammates">
-                                    <Image Width="24" Source="pack://application:,,,/Assets/icons/cloud-upload.png" />
-                                </Button>
-                                <Button
+                                    Icon="{ui:SymbolIcon Symbol=ArrowUpload24}"
+                                    ToolTip="Export devices to teammates" />
+                                <ui:Button
                                     Width="80"
                                     Margin="10,0,0,0"
+                                    Appearance="Secondary"
                                     Click="BtnDeviceRefresh_Click"
-                                    Content="Refresh"
-                                    Style="{StaticResource GhostButton}" />
-                                <Button
+                                    Content="Refresh" />
+                                <ui:Button
                                     Width="80"
                                     Margin="10,0,0,0"
+                                    Appearance="Secondary"
                                     Click="BtnDeleteDevice_Click"
                                     Content="Delete"
                                     IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem.IsMissing, Converter={StaticResource NotNull}}"
-                                    Style="{StaticResource GhostButton}"
                                     ToolTip="You can only delete missing devices" />
                             </StackPanel>
 
