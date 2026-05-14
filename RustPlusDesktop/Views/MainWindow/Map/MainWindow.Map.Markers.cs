@@ -555,7 +555,7 @@ public partial class MainWindow
         _isDynPollBusy = true;
         try
         {
-            if (!_monumentWatcher.HasMonuments)
+            if (!_monumentWatcher.HasAnyMonument)
             {
                 var staticMons = await real.GetStaticMonumentsAsync();
                 if (staticMons != null && staticMons.Count > 0)
@@ -1382,7 +1382,10 @@ public partial class MainWindow
             }
         }
 
-        CenterMiniMapOnPlayer();
+        if (!_vm.IsFollowing && !_trackingEntityId.HasValue)
+        {
+            CenterMiniMapOnPlayer();
+        }
         _firstPollDyn = false;
         var gone = _dynEls.Keys.Where(id => !incoming.Contains(id)).ToList();
         foreach (var id in gone)
@@ -1470,7 +1473,8 @@ public partial class MainWindow
                 var target = markers.FirstOrDefault(m => m.Id == _trackingEntityId.Value);
                 if (target.Id != 0)
                 {
-                    CenterMapOnWorldAnimated(target.X, target.Y, allowDip: false, fast: true, keepTracking: true);
+                    // Use smooth interpolation instead of jumpy animation for continuous tracking
+                    CenterMapOnWorldSmooth(target.X, target.Y, 2000);
                 }
             }
             else if (_vm.IsFollowing)
@@ -1495,7 +1499,8 @@ public partial class MainWindow
 
                 if (found)
                 {
-                    CenterMapOnWorld(px, py);
+                    // Use smooth interpolation instead of instant snapping
+                    CenterMapOnWorldSmooth(px, py, 2000);
                 }
             }
         }

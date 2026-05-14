@@ -384,11 +384,11 @@ public partial class MainWindow
         // Immediate center
         if (TryResolvePosFromDynMarkers(steamId, out var x, out var y))
         {
-            CenterMapOnWorld(x, y);
+            CenterMapOnWorld(x, y, true);
         }
         else if (TeamMembers.FirstOrDefault(t => t.SteamId == steamId) is { X: { } tx, Y: { } ty })
         {
-            CenterMapOnWorld(tx, ty);
+            CenterMapOnWorld(tx, ty, true);
         }
     }
 
