@@ -273,6 +273,7 @@ public partial class MainWindow : Window
         if (FindName("TxtVersion") is TextBlock txt)
             txt.Text = $"v{AppInfo.VersionRaw}";
         InitCameraUi();
+        InitSmoothFollowLoop();
         ApplySettings();
         _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
         AppendLog($"[items-new] baseDir={baseDir}");

@@ -357,6 +357,11 @@ public partial class MainWindow
     // Weltpunkt (x,y) in die Mitte des sichtbaren Bereichs schieben - Zoom bleibt unveraendert
     private void CenterMapOnWorld(double x, double y)
     {
+        CenterMapOnWorldSmooth(x, y, 500);
+    }
+
+    private void CenterMapOnWorldInstant(double x, double y)
+    {
         if (_worldSizeS <= 0) return;
 
         var p = WorldToImagePx(x, y);
@@ -382,7 +387,7 @@ public partial class MainWindow
         ResetMapZoom();
         AppendLog("Map reset.");
     }
- 
+
     private void ResetMapZoom()
     {
         if (_worldSizeS > 0)
@@ -397,5 +402,79 @@ public partial class MainWindow
             RefreshUserOverlayIcons();
             CenterMiniMapOnPlayer();
         }
+    }
+
+    private int _smoothFollowId = 0;
+    private bool _isSmoothingFollow = false;
+    private double? _camTargetX, _camTargetY;
+    private double? _currentCamX, _currentCamY;
+
+    private void InitSmoothFollowLoop()
+    {
+        CompositionTarget.Rendering += OnMapRendering;
+    }
+
+    private void OnMapRendering(object? sender, EventArgs e)
+    {
+        if (!_camTargetX.HasValue || !_camTargetY.HasValue || _isAnimatingMap) return;
+        if (!_vm.IsFollowing && !_trackingEntityId.HasValue) 
+        {
+            _camTargetX = _camTargetY = null;
+            _currentCamX = _currentCamY = null;
+            _isSmoothingFollow = false;
+            return;
+        }
+
+        // Initialize current position if not set
+        if (!_currentCamX.HasValue || !_currentCamY.HasValue)
+        {
+            var (s, offX, offY) = GetViewboxScaleAndOffset();
+            var m = MapTransform.Matrix;
+            if (Math.Abs(m.M11) < 1e-4) return; // Wait for valid matrix
+
+            _currentCamX = ((WebViewHost.ActualWidth * 0.5 - offX) / s - m.OffsetX) / m.M11;
+            _currentCamY = ((WebViewHost.ActualHeight * 0.5 - offY) / s - m.OffsetY) / m.M22;
+            
+            // Safety check for Pampa jumps
+            if (double.IsNaN(_currentCamX.Value) || Math.Abs(_currentCamX.Value) > 20000) _currentCamX = _camTargetX;
+            if (double.IsNaN(_currentCamY.Value) || Math.Abs(_currentCamY.Value) > 20000) _currentCamY = _camTargetY;
+        }
+
+        // Spring-damper lerp for premium feel
+        double lerpFactor = 0.08; 
+        _currentCamX = _currentCamX.Value + (_camTargetX.Value - _currentCamX.Value) * lerpFactor;
+        _currentCamY = _currentCamY.Value + (_camTargetY.Value - _currentCamY.Value) * lerpFactor;
+
+        // Apply to Main Map
+        CenterMapOnWorldInstant(_currentCamX.Value, _currentCamY.Value);
+
+        // Sync Mini-Map (ensure _isSmoothingFollow is true before calling)
+        _isSmoothingFollow = true;
+        CenterMiniMapOnPlayer();
+    }
+
+    // Smoothly transition the map center to a new world coordinate without zooming or dipping.
+    // Useful for following moving entities during polling.
+    private void CenterMapOnWorldSmooth(double targetX, double targetY, int durationMs)
+    {
+        // Wenn wir noch nicht interpolieren oder das Ziel sehr weit weg ist (Teleport/First Click),
+        // setzen wir die aktuelle Position sofort auf das Ziel, um den "Zucker" aus der Pampa zu vermeiden.
+        if (!_currentCamX.HasValue || !_currentCamY.HasValue)
+        {
+            _currentCamX = targetX;
+            _currentCamY = targetY;
+        }
+        else
+        {
+            double dist = Math.Sqrt(Math.Pow(targetX - _currentCamX.Value, 2) + Math.Pow(targetY - _currentCamY.Value, 2));
+            if (dist > 500) // Großer Sprung -> sofort synchronisieren
+            {
+                _currentCamX = targetX;
+                _currentCamY = targetY;
+            }
+        }
+
+        _camTargetX = targetX;
+        _camTargetY = targetY;
     }
 }
