@@ -555,7 +555,7 @@ public partial class MainWindow
         _isDynPollBusy = true;
         try
         {
-            if (!_monumentWatcher.HasMonuments)
+            if (!_monumentWatcher.HasAnyMonument)
             {
                 var staticMons = await real.GetStaticMonumentsAsync();
                 if (staticMons != null && staticMons.Count > 0)
