@@ -911,8 +911,20 @@
                                         x:Name="BtnCheckUpdates"
                                         Appearance="Transparent"
                                         Click="BtnCheckUpdates_Click"
-                                        Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"
                                         ToolTip="Check for Updates">
+                                        <ui:Button.Icon>
+                                            <ui:SymbolIcon Symbol="ArrowDownload24">
+                                                <ui:SymbolIcon.Style>
+                                                    <Style TargetType="ui:SymbolIcon">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsDownloadingUpdate}" Value="True">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ui:SymbolIcon.Style>
+                                            </ui:SymbolIcon>
+                                        </ui:Button.Icon>
                                         <ui:Button.Style>
                                             <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
                                                 <Style.Triggers>
@@ -943,7 +955,33 @@
                                         </ui:Button.Style>
                                     </ui:Button>
 
-                                    <!-- Download Progress Popup -->
+                                    <!-- Circular Progress Indicator -->
+                                    <ui:ProgressRing
+                                        Width="24" Height="24"
+                                        IsIndeterminate="False"
+                                        Progress="{Binding UpdateDownloadProgress}"
+                                        Visibility="{Binding IsDownloadingUpdate, Converter={StaticResource BoolToVisibility}}"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        IsHitTestVisible="False"
+                                        Foreground="{DynamicResource Accent}" />
+
+                                    <!-- Percentage Text -->
+                                    <TextBlock
+                                        Text="{Binding UpdateDownloadPercentage}"
+                                        FontSize="8"
+                                        FontWeight="Bold"
+                                        Foreground="White"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        IsHitTestVisible="False"
+                                        Visibility="{Binding IsDownloadingUpdate, Converter={StaticResource BoolToVisibility}}">
+                                        <TextBlock.RenderTransform>
+                                            <TranslateTransform Y="1" />
+                                        </TextBlock.RenderTransform>
+                                    </TextBlock>
+
+                                    <!-- Download Progress Popup (Keep for details on hover) -->
                                     <Popup x:Name="UpdateDownloadPopup"
                                            AllowsTransparency="True"
                                            Placement="Bottom"

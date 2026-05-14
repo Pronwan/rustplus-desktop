@@ -5071,14 +5071,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         try
         {
-            _vm.IsBusy = true;
-            _vm.BusyText = "Checking GitHub release …";
+            // _vm.IsBusy = true; // No overlay during update check if we want it to be non-intrusive
+            // _vm.BusyText = "Checking GitHub release …";
 
             var curr = AppInfo.VersionForCompare;
             var latestInfo = await GetLatestReleaseAsync();
             if (latestInfo is null)
             {
-                _vm.IsBusy = false; _vm.BusyText = "";
+                // _vm.IsBusy = false; _vm.BusyText = "";
                 System.Windows.MessageBox.Show(
                     "Could not query latest release. Please try again or open Releases page.",
                     "Update", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -5108,7 +5108,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (!updateAvailable)
             {
-                _vm.IsBusy = false; _vm.BusyText = "";
+                // _vm.IsBusy = false; _vm.BusyText = "";
                 _vm.IsUpdateAvailable = false;
                 System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
@@ -5120,7 +5120,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             // neuere Version vorhanden
             if (string.IsNullOrWhiteSpace(dlUrl))
             {
-                _vm.IsBusy = false; _vm.BusyText = "";
+                // _vm.IsBusy = false; _vm.BusyText = "";
                 var open = System.Windows.MessageBox.Show(
                     $"New version available: {tag}\nOpen Releases page?",
                     "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -5135,7 +5135,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (ask != MessageBoxResult.Yes)
             {
-                _vm.IsBusy = false; _vm.BusyText = "";
+                // _vm.IsBusy = false; _vm.BusyText = "";
                 return;
             }
 
@@ -5152,7 +5152,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             var path = await DownloadInstallerAsync(dlUrl!, prog);
 
             _vm.IsDownloadingUpdate = false;
-            _vm.IsBusy = false; _vm.BusyText = "";
+            // _vm.IsBusy = false; _vm.BusyText = "";
 
             if (path == null)
             {
@@ -5166,8 +5166,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _vm.IsUpdateAvailable = false;
             _vm.IsDownloadingUpdate = false;
-            _vm.IsBusy = false;
-            _vm.BusyText = "";
+            // _vm.IsBusy = false;
+            // _vm.BusyText = "";
             AppendLog("❌ Update check failed: " + ex.Message);
             System.Windows.MessageBox.Show("Update check failed.\n" + ex.Message, "Update", MessageBoxButton.OK, MessageBoxImage.Error);
         }
