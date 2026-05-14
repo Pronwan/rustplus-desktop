@@ -3,8 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:conv="clr-namespace:RustPlusDesk.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="400">
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="Vis" />
+        <conv:BoolToVisibilityConverter x:Key="VisInv" Invert="True" />
+    </UserControl.Resources>
     <Border Visibility="Visible" Background="#F0141F2D" Padding="20" CornerRadius="10">
         <Grid>
             <Grid.RowDefinitions>
@@ -62,22 +67,49 @@
                         <TextBox Grid.Column="2" Text="{Binding CmdOilRig}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
                     </Grid>
                     
-                    <StackPanel IsEnabled="{Binding HasSmartSwitches}">
-                        <TextBlock Text="Smart Switches" Foreground="#8090A0" Margin="0,0,0,5" FontWeight="SemiBold" />
-                        <Grid Margin="0,0,0,5">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="100"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="100"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <TextBlock Text="Switch 1:" VerticalAlignment="Center" Foreground="White" />
-                            <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
-                            <TextBox Grid.Column="2" Text="{Binding CmdSwitch1}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" Margin="0,0,10,0" />
-                            <ComboBox Grid.Column="3" ItemsSource="{Binding SmartSwitches}" SelectedValue="{Binding BoundSwitchId1}" SelectedValuePath="EntityId" DisplayMemberPath="PureName" Style="{StaticResource DarkComboBox}" />
-                        </Grid>
-                        <Grid Margin="0,0,0,5">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="100"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="100"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <TextBlock Text="Switch 2:" VerticalAlignment="Center" Foreground="White" />
-                            <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
-                            <TextBox Grid.Column="2" Text="{Binding CmdSwitch2}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" Margin="0,0,10,0" />
-                            <ComboBox Grid.Column="3" ItemsSource="{Binding SmartSwitches}" SelectedValue="{Binding BoundSwitchId2}" SelectedValuePath="EntityId" DisplayMemberPath="PureName" Style="{StaticResource DarkComboBox}" />
-                        </Grid>
+                    <StackPanel Visibility="{Binding HasSmartSwitches, Converter={StaticResource Vis}}">
+                        <TextBlock Text="Smart Switches" Foreground="#8090A0" Margin="0,10,0,5" FontWeight="SemiBold" />
+                        <ItemsControl ItemsSource="{Binding SwitchCommandMappings}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Label, StringFormat='{}{0}:'}" VerticalAlignment="Center" Foreground="White" />
+                                        <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                                        <TextBox Grid.Column="2" Text="{Binding Command, UpdateSourceTrigger=PropertyChanged}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" Margin="0,0,10,0" />
+                                        <ComboBox Grid.Column="3" ItemsSource="{Binding DataContext.SmartSwitches, RelativeSource={RelativeSource AncestorType=ItemsControl}}" SelectedValue="{Binding EntityId}" SelectedValuePath="EntityId" DisplayMemberPath="PureName" Style="{StaticResource DarkComboBox}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,15,0,0">
+                        <TextBlock Text="Upkeep (TC) Monitors" Foreground="#8090A0" Margin="0,0,0,5" FontWeight="SemiBold" />
+                        <ItemsControl ItemsSource="{Binding UpkeepCommandMappings}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Label, StringFormat='{}{0}:'}" VerticalAlignment="Center" Foreground="White" />
+                                        <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                                        <TextBox Grid.Column="2" Text="{Binding Command, UpdateSourceTrigger=PropertyChanged}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" Margin="0,0,10,0" />
+                                        <ComboBox Grid.Column="3" ItemsSource="{Binding DataContext.TcMonitors, RelativeSource={RelativeSource AncestorType=ItemsControl}}" SelectedValue="{Binding EntityId}" SelectedValuePath="EntityId" DisplayMemberPath="PureName" Style="{StaticResource DarkComboBox}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Text="No TC monitors found." Foreground="#607080" FontSize="11" FontStyle="Italic" Visibility="{Binding UpkeepCommandMappings.Count, Converter={StaticResource VisInv}, FallbackValue=Visible}" />
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>

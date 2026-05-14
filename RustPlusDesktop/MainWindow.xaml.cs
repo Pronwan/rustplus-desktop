@@ -56,7 +56,7 @@ using ui = Wpf.Ui.Controls;
 namespace RustPlusDesk.Views;
 
 
-public partial class MainWindow : Window
+public partial class MainWindow : ui.FluentWindow
 {
 
     private readonly MainViewModel _vm = new();
@@ -269,7 +269,8 @@ public partial class MainWindow : Window
         // ── Wpf.Ui: Apply Fluent dark theme to all controls ───────────────────
         ApplicationThemeManager.Apply(ApplicationTheme.Dark, updateAccent: true);
         
-        this.Title = $"RustPlusDesk v{AppInfo.VersionRaw}";
+        if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
+        this.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
         if (FindName("TxtVersion") is TextBlock txt)
             txt.Text = $"v{AppInfo.VersionRaw}";
         InitCameraUi();
@@ -334,19 +335,26 @@ public partial class MainWindow : Window
         SyncAlertMenuItems();
 
         // Auto-start FCM listener silently in background on app open
-        Loaded += (_, __) => _ = Task.Delay(1500).ContinueWith(_ => Dispatcher.Invoke(() => 
+        Loaded += (_, __) => 
         {
-            StartPairingSilent();
+            // Titel nochmal forcieren, da Mica ihn manchmal schluckt
+            if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
+        this.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
             
-            // Auto-connect if enabled and not already connected
-            if (TrackingService.AutoConnectEnabled && _vm.Selected != null && !_vm.Selected.IsConnected)
+            _ = Task.Delay(1500).ContinueWith(_ => Dispatcher.Invoke(() => 
             {
-                _ = Task.Run(async () => {
-                    await Task.Delay(1000); // Give Pairing Listener a head start
-                    await Dispatcher.InvokeAsync(async () => await PerformConnectAsync(true));
-                });
-            }
-        }));
+                StartPairingSilent();
+                
+                // Auto-connect if enabled and not already connected
+                if (TrackingService.AutoConnectEnabled && _vm.Selected != null && !_vm.Selected.IsConnected)
+                {
+                    _ = Task.Run(async () => {
+                        await Task.Delay(1000); // Give Pairing Listener a head start
+                        await Dispatcher.InvokeAsync(async () => await PerformConnectAsync(true));
+                    });
+                }
+            }));
+        };
 
         // One-time migration notice for v4.5 — The Intelligence Update
         const string AppVersion = "4.5.0";
@@ -2806,6 +2814,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         UpdateShopSearchConfig();
     }
 
+    private void ChatAnnounceLabel_Click(object sender, MouseButtonEventArgs e)
+    {
+        if (ChatAnnounceLabel.ContextMenu != null)
+        {
+            ChatAnnounceLabel.ContextMenu.PlacementTarget = ChatAnnounceLabel;
+            ChatAnnounceLabel.ContextMenu.IsOpen = true;
+            e.Handled = true;
+        }
+    }
+
     private void SetAllAlerts(bool val)
     {
         TrackingService.AnnounceCargo = val;
@@ -2923,12 +2941,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         bool masterOn = TrackingService.AnnounceSpawnsMaster;
         PopulateTradeAlertsSubMenu(masterOn);
 
-        if (ChatAnnounce.ContextMenu == null) return;
+        if (ChatAnnounceLabel.ContextMenu == null) return;
         
         string host = _rust?.Host ?? "unknown";
         bool hasTravelData = TrackingService.HasAnyCargoTrigger(host);
 
-        foreach (var item in ChatAnnounce.ContextMenu.Items)
+        foreach (var item in ChatAnnounceLabel.ContextMenu.Items)
         {
             if (item is MenuItem mi)
             {
@@ -3753,7 +3771,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (sender is Button b && b.Name == "BtnShowOnline")
         {
-            MainTabs.SelectedIndex = 2; // Players tab
+            MainTabs.SelectedIndex = 3; // Players tab
         }
 
         if (_vm.Selected == null || string.IsNullOrEmpty(_vm.Selected.Host))
@@ -4857,6 +4875,27 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var modal = new SettingsModal { Owner = this };
         modal.ShowDialog();
         ApplySettings();
+
+        if (modal.RequestAction == "ModifyChatAlerts")
+        {
+            Dispatcher.BeginInvoke(new Action(() => {
+                if (ChatAnnounceLabel.ContextMenu != null)
+                {
+                    ChatAnnounceLabel.ContextMenu.PlacementTarget = ChatAnnounceLabel;
+                    ChatAnnounceLabel.ContextMenu.IsOpen = true;
+                }
+            }), System.Windows.Threading.DispatcherPriority.Input);
+        }
+        else if (modal.RequestAction == "ChatCommands")
+        {
+            // Open Chat if closed
+            if (ChatContentBorder.Visibility != Visibility.Visible)
+            {
+                BtnToggleChat_Click(null, null);
+            }
+            // Show commands
+            BtnOpenChatCommands_Click(null, null);
+        }
     }
     
     private void ApplySettings()
@@ -5024,6 +5063,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     protected override void OnSourceInitialized(EventArgs e)
     {
         base.OnSourceInitialized(e);
+
+        // Spätestens hier sollte Windows den Titel im Rahmen akzeptieren
+        if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
+        this.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
 
         var hwnd = new WindowInteropHelper(this).Handle;
         _hotkeyMgr = new GlobalHotkeyManager(hwnd);

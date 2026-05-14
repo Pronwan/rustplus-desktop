@@ -355,9 +355,10 @@ public partial class MainWindow
     }
 
     // Weltpunkt (x,y) in die Mitte des sichtbaren Bereichs schieben - Zoom bleibt unveraendert
-    private void CenterMapOnWorld(double x, double y)
+    private void CenterMapOnWorld(double x, double y, bool keepTracking = false)
     {
-        CenterMapOnWorldSmooth(x, y, 500);
+        // Use animated centering for manual/one-shot actions to avoid conflict with the follow loop
+        CenterMapOnWorldAnimated(x, y, allowDip: false, fast: true, keepTracking: keepTracking);
     }
 
     private void CenterMapOnWorldInstant(double x, double y)

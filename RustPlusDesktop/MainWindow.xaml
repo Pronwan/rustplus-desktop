@@ -1,4 +1,4 @@
-<Window
+<ui:FluentWindow
     x:Class="RustPlusDesk.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,17 +10,20 @@
     xmlns:views="clr-namespace:RustPlusDesk.Views"
     xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Title="Rust+ Desktop by Pronwan"
+    Title="RUST+ DESKTOP"
     Width="1600"
     Height="814"
     MinWidth="1300"
     MinHeight="700"
+    ExtendsContentIntoTitleBar="True"
+    WindowBackdropType="Mica"
+    WindowCornerPreference="Round"
     Background="{DynamicResource AppBg}"
     Foreground="{DynamicResource TextPrimary}"
     SnapsToDevicePixels="True"
     UseLayoutRounding="True"
     mc:Ignorable="d">
-    <Window.Resources>
+    <ui:FluentWindow.Resources>
         <conv:UpkeepBackgroundConverter x:Key="UpkeepBackgroundConverter" />
         <conv:StorageChipConverter x:Key="StorageChipConverter" />
         <conv:KindToStorageVisibilityConverter x:Key="KindToStorageVisibility" />
@@ -790,9 +793,24 @@
 
         <conv:NotNullToBoolConverter x:Key="NotNull" />
 
-    </Window.Resources>
+    </ui:FluentWindow.Resources>
 
-    <Grid x:Name="Root" Margin="0">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Custom TitleBar for Guaranteed Visibility in Mica/Dark Mode -->
+        <ui:TitleBar x:Name="AppTitleBar" 
+                     Grid.Row="0"
+                     Title="RUST+ DESKTOP">
+            <ui:TitleBar.Icon>
+                <ui:ImageIcon Source="pack://application:,,,/Assets/rustplus-desktop-icon.ico" />
+            </ui:TitleBar.Icon>
+        </ui:TitleBar>
+
+        <Grid x:Name="Root" Grid.Row="1" Margin="0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition
                 x:Name="ColSidebar"
@@ -832,125 +850,35 @@
             <!--  WICHTIG: DockPanel statt StackPanel, damit die Mitte flexibel ist  -->
             <DockPanel LastChildFill="True">
 
-                <!--  TOP: Account + Serverliste (bleibt unverÃ¤ndert)  -->
+                <!--  TOP: Account + Serverliste (bleibt unverändert)  -->
                 <StackPanel DockPanel.Dock="Top">
-                    <!--  TOP: Account + Serverliste (bleibt unverÃ¤ndert)  -->
-                    <StackPanel DockPanel.Dock="Top">
+                    <!-- Header Split into two parts -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                        <!--  Account-Zeile + Update-Button rechts  -->
-                        <!-- App Header & Utility Toolbar -->
-                        <Grid Margin="0,0,0,14">
-                            <TextBlock
-                                FontSize="10"
-                                FontWeight="Bold"
-                                Opacity="0.6"
-                                Foreground="White"
-                                Text="RUST+ DESKTOP" 
-                                VerticalAlignment="Center"/>
-
-                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                <!-- Icon Download Progress -->
-                                <StackPanel
-                                    Margin="0,0,12,0"
-                                    VerticalAlignment="Center"
-                                    Orientation="Horizontal"
-                                    Visibility="{Binding IsDownloadingIcons, Converter={StaticResource BoolToVisibility}}">
-                                    <TextBlock
-                                        Margin="0,0,4,0"
-                                        VerticalAlignment="Center"
-                                        FontFamily="Segoe MDL2 Assets"
-                                        FontSize="14"
-                                        Foreground="{StaticResource Accent}"
-                                        Text="&#xE896;" />
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        FontSize="10"
-                                        Foreground="{StaticResource TextSubtle}">
-                                        <Run Text="{Binding IconsDownloaded, Mode=OneWay}" />
-                                        <Run Text="/" />
-                                        <Run Text="{Binding IconsTotal, Mode=OneWay}" />
-                                    </TextBlock>
-                                </StackPanel>
-
-                                <ui:Button x:Name="BtnCheckUpdates"
-                                           Appearance="Transparent"
-                                           Click="BtnCheckUpdates_Click"
-                                           Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"
-                                           ToolTip="Check for Updates" />
-                                <ui:Button x:Name="BtnDiscord"
-                                           Margin="4,0,0,0"
-                                           Appearance="Transparent"
-                                           Click="BtnDiscord_Click"
-                                           ToolTip="Join Discord">
-                                    <Image Source="pack://application:,,,/Assets/icons/discord.png" Width="16" Height="16"/>
-                                </ui:Button>
-                                <ui:Button x:Name="BtnPatchNotes"
-                                           Margin="4,0,0,0"
-                                           Appearance="Transparent"
-                                           Click="BtnPatchNotes_Click"
-                                           Icon="{ui:SymbolIcon Symbol=DocumentBulletList24}"
-                                           ToolTip="Patch Notes" />
-                                <ui:Button x:Name="BtnSettings"
-                                           Margin="4,0,0,0"
-                                           Appearance="Transparent"
-                                           Click="BtnSettings_Click"
-                                           Icon="{ui:SymbolIcon Symbol=Settings24}"
-                                           ToolTip="Settings" />
-                            </StackPanel>
-                        </Grid>
-                        
-                        <!--  FCM Token Expiry Badge  -->
-                        <ui:InfoBar x:Name="FcmExpiryInfoBar"
-                                    Margin="0,0,0,10"
-                                    IsClosable="False"
-                                    IsOpen="True"
-                                    Title="FCM Credentials"
-                                    Message="{Binding FcmExpiryText}"
-                                    Severity="Informational">
-                            <ui:InfoBar.Style>
-                                <Style TargetType="ui:InfoBar">
-                                    <Setter Property="Severity" Value="Informational"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding FcmExpiryDays, Converter={StaticResource LessThanConverter}, ConverterParameter=30}" Value="True">
-                                            <Setter Property="Severity" Value="Warning"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding FcmExpiryDays}" Value="-1">
-                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ui:InfoBar.Style>
-                        </ui:InfoBar>
-
-                        <!--  (Rest bleibt wie bei dir)  -->
-                        <StackPanel Orientation="Horizontal">
-                            <!--  Steam Login usw.  -->
-                        </StackPanel>
-
-                        <Border Height="1" Margin="0,10,0,10" Background="#12FFFFFF" />
-
-                    </StackPanel>
-
-
-                        <!-- Account Profile Section -->
-                        <Border Background="{DynamicResource SurfaceAlt}" 
+                        <!-- LEFT: Account Section -->
+                        <Border Grid.Column="0" 
+                                Background="{DynamicResource SurfaceAlt}" 
                                 BorderBrush="{DynamicResource CardBorder}" 
                                 BorderThickness="1" 
                                 CornerRadius="10" 
-                                Padding="12,10"
-                                Margin="0,0,0,4">
+                                Padding="10,8"
+                                Margin="0,0,4,0">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                
+
                                 <!-- Profile Picture / Icon -->
-                                <Grid Grid.Column="0" Width="36" Height="36" Margin="0,0,12,0">
-                                    <Border CornerRadius="18" Background="#1AFFFFFF" ClipToBounds="True">
+                                <Grid Grid.Column="0" Width="32" Height="32" Margin="0,0,10,0">
+                                    <Border CornerRadius="16" Background="#1AFFFFFF" ClipToBounds="True">
                                         <Grid>
-                                            <ui:SymbolIcon Symbol="Person24" FontSize="20" Opacity="0.4" Foreground="White"/>
+                                            <ui:SymbolIcon Symbol="Person24" FontSize="18" Opacity="0.4" Foreground="White"/>
                                             <Image x:Name="ImgSteam" Stretch="UniformToFill" />
                                         </Grid>
                                     </Border>
@@ -961,39 +889,104 @@
                                     <TextBlock x:Name="TxtSteamName" 
                                                Text="Steam Account" 
                                                FontWeight="SemiBold" 
-                                               FontSize="13" 
+                                               FontSize="12" 
                                                Foreground="White"/>
                                     <TextBlock x:Name="TxtSteamId" 
-                                               FontSize="10" 
+                                               FontSize="9" 
                                                Opacity="0.6" 
                                                Foreground="White"
                                                Text="Not Logged In"/>
                                 </StackPanel>
 
-                                <!-- Login Action -->
+                                <!-- Login/Switch Action -->
                                 <ui:Button x:Name="BtnSteamLogin"
                                            Grid.Column="2"
-                                           Padding="12,6"
+                                           Padding="10,5"
+                                           Margin="8,0,0,0"
                                            Appearance="Primary"
                                            Click="BtnSteamLogin_Click"
-                                           Content="Login"
+                                           Content="Switch"
+                                           FontSize="11"
                                            Icon="{ui:SymbolIcon Symbol=PersonArrowRight24}" />
                             </Grid>
                         </Border>
 
-                    <Border Height="1" Margin="0,12,0,12" Background="#12FFFFFF" />
+                        <!-- RIGHT: Utility Cluster -->
+                        <Border Grid.Column="1" 
+                                Background="{DynamicResource SurfaceAlt}" 
+                                BorderBrush="{DynamicResource CardBorder}" 
+                                BorderThickness="1" 
+                                CornerRadius="10" 
+                                Padding="6,8"
+                                Margin="4,0,0,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:Button x:Name="BtnCheckUpdates"
+                                           Appearance="Transparent"
+                                           Padding="6,4"
+                                           Click="BtnCheckUpdates_Click"
+                                           Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"
+                                           ToolTip="Check for Updates" />
+                                <ui:Button x:Name="BtnDiscord"
+                                           Margin="2,0,0,0"
+                                           Padding="6,4"
+                                           Appearance="Transparent"
+                                           Click="BtnDiscord_Click"
+                                           ToolTip="Join Discord">
+                                    <Image Source="pack://application:,,,/Assets/icons/discord.png" Width="14" Height="14"/>
+                                </ui:Button>
+                                <ui:Button x:Name="BtnPatchNotes"
+                                           Margin="2,0,0,0"
+                                           Padding="6,4"
+                                           Appearance="Transparent"
+                                           Click="BtnPatchNotes_Click"
+                                           Icon="{ui:SymbolIcon Symbol=DocumentBulletList24}"
+                                           ToolTip="Patch Notes" />
+                                <ui:Button x:Name="BtnSettings"
+                                           Margin="2,0,0,0"
+                                           Padding="6,4"
+                                           Appearance="Transparent"
+                                           Click="BtnSettings_Click"
+                                           Icon="{ui:SymbolIcon Symbol=Settings24}"
+                                           ToolTip="Settings" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!--  FCM Token Expiry Badge  -->
+                    <ui:InfoBar x:Name="FcmExpiryInfoBar"
+                                Margin="0,0,0,6"
+                                IsClosable="False"
+                                IsOpen="True"
+                                Title="FCM Credentials"
+                                Message="{Binding FcmExpiryText}"
+                                Severity="Informational">
+                        <ui:InfoBar.Style>
+                            <Style TargetType="ui:InfoBar">
+                                <Setter Property="Severity" Value="Informational"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding FcmExpiryDays, Converter={StaticResource LessThanConverter}, ConverterParameter=30}" Value="True">
+                                        <Setter Property="Severity" Value="Warning"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding FcmExpiryDays}" Value="-1">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ui:InfoBar.Style>
+                    </ui:InfoBar>
 
                     <TextBlock
-                        Margin="0,0,0,8"
+                        Margin="0,4,0,6"
                         FontSize="11"
                         FontWeight="SemiBold"
                         Foreground="{StaticResource TextBrushMuted}"
                         Text="PAIRED SERVERS" />
+                    
                     <Grid x:Name="ServerListGrid">
                         <ListBox
                             x:Name="ListServers"
-                            MinHeight="70"
-                            MaxHeight="110"
+                            MinHeight="60"
+                            MaxHeight="100"
                             DisplayMemberPath="Name"
                             Foreground="White"
                             ItemsSource="{Binding Servers}"
@@ -1205,7 +1198,7 @@
                             
                             <StackPanel Grid.Column="0" Orientation="Horizontal">
                                 <ui:Button x:Name="BtnListenPairing"
-                                           Padding="12,6"
+                                           Padding="8,2"
                                            Appearance="Secondary"
                                            Click="BtnListenPairing_Click"
                                            Content="Listen"
@@ -1224,7 +1217,7 @@
                                 </ui:Button>
 
                                 <ui:Button x:Name="BtnStopPairing"
-                                           Padding="12,6"
+                                           Padding="8,2"
                                            Appearance="Caution"
                                            Click="BtnStopPairing_Click"
                                            Content="Stop"
@@ -1256,9 +1249,9 @@
                         </Grid>
                     </StackPanel>
 
-                    <Border Height="1" Margin="0,14,0,14" Background="#12FFFFFF" />
+                    <Border Height="1" Margin="0,4,0,4" Background="#12FFFFFF" />
 
-                    <Grid Margin="0,4,0,0">
+                    <Grid Margin="0,2,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
@@ -1313,7 +1306,7 @@
                             Text="Last pull: --:--" />
                     </Grid>
 
-                    <Border Height="1" Margin="0,10,0,12" Background="#12FFFFFF" />
+                    <Border Height="1" Margin="0,8,0,8" Background="#12FFFFFF" />
                 </StackPanel>
 
                 <!--  BOTTOM: Footer (Donate + Serverdaten) andocken  -->
@@ -1383,7 +1376,7 @@
                     VerticalAlignment="Stretch"
                     Style="{StaticResource PrettyTabControl}">
                     <!--  ===== DEVICES =====  -->
-                    <TabItem Header="Devices" Style="{StaticResource PrettyTabItem}">
+                        <TabItem Header="🔌 Devices" Style="{StaticResource PrettyTabItem}">
                         <DockPanel LastChildFill="True">
                             <!--  Footer  -->
                             <StackPanel
@@ -2108,7 +2101,7 @@
                     <!--  ===== TEAM =====  -->
                     <TabItem
                         x:Name="TabTeam"
-                        Header="Team"
+                        Header="👥 Team"
                         Style="{StaticResource PrettyTabItem}">
                         <Grid>
                             <Grid Background="#181A1E">
@@ -2278,7 +2271,7 @@
                 </TabItem>
 
                     <!--  ===== CAMERAS =====  -->
-                    <TabItem Header="Cameras" Style="{StaticResource PrettyTabItem}">
+                        <TabItem Header="🎥 Cameras" Style="{StaticResource PrettyTabItem}">
                         <DockPanel LastChildFill="True">
                             <!--  Add Camera unten rechts  -->
                             <StackPanel
@@ -2288,7 +2281,7 @@
                                 Orientation="Horizontal">
                                 <Button x:Name="BtnAddCam" Style="{StaticResource PrimaryButton}">
                                     <StackPanel Margin="6,1" Orientation="Horizontal">
-                                        <TextBlock Text="ðŸŽ¥ Add Camera" />
+                                        <TextBlock Text="📷 Add Camera" />
                                     </StackPanel>
                                 </Button>
                             </StackPanel>
@@ -2336,7 +2329,7 @@
                     </TabItem>
 
                     <!--  ===== PLAYERS =====  -->
-                    <TabItem Header="Players" Style="{StaticResource PrettyTabItem}">
+                        <TabItem Header="🌍 Players" Style="{StaticResource PrettyTabItem}">
                         <TabControl Margin="0,10,0,0" Background="Transparent" BorderThickness="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                             <TabControl.Template>
                                 <ControlTemplate TargetType="{x:Type TabControl}">
@@ -2514,17 +2507,26 @@
                         Style="{StaticResource DotCheckBox}"
                         Unchecked="ChkShops_Checked" />
                     <TextBlock Width="20" />
-                    <CheckBox
-                        x:Name="ChatAnnounce"
-                        Margin="8,0,0,0"
-                        Click="ChatAnnounce_Toggle"
-                        Content="Chat Alerts"
-                        IsChecked="False"
-                        IsThreeState="True"
-                        Style="{StaticResource DotCheckBox}"
-                        ToolTip="Right-click to configure">
-                        <CheckBox.ContextMenu>
-                            <ContextMenu Style="{StaticResource DarkContextMenu}">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                        <CheckBox
+                            x:Name="ChatAnnounce"
+                            Margin="0,0,0,0"
+                            Click="ChatAnnounce_Toggle"
+                            IsChecked="False"
+                            IsThreeState="True"
+                            Style="{StaticResource DotCheckBox}"
+                            ToolTip="Toggle all Alerts" />
+                        <TextBlock
+                            x:Name="ChatAnnounceLabel"
+                            Margin="6,0,0,0"
+                            VerticalAlignment="Center"
+                            Cursor="Hand"
+                            Foreground="{StaticResource CbText}"
+                            Text="Chat Alerts"
+                            PreviewMouseLeftButtonDown="ChatAnnounceLabel_Click"
+                            ToolTip="Left-click to configure alerts">
+                            <TextBlock.ContextMenu>
+                                <ContextMenu Style="{StaticResource DarkContextMenu}" Placement="Bottom">
                                 <MenuItem
                                     FontWeight="Bold"
                                     Foreground="{StaticResource TextBrushMuted}"
@@ -2673,8 +2675,9 @@
                                     StaysOpenOnClick="True"
                                     Style="{StaticResource DarkMenuItem}" />
                             </ContextMenu>
-                        </CheckBox.ContextMenu>
-                    </CheckBox>
+                            </TextBlock.ContextMenu>
+                        </TextBlock>
+                    </StackPanel>
                     <Button
                         Width="80"
                         Margin="8,0,0,0"
@@ -3894,4 +3897,5 @@
                               Margin="20,0,20,20" Panel.ZIndex="9999" />
 
     </Grid>
-</Window>
+    </Grid>
+</ui:FluentWindow>
