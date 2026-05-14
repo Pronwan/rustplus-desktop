@@ -121,14 +121,14 @@ public class MainViewModel : INotifyPropertyChanged
     public bool IsBusy
     {
         get => _isBusy;
-        set { _isBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
+        set { _isBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); OnPropertyChanged(nameof(ShowLoginOverlay)); }
     }
 
     private bool _isInitializing;
     public bool IsInitializing
     {
         get => _isInitializing;
-        set { _isInitializing = value; OnPropertyChanged(); }
+        set { _isInitializing = value; OnPropertyChanged(); OnPropertyChanged(nameof(ShowLoginOverlay)); }
     }
 
     public bool IsPairingBusy
@@ -151,6 +151,43 @@ public class MainViewModel : INotifyPropertyChanged
         set { _steamId64 = value; OnPropertyChanged(); }
     }
 
+    public string FcmExpiryText
+    {
+        get
+        {
+            if (TrackingService.FcmExpiresAt == null) return "No token registered";
+            var remaining = TrackingService.FcmExpiresAt.Value - DateTime.Now;
+            if (remaining.TotalDays < 0) return "Token expired!";
+            return $"Expires in {(int)remaining.TotalDays} days";
+        }
+    }
+
+    public int FcmExpiryDays
+    {
+        get
+        {
+            if (TrackingService.FcmExpiresAt == null) return -1;
+            return (int)(TrackingService.FcmExpiresAt.Value - DateTime.Now).TotalDays;
+        }
+    }
+
+    public void NotifyFcmChanged()
+    {
+        OnPropertyChanged(nameof(FcmExpiryText));
+        OnPropertyChanged(nameof(FcmExpiryDays));
+        OnPropertyChanged(nameof(ShowLoginOverlay));
+    }
+
+    public bool ShowLoginOverlay
+    {
+        get
+        {
+            // Show overlay if no token registered and not currently busy/initializing
+            // FALLBACK: Also check if the file physically exists (for existing users)
+            bool hasToken = TrackingService.FcmExpiresAt != null || TrackingService.IsFcmConfigured();
+            return !hasToken && !IsBusy && !IsInitializing;
+        }
+    }
     private ulong? _followingSteamId;
     public ulong? FollowingSteamId
     {

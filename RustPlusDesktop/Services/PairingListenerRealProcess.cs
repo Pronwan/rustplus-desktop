@@ -57,8 +57,10 @@ namespace RustPlusDesk.Services
         public event EventHandler<string>? Failed;            // bei erkennbaren Fehlerzeilen
 
         public event EventHandler<string>? Status;            // optional, für UI-Text
+        public event EventHandler? RegistrationCompleted;
         private volatile bool _running;
         public bool IsRunning => _running;
+        public bool IsConfigured => File.Exists(ConfigPath) && new FileInfo(ConfigPath).Length > 50;
 
 
 
@@ -142,6 +144,11 @@ namespace RustPlusDesk.Services
                 }
 
                 _log("Registering completed (Confirm login in browser if applicable).");
+
+                // Record FCM Token dates
+                TrackingService.FcmIssuedAt = DateTime.Now;
+                TrackingService.FcmExpiresAt = DateTime.Now.AddMonths(6); // FCM tokens usually last ~6 months or until revoked
+                RegistrationCompleted?.Invoke(this, EventArgs.Empty);
             }
 
             // 2) Listener starten
@@ -194,16 +201,26 @@ namespace RustPlusDesk.Services
 
         public Task StopAsync()
         {
-            try { _listenProc?.Kill(entireProcessTree: true); } catch { }
-            _listenProc?.Dispose();
-            _listenProc = null;
-            _cts?.Cancel(); _cts = null;
+            try
+            {
+                try { _listenProc?.Kill(entireProcessTree: true); } catch { }
+                try { _listenProc?.Dispose(); } catch { }
+                _listenProc = null;
 
-            var wasRunning = _running;
-            _running = false;
-            if (wasRunning) Stopped?.Invoke(this, EventArgs.Empty);
+                try { _cts?.Cancel(); } catch { }
+                _cts = null;
 
-            _log("Pairing-Listener stopped.");
+                var wasRunning = _running;
+                _running = false;
+                if (wasRunning) Stopped?.Invoke(this, EventArgs.Empty);
+
+                _log("Pairing-Listener stopped.");
+            }
+            catch (Exception ex)
+            {
+                _log("Error stopping listener: " + ex.Message);
+            }
+            
             return Task.CompletedTask;
         }
 
