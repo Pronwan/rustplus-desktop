@@ -9,6 +9,7 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:views="clr-namespace:RustPlusDesk.Views"
     xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="Rust+ Desktop by Pronwan"
     Width="1600"
     Height="814"
@@ -25,29 +26,34 @@
         <conv:KindToStorageVisibilityConverter x:Key="KindToStorageVisibility" />
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibility" />
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityInv" Invert="True" />
+        <conv:LessThanConverter x:Key="LessThanConverter" />
         <BitmapImage x:Key="IconStorageMonitor" UriSource="pack://application:,,,/Assets/icons/storagemonitor.png" />
         <BitmapImage x:Key="IconSmartSwitch" UriSource="pack://application:,,,/Assets/icons/smartswitch.png" />
         <BitmapImage x:Key="IconSmartAlarm" UriSource="pack://application:,,,/Assets/icons/smartalarm.png" />
         <BitmapImage x:Key="IconGroup" UriSource="pack://application:,,,/Assets/icons/cabins.png" />
-        <!--  Palette  -->
-        <SolidColorBrush x:Key="AppBg" Color="#121417" />
-        <SolidColorBrush x:Key="Surface" Color="#1C1F24" />
-        <SolidColorBrush x:Key="SurfaceAlt" Color="#23272E" />
-        <SolidColorBrush x:Key="CardBorder" Color="#33414850" />
-        <SolidColorBrush x:Key="Accent" Color="#4FC3F7" />
-        <SolidColorBrush x:Key="AccentDark" Color="#FF1E576F" />
+        <!--  WinUI 3 Design Palette  -->
+        <SolidColorBrush x:Key="AppBg" Color="#0F1013" />
+        <SolidColorBrush x:Key="Surface" Color="#181B1F" />
+        <SolidColorBrush x:Key="SurfaceAlt" Color="#1F2229" />
+        <SolidColorBrush x:Key="SurfaceHover" Color="#252A33" />
+        <SolidColorBrush x:Key="CardBorder" Color="#28FFFFFF" />
+        <SolidColorBrush x:Key="Accent" Color="#60CDFF" />
+        <SolidColorBrush x:Key="AccentDark" Color="#1A4D6B" />
+        <SolidColorBrush x:Key="AccentGreen" Color="#4EB887" />
+        <SolidColorBrush x:Key="AccentRed" Color="#F04747" />
 
-        <SolidColorBrush x:Key="TextPrimary" Color="#ECEFF1" />
-        <SolidColorBrush x:Key="TextSubtle" Color="#B0BEC5" />
-        <CornerRadius x:Key="Radius">10</CornerRadius>
+        <SolidColorBrush x:Key="TextPrimary" Color="#F0F3F7" />
+        <SolidColorBrush x:Key="TextSubtle" Color="#8C96A8" />
+        <SolidColorBrush x:Key="TextCaption" Color="#5A6475" />
+        <CornerRadius x:Key="Radius">8</CornerRadius>
 
-        <!-- ========== TAB STYLES (einfÃ¼gen in <Window.Resources>) ========== -->
-        <SolidColorBrush x:Key="CardBrush" Color="#171A21" />
-        <SolidColorBrush x:Key="CardBorderBrush" Color="#222734" />
-        <SolidColorBrush x:Key="PrimaryBrush" Color="#4C8BF5" />
-        <SolidColorBrush x:Key="PrimaryBrushMuted" Color="#375FA8" />
-        <SolidColorBrush x:Key="TextBrush" Color="#E8ECF3" />
-        <SolidColorBrush x:Key="TextBrushMuted" Color="#AAB6CF" />
+        <!--  Card / Tab styles  -->
+        <SolidColorBrush x:Key="CardBrush" Color="#181B20" />
+        <SolidColorBrush x:Key="CardBorderBrush" Color="#1EFFFFFF" />
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#3B82F6" />
+        <SolidColorBrush x:Key="PrimaryBrushMuted" Color="#1D4ED8" />
+        <SolidColorBrush x:Key="TextBrush" Color="#E8ECF4" />
+        <SolidColorBrush x:Key="TextBrushMuted" Color="#8C96A8" />
 
         <Style x:Key="PrettyTabControl" TargetType="{x:Type TabControl}">
             <Setter Property="Background" Value="Transparent" />
@@ -786,7 +792,7 @@
 
     </Window.Resources>
 
-    <Grid x:Name="Root" Margin="16">
+    <Grid x:Name="Root" Margin="0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition
                 x:Name="ColSidebar"
@@ -808,13 +814,21 @@
             ResizeDirection="Columns"
             ShowsPreview="False" />
 
-        <!--  Linke Spalte: Account + Serverliste  -->
+        <!--  Left Panel: WinUI 3 Acrylic Glass  -->
         <Border
             Grid.Column="0"
             MinWidth="400"
             MaxWidth="600"
-            Margin="0,0,4,0"
-            Style="{StaticResource Card}">
+            Margin="0,0,0,0"
+            Background="#CC181B20"
+            BorderBrush="#1AFFFFFF"
+            BorderThickness="0,0,1,0"
+            CornerRadius="0"
+            Padding="16"
+            TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="24" ShadowDepth="0" Color="#000000" Opacity="0.45" />
+            </Border.Effect>
             <!--  WICHTIG: DockPanel statt StackPanel, damit die Mitte flexibel ist  -->
             <DockPanel LastChildFill="True">
 
@@ -824,24 +838,20 @@
                     <StackPanel DockPanel.Dock="Top">
 
                         <!--  Account-Zeile + Update-Button rechts  -->
-                        <Grid Margin="0,0,0,8">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <!--  links: Text  -->
-                                <ColumnDefinition Width="Auto" />
-                                <!--  rechts: Button  -->
-                            </Grid.ColumnDefinitions>
+                        <!-- App Header & Utility Toolbar -->
+                        <Grid Margin="0,0,0,14">
+                            <TextBlock
+                                FontSize="10"
+                                FontWeight="Bold"
+                                Opacity="0.6"
+                                Foreground="White"
+                                Text="RUST+ DESKTOP" 
+                                VerticalAlignment="Center"/>
 
-                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                                <TextBlock
-                                    FontSize="16"
-                                    FontWeight="Bold"
-                                    Foreground="White"
-                                    Text="Account" />
-
-                                <!--  Icon Download Progress  -->
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                <!-- Icon Download Progress -->
                                 <StackPanel
-                                    Margin="12,0,0,0"
+                                    Margin="0,0,12,0"
                                     VerticalAlignment="Center"
                                     Orientation="Horizontal"
                                     Visibility="{Binding IsDownloadingIcons, Converter={StaticResource BoolToVisibility}}">
@@ -854,105 +864,131 @@
                                         Text="&#xE896;" />
                                     <TextBlock
                                         VerticalAlignment="Center"
-                                        FontSize="12"
+                                        FontSize="10"
                                         Foreground="{StaticResource TextSubtle}">
-                                        <Run Text="Downloading Icons (" />
                                         <Run Text="{Binding IconsDownloaded, Mode=OneWay}" />
                                         <Run Text="/" />
                                         <Run Text="{Binding IconsTotal, Mode=OneWay}" />
-                                        <Run Text=")" />
                                     </TextBlock>
                                 </StackPanel>
-                            </StackPanel>
 
-                            <Grid Grid.Column="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                    <Button
-                                        x:Name="BtnCheckUpdates"
-                                        Margin="8,0,0,0"
-                                        Background="{DynamicResource AccentDark}"
-                                        BorderBrush="{DynamicResource Accent}"
-                                        Click="BtnCheckUpdates_Click"
-                                        Content=" Check for Updates "
-                                        ToolTip="Check GitHub for a newer version" />
-                                    <Button
-                                        x:Name="BtnDiscord"
-                                        Margin="8,0,0,0"
-                                        Background="#5865F2"
-                                        BorderBrush="{DynamicResource Accent}"
-                                        Click="BtnDiscord_Click"
-                                        ToolTip="Join our Discord community">
-                                        <StackPanel Orientation="Horizontal" Margin="4,0,4,0">
-                                            <Image Source="pack://application:,,,/Assets/icons/discord.png" Width="14" Height="14" Margin="0,0,6,0"/>
-                                            <TextBlock Text="Rust+Desktop" VerticalAlignment="Center" FontWeight="SemiBold"/>
-                                        </StackPanel>
-                                    </Button>
-                                    <Button
-                                        x:Name="BtnPatchNotes"
-                                        Margin="8,0,0,0"
-                                        Background="{DynamicResource SurfaceAlt}"
-                                        BorderBrush="{DynamicResource CardBorder}"
-                                        Click="BtnPatchNotes_Click"
-                                        Content=" Patch Notes "
-                                        ToolTip="Show latest changes" />
-                                    <Button
-                                        x:Name="BtnSettings"
-                                        Margin="8,0,0,0"
-                                        Click="BtnSettings_Click"
-                                        Content="&#x2699; Settings"
-                                        Style="{StaticResource GhostButton}"
-                                        ToolTip="App Settings &amp; Options" />
-                                </StackPanel>
-                            </Grid>
+                                <ui:Button x:Name="BtnCheckUpdates"
+                                           Appearance="Transparent"
+                                           Click="BtnCheckUpdates_Click"
+                                           Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"
+                                           ToolTip="Check for Updates" />
+                                <ui:Button x:Name="BtnDiscord"
+                                           Margin="4,0,0,0"
+                                           Appearance="Transparent"
+                                           Click="BtnDiscord_Click"
+                                           ToolTip="Join Discord">
+                                    <Image Source="pack://application:,,,/Assets/icons/discord.png" Width="16" Height="16"/>
+                                </ui:Button>
+                                <ui:Button x:Name="BtnPatchNotes"
+                                           Margin="4,0,0,0"
+                                           Appearance="Transparent"
+                                           Click="BtnPatchNotes_Click"
+                                           Icon="{ui:SymbolIcon Symbol=DocumentBulletList24}"
+                                           ToolTip="Patch Notes" />
+                                <ui:Button x:Name="BtnSettings"
+                                           Margin="4,0,0,0"
+                                           Appearance="Transparent"
+                                           Click="BtnSettings_Click"
+                                           Icon="{ui:SymbolIcon Symbol=Settings24}"
+                                           ToolTip="Settings" />
+                            </StackPanel>
                         </Grid>
+                        
+                        <!--  FCM Token Expiry Badge  -->
+                        <ui:InfoBar x:Name="FcmExpiryInfoBar"
+                                    Margin="0,0,0,10"
+                                    IsClosable="False"
+                                    IsOpen="True"
+                                    Title="FCM Credentials"
+                                    Message="{Binding FcmExpiryText}"
+                                    Severity="Informational">
+                            <ui:InfoBar.Style>
+                                <Style TargetType="ui:InfoBar">
+                                    <Setter Property="Severity" Value="Informational"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FcmExpiryDays, Converter={StaticResource LessThanConverter}, ConverterParameter=30}" Value="True">
+                                            <Setter Property="Severity" Value="Warning"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FcmExpiryDays}" Value="-1">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ui:InfoBar.Style>
+                        </ui:InfoBar>
 
                         <!--  (Rest bleibt wie bei dir)  -->
                         <StackPanel Orientation="Horizontal">
                             <!--  Steam Login usw.  -->
                         </StackPanel>
 
-                        <Separator Margin="0,8,0,8" />
+                        <Border Height="1" Margin="0,10,0,10" Background="#12FFFFFF" />
 
-                        <!--  ...  -->
                     </StackPanel>
 
 
-                    <StackPanel Orientation="Horizontal">
-                        <Button
-                            x:Name="BtnSteamLogin"
-                            Width="180"
-                            Margin="0,0,8,0"
-                            Click="BtnSteamLogin_Click"
-                            Content="Login with Steam" />
-                        <TextBlock
-                            Margin="0,0,6,0"
-                            VerticalAlignment="Center"
-                            Text="SteamID64:" />
-                        <TextBlock
-                            x:Name="TxtSteamId"
-                            VerticalAlignment="Center"
-                            FontWeight="SemiBold" />
-                        <!--  Avatar  -->
-                        <Image
-                            x:Name="ImgSteam"
-                            Width="24"
-                            Height="24"
-                            Margin="8,0,0,0"
-                            Stretch="UniformToFill"
-                            Visibility="Collapsed" />
-                    </StackPanel>
+                        <!-- Account Profile Section -->
+                        <Border Background="{DynamicResource SurfaceAlt}" 
+                                BorderBrush="{DynamicResource CardBorder}" 
+                                BorderThickness="1" 
+                                CornerRadius="10" 
+                                Padding="12,10"
+                                Margin="0,0,0,4">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                
+                                <!-- Profile Picture / Icon -->
+                                <Grid Grid.Column="0" Width="36" Height="36" Margin="0,0,12,0">
+                                    <Border CornerRadius="18" Background="#1AFFFFFF" ClipToBounds="True">
+                                        <Grid>
+                                            <ui:SymbolIcon Symbol="Person24" FontSize="20" Opacity="0.4" Foreground="White"/>
+                                            <Image x:Name="ImgSteam" Stretch="UniformToFill" />
+                                        </Grid>
+                                    </Border>
+                                </Grid>
 
-                    <Separator Margin="0,8,0,8" />
+                                <!-- Identity -->
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock x:Name="TxtSteamName" 
+                                               Text="Steam Account" 
+                                               FontWeight="SemiBold" 
+                                               FontSize="13" 
+                                               Foreground="White"/>
+                                    <TextBlock x:Name="TxtSteamId" 
+                                               FontSize="10" 
+                                               Opacity="0.6" 
+                                               Foreground="White"
+                                               Text="Not Logged In"/>
+                                </StackPanel>
+
+                                <!-- Login Action -->
+                                <ui:Button x:Name="BtnSteamLogin"
+                                           Grid.Column="2"
+                                           Padding="12,6"
+                                           Appearance="Primary"
+                                           Click="BtnSteamLogin_Click"
+                                           Content="Login"
+                                           Icon="{ui:SymbolIcon Symbol=PersonArrowRight24}" />
+                            </Grid>
+                        </Border>
+
+                    <Border Height="1" Margin="0,12,0,12" Background="#12FFFFFF" />
 
                     <TextBlock
                         Margin="0,0,0,8"
-                        FontSize="16"
-                        FontWeight="Bold"
-                        Foreground="White"
-                        Text="Paired servers list" />
+                        FontSize="11"
+                        FontWeight="SemiBold"
+                        Foreground="{StaticResource TextBrushMuted}"
+                        Text="PAIRED SERVERS" />
                     <Grid x:Name="ServerListGrid">
                         <ListBox
                             x:Name="ListServers"
@@ -1006,10 +1042,15 @@
                         </TextBlock>
                     </Grid>
 
-                    <!--  Connection Card  -->
-                    <Border Margin="0,8,0,0" Background="{StaticResource SurfaceAlt}">
+                    <!-- Compact Connection Card -->
+                    <Border Margin="0,8,0,0" 
+                            Background="{DynamicResource SurfaceAlt}" 
+                            BorderBrush="{DynamicResource CardBorder}" 
+                            BorderThickness="1" 
+                            CornerRadius="10" 
+                            Padding="12,10">
                         <Border.Style>
-                            <Style BasedOn="{StaticResource Card}" TargetType="Border">
+                            <Style TargetType="Border">
                                 <Setter Property="Visibility" Value="Collapsed" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Selected, Converter={StaticResource NotNull}}" Value="True">
@@ -1018,166 +1059,204 @@
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
-                        <StackPanel>
-                            <Grid Margin="0,0,0,5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    Margin="0,0,10,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="18"
-                                    FontWeight="Bold"
-                                    Foreground="White"
-                                    Text="{Binding Selected.Name, FallbackValue='Select a Server'}"
-                                    TextTrimming="CharacterEllipsis" />
-                                <Button
-                                    Grid.Column="1"
-                                    Margin="5,0,0,0"
-                                    Padding="10,4"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    Click="BtnShowServerInfo_Click"
-                                    Content="&#x24D8; Info"
-                                    FontSize="11"
-                                    Foreground="{StaticResource TextSubtle}"
-                                    Style="{StaticResource GhostButton}"
-                                    ToolTip="Show Server Description" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" /> <!-- Status Dot -->
+                                <ColumnDefinition Width="*" />    <!-- Name + Status -->
+                                <ColumnDefinition Width="Auto" /> <!-- Buttons -->
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Status Dot -->
+                            <Grid Width="10" Height="10" VerticalAlignment="Center" Margin="0,0,12,0">
+                                 <Ellipse x:Name="StatusDot">
+                                    <Ellipse.Style>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="Fill" Value="#EF5350" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsBusy}" Value="True">
+                                                    <Setter Property="Fill" Value="#FFCA28" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsInitializing}" Value="True">
+                                                    <Setter Property="Fill" Value="#FFCA28" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True">
+                                                    <Setter Property="Fill" Value="#66BB6A" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                 </Ellipse>
                             </Grid>
 
-                            <Separator Margin="0,4,0,8" Background="{StaticResource CardBorder}" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Selected.Name, FallbackValue='Select a Server'}"
+                                           FontWeight="SemiBold"
+                                           FontSize="13"
+                                           Foreground="White"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <TextBlock FontSize="9" FontWeight="Bold" Opacity="0.7">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="DISCONNECTED" />
+                                            <Setter Property="Foreground" Value="#EF5350" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsBusy}" Value="True">
+                                                    <Setter Property="Text" Value="CONNECTING..." />
+                                                    <Setter Property="Foreground" Value="#FFCA28" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsInitializing}" Value="True">
+                                                    <Setter Property="Text" Value="INITIALIZING..." />
+                                                    <Setter Property="Foreground" Value="#FFCA28" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True">
+                                                    <Setter Property="Text" Value="DEVICES ACTIVE" />
+                                                    <Setter Property="Foreground" Value="#66BB6A" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Selected.IsFullConnected}" Value="True">
+                                                    <Setter Property="Text" Value="FULLY CONNECTED" />
+                                                    <Setter Property="Foreground" Value="#66BB6A" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
 
-                            <DockPanel LastChildFill="False">
-                                <StackPanel
-                                    VerticalAlignment="Center"
-                                    DockPanel.Dock="Left"
-                                    Orientation="Horizontal">
-                                    <Ellipse
-                                        Width="12"
-                                        Height="12"
-                                        Margin="0,0,10,0">
-                                        <Ellipse.Style>
-                                            <Style TargetType="Ellipse">
-                                                <Setter Property="Fill" Value="#EF5350" />
-                                                <!--  Disconnected: Red  -->
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsBusy}" Value="True">
-                                                        <Setter Property="Fill" Value="#FFCA28" />
-                                                        <!--  Connecting: Yellow  -->
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IsInitializing}" Value="True">
-                                                        <Setter Property="Fill" Value="#FFCA28" />
-                                                        <!--  Initializing: Yellow  -->
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True">
-                                                        <Setter Property="Fill" Value="#66BB6A" />
-                                                        <!--  Connected (at least devices): Green  -->
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Ellipse.Style>
-                                    </Ellipse>
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        FontSize="13"
-                                        FontWeight="Bold">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Text" Value="DISCONNECTED" />
-                                                <Setter Property="Foreground" Value="#EF5350" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsBusy}" Value="True">
-                                                        <Setter Property="Text" Value="CONNECTING..." />
-                                                        <Setter Property="Foreground" Value="#FFCA28" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IsInitializing}" Value="True">
-                                                        <Setter Property="Text" Value="INITIALIZING..." />
-                                                        <Setter Property="Foreground" Value="#FFCA28" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True">
-                                                        <Setter Property="Text" Value="CONNECTED (DEVICES ONLY)" />
-                                                        <Setter Property="Foreground" Value="#66BB6A" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Selected.IsFullConnected}" Value="True">
-                                                        <Setter Property="Text" Value="CONNECTED" />
-                                                        <Setter Property="Foreground" Value="#66BB6A" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </StackPanel>
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                 <!-- Connect -->
+                                 <ui:Button x:Name="UiBtnConnect" 
+                                            Padding="10,4"
+                                            Margin="0,0,4,0"
+                                            Appearance="Primary"
+                                            Content="Connect"
+                                            Icon="{ui:SymbolIcon Symbol=PlugConnected20}"
+                                            Click="BtnConnect_Click"
+                                            Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}" />
 
-                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-                                    <Button Click="BtnConnect_Click">
-                                        <Button.Style>
-                                            <Style TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
-                                                <Setter Property="Content" Value=" Connect to Server " />
-                                                <Setter Property="Visibility" Value="{Binding Selected.IsFullConnected, Converter={StaticResource BoolToVisibilityInv}}" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True">
-                                                        <Setter Property="Content" Value=" Full Connect " />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
-                                    <Button
-                                        Background="#D32F2F"
-                                        BorderBrush="#B71C1C"
-                                        Click="BtnDisconnect_Click"
-                                        Content=" Disconnect "
-                                        Foreground="White"
-                                        Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}}" />
-                                </StackPanel>
-                            </DockPanel>
-                        </StackPanel>
+                                 <!-- Full Connect -->
+                                 <ui:Button x:Name="UiBtnFullConnect" 
+                                            Padding="10,4"
+                                            Margin="0,0,4,0"
+                                            Appearance="Primary"
+                                            Content="Full Connect"
+                                            Icon="{ui:SymbolIcon Symbol=Play20}"
+                                            ToolTip="Load Map &amp; Team"
+                                            Click="BtnConnect_Click">
+                                    <ui:Button.Style>
+                                        <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding Selected.IsConnected}" Value="True" />
+                                                        <Condition Binding="{Binding Selected.IsFullConnected}" Value="False" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ui:Button.Style>
+                                 </ui:Button>
+
+                                 <!-- Disconnect -->
+                                 <ui:Button x:Name="UiBtnDisconnect"
+                                            Padding="10,4"
+                                            Appearance="Caution"
+                                            Icon="{ui:SymbolIcon Symbol=PlugDisconnected20}"
+                                            Click="BtnDisconnect_Click"
+                                            ToolTip="Disconnect"
+                                            Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}}" />
+                                 
+                                 <!-- Info -->
+                                 <ui:Button Margin="4,0,0,0"
+                                            Padding="10,4"
+                                            Appearance="Secondary"
+                                            Icon="{ui:SymbolIcon Symbol=Info20}"
+                                            Click="BtnShowServerInfo_Click"
+                                            ToolTip="Server Details" />
+
+                                 <!-- BattleMetrics -->
+                                 <ui:Button x:Name="BtnServerBM"
+                                            Margin="4,0,0,0"
+                                            Padding="10,4"
+                                            Appearance="Secondary"
+                                            Icon="{ui:SymbolIcon Symbol=Globe20}"
+                                            Click="BtnServerBM_Click"
+                                            ToolTip="Open Server on BattleMetrics"
+                                            Visibility="Collapsed" />
+                            </StackPanel>
+                        </Grid>
                     </Border>
 
-                    <StackPanel Margin="0,12,0,0" Orientation="Horizontal">
-                        <Button
-                            x:Name="BtnListenPairing"
-                            Width="120"
-                            Margin="0,0,8,0"
-                            Click="BtnListenPairing_Click"
-                            Content="Listen (Pairing)"
-                            IsEnabled="{Binding CanStartPairing}"
-                            Style="{StaticResource GhostButton}">
-                            <Button.ContextMenu>
-                                <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                    <MenuItem Click="BtnListenWithEdge_Click" Header="Try Pairing with Edge" />
-                                    <Separator />
-                                    <MenuItem Click="BtnResetPairing_Click" Header="Reset pairing (delete config)" />
-                                    <MenuItem Click="BtnResetAndListen_Click" Header="Reset + Listen (re-pair)" />
-                                    <MenuItem Click="BtnResetAndListenEdge_Click" Header="Reset + Listen with Edge" />
-                                </ContextMenu>
-                            </Button.ContextMenu>
-                        </Button>
-                        <TextBlock
-                            x:Name="TxtPairingState"
-                            Margin="0,0,10,0"
-                            VerticalAlignment="Center"
-                            FontSize="11"
-                            Foreground="{StaticResource TextSubtle}"
-                            Text="Pairing: idle" />
-                        <ProgressBar
-                            Width="60"
-                            Height="4"
-                            Margin="0,0,10,0"
-                            VerticalAlignment="Center"
-                            IsIndeterminate="True"
-                            Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}" />
+                    <StackPanel Margin="0,16,0,0">
+                        <TextBlock Text="PAIRING &amp; MAINTENANCE" 
+                                   FontSize="10" 
+                                   FontWeight="Bold" 
+                                   Opacity="0.6"
+                                   Foreground="White"
+                                   Margin="0,0,0,10"/>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                <ui:Button x:Name="BtnListenPairing"
+                                           Padding="12,6"
+                                           Appearance="Secondary"
+                                           Click="BtnListenPairing_Click"
+                                           Content="Listen"
+                                           Icon="{ui:SymbolIcon Symbol=Bluetooth24}"
+                                           Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibilityInv}}"
+                                           IsEnabled="{Binding CanStartPairing}">
+                                    <ui:Button.ContextMenu>
+                                        <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                            <MenuItem Click="BtnListenWithEdge_Click" Header="Try Pairing with Edge" />
+                                            <Separator />
+                                            <MenuItem Click="BtnResetPairing_Click" Header="Reset pairing (delete config)" />
+                                            <MenuItem Click="BtnResetAndListen_Click" Header="Reset + Listen (re-pair)" />
+                                            <MenuItem Click="BtnResetAndListenEdge_Click" Header="Reset + Listen with Edge" />
+                                        </ContextMenu>
+                                    </ui:Button.ContextMenu>
+                                </ui:Button>
 
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            FontSize="9"
-                            FontStyle="Italic"
-                            Foreground="{StaticResource TextSubtle}"
-                            Text="Tip: Right-click Listen for more options" />
+                                <ui:Button x:Name="BtnStopPairing"
+                                           Padding="12,6"
+                                           Appearance="Caution"
+                                           Click="BtnStopPairing_Click"
+                                           Content="Stop"
+                                           Icon="{ui:SymbolIcon Symbol=Stop24}"
+                                           Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="12,0">
+                                <TextBlock x:Name="TxtPairingState"
+                                           FontSize="11"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextSubtle}"
+                                           Text="Pairing: idle" />
+                                <ProgressBar Height="3"
+                                             Margin="0,4,0,0"
+                                             IsIndeterminate="True"
+                                             Background="#1AFFFFFF"
+                                             Foreground="{DynamicResource SystemAccentBrush}"
+                                             Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}" />
+                            </StackPanel>
+
+                            <TextBlock Grid.Column="2"
+                                       VerticalAlignment="Center"
+                                       FontSize="9"
+                                       FontStyle="Italic"
+                                       Opacity="0.5"
+                                       Foreground="White"
+                                       Text="Right-click for options" />
+                        </Grid>
                     </StackPanel>
 
-                    <Separator Margin="0,12,0,12" />
+                    <Border Height="1" Margin="0,14,0,14" Background="#12FFFFFF" />
 
                     <Grid Margin="0,4,0,0">
                         <Grid.ColumnDefinitions>
@@ -1234,7 +1313,7 @@
                             Text="Last pull: --:--" />
                     </Grid>
 
-                    <Separator Margin="0,12,0,12" />
+                    <Border Height="1" Margin="0,10,0,12" Background="#12FFFFFF" />
                 </StackPanel>
 
                 <!--  BOTTOM: Footer (Donate + Serverdaten) andocken  -->
@@ -1245,37 +1324,26 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <!--  Donate (links)  -->
-                    <Button
-                        x:Name="BtnDonate"
-                        Grid.Column="0"
-                        Margin="0,0,10,0"
-                        Click="BtnDonate_Click"
-                        Style="{StaticResource DonateButton}"
-                        ToolTip="Support (Opens in Browser)">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock
-                                Margin="2,0,6,0"
-                                FontSize="14"
-                                Foreground="Red"
-                                Text="&#x2764;" />
-                            <TextBlock
-                                Margin="2,0,6,0"
-                                Foreground="Red"
-                                Text="Donate" />
-                        </StackPanel>
-                    </Button>
+                    <!--  Donate  -->
+                    <ui:Button x:Name="BtnDonate"
+                               Grid.Column="0"
+                               Margin="0,0,10,0"
+                               Background="#991A1A00"
+                               BorderBrush="#80FFD166"
+                               Foreground="#FFD166"
+                               Click="BtnDonate_Click"
+                               Content="Donate"
+                               Icon="{ui:SymbolIcon Symbol=Heart24}"
+                               ToolTip="Support the developer" />
 
-                    <!--  Spacer  -->
-                    <Border Grid.Column="1">
-                        <Button
-                            Width="100"
-                            Margin="0,0,8,0"
-                            Background="DarkSlateGray"
-                            BorderBrush="DarkGoldenrod"
-                            Click="BtnHardReset_Click"
-                            Content="Reset Connection" />
-
+                    <!--  Reset Connection  -->
+                    <Border Grid.Column="1" VerticalAlignment="Center">
+                        <ui:Button Appearance="Secondary"
+                                   Margin="0,0,8,0"
+                                   Click="BtnHardReset_Click"
+                                   Content="Reset"
+                                   Icon="{ui:SymbolIcon Symbol=ArrowReset24}"
+                                   ToolTip="Reset WebSocket connection" />
                     </Border>
 
                     <!--  Serverdaten (rechtsbÃ¼ndig, gleiche Zeile)  -->
@@ -1290,20 +1358,6 @@
                             Text="{Binding ServerPlayers}" />
 
                         <Button
-                            x:Name="BtnServerBM"
-                            Width="24"
-                            Height="18"
-                            Margin="6,0,0,0"
-                            Padding="0"
-                            Click="BtnServerBM_Click"
-                            Content="BM"
-                            FontSize="9"
-                            FontWeight="Bold"
-                            Style="{StaticResource GhostButton}"
-                            ToolTip="Open Server on BattleMetrics"
-                            Visibility="Collapsed" />
-
-                        <ToggleButton
                             x:Name="BtnShowOnline"
                             Width="18"
                             Height="18"
@@ -1313,189 +1367,7 @@
                             Click="BtnShowOnline_Click"
                             Content="&#x25BC;"
                             Foreground="White"
-                            ToolTip="Show Online Players" />
-
-                        <Popup
-                            x:Name="PopupOnlinePlayers"
-                            AllowsTransparency="True"
-                            IsOpen="{Binding IsChecked, ElementName=BtnShowOnline}"
-                            PlacementTarget="{Binding ElementName=BtnShowOnline}"
-                            PopupAnimation="Fade"
-                            StaysOpen="False"
-                            VerticalOffset="20">
-                            <Border
-                                Width="320"
-                                MaxHeight="350"
-                                Padding="6"
-                                Background="{DynamicResource Surface}"
-                                BorderBrush="{DynamicResource CardBorder}"
-                                BorderThickness="1"
-                                CornerRadius="6">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <TextBlock
-                                        Grid.Row="0"
-                                        Margin="0,0,0,6"
-                                        FontWeight="Bold"
-                                        Text="Online Players" />
-
-                                    <!--  Manual Add Section  -->
-                                    <DockPanel Grid.Row="1" Margin="0,0,0,8">
-                                        <Button
-                                            x:Name="BtnAddManual"
-                                            Margin="4,0,0,0"
-                                            Padding="4,0"
-                                            Click="BtnAddManual_Click"
-                                            Content="Track ID"
-                                            DockPanel.Dock="Right"
-                                            FontSize="10"
-                                            Style="{StaticResource GhostButton}" />
-                                        <TextBox
-                                            x:Name="TxtManualBMId"
-                                            Padding="4,1"
-                                            Background="#25272a"
-                                            BorderBrush="#333"
-                                            BorderThickness="1"
-                                            FontSize="10"
-                                            Foreground="Gray"
-                                            GotFocus="TxtManualBMId_GotFocus"
-                                            LostFocus="TxtManualBMId_LostFocus"
-                                            Text="Manual BM ID..." />
-                                    </DockPanel>
-                                    <!--  Online List Filter  -->
-                                    <TextBox
-                                        x:Name="TxtOnlineFilter"
-                                        Grid.Row="1"
-                                        Margin="0,0,0,6"
-                                        Padding="4,2"
-                                        Background="#1a1c1e"
-                                        BorderBrush="#333"
-                                        BorderThickness="1"
-                                        FontSize="10"
-                                        Foreground="White"
-                                        GotFocus="TxtOnlineFilter_GotFocus"
-                                        LostFocus="TxtOnlineFilter_LostFocus"
-                                        TextChanged="TxtOnlineFilter_TextChanged"
-                                        Visibility="Collapsed" />
-
-                                    <Grid
-                                        x:Name="PnlOnlineStatus"
-                                        Grid.Row="2"
-                                        Margin="20"
-                                        VerticalAlignment="Center"
-                                        Visibility="Collapsed">
-                                        <StackPanel>
-                                            <ProgressBar
-                                                x:Name="PbOnlineLoading"
-                                                Width="120"
-                                                Height="2"
-                                                Margin="0,0,0,12"
-                                                Background="#111"
-                                                BorderThickness="0"
-                                                Foreground="{DynamicResource CbAccent}"
-                                                IsIndeterminate="True" />
-                                            <TextBlock
-                                                x:Name="TxtOnlinePlayersStatus"
-                                                HorizontalAlignment="Center"
-                                                FontSize="11"
-                                                Foreground="{DynamicResource TextSubtle}"
-                                                Text="Loading players..."
-                                                TextAlignment="Center"
-                                                TextWrapping="Wrap" />
-                                        </StackPanel>
-                                    </Grid>
-                                    <ListBox
-                                        x:Name="ListOnlinePlayers"
-                                        Grid.Row="2"
-                                        Background="Transparent"
-                                        BorderThickness="0"
-                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Margin="0,2">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                                        <Ellipse
-                                                            x:Name="StatusDot"
-                                                            Width="8"
-                                                            Height="8"
-                                                            Margin="0,0,6,0"
-                                                            VerticalAlignment="Center"
-                                                            Fill="{DynamicResource CbAccent}" />
-                                                        <TextBlock
-                                                            Width="130"
-                                                            VerticalAlignment="Center"
-                                                            FontWeight="SemiBold"
-                                                            Text="{Binding Name}"
-                                                            TextTrimming="CharacterEllipsis"
-                                                            ToolTip="{Binding Name}" />
-                                                    </StackPanel>
-                                                    <TextBlock
-                                                        Grid.Column="1"
-                                                        Width="50"
-                                                        Margin="0,0,8,0"
-                                                        VerticalAlignment="Center"
-                                                        FontSize="11"
-                                                        Foreground="{DynamicResource TextSubtle}"
-                                                        Text="{Binding PlayTimeStr}" />
-                                                    <Button
-                                                        x:Name="BtnPlayerBM"
-                                                        Grid.Column="2"
-                                                        Margin="0,0,4,0"
-                                                        Padding="4,2"
-                                                        Click="BtnPlayerBM_Click"
-                                                        Content="BM"
-                                                        FontSize="10"
-                                                        Style="{StaticResource GhostButton}"
-                                                        Tag="{Binding}" />
-                                                    <Button
-                                                        x:Name="BtnAction"
-                                                        Grid.Column="3"
-                                                        Width="50"
-                                                        Margin="0"
-                                                        Padding="6,2"
-                                                        Click="BtnTrackPlayer_Click"
-                                                        Content="Track"
-                                                        FontSize="10"
-                                                        Style="{StaticResource GhostButton}"
-                                                        Tag="{Binding}" />
-                                                </Grid>
-                                                <DataTemplate.Triggers>
-                                                    <DataTrigger Binding="{Binding IsTracked}" Value="True">
-                                                        <Setter TargetName="StatusDot" Property="Fill" Value="#FFD166" />
-                                                        <Setter TargetName="BtnAction" Property="Content" Value="Details" />
-                                                    </DataTrigger>
-                                                    <!--  Invisible button until hover  -->
-                                                    <Trigger Property="IsMouseOver" Value="False">
-                                                        <Setter TargetName="BtnAction" Property="Opacity" Value="0.2" />
-                                                    </Trigger>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="BtnAction" Property="Opacity" Value="1" />
-                                                    </Trigger>
-                                                </DataTemplate.Triggers>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                    <Button
-                                        x:Name="BtnViewTracking"
-                                        Grid.Row="3"
-                                        Margin="0,6,0,0"
-                                        Click="BtnViewTracking_Click"
-                                        Content="View tracker players list"
-                                        Style="{StaticResource PrimaryButton}" />
-                                </Grid>
-                            </Border>
-                        </Popup>
+                            ToolTip="Show Online Players Tab" />
 
                         <TextBlock Margin="6,0,0,0" Text="  |  Queue:" />
                         <TextBlock
@@ -2400,6 +2272,126 @@
                             </ScrollViewer>
                         </DockPanel>
                     </TabItem>
+
+                    <!--  ===== PLAYERS =====  -->
+                    <TabItem Header="Players" Style="{StaticResource PrettyTabItem}">
+                        <TabControl Margin="0,10,0,0" Background="Transparent" BorderThickness="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            <TabControl.Template>
+                                <ControlTemplate TargetType="{x:Type TabControl}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <TabPanel Grid.Row="0" Margin="0" Panel.ZIndex="1" IsItemsHost="True" />
+                                        <ContentPresenter Grid.Row="1" Margin="0,8,0,0" ContentSource="SelectedContent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                                    </Grid>
+                                </ControlTemplate>
+                            </TabControl.Template>
+                            
+                            <!--  Online Players Tab  -->
+                            <TabItem Header="Online" Style="{StaticResource PrettyTabItem}">
+                                <Border Background="#801a1c1e" BorderBrush="#33ffffff" BorderThickness="1" CornerRadius="8" Padding="12" TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid Grid.Row="0" Margin="0,0,0,12">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock FontSize="16" FontWeight="Bold" Foreground="White" Text="Online Players" VerticalAlignment="Center" />
+                                            <Button Grid.Column="1" Click="BtnShowOnline_Click" Content="Refresh" Style="{StaticResource GhostButton}" Padding="8,4" />
+                                        </Grid>
+
+                                        <DockPanel Grid.Row="1" Margin="0,0,0,8">
+                                            <Button x:Name="BtnAddManual" Margin="4,0,0,0" Padding="8,4" Click="BtnAddManual_Click" Content="Track ID" DockPanel.Dock="Right" Style="{StaticResource GhostButton}" />
+                                            <TextBox x:Name="TxtManualBMId" Padding="6,4" Background="#25272a" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" Foreground="Gray" GotFocus="TxtManualBMId_GotFocus" LostFocus="TxtManualBMId_LostFocus" Text="Manual BM ID..." />
+                                        </DockPanel>
+
+                                        <TextBox x:Name="TxtOnlineFilter" Grid.Row="2" Margin="0,0,0,8" Padding="6,4" Background="#1a1c1e" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" Foreground="White" GotFocus="TxtOnlineFilter_GotFocus" LostFocus="TxtOnlineFilter_LostFocus" TextChanged="TxtOnlineFilter_TextChanged" Visibility="Collapsed" />
+
+                                        <Grid x:Name="PnlOnlineStatus" Grid.Row="3" Margin="20" VerticalAlignment="Center" Visibility="Collapsed">
+                                            <StackPanel>
+                                                <ProgressBar x:Name="PbOnlineLoading" Width="120" Height="2" Margin="0,0,0,12" Background="#111" BorderThickness="0" Foreground="{DynamicResource CbAccent}" IsIndeterminate="True" />
+                                                <TextBlock x:Name="TxtOnlinePlayersStatus" HorizontalAlignment="Center" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="Loading players..." TextAlignment="Center" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <ListBox x:Name="ListOnlinePlayers" Grid.Row="3" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="0,2">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                                            <Ellipse x:Name="StatusDot" Width="8" Height="8" Margin="0,0,6,0" VerticalAlignment="Center" Fill="{DynamicResource CbAccent}" />
+                                                            <TextBlock VerticalAlignment="Center" FontWeight="SemiBold" Text="{Binding Name}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" MaxWidth="160" />
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="1" Width="40" Margin="0,0,8,0" VerticalAlignment="Center" FontSize="10" Foreground="{DynamicResource TextSubtle}" Text="{Binding PlayTimeStr}" />
+                                                        <Button x:Name="BtnPlayerBM" Grid.Column="2" Margin="0,0,4,0" Padding="4,2" Click="BtnPlayerBM_Click" Content="BM" FontSize="10" Style="{StaticResource GhostButton}" Tag="{Binding}" />
+                                                        <Button x:Name="BtnAction" Grid.Column="3" Width="45" Margin="0" Padding="6,2" Click="BtnTrackPlayer_Click" Content="Track" FontSize="10" Style="{StaticResource GhostButton}" Tag="{Binding}" />
+                                                    </Grid>
+                                                    <DataTemplate.Triggers>
+                                                        <DataTrigger Binding="{Binding IsTracked}" Value="True">
+                                                            <Setter TargetName="StatusDot" Property="Fill" Value="#FFD166" />
+                                                            <Setter TargetName="BtnAction" Property="Content" Value="Details" />
+                                                        </DataTrigger>
+                                                        <Trigger Property="IsMouseOver" Value="False">
+                                                            <Setter TargetName="BtnAction" Property="Opacity" Value="0.2" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="BtnAction" Property="Opacity" Value="1" />
+                                                        </Trigger>
+                                                    </DataTemplate.Triggers>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </Grid>
+                                </Border>
+                            </TabItem>
+
+                            <!--  Tracked Players Tab  -->
+                            <TabItem Header="Tracked" Style="{StaticResource PrettyTabItem}">
+                                <Border Background="#801a1c1e" BorderBrush="#33ffffff" BorderThickness="1" CornerRadius="8" Padding="12" TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid Grid.Row="0" Margin="0,0,0,12">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock FontSize="16" FontWeight="Bold" Foreground="White" Text="Tracked Players" VerticalAlignment="Center" />
+                                            <Button Grid.Column="1" Click="BtnManageGroups_Click" Content="Manage Groups" Style="{StaticResource GhostButton}" Padding="8,4" />
+                                        </Grid>
+
+                                        <TextBox x:Name="TxtTrackedFilter" Grid.Row="1" Margin="0,0,0,8" Padding="6,4" Background="#1a1c1e" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" Foreground="Gray" GotFocus="TxtTrackedFilter_GotFocus" LostFocus="TxtTrackedFilter_LostFocus" TextChanged="TxtTrackedFilter_TextChanged" Text="Filter players..." />
+
+                                        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                                            <StackPanel x:Name="ListTrackedPlayers" />
+                                        </ScrollViewer>
+
+                                        <Button x:Name="BtnViewTracking" Grid.Row="3" Margin="0,8,0,0" Click="BtnViewAllAnalysis_Click" Content="View All Analysis Report" Style="{StaticResource PrimaryButton}" />
+                                    </Grid>
+                                </Border>
+                            </TabItem>
+                        </TabControl>
+                    </TabItem>
                 </TabControl>
 
             </DockPanel>
@@ -2409,7 +2401,11 @@
         <Border
             Grid.Column="2"
             MinWidth="800"
-            Style="{StaticResource Card}">
+            Background="{DynamicResource Surface}"
+            BorderBrush="{DynamicResource CardBorder}"
+            BorderThickness="1,0,0,0"
+            CornerRadius="0"
+            Padding="12">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -2881,16 +2877,47 @@
                                     FontSize="20"
                                     FontWeight="SemiBold"
                                     Foreground="White"
-                                    Text="Connect to a server to see the map"
+                                    Text="Ready to explore the map?"
                                     TextAlignment="Center"
                                     TextWrapping="Wrap" />
                                 <TextBlock
-                                    Margin="0,10,0,0"
+                                    Margin="0,10,0,24"
                                     FontSize="13"
                                     Foreground="#D9FFFFFF"
-                                    Text="Once connected, the live Rust map will load here."
+                                    Text="Connect to a selected server to load the live Rust map and team."
                                     TextAlignment="Center"
                                     TextWrapping="Wrap" />
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <ui:Button Appearance="Primary"
+                                               Content="Connect"
+                                               Icon="{ui:SymbolIcon Symbol=PlugConnected20}"
+                                               Padding="16,8"
+                                               Click="BtnConnect_Click"
+                                               Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}" />
+                                    
+                                    <ui:Button Appearance="Primary"
+                                               Content="Full Connect"
+                                               Icon="{ui:SymbolIcon Symbol=Play20}"
+                                               Padding="16,8"
+                                               Click="BtnConnect_Click"
+                                               ToolTip="Load Map &amp; Team">
+                                        <ui:Button.Style>
+                                            <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                <Style.Triggers>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding Selected.IsConnected}" Value="True" />
+                                                            <Condition Binding="{Binding Selected.IsFullConnected}" Value="False" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </MultiDataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ui:Button.Style>
+                                    </ui:Button>
+                                </StackPanel>
                             </StackPanel>
                         </Border>
                     </Border>
@@ -3589,54 +3616,103 @@
                     VerticalScrollBarVisibility="Auto" />
             </Grid>
         </Border>
-        <Grid
-            Panel.ZIndex="9999"
-            Background="#80000000"
-            IsHitTestVisible="True"
-            Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
-            <Border
-                Width="320"
-                Padding="20"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Background="#F2FFFFFF"
-                CornerRadius="8">
+        <!--  Premium Busy Overlay (Single)  -->
+        <Grid Panel.ZIndex="9999"
+              Background="#AA000000"
+              IsHitTestVisible="True"
+              Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
+            <Border Width="340"
+                    Padding="24"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="{DynamicResource Surface}"
+                    BorderBrush="{DynamicResource CardBorder}"
+                    BorderThickness="1"
+                    CornerRadius="12">
                 <StackPanel>
-                    <TextBlock
-                        Margin="0,0,0,10"
-                        FontSize="16"
-                        FontWeight="SemiBold"
-                        Text="{Binding BusyText}"
-                        TextAlignment="Center" />
-                    <ProgressBar Height="6" IsIndeterminate="True" />
+                    <ui:ProgressRing IsIndeterminate="True" Height="48" Width="48" Margin="0,0,0,20" />
+                    <TextBlock Text="{Binding BusyText}"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               TextAlignment="Center"
+                               Foreground="{DynamicResource TextPrimary}"/>
+                    <TextBlock Text="This may take a moment..."
+                               Margin="0,8,0,0"
+                               FontSize="12"
+                               TextAlignment="Center"
+                               Foreground="{DynamicResource TextSubtle}"/>
                 </StackPanel>
             </Border>
         </Grid>
 
-        <Grid
-            Panel.ZIndex="9999"
-            Background="#80000000"
-            IsHitTestVisible="True"
-            Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
-            <Border
-                Width="320"
-                Padding="20"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Background="{DynamicResource AccentDark}"
-                CornerRadius="8">
+        <!--  Dedicated Login & Pairing Overlay  -->
+        <Grid Panel.ZIndex="9998"
+              Background="#DD0F1115"
+              IsHitTestVisible="True"
+              Visibility="{Binding ShowLoginOverlay, Converter={StaticResource BoolToVisibility}}">
+            
+            <Border Width="450"
+                    Padding="40"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="{DynamicResource Surface}"
+                    BorderBrush="{DynamicResource CardBorder}"
+                    BorderThickness="1"
+                    CornerRadius="20">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="50" Opacity="0.5" ShadowDepth="0" Color="Black"/>
+                </Border.Effect>
+                
                 <StackPanel>
-                    <TextBlock
-                        Margin="0,0,0,10"
-                        FontSize="16"
-                        FontWeight="SemiBold"
-                        Text="{Binding BusyText}"
-                        TextAlignment="Center" />
-                    <ProgressBar Height="6" IsIndeterminate="True" />
+                    <!-- Icon / Brand -->
+                    <Border Width="80" Height="80" 
+                            Background="{DynamicResource AccentDark}" 
+                            CornerRadius="40" 
+                            Margin="0,0,0,24">
+                        <ui:SymbolIcon Symbol="ShieldLock24" FontSize="40" Foreground="{DynamicResource Accent}"/>
+                    </Border>
+
+                    <TextBlock Text="Ready to dominate Rust?"
+                               FontSize="28"
+                               FontWeight="Bold"
+                               TextAlignment="Center"
+                               Margin="0,0,0,12"
+                               Foreground="White"/>
+                    
+                    <TextBlock Text="Pair your account to start tracking players, receiving base raid alerts, and controlling your smart devices instantly."
+                               FontSize="14"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,32"
+                               Foreground="{DynamicResource TextSubtle}"
+                               LineHeight="20"/>
+
+                    <ui:Button x:Name="BtnOverlayPair"
+                               Height="50"
+                               HorizontalAlignment="Stretch"
+                               Appearance="Primary"
+                               Click="BtnListenPairing_Click"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Icon="{ui:SymbolIcon Symbol=BluetoothConnected24}">
+                        <ui:Button.Content>
+                            <TextBlock Text="Login &amp; Pair Account" Margin="8,0,0,0"/>
+                        </ui:Button.Content>
+                    </ui:Button>
+                    
+                    <TextBlock Margin="0,20,0,0" 
+                               Text="Requires Steam login in your default browser."
+                               FontSize="11"
+                               TextAlignment="Center"
+                               Foreground="{DynamicResource TextCaption}"/>
                 </StackPanel>
             </Border>
         </Grid>
 
+        <!-- Wpf.Ui: WinUI 3 Snackbar presenter (toast notifications) -->
+        <ui:SnackbarPresenter x:Name="RootSnackbar" Grid.ColumnSpan="3"
+                              VerticalAlignment="Bottom" HorizontalAlignment="Stretch"
+                              Margin="20,0,20,20" Panel.ZIndex="9999" />
 
     </Grid>
 </Window>
