@@ -14,6 +14,8 @@ public class TrackedPlayer
     public string BMId { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string LastServerName { get; set; } = string.Empty;
+    public string GroupName { get; set; } = string.Empty;
+    public string GroupColor { get; set; } = string.Empty;
     public List<PlayerSession> Sessions { get; set; } = new();
 }
 
@@ -70,6 +72,8 @@ public class TrackingSettings
     public bool AnnounceSpawnsMaster { get; set; } = false;
     public bool SaveAlertSelection { get; set; } = true;
     public string LastSeenVersion { get; set; } = "";
+    public DateTime? FcmIssuedAt { get; set; }
+    public DateTime? FcmExpiresAt { get; set; }
 }
 
 
@@ -98,6 +102,14 @@ public static class TrackingService
     private static readonly string _settingsPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "RustPlusDesk", "tracking_settings.json");
+
+    public static bool IsFcmConfigured()
+    {
+        string path = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "RustPlusDesk", "rustplusjs-config.json");
+        return File.Exists(path) && new FileInfo(path).Length > 50;
+    }
     
     private static Dictionary<string, TrackedPlayer> _trackedPlayers = new();
     private static TrackingSettings _settings = new();
@@ -227,6 +239,16 @@ public static class TrackingService
             OnOnlinePlayersUpdated?.Invoke();
         }
     }
+    public static void SetPlayerGroup(string bmId, string groupName, string groupColor)
+    {
+        if (_trackedPlayers.TryGetValue(bmId, out var player))
+        {
+            player.GroupName = groupName;
+            player.GroupColor = groupColor;
+            SaveDB();
+            OnOnlinePlayersUpdated?.Invoke();
+        }
+    }
     public static List<TrackedPlayer> GetTrackedPlayers() => _trackedPlayers.Values.ToList();
     public static bool IsTracked(string bmId) => _trackedPlayers.ContainsKey(bmId);
 
@@ -288,6 +310,18 @@ public static class TrackingService
     {
         get => _settings.SteamId64;
         set { _settings.SteamId64 = value; SaveDB(); }
+    }
+
+    public static DateTime? FcmIssuedAt
+    {
+        get => _settings.FcmIssuedAt;
+        set { _settings.FcmIssuedAt = value; SaveDB(); }
+    }
+
+    public static DateTime? FcmExpiresAt
+    {
+        get => _settings.FcmExpiresAt;
+        set { _settings.FcmExpiresAt = value; SaveDB(); }
     }
 
     public static bool AnnounceCargo
