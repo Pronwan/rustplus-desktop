@@ -12,7 +12,7 @@
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
                 <TextBlock Text="Patch Notes &amp; Version History" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,2"/>
                 <!-- UPDATE VERSION NUMBER HERE -->
-                <TextBlock Text="Current Version: 4.6.0" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
+                <TextBlock Text="Current Version: 4.9.9-beta1" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
             </StackPanel>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -22,27 +22,47 @@
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="v4.6.0  |  Stability &amp; Intelligence Overhaul (May 14, 2026)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="v4.9.9-beta1  |  The Version 5 Foundation (May 14, 2026)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
 
                             <!-- Features -->
-                            <TextBlock Text="&#x2022; Stabilized FCM Listener &amp; Modern Edge-to-Edge Layout" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="&#x2022; Integrated Auto-Update System &amp; Runtime Management" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
-                                Complete architectural hardening of the background Node.js process. Implemented crash protections for FCM listening and transitioned to asynchronous event hooks to prevent UI deadlocks. The main interface now features a sleek, borderless edge-to-edge design.
+                                Never worry about manual updates again. The app now features a background update checker with a detailed progress UI (speed, size, percentage). Runtime management has been centralized for better reliability and easier installation of background components like Node.js.
                             </TextBlock>
 
-                            <TextBlock Text="&#x2022; Dynamic Chat Commands &amp; Automated !Upkeep" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="&#x2022; Modernized 'Edge-to-Edge' Interface &amp; Map Fixes" FontWeight="Bold" Margin="0,0,0,4"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
-                                Smart home automation now scales with your base. Support for an arbitrary number of Smart Switches and Tool Cupboard monitors. Use the new <Run FontWeight="Bold">!Upkeep</Run> command in team chat to get a live report of remaining TC time.
+                                We've removed the thick outer margins and squared off the window corners for a truly modern, flush design. This update also includes <Run FontWeight="Bold">interpolated map movements</Run> for smoother tracking and a fix for the "Center on Map" functionality for team members.
                             </TextBlock>
 
-                            <TextBlock Text="&#x2022; Token Expiry Management &amp; UI Polish" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="&#x2022; Smart Home Automation: Storage Monitors &amp; !Upkeep" FontWeight="Bold" Margin="0,0,0,4"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
-                                Never miss a notification again. The app now tracks FCM token expiry and warns you proactively. UI artifacts like the green selection highlights have been removed for a unified, premium dark theme experience. Access Chat Alert and Chat Command customization through Settings window.
+                                Complete overhaul of device detection. The app now <Run FontWeight="Bold">automatically recognizes Storage Monitors</Run> alongside Smart Switches and TCs for chat commands. Use the <Run FontWeight="Bold">!Upkeep</Run> command in team chat to get a live report from any number of connected Tool Cupboards.
                             </TextBlock>
 
-                            <TextBlock Text="&#x2022; Intuitive Navigation &amp; Map Center and other Fixes" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="&#x2022; Advanced Player Tracking &amp; Grouping" FontWeight="Bold" Margin="0,0,0,4"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
-                                Overhauled the Settings window and "Chat Alerts" interaction for better accessibility. Fixed "Center on Map" functionality for team members and improved the transition between follow and manual map control. Audio Smart Alarm alerts now work properly again.
+                                The player list has been completely rebuilt for better performance and styling. You can now track custom Group Names and Colors for players. Added a context menu to player cards, along with "Is Online" and "Play Time" indicators.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Expanded Alert System &amp; Smart Alarm Fixes" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Added new chat alert options for <Run FontWeight="Bold">monuments, player status, and shop changes</Run>. Audio Smart Alarm alerts now work properly again, and we've added a warning if your pairing is about to expire via a new sidebar InfoBar.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Enhanced Background Stability &amp; FCM Hardening" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Major architectural hardening to prevent crashes and UI freezes. We've modernized how the app talks to the background Node.js process, ensuring 100% responsiveness even during complex connection transitions.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; UI Polish &amp; Overhauled Settings" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                The Settings window and "Chat Alerts" interaction have been redesigned for better accessibility. We've removed legacy UI artifacts like green selection highlights and upgraded the BattleMetrics button to a sleek icon on the server card.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Steam Identity Integration (Preview)" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Added a new Steam Identity section to the sidebar, paving the way for future account-linked features like profile pictures and easy login.
                             </TextBlock>
                         </StackPanel>
                     </Border>
