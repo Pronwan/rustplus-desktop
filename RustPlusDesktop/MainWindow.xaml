@@ -7,9 +7,9 @@
     xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:views="clr-namespace:RustPlusDesk.Views"
     xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="Rust+ Desktop by Pronwan"
     Width="1600"
     Height="814"
@@ -814,20 +814,24 @@
             ResizeDirection="Columns"
             ShowsPreview="False" />
 
-        <!--  Left Panel: WinUI 3 Acrylic Glass  -->
+        <!--  Left Panel  -->
         <Border
             Grid.Column="0"
             MinWidth="400"
             MaxWidth="600"
             Margin="0,0,0,0"
-            Background="#CC181B20"
+            Padding="16"
+            Background="{DynamicResource Surface}"
             BorderBrush="#1AFFFFFF"
             BorderThickness="0,0,1,0"
             CornerRadius="0"
-            Padding="16"
             TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="24" ShadowDepth="0" Color="#000000" Opacity="0.45" />
+                <DropShadowEffect
+                    BlurRadius="24"
+                    Opacity="0.35"
+                    ShadowDepth="0"
+                    Color="#000000" />
             </Border.Effect>
             <!--  WICHTIG: DockPanel statt StackPanel, damit die Mitte flexibel ist  -->
             <DockPanel LastChildFill="True">
@@ -837,19 +841,41 @@
                     <!--  TOP: Account + Serverliste (bleibt unverÃ¤ndert)  -->
                     <StackPanel DockPanel.Dock="Top">
 
-                        <!--  Account-Zeile + Update-Button rechts  -->
-                        <!-- App Header & Utility Toolbar -->
+                        <!--  App Header & Utility Toolbar  -->
                         <Grid Margin="0,0,0,14">
-                            <TextBlock
-                                FontSize="10"
-                                FontWeight="Bold"
-                                Opacity="0.6"
-                                Foreground="White"
-                                Text="RUST+ DESKTOP" 
-                                VerticalAlignment="Center"/>
+                            <!--  Brand: Name + Version  -->
+                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                <ui:SymbolIcon
+                                    Margin="0,0,6,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="14"
+                                    Foreground="{DynamicResource Accent}"
+                                    Symbol="Shield24" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontSize="12"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource TextPrimary}"
+                                    Text="Rust+ Desktop" />
+                                <Border
+                                    Margin="6,0,0,0"
+                                    Padding="5,1"
+                                    VerticalAlignment="Center"
+                                    Background="{DynamicResource AccentDark}"
+                                    BorderBrush="{DynamicResource Accent}"
+                                    BorderThickness="1"
+                                    CornerRadius="4">
+                                    <TextBlock
+                                        x:Name="TxtAppVersion"
+                                        FontSize="9"
+                                        FontWeight="Bold"
+                                        Foreground="{DynamicResource Accent}"
+                                        Text="v4.5.2" />
+                                </Border>
+                            </StackPanel>
 
                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                <!-- Icon Download Progress -->
+                                <!--  Icon Download Progress  -->
                                 <StackPanel
                                     Margin="0,0,12,0"
                                     VerticalAlignment="Center"
@@ -872,50 +898,58 @@
                                     </TextBlock>
                                 </StackPanel>
 
-                                <ui:Button x:Name="BtnCheckUpdates"
-                                           Appearance="Transparent"
-                                           Click="BtnCheckUpdates_Click"
-                                           Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"
-                                           ToolTip="Check for Updates" />
-                                <ui:Button x:Name="BtnDiscord"
-                                           Margin="4,0,0,0"
-                                           Appearance="Transparent"
-                                           Click="BtnDiscord_Click"
-                                           ToolTip="Join Discord">
-                                    <Image Source="pack://application:,,,/Assets/icons/discord.png" Width="16" Height="16"/>
+                                <ui:Button
+                                    x:Name="BtnCheckUpdates"
+                                    Appearance="Transparent"
+                                    Click="BtnCheckUpdates_Click"
+                                    Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"
+                                    ToolTip="Check for Updates" />
+                                <ui:Button
+                                    x:Name="BtnDiscord"
+                                    Margin="4,0,0,0"
+                                    Appearance="Transparent"
+                                    Click="BtnDiscord_Click"
+                                    ToolTip="Join Discord">
+                                    <Image
+                                        Width="16"
+                                        Height="16"
+                                        Source="pack://application:,,,/Assets/icons/discord.png" />
                                 </ui:Button>
-                                <ui:Button x:Name="BtnPatchNotes"
-                                           Margin="4,0,0,0"
-                                           Appearance="Transparent"
-                                           Click="BtnPatchNotes_Click"
-                                           Icon="{ui:SymbolIcon Symbol=DocumentBulletList24}"
-                                           ToolTip="Patch Notes" />
-                                <ui:Button x:Name="BtnSettings"
-                                           Margin="4,0,0,0"
-                                           Appearance="Transparent"
-                                           Click="BtnSettings_Click"
-                                           Icon="{ui:SymbolIcon Symbol=Settings24}"
-                                           ToolTip="Settings" />
+                                <ui:Button
+                                    x:Name="BtnPatchNotes"
+                                    Margin="4,0,0,0"
+                                    Appearance="Transparent"
+                                    Click="BtnPatchNotes_Click"
+                                    Icon="{ui:SymbolIcon Symbol=DocumentBulletList24}"
+                                    ToolTip="Patch Notes" />
+                                <ui:Button
+                                    x:Name="BtnSettings"
+                                    Margin="4,0,0,0"
+                                    Appearance="Transparent"
+                                    Click="BtnSettings_Click"
+                                    Icon="{ui:SymbolIcon Symbol=Settings24}"
+                                    ToolTip="Settings" />
                             </StackPanel>
                         </Grid>
-                        
+
                         <!--  FCM Token Expiry Badge  -->
-                        <ui:InfoBar x:Name="FcmExpiryInfoBar"
-                                    Margin="0,0,0,10"
-                                    IsClosable="False"
-                                    IsOpen="True"
-                                    Title="FCM Credentials"
-                                    Message="{Binding FcmExpiryText}"
-                                    Severity="Informational">
+                        <ui:InfoBar
+                            x:Name="FcmExpiryInfoBar"
+                            Title="FCM Credentials"
+                            Margin="0,0,0,10"
+                            IsClosable="False"
+                            IsOpen="True"
+                            Message="{Binding FcmExpiryText}"
+                            Severity="Informational">
                             <ui:InfoBar.Style>
                                 <Style TargetType="ui:InfoBar">
-                                    <Setter Property="Severity" Value="Informational"/>
+                                    <Setter Property="Severity" Value="Informational" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FcmExpiryDays, Converter={StaticResource LessThanConverter}, ConverterParameter=30}" Value="True">
-                                            <Setter Property="Severity" Value="Warning"/>
+                                            <Setter Property="Severity" Value="Warning" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding FcmExpiryDays}" Value="-1">
-                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Setter Property="Visibility" Value="Collapsed" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -927,61 +961,74 @@
                             <!--  Steam Login usw.  -->
                         </StackPanel>
 
-                        <Border Height="1" Margin="0,10,0,10" Background="#12FFFFFF" />
+                        <Border
+                            Height="1"
+                            Margin="0,10,0,10"
+                            Background="#12FFFFFF" />
 
                     </StackPanel>
 
 
-                        <!-- Account Profile Section -->
-                        <Border Background="{DynamicResource SurfaceAlt}" 
-                                BorderBrush="{DynamicResource CardBorder}" 
-                                BorderThickness="1" 
-                                CornerRadius="10" 
-                                Padding="12,10"
-                                Margin="0,0,0,4">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                
-                                <!-- Profile Picture / Icon -->
-                                <Grid Grid.Column="0" Width="36" Height="36" Margin="0,0,12,0">
-                                    <Border CornerRadius="18" Background="#1AFFFFFF" ClipToBounds="True">
-                                        <Grid>
-                                            <ui:SymbolIcon Symbol="Person24" FontSize="20" Opacity="0.4" Foreground="White"/>
-                                            <Image x:Name="ImgSteam" Stretch="UniformToFill" />
-                                        </Grid>
-                                    </Border>
-                                </Grid>
+                    <!--  Account Profile Section  -->
+                    <Border
+                        Margin="0,0,0,4"
+                        Padding="12,10"
+                        Background="{DynamicResource SurfaceAlt}"
+                        BorderBrush="{DynamicResource CardBorder}"
+                        BorderThickness="1"
+                        CornerRadius="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                                <!-- Identity -->
-                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock x:Name="TxtSteamName" 
-                                               Text="Steam Account" 
-                                               FontWeight="SemiBold" 
-                                               FontSize="13" 
-                                               Foreground="White"/>
-                                    <TextBlock x:Name="TxtSteamId" 
-                                               FontSize="10" 
-                                               Opacity="0.6" 
-                                               Foreground="White"
-                                               Text="Not Logged In"/>
-                                </StackPanel>
-
-                                <!-- Login Action -->
-                                <ui:Button x:Name="BtnSteamLogin"
-                                           Grid.Column="2"
-                                           Padding="12,6"
-                                           Appearance="Primary"
-                                           Click="BtnSteamLogin_Click"
-                                           Content="Login"
-                                           Icon="{ui:SymbolIcon Symbol=PersonArrowRight24}" />
+                            <!--  Profile Picture / Icon  -->
+                            <Grid
+                                Grid.Column="0"
+                                Width="36"
+                                Height="36"
+                                Margin="0,0,12,0">
+                                <Border
+                                    Background="#1AFFFFFF"
+                                    ClipToBounds="True"
+                                    CornerRadius="18">
+                                    <Grid>
+                                        <ui:SymbolIcon
+                                            FontSize="20"
+                                            Foreground="White"
+                                            Opacity="0.4"
+                                            Symbol="Person24" />
+                                        <Image x:Name="ImgSteam" Stretch="UniformToFill" />
+                                    </Grid>
+                                </Border>
                             </Grid>
-                        </Border>
 
-                    <Border Height="1" Margin="0,12,0,12" Background="#12FFFFFF" />
+                            <!--  Identity  -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock
+                                    x:Name="TxtSteamName"
+                                    FontSize="13"
+                                    FontWeight="SemiBold"
+                                    Foreground="White"
+                                    Text="Steam Account" />
+                                <TextBlock
+                                    x:Name="TxtSteamId"
+                                    FontSize="10"
+                                    Foreground="White"
+                                    Opacity="0.6"
+                                    Text="Not Logged In" />
+                            </StackPanel>
+
+
+                        </Grid>
+                    </Border>
+
+                    <Border
+                        Height="1"
+                        Margin="0,12,0,12"
+                        Background="#12FFFFFF" />
 
                     <TextBlock
                         Margin="0,0,0,8"
@@ -1042,13 +1089,14 @@
                         </TextBlock>
                     </Grid>
 
-                    <!-- Compact Connection Card -->
-                    <Border Margin="0,8,0,0" 
-                            Background="{DynamicResource SurfaceAlt}" 
-                            BorderBrush="{DynamicResource CardBorder}" 
-                            BorderThickness="1" 
-                            CornerRadius="10" 
-                            Padding="12,10">
+                    <!--  Compact Connection Card  -->
+                    <Border
+                        Margin="0,8,0,0"
+                        Padding="12,10"
+                        Background="{DynamicResource SurfaceAlt}"
+                        BorderBrush="{DynamicResource CardBorder}"
+                        BorderThickness="1"
+                        CornerRadius="10">
                         <Border.Style>
                             <Style TargetType="Border">
                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -1061,14 +1109,21 @@
                         </Border.Style>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" /> <!-- Status Dot -->
-                                <ColumnDefinition Width="*" />    <!-- Name + Status -->
-                                <ColumnDefinition Width="Auto" /> <!-- Buttons -->
+                                <ColumnDefinition Width="Auto" /> 
+                                <!--  Status Dot  -->
+                                <ColumnDefinition Width="*" />    
+                                <!--  Name + Status  -->
+                                <ColumnDefinition Width="Auto" /> 
+                                <!--  Buttons  -->
                             </Grid.ColumnDefinitions>
 
-                            <!-- Status Dot -->
-                            <Grid Width="10" Height="10" VerticalAlignment="Center" Margin="0,0,12,0">
-                                 <Ellipse x:Name="StatusDot">
+                            <!--  Status Dot  -->
+                            <Grid
+                                Width="10"
+                                Height="10"
+                                Margin="0,0,12,0"
+                                VerticalAlignment="Center">
+                                <Ellipse x:Name="StatusDot">
                                     <Ellipse.Style>
                                         <Style TargetType="Ellipse">
                                             <Setter Property="Fill" Value="#EF5350" />
@@ -1085,16 +1140,20 @@
                                             </Style.Triggers>
                                         </Style>
                                     </Ellipse.Style>
-                                 </Ellipse>
+                                </Ellipse>
                             </Grid>
 
                             <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Selected.Name, FallbackValue='Select a Server'}"
-                                           FontWeight="SemiBold"
-                                           FontSize="13"
-                                           Foreground="White"
-                                           TextTrimming="CharacterEllipsis"/>
-                                <TextBlock FontSize="9" FontWeight="Bold" Opacity="0.7">
+                                <TextBlock
+                                    FontSize="13"
+                                    FontWeight="SemiBold"
+                                    Foreground="White"
+                                    Text="{Binding Selected.Name, FallbackValue='Select a Server'}"
+                                    TextTrimming="CharacterEllipsis" />
+                                <TextBlock
+                                    FontSize="9"
+                                    FontWeight="Bold"
+                                    Opacity="0.7">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Text" Value="DISCONNECTED" />
@@ -1122,28 +1181,33 @@
                                 </TextBlock>
                             </StackPanel>
 
-                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                 <!-- Connect -->
-                                 <ui:Button x:Name="UiBtnConnect" 
-                                            Padding="10,4"
-                                            Margin="0,0,4,0"
-                                            Appearance="Primary"
-                                            Content="Connect"
-                                            Icon="{ui:SymbolIcon Symbol=PlugConnected20}"
-                                            Click="BtnConnect_Click"
-                                            Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}" />
+                            <StackPanel
+                                Grid.Column="2"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                                <!--  Connect  -->
+                                <ui:Button
+                                    x:Name="UiBtnConnect"
+                                    Margin="0,0,4,0"
+                                    Padding="10,4"
+                                    Appearance="Primary"
+                                    Click="BtnConnect_Click"
+                                    Content="Connect"
+                                    Icon="{ui:SymbolIcon Symbol=PlugConnected20}"
+                                    Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}" />
 
-                                 <!-- Full Connect -->
-                                 <ui:Button x:Name="UiBtnFullConnect" 
-                                            Padding="10,4"
-                                            Margin="0,0,4,0"
-                                            Appearance="Primary"
-                                            Content="Full Connect"
-                                            Icon="{ui:SymbolIcon Symbol=Play20}"
-                                            ToolTip="Load Map &amp; Team"
-                                            Click="BtnConnect_Click">
+                                <!--  Full Connect  -->
+                                <ui:Button
+                                    x:Name="UiBtnFullConnect"
+                                    Margin="0,0,4,0"
+                                    Padding="10,4"
+                                    Appearance="Primary"
+                                    Click="BtnConnect_Click"
+                                    Content="Full Connect"
+                                    Icon="{ui:SymbolIcon Symbol=Play20}"
+                                    ToolTip="Load Map &amp; Team">
                                     <ui:Button.Style>
-                                        <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                        <Style BasedOn="{StaticResource {x:Type ui:Button}}" TargetType="ui:Button">
                                             <Setter Property="Visibility" Value="Collapsed" />
                                             <Style.Triggers>
                                                 <MultiDataTrigger>
@@ -1156,62 +1220,67 @@
                                             </Style.Triggers>
                                         </Style>
                                     </ui:Button.Style>
-                                 </ui:Button>
+                                </ui:Button>
 
-                                 <!-- Disconnect -->
-                                 <ui:Button x:Name="UiBtnDisconnect"
-                                            Padding="10,4"
-                                            Appearance="Caution"
-                                            Icon="{ui:SymbolIcon Symbol=PlugDisconnected20}"
-                                            Click="BtnDisconnect_Click"
-                                            ToolTip="Disconnect"
-                                            Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}}" />
-                                 
-                                 <!-- Info -->
-                                 <ui:Button Margin="4,0,0,0"
-                                            Padding="10,4"
-                                            Appearance="Secondary"
-                                            Icon="{ui:SymbolIcon Symbol=Info20}"
-                                            Click="BtnShowServerInfo_Click"
-                                            ToolTip="Server Details" />
+                                <!--  Disconnect  -->
+                                <ui:Button
+                                    x:Name="UiBtnDisconnect"
+                                    Padding="10,4"
+                                    Appearance="Caution"
+                                    Click="BtnDisconnect_Click"
+                                    Icon="{ui:SymbolIcon Symbol=PlugDisconnected20}"
+                                    ToolTip="Disconnect"
+                                    Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}}" />
 
-                                 <!-- BattleMetrics -->
-                                 <ui:Button x:Name="BtnServerBM"
-                                            Margin="4,0,0,0"
-                                            Padding="10,4"
-                                            Appearance="Secondary"
-                                            Icon="{ui:SymbolIcon Symbol=Globe20}"
-                                            Click="BtnServerBM_Click"
-                                            ToolTip="Open Server on BattleMetrics"
-                                            Visibility="Collapsed" />
+                                <!--  Info  -->
+                                <ui:Button
+                                    Margin="4,0,0,0"
+                                    Padding="10,4"
+                                    Appearance="Secondary"
+                                    Click="BtnShowServerInfo_Click"
+                                    Icon="{ui:SymbolIcon Symbol=Info20}"
+                                    ToolTip="Server Details" />
+
+                                <!--  BattleMetrics  -->
+                                <ui:Button
+                                    x:Name="BtnServerBM"
+                                    Margin="4,0,0,0"
+                                    Padding="10,4"
+                                    Appearance="Secondary"
+                                    Click="BtnServerBM_Click"
+                                    Icon="{ui:SymbolIcon Symbol=Globe20}"
+                                    ToolTip="Open Server on BattleMetrics"
+                                    Visibility="Collapsed" />
                             </StackPanel>
                         </Grid>
                     </Border>
 
                     <StackPanel Margin="0,16,0,0">
-                        <TextBlock Text="PAIRING &amp; MAINTENANCE" 
-                                   FontSize="10" 
-                                   FontWeight="Bold" 
-                                   Opacity="0.6"
-                                   Foreground="White"
-                                   Margin="0,0,0,10"/>
-                        
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            FontSize="10"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Opacity="0.6"
+                            Text="PAIRING &amp; MAINTENANCE" />
+
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            
+
                             <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                <ui:Button x:Name="BtnListenPairing"
-                                           Padding="12,6"
-                                           Appearance="Secondary"
-                                           Click="BtnListenPairing_Click"
-                                           Content="Listen"
-                                           Icon="{ui:SymbolIcon Symbol=Bluetooth24}"
-                                           Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibilityInv}}"
-                                           IsEnabled="{Binding CanStartPairing}">
+                                <ui:Button
+                                    x:Name="BtnListenPairing"
+                                    Padding="12,6"
+                                    Appearance="Secondary"
+                                    Click="BtnListenPairing_Click"
+                                    Content="Listen"
+                                    Icon="{ui:SymbolIcon Symbol=Bluetooth24}"
+                                    IsEnabled="{Binding CanStartPairing}"
+                                    Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibilityInv}}">
                                     <ui:Button.ContextMenu>
                                         <ContextMenu Style="{StaticResource DarkContextMenu}">
                                             <MenuItem Click="BtnListenWithEdge_Click" Header="Try Pairing with Edge" />
@@ -1223,40 +1292,50 @@
                                     </ui:Button.ContextMenu>
                                 </ui:Button>
 
-                                <ui:Button x:Name="BtnStopPairing"
-                                           Padding="12,6"
-                                           Appearance="Caution"
-                                           Click="BtnStopPairing_Click"
-                                           Content="Stop"
-                                           Icon="{ui:SymbolIcon Symbol=Stop24}"
-                                           Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}" />
+                                <ui:Button
+                                    x:Name="BtnStopPairing"
+                                    Padding="12,6"
+                                    Appearance="Caution"
+                                    Click="BtnStopPairing_Click"
+                                    Content="Stop"
+                                    Icon="{ui:SymbolIcon Symbol=Stop24}"
+                                    Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}" />
                             </StackPanel>
 
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="12,0">
-                                <TextBlock x:Name="TxtPairingState"
-                                           FontSize="11"
-                                           FontWeight="SemiBold"
-                                           Foreground="{StaticResource TextSubtle}"
-                                           Text="Pairing: idle" />
-                                <ProgressBar Height="3"
-                                             Margin="0,4,0,0"
-                                             IsIndeterminate="True"
-                                             Background="#1AFFFFFF"
-                                             Foreground="{DynamicResource SystemAccentBrush}"
-                                             Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}" />
+                            <StackPanel
+                                Grid.Column="1"
+                                Margin="12,0"
+                                VerticalAlignment="Center">
+                                <TextBlock
+                                    x:Name="TxtPairingState"
+                                    FontSize="11"
+                                    FontWeight="SemiBold"
+                                    Foreground="{StaticResource TextSubtle}"
+                                    Text="Pairing: idle" />
+                                <ProgressBar
+                                    Height="3"
+                                    Margin="0,4,0,0"
+                                    Background="#1AFFFFFF"
+                                    Foreground="{DynamicResource SystemAccentBrush}"
+                                    IsIndeterminate="True"
+                                    Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}" />
                             </StackPanel>
 
-                            <TextBlock Grid.Column="2"
-                                       VerticalAlignment="Center"
-                                       FontSize="9"
-                                       FontStyle="Italic"
-                                       Opacity="0.5"
-                                       Foreground="White"
-                                       Text="Right-click for options" />
+                            <TextBlock
+                                Grid.Column="2"
+                                VerticalAlignment="Center"
+                                FontSize="9"
+                                FontStyle="Italic"
+                                Foreground="White"
+                                Opacity="0.5"
+                                Text="Right-click for options" />
                         </Grid>
                     </StackPanel>
 
-                    <Border Height="1" Margin="0,14,0,14" Background="#12FFFFFF" />
+                    <Border
+                        Height="1"
+                        Margin="0,14,0,14"
+                        Background="#12FFFFFF" />
 
                     <Grid Margin="0,4,0,0">
                         <Grid.ColumnDefinitions>
@@ -1313,7 +1392,10 @@
                             Text="Last pull: --:--" />
                     </Grid>
 
-                    <Border Height="1" Margin="0,10,0,12" Background="#12FFFFFF" />
+                    <Border
+                        Height="1"
+                        Margin="0,10,0,12"
+                        Background="#12FFFFFF" />
                 </StackPanel>
 
                 <!--  BOTTOM: Footer (Donate + Serverdaten) andocken  -->
@@ -1325,25 +1407,27 @@
                     </Grid.ColumnDefinitions>
 
                     <!--  Donate  -->
-                    <ui:Button x:Name="BtnDonate"
-                               Grid.Column="0"
-                               Margin="0,0,10,0"
-                               Background="#991A1A00"
-                               BorderBrush="#80FFD166"
-                               Foreground="#FFD166"
-                               Click="BtnDonate_Click"
-                               Content="Donate"
-                               Icon="{ui:SymbolIcon Symbol=Heart24}"
-                               ToolTip="Support the developer" />
+                    <ui:Button
+                        x:Name="BtnDonate"
+                        Grid.Column="0"
+                        Margin="0,0,10,0"
+                        Background="#991A1A00"
+                        BorderBrush="#80FFD166"
+                        Click="BtnDonate_Click"
+                        Content="Donate"
+                        Foreground="#FFD166"
+                        Icon="{ui:SymbolIcon Symbol=Heart24}"
+                        ToolTip="Support the developer" />
 
                     <!--  Reset Connection  -->
                     <Border Grid.Column="1" VerticalAlignment="Center">
-                        <ui:Button Appearance="Secondary"
-                                   Margin="0,0,8,0"
-                                   Click="BtnHardReset_Click"
-                                   Content="Reset"
-                                   Icon="{ui:SymbolIcon Symbol=ArrowReset24}"
-                                   ToolTip="Reset WebSocket connection" />
+                        <ui:Button
+                            Margin="0,0,8,0"
+                            Appearance="Secondary"
+                            Click="BtnHardReset_Click"
+                            Content="Reset"
+                            Icon="{ui:SymbolIcon Symbol=ArrowReset24}"
+                            ToolTip="Reset WebSocket connection" />
                     </Border>
 
                     <!--  Serverdaten (rechtsbÃ¼ndig, gleiche Zeile)  -->
@@ -1542,8 +1626,13 @@
                                                             Margin="12,0"
                                                             VerticalAlignment="Center"
                                                             Orientation="Horizontal">
-                                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                                <TextBlock Text="✗ " Foreground="#FF4B4B" FontSize="14" FontWeight="Bold" VerticalAlignment="Center">
+                                                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                                                <TextBlock
+                                                                    VerticalAlignment="Center"
+                                                                    FontSize="14"
+                                                                    FontWeight="Bold"
+                                                                    Foreground="#FF4B4B"
+                                                                    Text="✗ ">
                                                                     <TextBlock.Style>
                                                                         <Style TargetType="TextBlock">
                                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -1600,19 +1689,19 @@
                                                                         <Setter Property="Background" Value="#2E3646" />
                                                                         <Setter Property="BorderBrush" Value="#4A5670" />
                                                                         <Style.Triggers>
-                                                                            <!-- ON / ACTIVE / ONLINE Status (Grün) -->
+                                                                            <!--  ON / ACTIVE / ONLINE Status (Grün)  -->
                                                                             <DataTrigger Binding="{Binding IsOn}" Value="True">
                                                                                 <Setter Property="Background" Value="#193F2A" />
                                                                                 <Setter Property="BorderBrush" Value="#2B7A4E" />
                                                                             </DataTrigger>
-                                                                            
-                                                                            <!-- Storage Monitor & Others: Immer grün wenn da -->
+
+                                                                            <!--  Storage Monitor & Others: Immer grün wenn da  -->
                                                                             <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
                                                                                 <Setter Property="Background" Value="#193F2A" />
                                                                                 <Setter Property="BorderBrush" Value="#2B7A4E" />
                                                                             </DataTrigger>
-                                                                            
-                                                                            <!-- MISSING / DISCONNECTED (Rot) -->
+
+                                                                            <!--  MISSING / DISCONNECTED (Rot)  -->
                                                                             <DataTrigger Binding="{Binding IsMissing}" Value="True">
                                                                                 <Setter Property="Background" Value="#412226" />
                                                                                 <Setter Property="BorderBrush" Value="#8E3B45" />
@@ -1629,12 +1718,12 @@
                                                                         <Style TargetType="TextBlock">
                                                                             <Setter Property="Text" Value="ONLINE" />
                                                                             <Style.Triggers>
-                                                                                <!-- MISSING -->
+                                                                                <!--  MISSING  -->
                                                                                 <DataTrigger Binding="{Binding IsMissing}" Value="True">
                                                                                     <Setter Property="Text" Value="OFFLINE" />
                                                                                 </DataTrigger>
 
-                                                                                <!-- Smart Switch -->
+                                                                                <!--  Smart Switch  -->
                                                                                 <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
                                                                                     <Setter Property="Text" Value="OFF" />
                                                                                 </DataTrigger>
@@ -1656,7 +1745,7 @@
                                                                                     <Setter Property="Text" Value="ON" />
                                                                                 </MultiDataTrigger>
 
-                                                                                <!-- Smart Alarm -->
+                                                                                <!--  Smart Alarm  -->
                                                                                 <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
                                                                                     <Setter Property="Text" Value="INACTIVE" />
                                                                                 </DataTrigger>
@@ -1678,7 +1767,7 @@
                                                                                     <Setter Property="Text" Value="ACTIVE" />
                                                                                 </MultiDataTrigger>
 
-                                                                                <!-- Group -->
+                                                                                <!--  Group  -->
                                                                                 <DataTrigger Binding="{Binding IsGroup}" Value="True">
                                                                                     <Setter Property="Text" Value="GROUP" />
                                                                                 </DataTrigger>
@@ -1889,7 +1978,12 @@
                                                                                     Opacity="0.9"
                                                                                     Source="{StaticResource IconStorageMonitor}" />
                                                                                 <StackPanel Orientation="Horizontal">
-                                                                                    <TextBlock Text="✗ " Foreground="#FF4B4B" FontSize="13" FontWeight="Bold" VerticalAlignment="Center">
+                                                                                    <TextBlock
+                                                                                        VerticalAlignment="Center"
+                                                                                        FontSize="13"
+                                                                                        FontWeight="Bold"
+                                                                                        Foreground="#FF4B4B"
+                                                                                        Text="✗ ">
                                                                                         <TextBlock.Style>
                                                                                             <Style TargetType="TextBlock">
                                                                                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -2112,170 +2206,170 @@
                         Style="{StaticResource PrettyTabItem}">
                         <Grid>
                             <Grid Background="#181A1E">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
-                            <Grid.Resources>
-                                <conv:BoolToVisibilityConverter x:Key="Vis" />
-                                <conv:BoolToVisibilityConverter x:Key="VisInv" Invert="True" />
-                                <Style x:Key="Card" TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="10" />
-                                    <Setter Property="Background" Value="#FF141F2D" />
-                                    <Setter Property="Padding" Value="8" />
-                                    <Setter Property="Margin" Value="6" />
-                                </Style>
-                            </Grid.Resources>
-
-                            <!--  Liste oben  -->
-                            <ListBox
-                                x:Name="TeamList"
-                                Grid.Row="0"
-                                HorizontalContentAlignment="Stretch"
-                                ItemsSource="{Binding TeamMembers, RelativeSource={RelativeSource AncestorType=Window}}"
-                                ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel />
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                                <!--  KontextmenÃ¼  -->
-                                <ListBox.Resources>
-                                    <ContextMenu x:Key="TeamContextMenu" Style="{StaticResource DarkContextMenu}">
-                                        <MenuItem Click="Team_Center_Click" Header="Center on map" />
-                                        <MenuItem Click="Team_Follow_Click" Header="Follow on Map" />
-                                        <MenuItem Click="Team_OpenProfile_Click" Header="Open Steam profile" />
-                                        <Separator />
-                                        <MenuItem Click="Team_Promote_Click" Header="Promote to Leader" />
-                                        <MenuItem Click="Team_Kick_Click" Header="Kick from Team" />
-                                    </ContextMenu>
-                                </ListBox.Resources>
-
-                                <ListBox.ItemContainerStyle>
-                                    <Style TargetType="ListBoxItem">
-                                        <Setter Property="Width" Value="210" />
-                                        <!--  an deine Fensterbreite anpassen  -->
+                                <Grid.Resources>
+                                    <conv:BoolToVisibilityConverter x:Key="Vis" />
+                                    <conv:BoolToVisibilityConverter x:Key="VisInv" Invert="True" />
+                                    <Style x:Key="Card" TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="10" />
+                                        <Setter Property="Background" Value="#FF141F2D" />
+                                        <Setter Property="Padding" Value="8" />
                                         <Setter Property="Margin" Value="6" />
-                                        <EventSetter Event="MouseLeftButtonUp" Handler="TeamItem_MouseLeftButtonUp" />
-                                        <Setter Property="ContextMenu" Value="{StaticResource TeamContextMenu}" />
                                     </Style>
-                                </ListBox.ItemContainerStyle>
+                                </Grid.Resources>
 
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Style="{StaticResource Card}">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="56" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
+                                <!--  Liste oben  -->
+                                <ListBox
+                                    x:Name="TeamList"
+                                    Grid.Row="0"
+                                    HorizontalContentAlignment="Stretch"
+                                    ItemsSource="{Binding TeamMembers, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                    <!--  KontextmenÃ¼  -->
+                                    <ListBox.Resources>
+                                        <ContextMenu x:Key="TeamContextMenu" Style="{StaticResource DarkContextMenu}">
+                                            <MenuItem Click="Team_Center_Click" Header="Center on map" />
+                                            <MenuItem Click="Team_Follow_Click" Header="Follow on Map" />
+                                            <MenuItem Click="Team_OpenProfile_Click" Header="Open Steam profile" />
+                                            <Separator />
+                                            <MenuItem Click="Team_Promote_Click" Header="Promote to Leader" />
+                                            <MenuItem Click="Team_Kick_Click" Header="Kick from Team" />
+                                        </ContextMenu>
+                                    </ListBox.Resources>
 
-                                                <!--  Avatar + Status  -->
-                                                <Grid Width="44" Height="44">
-                                                    <Image
-                                                        ClipToBounds="True"
-                                                        Source="{Binding Avatar}"
-                                                        Stretch="UniformToFill" />
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="Width" Value="210" />
+                                            <!--  an deine Fensterbreite anpassen  -->
+                                            <Setter Property="Margin" Value="6" />
+                                            <EventSetter Event="MouseLeftButtonUp" Handler="TeamItem_MouseLeftButtonUp" />
+                                            <Setter Property="ContextMenu" Value="{StaticResource TeamContextMenu}" />
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
 
-                                                    <!--  Online (grÃ¼n)  -->
-                                                    <Ellipse
-                                                        Width="12"
-                                                        Height="12"
-                                                        HorizontalAlignment="Right"
-                                                        VerticalAlignment="Bottom"
-                                                        Fill="#4CAF50"
-                                                        Stroke="Black"
-                                                        Visibility="{Binding IsOnline, Converter={StaticResource Vis}}" />
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource Card}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="56" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
 
-                                                    <!--  Offline (grau)  -->
-                                                    <Ellipse
-                                                        Width="12"
-                                                        Height="12"
-                                                        HorizontalAlignment="Right"
-                                                        VerticalAlignment="Bottom"
-                                                        Fill="#666"
-                                                        Stroke="Black"
-                                                        Visibility="{Binding IsOnline, Converter={StaticResource VisInv}}" />
+                                                    <!--  Avatar + Status  -->
+                                                    <Grid Width="44" Height="44">
+                                                        <Image
+                                                            ClipToBounds="True"
+                                                            Source="{Binding Avatar}"
+                                                            Stretch="UniformToFill" />
 
-                                                    <!--  Leader-Stern  -->
-                                                    <Path
-                                                        Width="20"
-                                                        Height="20"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Top"
-                                                        Data="M 10,1 12,7 19,7 13,11 15,18 10,14 5,18 7,11 1,7 8,7 z"
-                                                        Fill="Gold"
-                                                        Stroke="Black"
-                                                        Visibility="{Binding IsLeader, Converter={StaticResource Vis}}" />
+                                                        <!--  Online (grÃ¼n)  -->
+                                                        <Ellipse
+                                                            Width="12"
+                                                            Height="12"
+                                                            HorizontalAlignment="Right"
+                                                            VerticalAlignment="Bottom"
+                                                            Fill="#4CAF50"
+                                                            Stroke="Black"
+                                                            Visibility="{Binding IsOnline, Converter={StaticResource Vis}}" />
+
+                                                        <!--  Offline (grau)  -->
+                                                        <Ellipse
+                                                            Width="12"
+                                                            Height="12"
+                                                            HorizontalAlignment="Right"
+                                                            VerticalAlignment="Bottom"
+                                                            Fill="#666"
+                                                            Stroke="Black"
+                                                            Visibility="{Binding IsOnline, Converter={StaticResource VisInv}}" />
+
+                                                        <!--  Leader-Stern  -->
+                                                        <Path
+                                                            Width="20"
+                                                            Height="20"
+                                                            HorizontalAlignment="Left"
+                                                            VerticalAlignment="Top"
+                                                            Data="M 10,1 12,7 19,7 13,11 15,18 10,14 5,18 7,11 1,7 8,7 z"
+                                                            Fill="Gold"
+                                                            Stroke="Black"
+                                                            Visibility="{Binding IsLeader, Converter={StaticResource Vis}}" />
+                                                    </Grid>
+
+                                                    <!--  Textseite  -->
+                                                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                                        <!--  Name: Standard weiÃŸ, offline leicht ausgrauen, tot = rot  -->
+                                                        <TextBlock FontSize="14" FontWeight="SemiBold">
+                                                            <TextBlock.Text>
+                                                                <Binding Path="Name" />
+                                                            </TextBlock.Text>
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Foreground" Value="White" />
+                                                                    <Setter Property="Opacity" Value="1" />
+                                                                    <Style.Triggers>
+                                                                        <!--  tot -> rot  -->
+                                                                        <DataTrigger Binding="{Binding IsDead}" Value="True">
+                                                                            <Setter Property="Foreground" Value="#EF5350" />
+                                                                        </DataTrigger>
+                                                                        <!--  offline -> etwas ausgegraut  -->
+                                                                        <DataTrigger Binding="{Binding IsOnline}" Value="False">
+                                                                            <Setter Property="Opacity" Value="0.55" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+
+                                                        <TextBlock
+                                                            FontSize="11"
+                                                            Foreground="White"
+                                                            Opacity="0.65"
+                                                            Text="{Binding SteamId}" />
+                                                    </StackPanel>
                                                 </Grid>
-
-                                                <!--  Textseite  -->
-                                                <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                                                    <!--  Name: Standard weiÃŸ, offline leicht ausgrauen, tot = rot  -->
-                                                    <TextBlock FontSize="14" FontWeight="SemiBold">
-                                                        <TextBlock.Text>
-                                                            <Binding Path="Name" />
-                                                        </TextBlock.Text>
-                                                        <TextBlock.Style>
-                                                            <Style TargetType="TextBlock">
-                                                                <Setter Property="Foreground" Value="White" />
-                                                                <Setter Property="Opacity" Value="1" />
-                                                                <Style.Triggers>
-                                                                    <!--  tot -> rot  -->
-                                                                    <DataTrigger Binding="{Binding IsDead}" Value="True">
-                                                                        <Setter Property="Foreground" Value="#EF5350" />
-                                                                    </DataTrigger>
-                                                                    <!--  offline -> etwas ausgegraut  -->
-                                                                    <DataTrigger Binding="{Binding IsOnline}" Value="False">
-                                                                        <Setter Property="Opacity" Value="0.55" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </TextBlock.Style>
-                                                    </TextBlock>
-
-                                                    <TextBlock
-                                                        FontSize="11"
-                                                        Foreground="White"
-                                                        Opacity="0.65"
-                                                        Text="{Binding SteamId}" />
-                                                </StackPanel>
-                                            </Grid>
-                                        </Border>
+                                            </Border>
 
 
 
 
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
 
-                            <!--  Buttonleiste unten  -->
-                            <Grid Grid.Row="1" Margin="0,10,0,0">
-                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                    <!--  Profile marker toggle (default ON)  -->
-                                    <CheckBox
-                                        x:Name="ChkProfileMarkers"
-                                        Margin="0,0,12,0"
-                                        Checked="ChkProfileMarkers_Toggled"
-                                        Content="Profile markers"
-                                        IsChecked="True"
-                                        Unchecked="ChkProfileMarkers_Toggled" />
+                                <!--  Buttonleiste unten  -->
+                                <Grid Grid.Row="1" Margin="0,10,0,0">
+                                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                        <!--  Profile marker toggle (default ON)  -->
+                                        <CheckBox
+                                            x:Name="ChkProfileMarkers"
+                                            Margin="0,0,12,0"
+                                            Checked="ChkProfileMarkers_Toggled"
+                                            Content="Profile markers"
+                                            IsChecked="True"
+                                            Unchecked="ChkProfileMarkers_Toggled" />
 
-                                    <!--  Death markers toggle (default OFF)  -->
-                                    <CheckBox
-                                        x:Name="ChkDeathMarkers"
-                                        Margin="0,0,12,0"
-                                        Checked="ChkDeathMarkers_Toggled"
-                                        Content="Death markers"
-                                        IsChecked="False"
-                                        Unchecked="ChkDeathMarkers_Toggled" />
-                                </StackPanel>
+                                        <!--  Death markers toggle (default OFF)  -->
+                                        <CheckBox
+                                            x:Name="ChkDeathMarkers"
+                                            Margin="0,0,12,0"
+                                            Checked="ChkDeathMarkers_Toggled"
+                                            Content="Death markers"
+                                            IsChecked="False"
+                                            Unchecked="ChkDeathMarkers_Toggled" />
+                                    </StackPanel>
+                                </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
-                </TabItem>
+                    </TabItem>
 
                     <!--  ===== CAMERAS =====  -->
                     <TabItem Header="Cameras" Style="{StaticResource PrettyTabItem}">
@@ -2288,7 +2382,7 @@
                                 Orientation="Horizontal">
                                 <Button x:Name="BtnAddCam" Style="{StaticResource PrimaryButton}">
                                     <StackPanel Margin="6,1" Orientation="Horizontal">
-                                        <TextBlock Text="ðŸŽ¥ Add Camera" />
+                                        <TextBlock Text="+ Add Camera" />
                                     </StackPanel>
                                 </Button>
                             </StackPanel>
@@ -2337,7 +2431,12 @@
 
                     <!--  ===== PLAYERS =====  -->
                     <TabItem Header="Players" Style="{StaticResource PrettyTabItem}">
-                        <TabControl Margin="0,10,0,0" Background="Transparent" BorderThickness="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <TabControl
+                            Margin="0,10,0,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Background="Transparent"
+                            BorderThickness="0">
                             <TabControl.Template>
                                 <ControlTemplate TargetType="{x:Type TabControl}">
                                     <Grid>
@@ -2345,15 +2444,30 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
-                                        <TabPanel Grid.Row="0" Margin="0" Panel.ZIndex="1" IsItemsHost="True" />
-                                        <ContentPresenter Grid.Row="1" Margin="0,8,0,0" ContentSource="SelectedContent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                                        <TabPanel
+                                            Grid.Row="0"
+                                            Margin="0"
+                                            Panel.ZIndex="1"
+                                            IsItemsHost="True" />
+                                        <ContentPresenter
+                                            Grid.Row="1"
+                                            Margin="0,8,0,0"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            ContentSource="SelectedContent" />
                                     </Grid>
                                 </ControlTemplate>
                             </TabControl.Template>
-                            
+
                             <!--  Online Players Tab  -->
                             <TabItem Header="Online" Style="{StaticResource PrettyTabItem}">
-                                <Border Background="#801a1c1e" BorderBrush="#33ffffff" BorderThickness="1" CornerRadius="8" Padding="12" TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
+                                <Border
+                                    Padding="12"
+                                    Background="#801a1c1e"
+                                    BorderBrush="#33ffffff"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -2367,25 +2481,88 @@
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock FontSize="16" FontWeight="Bold" Foreground="White" Text="Online Players" VerticalAlignment="Center" />
-                                            <Button Grid.Column="1" Click="BtnShowOnline_Click" Content="Refresh" Style="{StaticResource GhostButton}" Padding="8,4" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="16"
+                                                FontWeight="Bold"
+                                                Foreground="White"
+                                                Text="Online Players" />
+                                            <Button
+                                                Grid.Column="1"
+                                                Padding="8,4"
+                                                Click="BtnShowOnline_Click"
+                                                Content="Refresh"
+                                                Style="{StaticResource GhostButton}" />
                                         </Grid>
 
                                         <DockPanel Grid.Row="1" Margin="0,0,0,8">
-                                            <Button x:Name="BtnAddManual" Margin="4,0,0,0" Padding="8,4" Click="BtnAddManual_Click" Content="Track ID" DockPanel.Dock="Right" Style="{StaticResource GhostButton}" />
-                                            <TextBox x:Name="TxtManualBMId" Padding="6,4" Background="#25272a" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" Foreground="Gray" GotFocus="TxtManualBMId_GotFocus" LostFocus="TxtManualBMId_LostFocus" Text="Manual BM ID..." />
+                                            <Button
+                                                x:Name="BtnAddManual"
+                                                Margin="4,0,0,0"
+                                                Padding="8,4"
+                                                Click="BtnAddManual_Click"
+                                                Content="Track ID"
+                                                DockPanel.Dock="Right"
+                                                Style="{StaticResource GhostButton}" />
+                                            <TextBox
+                                                x:Name="TxtManualBMId"
+                                                Padding="6,4"
+                                                Background="#25272a"
+                                                BorderBrush="{DynamicResource CardBorder}"
+                                                BorderThickness="1"
+                                                Foreground="Gray"
+                                                GotFocus="TxtManualBMId_GotFocus"
+                                                LostFocus="TxtManualBMId_LostFocus"
+                                                Text="Manual BM ID..." />
                                         </DockPanel>
 
-                                        <TextBox x:Name="TxtOnlineFilter" Grid.Row="2" Margin="0,0,0,8" Padding="6,4" Background="#1a1c1e" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" Foreground="White" GotFocus="TxtOnlineFilter_GotFocus" LostFocus="TxtOnlineFilter_LostFocus" TextChanged="TxtOnlineFilter_TextChanged" Visibility="Collapsed" />
+                                        <TextBox
+                                            x:Name="TxtOnlineFilter"
+                                            Grid.Row="2"
+                                            Margin="0,0,0,8"
+                                            Padding="6,4"
+                                            Background="#1a1c1e"
+                                            BorderBrush="{DynamicResource CardBorder}"
+                                            BorderThickness="1"
+                                            Foreground="White"
+                                            GotFocus="TxtOnlineFilter_GotFocus"
+                                            LostFocus="TxtOnlineFilter_LostFocus"
+                                            TextChanged="TxtOnlineFilter_TextChanged"
+                                            Visibility="Collapsed" />
 
-                                        <Grid x:Name="PnlOnlineStatus" Grid.Row="3" Margin="20" VerticalAlignment="Center" Visibility="Collapsed">
+                                        <Grid
+                                            x:Name="PnlOnlineStatus"
+                                            Grid.Row="3"
+                                            Margin="20"
+                                            VerticalAlignment="Center"
+                                            Visibility="Collapsed">
                                             <StackPanel>
-                                                <ProgressBar x:Name="PbOnlineLoading" Width="120" Height="2" Margin="0,0,0,12" Background="#111" BorderThickness="0" Foreground="{DynamicResource CbAccent}" IsIndeterminate="True" />
-                                                <TextBlock x:Name="TxtOnlinePlayersStatus" HorizontalAlignment="Center" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="Loading players..." TextAlignment="Center" TextWrapping="Wrap" />
+                                                <ProgressBar
+                                                    x:Name="PbOnlineLoading"
+                                                    Width="120"
+                                                    Height="2"
+                                                    Margin="0,0,0,12"
+                                                    Background="#111"
+                                                    BorderThickness="0"
+                                                    Foreground="{DynamicResource CbAccent}"
+                                                    IsIndeterminate="True" />
+                                                <TextBlock
+                                                    x:Name="TxtOnlinePlayersStatus"
+                                                    HorizontalAlignment="Center"
+                                                    FontSize="11"
+                                                    Foreground="{DynamicResource TextSubtle}"
+                                                    Text="Loading players..."
+                                                    TextAlignment="Center"
+                                                    TextWrapping="Wrap" />
                                             </StackPanel>
                                         </Grid>
 
-                                        <ListBox x:Name="ListOnlinePlayers" Grid.Row="3" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                        <ListBox
+                                            x:Name="ListOnlinePlayers"
+                                            Grid.Row="3"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <Grid Margin="0,2">
@@ -2396,12 +2573,50 @@
                                                             <ColumnDefinition Width="Auto" />
                                                         </Grid.ColumnDefinitions>
                                                         <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                                            <Ellipse x:Name="StatusDot" Width="8" Height="8" Margin="0,0,6,0" VerticalAlignment="Center" Fill="{DynamicResource CbAccent}" />
-                                                            <TextBlock VerticalAlignment="Center" FontWeight="SemiBold" Text="{Binding Name}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" MaxWidth="160" />
+                                                            <Ellipse
+                                                                x:Name="StatusDot"
+                                                                Width="8"
+                                                                Height="8"
+                                                                Margin="0,0,6,0"
+                                                                VerticalAlignment="Center"
+                                                                Fill="{DynamicResource CbAccent}" />
+                                                            <TextBlock
+                                                                MaxWidth="160"
+                                                                VerticalAlignment="Center"
+                                                                FontWeight="SemiBold"
+                                                                Text="{Binding Name}"
+                                                                TextTrimming="CharacterEllipsis"
+                                                                ToolTip="{Binding Name}" />
                                                         </StackPanel>
-                                                        <TextBlock Grid.Column="1" Width="40" Margin="0,0,8,0" VerticalAlignment="Center" FontSize="10" Foreground="{DynamicResource TextSubtle}" Text="{Binding PlayTimeStr}" />
-                                                        <Button x:Name="BtnPlayerBM" Grid.Column="2" Margin="0,0,4,0" Padding="4,2" Click="BtnPlayerBM_Click" Content="BM" FontSize="10" Style="{StaticResource GhostButton}" Tag="{Binding}" />
-                                                        <Button x:Name="BtnAction" Grid.Column="3" Width="45" Margin="0" Padding="6,2" Click="BtnTrackPlayer_Click" Content="Track" FontSize="10" Style="{StaticResource GhostButton}" Tag="{Binding}" />
+                                                        <TextBlock
+                                                            Grid.Column="1"
+                                                            Width="40"
+                                                            Margin="0,0,8,0"
+                                                            VerticalAlignment="Center"
+                                                            FontSize="10"
+                                                            Foreground="{DynamicResource TextSubtle}"
+                                                            Text="{Binding PlayTimeStr}" />
+                                                        <Button
+                                                            x:Name="BtnPlayerBM"
+                                                            Grid.Column="2"
+                                                            Margin="0,0,4,0"
+                                                            Padding="4,2"
+                                                            Click="BtnPlayerBM_Click"
+                                                            Content="BM"
+                                                            FontSize="10"
+                                                            Style="{StaticResource GhostButton}"
+                                                            Tag="{Binding}" />
+                                                        <Button
+                                                            x:Name="BtnAction"
+                                                            Grid.Column="3"
+                                                            Width="45"
+                                                            Margin="0"
+                                                            Padding="6,2"
+                                                            Click="BtnTrackPlayer_Click"
+                                                            Content="Track"
+                                                            FontSize="10"
+                                                            Style="{StaticResource GhostButton}"
+                                                            Tag="{Binding}" />
                                                     </Grid>
                                                     <DataTemplate.Triggers>
                                                         <DataTrigger Binding="{Binding IsTracked}" Value="True">
@@ -2424,7 +2639,13 @@
 
                             <!--  Tracked Players Tab  -->
                             <TabItem Header="Tracked" Style="{StaticResource PrettyTabItem}">
-                                <Border Background="#801a1c1e" BorderBrush="#33ffffff" BorderThickness="1" CornerRadius="8" Padding="12" TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
+                                <Border
+                                    Padding="12"
+                                    Background="#801a1c1e"
+                                    BorderBrush="#33ffffff"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -2438,17 +2659,45 @@
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock FontSize="16" FontWeight="Bold" Foreground="White" Text="Tracked Players" VerticalAlignment="Center" />
-                                            <Button Grid.Column="1" Click="BtnManageGroups_Click" Content="Manage Groups" Style="{StaticResource GhostButton}" Padding="8,4" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="16"
+                                                FontWeight="Bold"
+                                                Foreground="White"
+                                                Text="Tracked Players" />
+                                            <Button
+                                                Grid.Column="1"
+                                                Padding="8,4"
+                                                Click="BtnManageGroups_Click"
+                                                Content="Manage Groups"
+                                                Style="{StaticResource GhostButton}" />
                                         </Grid>
 
-                                        <TextBox x:Name="TxtTrackedFilter" Grid.Row="1" Margin="0,0,0,8" Padding="6,4" Background="#1a1c1e" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" Foreground="Gray" GotFocus="TxtTrackedFilter_GotFocus" LostFocus="TxtTrackedFilter_LostFocus" TextChanged="TxtTrackedFilter_TextChanged" Text="Filter players..." />
+                                        <TextBox
+                                            x:Name="TxtTrackedFilter"
+                                            Grid.Row="1"
+                                            Margin="0,0,0,8"
+                                            Padding="6,4"
+                                            Background="#1a1c1e"
+                                            BorderBrush="{DynamicResource CardBorder}"
+                                            BorderThickness="1"
+                                            Foreground="Gray"
+                                            GotFocus="TxtTrackedFilter_GotFocus"
+                                            LostFocus="TxtTrackedFilter_LostFocus"
+                                            Text="Filter players..."
+                                            TextChanged="TxtTrackedFilter_TextChanged" />
 
                                         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
                                             <StackPanel x:Name="ListTrackedPlayers" />
                                         </ScrollViewer>
 
-                                        <Button x:Name="BtnViewTracking" Grid.Row="3" Margin="0,8,0,0" Click="BtnViewAllAnalysis_Click" Content="View All Analysis Report" Style="{StaticResource PrimaryButton}" />
+                                        <Button
+                                            x:Name="BtnViewTracking"
+                                            Grid.Row="3"
+                                            Margin="0,8,0,0"
+                                            Click="BtnViewAllAnalysis_Click"
+                                            Content="View All Analysis Report"
+                                            Style="{StaticResource PrimaryButton}" />
                                     </Grid>
                                 </Border>
                             </TabItem>
@@ -2463,11 +2712,11 @@
         <Border
             Grid.Column="2"
             MinWidth="800"
+            Padding="12"
             Background="{DynamicResource Surface}"
             BorderBrush="{DynamicResource CardBorder}"
             BorderThickness="1,0,0,0"
-            CornerRadius="0"
-            Padding="12">
+            CornerRadius="0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -2475,449 +2724,454 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <StackPanel
+                <Border
                     Grid.Row="0"
-                    Margin="0,0,0,8"
-                    Orientation="Horizontal">
-                    <TextBlock
-                        Margin="0,5,8,0"
-                        Style="{StaticResource SectionTitle}"
-                        Text="Map Controls" />
-                    <CheckBox
-                        x:Name="ChkGrid"
-                        Margin="8,0,0,0"
-                        Checked="ChkGrid_Checked"
-                        Content="Grid"
-                        Style="{StaticResource DotCheckBox}"
-                        Unchecked="ChkGrid_Checked" />
-                    <CheckBox
-                        x:Name="ChkPlayers"
-                        Margin="12,0,0,0"
-                        Checked="ChkPlayers_Checked"
-                        Content="Players"
-                        IsChecked="True"
-                        Style="{StaticResource DotCheckBox}"
-                        Unchecked="ChkPlayers_Checked" />
-                    <CheckBox
-                        x:Name="Monuments"
-                        Margin="12,0,0,0"
-                        Checked="Monuments_Checked"
-                        Content="Monuments"
-                        IsChecked="True"
-                        Style="{StaticResource DotCheckBox}"
-                        Unchecked="Monuments_Unchecked" />
-                    <CheckBox
-                        x:Name="ChkShops"
-                        Margin="12,0,0,0"
-                        Checked="ChkShops_Checked"
-                        Content="Shops"
-                        Style="{StaticResource DotCheckBox}"
-                        Unchecked="ChkShops_Checked" />
-                    <TextBlock Width="20" />
-                    <CheckBox
-                        x:Name="ChatAnnounce"
-                        Margin="8,0,0,0"
-                        Click="ChatAnnounce_Toggle"
-                        Content="Chat Alerts"
-                        IsChecked="False"
-                        IsThreeState="True"
-                        Style="{StaticResource DotCheckBox}"
-                        ToolTip="Right-click to configure">
-                        <CheckBox.ContextMenu>
-                            <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                <MenuItem
-                                    FontWeight="Bold"
-                                    Foreground="{StaticResource TextBrushMuted}"
-                                    Header="Events"
-                                    IsHitTestVisible="False" />
-                                <MenuItem
-                                    Header="Cargo Ship"
-                                    Style="{StaticResource DarkMenuItem}"
-                                    Tag="Cargo">
+                    Margin="-12,-12,-12,0"
+                    Padding="12,6"
+                    Background="{DynamicResource SurfaceAlt}"
+                    BorderBrush="{DynamicResource CardBorder}"
+                    BorderThickness="0,0,0,1">
+                    <StackPanel Margin="0,0,0,0" Orientation="Horizontal">
+                        <TextBlock
+                            Margin="0,5,8,0"
+                            Style="{StaticResource SectionTitle}"
+                            Text="Map Controls" />
+                        <CheckBox
+                            x:Name="ChkGrid"
+                            Margin="8,0,0,0"
+                            Checked="ChkGrid_Checked"
+                            Content="Grid"
+                            Style="{StaticResource DotCheckBox}"
+                            Unchecked="ChkGrid_Checked" />
+                        <CheckBox
+                            x:Name="ChkPlayers"
+                            Margin="12,0,0,0"
+                            Checked="ChkPlayers_Checked"
+                            Content="Players"
+                            IsChecked="True"
+                            Style="{StaticResource DotCheckBox}"
+                            Unchecked="ChkPlayers_Checked" />
+                        <CheckBox
+                            x:Name="Monuments"
+                            Margin="12,0,0,0"
+                            Checked="Monuments_Checked"
+                            Content="Monuments"
+                            IsChecked="True"
+                            Style="{StaticResource DotCheckBox}"
+                            Unchecked="Monuments_Unchecked" />
+                        <CheckBox
+                            x:Name="ChkShops"
+                            Margin="12,0,0,0"
+                            Checked="ChkShops_Checked"
+                            Content="Shops"
+                            Style="{StaticResource DotCheckBox}"
+                            Unchecked="ChkShops_Checked" />
+                        <TextBlock Width="20" />
+                        <CheckBox
+                            x:Name="ChatAnnounce"
+                            Margin="8,0,0,0"
+                            Click="ChatAnnounce_Toggle"
+                            Content="Chat Alerts"
+                            IsChecked="False"
+                            IsThreeState="True"
+                            Style="{StaticResource DotCheckBox}"
+                            ToolTip="Right-click to configure">
+                            <CheckBox.ContextMenu>
+                                <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                    <MenuItem
+                                        FontWeight="Bold"
+                                        Foreground="{StaticResource TextBrushMuted}"
+                                        Header="Events"
+                                        IsHitTestVisible="False" />
+                                    <MenuItem
+                                        Header="Cargo Ship"
+                                        Style="{StaticResource DarkMenuItem}"
+                                        Tag="Cargo">
+                                        <MenuItem
+                                            Click="Alert_MenuItem_Click"
+                                            Header="Spawn"
+                                            IsCheckable="True"
+                                            StaysOpenOnClick="True"
+                                            Style="{StaticResource DarkMenuItem}"
+                                            Tag="CargoSpawn" />
+                                        <MenuItem
+                                            Click="Alert_MenuItem_Click"
+                                            Header="Harbor Docking"
+                                            IsCheckable="True"
+                                            StaysOpenOnClick="True"
+                                            Style="{StaticResource DarkMenuItem}"
+                                            Tag="CargoDock" />
+                                        <MenuItem
+                                            Click="Alert_MenuItem_Click"
+                                            Header="Departure (5m Warning)"
+                                            IsCheckable="True"
+                                            StaysOpenOnClick="True"
+                                            Style="{StaticResource DarkMenuItem}"
+                                            Tag="CargoEgress" />
+                                        <MenuItem
+                                            x:Name="MenuCargoArrival"
+                                            Click="Alert_MenuItem_Click"
+                                            Header="Arrival Warning (5m before Dock)"
+                                            IsCheckable="True"
+                                            StaysOpenOnClick="True"
+                                            Style="{StaticResource DarkMenuItem}"
+                                            Tag="CargoArrival" />
+                                    </MenuItem>
                                     <MenuItem
                                         Click="Alert_MenuItem_Click"
-                                        Header="Spawn"
+                                        Header="Patrol Helicopter"
                                         IsCheckable="True"
                                         StaysOpenOnClick="True"
                                         Style="{StaticResource DarkMenuItem}"
-                                        Tag="CargoSpawn" />
+                                        Tag="Heli" />
                                     <MenuItem
                                         Click="Alert_MenuItem_Click"
-                                        Header="Harbor Docking"
+                                        Header="Chinook (CH47)"
                                         IsCheckable="True"
                                         StaysOpenOnClick="True"
                                         Style="{StaticResource DarkMenuItem}"
-                                        Tag="CargoDock" />
+                                        Tag="Chinook" />
                                     <MenuItem
                                         Click="Alert_MenuItem_Click"
-                                        Header="Departure (5m Warning)"
+                                        Header="Travelling Vendor"
                                         IsCheckable="True"
                                         StaysOpenOnClick="True"
                                         Style="{StaticResource DarkMenuItem}"
-                                        Tag="CargoEgress" />
+                                        Tag="Vendor" />
                                     <MenuItem
-                                        x:Name="MenuCargoArrival"
                                         Click="Alert_MenuItem_Click"
-                                        Header="Arrival Warning (5m before Dock)"
+                                        Header="Oil Rig Trigger"
                                         IsCheckable="True"
                                         StaysOpenOnClick="True"
                                         Style="{StaticResource DarkMenuItem}"
-                                        Tag="CargoArrival" />
-                                </MenuItem>
-                                <MenuItem
-                                    Click="Alert_MenuItem_Click"
-                                    Header="Patrol Helicopter"
-                                    IsCheckable="True"
-                                    StaysOpenOnClick="True"
-                                    Style="{StaticResource DarkMenuItem}"
-                                    Tag="Heli" />
-                                <MenuItem
-                                    Click="Alert_MenuItem_Click"
-                                    Header="Chinook (CH47)"
-                                    IsCheckable="True"
-                                    StaysOpenOnClick="True"
-                                    Style="{StaticResource DarkMenuItem}"
-                                    Tag="Chinook" />
-                                <MenuItem
-                                    Click="Alert_MenuItem_Click"
-                                    Header="Travelling Vendor"
-                                    IsCheckable="True"
-                                    StaysOpenOnClick="True"
-                                    Style="{StaticResource DarkMenuItem}"
-                                    Tag="Vendor" />
-                                <MenuItem
-                                    Click="Alert_MenuItem_Click"
-                                    Header="Oil Rig Trigger"
-                                    IsCheckable="True"
-                                    StaysOpenOnClick="True"
-                                    Style="{StaticResource DarkMenuItem}"
-                                    Tag="OilRig" />
-                                <MenuItem
-                                    Click="Alert_MenuItem_Click"
-                                    Header="Deep Sea Event"
-                                    IsCheckable="True"
-                                    StaysOpenOnClick="True"
-                                    Style="{StaticResource DarkMenuItem}"
-                                    Tag="DeepSea" />
-                                <Separator Style="{StaticResource DarkSeparator}" />
-                                <MenuItem
-                                    FontWeight="Bold"
-                                    Foreground="{StaticResource TextBrushMuted}"
-                                    Header="Players"
-                                    IsHitTestVisible="False" />
-                                <MenuItem
-                                    Click="Alert_MenuItem_Click"
-                                    Header="Online Status"
-                                    IsCheckable="True"
-                                    StaysOpenOnClick="True"
-                                    Style="{StaticResource DarkMenuItem}"
-                                    Tag="PlayerOnline" />
-                                <MenuItem
-                                    Click="Alert_MenuItem_Click"
-                                    Header="Offline Status"
-                                    IsCheckable="True"
-                                    StaysOpenOnClick="True"
-                                    Style="{StaticResource DarkMenuItem}"
-                                    Tag="PlayerOffline" />
-                                <MenuItem
-                                    Click="Alert_MenuItem_Click"
-                                    Header="Self Death"
-                                    IsCheckable="True"
-                                    StaysOpenOnClick="True"
-                                    Style="{StaticResource DarkMenuItem}"
-                                    Tag="PlayerDeathSelf" />
-                                <MenuItem
-                                    Click="Alert_MenuItem_Click"
-                                    Header="Team Death"
-                                    IsCheckable="True"
-                                    StaysOpenOnClick="True"
-                                    Style="{StaticResource DarkMenuItem}"
-                                    Tag="PlayerDeathTeam" />
-                                <MenuItem
-                                    Click="Alert_MenuItem_Click"
-                                    Header="Self Respawn"
-                                    IsCheckable="True"
-                                    StaysOpenOnClick="True"
-                                    Style="{StaticResource DarkMenuItem}"
-                                    Tag="PlayerRespawnSelf" />
-                                <MenuItem
-                                    Click="Alert_MenuItem_Click"
-                                    Header="Team Respawn"
-                                    IsCheckable="True"
-                                    StaysOpenOnClick="True"
-                                    Style="{StaticResource DarkMenuItem}"
-                                    Tag="PlayerRespawnTeam" />
-                                <Separator Style="{StaticResource DarkSeparator}" />
-                                <MenuItem
-                                    FontWeight="Bold"
-                                    Foreground="{StaticResource TextBrushMuted}"
-                                    Header="Shops"
-                                    IsHitTestVisible="False" />
-                                <MenuItem
-                                    Click="Alert_MenuItem_Click"
-                                    Header="New Shops"
-                                    IsCheckable="True"
-                                    StaysOpenOnClick="True"
-                                    Style="{StaticResource DarkMenuItem}"
-                                    Tag="NewShops" />
-                                <MenuItem
-                                    Click="Alert_MenuItem_Click"
-                                    Header="Suspicious Shops"
-                                    IsCheckable="True"
-                                    StaysOpenOnClick="True"
-                                    Style="{StaticResource DarkMenuItem}"
-                                    Tag="SuspiciousShops" />
-                                <MenuItem
-                                    x:Name="TradeAlertsMenuItem"
-                                    Header="Trade Alerts"
-                                    StaysOpenOnClick="True"
-                                    Style="{StaticResource DarkMenuItem}" />
-                            </ContextMenu>
-                        </CheckBox.ContextMenu>
-                    </CheckBox>
-                    <Button
-                        Width="80"
-                        Margin="8,0,0,0"
-                        Click="BtnResetMap_Click"
-                        Content="Reset &#x27F2;"
-                        Style="{StaticResource GhostButton}"
-                        ToolTip="Reset map zoom and position" />
-                    <Button
-                        Width="80"
-                        Click="BtnToggleMiniMap_Click"
-                        Content="Mini &#x1F5FA;"
-                        Style="{StaticResource GhostButton}" />
+                                        Tag="OilRig" />
+                                    <MenuItem
+                                        Click="Alert_MenuItem_Click"
+                                        Header="Deep Sea Event"
+                                        IsCheckable="True"
+                                        StaysOpenOnClick="True"
+                                        Style="{StaticResource DarkMenuItem}"
+                                        Tag="DeepSea" />
+                                    <Separator Style="{StaticResource DarkSeparator}" />
+                                    <MenuItem
+                                        FontWeight="Bold"
+                                        Foreground="{StaticResource TextBrushMuted}"
+                                        Header="Players"
+                                        IsHitTestVisible="False" />
+                                    <MenuItem
+                                        Click="Alert_MenuItem_Click"
+                                        Header="Online Status"
+                                        IsCheckable="True"
+                                        StaysOpenOnClick="True"
+                                        Style="{StaticResource DarkMenuItem}"
+                                        Tag="PlayerOnline" />
+                                    <MenuItem
+                                        Click="Alert_MenuItem_Click"
+                                        Header="Offline Status"
+                                        IsCheckable="True"
+                                        StaysOpenOnClick="True"
+                                        Style="{StaticResource DarkMenuItem}"
+                                        Tag="PlayerOffline" />
+                                    <MenuItem
+                                        Click="Alert_MenuItem_Click"
+                                        Header="Self Death"
+                                        IsCheckable="True"
+                                        StaysOpenOnClick="True"
+                                        Style="{StaticResource DarkMenuItem}"
+                                        Tag="PlayerDeathSelf" />
+                                    <MenuItem
+                                        Click="Alert_MenuItem_Click"
+                                        Header="Team Death"
+                                        IsCheckable="True"
+                                        StaysOpenOnClick="True"
+                                        Style="{StaticResource DarkMenuItem}"
+                                        Tag="PlayerDeathTeam" />
+                                    <MenuItem
+                                        Click="Alert_MenuItem_Click"
+                                        Header="Self Respawn"
+                                        IsCheckable="True"
+                                        StaysOpenOnClick="True"
+                                        Style="{StaticResource DarkMenuItem}"
+                                        Tag="PlayerRespawnSelf" />
+                                    <MenuItem
+                                        Click="Alert_MenuItem_Click"
+                                        Header="Team Respawn"
+                                        IsCheckable="True"
+                                        StaysOpenOnClick="True"
+                                        Style="{StaticResource DarkMenuItem}"
+                                        Tag="PlayerRespawnTeam" />
+                                    <Separator Style="{StaticResource DarkSeparator}" />
+                                    <MenuItem
+                                        FontWeight="Bold"
+                                        Foreground="{StaticResource TextBrushMuted}"
+                                        Header="Shops"
+                                        IsHitTestVisible="False" />
+                                    <MenuItem
+                                        Click="Alert_MenuItem_Click"
+                                        Header="New Shops"
+                                        IsCheckable="True"
+                                        StaysOpenOnClick="True"
+                                        Style="{StaticResource DarkMenuItem}"
+                                        Tag="NewShops" />
+                                    <MenuItem
+                                        Click="Alert_MenuItem_Click"
+                                        Header="Suspicious Shops"
+                                        IsCheckable="True"
+                                        StaysOpenOnClick="True"
+                                        Style="{StaticResource DarkMenuItem}"
+                                        Tag="SuspiciousShops" />
+                                    <MenuItem
+                                        x:Name="TradeAlertsMenuItem"
+                                        Header="Trade Alerts"
+                                        StaysOpenOnClick="True"
+                                        Style="{StaticResource DarkMenuItem}" />
+                                </ContextMenu>
+                            </CheckBox.ContextMenu>
+                        </CheckBox>
+                        <Button
+                            Width="80"
+                            Margin="8,0,0,0"
+                            Click="BtnResetMap_Click"
+                            Content="Reset &#x27F2;"
+                            Style="{StaticResource GhostButton}"
+                            ToolTip="Reset map zoom and position" />
+                        <Button
+                            Width="80"
+                            Click="BtnToggleMiniMap_Click"
+                            Content="Mini &#x1F5FA;"
+                            Style="{StaticResource GhostButton}" />
 
-                    <Button
-                        x:Name="BtnCrosshair"
-                        Margin="4,0,0,0"
-                        Click="BtnCrosshair_Click"
-                        PreviewMouseRightButtonDown="BtnCrosshair_PreviewMouseRightButtonDown"
-                        Style="{StaticResource IconButton}"
-                        ToolTip="Crosshair on/off (Right Click For Options)">
-                        <TextBlock FontSize="18" Text="&#x2316;" />
-                        <Button.ContextMenu>
-                            <ContextMenu
-                                x:Name="CrosshairContextMenu"
-                                Opened="CrosshairContextMenu_Opened"
-                                Style="{StaticResource DarkContextMenu}">
-                                <!--  sorge dafÃ¼r, dass ALLE Items (auch SubmenÃ¼s) dunkel sind  -->
-                                <ContextMenu.Resources>
-                                    <Style BasedOn="{StaticResource DarkMenuItem}" TargetType="MenuItem" />
-                                    <Style BasedOn="{StaticResource DarkSeparator}" TargetType="Separator" />
-                                </ContextMenu.Resources>
+                        <Button
+                            x:Name="BtnCrosshair"
+                            Margin="4,0,0,0"
+                            Click="BtnCrosshair_Click"
+                            PreviewMouseRightButtonDown="BtnCrosshair_PreviewMouseRightButtonDown"
+                            Style="{StaticResource IconButton}"
+                            ToolTip="Crosshair on/off (Right Click For Options)">
+                            <TextBlock FontSize="18" Text="&#x2316;" />
+                            <Button.ContextMenu>
+                                <ContextMenu
+                                    x:Name="CrosshairContextMenu"
+                                    Opened="CrosshairContextMenu_Opened"
+                                    Style="{StaticResource DarkContextMenu}">
+                                    <!--  sorge dafÃ¼r, dass ALLE Items (auch SubmenÃ¼s) dunkel sind  -->
+                                    <ContextMenu.Resources>
+                                        <Style BasedOn="{StaticResource DarkMenuItem}" TargetType="MenuItem" />
+                                        <Style BasedOn="{StaticResource DarkSeparator}" TargetType="Separator" />
+                                    </ContextMenu.Resources>
 
-                                <MenuItem x:Name="MenuCrosshairStyle" Header="Crosshair Style">
-                                    <MenuItem
-                                        Click="Style_Click"
-                                        Header="Green Dot"
-                                        Tag="GreenDot">
-                                        <MenuItem.Icon>
-                                            <Grid Width="16" Height="16">
-                                                <Ellipse
-                                                    Width="4"
-                                                    Height="4"
-                                                    Fill="Lime" />
-                                            </Grid>
-                                        </MenuItem.Icon>
+                                    <MenuItem x:Name="MenuCrosshairStyle" Header="Crosshair Style">
+                                        <MenuItem
+                                            Click="Style_Click"
+                                            Header="Green Dot"
+                                            Tag="GreenDot">
+                                            <MenuItem.Icon>
+                                                <Grid Width="16" Height="16">
+                                                    <Ellipse
+                                                        Width="4"
+                                                        Height="4"
+                                                        Fill="Lime" />
+                                                </Grid>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem
+                                            Click="Style_Click"
+                                            Header="Mini Green"
+                                            Tag="MiniGreen">
+                                            <MenuItem.Icon>
+                                                <Grid Width="16" Height="16">
+                                                    <Ellipse
+                                                        Width="2"
+                                                        Height="2"
+                                                        Fill="Lime" />
+                                                </Grid>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem
+                                            Click="Style_Click"
+                                            Header="Open Crosshair (R/G)"
+                                            Tag="OpenCrossRG">
+                                            <MenuItem.Icon>
+                                                <Grid Width="16" Height="16">
+                                                    <Line
+                                                        Stroke="Lime"
+                                                        StrokeThickness="1"
+                                                        X1="8"
+                                                        X2="8"
+                                                        Y1="0"
+                                                        Y2="6" />
+                                                    <Line
+                                                        Stroke="Lime"
+                                                        StrokeThickness="1"
+                                                        X1="8"
+                                                        X2="8"
+                                                        Y1="10"
+                                                        Y2="16" />
+                                                    <Line
+                                                        Stroke="Lime"
+                                                        StrokeThickness="1"
+                                                        X1="0"
+                                                        X2="6"
+                                                        Y1="8"
+                                                        Y2="8" />
+                                                    <Line
+                                                        Stroke="Lime"
+                                                        StrokeThickness="1"
+                                                        X1="10"
+                                                        X2="16"
+                                                        Y1="8"
+                                                        Y2="8" />
+                                                    <Ellipse
+                                                        Width="2"
+                                                        Height="2"
+                                                        Fill="Red" />
+                                                </Grid>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem
+                                            Click="Style_Click"
+                                            Header="Thin Circle (bright red)"
+                                            Tag="ThinRedCircle">
+                                            <MenuItem.Icon>
+                                                <Grid Width="16" Height="16">
+                                                    <Ellipse
+                                                        Width="12"
+                                                        Height="12"
+                                                        Fill="Transparent"
+                                                        Stroke="Red"
+                                                        StrokeThickness="1" />
+                                                </Grid>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem
+                                            Click="Style_Click"
+                                            Header="Square + Dot"
+                                            Tag="SquareDot">
+                                            <MenuItem.Icon>
+                                                <Grid Width="16" Height="16">
+                                                    <Rectangle
+                                                        Width="8"
+                                                        Height="8"
+                                                        Fill="Transparent"
+                                                        Stroke="Lime"
+                                                        StrokeThickness="1" />
+                                                    <Ellipse
+                                                        Width="2"
+                                                        Height="2"
+                                                        Fill="Lime" />
+                                                </Grid>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem
+                                            Click="Style_Click"
+                                            Header="Magenta Dot"
+                                            Tag="MagentaDot">
+                                            <MenuItem.Icon>
+                                                <Grid Width="16" Height="16">
+                                                    <Ellipse
+                                                        Width="4"
+                                                        Height="4"
+                                                        Fill="Magenta" />
+                                                </Grid>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem
+                                            Click="Style_Click"
+                                            Header="Magenta Open Cross"
+                                            Tag="MagentaOpenCross">
+                                            <MenuItem.Icon>
+                                                <Grid Width="16" Height="16">
+                                                    <Line
+                                                        Stroke="Magenta"
+                                                        StrokeThickness="1"
+                                                        X1="8"
+                                                        X2="8"
+                                                        Y1="0"
+                                                        Y2="6" />
+                                                    <Line
+                                                        Stroke="Magenta"
+                                                        StrokeThickness="1"
+                                                        X1="8"
+                                                        X2="8"
+                                                        Y1="10"
+                                                        Y2="16" />
+                                                    <Line
+                                                        Stroke="Magenta"
+                                                        StrokeThickness="1"
+                                                        X1="0"
+                                                        X2="6"
+                                                        Y1="8"
+                                                        Y2="8" />
+                                                    <Line
+                                                        Stroke="Magenta"
+                                                        StrokeThickness="1"
+                                                        X1="10"
+                                                        X2="16"
+                                                        Y1="8"
+                                                        Y2="8" />
+                                                </Grid>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem
+                                            Click="Style_Click"
+                                            Header="Range Line (ticks)"
+                                            Tag="RangeLine">
+                                            <MenuItem.Icon>
+                                                <Grid Width="16" Height="16">
+                                                    <Line
+                                                        Stroke="White"
+                                                        StrokeThickness="1"
+                                                        X1="8"
+                                                        X2="8"
+                                                        Y1="0"
+                                                        Y2="16" />
+                                                    <Line
+                                                        Stroke="White"
+                                                        StrokeThickness="1"
+                                                        X1="5"
+                                                        X2="11"
+                                                        Y1="6"
+                                                        Y2="6" />
+                                                    <Line
+                                                        Stroke="White"
+                                                        StrokeThickness="1"
+                                                        X1="6"
+                                                        X2="10"
+                                                        Y1="12"
+                                                        Y2="12" />
+                                                </Grid>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <Separator x:Name="CrosshairStyleSeparator" />
+                                        <MenuItem Click="DrawCustomCrosshair_Click" Header="Draw Crosshair..." />
                                     </MenuItem>
-                                    <MenuItem
-                                        Click="Style_Click"
-                                        Header="Mini Green"
-                                        Tag="MiniGreen">
-                                        <MenuItem.Icon>
-                                            <Grid Width="16" Height="16">
-                                                <Ellipse
-                                                    Width="2"
-                                                    Height="2"
-                                                    Fill="Lime" />
-                                            </Grid>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem
-                                        Click="Style_Click"
-                                        Header="Open Crosshair (R/G)"
-                                        Tag="OpenCrossRG">
-                                        <MenuItem.Icon>
-                                            <Grid Width="16" Height="16">
-                                                <Line
-                                                    Stroke="Lime"
-                                                    StrokeThickness="1"
-                                                    X1="8"
-                                                    X2="8"
-                                                    Y1="0"
-                                                    Y2="6" />
-                                                <Line
-                                                    Stroke="Lime"
-                                                    StrokeThickness="1"
-                                                    X1="8"
-                                                    X2="8"
-                                                    Y1="10"
-                                                    Y2="16" />
-                                                <Line
-                                                    Stroke="Lime"
-                                                    StrokeThickness="1"
-                                                    X1="0"
-                                                    X2="6"
-                                                    Y1="8"
-                                                    Y2="8" />
-                                                <Line
-                                                    Stroke="Lime"
-                                                    StrokeThickness="1"
-                                                    X1="10"
-                                                    X2="16"
-                                                    Y1="8"
-                                                    Y2="8" />
-                                                <Ellipse
-                                                    Width="2"
-                                                    Height="2"
-                                                    Fill="Red" />
-                                            </Grid>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem
-                                        Click="Style_Click"
-                                        Header="Thin Circle (bright red)"
-                                        Tag="ThinRedCircle">
-                                        <MenuItem.Icon>
-                                            <Grid Width="16" Height="16">
-                                                <Ellipse
-                                                    Width="12"
-                                                    Height="12"
-                                                    Fill="Transparent"
-                                                    Stroke="Red"
-                                                    StrokeThickness="1" />
-                                            </Grid>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem
-                                        Click="Style_Click"
-                                        Header="Square + Dot"
-                                        Tag="SquareDot">
-                                        <MenuItem.Icon>
-                                            <Grid Width="16" Height="16">
-                                                <Rectangle
-                                                    Width="8"
-                                                    Height="8"
-                                                    Fill="Transparent"
-                                                    Stroke="Lime"
-                                                    StrokeThickness="1" />
-                                                <Ellipse
-                                                    Width="2"
-                                                    Height="2"
-                                                    Fill="Lime" />
-                                            </Grid>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem
-                                        Click="Style_Click"
-                                        Header="Magenta Dot"
-                                        Tag="MagentaDot">
-                                        <MenuItem.Icon>
-                                            <Grid Width="16" Height="16">
-                                                <Ellipse
-                                                    Width="4"
-                                                    Height="4"
-                                                    Fill="Magenta" />
-                                            </Grid>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem
-                                        Click="Style_Click"
-                                        Header="Magenta Open Cross"
-                                        Tag="MagentaOpenCross">
-                                        <MenuItem.Icon>
-                                            <Grid Width="16" Height="16">
-                                                <Line
-                                                    Stroke="Magenta"
-                                                    StrokeThickness="1"
-                                                    X1="8"
-                                                    X2="8"
-                                                    Y1="0"
-                                                    Y2="6" />
-                                                <Line
-                                                    Stroke="Magenta"
-                                                    StrokeThickness="1"
-                                                    X1="8"
-                                                    X2="8"
-                                                    Y1="10"
-                                                    Y2="16" />
-                                                <Line
-                                                    Stroke="Magenta"
-                                                    StrokeThickness="1"
-                                                    X1="0"
-                                                    X2="6"
-                                                    Y1="8"
-                                                    Y2="8" />
-                                                <Line
-                                                    Stroke="Magenta"
-                                                    StrokeThickness="1"
-                                                    X1="10"
-                                                    X2="16"
-                                                    Y1="8"
-                                                    Y2="8" />
-                                            </Grid>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem
-                                        Click="Style_Click"
-                                        Header="Range Line (ticks)"
-                                        Tag="RangeLine">
-                                        <MenuItem.Icon>
-                                            <Grid Width="16" Height="16">
-                                                <Line
-                                                    Stroke="White"
-                                                    StrokeThickness="1"
-                                                    X1="8"
-                                                    X2="8"
-                                                    Y1="0"
-                                                    Y2="16" />
-                                                <Line
-                                                    Stroke="White"
-                                                    StrokeThickness="1"
-                                                    X1="5"
-                                                    X2="11"
-                                                    Y1="6"
-                                                    Y2="6" />
-                                                <Line
-                                                    Stroke="White"
-                                                    StrokeThickness="1"
-                                                    X1="6"
-                                                    X2="10"
-                                                    Y1="12"
-                                                    Y2="12" />
-                                            </Grid>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <Separator x:Name="CrosshairStyleSeparator" />
-                                    <MenuItem Click="DrawCustomCrosshair_Click" Header="Draw Crosshair..." />
-                                </MenuItem>
 
-                                <Separator />
+                                    <Separator />
 
-                                <MenuItem x:Name="MonitorRoot" Header="Choose monitor" />
-                            </ContextMenu>
-                        </Button.ContextMenu>
-                    </Button>
+                                    <MenuItem x:Name="MonitorRoot" Header="Choose monitor" />
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                        </Button>
 
-                    <Button
-                        x:Name="BtnToggleOverlayTools"
-                        Width="32"
-                        Height="32"
-                        Margin="4,0,0,0"
-                        Click="BtnToggleOverlayTools_Click"
-                        ToolTip="Map-Overlay Zeichnen / Team Overlays">
-                        <Image Source="pack://application:,,,/Assets/icons/pencil.png" />
-                    </Button>
+                        <Button
+                            x:Name="BtnToggleOverlayTools"
+                            Width="32"
+                            Height="32"
+                            Margin="4,0,0,0"
+                            Click="BtnToggleOverlayTools_Click"
+                            ToolTip="Map-Overlay Zeichnen / Team Overlays">
+                            <Image Source="pack://application:,,,/Assets/icons/pencil.png" />
+                        </Button>
 
-                    <!--  StackPanel with Heli Demo removed  -->
-                    <StackPanel Margin="12,0,0,0" Orientation="Horizontal" />
-                </StackPanel>
+                        <!--  StackPanel with Heli Demo removed  -->
+                        <StackPanel Margin="12,0,0,0" Orientation="Horizontal" />
+                    </StackPanel>
+                </Border>
 
                 <Grid
                     x:Name="WebViewHost"
                     Grid.Row="1"
-                    Margin="0,0,0,8"
+                    Margin="0,8,0,8"
                     Background="#0B3A4A"
                     ClipToBounds="True">
                     <Rectangle x:Name="SplashBgColor" Fill="#0B3A4A" />
@@ -2950,22 +3204,24 @@
                                     TextAlignment="Center"
                                     TextWrapping="Wrap" />
 
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <ui:Button Appearance="Primary"
-                                               Content="Connect"
-                                               Icon="{ui:SymbolIcon Symbol=PlugConnected20}"
-                                               Padding="16,8"
-                                               Click="BtnConnect_Click"
-                                               Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}" />
-                                    
-                                    <ui:Button Appearance="Primary"
-                                               Content="Full Connect"
-                                               Icon="{ui:SymbolIcon Symbol=Play20}"
-                                               Padding="16,8"
-                                               Click="BtnConnect_Click"
-                                               ToolTip="Load Map &amp; Team">
+                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <ui:Button
+                                        Padding="16,8"
+                                        Appearance="Primary"
+                                        Click="BtnConnect_Click"
+                                        Content="Connect"
+                                        Icon="{ui:SymbolIcon Symbol=PlugConnected20}"
+                                        Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}" />
+
+                                    <ui:Button
+                                        Padding="16,8"
+                                        Appearance="Primary"
+                                        Click="BtnConnect_Click"
+                                        Content="Full Connect"
+                                        Icon="{ui:SymbolIcon Symbol=Play20}"
+                                        ToolTip="Load Map &amp; Team">
                                         <ui:Button.Style>
-                                            <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                            <Style BasedOn="{StaticResource {x:Type ui:Button}}" TargetType="ui:Button">
                                                 <Setter Property="Visibility" Value="Collapsed" />
                                                 <Style.Triggers>
                                                     <MultiDataTrigger>
@@ -3005,8 +3261,8 @@
                         Margin="15"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        Orientation="Horizontal"
-                        Panel.ZIndex="1000">
+                        Panel.ZIndex="1000"
+                        Orientation="Horizontal">
                         <!--  TIME OVERLAY  -->
                         <Border
                             x:Name="TimeOverlay"
@@ -3169,8 +3425,8 @@
                                         <Grid Width="24" Height="24">
                                             <!--  Default Icon (Placeholder)  -->
                                             <TextBlock
-                                                VerticalAlignment="Center"
                                                 HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
                                                 FontFamily="Segoe MDL2 Assets"
                                                 FontSize="14"
                                                 Foreground="#8D98A8"
@@ -3188,13 +3444,16 @@
 
                                             <!--  Real Avatar  -->
                                             <Image
-                                                Source="{Binding FollowingPlayerAvatar}"
-                                                Stretch="UniformToFill"
                                                 Width="24"
                                                 Height="24"
-                                                ClipToBounds="True">
+                                                ClipToBounds="True"
+                                                Source="{Binding FollowingPlayerAvatar}"
+                                                Stretch="UniformToFill">
                                                 <Image.Clip>
-                                                    <EllipseGeometry Center="12,12" RadiusX="12" RadiusY="12" />
+                                                    <EllipseGeometry
+                                                        Center="12,12"
+                                                        RadiusX="12"
+                                                        RadiusY="12" />
                                                 </Image.Clip>
                                                 <Image.Style>
                                                     <Style TargetType="Image">
@@ -3509,47 +3768,68 @@
                                         </Button>
                                     </Grid>
 
-                                    <!-- Chat-History -->
-                                    <ListBox x:Name="ChatList" 
-                                             Grid.Row="1"
-                                             Background="Transparent" 
-                                             BorderThickness="0"
-                                             ItemsSource="{Binding ChatMessages, RelativeSource={RelativeSource AncestorType=Window}}"
-                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                             HorizontalContentAlignment="Stretch">
+                                    <!--  Chat-History  -->
+                                    <ListBox
+                                        x:Name="ChatList"
+                                        Grid.Row="1"
+                                        HorizontalContentAlignment="Stretch"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        ItemsSource="{Binding ChatMessages, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <StackPanel>
-                                                    <!-- Day Separator -->
-                                                    <Border Visibility="{Binding ShowSeparator, Converter={StaticResource BoolToVisibility}}"
-                                                            Background="#141A22"
-                                                            Padding="8,4" Margin="0,8,0,8" CornerRadius="8"
-                                                            HorizontalAlignment="Center">
-                                                        <TextBlock Text="{Binding SeparatorText}" 
-                                                                   FontSize="11" FontWeight="Bold"
-                                                                   Foreground="{DynamicResource TextSecondary}"/>
+                                                    <!--  Day Separator  -->
+                                                    <Border
+                                                        Margin="0,8,0,8"
+                                                        Padding="8,4"
+                                                        HorizontalAlignment="Center"
+                                                        Background="#141A22"
+                                                        CornerRadius="8"
+                                                        Visibility="{Binding ShowSeparator, Converter={StaticResource BoolToVisibility}}">
+                                                        <TextBlock
+                                                            FontSize="11"
+                                                            FontWeight="Bold"
+                                                            Foreground="{DynamicResource TextSecondary}"
+                                                            Text="{Binding SeparatorText}" />
                                                     </Border>
 
-                                                    <!-- Message Entry -->
+                                                    <!--  Message Entry  -->
                                                     <Grid Margin="10,4,10,4">
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="36"/>
-                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="36" />
+                                                            <ColumnDefinition Width="*" />
                                                         </Grid.ColumnDefinitions>
-                                                        
-                                                        <Ellipse Width="28" Height="28" VerticalAlignment="Top" Margin="0,2,0,0">
+
+                                                        <Ellipse
+                                                            Width="28"
+                                                            Height="28"
+                                                            Margin="0,2,0,0"
+                                                            VerticalAlignment="Top">
                                                             <Ellipse.Fill>
-                                                                <ImageBrush ImageSource="{Binding Avatar}" Stretch="UniformToFill"/>
+                                                                <ImageBrush ImageSource="{Binding Avatar}" Stretch="UniformToFill" />
                                                             </Ellipse.Fill>
                                                         </Ellipse>
-                                                        
+
                                                         <StackPanel Grid.Column="1" Margin="8,0,0,0">
                                                             <DockPanel>
-                                                                <TextBlock Text="{Binding Author}" FontWeight="Bold" Foreground="{DynamicResource Accent}"/>
-                                                                <TextBlock Text="{Binding Timestamp, StringFormat=HH:mm}" Margin="8,0,0,0" 
-                                                                           Foreground="{DynamicResource TextSecondary}" FontSize="10" VerticalAlignment="Bottom"/>
+                                                                <TextBlock
+                                                                    FontWeight="Bold"
+                                                                    Foreground="{DynamicResource Accent}"
+                                                                    Text="{Binding Author}" />
+                                                                <TextBlock
+                                                                    Margin="8,0,0,0"
+                                                                    VerticalAlignment="Bottom"
+                                                                    FontSize="10"
+                                                                    Foreground="{DynamicResource TextSecondary}"
+                                                                    Text="{Binding Timestamp, StringFormat=HH:mm}" />
                                                             </DockPanel>
-                                                            <TextBlock Text="{Binding Text}" TextWrapping="Wrap" Margin="0,2,0,0" Foreground="{DynamicResource TextPrimary}"/>
+                                                            <TextBlock
+                                                                Margin="0,2,0,0"
+                                                                Foreground="{DynamicResource TextPrimary}"
+                                                                Text="{Binding Text}"
+                                                                TextWrapping="Wrap" />
                                                         </StackPanel>
                                                     </Grid>
                                                 </StackPanel>
@@ -3568,64 +3848,97 @@
                                         </ListBox.ItemContainerStyle>
                                     </ListBox>
 
-                                    <!-- Input-Bar -->
-                                    <StackPanel Grid.Row="2" Background="#141A22" Margin="0,0,0,12">
-                                        <!-- Inline Error Box -->
-                                        <Border x:Name="ChatErrorBox" 
-                                                Background="#33FF0000" 
-                                                BorderBrush="Red" 
-                                                BorderThickness="1" 
-                                                Margin="12,12,12,0" 
-                                                Padding="6" 
-                                                CornerRadius="4" 
-                                                Visibility="Collapsed">
-                                            <TextBlock x:Name="ChatErrorText" 
-                                                       Foreground="White" 
-                                                       FontSize="11" 
-                                                       TextWrapping="Wrap" 
-                                                       Text="Error message here"/>
+                                    <!--  Input-Bar  -->
+                                    <StackPanel
+                                        Grid.Row="2"
+                                        Margin="0,0,0,12"
+                                        Background="#141A22">
+                                        <!--  Inline Error Box  -->
+                                        <Border
+                                            x:Name="ChatErrorBox"
+                                            Margin="12,12,12,0"
+                                            Padding="6"
+                                            Background="#33FF0000"
+                                            BorderBrush="Red"
+                                            BorderThickness="1"
+                                            CornerRadius="4"
+                                            Visibility="Collapsed">
+                                            <TextBlock
+                                                x:Name="ChatErrorText"
+                                                FontSize="11"
+                                                Foreground="White"
+                                                Text="Error message here"
+                                                TextWrapping="Wrap" />
                                         </Border>
-                                        
+
                                         <DockPanel Margin="12,12,12,0">
-                                            <Border DockPanel.Dock="Right" Margin="8,0,0,0" VerticalAlignment="Bottom">
-                                                <Button x:Name="BtnSendChat"
-                                                        Content="Send"
-                                                        Style="{StaticResource PrimaryButton}"
-                                                        Width="70"
-                                                        Height="36"
-                                                        Background="{DynamicResource Accent}"
-                                                        Foreground="White"
-                                                        BorderThickness="0"
-                                                        Click="BtnSendChat_Click"/>
+                                            <Border
+                                                Margin="8,0,0,0"
+                                                VerticalAlignment="Bottom"
+                                                DockPanel.Dock="Right">
+                                                <Button
+                                                    x:Name="BtnSendChat"
+                                                    Width="70"
+                                                    Height="36"
+                                                    Background="{DynamicResource Accent}"
+                                                    BorderThickness="0"
+                                                    Click="BtnSendChat_Click"
+                                                    Content="Send"
+                                                    Foreground="White"
+                                                    Style="{StaticResource PrimaryButton}" />
                                             </Border>
-                                            
-                                            <Border Background="#1E2126"
-                                                    BorderBrush="#40FFFFFF"
-                                                    BorderThickness="1"
-                                                    CornerRadius="6"
-                                                    Padding="6"
-                                                    Height="36">
-                                                <TextBox x:Name="TxtChatInput"
-                                                         Background="Transparent"
-                                                         BorderThickness="0"
-                                                         Foreground="{DynamicResource TextPrimary}"
-                                                         VerticalContentAlignment="Center"
-                                                         MaxLength="128"
-                                                         MaxLines="1"
-                                                         KeyDown="TxtChatInput_KeyDown"/>
+
+                                            <Border
+                                                Height="36"
+                                                Padding="6"
+                                                Background="#1E2126"
+                                                BorderBrush="#40FFFFFF"
+                                                BorderThickness="1"
+                                                CornerRadius="6">
+                                                <TextBox
+                                                    x:Name="TxtChatInput"
+                                                    VerticalContentAlignment="Center"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Foreground="{DynamicResource TextPrimary}"
+                                                    KeyDown="TxtChatInput_KeyDown"
+                                                    MaxLength="128"
+                                                    MaxLines="1" />
                                             </Border>
                                         </DockPanel>
 
-                                        <Button x:Name="BtnOpenChatCommands" Click="BtnOpenChatCommands_Click" HorizontalAlignment="Left" Background="Transparent" BorderThickness="0" ToolTip="Chat Commands Settings" Padding="4" Margin="12,4,0,0">
+                                        <Button
+                                            x:Name="BtnOpenChatCommands"
+                                            Margin="12,4,0,0"
+                                            Padding="4"
+                                            HorizontalAlignment="Left"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Click="BtnOpenChatCommands_Click"
+                                            ToolTip="Chat Commands Settings">
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="⚙" FontSize="16" Foreground="#888" VerticalAlignment="Center" />
-                                                <TextBlock Text="Chat Commands" FontSize="10" Foreground="#888" VerticalAlignment="Center" Margin="4,0,0,0" />
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    FontSize="16"
+                                                    Foreground="#888"
+                                                    Text="⚙" />
+                                                <TextBlock
+                                                    Margin="4,0,0,0"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="10"
+                                                    Foreground="#888"
+                                                    Text="Chat Commands" />
                                             </StackPanel>
                                         </Button>
                                     </StackPanel>
 
                                     <!--  Chat Commands Overlay  -->
-                                    <views:ChatCommandsOverlay x:Name="ChatCommandsOverlay" Grid.RowSpan="3" Visibility="Collapsed" CloseRequested="BtnCloseChatCommands_Click" Panel.ZIndex="2000" />
+                                    <views:ChatCommandsOverlay
+                                        x:Name="ChatCommandsOverlay"
+                                        Grid.RowSpan="3"
+                                        Panel.ZIndex="2000"
+                                        CloseRequested="BtnCloseChatCommands_Click"
+                                        Visibility="Collapsed" />
                                 </Grid>
                             </Border>
 
@@ -3796,102 +4109,129 @@
             </Grid>
         </Border>
         <!--  Premium Busy Overlay (Single)  -->
-        <Grid Panel.ZIndex="9999"
-              Background="#AA000000"
-              IsHitTestVisible="True"
-              Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
-            <Border Width="340"
-                    Padding="24"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Background="{DynamicResource Surface}"
-                    BorderBrush="{DynamicResource CardBorder}"
-                    BorderThickness="1"
-                    CornerRadius="12">
+        <Grid
+            Panel.ZIndex="9999"
+            Background="#AA000000"
+            IsHitTestVisible="True"
+            Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
+            <Border
+                Width="340"
+                Padding="24"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="{DynamicResource Surface}"
+                BorderBrush="{DynamicResource CardBorder}"
+                BorderThickness="1"
+                CornerRadius="12">
                 <StackPanel>
-                    <ui:ProgressRing IsIndeterminate="True" Height="48" Width="48" Margin="0,0,0,20" />
-                    <TextBlock Text="{Binding BusyText}"
-                               FontSize="16"
-                               FontWeight="SemiBold"
-                               TextAlignment="Center"
-                               Foreground="{DynamicResource TextPrimary}"/>
-                    <TextBlock Text="This may take a moment..."
-                               Margin="0,8,0,0"
-                               FontSize="12"
-                               TextAlignment="Center"
-                               Foreground="{DynamicResource TextSubtle}"/>
+                    <ui:ProgressRing
+                        Width="48"
+                        Height="48"
+                        Margin="0,0,0,20"
+                        IsIndeterminate="True" />
+                    <TextBlock
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource TextPrimary}"
+                        Text="{Binding BusyText}"
+                        TextAlignment="Center" />
+                    <TextBlock
+                        Margin="0,8,0,0"
+                        FontSize="12"
+                        Foreground="{DynamicResource TextSubtle}"
+                        Text="This may take a moment..."
+                        TextAlignment="Center" />
                 </StackPanel>
             </Border>
         </Grid>
 
         <!--  Dedicated Login & Pairing Overlay  -->
-        <Grid Panel.ZIndex="9998"
-              Background="#DD0F1115"
-              IsHitTestVisible="True"
-              Visibility="{Binding ShowLoginOverlay, Converter={StaticResource BoolToVisibility}}">
-            
-            <Border Width="450"
-                    Padding="40"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Background="{DynamicResource Surface}"
-                    BorderBrush="{DynamicResource CardBorder}"
-                    BorderThickness="1"
-                    CornerRadius="20">
+        <Grid
+            Panel.ZIndex="9998"
+            Background="#DD0F1115"
+            IsHitTestVisible="True"
+            Visibility="{Binding ShowLoginOverlay, Converter={StaticResource BoolToVisibility}}">
+
+            <Border
+                Width="450"
+                Padding="40"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="{DynamicResource Surface}"
+                BorderBrush="{DynamicResource CardBorder}"
+                BorderThickness="1"
+                CornerRadius="20">
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="50" Opacity="0.5" ShadowDepth="0" Color="Black"/>
+                    <DropShadowEffect
+                        BlurRadius="50"
+                        Opacity="0.5"
+                        ShadowDepth="0"
+                        Color="Black" />
                 </Border.Effect>
-                
+
                 <StackPanel>
-                    <!-- Icon / Brand -->
-                    <Border Width="80" Height="80" 
-                            Background="{DynamicResource AccentDark}" 
-                            CornerRadius="40" 
-                            Margin="0,0,0,24">
-                        <ui:SymbolIcon Symbol="ShieldLock24" FontSize="40" Foreground="{DynamicResource Accent}"/>
+                    <!--  Icon / Brand  -->
+                    <Border
+                        Width="80"
+                        Height="80"
+                        Margin="0,0,0,24"
+                        Background="{DynamicResource AccentDark}"
+                        CornerRadius="40">
+                        <ui:SymbolIcon
+                            FontSize="40"
+                            Foreground="{DynamicResource Accent}"
+                            Symbol="ShieldLock24" />
                     </Border>
 
-                    <TextBlock Text="Ready to dominate Rust?"
-                               FontSize="28"
-                               FontWeight="Bold"
-                               TextAlignment="Center"
-                               Margin="0,0,0,12"
-                               Foreground="White"/>
-                    
-                    <TextBlock Text="Pair your account to start tracking players, receiving base raid alerts, and controlling your smart devices instantly."
-                               FontSize="14"
-                               TextAlignment="Center"
-                               TextWrapping="Wrap"
-                               Margin="0,0,0,32"
-                               Foreground="{DynamicResource TextSubtle}"
-                               LineHeight="20"/>
+                    <TextBlock
+                        Margin="0,0,0,12"
+                        FontSize="28"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Text="Ready to dominate Rust?"
+                        TextAlignment="Center" />
 
-                    <ui:Button x:Name="BtnOverlayPair"
-                               Height="50"
-                               HorizontalAlignment="Stretch"
-                               Appearance="Primary"
-                               Click="BtnListenPairing_Click"
-                               FontSize="16"
-                               FontWeight="SemiBold"
-                               Icon="{ui:SymbolIcon Symbol=BluetoothConnected24}">
+                    <TextBlock
+                        Margin="0,0,0,32"
+                        FontSize="14"
+                        Foreground="{DynamicResource TextSubtle}"
+                        LineHeight="20"
+                        Text="Pair your account to start tracking players, receiving base raid alerts, and controlling your smart devices instantly."
+                        TextAlignment="Center"
+                        TextWrapping="Wrap" />
+
+                    <ui:Button
+                        x:Name="BtnOverlayPair"
+                        Height="50"
+                        HorizontalAlignment="Stretch"
+                        Appearance="Primary"
+                        Click="BtnListenPairing_Click"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Icon="{ui:SymbolIcon Symbol=BluetoothConnected24}">
                         <ui:Button.Content>
-                            <TextBlock Text="Login &amp; Pair Account" Margin="8,0,0,0"/>
+                            <TextBlock Margin="8,0,0,0" Text="Login &amp; Pair Account" />
                         </ui:Button.Content>
                     </ui:Button>
-                    
-                    <TextBlock Margin="0,20,0,0" 
-                               Text="Requires Steam login in your default browser."
-                               FontSize="11"
-                               TextAlignment="Center"
-                               Foreground="{DynamicResource TextCaption}"/>
+
+                    <TextBlock
+                        Margin="0,20,0,0"
+                        FontSize="11"
+                        Foreground="{DynamicResource TextCaption}"
+                        Text="Requires Steam login in your default browser."
+                        TextAlignment="Center" />
                 </StackPanel>
             </Border>
         </Grid>
 
-        <!-- Wpf.Ui: WinUI 3 Snackbar presenter (toast notifications) -->
-        <ui:SnackbarPresenter x:Name="RootSnackbar" Grid.ColumnSpan="3"
-                              VerticalAlignment="Bottom" HorizontalAlignment="Stretch"
-                              Margin="20,0,20,20" Panel.ZIndex="9999" />
+        <!--  Wpf.Ui: WinUI 3 Snackbar presenter (toast notifications)  -->
+        <ui:SnackbarPresenter
+            x:Name="RootSnackbar"
+            Grid.ColumnSpan="3"
+            Margin="20,0,20,20"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Panel.ZIndex="9999" />
 
     </Grid>
 </Window>

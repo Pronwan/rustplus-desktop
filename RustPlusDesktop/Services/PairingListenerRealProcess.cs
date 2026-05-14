@@ -146,8 +146,14 @@ namespace RustPlusDesk.Services
                 _log("Registering completed (Confirm login in browser if applicable).");
 
                 // Record FCM Token dates
-                TrackingService.FcmIssuedAt = DateTime.Now;
-                TrackingService.FcmExpiresAt = DateTime.Now.AddMonths(6); // FCM tokens usually last ~6 months or until revoked
+                var issuedAt  = DateTime.Now;
+                var expiresAt = issuedAt.AddDays(15); // FCM tokens expire after 15 days
+                TrackingService.FcmIssuedAt  = issuedAt;
+                TrackingService.FcmExpiresAt = expiresAt;
+
+                // Persist dates (and SteamId if known) directly into the config file
+                EnrichFcmConfig(issuedAt, expiresAt, TrackingService.SteamId64);
+
                 RegistrationCompleted?.Invoke(this, EventArgs.Empty);
             }
 
@@ -469,6 +475,8 @@ namespace RustPlusDesk.Services
                     string? entityName = GetJsonString(root, "entityName");
                     string? type = GetJsonString(root, "type");          // "server" | "entity" | "alarm"
                     string? entityType = GetJsonString(root, "entityType");    // z.B. "1" (Switch) / "2" (Alarm)
+                    string? issueDateStr = GetJsonString(root, "issueDate");
+                    string? expiryDateStr = GetJsonString(root, "expiryDate") ?? GetJsonString(root, "expirtyDate");
 
                     if (!int.TryParse(portStr, out var port)) port = 28082;
                     uint? entityId = (uint.TryParse(entityIdStr, out var eid) ? eid : (uint?)null);
@@ -502,7 +510,9 @@ namespace RustPlusDesk.Services
                             PlayerToken = playerToken!,
                             EntityId = entityId,
                             EntityName = string.IsNullOrWhiteSpace(entityName) ? null : entityName,
-                            EntityType = kind ?? type
+                            EntityType = kind ?? type,
+                            IssueDate = issueDateStr,
+                            ExpiryDate = expiryDateStr
                         };
 
                         var key = $"{payload.Host}:{payload.Port}|{payload.SteamId64}|{payload.PlayerToken}|{payload.EntityId}";
@@ -893,6 +903,14 @@ namespace RustPlusDesk.Services
                     env: env
                 );
                 _log("Registering completed (Confirm login in browser if applicable).");
+
+                // Persist dates into config file
+                var issuedAt2  = DateTime.Now;
+                var expiresAt2 = issuedAt2.AddDays(15);
+                TrackingService.FcmIssuedAt  = issuedAt2;
+                TrackingService.FcmExpiresAt = expiresAt2;
+                EnrichFcmConfig(issuedAt2, expiresAt2, TrackingService.SteamId64);
+                RegistrationCompleted?.Invoke(this, EventArgs.Empty);
             }
 
             // Listener via Edge (mit ENV)
@@ -924,6 +942,47 @@ namespace RustPlusDesk.Services
                 }
                 catch { /* ignore */ }
             };
+        }
+
+        // ── Helpers ─────────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Reads the rustplusjs-config.json, injects issue_date / expiry_date / steam_id,
+        /// and writes it back so the file is self-contained for the next app launch.
+        /// </summary>
+        public void EnrichFcmConfig(DateTime issuedAt, DateTime expiresAt, string? steamId)
+        {
+            try
+            {
+                if (!File.Exists(ConfigPath)) return;
+
+                var json = File.ReadAllText(ConfigPath);
+                using var doc = JsonDocument.Parse(json);
+                var root = doc.RootElement;
+
+                using var ms  = new System.IO.MemoryStream();
+                using var wtr = new Utf8JsonWriter(ms, new JsonWriterOptions { Indented = true });
+                wtr.WriteStartObject();
+
+                // Copy all existing properties
+                foreach (var prop in root.EnumerateObject())
+                    prop.WriteTo(wtr);
+
+                // Inject / overwrite our metadata fields
+                wtr.WriteString("steam_id",    steamId ?? "");
+                wtr.WriteString("issue_date",  issuedAt.ToString("o"));
+                wtr.WriteString("expiry_date", expiresAt.ToString("o"));
+
+                wtr.WriteEndObject();
+                wtr.Flush();
+
+                File.WriteAllBytes(ConfigPath, ms.ToArray());
+                _log($"[fcm] Config enriched – expires {expiresAt:yyyy-MM-dd}");
+            }
+            catch (Exception ex)
+            {
+                _log($"[fcm] Warning: could not enrich config file: {ex.Message}");
+            }
         }
 
     }
