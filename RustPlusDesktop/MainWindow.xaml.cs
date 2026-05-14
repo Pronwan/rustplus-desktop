@@ -60,7 +60,7 @@ public partial class MainWindow : Window
 {
 
     private readonly MainViewModel _vm = new();
-    private readonly SteamLoginService _steam = new();
+
     private DateTime _lastPairingPingAt = DateTime.MinValue;
     private readonly IRustPlusClient _rust;  // Interface statt fester Klasse
     private WebView2? _webView;
@@ -323,6 +323,11 @@ public partial class MainWindow : Window
 
         // MapTransform.Changed += (_, __) => UpdateMarkerPositions();
         HydrateSteamUiFromStorage();   // <= HIER
+
+        // Set version badge dynamically from assembly
+        var ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+        if (ver != null)
+            TxtAppVersion.Text = $"v{ver.Major}.{ver.Minor}.{ver.Build}";
         // _statusTimer.Tick += async (_, __) => await UpdateServerStatusAsync();
         _upkeepTimer.Tick += (_, __) => RefreshUpkeepUI();
         _upkeepTimer.Start();
@@ -335,7 +340,11 @@ public partial class MainWindow : Window
         // Auto-start FCM listener silently in background on app open
         Loaded += (_, __) => _ = Task.Delay(1500).ContinueWith(_ => Dispatcher.Invoke(() => 
         {
-            StartPairingSilent();
+            // Seed in-memory state from the config file (issue_date, expiry_date, steam_id)
+            TrackingService.ReadFcmConfig();
+            _vm.NotifyFcmChanged();
+
+            StartPairingSilent(true);
             
             // Auto-connect if enabled and not already connected
             if (TrackingService.AutoConnectEnabled && _vm.Selected != null && !_vm.Selected.IsConnected)
@@ -412,7 +421,7 @@ public partial class MainWindow : Window
             TxtPairingState.Text = "Pairing: failed"; // show failure text
             AppendLog("[listener] " + msg);
             // Auto-retry after a short delay
-            _ = Task.Delay(5000).ContinueWith(_ => Dispatcher.BeginInvoke(new Action(() => StartPairingSilent())));
+            _ = Task.Delay(5000).ContinueWith(_ => Dispatcher.BeginInvoke(new Action(() => StartPairingSilent(true))));
         }));
 
 
@@ -2072,7 +2081,31 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 TrackingService.SteamId64 = e.SteamId64;
                 _vm.SteamId64 = e.SteamId64;
                 AppendLog($"[pairing] Captured SteamID {e.SteamId64} from pairing response.");
+                // Persist SteamId into the FCM config file so future launches read it
+                TrackingService.PatchFcmConfigSteamId(e.SteamId64);
+                HydrateSteamUiFromStorage();
             }
+
+            bool datesChanged = false;
+            if (!string.IsNullOrEmpty(e.IssueDate))
+            {
+                if (long.TryParse(e.IssueDate, out var issueTs))
+                    TrackingService.FcmIssuedAt = DateTimeOffset.FromUnixTimeMilliseconds(issueTs > 9999999999 ? issueTs : issueTs * 1000).LocalDateTime;
+                else if (DateTime.TryParse(e.IssueDate, out var d1))
+                    TrackingService.FcmIssuedAt = d1;
+                datesChanged = true;
+            }
+
+            if (!string.IsNullOrEmpty(e.ExpiryDate))
+            {
+                if (long.TryParse(e.ExpiryDate, out var expTs))
+                    TrackingService.FcmExpiresAt = DateTimeOffset.FromUnixTimeMilliseconds(expTs > 9999999999 ? expTs : expTs * 1000).LocalDateTime;
+                else if (DateTime.TryParse(e.ExpiryDate, out var d2))
+                    TrackingService.FcmExpiresAt = d2;
+                datesChanged = true;
+            }
+            
+            if (datesChanged) _vm.NotifyFcmChanged();
 
             var prof = _vm.Servers.FirstOrDefault(s =>
                 s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
@@ -2240,9 +2273,24 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
 
     /// <summary>Starts the FCM pairing listener silently — no busy overlay, no blocking.</summary>
-    private void StartPairingSilent()
+    private void StartPairingSilent(bool autoStart = false)
     {
         if (_listenerStarting || _pairing.IsRunning) return;
+
+        if (autoStart)
+        {
+            if (!TrackingService.IsFcmConfigured())
+            {
+                AppendLog("[pairing] No FCM config saved. Auto-start disabled.");
+                return;
+            }
+            if (TrackingService.FcmExpiresAt.HasValue && TrackingService.FcmExpiresAt.Value < DateTime.Now)
+            {
+                AppendLog("[pairing] FCM config has expired. Manual start (Listen) required to re-register.");
+                return;
+            }
+        }
+
         _listenerStarting = true;
         _vm.IsPairingBusy = true; // Tell UI we are trying to start
         TxtPairingState.Text = "Pairing: starting…";
@@ -2261,7 +2309,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private async Task StartPairingListenerUiAsync()
     {
         // Delegate to silent start — no more busy overlay
-        StartPairingSilent();
+        StartPairingSilent(false);
         await Task.CompletedTask;
     }
 
@@ -2461,11 +2509,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TxtSteamId.Text = sidText;
         TxtSteamName.Text = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Steam Account" : "Logged In";
         
-        BtnSteamLogin.Content = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Login" : "Switch";
-        BtnSteamLogin.Icon = new Wpf.Ui.Controls.SymbolIcon 
-        { 
-            Symbol = string.IsNullOrWhiteSpace(_vm.SteamId64) ? Wpf.Ui.Controls.SymbolRegular.PersonArrowRight24 : Wpf.Ui.Controls.SymbolRegular.ArrowSwap24 
-        };
+
 
         // Avatar versuchen zu laden (nur wenn wir eine ID haben)
         _ = TryLoadSteamAvatarAsync(_vm.SteamId64);
@@ -4617,14 +4661,19 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 File.Delete(PairingConfigPath);
                 AppendLog($"🗑️ Deleted pairing config: {PairingConfigPath}");
-                TxtPairingState.Text = "Pairing: config deleted";
-                return true;
             }
             else
             {
-                AppendLog("ℹ️ No pairing config found to delete.");
-                return false;
+                AppendLog("ℹ️ No pairing config found to delete on disk.");
             }
+
+            // Always clear tracking dates on reset
+            TrackingService.FcmIssuedAt = null;
+            TrackingService.FcmExpiresAt = null;
+            _vm.NotifyFcmChanged();
+
+            TxtPairingState.Text = "Pairing: config deleted";
+            return true;
         }
         catch (Exception ex)
         {

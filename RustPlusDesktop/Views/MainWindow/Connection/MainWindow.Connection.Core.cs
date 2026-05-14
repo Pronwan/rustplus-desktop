@@ -39,27 +39,10 @@ public partial class MainWindow
         _webView.CoreWebView2.Settings.UserAgent =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
             "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
-        _webView.NavigationCompleted += WebView_NavigationCompleted;
+
     }
 
-    private async void BtnSteamLogin_Click(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            var loopback = new SteamOpenIdLoopbackService();
-            var sid = await loopback.SignInAsync();
-            _vm.SteamId64 = sid;
-            TrackingService.SteamId64 = sid;
-            TxtSteamId.Text = sid;
-            AppendLog($"Steam angemeldet (Loopback): {sid}");
-            _vm.Save();
-            HydrateSteamUiFromStorage();
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show("Steam-Login fehlgeschlagen: " + ex.Message);
-        }
-    }
+
 
     private async Task UpdateServerStatusAsync()
     {
@@ -84,18 +67,7 @@ public partial class MainWindow
         }
     }
 
-    private void WebView_NavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
-    {
-        if (_webView?.Source is null) return;
-        var url = _webView.Source.ToString();
-        if (_steam.TryExtractSteamId64FromReturnUrl(url, out var sid))
-        {
-            _vm.SteamId64 = sid;
-            TxtSteamId.Text = sid;
-            AppendLog($"Steam angemeldet: {sid}");
-            _vm.Save();
-        }
-    }
+
 
     private void BtnAddServer_Click(object sender, RoutedEventArgs e)
     {

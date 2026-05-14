@@ -183,8 +183,9 @@ public class MainViewModel : INotifyPropertyChanged
         get
         {
             // Show overlay if no token registered and not currently busy/initializing
-            // FALLBACK: Also check if the file physically exists (for existing users)
-            bool hasToken = TrackingService.FcmExpiresAt != null || TrackingService.IsFcmConfigured();
+            // Show overlay if no valid token exists
+            bool hasToken = TrackingService.IsFcmConfigured() &&
+                            (!TrackingService.FcmExpiresAt.HasValue || TrackingService.FcmExpiresAt.Value >= DateTime.Now);
             return !hasToken && !IsBusy && !IsInitializing;
         }
     }
