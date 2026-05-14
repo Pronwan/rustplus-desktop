@@ -765,42 +765,16 @@
         </Style>
         
         <Style x:Key="DarkComboBox" TargetType="ComboBox">
-            <Setter Property="Background" Value="#2A2E35"/>
-            <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="8,4"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ComboBox">
-                        <Grid>
-                            <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="10" Padding="{TemplateBinding Padding}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ContentPresenter Content="{TemplateBinding SelectionBoxItem}"
-                                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                                      ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                                                      VerticalAlignment="Center"/>
-                                    <Path Grid.Column="1" Data="M 0 0 L 4 4 L 8 0" Stroke="#888" StrokeThickness="2" VerticalAlignment="Center" Margin="5,0,2,0"/>
-                                </Grid>
-                            </Border>
-                            <ToggleButton Background="Transparent" BorderThickness="0" ClickMode="Press" Focusable="False" IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"/>
-                            <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" AllowsTransparency="True">
-                                <Border Background="#1E2126" BorderBrush="#40FFFFFF" BorderThickness="1" CornerRadius="8" Margin="0,2,0,0" MinWidth="{TemplateBinding ActualWidth}">
-                                    <ScrollViewer MaxHeight="300" CanContentScroll="True">
-                                        <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                                    </ScrollViewer>
-                                </Border>
-                            </Popup>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
             <Style.Resources>
+                <Style x:Key="ComboToggle" TargetType="ToggleButton">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ToggleButton">
+                                <Border Background="Transparent" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
                 <Style TargetType="ComboBoxItem">
                     <Setter Property="Padding" Value="8,4"/>
                     <Setter Property="Foreground" Value="White"/>
@@ -825,6 +799,41 @@
                     </Setter>
                 </Style>
             </Style.Resources>
+            <Setter Property="Background" Value="#2A2E35"/>
+            <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="10" Padding="{TemplateBinding Padding}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter Content="{TemplateBinding SelectionBoxItem}"
+                                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                      ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                                      VerticalAlignment="Center"/>
+                                    <Path Grid.Column="1" Data="M 0 0 L 4 4 L 8 0" Stroke="#888" StrokeThickness="2" VerticalAlignment="Center" Margin="5,0,2,0"/>
+                                </Grid>
+                            </Border>
+                            <ToggleButton Style="{StaticResource ComboToggle}" Background="Transparent" BorderThickness="0" ClickMode="Press" Focusable="False" IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" AllowsTransparency="True">
+                                <Border Background="#1E2126" BorderBrush="#40FFFFFF" BorderThickness="1" CornerRadius="8" Margin="0,2,0,0" MinWidth="{TemplateBinding ActualWidth}">
+                                    <ScrollViewer MaxHeight="300" CanContentScroll="True">
+                                        <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         
                 </ResourceDictionary>

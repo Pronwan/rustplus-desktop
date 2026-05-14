@@ -46,7 +46,7 @@
                     Margin="0,15,0,0"/>
 
             <!-- Content -->
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Style="{StaticResource {x:Type ScrollViewer}}">
                 <StackPanel>
                     <TextBlock Text="General" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,0,0,10"/>
                     
@@ -99,6 +99,20 @@
                                Style="{StaticResource DotCheckBox}"
                                Checked="OnSettingChanged" Unchecked="OnSettingChanged"
                                ToolTip="Automatically starts polling shops and alerts when connected to a server."/>
+
+                    <!-- Chat Section -->
+                    <TextBlock Text="Chat" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <Button Content="Modify Chat Alerts" 
+                                Style="{StaticResource GhostButton}"
+                                Padding="12,6"
+                                Click="BtnModifyChatAlerts_Click"/>
+                        <Button Content="Chat Commands" 
+                                Style="{StaticResource GhostButton}"
+                                Margin="8,0,0,0"
+                                Padding="12,6"
+                                Click="BtnChatCommands_Click"/>
+                    </StackPanel>
 
                     <TextBlock Text="Steam Account" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
                     <TextBlock Text="Manage your linked Steam account in the main window." 
