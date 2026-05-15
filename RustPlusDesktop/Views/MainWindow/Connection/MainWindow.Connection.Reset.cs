@@ -167,7 +167,14 @@ public partial class MainWindow
     {
         if (_isReconnecting) return;
         _isReconnecting = true;
-        await _rust.DisconnectAsync(); 
+
+        try
+        {
+            // Suppress errors if the socket is already completely dead
+            await _rust.DisconnectAsync();
+        }
+        catch { /* Ignore */ }
+
         Dispatcher.Invoke(() => ChkShops.IsChecked = false);
         AppendLog("[auto-reconnect] Connection lost detected. Starting recovery...");
 
