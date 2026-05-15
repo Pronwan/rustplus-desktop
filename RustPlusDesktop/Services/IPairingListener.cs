@@ -11,6 +11,7 @@ public interface IPairingListener
 
     // Status
     event EventHandler? Listening;
+    event EventHandler? RegistrationCompleted;
     event EventHandler? Stopped;
     event EventHandler<string>? Failed;
 
@@ -18,6 +19,7 @@ public interface IPairingListener
     event EventHandler<AlarmNotification>? AlarmReceived;
     event EventHandler<TeamChatMessage>? ChatReceived;
     bool IsRunning { get; }
+    bool IsConfigured { get; }
     Task StartAsync(CancellationToken ct = default);
     Task StopAsync();
     // NEU: optional – Standard fällt auf normalen Start zurück

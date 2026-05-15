@@ -144,6 +144,11 @@ public partial class MainWindow
                             ApplyCurrentOverlayScale(el);
                         }
                     }
+
+                    if (vm.SteamId == _mySteamId)
+                    {
+                        _vm.MyAvatar = vm.Avatar;
+                    }
                 });
 
                 _avatarNextTry.Remove(vm.SteamId);
@@ -205,6 +210,11 @@ public partial class MainWindow
 
                 var now = (m.Online, m.Dead);
                 _lastPresence[sid] = now;
+
+                if (sid == _mySteamId)
+                {
+                    _vm.MyAvatar = vm.Avatar;
+                }
 
                 if (hadPrev && prev != now)
                     _ = AnnouncePresenceChangeAsync(vm, prev, now);
@@ -384,11 +394,11 @@ public partial class MainWindow
         // Immediate center
         if (TryResolvePosFromDynMarkers(steamId, out var x, out var y))
         {
-            CenterMapOnWorld(x, y);
+            CenterMapOnWorld(x, y, true);
         }
         else if (TeamMembers.FirstOrDefault(t => t.SteamId == steamId) is { X: { } tx, Y: { } ty })
         {
-            CenterMapOnWorld(tx, ty);
+            CenterMapOnWorld(tx, ty, true);
         }
     }
 

@@ -139,6 +139,7 @@ public partial class MainWindow
         if (ShopSearchContent.Visibility == Visibility.Collapsed)
         {
             if (_shopSearchWebView == null) InitEmbeddedShopSearch();
+            UpdateShopPollingWarning();
             
             ShopSearchContent.Visibility = Visibility.Visible;
             ShopSearchContent.Opacity = 0;
@@ -187,6 +188,20 @@ public partial class MainWindow
     private void BtnCloseShopSearch_Click(object sender, RoutedEventArgs e)
     {
         ToggleShopSearch();
+    }
+
+    private void UpdateShopPollingWarning()
+    {
+        if (ShopSearchWarning != null)
+        {
+            ShopSearchWarning.Visibility = ChkShops.IsChecked == true ? Visibility.Collapsed : Visibility.Visible;
+        }
+    }
+
+    private void BtnActivateShopPolling_Click(object sender, RoutedEventArgs e)
+    {
+        ChkShops.IsChecked = true;
+        UpdateShopPollingWarning();
     }
 
     private async void InitEmbeddedShopSearch()
@@ -245,6 +260,17 @@ public partial class MainWindow
             LoadPersistentAlerts();
             SyncAlertMenuItems();
         }
+
+        UpdateShopSearchToolHighlights();
+    }
+
+    public void UpdateShopSearchToolHighlights()
+    {
+        if (_shopSearchWebView == null) return;
+        bool profitOpen = _analysisWin != null && _analysisWin.IsVisible;
+        bool pathOpen = _pathFinderWin != null && _pathFinderWin.IsVisible;
+
+        _ = _shopSearchWebView.ExecuteScriptAsync($"window.updateToolHighlights({profitOpen.ToString().ToLower()}, {pathOpen.ToString().ToLower()})");
     }
 
     // ── Refresh (called by PollShopsOnceAsync) ───────────────────────────────

@@ -12,17 +12,70 @@
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
                 <TextBlock Text="Patch Notes &amp; Version History" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,2"/>
                 <!-- UPDATE VERSION NUMBER HERE -->
-                <TextBlock Text="Current Version: 4.5.0" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
+                <TextBlock Text="Current Version: v5.0.0" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
             </StackPanel>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v4.5.0 PATCH NOTES -->
+                    <!-- NEW v4.6.0 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="v4.5.2  |  Shop Polling Hotfix (May 12, 2026)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="v5.0.0 |  The Game Changer Update (May 15, 2026)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            
+                            <!-- Thumbnail -->
+                            <Image Source="pack://application:,,,/Assets/Images/RustPlus_V5_Thumbnail.jpg" Stretch="Uniform" MaxHeight="380" Margin="0,4,0,12" />
+
+                            <!-- Features -->
+                            <TextBlock Text="&#x2022; Integrated Auto-Update System &amp; Runtime Management" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Never worry about manual updates again. The app now features a background update checker with a detailed progress UI (speed, size, percentage). Runtime management has been centralized for better reliability and easier installation of background components like Node.js.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Modernized 'Edge-to-Edge' Interface &amp; Map Fixes" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                We've removed the thick outer margins and squared off the window corners for a truly modern, flush design. This update also includes <Run FontWeight="Bold">interpolated map movements</Run> for smoother tracking and a fix for the "Center on Map" functionality for team members.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Smart Home Automation: Storage Monitors &amp; !Upkeep" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Complete overhaul of device detection. The app now <Run FontWeight="Bold">automatically recognizes Storage Monitors</Run> alongside Smart Switches and TCs for chat commands. Use the <Run FontWeight="Bold">!Upkeep</Run> command in team chat to get a live report from any number of connected Tool Cupboards.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Advanced Player Tracking &amp; Grouping" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                The player list has been completely rebuilt for better performance and styling. You can now track custom Group Names and Colors for players. Added a context menu to player cards, along with "Is Online" and "Play Time" indicators.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Expanded Alert System &amp; Smart Alarm Fixes" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Added new chat alert options for <Run FontWeight="Bold">monuments, player status, and shop changes</Run>. Audio Smart Alarm alerts now work properly again, and we've added a warning if your pairing is about to expire via a new sidebar InfoBar.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Enhanced Background Stability &amp; FCM Hardening" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Major architectural hardening to prevent crashes and UI freezes. We've modernized how the app talks to the background Node.js process, ensuring 100% responsiveness even during complex connection transitions. Auto-reconnect will now start a new connection and dispose the old one. This should also prevent you from being kicked from the API after some hours.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; UI Polish &amp; Overhauled Settings" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                The Settings window and "Chat Alerts" interaction have been redesigned for better accessibility. We've removed legacy UI artifacts like green selection highlights and upgraded the BattleMetrics button to a sleek icon on the server card.
+                            </TextBlock>
+
+                            <TextBlock Text="&#x2022; Steam Identity Integration (Preview)" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Added a new Steam Identity section to the sidebar, paving the way for future account-linked features like profile pictures and easy login.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
+                    <!-- v4.5.0 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v4.5.3  |  Audio Smart Alert Hotfix (May 14, 2026)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
 
                             <!-- Screenshots -->
                             <Image Source="pack://application:,,,/Assets/Screenshots/4.5.0.png" Stretch="Uniform" MaxHeight="350" Margin="0,0,0,12"/>

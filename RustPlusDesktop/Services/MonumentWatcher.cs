@@ -59,9 +59,10 @@ namespace RustPlusDesk.Services
         public event EventHandler<string> OnOilRigChatUpdate;
         public event EventHandler<string>? OnDebug;
 
-        public bool HasMonuments =>
-            _smallOilPos.HasValue && _smallOilPos.Value.X > 1 &&
-            _largeOilPos.HasValue && _largeOilPos.Value.X > 1;
+        public bool HasSmallOil => _smallOilPos.HasValue;
+        public bool HasLargeOil => _largeOilPos.HasValue;
+
+        public bool HasAnyMonument => HasSmallOil || HasLargeOil;
 
         public void SetMonuments(List<RustPlusClientReal.DynMarker> monuments)
         {
@@ -80,9 +81,9 @@ namespace RustPlusDesk.Services
             var virtualMarkers = new List<RustPlusClientReal.DynMarker>();
             var now = DateTime.UtcNow;
 
-            if (HasMonuments)
+            if (HasAnyMonument)
             {
-                var chinooks = currentMarkers.Where(m => m.Type == 4 || (m.Kind?.Contains("CH47") == true));
+                var chinooks = currentMarkers.Where(m => m.Type == 4 || (m.Kind?.Contains("CH47", StringComparison.OrdinalIgnoreCase) == true));
                 var currentChinookIds = new HashSet<uint>();
 
                 foreach (var ch47 in chinooks)
@@ -90,10 +91,8 @@ namespace RustPlusDesk.Services
                     if (ch47.X < 1 && ch47.Y < 1) continue;
                     currentChinookIds.Add(ch47.Id);
 
-                    // 1. Chinook State holen oder neu anlegen
                     if (!_chinookStates.TryGetValue(ch47.Id, out var state))
                     {
-                        // NEUER Chinook!
                         state = new ChinookState
                         {
                             FirstSeen = now,
@@ -107,38 +106,30 @@ namespace RustPlusDesk.Services
                         _chinookStates[ch47.Id] = state;
                     }
 
-                    // Reset missing count
                     state.MissingCount = 0;
 
-                    // 2. Trigger prüfen (Hover Logic)
-                    if (!_activeEvents.ContainsKey("Small Oil Rig"))
+                    // Trigger für jedes vorhandene Rig einzeln prüfen
+                    if (HasSmallOil && !_activeEvents.ContainsKey("Small Oil Rig"))
                     {
                         CheckAndTriggerHover(ch47, state, _smallOilPos, "Small Oil Rig", now);
                         CheckAndTriggerTrajectory(ch47, state, _smallOilPos, "Small Oil Rig", now);
                     }
 
-                    if (!_activeEvents.ContainsKey("Large Oil Rig"))
+                    if (HasLargeOil && !_activeEvents.ContainsKey("Large Oil Rig"))
                     {
                         CheckAndTriggerHover(ch47, state, _largeOilPos, "Large Oil Rig", now);
                         CheckAndTriggerTrajectory(ch47, state, _largeOilPos, "Large Oil Rig", now);
                     }
 
-                    // Position für nächsten Tick merken
                     state.LastX = ch47.X;
                     state.LastY = ch47.Y;
                     state.LastSeen = now;
                 }
 
-                // Veraltete States aufräumen (mit Toleranz für laggy Server)
                 var oldIds = _chinookStates.Keys.Where(k => !currentChinookIds.Contains(k)).ToList();
                 foreach (var id in oldIds)
                 {
-                    var state = _chinookStates[id];
-                    state.MissingCount++;
-                    if (state.MissingCount > 15) // Keep alive for ~15 seconds of missing data
-                    {
-                        _chinookStates.Remove(id);
-                    }
+                    if (++_chinookStates[id].MissingCount > 15) _chinookStates.Remove(id);
                 }
             }
 
@@ -250,32 +241,37 @@ namespace RustPlusDesk.Services
             double dyC = chinook.Y - rigPos.Value.Y;
             double currentDist = Math.Sqrt(dxC * dxC + dyC * dyC);
 
-            // LOGIK: Chinook taucht "nahe" am Rig auf (max 3-4 Grids) 
-            // und fliegt dann weg. Radius: zwischen 50m und 500m beim Spawn.
-            if (spawnDist > 50 && spawnDist < 500)
+            // LOGIK: Chinook taucht in der Nähe des Rigs auf (erweiterter Radius bis ~8 Grids)
+            // und fliegt dann weg. Radius: zwischen 50m und 1200m beim Spawn.
+            if (spawnDist > 50 && spawnDist < 1200)
             {
                 state.TickCount++;
 
-                // Wir warten ~4 Ticks (ca. 12 Sek), um die Flugrichtung zu bestätigen
-                if (state.TickCount >= 4)
+                // Debug log every few ticks so user sees it's working
+                if (state.TickCount == 1 || state.TickCount % 5 == 0)
+                {
+                    OnDebug?.Invoke(this, $"[MON] Evaluating Trajectory for {rigName}: SpawnDist={spawnDist:F0} Tick={state.TickCount} CurrentDist={currentDist:F0}");
+                }
+
+                // Wir warten ~3 Ticks (ca. 6-10 Sek), um die Flugrichtung zu bestätigen
+                if (state.TickCount >= 3)
                 {
                     double moveX = chinook.X - state.FirstX;
                     double moveY = chinook.Y - state.FirstY;
                     double totalMoved = Math.Sqrt(moveX * moveX + moveY * moveY);
 
-                    // Er muss sich mindestens 150m vom Spawn wegbewegt haben 
-                    // UND die Distanz zum Rig muss deutlich zugenommen haben.
-                    if (totalMoved > 150 && currentDist > spawnDist + 100)
+                    // Er muss sich etwas vom Spawn wegbewegt haben 
+                    // UND die Distanz zum Rig muss zugenommen haben.
+                    if (totalMoved > 100 && currentDist > spawnDist + 50)
                     {
-                        // Winkelprüfung: Bewegt er sich in einer Linie "weg vom Rig"?
-                        // Vektor Rig->Spawn vs Vektor Spawn->Chinook
+                        // Winkelprüfung: Bewegt er sich weg vom Rig?
                         double angle = GetAngle(dxS, dyS, moveX, moveY);
                         
-                        if (Math.Abs(angle) < 30) // Innerhalb von 30 Grad Abweichung
+                        if (Math.Abs(angle) < 35) // Innerhalb von 35 Grad Abweichung
                         {
                             state.TrajectoryTriggered = true;
                             TriggerEvent(rigName, 750); // 12 Minuten 30 Sekunden
-                            OnDebug?.Invoke(this, $"[MON] Trajectory Trigger! CH={chinook.Id} Rig={rigName} SpawnDist={spawnDist:F0} Moved={totalMoved:F0} Angle={angle:F1}");
+                            OnDebug?.Invoke(this, $"[MON] !!! Trajectory Trigger !!! {rigName} SpawnDist={spawnDist:F0} Moved={totalMoved:F0} Angle={angle:F1}");
                         }
                     }
                 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace RustPlusDesk.Models;
 
@@ -13,6 +13,8 @@ public class PairingPayload
     public uint? EntityId { get; set; }
     public string? EntityName { get; set; }
     public string? EntityType { get; set; } // z.B. "server", "entity", "SmartSwitch" …
+    public string? IssueDate { get; set; }
+    public string? ExpiryDate { get; set; }
 
 }
 

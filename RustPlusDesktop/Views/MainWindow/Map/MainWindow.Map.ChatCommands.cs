@@ -12,6 +12,7 @@ public partial class MainWindow
 {
     private void BtnOpenChatCommands_Click(object sender, System.Windows.RoutedEventArgs e)
     {
+        _vm.Selected?.SyncChatCommands();
         ChatCommandsOverlay.Visibility = System.Windows.Visibility.Visible;
     }
 
@@ -192,18 +193,60 @@ public partial class MainWindow
             return;
         }
 
-        // Command: Switch 1
-        if (cmd == profile.CmdSwitch1.ToLowerInvariant() && profile.BoundSwitchId1.HasValue)
+        // Command: Switches (Dynamic List)
+        foreach (var mapping in profile.SwitchCommandMappings)
         {
-            await ToggleCommandSwitch(real, profile.BoundSwitchId1.Value, m.Author);
-            return;
+            if (cmd == mapping.Command.ToLowerInvariant() && mapping.EntityId != 0)
+            {
+                await ToggleCommandSwitch(real, mapping.EntityId, m.Author);
+                return;
+            }
         }
 
-        // Command: Switch 2
-        if (cmd == profile.CmdSwitch2.ToLowerInvariant() && profile.BoundSwitchId2.HasValue)
+        // Command: Upkeep (Dynamic List)
+        foreach (var mapping in profile.UpkeepCommandMappings)
         {
-            await ToggleCommandSwitch(real, profile.BoundSwitchId2.Value, m.Author);
-            return;
+            if (cmd == mapping.Command.ToLowerInvariant() && mapping.EntityId != 0)
+            {
+                await ProcessUpkeepCommand(real, mapping.EntityId, m.Author);
+                return;
+            }
+        }
+    }
+
+    private async Task ProcessUpkeepCommand(RustPlusClientReal real, uint entityId, string author)
+    {
+        var profile = _vm.Selected;
+        if (profile == null) return;
+
+        var dev = profile.AllDevices.FirstOrDefault(d => d.EntityId == entityId && (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor"));
+        if (dev != null && dev.Storage?.IsToolCupboard == true)
+        {
+            var secs = dev.UpkeepSeconds ?? 0;
+            if (secs <= 0)
+            {
+                _ = SendTeamChatSafeAsync($"Upkeep in {dev.PureName} TC: Empty or expired.");
+            }
+            else
+            {
+                int days = secs / 86400;
+                int rem = secs % 86400;
+                int hours = rem / 3600;
+                rem = rem % 3600;
+                int mins = rem / 60;
+
+                string timeStr = "";
+                if (days > 0) timeStr += $"{days} days, ";
+                if (hours > 0 || days > 0) timeStr += $"{hours} hours, ";
+                timeStr += $"{mins} minutes";
+
+                _ = SendTeamChatSafeAsync($"Upkeep in {dev.PureName} TC: {timeStr}.");
+            }
+            AppendLog($"[ChatCommand] Upkeep for {dev.Name} executed by {author}");
+        }
+        else
+        {
+            _ = SendTeamChatSafeAsync("Bound Tool Cupboard monitor not found or not paired.");
         }
     }
 
@@ -212,7 +255,7 @@ public partial class MainWindow
         var profile = _vm.Selected;
         if (profile == null) return;
         
-        var dev = profile.Devices.FirstOrDefault(d => d.EntityId == entityId && d.Kind == "SmartSwitch");
+        var dev = profile.AllDevices.FirstOrDefault(d => d.EntityId == entityId && d.Kind == "SmartSwitch");
         if (dev != null)
         {
             bool newState = !(dev.IsOn ?? false);

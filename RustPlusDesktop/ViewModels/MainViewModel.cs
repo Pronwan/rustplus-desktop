@@ -13,6 +13,13 @@ namespace RustPlusDesk.ViewModels;
 public class MainViewModel : INotifyPropertyChanged
 {
     private readonly System.Windows.Threading.DispatcherTimer _clockTimer;
+    private ImageSource? _myAvatar;
+
+    public ImageSource? MyAvatar
+    {
+        get => _myAvatar;
+        set { _myAvatar = value; OnPropertyChanged(); }
+    }
 
     public MainViewModel()
     {
@@ -121,20 +128,69 @@ public class MainViewModel : INotifyPropertyChanged
     public bool IsBusy
     {
         get => _isBusy;
-        set { _isBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
+        set { _isBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); OnPropertyChanged(nameof(ShowLoginOverlay)); }
     }
 
     private bool _isInitializing;
     public bool IsInitializing
     {
         get => _isInitializing;
-        set { _isInitializing = value; OnPropertyChanged(); }
+        set { _isInitializing = value; OnPropertyChanged(); OnPropertyChanged(nameof(ShowLoginOverlay)); }
     }
 
     public bool IsPairingBusy
     {
         get => _isPairingBusy;
         set { _isPairingBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
+    }
+
+    private bool _isUpdateAvailable;
+    public bool IsUpdateAvailable
+    {
+        get => _isUpdateAvailable;
+        set { _isUpdateAvailable = value; OnPropertyChanged(); }
+    }
+
+    private string _updateTag = "";
+    public string UpdateTag
+    {
+        get => _updateTag;
+        set { _updateTag = value; OnPropertyChanged(); }
+    }
+
+    private bool _isDownloadingUpdate;
+    public bool IsDownloadingUpdate
+    {
+        get => _isDownloadingUpdate;
+        set { _isDownloadingUpdate = value; OnPropertyChanged(); }
+    }
+
+    private double _updateDownloadProgress;
+    public double UpdateDownloadProgress
+    {
+        get => _updateDownloadProgress;
+        set { _updateDownloadProgress = value; OnPropertyChanged(); }
+    }
+
+    private string _updateDownloadSpeed = "";
+    public string UpdateDownloadSpeed
+    {
+        get => _updateDownloadSpeed;
+        set { _updateDownloadSpeed = value; OnPropertyChanged(); }
+    }
+
+    private string _updateDownloadSize = "";
+    public string UpdateDownloadSize
+    {
+        get => _updateDownloadSize;
+        set { _updateDownloadSize = value; OnPropertyChanged(); }
+    }
+
+    private string _updateDownloadPercentage = "0%";
+    public string UpdateDownloadPercentage
+    {
+        get => _updateDownloadPercentage;
+        set { _updateDownloadPercentage = value; OnPropertyChanged(); }
     }
 
     private string _busyText = "Bitte warten …";
@@ -151,6 +207,44 @@ public class MainViewModel : INotifyPropertyChanged
         set { _steamId64 = value; OnPropertyChanged(); }
     }
 
+    public string FcmExpiryText
+    {
+        get
+        {
+            if (TrackingService.FcmExpiresAt == null) return "No token registered";
+            var remaining = TrackingService.FcmExpiresAt.Value - DateTime.Now;
+            if (remaining.TotalDays < 0) return "Token expired!";
+            return $"Expires in {(int)remaining.TotalDays} days";
+        }
+    }
+
+    public int FcmExpiryDays
+    {
+        get
+        {
+            if (TrackingService.FcmExpiresAt == null) return -1;
+            return (int)(TrackingService.FcmExpiresAt.Value - DateTime.Now).TotalDays;
+        }
+    }
+
+    public void NotifyFcmChanged()
+    {
+        OnPropertyChanged(nameof(FcmExpiryText));
+        OnPropertyChanged(nameof(FcmExpiryDays));
+        OnPropertyChanged(nameof(ShowLoginOverlay));
+    }
+
+    public bool ShowLoginOverlay
+    {
+        get
+        {
+            // Show overlay if no token registered and not currently busy/initializing
+            // Show overlay if no valid token exists
+            bool hasToken = TrackingService.IsFcmConfigured() &&
+                            (!TrackingService.FcmExpiresAt.HasValue || TrackingService.FcmExpiresAt.Value >= DateTime.Now);
+            return !hasToken && !IsBusy && !IsInitializing;
+        }
+    }
     private ulong? _followingSteamId;
     public ulong? FollowingSteamId
     {
