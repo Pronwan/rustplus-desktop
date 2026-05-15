@@ -1,4 +1,5 @@
 using RustPlusDesk.Models;
+using RustPlusDesk.Helpers;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -57,8 +58,10 @@ namespace RustPlusDesk.Services
         public event EventHandler<string>? Failed;            // bei erkennbaren Fehlerzeilen
 
         public event EventHandler<string>? Status;            // optional, für UI-Text
+        public event EventHandler? RegistrationCompleted;
         private volatile bool _running;
         public bool IsRunning => _running;
+        public bool IsConfigured => File.Exists(ConfigPath) && new FileInfo(ConfigPath).Length > 50;
 
 
 
@@ -91,11 +94,11 @@ namespace RustPlusDesk.Services
                 return;
             }
 
-            var node = FindBundledNode()
-                ?? throw new InvalidOperationException("Node.js Runtime not found (runtime/node-win-x64/node.exe).");
+            var node = RuntimeHelper.FindBundledNode()
+                ?? throw new InvalidOperationException(RuntimeHelper.GetNodeNotFoundMessage());
 
-            var cli = ResolveRustplusCliEntry(out var wd)
-                ?? throw new InvalidOperationException("rustplus-cli not found (rustplus-cli.zip entpackt?).");
+            var cli = RuntimeHelper.ResolveCliEntry(out var wd)
+                ?? throw new InvalidOperationException("rustplus-cli not found (rustplus-cli.zip missing or extraction failed).");
 
             Directory.CreateDirectory(Path.GetDirectoryName(ConfigPath)!);
 
@@ -142,6 +145,17 @@ namespace RustPlusDesk.Services
                 }
 
                 _log("Registering completed (Confirm login in browser if applicable).");
+
+                // Record FCM Token dates
+                var issuedAt  = DateTime.Now;
+                var expiresAt = issuedAt.AddDays(15); // FCM tokens expire after 15 days
+                TrackingService.FcmIssuedAt  = issuedAt;
+                TrackingService.FcmExpiresAt = expiresAt;
+
+                // Persist dates (and SteamId if known) directly into the config file
+                EnrichFcmConfig(issuedAt, expiresAt, TrackingService.SteamId64);
+
+                RegistrationCompleted?.Invoke(this, EventArgs.Empty);
             }
 
             // 2) Listener starten
@@ -194,16 +208,26 @@ namespace RustPlusDesk.Services
 
         public Task StopAsync()
         {
-            try { _listenProc?.Kill(entireProcessTree: true); } catch { }
-            _listenProc?.Dispose();
-            _listenProc = null;
-            _cts?.Cancel(); _cts = null;
+            try
+            {
+                try { _listenProc?.Kill(entireProcessTree: true); } catch { }
+                try { _listenProc?.Dispose(); } catch { }
+                _listenProc = null;
 
-            var wasRunning = _running;
-            _running = false;
-            if (wasRunning) Stopped?.Invoke(this, EventArgs.Empty);
+                try { _cts?.Cancel(); } catch { }
+                _cts = null;
 
-            _log("Pairing-Listener stopped.");
+                var wasRunning = _running;
+                _running = false;
+                if (wasRunning) Stopped?.Invoke(this, EventArgs.Empty);
+
+                _log("Pairing-Listener stopped.");
+            }
+            catch (Exception ex)
+            {
+                _log("Error stopping listener: " + ex.Message);
+            }
+            
             return Task.CompletedTask;
         }
 
@@ -452,6 +476,8 @@ namespace RustPlusDesk.Services
                     string? entityName = GetJsonString(root, "entityName");
                     string? type = GetJsonString(root, "type");          // "server" | "entity" | "alarm"
                     string? entityType = GetJsonString(root, "entityType");    // z.B. "1" (Switch) / "2" (Alarm)
+                    string? issueDateStr = GetJsonString(root, "issueDate");
+                    string? expiryDateStr = GetJsonString(root, "expiryDate") ?? GetJsonString(root, "expirtyDate");
 
                     if (!int.TryParse(portStr, out var port)) port = 28082;
                     uint? entityId = (uint.TryParse(entityIdStr, out var eid) ? eid : (uint?)null);
@@ -485,7 +511,9 @@ namespace RustPlusDesk.Services
                             PlayerToken = playerToken!,
                             EntityId = entityId,
                             EntityName = string.IsNullOrWhiteSpace(entityName) ? null : entityName,
-                            EntityType = kind ?? type
+                            EntityType = kind ?? type,
+                            IssueDate = issueDateStr,
+                            ExpiryDate = expiryDateStr
                         };
 
                         var key = $"{payload.Host}:{payload.Port}|{payload.SteamId64}|{payload.PlayerToken}|{payload.EntityId}";
@@ -536,112 +564,6 @@ namespace RustPlusDesk.Services
             _log("[fcm-listen] " + s);
         }
 
-
-        // ----------------- HELFER: ALLE INNERHALB DER KLASSE! -----------------
-
-
-        // %LOCALAPPDATA%\RustPlusDesk\runtime\rustplus-cli – entpackt die ZIP nur, wenn neu
-        private static string EnsureCliUnpackedRoot()
-        {
-            var target = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                                      "RustPlusDesk", "runtime", "rustplus-cli");
-            Directory.CreateDirectory(target);
-
-            var zip = Path.Combine(AppContext.BaseDirectory, "runtime", "rustplus-cli.zip");
-            if (File.Exists(zip))
-            {
-                var stamp = Path.Combine(target, ".stamp");
-                var sig = $"{new FileInfo(zip).Length}-{File.GetLastWriteTimeUtc(zip).Ticks}";
-                var need = !File.Exists(stamp) || File.ReadAllText(stamp) != sig
-                           || !Directory.Exists(Path.Combine(target, "node_modules"));
-
-                if (need)
-                {
-                    try { Directory.Delete(target, true); } catch { }
-                    Directory.CreateDirectory(target);
-                    ZipFile.ExtractToDirectory(zip, target);
-                    File.WriteAllText(stamp, sig);
-                }
-                return target;
-            }
-
-            // Debug-Fallback: ungezippter Ordner im Projekt
-            var dev = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..",
-                                                    "runtime", "rustplus-cli"));
-            if (Directory.Exists(dev)) return dev;
-
-            throw new FileNotFoundException("rustplus-cli not found gefunden (neither ZIP in output nor Dev Folder).");
-        }
-
-        // findet den eigentlichen CLI-Entry (cli/index.js o. ä.) & gibt workingDir zurück
-        private static string? ResolveRustplusCliEntry(out string workingDir)
-        {
-            workingDir = "";
-            var root = EnsureCliUnpackedRoot();
-
-            var pkgRoot = Path.Combine(root, "node_modules", "@liamcottle", "rustplus.js");
-            if (!Directory.Exists(pkgRoot)) return null;
-
-            var pkgJson = Path.Combine(pkgRoot, "package.json");
-            if (File.Exists(pkgJson))
-            {
-                try
-                {
-                    using var doc = JsonDocument.Parse(File.ReadAllText(pkgJson));
-                    var je = doc.RootElement;
-                    string? rel = null;
-
-                    if (je.TryGetProperty("bin", out var bin))
-                    {
-                        if (bin.ValueKind == JsonValueKind.String) rel = bin.GetString();
-                        else if (bin.ValueKind == JsonValueKind.Object)
-                        {
-                            foreach (var p in bin.EnumerateObject())
-                            {
-                                if (p.NameEquals("rustplus")) { rel = p.Value.GetString(); break; }
-                                rel ??= p.Value.GetString();
-                            }
-                        }
-                    }
-                    if (string.IsNullOrWhiteSpace(rel) &&
-                        je.TryGetProperty("main", out var main) &&
-                        main.ValueKind == JsonValueKind.String)
-                        rel = main.GetString();
-
-                    if (!string.IsNullOrWhiteSpace(rel))
-                    {
-                        var abs = Path.Combine(pkgRoot, rel.Replace('/', Path.DirectorySeparatorChar));
-                        if (File.Exists(abs)) { workingDir = pkgRoot; return abs; }
-                    }
-                }
-                catch { /* tolerant */ }
-            }
-
-            // gängige Fallbacks (deine Version hat cli/index.js)
-            foreach (var c in new[]
-            {
-        Path.Combine(pkgRoot,"cli","index.js"),
-        Path.Combine(pkgRoot,"cli.js"),
-        Path.Combine(pkgRoot,"rustplus.js"),
-        Path.Combine(pkgRoot,"index.js")
-    })
-            {
-                if (File.Exists(c)) { workingDir = pkgRoot; return c; }
-            }
-            return null;
-        }
-
-        private static string? FindBundledNode()
-        {
-            // 1) Release/Publish: neben der EXE
-            var p1 = Path.Combine(AppContext.BaseDirectory, "runtime", "node-win-x64", "node.exe");
-            if (File.Exists(p1)) return p1;
-
-            // 2) Debug: direkt aus dem Projekt
-            var p2 = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..",
-                                                   "runtime", "node-win-x64", "node.exe"));
-            return File.Exists(p2) ? p2 : null;
-        }
 
         private static string PathJoin(params string[] parts) => Path.Combine(parts);
 
@@ -842,11 +764,11 @@ namespace RustPlusDesk.Services
             if (_running && _listenProc != null && !_listenProc.HasExited)
             { _log("Listener already running."); return; }
 
-            var node = FindBundledNode()
-                ?? throw new InvalidOperationException("Node.js Runtime not found (runtime/node-win-x64/node.exe).");
+            var node = RuntimeHelper.FindBundledNode()
+                ?? throw new InvalidOperationException(RuntimeHelper.GetNodeNotFoundMessage());
 
-            var cli = ResolveRustplusCliEntry(out var wd)
-                ?? throw new InvalidOperationException("rustplus-cli not found (rustplus-cli.zip entpackt?).");
+            var cli = RuntimeHelper.ResolveCliEntry(out var wd)
+                ?? throw new InvalidOperationException("rustplus-cli not found (rustplus-cli.zip missing or extraction failed).");
 
             Directory.CreateDirectory(Path.GetDirectoryName(ConfigPath)!);
 
@@ -876,6 +798,14 @@ namespace RustPlusDesk.Services
                     env: env
                 );
                 _log("Registering completed (Confirm login in browser if applicable).");
+
+                // Persist dates into config file
+                var issuedAt2  = DateTime.Now;
+                var expiresAt2 = issuedAt2.AddDays(15);
+                TrackingService.FcmIssuedAt  = issuedAt2;
+                TrackingService.FcmExpiresAt = expiresAt2;
+                EnrichFcmConfig(issuedAt2, expiresAt2, TrackingService.SteamId64);
+                RegistrationCompleted?.Invoke(this, EventArgs.Empty);
             }
 
             // Listener via Edge (mit ENV)
@@ -907,6 +837,47 @@ namespace RustPlusDesk.Services
                 }
                 catch { /* ignore */ }
             };
+        }
+
+        // ── Helpers ─────────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Reads the rustplusjs-config.json, injects issue_date / expiry_date / steam_id,
+        /// and writes it back so the file is self-contained for the next app launch.
+        /// </summary>
+        public void EnrichFcmConfig(DateTime issuedAt, DateTime expiresAt, string? steamId)
+        {
+            try
+            {
+                if (!File.Exists(ConfigPath)) return;
+
+                var json = File.ReadAllText(ConfigPath);
+                using var doc = JsonDocument.Parse(json);
+                var root = doc.RootElement;
+
+                using var ms  = new System.IO.MemoryStream();
+                using var wtr = new Utf8JsonWriter(ms, new JsonWriterOptions { Indented = true });
+                wtr.WriteStartObject();
+
+                // Copy all existing properties
+                foreach (var prop in root.EnumerateObject())
+                    prop.WriteTo(wtr);
+
+                // Inject / overwrite our metadata fields
+                wtr.WriteString("steam_id",    steamId ?? "");
+                wtr.WriteString("issue_date",  issuedAt.ToString("o"));
+                wtr.WriteString("expiry_date", expiresAt.ToString("o"));
+
+                wtr.WriteEndObject();
+                wtr.Flush();
+
+                File.WriteAllBytes(ConfigPath, ms.ToArray());
+                _log($"[fcm] Config enriched – expires {expiresAt:yyyy-MM-dd}");
+            }
+            catch (Exception ex)
+            {
+                _log($"[fcm] Warning: could not enrich config file: {ex.Message}");
+            }
         }
 
     }

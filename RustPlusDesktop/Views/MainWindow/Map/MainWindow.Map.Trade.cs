@@ -405,18 +405,31 @@ public partial class MainWindow
             return;
         }
 
-        var w = new Window
+        var w = new Wpf.Ui.Controls.FluentWindow
         {
             Title = "Buy X for Y",
-            Width = 900,
-            Height = 600,
+            Width = 950,
+            Height = 650,
             Owner = this,
             Background = SearchWinBg,
-            Foreground = SearchText
+            Foreground = SearchText,
+            ExtendsContentIntoTitleBar = true,
+            WindowBackdropType = Wpf.Ui.Controls.WindowBackdropType.Mica,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner
         };
 
         // Root dock
-        var root = new DockPanel { Margin = new Thickness(10) };
+        var root = new DockPanel();
+        var titleBar = new Wpf.Ui.Controls.TitleBar
+        {
+            Title = "Buy X for Y",
+            Icon = new Wpf.Ui.Controls.SymbolIcon(Wpf.Ui.Controls.SymbolRegular.Search24)
+        };
+        DockPanel.SetDock(titleBar, Dock.Top);
+        root.Children.Add(titleBar);
+
+        var contentArea = new DockPanel { Margin = new Thickness(12) };
+        root.Children.Add(contentArea);
 
         // === Kopfbereich: zwei Suchfelder nebeneinander + Tiefe + Analyze ===
         var header = new Grid
@@ -430,12 +443,12 @@ public partial class MainWindow
         DockPanel.SetDock(header, Dock.Top);
 
         // SUCHFELD LINKS ("I want to GET ...")
-        var wantControl = BuildRoundedSearchField(out _wantTb, "🎯", "I want to GET (e.g. Crude Oil)");
+        var wantControl = BuildRoundedSearchField(out _wantTb, "🎯", "Enter, what you want to buy");
         Grid.SetColumn(wantControl, 0);
         header.Children.Add(wantControl);
 
         // SUCHFELD RECHTS ("...pay WITH ...")
-        var payControl = BuildRoundedSearchField(out _payTb, "💰", "I want to PAY WITH (e.g. Scrap)");
+        var payControl = BuildRoundedSearchField(out _payTb, "💰", "Enter what you want to pay with");
         Grid.SetColumn(payControl, 1);
         header.Children.Add(payControl);
 
@@ -465,11 +478,16 @@ public partial class MainWindow
 
         // Analyze Button
         _runPathBtn = MakeHeaderPillButton(" Analyze ");
+        _runPathBtn.Background = new SolidColorBrush(Color.FromRgb(32, 92, 128)); // Ungesättigtes kräftiges Blau
+        _runPathBtn.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 173, 239));
+        _runPathBtn.Padding = new Thickness(24, 10, 24, 10);
+        _runPathBtn.FontSize = 14;
+        _runPathBtn.FontWeight = FontWeights.Bold;
         Grid.SetColumn(_runPathBtn, 3);
         _runPathBtn.Click += (_, __) => RunPathAnalysis();
         header.Children.Add(_runPathBtn);
 
-        root.Children.Add(header);
+        contentArea.Children.Add(header);
 
         // Preview-Zweispalter unter den Suchfeldern
         var previewGrid = new Grid
@@ -512,7 +530,7 @@ public partial class MainWindow
         _payPreviewList.SetValue(VirtualizingStackPanel.IsVirtualizingProperty, true);
         _payPreviewList.SetValue(VirtualizingStackPanel.ScrollUnitProperty, ScrollUnit.Pixel);
         ApplyThinScrollbar(_payPreviewList);
-        root.Children.Add(previewGrid);
+        contentArea.Children.Add(previewGrid);
 
         // === Ergebnisliste unten ===
         _pathResultList = new ListBox
@@ -530,7 +548,7 @@ public partial class MainWindow
 
         ApplyThinScrollbar(_pathResultList);
 
-        root.Children.Add(_pathResultList);
+        contentArea.Children.Add(_pathResultList);
 
        
 
@@ -544,10 +562,12 @@ public partial class MainWindow
           //  _depthCb = null;
             _runPathBtn = null;
             _pathResultList = null;
+            UpdateShopSearchToolHighlights();
         };
 
         w.Show();
         w.Activate();
+        UpdateShopSearchToolHighlights();
     }
     // Style for Scroll bars
    
@@ -781,27 +801,44 @@ public partial class MainWindow
         Grid.SetColumn(iconHost, 0);
         grid.Children.Add(iconHost);
 
-        tb = new TextBox
+        var localTb = new TextBox
         {
             Background = Brushes.Transparent,
             BorderThickness = new Thickness(0),
             Foreground = Brushes.White,
             CaretBrush = Brushes.White,
             SelectionBrush = new SolidColorBrush(Color.FromArgb(160, 0, 173, 239)),
-            Padding = new Thickness(2, 4, 6, 4),
+            Padding = new Thickness(6, 4, 6, 4),
             VerticalContentAlignment = VerticalAlignment.Center,
-            MinWidth = 250,
-            ToolTip = placeholder
+            MinWidth = 160,
+            FontSize = 12
         };
+        tb = localTb;
+
+        var placeholderBlock = new TextBlock
+        {
+            Text = placeholder,
+            Foreground = new SolidColorBrush(Color.FromArgb(180, 255, 255, 255)),
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(10, 0, 0, 0),
+            IsHitTestVisible = false,
+            Opacity = 0.6
+        };
+
+        localTb.TextChanged += (s, e) =>
+        {
+            placeholderBlock.Visibility = string.IsNullOrEmpty(localTb.Text) ? Visibility.Visible : Visibility.Collapsed;
+        };
+
         Grid.SetColumn(tb, 1);
+        Grid.SetColumn(placeholderBlock, 1);
+
+        grid.Children.Add(placeholderBlock);
         grid.Children.Add(tb);
 
-        // <<< WICHTIG: lokale Kopie für die Lambdas
-        var tbLocal = tb;
-        outer.MouseLeftButtonDown += (_, __) => tbLocal.Focus();
-        grid.MouseLeftButtonDown += (_, __) => tbLocal.Focus();
-
         outer.Child = grid;
+        outer.MouseDown += (s, e) => localTb.Focus();
+
         return outer;
     }
 
@@ -812,15 +849,17 @@ public partial class MainWindow
         {
             Content = text,
             Margin = new Thickness(0, 0, 0, 0),
-            Padding = new Thickness(10, 4, 10, 4),
+            Padding = new Thickness(14, 5, 14, 5),
             Cursor = Cursors.Hand,
-            Background = new SolidColorBrush(Color.FromRgb(24, 26, 28)),
+            Background = new SolidColorBrush(Color.FromRgb(35, 38, 41)),
             Foreground = Brushes.White,
             BorderBrush = new SolidColorBrush(Color.FromArgb(160, 0, 173, 239)),
             BorderThickness = new Thickness(1),
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Template = BuildRoundedButtonTemplate()
+            Template = BuildRoundedButtonTemplate(),
+            FontSize = 12,
+            FontWeight = FontWeights.SemiBold
         };
     }
 
@@ -2032,24 +2071,30 @@ public partial class MainWindow
             return;
         }
 
-        var w = new Window
+        var w = new Wpf.Ui.Controls.FluentWindow
         {
             Title = "Profit Trades",
-            Width = 900,
-            Height = 600,
+            Width = 950,
+            Height = 650,
             Owner = this,
             Background = SearchWinBg,
             Foreground = SearchText,
-            WindowStyle = WindowStyle.SingleBorderWindow,
-            ResizeMode = ResizeMode.CanResizeWithGrip
+            ExtendsContentIntoTitleBar = true,
+            WindowBackdropType = Wpf.Ui.Controls.WindowBackdropType.Mica,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner
         };
 
-        // Root Dock
-        var root = new DockPanel
+        var root = new DockPanel();
+        var titleBar = new Wpf.Ui.Controls.TitleBar
         {
-            LastChildFill = true,
-            Margin = new Thickness(0)
+            Title = "Profit Trades",
+            Icon = new Wpf.Ui.Controls.SymbolIcon(Wpf.Ui.Controls.SymbolRegular.Money24)
         };
+        DockPanel.SetDock(titleBar, Dock.Top);
+        root.Children.Add(titleBar);
+
+        var contentArea = new DockPanel { Margin = new Thickness(0) };
+        root.Children.Add(contentArea);
         w.Content = root;
 
         // ===== HEADER BAR (oben dunkel, mit Icon links + Titel + Refresh-Button rechts) =====
@@ -2128,7 +2173,7 @@ public partial class MainWindow
         headerBar.Children.Add(btnRefresh);
 
         DockPanel.SetDock(headerBar, Dock.Top);
-        root.Children.Add(headerBar);
+        contentArea.Children.Add(headerBar);
 
         // ===== INFO BAR direkt unter Header =====
         var infoBar = new Border
@@ -2152,7 +2197,7 @@ public partial class MainWindow
         infoBar.Child = infoText;
 
         DockPanel.SetDock(infoBar, Dock.Top);
-        root.Children.Add(infoBar);
+        contentArea.Children.Add(infoBar);
 
         // ===== MAIN SCROLL AREA =====
         _analysisListBox = new ListBox
@@ -2198,7 +2243,7 @@ public partial class MainWindow
             e.Handled = true;
         };
 
-        root.Children.Add(scrollHost);
+        contentArea.Children.Add(scrollHost);
 
         // Fenster events
         _analysisWin = w;
@@ -2207,12 +2252,14 @@ public partial class MainWindow
         {
             _analysisWin = null;
             _analysisListBox = null;
+            UpdateShopSearchToolHighlights();
         };
 
         RefreshAnalysisWindow();
 
         w.Show();
         w.Activate();
+        UpdateShopSearchToolHighlights();
     }
     private void RefreshAnalysisWindow()
     {

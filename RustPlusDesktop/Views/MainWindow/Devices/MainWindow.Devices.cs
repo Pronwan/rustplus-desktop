@@ -370,53 +370,59 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
 
     private void PlayAlarmAudio(SmartDevice? dev)
     {
-        if (dev == null || !dev.AudioEnabled) return;
-        
-        string baseDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
-        string audioFile = "";
-        
-        if (!string.IsNullOrWhiteSpace(dev.AudioFilePath))
-        {
-            audioFile = dev.AudioFilePath!;
-        }
-        else
-        {
-            // Standard-Pfad unter Assets
-            audioFile = System.IO.Path.Combine(baseDir, "Assets", "icons", "rust-c4.mp3");
-            if (!System.IO.File.Exists(audioFile))
-            {
-                // Fallback für alte Ordnerstruktur
-                audioFile = System.IO.Path.Combine(baseDir, "icons", "rust-c4.mp3");
-            }
-        }
+        // Wenn ein Gerät erkannt wurde, prüfen wir seine individuellen Audio-Einstellungen.
+        // Wenn kein Gerät erkannt wurde (generischer Alarm), spielen wir den Standard-Sound ab.
+        if (dev != null && !dev.AudioEnabled) return;
 
-        if (System.IO.File.Exists(audioFile))
+        try
         {
-            var fullPath = System.IO.Path.GetFullPath(audioFile);
-            try
+            string baseDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
+            string audioFile = "";
+
+            if (dev != null && !string.IsNullOrWhiteSpace(dev.AudioFilePath))
             {
+                audioFile = dev.AudioFilePath!;
+            }
+            else
+            {
+                // Standard-Pfad unter Assets
+                audioFile = System.IO.Path.Combine(baseDir, "Assets", "icons", "rust-c4.mp3");
+                if (!System.IO.File.Exists(audioFile))
+                {
+                    // Fallback für alte Ordnerstruktur
+                    audioFile = System.IO.Path.Combine(baseDir, "icons", "rust-c4.mp3");
+                }
+            }
+
+            if (System.IO.File.Exists(audioFile))
+            {
+                var fullPath = System.IO.Path.GetFullPath(audioFile);
                 Dispatcher.Invoke(() =>
                 {
                     if (_alarmPlayer == null)
                     {
                         _alarmPlayer = new System.Windows.Media.MediaPlayer();
                         _alarmPlayer.MediaFailed += (s, e) => AppendLog($"[audio] Media Failed: {e.ErrorException?.Message}");
-                        // Erst abspielen, wenn der Stream bereit ist, um "Kratzen" zu vermeiden
-                        _alarmPlayer.MediaOpened += (s, e) => _alarmPlayer.Play();
+                        // Optional: MediaOpened Handler für asynchrones Play, 
+                        // aber Play() direkt nach Open() funktioniert bei MediaPlayer meist auch.
                     }
-                    AppendLog($"[audio] Loading: {fullPath}");
+
+                    _alarmPlayer.Stop(); // Stoppen, falls noch etwas läuft
                     _alarmPlayer.Open(new Uri(fullPath, UriKind.Absolute));
                     _alarmPlayer.Volume = 1.0;
+                    _alarmPlayer.Play(); // Starten
+                    
+                    AppendLog($"[audio] Playing: {fullPath}");
                 });
             }
-            catch (Exception ex)
+            else
             {
-                AppendLog($"[audio] Error playing: {ex.Message}");
+                AppendLog($"[audio] File not found: {audioFile}");
             }
         }
-        else
+        catch (Exception ex)
         {
-            AppendLog($"[audio] File not found: {audioFile}");
+            AppendLog($"[audio] Error playing alarm audio: {ex.Message}");
         }
     }
 

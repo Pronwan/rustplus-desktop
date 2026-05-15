@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
+using ui = Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views;
 
@@ -256,13 +257,13 @@ public partial class MainWindow
     {
         if (_rust is not RustPlusClientReal real)
         {
-            MessageBox.Show(ChineseLocalizationService.T("Not connected."));
+            ShowInfoSnackbar("Connection", "You are not connected to any server.", ui.ControlAppearance.Caution);
             return;
         }
 
         if (!(_vm.Selected?.IsConnected ?? false))
         {
-            MessageBox.Show(ChineseLocalizationService.T("Please connect to a server first."));
+            ShowInfoSnackbar("Chat", "Please connect to a server first.", ui.ControlAppearance.Info);
             return;
         }
 
@@ -280,13 +281,13 @@ public partial class MainWindow
         }
         catch (InvalidOperationException)
         {
-            MessageBox.Show(ChineseLocalizationService.T("Please connect to a server first."));
+            ShowInfoSnackbar("Chat", "Please connect to a server first.", ui.ControlAppearance.Info);
             return;
         }
         catch (Exception ex)
         {
             AppendLog("PrimeChat failed: " + ex.Message);
-            MessageBox.Show(ChineseLocalizationService.T("Chat is not available right now."));
+            ShowInfoSnackbar("Chat", "Chat is not available right now.", ui.ControlAppearance.Danger);
             return;
         }
 

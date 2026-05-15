@@ -44,6 +44,20 @@ namespace RustPlusDesk.Views
             Close();
         }
 
+        public string RequestAction { get; private set; }
+
+        private void BtnModifyChatAlerts_Click(object sender, RoutedEventArgs e)
+        {
+            RequestAction = "ModifyChatAlerts";
+            Close();
+        }
+
+        private void BtnChatCommands_Click(object sender, RoutedEventArgs e)
+        {
+            RequestAction = "ChatCommands";
+            Close();
+        }
+
         protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);

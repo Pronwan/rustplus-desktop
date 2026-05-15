@@ -2,6 +2,7 @@
 using RustPlusApi;                 // NuGet: HandyS11.RustPlusApi
 using RustPlusApi.Data.Events;
 using RustPlusDesk.Models;
+using RustPlusDesk.Helpers;
 using RustPlusDesk.Views;
 using System;
 using System.Collections;
@@ -786,8 +787,8 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         }
 
         // ---- Node + rustplus.js Verzeichnis finden ----
-        string? nodeExe = FindBundledNode();
-        if (nodeExe == null) throw new FileNotFoundException("Node Runtime not found (runtime/node-win-x64/node.exe).");
+        string? nodeExe = RuntimeHelper.FindBundledNode();
+        if (nodeExe == null) throw new FileNotFoundException(RuntimeHelper.GetNodeNotFoundMessage());
 
         string? pkgRoot = FindRustplusJsPackageRoot(); // Ordner, der *node_modules* enthält
         if (pkgRoot == null) throw new DirectoryNotFoundException("rustplus.js Package not found (runtime/rustplus-cli/node_modules).");
@@ -1157,43 +1158,8 @@ rp.connect();
         }
 
         // --- lokale Finder ---
-        static string? FindBundledNode()
-        {
-            var p1 = Path.Combine(AppContext.BaseDirectory, "runtime", "node-win-x64", "node.exe");
-            if (File.Exists(p1)) return p1;
-            var p2 = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "runtime", "node-win-x64", "node.exe"));
-            return File.Exists(p2) ? p2 : null;
-        }
-
-        static string? FindRustplusJsPackageRoot()
-        {
-            // wir brauchen den Ordner, der die *node_modules* enthält
-            var candidates = new[]
-            {
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "RustPlusDesk","runtime","rustplus-cli"), // Release (ZIP entpackt)
-            Path.Combine(AppContext.BaseDirectory, "runtime","rustplus-cli"), // neben EXE
-            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..","..","..","runtime","rustplus-cli")) // Dev
-        };
-            foreach (var root in candidates)
-            {
-                if (Directory.Exists(Path.Combine(root, "node_modules", "@liamcottle", "rustplus.js")))
-                    return root;
-            }
-            return null;
-        }
+        static string? FindRustplusJsPackageRoot() => RuntimeHelper.FindRustplusJsPackageRoot();
     }
-
-    // --- minimaler Node-Finder (kopie deiner Pairing-Helfer, gekürzt) ---
-    private static string? FindBundledNode()
-    {
-        var p1 = Path.Combine(AppContext.BaseDirectory, "runtime", "node-win-x64", "node.exe");
-        if (File.Exists(p1)) return p1;
-        var p2 = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "runtime", "node-win-x64", "node.exe"));
-        return File.Exists(p2) ? p2 : null;
-    }
-
-
 
     private static Delegate BuildWildcardHandler(EventInfo ev, Action<object, object> onInvoke)
     {
@@ -1797,6 +1763,12 @@ rp.connect();
         return null;
     }
     private readonly object _hookLock = new();
+    private void Api_OnDisconnected(object? sender, EventArgs e)
+    {
+        _log?.Invoke("[Core] Wrapper fired Disconnected event! Server kicked the socket.");
+        ConnectionLost?.Invoke();
+    }
+
     private void HookEventsIfNeeded()
     {
         if (_api is null) return;
@@ -1804,8 +1776,22 @@ rp.connect();
         {
             if (_eventsHooked) return;
             _eventsHooked = true;
-
         }
+
+        // --- WIRING UP NATIVE DISCONNECT ---
+        try
+        {
+            var disconnectedEv = _api.GetType().GetEvent("Disconnected");
+            if (disconnectedEv != null && disconnectedEv.EventHandlerType != null)
+            {
+                var d = Delegate.CreateDelegate(disconnectedEv.EventHandlerType, this,
+                    GetType().GetMethod(nameof(Api_OnDisconnected), BindingFlags.NonPublic | BindingFlags.Instance)!);
+
+                disconnectedEv.RemoveEventHandler(_api, d); // Prevent duplicates
+                disconnectedEv.AddEventHandler(_api, d);
+            }
+        }
+        catch { /* tolerant */ }
 
         // --- ab hier: Events/Sniffer VERDRAHTEN ---
         _log?.Invoke("[stor/sniff] events: " + string.Join(", ", _api.GetType().GetEvents().Select(e => e.Name)));
@@ -2778,7 +2764,7 @@ rp.connect();
                                                          : m.Invoke(_api, Array.Empty<object>());
                 if (call is Task task)
                 {
-                    await task.ConfigureAwait(false);
+                    await task.WaitAsync(TimeSpan.FromSeconds(5), ct).ConfigureAwait(false);
                     var result = task.GetType().GetProperty("Result")?.GetValue(task);
                     var data = result?.GetType().GetProperty("Data")?.GetValue(result) ?? result;
                     worldSize = ReadInt(data, "WorldSize", "MapSize");
@@ -2799,7 +2785,7 @@ rp.connect();
                                                          : m.Invoke(_api, Array.Empty<object>());
                 if (call is Task task)
                 {
-                    await task.ConfigureAwait(false);
+                    await task.WaitAsync(TimeSpan.FromSeconds(5), ct).ConfigureAwait(false);
                     var result = task.GetType().GetProperty("Result")?.GetValue(task);
                     var mapObj = result?.GetType().GetProperty("Data")?.GetValue(result) ?? result;
 
@@ -2890,7 +2876,7 @@ rp.connect();
                 : mMap.Invoke(_api, Array.Empty<object>());
 
             if (call is not Task task) return null;
-            await task.ConfigureAwait(false);
+            await task.WaitAsync(TimeSpan.FromSeconds(5), ct).ConfigureAwait(false);
 
             var result = task.GetType().GetProperty("Result")?.GetValue(task);
             if (!IsResponseValid(result)) return null;
@@ -3096,7 +3082,7 @@ rp.connect();
 
                 if (call is Task task)
                 {
-                    await task.ConfigureAwait(false);
+                    await task.WaitAsync(TimeSpan.FromSeconds(5), ct).ConfigureAwait(false);
                     resultObj = task.GetType().GetProperty("Result")?.GetValue(task);
                 }
 
@@ -3942,7 +3928,7 @@ rp.connect();
             object? result = call;
             if (call is Task task)
             {
-                await task.ConfigureAwait(false);
+                await task.WaitAsync(TimeSpan.FromSeconds(5), ct).ConfigureAwait(false);
                 result = task.GetType().GetProperty("Result")?.GetValue(task);
             }
 
@@ -3999,7 +3985,7 @@ rp.connect();
                         object? resp = taskObj;
                         if (taskObj is Task tsk)
                         {
-                            await tsk.ConfigureAwait(false);
+                            await tsk.WaitAsync(TimeSpan.FromSeconds(5), ct).ConfigureAwait(false);
                             resp = tsk.GetType().GetProperty("Result")?.GetValue(tsk);
                         }
 
@@ -4689,7 +4675,7 @@ rp.connect();
 
                 if (call is Task task)
                 {
-                    await task;
+                    await task.WaitAsync(TimeSpan.FromSeconds(5), ct);
                     var ok = TryGetTaskResultSuccess(task);
                     var result = task.GetType().GetProperty("Result")?.GetValue(task);
                     var data = result?.GetType().GetProperty("Data")?.GetValue(result);
@@ -4767,6 +4753,9 @@ rp.connect();
 
     public async Task ConnectAsync(ServerProfile profile, CancellationToken ct)
     {
+        // 1. Force a clean slate to prevent overlapping socket leaks
+        await DisconnectAsync();
+
         _isChatPrimed = false; // Reset bei Neuverbindung
         if (profile is null) throw new ArgumentNullException(nameof(profile));
         if (!ulong.TryParse(profile.SteamId64, out var steamId))
@@ -4849,10 +4838,49 @@ rp.connect();
 
     public async Task DisconnectAsync()
     {
-        try { if (_api is not null) await _api.DisconnectAsync(); }
-        catch { }
-        finally { _api = null; _eventsHooked = false; _subscribed.Clear(); _subOnce.Clear(); _seqToEntity.Clear(); }
-        _log("Connection Closed.");
+        try
+        {
+            if (_api is not null)
+            {
+                // Try graceful disconnect first
+                var mDisconnect = _api.GetType().GetMethod("DisconnectAsync", Type.EmptyTypes);
+                if (mDisconnect != null)
+                {
+                    var res = mDisconnect.Invoke(_api, null);
+                    if (res is Task t) await t.WaitAsync(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+                }
+
+                // CRITICAL: Forcefully destroy the underlying WebSocket and HTTP Clients
+                if (_api is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
+        }
+        catch { /* Ignore cleanup errors */ }
+        finally
+        {
+            _api = null;
+            _eventsHooked = false;
+            _subscribed.Clear();
+            _subOnce.Clear();
+            _seqToEntity.Clear();
+
+            // CRITICAL: Unfreeze any hanging camera streams
+            foreach (var tcs in _camAwaitOnce.Values) tcs.TrySetCanceled();
+            _camAwaitOnce.Clear();
+
+            // CRITICAL: Unfreeze hanging entity pollers
+            lock (_entityPullTimers)
+            {
+                foreach (var cts in _entityPullTimers.Values)
+                {
+                    try { cts.Cancel(); cts.Dispose(); } catch { }
+                }
+                _entityPullTimers.Clear();
+            }
+        }
+        _log("Connection cleanly destroyed and closed.");
     }
 
     // Minimaler „Basics“-Abruf (wahlfrei; nur Log)

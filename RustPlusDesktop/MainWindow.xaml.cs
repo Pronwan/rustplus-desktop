@@ -26,7 +26,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Text.RegularExpressions;
 
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,16 +46,20 @@ using System.Windows.Threading;
 using System.Xml.Linq;
 using static RustPlusDesk.Services.RustPlusClientReal;
 using IOPath = System.IO.Path;
+using RustPlusDesk.Helpers;
+using Wpf.Ui;
+using Wpf.Ui.Appearance;
+using ui = Wpf.Ui.Controls;
 
 
 namespace RustPlusDesk.Views;
 
 
-public partial class MainWindow : Window
+public partial class MainWindow : ui.FluentWindow
 {
 
     private readonly MainViewModel _vm = new();
-    private readonly SteamLoginService _steam = new();
+
     private DateTime _lastPairingPingAt = DateTime.MinValue;
     private readonly IRustPlusClient _rust;  // Interface statt fester Klasse
     private WebView2? _webView;
@@ -211,12 +214,29 @@ public partial class MainWindow : Window
 
     public static class AppInfo
     {
-        public static string VersionRaw =>
-            Assembly.GetExecutingAssembly()
-                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
-            ?? FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion
-            ?? Assembly.GetExecutingAssembly().GetName().Version?.ToString()      // 4-teilig
-            ?? "0.0.0";
+        public static string VersionRaw
+        {
+            get
+            {
+                var attr = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+                if (attr != null && !string.IsNullOrWhiteSpace(attr.InformationalVersion))
+                    return attr.InformationalVersion;
+
+                var path = Environment.ProcessPath;
+                if (!string.IsNullOrEmpty(path))
+                {
+                    try
+                    {
+                        var fvi = FileVersionInfo.GetVersionInfo(path);
+                        if (!string.IsNullOrWhiteSpace(fvi.ProductVersion))
+                            return fvi.ProductVersion;
+                    }
+                    catch { }
+                }
+
+                return Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0";
+            }
+        }
 
         public static string VersionShort => NormalizeVer(VersionRaw);
 
@@ -258,12 +278,20 @@ public partial class MainWindow : Window
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
         InitializeComponent();
-        this.Title = $"RustPlusDesk v{AppInfo.VersionRaw}";
+        _vm.IsInitializing = true;
         ChineseLocalizationService.ApplyTo(this);
         
+        // ── WinUI 3: Apply OS-level Mica backdrop via DWM ────────────────────
+        WindowBackdropHelper.Apply(this, WindowBackdropHelper.BackdropType.Mica);
+        // ── Wpf.Ui: Apply Fluent dark theme to all controls ───────────────────
+        ApplicationThemeManager.Apply(ApplicationTheme.Dark, updateAccent: true);
+        
+        if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
+        this.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
         if (FindName("TxtVersion") is TextBlock txt)
             txt.Text = $"v{AppInfo.VersionRaw}";
         InitCameraUi();
+        InitSmoothFollowLoop();
         ApplySettings();
         _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
         AppendLog($"[items-new] baseDir={baseDir}");
@@ -314,6 +342,11 @@ public partial class MainWindow : Window
 
         // MapTransform.Changed += (_, __) => UpdateMarkerPositions();
         HydrateSteamUiFromStorage();   // <= HIER
+
+        // Set version badge dynamically from assembly
+        var ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+        if (ver != null)
+            TxtAppVersion.Text = $"v{ver.Major}.{ver.Minor}.{ver.Build}";
         // _statusTimer.Tick += async (_, __) => await UpdateServerStatusAsync();
         _upkeepTimer.Tick += (_, __) => RefreshUpkeepUI();
         _upkeepTimer.Start();
@@ -326,7 +359,11 @@ public partial class MainWindow : Window
         // Auto-start FCM listener silently in background on app open
         Loaded += (_, __) => _ = Task.Delay(1500).ContinueWith(_ => Dispatcher.Invoke(() => 
         {
-            StartPairingSilent();
+            // Seed in-memory state from the config file (issue_date, expiry_date, steam_id)
+            TrackingService.ReadFcmConfig();
+            _vm.NotifyFcmChanged();
+
+            StartPairingSilent(true);
             
             // Auto-connect if enabled and not already connected
             if (TrackingService.AutoConnectEnabled && _vm.Selected != null && !_vm.Selected.IsConnected)
@@ -336,6 +373,9 @@ public partial class MainWindow : Window
                     await Dispatcher.InvokeAsync(async () => await PerformConnectAsync(true));
                 });
             }
+
+            // Auto-check for updates
+            _ = Task.Run(async () => await AutoCheckUpdatesAsync());
         }));
 
         // One-time migration notice for v4.5 — The Intelligence Update
@@ -368,6 +408,7 @@ public partial class MainWindow : Window
         TrackingService.OnServerInfoUpdated -= OnServerInfoUpdated;
         TrackingService.OnServerInfoUpdated += OnServerInfoUpdated;
         OnOnlinePlayersUpdated();
+        _vm.IsInitializing = false;
         
         // Einmal erzeugen (falls du den Stub behalten willst: try/fallback – aber nur EINMAL zuweisen)
 
@@ -382,24 +423,28 @@ public partial class MainWindow : Window
         }
 
         // Status → UI
-        _pairing.Listening += (_, __) => Dispatcher.Invoke(() =>
+        _pairing.Listening += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
         {
             _vm.IsPairingRunning = true;
+            _vm.IsPairingBusy = true; // Update UI button state
             TxtPairingState.Text = ChineseLocalizationService.T("Pairing: listening…");
-        });
-        _pairing.Stopped += (_, __) => Dispatcher.Invoke(() =>
+        }));
+        _pairing.Stopped += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
         {
             _vm.IsPairingRunning = false;
+            _vm.IsPairingBusy = false; // Update UI button state
             TxtPairingState.Text = ChineseLocalizationService.T("Pairing: stopped");
-        });
-        _pairing.Failed += (_, msg) => Dispatcher.Invoke(() =>
+        }));
+        _pairing.RegistrationCompleted += (_, __) => Dispatcher.BeginInvoke(new Action(() => _vm.NotifyFcmChanged()));
+        _pairing.Failed += (_, msg) => Dispatcher.BeginInvoke(new Action(() =>
         {
             _vm.IsPairingRunning = false;
-            TxtPairingState.Text = ChineseLocalizationService.T("Pairing: listening…"); // retry silently
+            _vm.IsPairingBusy = false; // Error occurred, not busy anymore
+            TxtPairingState.Text = ChineseLocalizationService.T("Pairing: failed"); // show failure text
             AppendLog("[listener] " + msg);
             // Auto-retry after a short delay
-            _ = Task.Delay(5000).ContinueWith(_ => Dispatcher.Invoke(() => StartPairingSilent()));
-        });
+            _ = Task.Delay(5000).ContinueWith(_ => Dispatcher.BeginInvoke(new Action(() => StartPairingSilent(true))));
+        }));
 
 
         _rust = new RustPlusClientReal(AppendLog);
@@ -1136,7 +1181,7 @@ public partial class MainWindow : Window
         // 1) Disk-Kandidaten
         string baseDir = AppDomain.CurrentDomain.BaseDirectory;
         string currDir = Environment.CurrentDirectory;
-        string? entryDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()!.Location);
+        string? entryDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath);
 
         var diskCandidates = new[]
         {
@@ -1762,16 +1807,35 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
 
         // FUZZY MATCH: If we couldn't map the device via ID (e.g. generic FCM push without ID),
-        // check if there is EXACTLY ONE Smart Alarm registered across all servers.
-        // If so, we can safely assume this alarm belongs to it and respect its settings.
+        // we try to find a matching server and check if it has exactly one Smart Alarm.
         if (dev == null)
         {
-            var allAlarms = _vm.Servers.SelectMany(s => s.Devices).Where(d => d.Kind == "SmartAlarm").ToList();
-            if (allAlarms.Count == 1)
+            // 1) Try to find the specific server profile first
+            var profile = _vm.Servers.FirstOrDefault(s => 
+                string.Equals(Regex.Replace(s.Name ?? "", @"\x1B\[[0-9;]*[A-Za-z]", "").Trim(), cleanSrv, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(s.Host, cleanSrv, StringComparison.OrdinalIgnoreCase));
+
+            if (profile != null)
             {
-                dev = allAlarms[0];
-                n = n with { EntityId = dev.EntityId };
-                AppendLog($"[alarm/debug] ({source}) Fuzzy matched single alarm device: {dev.Name} (ID: {dev.EntityId})");
+                var serverAlarms = profile.Devices.Where(d => d.Kind == "SmartAlarm").ToList();
+                if (serverAlarms.Count == 1)
+                {
+                    dev = serverAlarms[0];
+                    n = n with { EntityId = dev.EntityId };
+                    AppendLog($"[alarm/debug] ({source}) Fuzzy matched single alarm on server '{cleanSrv}': {dev.Name} (ID: {dev.EntityId})");
+                }
+            }
+
+            // 2) Global Fallback: check if there is EXACTLY ONE Smart Alarm registered across all servers.
+            if (dev == null)
+            {
+                var allAlarms = _vm.Servers.SelectMany(s => s.Devices).Where(d => d.Kind == "SmartAlarm").ToList();
+                if (allAlarms.Count == 1)
+                {
+                    dev = allAlarms[0];
+                    n = n with { EntityId = dev.EntityId };
+                    AppendLog($"[alarm/debug] ({source}) Fuzzy matched single global alarm device: {dev.Name} (ID: {dev.EntityId})");
+                }
             }
         }
 
@@ -1840,6 +1904,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _lastAnyAlarmTime = now;
         }
 
+        // 4) Play Audio (Respects settings if device is identified, otherwise plays default)
+        PlayAlarmAudio(dev);
+
         if (dev != null)
         {
             AppendLog($"[alarm/debug] ({source}) Device identified: {dev.Name} (Kind: {dev.Kind}, ID: {dev.EntityId})");
@@ -1856,8 +1923,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 });
             }
 
-            PlayAlarmAudio(dev);
-            
             if (!dev.PopupEnabled) 
             {
                 AppendLog($"[alarm/debug] ({source}) Skipping popup window because PopupEnabled is false for this device.");
@@ -2052,6 +2117,38 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             // Only fallback to _vm.SteamId64 if the payload is missing it.
             var keySteam = !string.IsNullOrEmpty(e.SteamId64) ? e.SteamId64 : _vm.SteamId64;
 
+            // Save SteamID globally if we just received a new one
+            if (!string.IsNullOrEmpty(e.SteamId64) && e.SteamId64 != TrackingService.SteamId64)
+            {
+                TrackingService.SteamId64 = e.SteamId64;
+                _vm.SteamId64 = e.SteamId64;
+                AppendLog($"[pairing] Captured SteamID {e.SteamId64} from pairing response.");
+                // Persist SteamId into the FCM config file so future launches read it
+                TrackingService.PatchFcmConfigSteamId(e.SteamId64);
+                HydrateSteamUiFromStorage();
+            }
+
+            bool datesChanged = false;
+            if (!string.IsNullOrEmpty(e.IssueDate))
+            {
+                if (long.TryParse(e.IssueDate, out var issueTs))
+                    TrackingService.FcmIssuedAt = DateTimeOffset.FromUnixTimeMilliseconds(issueTs > 9999999999 ? issueTs : issueTs * 1000).LocalDateTime;
+                else if (DateTime.TryParse(e.IssueDate, out var d1))
+                    TrackingService.FcmIssuedAt = d1;
+                datesChanged = true;
+            }
+
+            if (!string.IsNullOrEmpty(e.ExpiryDate))
+            {
+                if (long.TryParse(e.ExpiryDate, out var expTs))
+                    TrackingService.FcmExpiresAt = DateTimeOffset.FromUnixTimeMilliseconds(expTs > 9999999999 ? expTs : expTs * 1000).LocalDateTime;
+                else if (DateTime.TryParse(e.ExpiryDate, out var d2))
+                    TrackingService.FcmExpiresAt = d2;
+                datesChanged = true;
+            }
+            
+            if (datesChanged) _vm.NotifyFcmChanged();
+
             var prof = _vm.Servers.FirstOrDefault(s =>
                 s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
                 s.Port == keyPort &&
@@ -2218,24 +2315,43 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
 
     /// <summary>Starts the FCM pairing listener silently — no busy overlay, no blocking.</summary>
-    private void StartPairingSilent()
+    private void StartPairingSilent(bool autoStart = false)
     {
         if (_listenerStarting || _pairing.IsRunning) return;
+
+        if (autoStart)
+        {
+            if (!TrackingService.IsFcmConfigured())
+            {
+                AppendLog("[pairing] No FCM config saved. Auto-start disabled.");
+                return;
+            }
+            if (TrackingService.FcmExpiresAt.HasValue && TrackingService.FcmExpiresAt.Value < DateTime.Now)
+            {
+                AppendLog("[pairing] FCM config has expired. Manual start (Listen) required to re-register.");
+                return;
+            }
+        }
+
         _listenerStarting = true;
-        _vm.IsPairingBusy = true;
-        TxtPairingState.Text = ChineseLocalizationService.T("Pairing: listening…");
+        _vm.IsPairingBusy = true; // Tell UI we are trying to start
+        TxtPairingState.Text = ChineseLocalizationService.T("Pairing: starting…");
         _ = Task.Run(async () =>
         {
             try { await _pairing.StartAsync(); }
-            catch (Exception ex) { AppendLog("[pairing] silent start error: " + ex.Message); }
-            finally { Dispatcher.Invoke(() => { _listenerStarting = false; _vm.IsPairingBusy = false; }); }
+            catch (Exception ex) 
+            { 
+                AppendLog("[pairing] silent start error: " + ex.Message); 
+                Dispatcher.Invoke(() => { _vm.IsPairingBusy = false; TxtPairingState.Text = ChineseLocalizationService.T("Pairing: error"); });
+            }
+            finally { Dispatcher.Invoke(() => { _listenerStarting = false; }); }
         });
     }
 
     private async Task StartPairingListenerUiAsync()
     {
         // Delegate to silent start — no more busy overlay
-        StartPairingSilent();
+        StartPairingSilent(false);
         await Task.CompletedTask;
     }
 
@@ -2325,29 +2441,63 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void OnStatus(object? s, string st)
     {
-        if (st == "starting") _vm.BusyText = ChineseLocalizationService.T("Starte Pairing-Listener …");
+        if (st == "starting") _vm.BusyText = ChineseLocalizationService.T("Starting Pairing-Listener …");
     }
 
+    private ServerProfile? _serverToDelete;
     private void Server_Delete_Click(object sender, RoutedEventArgs e)
     {
         if (((FrameworkElement)sender).Tag is not ServerProfile prof) return;
-        var ok = MessageBox.Show(
-            $"Server „{prof.Name}“ wirklich löschen?",
-            "Löschen bestätigen", MessageBoxButton.YesNo, MessageBoxImage.Question);
-        if (ok != MessageBoxResult.Yes) return;
+        
+        _serverToDelete = prof;
+        TxtDeleteConfirmation.Text = $"Are you sure you want to delete Server \"{prof.Name}\"? This action cannot be undone.";
+        DeleteConfirmationOverlay.Visibility = Visibility.Visible;
+    }
 
-        _vm.Servers.Remove(prof);
-        _vm.Save();
-        AppendLog($"Server gelöscht: {prof.Name}");
+    private void BtnCancelDelete_Click(object sender, RoutedEventArgs e)
+    {
+        DeleteConfirmationOverlay.Visibility = Visibility.Collapsed;
+        _serverToDelete = null;
+    }
+
+    private void BtnConfirmDelete_Click(object sender, RoutedEventArgs e)
+    {
+        if (_serverToDelete != null)
+        {
+            var prof = _serverToDelete;
+            _vm.Servers.Remove(prof);
+            _vm.Save();
+            AppendLog($"Server deleted: {prof.Name}");
+        }
+
+        DeleteConfirmationOverlay.Visibility = Visibility.Collapsed;
+        _serverToDelete = null;
     }
 
 
     private async void BtnListenPairing_Click(object sender, RoutedEventArgs e)
     {
-        if (_listenerStarting || _pairing.IsRunning) { AppendLog("Listener läuft bereits."); return; }
+        if (_listenerStarting || _pairing.IsRunning) { AppendLog("Listener already running."); return; }
         await StartPairingListenerUiAsync();
     }
 
+    private async void BtnStopPairing_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (_pairing.IsRunning)
+            {
+                AppendLog("Stopping pairing listener...");
+                await Task.Run(async () => await _pairing.StopAsync());
+                _vm.IsPairingBusy = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("Error on stop: " + ex.Message);
+            _vm.IsPairingBusy = false;
+        }
+    }
 
     private void AppendLog(string line)
     {
@@ -2413,21 +2563,25 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
         }
 
-        // Label setzen + Login-Button ggf. deaktivieren
-        var sidText = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "(not connected)" : _vm.SteamId64;
+        // Update UI Elements
+        var sidText = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Not Logged In" : _vm.SteamId64;
         TxtSteamId.Text = sidText;
-        BtnSteamLogin.IsEnabled = string.IsNullOrWhiteSpace(_vm.SteamId64);
+        TxtSteamName.Text = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Steam Account" : "Logged In";
+        
+
 
         // Avatar versuchen zu laden (nur wenn wir eine ID haben)
         _ = TryLoadSteamAvatarAsync(_vm.SteamId64);
+
+        // Notify VM of FCM data (for expiry badge)
+        _vm.NotifyFcmChanged();
     }
 
     private async Task TryLoadSteamAvatarAsync(string? steamId64)
     {
         if (string.IsNullOrWhiteSpace(steamId64))
         {
-            ImgSteam.Source = null;
-            ImgSteam.Visibility = Visibility.Collapsed;
+            _vm.MyAvatar = null;
             return;
         }
 
@@ -2450,17 +2604,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 bmp.EndInit();
                 bmp.Freeze();
 
-                ImgSteam.Source = bmp;
-                ImgSteam.Visibility = Visibility.Visible;
+                _vm.MyAvatar = bmp;
             }
             if (nameMatch.Success)
+            {
+                TxtSteamName.Text = nameMatch.Groups[1].Value;
                 ImgSteam.ToolTip = nameMatch.Groups[1].Value;
+            }
         }
         catch
         {
             // Avatar optional – bei Fehlern still
-            ImgSteam.Source = null;
-            ImgSteam.Visibility = Visibility.Collapsed;
+            _vm.MyAvatar = null;
         }
     }
 
@@ -2730,6 +2885,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         UpdateShopSearchConfig();
     }
 
+    private void ChatAnnounceLabel_Click(object sender, MouseButtonEventArgs e)
+    {
+        if (ChatAnnounceLabel.ContextMenu != null)
+        {
+            ChatAnnounceLabel.ContextMenu.PlacementTarget = ChatAnnounceLabel;
+            ChatAnnounceLabel.ContextMenu.Placement = PlacementMode.Bottom;
+            ChatAnnounceLabel.ContextMenu.IsOpen = true;
+            e.Handled = true;
+        }
+    }
+
     private void SetAllAlerts(bool val)
     {
         TrackingService.AnnounceCargo = val;
@@ -2847,12 +3013,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         bool masterOn = TrackingService.AnnounceSpawnsMaster;
         PopulateTradeAlertsSubMenu(masterOn);
 
-        if (ChatAnnounce.ContextMenu == null) return;
+        if (ChatAnnounceLabel.ContextMenu == null) return;
         
         string host = _rust?.Host ?? "unknown";
         bool hasTravelData = TrackingService.HasAnyCargoTrigger(host);
 
-        foreach (var item in ChatAnnounce.ContextMenu.Items)
+        foreach (var item in ChatAnnounceLabel.ContextMenu.Items)
         {
             if (item is MenuItem mi)
             {
@@ -2989,6 +3155,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         4 => "CH47",
         8 => "Patrol Helicopter",
         9 => "Oilrig Crate",
+        150 => "Oilrig Crate",
         2 => "Explosion",
         7 => "Building Blocked",
         _ => "Event"
@@ -3071,6 +3238,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         // Baseline der schon bekannten Orders beim Anlegen
         public List<AlertSeenOrder> Baseline { get; } = new();
+
+        // NEU: Kennzeichnet, ob der erste Poll nach Erstellung/Laden durch ist.
+        // Falls false, unterdrücken wir Alerts für existierende Shops.
+        public bool InitializationComplete { get; set; } = false;
 
         // Anti-Spam pro Order-Key
         public Dictionary<string, DateTime> LastAnnouncements { get; } = new();
@@ -3485,7 +3656,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 int curStock  = order.Stock;
 
                 // 3) Baseline updaten/erzeugen – wir wollen immer den letzten Stock dort haben
-                bool justCreated = false;
                 if (baseline == null)
                 {
                     baseline = new AlertSeenOrder
@@ -3498,7 +3668,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         Stock         = curStock
                     };
                     rule.Baseline.Add(baseline);
-                    justCreated = true;
                 }
                 else
                 {
@@ -3509,12 +3678,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (curStock <= 0)
                     continue;
 
-                // NEU: Wenn der Baseline-Eintrag gerade erst erstellt wurde, überspringen wir den Alert diesmal.
-                // Damit verhindern wir Chat-Spam bei neu angelegten Alert-Regeln für bereits existierende Shops.
-                if (justCreated)
+                // 5) Wenn die Regel gerade erst initialisiert wird (erster Poll nach Anlage/Start),
+                // unterdrücken wir den Alert, um Massen-Spam beim Programmstart zu vermeiden.
+                // Aber: Ein NEUER Shop, der WÄHREND die Regel schon aktiv ist auftaucht,
+                // soll natürlich TROTZDEM alerten.
+                if (!rule.InitializationComplete)
                     continue;
 
-                // 5) Entscheiden, ob wir das als "neu" werten
+                // 6) Entscheiden, ob wir das als "neu" werten
                 bool isNewDeal   = (baseline != null && prevStock == 0); // entweder ganz neu oder aus 0 kommend
                 bool isRestock   = (prevStock <= 0 && curStock > 0);
                 bool alreadySeenWithStock = (prevStock > 0);
@@ -3561,554 +3732,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 rule.LastAnnouncements[sig] = DateTime.UtcNow;
             }           // end foreach order
             }           // end foreach shop
-        }               // end foreach rule
+
+            // Nach dem ersten Durchlauf markieren wir die Regel als initialisiert
+            rule.InitializationComplete = true;
+        }
     }
     // ─── ONLINE PLAYERS & TRACKING ───────────────────────────────────────────
-
-    private void OnOnlinePlayersUpdated()
-    {
-        Dispatcher.Invoke(() =>
-        {
-            RefreshOnlinePlayersList();
-            // Update tracking status indicator
-            bool anyTracked = TrackingService.GetTrackedPlayers().Count > 0;
-            _vm.IsTrackingActive = TrackingService.IsTracking;
-
-            if (!anyTracked)
-            {
-                TxtTrackingStatus.Text = "Add players to tracker to start tracking";
-                TxtTrackingStatus.Foreground = Brushes.Gray;
-                TxtTrackingStatus.FontStyle = FontStyles.Italic;
-            }
-            else
-            {
-                TxtTrackingStatus.Text = TrackingService.IsTracking ? "Tracking Active" : "Tracking Idle";
-                TxtTrackingStatus.Foreground = TrackingService.IsTracking ? Brushes.White : Brushes.Gray;
-                TxtTrackingStatus.FontStyle = FontStyles.Normal;
-            }
-            
-            if (TrackingService.LastPullTime.HasValue && anyTracked)
-            {
-                TxtLastPull.Text = $"Last pull: {TrackingService.LastPullTime.Value:HH:mm:ss}";
-            }
-            else
-            {
-                TxtLastPull.Text = "Last pull: --:--";
-            }
-        });
-    }
-
-    private void OnServerInfoUpdated(string description)
-    {
-        Dispatcher.Invoke(() => {
-            if (_vm.Selected != null && string.IsNullOrWhiteSpace(_vm.Selected.Description))
-            {
-                _vm.Selected.Description = description;
-            }
-        });
-    }
-
-    private void RefreshOnlinePlayersList()
-    {
-        var players = TrackingService.LastOnlinePlayers;
-        
-        // Dynamic Filter visibility
-        if (players.Count > 0) {
-            TxtOnlineFilter.Visibility = Visibility.Visible;
-            if (string.IsNullOrEmpty(TxtOnlineFilter.Text) && !TxtOnlineFilter.IsFocused) {
-                TxtOnlineFilter.Text = "Filter players...";
-                TxtOnlineFilter.Foreground = Brushes.Gray;
-            }
-        } else {
-            TxtOnlineFilter.Visibility = Visibility.Collapsed;
-        }
-
-        var filterTxt = TxtOnlineFilter.Text;
-        if (!string.IsNullOrEmpty(filterTxt) && filterTxt != "Filter players...")
-        {
-            players = players.Where(p => p.Name.Contains(filterTxt, StringComparison.OrdinalIgnoreCase)).ToList();
-        }
-
-        ListOnlinePlayers.ItemsSource = null;
-        ListOnlinePlayers.ItemsSource = players;
-
-        if (TrackingService.LastOnlinePlayers.Count == 0)
-        {
-            TxtOnlinePlayersStatus.Text = TrackingService.StatusMessage;
-            PnlOnlineStatus.Visibility = Visibility.Visible;
-            PbOnlineLoading.Visibility = string.IsNullOrEmpty(TrackingService.StatusMessage) || TrackingService.StatusMessage.Contains("Fetching") || TrackingService.StatusMessage.Contains("Looking") ? Visibility.Visible : Visibility.Collapsed;
-        }
-        else
-        {
-            PnlOnlineStatus.Visibility = Visibility.Collapsed;
-        }
-
-        // Update Server BM button visibility
-        BtnServerBM.Visibility = string.IsNullOrEmpty(TrackingService.CurrentServerBMId) 
-            ? Visibility.Collapsed 
-            : Visibility.Visible;
-    }
-
-    private void TxtOnlineFilter_GotFocus(object sender, RoutedEventArgs e) {
-        if (TxtOnlineFilter.Text == "Filter players...") {
-            TxtOnlineFilter.Text = "";
-            TxtOnlineFilter.Foreground = Brushes.White;
-        }
-    }
-    private void TxtOnlineFilter_LostFocus(object sender, RoutedEventArgs e) {
-        if (string.IsNullOrWhiteSpace(TxtOnlineFilter.Text)) {
-            TxtOnlineFilter.Text = "Filter players...";
-            TxtOnlineFilter.Foreground = Brushes.Gray;
-        }
-    }
-    private void TxtOnlineFilter_TextChanged(object sender, TextChangedEventArgs e) {
-        if (TxtOnlineFilter.Text != "Filter players...") RefreshOnlinePlayersList();
-    }
-
-    private async void BtnShowOnline_Click(object sender, RoutedEventArgs e)
-    {
-        // When user opens the popup, trigger a fresh fetch
-        if (BtnShowOnline.IsChecked == true)
-        {
-            if (_vm.Selected == null || string.IsNullOrEmpty(_vm.Selected.Host))
-            {
-                TxtOnlinePlayersStatus.Text = "Connect to a server to load players list";
-                PnlOnlineStatus.Visibility = Visibility.Visible;
-                PbOnlineLoading.Visibility = Visibility.Collapsed;
-                ListOnlinePlayers.ItemsSource = null;
-                return;
-            }
-
-            TxtOnlinePlayersStatus.Text = "Synchronizing with Battlemetrics...";
-            PnlOnlineStatus.Visibility = Visibility.Visible;
-            PbOnlineLoading.Visibility = Visibility.Visible;
-            ListOnlinePlayers.ItemsSource = null;
-
-            try
-            {
-                await TrackingService.FetchOnlinePlayersNowAsync();
-            }
-            catch (Exception ex)
-            {
-                TxtOnlinePlayersStatus.Text = $"Error: {ex.Message}";
-                PnlOnlineStatus.Visibility = Visibility.Visible;
-                PbOnlineLoading.Visibility = Visibility.Collapsed;
-            }
-        }
-    }
-
-    private void BtnTrackPlayer_Click(object sender, RoutedEventArgs e)
-    {
-        if ((sender as Button)?.Tag is not OnlinePlayerBM player) return;
-
-        if (player.IsTracked)
-        {
-            // Already tracked → open inline analysis dialog
-            ShowPlayerAnalysis(player.BMId, player.Name);
-        }
-        else
-        {
-            TrackingService.TrackPlayer(player.BMId, player.Name, _vm.Selected?.Name ?? "Unknown");
-            player.IsTracked = true;
-            // Refresh list so button text updates
-            RefreshOnlinePlayersList();
-            AppendLog($"[tracking] Now tracking {player.Name} from {_vm.Selected?.Name ?? "this server"}");
-        }
-    }
-
-    private void BtnViewTracking_Click(object sender, RoutedEventArgs e)
-    {
-        ShowTrackedPlayersManager();
-    }
-
-    private void BtnServerBM_Click(object sender, RoutedEventArgs e)
-    {
-        var serverId = TrackingService.CurrentServerBMId;
-        if (!string.IsNullOrEmpty(serverId))
-        {
-            OpenUrl($"https://www.battlemetrics.com/servers/rust/{serverId}");
-        }
-    }
-
-    private void BtnPlayerBM_Click(object sender, RoutedEventArgs e)
-    {
-        if ((sender as Button)?.Tag is OnlinePlayerBM player)
-        {
-            OpenUrl($"https://www.battlemetrics.com/players/{player.BMId}");
-        }
-    }
-
-    private void TxtManualBMId_GotFocus(object sender, RoutedEventArgs e) {
-        if (TxtManualBMId.Text == "Manual BM ID...") {
-            TxtManualBMId.Text = "";
-            TxtManualBMId.Foreground = Brushes.White;
-        }
-    }
-    private void TxtManualBMId_LostFocus(object sender, RoutedEventArgs e) {
-        if (string.IsNullOrWhiteSpace(TxtManualBMId.Text)) {
-            TxtManualBMId.Text = "Manual BM ID...";
-            TxtManualBMId.Foreground = Brushes.Gray;
-        }
-    }
-
-    private async void BtnAddManual_Click(object sender, RoutedEventArgs e)
-    {
-        var bmId = TxtManualBMId.Text?.Trim();
-        if (string.IsNullOrEmpty(bmId) || bmId == "Manual BM ID..." || !bmId.All(char.IsDigit)) return;
-
-        TxtManualBMId.IsEnabled = false;
-        BtnAddManual.Content = "...";
-        
-        var name = await TrackingService.FetchPlayerNameAsync(bmId);
-        var lastSession = await TrackingService.FetchPlayerLastSessionAsync(bmId);
-        
-        // If name is unknown but we got session info, take name from session
-        if (name == "Unknown Player" && lastSession != null)
-        {
-            // We can't get the name easily from the PlayerSession object as currently structured, 
-            // but the API call in FetchPlayerLastSessionAsync could be updated to return it.
-            // For now, FetchPlayerNameAsync already has a fallback to sessions.
-        }
-
-        var serverName = TrackingService.LastServer.name;
-        if (string.IsNullOrEmpty(serverName)) serverName = _vm.Selected?.Name ?? "Manual Add";
-
-        TrackingService.TrackPlayer(bmId, name, serverName, lastSession);
-        
-        TxtManualBMId.Text = "Manual BM ID...";
-        TxtManualBMId.Foreground = Brushes.Gray;
-        TxtManualBMId.IsEnabled = true;
-        BtnAddManual.Content = "Track ID";
-        
-        var sessionMsg = lastSession != null ? $" (found last session: {lastSession.ConnectTime.ToLocalTime():g})" : "";
-        AppendLog($"[tracking] Manually added {name} ({bmId}) to tracking list on server: {serverName}{sessionMsg}");
-        RefreshOnlinePlayersList();
-    }
-
-    private void OpenUrl(string url)
-    {
-        try
-        {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = url,
-                UseShellExecute = true
-            });
-        }
-        catch (Exception ex)
-        {
-            AppendLog($"[error] Failed to open URL: {ex.Message}");
-        }
-    }
-
-    private void ShowTrackedPlayersManager()
-    {
-        var win = new Window
-        {
-            Title = "Managed Tracked Players",
-            Width = 500,
-            Height = 700,
-            Background = new SolidColorBrush(Color.FromRgb(18, 20, 23)),
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Owner = this,
-        };
-
-        var grid = new Grid { Margin = new Thickness(20) };
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Header
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Search
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Add Player
-        grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }); // List
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Actions
-
-        var header = new TextBlock { Text = "Tracked Players", FontSize = 20, FontWeight = FontWeights.Bold, Foreground = Brushes.White, Margin = new Thickness(0,0,0,10) };
-        grid.Children.Add(header);
-
-        var searchBox = new TextBox { 
-            Margin = new Thickness(0,0,0,10), 
-            Padding = new Thickness(6,4,6,4),
-            Background = new SolidColorBrush(Color.FromRgb(30, 32, 35)),
-            Foreground = Brushes.Gray,
-            BorderBrush = new SolidColorBrush(Color.FromRgb(50, 50, 50)),
-            FontSize = 12,
-            Text = "Filter players..."
-        };
-        searchBox.GotFocus += (s, e) => { if (searchBox.Text == "Filter players...") { searchBox.Text = ""; searchBox.Foreground = Brushes.White; } };
-        searchBox.LostFocus += (s, e) => { if (string.IsNullOrWhiteSpace(searchBox.Text)) { searchBox.Text = "Filter players..."; searchBox.Foreground = Brushes.Gray; } };
-        Grid.SetRow(searchBox, 1);
-        grid.Children.Add(searchBox);
-
-        // Manual Add Section
-        var addGrid = new Grid { Margin = new Thickness(0, 0, 0, 15) };
-        addGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        addGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        
-        var idInput = new TextBox { 
-            Padding = new Thickness(6,4,6,4),
-            Background = new SolidColorBrush(Color.FromRgb(25, 27, 30)),
-            Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.FromRgb(60, 60, 60)),
-            FontSize = 12,
-            Margin = new Thickness(0,0,8,0)
-        };
-        // Poor man's watermark
-        idInput.Text = "Enter BattleMetrics Player ID...";
-        idInput.Foreground = Brushes.Gray;
-        idInput.GotFocus += (s, e) => { if (idInput.Text == "Enter BattleMetrics Player ID...") { idInput.Text = ""; idInput.Foreground = Brushes.White; } };
-        idInput.LostFocus += (s, e) => { if (string.IsNullOrWhiteSpace(idInput.Text)) { idInput.Text = "Enter BattleMetrics Player ID..."; idInput.Foreground = Brushes.Gray; } };
-
-        var addBtn = new Button { Content = "Track Player ID", Padding = new Thickness(15, 0, 15, 0), Height = 30, Background = new SolidColorBrush(Color.FromRgb(63, 185, 80)), Foreground = Brushes.White };
-        
-        Grid.SetColumn(idInput, 0);
-        Grid.SetColumn(addBtn, 1);
-        addGrid.Children.Add(idInput);
-        addGrid.Children.Add(addBtn);
-        
-        Grid.SetRow(addGrid, 2);
-        grid.Children.Add(addGrid);
-
-        var listContainer = new DockPanel();
-        var list = new ListBox { Background = Brushes.Transparent, BorderThickness = new Thickness(0), Foreground = Brushes.White };
-        listContainer.Children.Add(list);
-
-        Grid.SetRow(listContainer, 3);
-        grid.Children.Add(listContainer);
-
-        Action<string> refreshList = null;
-        refreshList = (filter) => {
-            list.Items.Clear();
-            var players = TrackingService.GetTrackedPlayers();
-            if (!string.IsNullOrEmpty(filter) && filter != "Filter players...") {
-                players = players.Where(p => 
-                    p.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) || 
-                    p.LastServerName.Contains(filter, StringComparison.OrdinalIgnoreCase)
-                ).ToList();
-            }
-
-            var grouped = players.GroupBy(p => string.IsNullOrEmpty(p.LastServerName) ? "Global / Legacy" : p.LastServerName);
-            foreach(var group in grouped)
-            {
-                list.Items.Add(new TextBlock { 
-                    Text = group.Key, 
-                    FontWeight = FontWeights.Bold, 
-                    Foreground = new SolidColorBrush(Color.FromRgb(88, 166, 255)),
-                    Margin = new Thickness(0, 10, 0, 5),
-                    FontSize = 14
-                });
-
-                foreach(var p in group)
-                {
-                    var pGrid = new Grid { Margin = new Thickness(10,5,0,5) };
-                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // Name
-                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Playtime
-                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // View
-                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Rename
-                    pGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Remove
-
-                    var onlineInfo = TrackingService.LastOnlinePlayers.FirstOrDefault(op => op.BMId == p.BMId);
-                    bool isOnline = onlineInfo != null;
-
-                    var namePanel = new StackPanel { Orientation = Orientation.Horizontal };
-                    var dot = new Ellipse { 
-                        Width = 8, 
-                        Height = 8, 
-                        Fill = isOnline ? new SolidColorBrush(Color.FromRgb(98, 211, 139)) : new SolidColorBrush(Color.FromRgb(102, 102, 102)),
-                        Margin = new Thickness(0, 0, 8, 0),
-                        VerticalAlignment = VerticalAlignment.Center
-                    };
-                    namePanel.Children.Add(dot);
-                    namePanel.Children.Add(new TextBlock { 
-                        Text = p.Name, 
-                        VerticalAlignment = VerticalAlignment.Center, 
-                        FontSize = 13,
-                        Foreground = isOnline ? Brushes.White : Brushes.Gray
-                    });
-
-                    Grid.SetColumn(namePanel, 0);
-                    pGrid.Children.Add(namePanel);
-
-                    if (isOnline)
-                    {
-                        var playTxt = new TextBlock { 
-                            Text = onlineInfo.PlayTimeStr, 
-                            Foreground = new SolidColorBrush(Color.FromRgb(176, 190, 197)), 
-                            VerticalAlignment = VerticalAlignment.Center,
-                            Margin = new Thickness(10, 0, 10, 0),
-                            FontSize = 11,
-                            Width = 50,
-                            TextAlignment = TextAlignment.Right
-                        };
-                        Grid.SetColumn(playTxt, 1);
-                        pGrid.Children.Add(playTxt);
-                    }
-
-                    var viewBtn = new Button { Content = "View", Width = 45, Margin = new Thickness(5,0,0,0), Tag = p.BMId };
-                    viewBtn.Click += (s, e) => ShowTrackingAnalysisWindow((string)((Button)s).Tag);
-                    Grid.SetColumn(viewBtn, 2);
-                    pGrid.Children.Add(viewBtn);
-
-                    var renameBtn = new Button { Content = "Rename", Width = 55, Margin = new Thickness(5,0,0,0), Tag = p };
-                    renameBtn.Click += (s, e) => {
-                        var player = (TrackedPlayer)((Button)s).Tag;
-                        var newName = ShowInputBox($"Enter new name for {player.BMId}:", "Rename Player", player.Name);
-                        if (!string.IsNullOrWhiteSpace(newName)) {
-                            TrackingService.RenameTrackedPlayer(player.BMId, newName);
-                            refreshList(searchBox.Text);
-                        }
-                    };
-                    Grid.SetColumn(renameBtn, 3);
-                    pGrid.Children.Add(renameBtn);
-
-                    var removeBtn = new Button { Content = "Remove", Width = 55, Margin = new Thickness(5,0,0,0), Tag = p.BMId, Background = Brushes.DarkRed, Foreground = Brushes.White };
-                    removeBtn.Click += (s, e) => {
-                        TrackingService.UntrackPlayer((string)((Button)s).Tag);
-                        refreshList(searchBox.Text);
-                    };
-                    Grid.SetColumn(removeBtn, 4);
-                    pGrid.Children.Add(removeBtn);
-
-                    list.Items.Add(pGrid);
-                }
-            }
-            if (players.Count == 0 && !string.IsNullOrEmpty(filter)) {
-                list.Items.Add(new TextBlock { Text = ChineseLocalizationService.T("No results found matching filter."), Margin = new Thickness(0,20,0,0), Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center });
-            }
-        };
-
-        addBtn.Click += async (s, e) => {
-            var val = idInput.Text.Trim();
-            if (string.IsNullOrEmpty(val) || val == "Enter BattleMetrics Player ID..." || !val.All(char.IsDigit)) return;
-            
-            addBtn.IsEnabled = false;
-            addBtn.Content = "...";
-            
-            var name = await TrackingService.FetchPlayerNameAsync(val);
-            var lastSession = await TrackingService.FetchPlayerLastSessionAsync(val);
-            
-            var serverName = TrackingService.LastServer.name;
-            if (string.IsNullOrEmpty(serverName)) serverName = _vm.Selected?.Name ?? "Manual Add";
-            
-            TrackingService.TrackPlayer(val, name, serverName, lastSession);
-            
-            var sessionMsg = lastSession != null ? $" (found last session: {lastSession.ConnectTime.ToLocalTime():g})" : "";
-            AppendLog($"[tracking] Manually added {name} ({val}) to tracking list on server: {serverName}{sessionMsg}");
-            
-            idInput.Text = "";
-            idInput.Focus();
-            addBtn.IsEnabled = true;
-            addBtn.Content = "Track Player ID";
-            refreshList(searchBox.Text);
-        };
-
-        searchBox.TextChanged += (s, e) => refreshList(searchBox.Text);
-        
-        Action updateList = () => {
-            this.Dispatcher.Invoke(() => refreshList?.Invoke(searchBox.Text));
-        };
-        TrackingService.OnOnlinePlayersUpdated += updateList;
-        win.Closed += (s, e) => TrackingService.OnOnlinePlayersUpdated -= updateList;
-
-        refreshList(""); // Initial load
-        searchBox.Focus();
-
-        var viewAllBtn = new Button { Content = "View All Analysis Report", Height = 35, Margin = new Thickness(0,15,0,0), Background = new SolidColorBrush(Color.FromRgb(76, 139, 245)), Foreground = Brushes.White };
-        viewAllBtn.Click += (s, e) => ShowTrackingAnalysisWindow();
-        Grid.SetRow(viewAllBtn, 4);
-        grid.Children.Add(viewAllBtn);
-
-        win.Content = grid;
-        win.ShowDialog();
-    }
-
-
-    private string? ShowInputBox(string prompt, string title, string defaultResponse)
-    {
-        var win = new Window
-        {
-            Title = title,
-            Width = 350,
-            Height = 150,
-            WindowStartupLocation = WindowStartupLocation.CenterScreen,
-            ResizeMode = ResizeMode.NoResize,
-            Background = new SolidColorBrush(Color.FromRgb(30, 30, 30)),
-            Foreground = Brushes.White
-        };
-
-        var stack = new StackPanel { Margin = new Thickness(15) };
-        stack.Children.Add(new TextBlock { Text = prompt, Margin = new Thickness(0, 0, 0, 10), TextWrapping = TextWrapping.Wrap });
-        
-        var input = new TextBox { Text = defaultResponse, Padding = new Thickness(5), Background = new SolidColorBrush(Color.FromRgb(40, 40, 40)), Foreground = Brushes.White, BorderBrush = Brushes.Gray };
-        input.SelectAll();
-        stack.Children.Add(input);
-
-        var btnPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 15, 0, 0) };
-        var okBtn = new Button { Content = "OK", Width = 70, Margin = new Thickness(0, 0, 10, 0), IsDefault = true };
-        var cancelBtn = new Button { Content = "Cancel", Width = 70, IsCancel = true };
-
-        string? result = null;
-        okBtn.Click += (s, e) => { result = input.Text; win.DialogResult = true; };
-        cancelBtn.Click += (s, e) => { win.DialogResult = false; };
-
-        btnPanel.Children.Add(okBtn);
-        btnPanel.Children.Add(cancelBtn);
-        stack.Children.Add(btnPanel);
-
-        win.Content = stack;
-        input.Focus();
-        
-        win.ShowDialog();
-        return result;
-    }
-
-    private void ShowTrackingAnalysisWindow(string? bmId = null)
-    {
-        var html = TrackingService.GetAnalysisReport(bmId);
-
-        var win = new Window
-        {
-            Title = "Player Activity Analytics & Forecasts",
-            Width = 900,
-            Height = 750,
-            Background = new SolidColorBrush(Color.FromRgb(18, 20, 23)),
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Owner = this,
-        };
-
-        var grid = new Grid();
-        var wv = new WebView2 { Margin = new Thickness(0) };
-        grid.Children.Add(wv);
-        win.Content = grid;
-        
-        win.Loaded += async (s, e) =>
-        {
-            try 
-            {
-                var dataPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "WebView2_Report");
-                var env = await Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync(userDataFolder: dataPath);
-                await wv.EnsureCoreWebView2Async(env);
-                wv.NavigateToString(html);
-            } 
-            catch (Exception ex) 
-            {
-                win.Content = new ScrollViewer 
-                { 
-                   Content = new TextBlock 
-                   { 
-                      Text = ChineseLocalizationService.T("Error loading analytics view: ") + ex.Message + "\n\n" + ChineseLocalizationService.T("Ensure WebView2 Runtime is installed."),
-                      Foreground = Brushes.White,
-                      TextWrapping = TextWrapping.Wrap,
-                      Margin = new Thickness(20) 
-                   } 
-                };
-            }
-        };
-
-        win.Show();
-    }
-
-    private void ShowPlayerAnalysis(string bmId, string name)
-    {
-        ShowTrackingAnalysisWindow(bmId);
-    }
 
     private void RebaselineAllAlertRulesFromCurrentShops(IReadOnlyList<RustPlusClientReal.ShopMarker> shops)
     {
@@ -4319,7 +3948,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (stopListenerFirst && _pairing.IsRunning)
             {
                 AppendLog("Stopping pairing listener …");
-                await _pairing.StopAsync();
+                await Task.Run(async () => await _pairing.StopAsync());
                 await Task.Delay(200); // kleine Atempause
             }
 
@@ -4327,14 +3956,19 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 File.Delete(PairingConfigPath);
                 AppendLog($"🗑️ Deleted pairing config: {PairingConfigPath}");
-                TxtPairingState.Text = ChineseLocalizationService.T("Pairing: config deleted");
-                return true;
             }
             else
             {
-                AppendLog("ℹ️ No pairing config found to delete.");
-                return false;
+                AppendLog("ℹ️ No pairing config found to delete on disk.");
             }
+
+            // Always clear tracking dates on reset
+            TrackingService.FcmIssuedAt = null;
+            TrackingService.FcmExpiresAt = null;
+            _vm.NotifyFcmChanged();
+
+            TxtPairingState.Text = ChineseLocalizationService.T("Pairing: config deleted");
+            return true;
         }
         catch (Exception ex)
         {
@@ -4393,10 +4027,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         try
         {
-            // zuerst Produktversion aus Datei
-            var fvi = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-            if (!string.IsNullOrWhiteSpace(fvi.ProductVersion) && Version.TryParse(NormalizeVer(fvi.ProductVersion), out var v1))
-                return v1;
+            // Zuerst versuchen wir es über unsere robuste AppInfo
+            if (Version.TryParse(AppInfo.VersionShort, out var v0))
+                return v0;
+
+            // Fallback auf ProcessPath
+            var path = Environment.ProcessPath;
+            if (!string.IsNullOrEmpty(path))
+            {
+                var fvi = FileVersionInfo.GetVersionInfo(path);
+                if (!string.IsNullOrWhiteSpace(fvi.ProductVersion) && Version.TryParse(NormalizeVer(fvi.ProductVersion), out var v1))
+                    return v1;
+            }
 
             // dann AssemblyVersion
             var v2 = Assembly.GetExecutingAssembly().GetName().Version;
@@ -4464,7 +4106,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return (latest, tag, dl);
     }
 
-    private async Task<string?> DownloadInstallerAsync(string url, IProgress<double>? progress = null)
+    private async Task<string?> DownloadInstallerAsync(string url, IProgress<DownloadReport>? progress = null)
     {
         var target = System.IO.Path.Combine(System.IO.Path.GetTempPath(), InstallerAssetName);
         try
@@ -4482,11 +4124,28 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             var buffer = new byte[81920];
             long readTotal = 0;
             int read;
+            var sw = Stopwatch.StartNew();
+            var lastReport = sw.ElapsedMilliseconds;
+
             while ((read = await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
             {
                 await file.WriteAsync(buffer, 0, read);
                 readTotal += read;
-                if (total.HasValue) progress?.Report(readTotal / (double)total.Value);
+
+                var now = sw.ElapsedMilliseconds;
+                if (now - lastReport > 200 || readTotal == total)
+                {
+                    lastReport = now;
+                    var report = new DownloadReport
+                    {
+                        Progress = total.HasValue ? (double)readTotal / total.Value : 0,
+                        Percentage = total.HasValue ? $"{(double)readTotal / total.Value:P0}" : "0%",
+                        BytesReceived = FormatBytes(readTotal),
+                        TotalBytes = total.HasValue ? FormatBytes(total.Value) : "Unknown",
+                        Speed = FormatBytes((long)(readTotal / (sw.Elapsed.TotalSeconds > 0 ? sw.Elapsed.TotalSeconds : 1))) + "/s"
+                    };
+                    progress?.Report(report);
+                }
             }
             return target;
         }
@@ -4495,6 +4154,19 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             AppendLog("❌ Download failed: " + ex.Message);
             return null;
         }
+    }
+
+    private static string FormatBytes(long bytes)
+    {
+        string[] Suffix = { "B", "KB", "MB", "GB", "TB" };
+        int i;
+        double dblSByte = bytes;
+        for (i = 0; i < Suffix.Length && bytes >= 1024; i++, bytes /= 1024)
+        {
+            dblSByte = bytes / 1024.0;
+        }
+
+        return $"{dblSByte:0.##} {Suffix[i]}";
     }
 
     private async Task<bool> StartInstallerAndExitAsync(string installerPath)
@@ -4511,7 +4183,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             Process.Start(psi);
 
             // optional: Listener ordentlich stoppen
-            try { if (_pairing?.IsRunning == true) await _pairing.StopAsync(); } catch { }
+            try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
 
             // kleines Delay, dann App schließen
             await Task.Delay(500);
@@ -4539,8 +4211,45 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var modal = new SettingsModal { Owner = this };
         modal.ShowDialog();
         ApplySettings();
+
+        if (modal.RequestAction == "ModifyChatAlerts")
+        {
+            Dispatcher.BeginInvoke(new Action(() => {
+                if (ChatAnnounceLabel.ContextMenu != null)
+                {
+                    ChatAnnounceLabel.ContextMenu.PlacementTarget = ChatAnnounceLabel;
+                    ChatAnnounceLabel.ContextMenu.Placement = PlacementMode.Bottom;
+                    ChatAnnounceLabel.ContextMenu.IsOpen = true;
+                }
+            }), System.Windows.Threading.DispatcherPriority.Input);
+        }
+        else if (modal.RequestAction == "ChatCommands")
+        {
+            // Open Chat if closed
+            if (ChatContentBorder.Visibility != Visibility.Visible)
+            {
+                BtnToggleChat_Click(null, null);
+            }
+            // Show commands
+            BtnOpenChatCommands_Click(null, null);
+        }
     }
     
+    private void ShowInfoSnackbar(string title, string message, ui.ControlAppearance appearance = ui.ControlAppearance.Secondary)
+    {
+        if (RootSnackbar == null) return;
+        
+        var snackbar = new ui.Snackbar(RootSnackbar)
+        {
+            Title = ChineseLocalizationService.T(title),
+            Content = ChineseLocalizationService.T(message),
+            Appearance = appearance,
+            Icon = new ui.SymbolIcon(ui.SymbolRegular.Info24),
+            Timeout = TimeSpan.FromSeconds(3.5)
+        };
+        snackbar.Show();
+    }
+
     private void ApplySettings()
     {
         if (TxtLog != null)
@@ -4577,20 +4286,52 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         catch { }
     }
 
+    private async Task AutoCheckUpdatesAsync()
+    {
+        try
+        {
+            var latestInfo = await GetLatestReleaseAsync();
+            if (latestInfo is null) return;
+
+            var (latest, tag, _) = latestInfo.Value;
+            var curr = AppInfo.VersionForCompare;
+
+            bool updateAvailable = false;
+            if (latest > curr) updateAvailable = true;
+            else if (latest == curr)
+            {
+                bool localIsBeta = AppInfo.VersionRaw.Contains("-", StringComparison.OrdinalIgnoreCase);
+                bool remoteIsBeta = tag.Contains("-", StringComparison.OrdinalIgnoreCase);
+                if (localIsBeta && !remoteIsBeta) updateAvailable = true;
+            }
+
+            if (updateAvailable)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    _vm.IsUpdateAvailable = true;
+                    _vm.UpdateTag = tag;
+                    AppendLog($"✨ Update found: {tag}");
+                });
+            }
+        }
+        catch { /* silent */ }
+    }
+
     private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
     {
         if (_listenerStarting) return;
 
         try
         {
-            _vm.IsBusy = true;
-            _vm.BusyText = ChineseLocalizationService.T("Checking GitHub release …");
+            // _vm.IsBusy = true; // No overlay during update check if we want it to be non-intrusive
+            // _vm.BusyText = "Checking GitHub release …";
 
             var curr = AppInfo.VersionForCompare;
             var latestInfo = await GetLatestReleaseAsync();
             if (latestInfo is null)
             {
-                _vm.IsBusy = false; _vm.BusyText = "";
+                // _vm.IsBusy = false; _vm.BusyText = "";
                 System.Windows.MessageBox.Show(
                     "Could not query latest release. Please try again or open Releases page.",
                     "Update", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -4600,14 +4341,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             var (latest, tag, dlUrl) = latestInfo.Value;
             AppendLog($"Current: {AppInfo.VersionShort} | Latest: {latest} ({tag})");
 
-            if (latest < curr)
+            bool updateAvailable = false;
+            if (latest > curr)
             {
-                _vm.IsBusy = false; _vm.BusyText = "";
-                System.Windows.MessageBox.Show(ChineseLocalizationService.T("You are up to date."), ChineseLocalizationService.T("Update"), MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
+                updateAvailable = true;
             }
-
-            if (latest == curr)
+            else if (latest == curr)
             {
                 // Spezialfall: Wenn wir eine Beta haben (Raw enthält '-') und GitHub den exakt gleichen numerischen Tag hat,
                 // aber der GitHub-Tag KEIN '-' enthält, dann ist GitHub neuer (Final Release).
@@ -4616,20 +4355,25 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
                 if (localIsBeta && !remoteIsBeta)
                 {
-                    // GitHub ist Final, wir sind Beta -> Update verfügbar!
-                }
-                else
-                {
-                    _vm.IsBusy = false; _vm.BusyText = "";
-                    System.Windows.MessageBox.Show(ChineseLocalizationService.T("You are up to date."), ChineseLocalizationService.T("Update"), MessageBoxButton.OK, MessageBoxImage.Information);
-                    return;
+                    updateAvailable = true;
                 }
             }
+
+            if (!updateAvailable)
+            {
+                // _vm.IsBusy = false; _vm.BusyText = "";
+                _vm.IsUpdateAvailable = false;
+                System.Windows.MessageBox.Show(ChineseLocalizationService.T("You are up to date."), ChineseLocalizationService.T("Update"), MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            _vm.IsUpdateAvailable = true;
+            _vm.UpdateTag = tag;
 
             // neuere Version vorhanden
             if (string.IsNullOrWhiteSpace(dlUrl))
             {
-                _vm.IsBusy = false; _vm.BusyText = "";
+                // _vm.IsBusy = false; _vm.BusyText = "";
                 var open = System.Windows.MessageBox.Show(
                     $"New version available: {tag}\nOpen Releases page?",
                     "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -4644,18 +4388,24 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (ask != MessageBoxResult.Yes)
             {
-                _vm.IsBusy = false; _vm.BusyText = "";
+                // _vm.IsBusy = false; _vm.BusyText = "";
                 return;
             }
 
-            // Download mit einfachem Progress in BusyText
-            var prog = new Progress<double>(p =>
+            // Download mit detailliertem Progress
+            _vm.IsDownloadingUpdate = true;
+            var prog = new Progress<DownloadReport>(r =>
             {
-                _vm.BusyText = $"Downloading installer … {(int)(p * 100)}%";
+                _vm.BusyText = $"Downloading installer … {r.Percentage}";
+                _vm.UpdateDownloadProgress = r.Progress * 100;
+                _vm.UpdateDownloadSpeed = r.Speed;
+                _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
+                _vm.UpdateDownloadPercentage = r.Percentage;
             });
             var path = await DownloadInstallerAsync(dlUrl!, prog);
 
-            _vm.IsBusy = false; _vm.BusyText = "";
+            _vm.IsDownloadingUpdate = false;
+            // _vm.IsBusy = false; _vm.BusyText = "";
 
             if (path == null)
             {
@@ -4667,8 +4417,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         catch (Exception ex)
         {
-            _vm.IsBusy = false;
-            _vm.BusyText = "";
+            _vm.IsUpdateAvailable = false;
+            _vm.IsDownloadingUpdate = false;
+            // _vm.IsBusy = false;
+            // _vm.BusyText = "";
             AppendLog("❌ Update check failed: " + ex.Message);
             System.Windows.MessageBox.Show(ChineseLocalizationService.T("Update check failed.") + "\n" + ex.Message, ChineseLocalizationService.T("Update"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
@@ -4706,6 +4458,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     protected override void OnSourceInitialized(EventArgs e)
     {
         base.OnSourceInitialized(e);
+
+        // Spätestens hier sollte Windows den Titel im Rahmen akzeptieren
+        if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
+        this.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
 
         var hwnd = new WindowInteropHelper(this).Handle;
         _hotkeyMgr = new GlobalHotkeyManager(hwnd);

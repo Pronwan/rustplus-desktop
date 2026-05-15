@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using RustPlusDesk.Models;
@@ -21,6 +21,7 @@ public class PairingListenerStub : IPairingListener
     private CancellationTokenSource? _cts;
     private readonly Action<string> _log;
     public event EventHandler? Listening;
+    public event EventHandler? RegistrationCompleted;
     public event EventHandler? Stopped;
     public event EventHandler<string>? Failed;
     private (string? server, string? entityName, uint? entityId)? _pendingAlarm;
@@ -30,6 +31,7 @@ public class PairingListenerStub : IPairingListener
     public event EventHandler<AlarmNotification>? AlarmReceived;
     private volatile bool _running;
     public bool IsRunning => _running;
+    public bool IsConfigured => true;
     public PairingListenerStub(Action<string> log) => _log = log;
 
     public Task StartAsync(CancellationToken ct = default)

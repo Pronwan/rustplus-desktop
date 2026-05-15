@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Threading;
+using ui = Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views;
 
@@ -39,27 +40,10 @@ public partial class MainWindow
         _webView.CoreWebView2.Settings.UserAgent =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
             "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
-        _webView.NavigationCompleted += WebView_NavigationCompleted;
+
     }
 
-    private async void BtnSteamLogin_Click(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            var loopback = new SteamOpenIdLoopbackService();
-            var sid = await loopback.SignInAsync();
-            _vm.SteamId64 = sid;
-            TrackingService.SteamId64 = sid;
-            TxtSteamId.Text = sid;
-            AppendLog($"Steam angemeldet (Loopback): {sid}");
-            _vm.Save();
-            HydrateSteamUiFromStorage();
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ChineseLocalizationService.T("Steam login failed: ") + ex.Message);
-        }
-    }
+
 
     private async Task UpdateServerStatusAsync()
     {
@@ -84,18 +68,7 @@ public partial class MainWindow
         }
     }
 
-    private void WebView_NavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
-    {
-        if (_webView?.Source is null) return;
-        var url = _webView.Source.ToString();
-        if (_steam.TryExtractSteamId64FromReturnUrl(url, out var sid))
-        {
-            _vm.SteamId64 = sid;
-            TxtSteamId.Text = sid;
-            AppendLog($"Steam angemeldet: {sid}");
-            _vm.Save();
-        }
-    }
+
 
     private void BtnAddServer_Click(object sender, RoutedEventArgs e)
     {
@@ -239,6 +212,9 @@ public partial class MainWindow
         }
         else
         {
+            // Ensure the interface disconnects before recreating
+            try { await _rust.DisconnectAsync(); } catch { }
+
             _shopTimer?.Stop();
             StopDynPolling(clearKnown: false);
             StopTeamPolling();
@@ -247,14 +223,14 @@ public partial class MainWindow
 
         if (_vm.Selected is null)
         {
-            if (!silent) MessageBox.Show("Please chose a server.");
+            if (!silent) ShowInfoSnackbar("Connection", "Please select a server first.", ui.ControlAppearance.Info);
             return false;
         }
 
         try
         {
             _vm.IsBusy = true;
-            _vm.BusyText = "Connecting …";
+            _vm.BusyText = ChineseLocalizationService.T("Connecting …");
 
             AppendLog($"Connecting to ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
             await _rust.ConnectAsync(_vm.Selected);
@@ -370,7 +346,7 @@ public partial class MainWindow
             _vm.IsBusy = false;
             _vm.BusyText = "";
             AppendLog("Fehler: " + ex.Message);
-            if (!silent) MessageBox.Show($"Connection failed: {ex.Message}");
+            if (!silent) MessageBox.Show(ChineseLocalizationService.T("Connection failed: ") + ex.Message);
             return false;
         }
 
