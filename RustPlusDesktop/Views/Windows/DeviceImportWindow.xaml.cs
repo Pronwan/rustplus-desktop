@@ -22,6 +22,7 @@ namespace RustPlusDesk.Views
             Func<uint, Task<EntityProbeResult>> probe)
         {
             InitializeComponent();
+            ChineseLocalizationService.ApplyTo(this);
 
             // Liste in ObservableCollection kopieren
             Devices.Clear();

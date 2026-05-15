@@ -37,6 +37,7 @@ namespace RustPlusDesk;
         public CrosshairEditorWindow(CustomCrosshair? cc = null)
         {
             InitializeComponent();
+            ChineseLocalizationService.ApplyTo(this);
             _editingCrosshair = cc;
             if (cc != null && !string.IsNullOrEmpty(cc.Base64Image))
             {
@@ -451,4 +452,3 @@ namespace RustPlusDesk;
             }
         }
     }
-

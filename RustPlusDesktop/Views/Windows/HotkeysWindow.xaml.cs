@@ -29,6 +29,7 @@ namespace RustPlusDesk.Views
                              Dictionary<string, List<long>> hotkeyMap)
         {
             InitializeComponent();
+            ChineseLocalizationService.ApplyTo(this);
             _map = hotkeyMap;
 
             _rows = devices
@@ -106,12 +107,12 @@ namespace RustPlusDesk.Views
         public string? Gesture { get; private set; }
         public HotkeyCaptureDialog()
         {
-            Title = "Press hotkey…";
+            Title = ChineseLocalizationService.T("Press hotkey…");
             Width = 320; Height = 120;
             WindowStartupLocation = WindowStartupLocation.CenterOwner;
             Content = new System.Windows.Controls.TextBlock
             {
-                Text = "Press the desired key combination",
+                Text = ChineseLocalizationService.T("Press the desired key combination"),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 Foreground = System.Windows.Media.Brushes.White

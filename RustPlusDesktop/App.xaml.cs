@@ -103,21 +103,23 @@ public partial class App : Application
         menu.Opening += (s, e) =>
         {
             menu.Items.Clear();
-            var status = TrackingService.IsTracking ? "Active" : "Idle";
+            var status = TrackingService.IsTracking
+                ? ChineseLocalizationService.T("Active")
+                : ChineseLocalizationService.T("Idle");
             var last = TrackingService.LastPullTime?.ToString("HH:mm:ss") ?? "--:--:--";
             
-            var statusItem = new System.Windows.Forms.ToolStripMenuItem($"Tracking: {status}");
+            var statusItem = new System.Windows.Forms.ToolStripMenuItem($"{ChineseLocalizationService.T("Tracking")}: {status}");
             statusItem.Enabled = false;
             menu.Items.Add(statusItem);
             
-            var lastItem = new System.Windows.Forms.ToolStripMenuItem($"Last update: {last}");
+            var lastItem = new System.Windows.Forms.ToolStripMenuItem($"{ChineseLocalizationService.T("Last update:")} {last}");
             lastItem.Enabled = false;
             menu.Items.Add(lastItem);
             
             menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            menu.Items.Add("Open Rust+ Desk", null, (s, ex) => ShowMainWindow());
+            menu.Items.Add(ChineseLocalizationService.T("Open Rust+ Desk"), null, (s, ex) => ShowMainWindow());
             menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            menu.Items.Add("Exit", null, (s, ex) => {
+            menu.Items.Add(ChineseLocalizationService.T("Exit"), null, (s, ex) => {
                 _trayIcon.Visible = false;
                 Current.Shutdown();
             });

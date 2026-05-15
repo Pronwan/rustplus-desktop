@@ -30,6 +30,14 @@ By now it's more than 'just' Rust Plus. It's Rust² you could say... That's why 
 
 The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, RustPlusAPI, etc.), so you don’t have to install dependencies manually.
 
+## 🌐 Language support
+
+Rust+ Desktop includes a Simplified Chinese UI layer. It activates automatically when Windows is using a Chinese UI culture. To force it for testing, start the app with:
+
+```powershell
+$env:RUSTPLUS_DESKTOP_LANGUAGE = "zh-CN"
+```
+
 
 
 ---
@@ -462,4 +470,3 @@ Open an [Issue](../../issues) or create a Pull Request.
 Sure, why not :) 
 
 **https://streamelements.com/pronwan/tip**
-

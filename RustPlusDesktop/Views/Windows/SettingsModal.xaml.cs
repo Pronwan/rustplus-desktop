@@ -10,6 +10,7 @@ namespace RustPlusDesk.Views
         public SettingsModal()
         {
             InitializeComponent();
+            ChineseLocalizationService.ApplyTo(this);
             LoadSettings();
             _isInitialized = true;
         }

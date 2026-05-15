@@ -687,7 +687,7 @@ public partial class MainWindow
             {
                 _wantPreviewList.Items.Add(new TextBlock
                 {
-                    Text = "No direct seller for that item.",
+                    Text = ChineseLocalizationService.T("No direct seller for that item."),
                     Foreground = SearchText,
                     Opacity = 0.6
                 });
@@ -697,7 +697,7 @@ public partial class MainWindow
         {
             _wantPreviewList.Items.Add(new TextBlock
             {
-                Text = "Type what you WANT to get.",
+                Text = ChineseLocalizationService.T("Type what you WANT to get."),
                 Foreground = SearchText,
                 Opacity = 0.4
             });
@@ -1998,7 +1998,7 @@ public partial class MainWindow
         {
             _pathResultList.Items.Add(new TextBlock
             {
-                Text = "No route found.",
+                Text = ChineseLocalizationService.T("No route found."),
                 Foreground = SearchText
             });
             return;
@@ -2017,7 +2017,7 @@ public partial class MainWindow
         }
         if (shown == 0)
         {
-            _pathResultList.Items.Add(new TextBlock { Text = "No valid route (bottlenecks).", Foreground = SearchText });
+            _pathResultList.Items.Add(new TextBlock { Text = ChineseLocalizationService.T("No valid route (bottlenecks)."), Foreground = SearchText });
         }
     }
 
@@ -2224,7 +2224,7 @@ public partial class MainWindow
         {
             _analysisListBox.Items.Add(new TextBlock
             {
-                Text = "No shop data yet.",
+                Text = ChineseLocalizationService.T("No shop data yet."),
                 Foreground = SearchText
             });
             return;
@@ -2234,7 +2234,7 @@ public partial class MainWindow
 
         _analysisListBox.Items.Add(new TextBlock
         {
-            Text = "Possible 2-step profit loops",
+            Text = ChineseLocalizationService.T("Possible 2-step profit loops"),
             Foreground = SearchText,
             Margin = new Thickness(0, 0, 0, 8)
         });
@@ -2243,7 +2243,7 @@ public partial class MainWindow
         {
             _analysisListBox.Items.Add(new TextBlock
             {
-                Text = "No profitable flips found.",
+                Text = ChineseLocalizationService.T("No profitable flips found."),
                 Foreground = SearchText
             });
             return;

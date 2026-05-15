@@ -256,13 +256,13 @@ public partial class MainWindow
     {
         if (_rust is not RustPlusClientReal real)
         {
-            MessageBox.Show("Not connected.");
+            MessageBox.Show(ChineseLocalizationService.T("Not connected."));
             return;
         }
 
         if (!(_vm.Selected?.IsConnected ?? false))
         {
-            MessageBox.Show("Please connect to a server first.");
+            MessageBox.Show(ChineseLocalizationService.T("Please connect to a server first."));
             return;
         }
 
@@ -280,13 +280,13 @@ public partial class MainWindow
         }
         catch (InvalidOperationException)
         {
-            MessageBox.Show("Please connect to a server first.");
+            MessageBox.Show(ChineseLocalizationService.T("Please connect to a server first."));
             return;
         }
         catch (Exception ex)
         {
             AppendLog("PrimeChat failed: " + ex.Message);
-            MessageBox.Show("Chat is not available right now.");
+            MessageBox.Show(ChineseLocalizationService.T("Chat is not available right now."));
             return;
         }
 
@@ -385,19 +385,19 @@ public partial class MainWindow
             {
                 // Nicht bestätigt -> Error-Box im Overlay anzeigen, KEIN Popup
                 ChatErrorBox.Visibility = Visibility.Visible;
-                ChatErrorText.Text = "Message could not be sent. Please try again. (Check if you are in a team!)";
+                ChatErrorText.Text = ChineseLocalizationService.T("Message could not be sent. Please try again. (Check if you are in a team!)");
             }
         }
         catch (Exception ex)
         {
             ChatErrorBox.Visibility = Visibility.Visible;
-            ChatErrorText.Text = "Error: " + ex.Message;
+            ChatErrorText.Text = ChineseLocalizationService.T("Error: ") + ex.Message;
         }
         finally
         {
             BtnSendChat.IsEnabled = true;
             TxtChatInput.IsEnabled = true;
-            BtnSendChat.Content = "Send";
+            BtnSendChat.Content = ChineseLocalizationService.T("Send");
             TxtChatInput.Focus();
         }
     }

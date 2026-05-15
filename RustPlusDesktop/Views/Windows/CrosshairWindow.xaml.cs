@@ -62,6 +62,7 @@ namespace RustPlusDesk
         public CrosshairWindow()
         {
             InitializeComponent();
+            Services.ChineseLocalizationService.ApplyTo(this);
             Presenter.IsHitTestVisible = false;
             SetStyle(CrosshairStyle.GreenDot);
             UseLayoutRounding = true;

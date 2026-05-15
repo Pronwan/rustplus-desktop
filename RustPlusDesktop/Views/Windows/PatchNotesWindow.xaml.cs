@@ -7,6 +7,7 @@ namespace RustPlusDesk.Views
         public PatchNotesWindow()
         {
             InitializeComponent();
+            RustPlusDesk.Services.ChineseLocalizationService.ApplyTo(this);
         }
 
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)

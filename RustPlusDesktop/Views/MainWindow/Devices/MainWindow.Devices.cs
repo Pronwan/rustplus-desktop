@@ -882,13 +882,13 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         {
             var count = await UploadDevicesSnapshotForCurrentServerAsync();
             AppendLog($"[dev/export] Exported {count} devices for server '{_vm.Selected.Name}'.");
-            MessageBox.Show($"Exported {count} devices to your team share.", "Device Export",
+            MessageBox.Show(string.Format(ChineseLocalizationService.T("Exported {0} devices to your team share."), count), ChineseLocalizationService.T("Device Export"),
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch (Exception ex)
         {
             AppendLog("[dev/export] Error: " + ex.Message);
-            MessageBox.Show("Device export failed:\n" + ex.Message, "Device Export",
+            MessageBox.Show(ChineseLocalizationService.T("Device export failed:") + "\n" + ex.Message, ChineseLocalizationService.T("Device Export"),
                 MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
@@ -1029,8 +1029,8 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
             if (items.Count == 0)
             {
-                MessageBox.Show("No device exports found for your team / server.",
-                    "Device Import", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(ChineseLocalizationService.T("No device exports found for your team / server."),
+                    ChineseLocalizationService.T("Device Import"), MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -1086,8 +1086,8 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         catch (Exception ex)
         {
             AppendLog("[dev/import] Error: " + ex.Message);
-            MessageBox.Show("Device import failed:\n" + ex.Message,
-                "Device Import", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(ChineseLocalizationService.T("Device import failed:") + "\n" + ex.Message,
+                ChineseLocalizationService.T("Device Import"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 

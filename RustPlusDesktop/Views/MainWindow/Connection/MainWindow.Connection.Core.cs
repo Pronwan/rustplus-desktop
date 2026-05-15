@@ -57,7 +57,7 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Steam-Login fehlgeschlagen: " + ex.Message);
+            MessageBox.Show(ChineseLocalizationService.T("Steam login failed: ") + ex.Message);
         }
     }
 
@@ -99,10 +99,10 @@ public partial class MainWindow
 
     private void BtnAddServer_Click(object sender, RoutedEventArgs e)
     {
-        var host = Microsoft.VisualBasic.Interaction.InputBox("Server IP/Host:", "Server hinzufügen", "127.0.0.1");
-        var portStr = Microsoft.VisualBasic.Interaction.InputBox("Companion-Port:", "Server hinzufügen", "28082");
-        var token = Microsoft.VisualBasic.Interaction.InputBox("Player-Token (Rust+):", "Server hinzufügen", "");
-        var proxy = Microsoft.VisualBasic.Interaction.InputBox("Facepunch-Proxy verwenden? (y/n)", "Server hinzufügen", "n");
+        var host = Microsoft.VisualBasic.Interaction.InputBox(ChineseLocalizationService.T("Server IP/Host:"), ChineseLocalizationService.T("Add server"), "127.0.0.1");
+        var portStr = Microsoft.VisualBasic.Interaction.InputBox(ChineseLocalizationService.T("Companion-Port:"), ChineseLocalizationService.T("Add server"), "28082");
+        var token = Microsoft.VisualBasic.Interaction.InputBox(ChineseLocalizationService.T("Player-Token (Rust+):"), ChineseLocalizationService.T("Add server"), "");
+        var proxy = Microsoft.VisualBasic.Interaction.InputBox(ChineseLocalizationService.T("Use Facepunch proxy? (y/n)"), ChineseLocalizationService.T("Add server"), "n");
 
         if (int.TryParse(portStr, out var port) && !string.IsNullOrWhiteSpace(host) && !string.IsNullOrWhiteSpace(token))
         {
@@ -120,7 +120,7 @@ public partial class MainWindow
         }
         else
         {
-            MessageBox.Show("Ungültige Eingaben.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(ChineseLocalizationService.T("Invalid input."), ChineseLocalizationService.T("Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 

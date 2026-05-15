@@ -78,6 +78,7 @@ namespace RustPlusDesk.Views
         public CameraWindow(RustPlusClientReal real, string cameraId)
         {
             InitializeComponent();
+            ChineseLocalizationService.ApplyTo(this);
             _real = real;
             _cameraId = cameraId;
             _real.CameraEntities += OnCameraEntities;

@@ -10,6 +10,7 @@ public partial class MigrationNoticeWindow : Window
     public MigrationNoticeWindow()
     {
         InitializeComponent();
+        RustPlusDesk.Services.ChineseLocalizationService.ApplyTo(this);
     }
 
     private void BtnOk_Click(object sender, RoutedEventArgs e)

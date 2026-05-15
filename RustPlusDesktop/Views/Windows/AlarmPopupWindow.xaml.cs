@@ -11,6 +11,7 @@ namespace RustPlusDesk.Views
         public AlarmWindow()
         {
             InitializeComponent();
+            RustPlusDesk.Services.ChineseLocalizationService.ApplyTo(this);
             List.ItemsSource = _items;
         }
 

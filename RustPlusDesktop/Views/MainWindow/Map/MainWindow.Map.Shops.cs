@@ -620,7 +620,7 @@ public partial class MainWindow
             }
             else
             {
-                shopContainer.Children.Add(new TextBlock { Text = "No offers available", Foreground = Brushes.Gray, FontSize = 12, FontStyle = FontStyles.Italic, Margin = new Thickness(4) });
+                shopContainer.Children.Add(new TextBlock { Text = ChineseLocalizationService.T("No offers available"), Foreground = Brushes.Gray, FontSize = 12, FontStyle = FontStyles.Italic, Margin = new Thickness(4) });
             }
 
             ShopDetailsContent.Children.Add(shopContainer);

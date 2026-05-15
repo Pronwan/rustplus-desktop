@@ -8,6 +8,7 @@ public partial class ChatCommandsOverlay : UserControl
     public ChatCommandsOverlay()
     {
         InitializeComponent();
+        RustPlusDesk.Services.ChineseLocalizationService.ApplyTo(this);
     }
 
     public event RoutedEventHandler CloseRequested;

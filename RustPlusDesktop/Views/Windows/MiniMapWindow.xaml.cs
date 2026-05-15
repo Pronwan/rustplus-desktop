@@ -30,6 +30,7 @@ namespace RustPlusDesk
         public MiniMapWindow(Visual mapVisual)
         {
             InitializeComponent();
+            Services.ChineseLocalizationService.ApplyTo(this);
             MirrorBrush.Visual = mapVisual;
 
             MouseLeftButtonDown += (_, __) => DragMove();
@@ -212,6 +213,7 @@ namespace RustPlusDesk
             {
                 // zurück auf rund
                 InitializeComponent();
+                Services.ChineseLocalizationService.ApplyTo(this);
             }
         }
     }

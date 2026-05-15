@@ -66,7 +66,7 @@ public class MainViewModel : INotifyPropertyChanged
             IsDay = true;
             double remainingGameHours = 20 - hours;
             double remainingRealMins = remainingGameHours / _observedDaySpeed;
-            TimeUntilNextPhase = FormatDuration(remainingRealMins / 60.0) + " until night";
+            TimeUntilNextPhase = ChineseLocalizationService.UntilPhase(FormatDuration(remainingRealMins / 60.0), "night");
         }
         else
         {
@@ -76,7 +76,7 @@ public class MainViewModel : INotifyPropertyChanged
             else remainingGameHours = 8 - hours;
             
             double remainingRealMins = remainingGameHours / _observedNightSpeed;
-            TimeUntilNextPhase = FormatDuration(remainingRealMins / 60.0) + " until day";
+            TimeUntilNextPhase = ChineseLocalizationService.UntilPhase(FormatDuration(remainingRealMins / 60.0), "day");
         }
     }
     private int _iconsTotal;
@@ -137,7 +137,7 @@ public class MainViewModel : INotifyPropertyChanged
         set { _isPairingBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
     }
 
-    private string _busyText = "Bitte warten …";
+    private string _busyText = ChineseLocalizationService.T("Bitte warten …");
     public string BusyText
     {
         get => _busyText;

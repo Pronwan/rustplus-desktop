@@ -259,6 +259,7 @@ public partial class MainWindow : Window
 
         InitializeComponent();
         this.Title = $"RustPlusDesk v{AppInfo.VersionRaw}";
+        ChineseLocalizationService.ApplyTo(this);
         
         if (FindName("TxtVersion") is TextBlock txt)
             txt.Text = $"v{AppInfo.VersionRaw}";
@@ -384,17 +385,17 @@ public partial class MainWindow : Window
         _pairing.Listening += (_, __) => Dispatcher.Invoke(() =>
         {
             _vm.IsPairingRunning = true;
-            TxtPairingState.Text = "Pairing: listening…";
+            TxtPairingState.Text = ChineseLocalizationService.T("Pairing: listening…");
         });
         _pairing.Stopped += (_, __) => Dispatcher.Invoke(() =>
         {
             _vm.IsPairingRunning = false;
-            TxtPairingState.Text = "Pairing: stopped";
+            TxtPairingState.Text = ChineseLocalizationService.T("Pairing: stopped");
         });
         _pairing.Failed += (_, msg) => Dispatcher.Invoke(() =>
         {
             _vm.IsPairingRunning = false;
-            TxtPairingState.Text = "Pairing: listening…"; // retry silently
+            TxtPairingState.Text = ChineseLocalizationService.T("Pairing: listening…"); // retry silently
             AppendLog("[listener] " + msg);
             // Auto-retry after a short delay
             _ = Task.Delay(5000).ContinueWith(_ => Dispatcher.Invoke(() => StartPairingSilent()));
@@ -2222,7 +2223,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (_listenerStarting || _pairing.IsRunning) return;
         _listenerStarting = true;
         _vm.IsPairingBusy = true;
-        TxtPairingState.Text = "Pairing: listening…";
+        TxtPairingState.Text = ChineseLocalizationService.T("Pairing: listening…");
         _ = Task.Run(async () =>
         {
             try { await _pairing.StartAsync(); }
@@ -2251,7 +2252,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (_pairing.IsRunning)
         {
             _vm.IsPairingBusy = false; _vm.BusyText = "";
-            TxtPairingState.Text = "Pairing: listening…";
+            TxtPairingState.Text = ChineseLocalizationService.T("Pairing: listening…");
             AppendLog("Listener already running.");
             return;
         }
@@ -2261,7 +2262,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _listenerStarting = true;
             _vm.IsPairingBusy = true;
-            _vm.BusyText = "Starting Pairing-Listener (Edge) …";
+            _vm.BusyText = ChineseLocalizationService.T("Starting Pairing-Listener (Edge) …");
 
             var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
             EventHandler onListen = (_, __) => tcs.TrySetResult(true);
@@ -2279,7 +2280,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _pairing.Failed -= onFail;
 
             _vm.IsPairingBusy = false; _vm.BusyText = "";
-            if (ok) TxtPairingState.Text = "Pairing: listening…";
+            if (ok) TxtPairingState.Text = ChineseLocalizationService.T("Pairing: listening…");
         }
         finally { _listenerStarting = false; }
     }
@@ -2289,20 +2290,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         Dispatcher.Invoke(() =>
         {
-            if (st == "starting") _vm.BusyText = "Starte Pairing-Listener …";
-            else if (st == "listening") TxtPairingState.Text = "Pairing: listening…";
-            else if (st == "error") TxtPairingState.Text = "Pairing: error";
+            if (st == "starting") _vm.BusyText = ChineseLocalizationService.T("Starte Pairing-Listener …");
+            else if (st == "listening") TxtPairingState.Text = ChineseLocalizationService.T("Pairing: listening…");
+            else if (st == "error") TxtPairingState.Text = ChineseLocalizationService.T("Pairing: error");
         });
     }
     private void Real_Listening(object? s, EventArgs e)
     {
-        Dispatcher.Invoke(() => TxtPairingState.Text = "Pairing: listening…");
+        Dispatcher.Invoke(() => TxtPairingState.Text = ChineseLocalizationService.T("Pairing: listening…"));
     }
     private void Real_Failed(object? s, string msg)
     {
         Dispatcher.Invoke(() =>
         {
-            TxtPairingState.Text = "Pairing: error";
+            TxtPairingState.Text = ChineseLocalizationService.T("Pairing: error");
             AppendLog("[listener] " + msg);
         });
     }
@@ -2311,20 +2312,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         _vm.IsBusy = false;
         _vm.BusyText = "";
-        TxtPairingState.Text = "Pairing: listening…";
+        TxtPairingState.Text = ChineseLocalizationService.T("Pairing: listening…");
     }
 
     private void OnFailed(object? s, string msg)
     {
         _vm.IsBusy = false;
         _vm.BusyText = "";
-        TxtPairingState.Text = "Pairing: error";
+        TxtPairingState.Text = ChineseLocalizationService.T("Pairing: error");
         AppendLog("[listener] " + msg);
     }
 
     private void OnStatus(object? s, string st)
     {
-        if (st == "starting") _vm.BusyText = "Starte Pairing-Listener …";
+        if (st == "starting") _vm.BusyText = ChineseLocalizationService.T("Starte Pairing-Listener …");
     }
 
     private void Server_Delete_Click(object sender, RoutedEventArgs e)
@@ -3969,7 +3970,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 }
             }
             if (players.Count == 0 && !string.IsNullOrEmpty(filter)) {
-                list.Items.Add(new TextBlock { Text = "No results found matching filter.", Margin = new Thickness(0,20,0,0), Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center });
+                list.Items.Add(new TextBlock { Text = ChineseLocalizationService.T("No results found matching filter."), Margin = new Thickness(0,20,0,0), Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center });
             }
         };
 
@@ -4092,7 +4093,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 { 
                    Content = new TextBlock 
                    { 
-                      Text = "Error loading analytics view: " + ex.Message + "\n\nEnsure WebView2 Runtime is installed.", 
+                      Text = ChineseLocalizationService.T("Error loading analytics view: ") + ex.Message + "\n\n" + ChineseLocalizationService.T("Ensure WebView2 Runtime is installed."),
                       Foreground = Brushes.White,
                       TextWrapping = TextWrapping.Wrap,
                       Margin = new Thickness(20) 
@@ -4326,7 +4327,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 File.Delete(PairingConfigPath);
                 AppendLog($"🗑️ Deleted pairing config: {PairingConfigPath}");
-                TxtPairingState.Text = "Pairing: config deleted";
+                TxtPairingState.Text = ChineseLocalizationService.T("Pairing: config deleted");
                 return true;
             }
             else
@@ -4583,7 +4584,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         try
         {
             _vm.IsBusy = true;
-            _vm.BusyText = "Checking GitHub release …";
+            _vm.BusyText = ChineseLocalizationService.T("Checking GitHub release …");
 
             var curr = AppInfo.VersionForCompare;
             var latestInfo = await GetLatestReleaseAsync();
@@ -4602,7 +4603,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (latest < curr)
             {
                 _vm.IsBusy = false; _vm.BusyText = "";
-                System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                System.Windows.MessageBox.Show(ChineseLocalizationService.T("You are up to date."), ChineseLocalizationService.T("Update"), MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -4620,7 +4621,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 else
                 {
                     _vm.IsBusy = false; _vm.BusyText = "";
-                    System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                    System.Windows.MessageBox.Show(ChineseLocalizationService.T("You are up to date."), ChineseLocalizationService.T("Update"), MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
             }
@@ -4658,7 +4659,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (path == null)
             {
-                System.Windows.MessageBox.Show("Download failed.", "Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(ChineseLocalizationService.T("Download failed."), ChineseLocalizationService.T("Update"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -4669,7 +4670,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsBusy = false;
             _vm.BusyText = "";
             AppendLog("❌ Update check failed: " + ex.Message);
-            System.Windows.MessageBox.Show("Update check failed.\n" + ex.Message, "Update", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show(ChineseLocalizationService.T("Update check failed.") + "\n" + ex.Message, ChineseLocalizationService.T("Update"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -4957,7 +4958,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         DeactivateHotkeys();
 
         IEnumerable? src = (ListDevices.ItemsSource as IEnumerable) ?? (DataContext as IEnumerable);
-        if (src == null) { MessageBox.Show("No devices."); return; }
+        if (src == null) { MessageBox.Show(ChineseLocalizationService.T("No devices.")); return; }
         
         var flatAssignable = GetHotkeyAssignableDevices(src.OfType<SmartDevice>());
 
@@ -5081,4 +5082,3 @@ public class RenameDialog : Window
         Loaded += (s, e) => { tb.Focus(); tb.SelectAll(); };
     }
 }
-

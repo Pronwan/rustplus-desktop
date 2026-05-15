@@ -7,9 +7,10 @@ namespace RustPlusDesk.Views
         public ServerInfoModal(string serverName, string description)
         {
             InitializeComponent();
+            RustPlusDesk.Services.ChineseLocalizationService.ApplyTo(this);
             Title = serverName;
             TxtDescription.Text = string.IsNullOrWhiteSpace(description) 
-                ? "No detailed description available for this server." 
+                ? RustPlusDesk.Services.ChineseLocalizationService.T("No detailed description available for this server.")
                 : description;
         }
 
