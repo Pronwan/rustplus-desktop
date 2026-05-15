@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Threading;
+using ui = Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views;
 
@@ -222,7 +223,7 @@ public partial class MainWindow
 
         if (_vm.Selected is null)
         {
-            if (!silent) MessageBox.Show("Please chose a server.");
+            if (!silent) ShowInfoSnackbar("Connection", "Please select a server first.", ui.ControlAppearance.Info);
             return false;
         }
 
