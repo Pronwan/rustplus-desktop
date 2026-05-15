@@ -2440,26 +2440,43 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void OnStatus(object? s, string st)
     {
-        if (st == "starting") _vm.BusyText = "Starte Pairing-Listener …";
+        if (st == "starting") _vm.BusyText = "Starting Pairing-Listener …";
     }
 
+    private ServerProfile? _serverToDelete;
     private void Server_Delete_Click(object sender, RoutedEventArgs e)
     {
         if (((FrameworkElement)sender).Tag is not ServerProfile prof) return;
-        var ok = MessageBox.Show(
-            $"Server „{prof.Name}“ wirklich löschen?",
-            "Löschen bestätigen", MessageBoxButton.YesNo, MessageBoxImage.Question);
-        if (ok != MessageBoxResult.Yes) return;
+        
+        _serverToDelete = prof;
+        TxtDeleteConfirmation.Text = $"Are you sure you want to delete Server \"{prof.Name}\"? This action cannot be undone.";
+        DeleteConfirmationOverlay.Visibility = Visibility.Visible;
+    }
 
-        _vm.Servers.Remove(prof);
-        _vm.Save();
-        AppendLog($"Server gelöscht: {prof.Name}");
+    private void BtnCancelDelete_Click(object sender, RoutedEventArgs e)
+    {
+        DeleteConfirmationOverlay.Visibility = Visibility.Collapsed;
+        _serverToDelete = null;
+    }
+
+    private void BtnConfirmDelete_Click(object sender, RoutedEventArgs e)
+    {
+        if (_serverToDelete != null)
+        {
+            var prof = _serverToDelete;
+            _vm.Servers.Remove(prof);
+            _vm.Save();
+            AppendLog($"Server deleted: {prof.Name}");
+        }
+
+        DeleteConfirmationOverlay.Visibility = Visibility.Collapsed;
+        _serverToDelete = null;
     }
 
 
     private async void BtnListenPairing_Click(object sender, RoutedEventArgs e)
     {
-        if (_listenerStarting || _pairing.IsRunning) { AppendLog("Listener läuft bereits."); return; }
+        if (_listenerStarting || _pairing.IsRunning) { AppendLog("Listener already running."); return; }
         await StartPairingListenerUiAsync();
     }
 

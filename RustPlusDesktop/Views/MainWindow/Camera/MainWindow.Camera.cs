@@ -167,14 +167,22 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
                 }
             };
 
+            _miniMap.Closed += (s, ev) =>
+            {
+                _miniMap = null;
+                BtnMiniMap.ClearValue(Control.BackgroundProperty);
+                BtnMiniMap.ClearValue(Control.BorderBrushProperty);
+            };
+
             _miniMap.Show();
             CenterMiniMapOnPlayer();
 
+            BtnMiniMap.Background = new SolidColorBrush(Color.FromArgb(50, 0, 150, 255));
+            BtnMiniMap.BorderBrush = new SolidColorBrush(Colors.DodgerBlue);
         }
         else
         {
             _miniMap.Close();
-            _miniMap = null;
         }
     }
 

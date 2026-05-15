@@ -632,26 +632,54 @@ private bool _overlayToolsVisible = false;
 
     private void EraseAt(Point mapPos)
     {
-        var toRemove = new List<Polyline>();
+        var toRemove = new List<FrameworkElement>();
 
         for (int i = 0; i < Overlay.Children.Count; i++)
         {
-            if (Overlay.Children[i] is Polyline line)
+            if (Overlay.Children[i] is FrameworkElement fe)
             {
                 // nur wenn mir gehörend, sonst Finger weg
-                if (line.Tag is OverlayTag meta && meta.OwnerSteamId == _mySteamId && meta.IsUserEditable)
+                if (fe.Tag is OverlayTag meta && meta.OwnerSteamId == _mySteamId && meta.IsUserEditable)
                 {
-                    double dist = DistancePointToPolyline(mapPos, line);
-                    if (dist <= _eraserSize)
+                    if (fe is Polyline line)
                     {
-                        toRemove.Add(line);
+                        double dist = DistancePointToPolyline(mapPos, line);
+                        if (dist <= _eraserSize)
+                        {
+                            toRemove.Add(line);
+                        }
+                    }
+                    else
+                    {
+                        // Text (TextBlock) oder Icon (Image)
+                        double x = Canvas.GetLeft(fe);
+                        double y = Canvas.GetTop(fe);
+
+                        // Wenn WPF noch kein ActualWidth/Height gemessen hat, fallback:
+                        double w = fe is Image img ? img.Width : (fe.ActualWidth > 0 ? fe.ActualWidth : 32);
+                        double h = fe is Image img2 ? img2.Height : (fe.ActualHeight > 0 ? fe.ActualHeight : 16);
+
+                        // Check ob der Radierer-Punkt im Bereich des Elements liegt (plus Puffer durch eraserSize)
+                        if (mapPos.X >= x - _eraserSize && mapPos.X <= x + w + _eraserSize &&
+                            mapPos.Y >= y - _eraserSize && mapPos.Y <= y + h + _eraserSize)
+                        {
+                            toRemove.Add(fe);
+                        }
                     }
                 }
             }
         }
 
-        foreach (var line in toRemove)
-            Overlay.Children.Remove(line);
+        foreach (var fe in toRemove)
+        {
+            Overlay.Children.Remove(fe);
+
+            // auch aus _playerOverlayElements[_mySteamId] rauswerfen
+            if (_playerOverlayElements.TryGetValue(_mySteamId, out var mine))
+            {
+                mine.Remove(fe);
+            }
+        }
 
         if (toRemove.Count > 0)
             SaveOwnOverlayToJson();
@@ -942,11 +970,17 @@ private bool _overlayToolsVisible = false;
             _currentTool = OverlayToolMode.None;
             _draggingElement = null;
             UpdateToolButtonHighlights();
+
+            BtnToggleOverlayTools.ClearValue(Control.BackgroundProperty);
+            BtnToggleOverlayTools.ClearValue(Control.BorderBrushProperty);
         }
         else
         {
             RebuildOverlayTeamBar();
             UpdateToolButtonHighlights();
+
+            BtnToggleOverlayTools.Background = new SolidColorBrush(Color.FromArgb(50, 0, 150, 255));
+            BtnToggleOverlayTools.BorderBrush = new SolidColorBrush(Colors.DodgerBlue);
         }
     }
 
