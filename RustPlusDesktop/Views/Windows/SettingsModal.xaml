@@ -104,13 +104,17 @@
                     <TextBlock Text="Chat" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                         <Button Content="Modify Chat Alerts" 
-                                Style="{StaticResource GhostButton}"
-                                Padding="12,6"
+                                Style="{StaticResource PrimaryButton}"
+                                Background="#3D5A80"
+                                Height="36"
+                                Padding="32,0"
                                 Click="BtnModifyChatAlerts_Click"/>
                         <Button Content="Chat Commands" 
-                                Style="{StaticResource GhostButton}"
-                                Margin="8,0,0,0"
-                                Padding="12,6"
+                                Style="{StaticResource PrimaryButton}"
+                                Background="#3D5A80"
+                                Height="36"
+                                Margin="12,0,0,0"
+                                Padding="32,0"
                                 Click="BtnChatCommands_Click"/>
                     </StackPanel>
 

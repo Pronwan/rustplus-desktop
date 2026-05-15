@@ -13,6 +13,13 @@ namespace RustPlusDesk.ViewModels;
 public class MainViewModel : INotifyPropertyChanged
 {
     private readonly System.Windows.Threading.DispatcherTimer _clockTimer;
+    private ImageSource? _myAvatar;
+
+    public ImageSource? MyAvatar
+    {
+        get => _myAvatar;
+        set { _myAvatar = value; OnPropertyChanged(); }
+    }
 
     public MainViewModel()
     {

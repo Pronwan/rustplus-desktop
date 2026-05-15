@@ -2563,8 +2563,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (string.IsNullOrWhiteSpace(steamId64))
         {
-            ImgSteam.Source = null;
-            ImgSteam.Visibility = Visibility.Collapsed;
+            _vm.MyAvatar = null;
             return;
         }
 
@@ -2587,8 +2586,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 bmp.EndInit();
                 bmp.Freeze();
 
-                ImgSteam.Source = bmp;
-                ImgSteam.Visibility = Visibility.Visible;
+                _vm.MyAvatar = bmp;
             }
             if (nameMatch.Success)
             {
@@ -2599,8 +2597,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         catch
         {
             // Avatar optional – bei Fehlern still
-            ImgSteam.Source = null;
-            ImgSteam.Visibility = Visibility.Collapsed;
+            _vm.MyAvatar = null;
         }
     }
 
@@ -2875,6 +2872,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (ChatAnnounceLabel.ContextMenu != null)
         {
             ChatAnnounceLabel.ContextMenu.PlacementTarget = ChatAnnounceLabel;
+            ChatAnnounceLabel.ContextMenu.Placement = PlacementMode.Bottom;
             ChatAnnounceLabel.ContextMenu.IsOpen = true;
             e.Handled = true;
         }
@@ -4201,6 +4199,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (ChatAnnounceLabel.ContextMenu != null)
                 {
                     ChatAnnounceLabel.ContextMenu.PlacementTarget = ChatAnnounceLabel;
+                    ChatAnnounceLabel.ContextMenu.Placement = PlacementMode.Bottom;
                     ChatAnnounceLabel.ContextMenu.IsOpen = true;
                 }
             }), System.Windows.Threading.DispatcherPriority.Input);
@@ -4217,6 +4216,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
     
+    private void ShowInfoSnackbar(string title, string message, ui.ControlAppearance appearance = ui.ControlAppearance.Secondary)
+    {
+        if (RootSnackbar == null) return;
+        
+        var snackbar = new ui.Snackbar(RootSnackbar)
+        {
+            Title = title,
+            Content = message,
+            Appearance = appearance,
+            Icon = new ui.SymbolIcon(ui.SymbolRegular.Info24),
+            Timeout = TimeSpan.FromSeconds(3.5)
+        };
+        snackbar.Show();
+    }
+
     private void ApplySettings()
     {
         if (TxtLog != null)
