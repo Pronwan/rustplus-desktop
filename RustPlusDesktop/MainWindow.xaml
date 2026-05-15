@@ -3245,6 +3245,7 @@
                                 Style="{StaticResource GhostButton}"
                                 ToolTip="Reset map zoom and position" />
                             <Button
+                                x:Name="BtnMiniMap"
                                 Width="80"
                                 Click="BtnToggleMiniMap_Click"
                                 Content="Mini &#x1F5FA;"
@@ -3468,7 +3469,7 @@
                                 Height="32"
                                 Margin="4,0,0,0"
                                 Click="BtnToggleOverlayTools_Click"
-                                ToolTip="Map-Overlay Zeichnen / Team Overlays">
+                                ToolTip="Draw Overlay">
                                 <Image Source="pack://application:,,,/Assets/icons/pencil.png" />
                             </Button>
 
@@ -3944,7 +3945,28 @@
                                             </Button>
                                         </Grid>
 
-                                        <wv2:WebView2 x:Name="EmbeddedShopSearch" Grid.Row="1" />
+                                        <Grid Grid.Row="1">
+                                            <wv2:WebView2 x:Name="EmbeddedShopSearch" />
+
+                                            <Grid x:Name="ShopSearchWarning" Background="#F216181C" Visibility="Collapsed">
+                                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <TextBlock
+                                                        Margin="0,0,0,20"
+                                                        HorizontalAlignment="Center"
+                                                        FontSize="14"
+                                                        Foreground="#CCFFFFFF"
+                                                        Text="Please activate Shops first" />
+                                                    <Button
+                                                        x:Name="BtnActivateShopPolling"
+                                                        Padding="20,8"
+                                                        Click="BtnActivateShopPolling_Click"
+                                                        Content="Activate Shop polling"
+                                                        FontSize="12"
+                                                        FontWeight="SemiBold"
+                                                        Style="{StaticResource DonateButton}" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Grid>
                                     </Grid>
                                 </Border>
 
@@ -4308,20 +4330,21 @@
                             x:Name="OverlayToolbox"
                             Grid.Row="1"
                             Margin="8"
-                            Padding="6"
-                            HorizontalAlignment="Right"
+                            Padding="6,4"
+                            HorizontalAlignment="Center"
                             VerticalAlignment="Top"
                             Panel.ZIndex="9000"
                             Background="#CC1E1E1E"
-                            CornerRadius="6"
+                            CornerRadius="8"
                             Visibility="Collapsed">
-                            <StackPanel>
+                            <StackPanel Orientation="Horizontal">
 
                                 <!--  Zeichnen  -->
                                 <Button
                                     x:Name="ToolDrawButton"
                                     Width="32"
                                     Height="32"
+                                    Margin="2,0"
                                     Click="ToolDrawButton_Click"
                                     PreviewMouseRightButtonDown="ToolDrawButton_RightClick"
                                     ToolTip="Draw (Right Click: Size / Color)">
@@ -4333,6 +4356,7 @@
                                     x:Name="ToolTextButton"
                                     Width="32"
                                     Height="32"
+                                    Margin="2,0"
                                     Click="ToolTextButton_Click"
                                     PreviewMouseRightButtonDown="ToolTextButton_RightClick"
                                     ToolTip="Place Text (Right Click: Color / Size)">
@@ -4344,6 +4368,7 @@
                                     x:Name="ToolIconButton"
                                     Width="32"
                                     Height="32"
+                                    Margin="2,0"
                                     Click="ToolIconButton_Click"
                                     PreviewMouseRightButtonDown="ToolIconButton_RightClick"
                                     ToolTip="Place Icon (Right Click: Pick Icon)">
@@ -4355,19 +4380,21 @@
                                     x:Name="ToolEraseButton"
                                     Width="32"
                                     Height="32"
+                                    Margin="2,0"
                                     Click="ToolEraseButton_Click"
                                     PreviewMouseRightButtonDown="ToolEraseButton_RightClick"
                                     ToolTip="Eraser (hold or click)">
                                     <Image Source="pack://application:,,,/Assets/icons/eraser.png" />
                                 </Button>
 
-                                <Separator />
+                                <Rectangle Width="1" Height="20" Margin="6,0" Fill="#40FFFFFF" VerticalAlignment="Center" />
 
                                 <!--  LÃ¶schen  -->
                                 <Button
                                     x:Name="ToolTrashButton"
                                     Width="32"
                                     Height="32"
+                                    Margin="2,0"
                                     Click="ToolTrashButton_Click"
                                     ToolTip="Delete own overlay">
                                     <Image Source="pack://application:,,,/Assets/icons/trash.png" />
@@ -4378,6 +4405,7 @@
                                     x:Name="ToolUploadButton"
                                     Width="32"
                                     Height="32"
+                                    Margin="2,0"
                                     Click="ToolUploadButton_Click"
                                     ToolTip="Upload own Overlay / share">
                                     <Image Source="pack://application:,,,/Assets/icons/upload.png" />
@@ -4529,6 +4557,80 @@
                             Foreground="{DynamicResource TextCaption}"
                             Text="Requires Steam login in your default browser."
                             TextAlignment="Center" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!--  Delete Confirmation Overlay  -->
+            <Grid
+                x:Name="DeleteConfirmationOverlay"
+                Panel.ZIndex="10000"
+                Background="#AA000000"
+                IsHitTestVisible="True"
+                Visibility="Collapsed">
+                <Border
+                    Width="400"
+                    Padding="32"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="{DynamicResource Surface}"
+                    BorderBrush="{DynamicResource CardBorder}"
+                    BorderThickness="1"
+                    CornerRadius="16">
+                    <StackPanel>
+                        <!--  Header with Icon  -->
+                        <Grid Margin="0,0,0,24">
+                            <Ellipse
+                                Width="64"
+                                Height="64"
+                                Fill="#26FF4B4B" />
+                            <ui:SymbolIcon
+                                FontSize="32"
+                                Foreground="#FFFF4B4B"
+                                Symbol="Delete24" />
+                        </Grid>
+
+                        <TextBlock
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Foreground="{DynamicResource TextPrimary}"
+                            Text="Delete Server?"
+                            TextAlignment="Center" />
+
+                        <TextBlock
+                            x:Name="TxtDeleteConfirmation"
+                            Margin="0,12,0,32"
+                            FontSize="14"
+                            LineHeight="20"
+                            Foreground="{DynamicResource TextSubtle}"
+                            Text="Are you sure you want to delete this server? This action cannot be undone."
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="16" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <ui:Button
+                                Grid.Column="0"
+                                Padding="12"
+                                HorizontalAlignment="Stretch"
+                                Click="BtnCancelDelete_Click"
+                                Content="Cancel" />
+
+                            <ui:Button
+                                Grid.Column="2"
+                                Padding="12"
+                                HorizontalAlignment="Stretch"
+                                Appearance="Primary"
+                                Background="#FFFF4B4B"
+                                BorderBrush="#FFFF4B4B"
+                                Click="BtnConfirmDelete_Click"
+                                Content="Delete" />
+                        </Grid>
                     </StackPanel>
                 </Border>
             </Grid>
