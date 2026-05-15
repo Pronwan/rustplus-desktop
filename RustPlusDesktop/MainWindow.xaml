@@ -904,14 +904,21 @@
         </Grid.RowDefinitions>
 
         <!--  Custom TitleBar for Guaranteed Visibility in Mica/Dark Mode  -->
-        <ui:TitleBar
-            x:Name="AppTitleBar"
-            Title="RUST+ DESKTOP"
-            Grid.Row="0">
-            <ui:TitleBar.Icon>
-                <ui:ImageIcon Source="pack://application:,,,/Assets/rustplus-desktop-icon.ico" />
-            </ui:TitleBar.Icon>
-        </ui:TitleBar>
+        <Border
+            Grid.Row="0"
+            Background="#0F1013"
+            BorderBrush="#1AFFFFFF"
+            BorderThickness="0,0,0,1">
+            <ui:TitleBar
+                x:Name="AppTitleBar"
+                Title="RUST+ DESKTOP"
+                Background="Transparent"
+                Foreground="White">
+                <ui:TitleBar.Icon>
+                    <ui:ImageIcon Source="pack://application:,,,/Assets/rustplus-desktop-icon.ico" />
+                </ui:TitleBar.Icon>
+            </ui:TitleBar>
+        </Border>
 
         <Grid
             x:Name="Root"
