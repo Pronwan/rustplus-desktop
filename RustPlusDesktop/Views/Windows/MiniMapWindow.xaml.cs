@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -9,6 +9,8 @@ namespace RustPlusDesk
 {
     public partial class MiniMapWindow : Window
     {
+        public Action? OnClicked { get; set; }
+
         // Basis-Ausschnitt vom MainWindow (wo der Spieler ist)
         private Rect _baseViewbox;
 
@@ -32,8 +34,6 @@ namespace RustPlusDesk
             InitializeComponent();
             MirrorBrush.Visual = mapVisual;
 
-            MouseLeftButtonDown += (_, __) => DragMove();
-
             // Zoom nur für Mini-Map
             MouseWheel += MiniMapWindow_MouseWheel;
 
@@ -41,13 +41,69 @@ namespace RustPlusDesk
             MouseRightButtonDown += MiniMapWindow_MouseRightButtonDown;
             MouseRightButtonUp += MiniMapWindow_MouseRightButtonUp;
             MouseMove += MiniMapWindow_MouseMove;
+
+            // Click detection for centering
+            Point startDragPos = new Point();
+            MouseLeftButtonDown += (s, e) => { startDragPos = e.GetPosition(this); DragMove(); };
+            MouseLeftButtonUp += (s, e) =>
+            {
+                var endPos = e.GetPosition(this);
+                if (Math.Abs(endPos.X - startDragPos.X) < 5 && Math.Abs(endPos.Y - startDragPos.Y) < 5)
+                {
+                    OnClicked?.Invoke();
+                }
+            };
         }
 
+        private int _viewboxId = 0;
+
         // wird vom MainWindow aufgerufen
-        public void SetViewbox(Rect viewbox)
+        public void SetViewbox(Rect viewbox, bool instant = false)
         {
-            _baseViewbox = viewbox;  // nur merken
-            ApplyViewbox();          // Basis + User-Zoom + User-Pan anwenden
+            if (_baseViewbox.Width <= 0 || _baseViewbox.Height <= 0 || instant)
+            {
+                _baseViewbox = viewbox;
+                ApplyViewbox();
+                _viewboxId++; // Cancel any running interpolation
+                return;
+            }
+
+            // Interpolation starten
+            int myId = ++_viewboxId;
+            var startPos = new Point(_baseViewbox.X, _baseViewbox.Y);
+            var startSize = new Size(_baseViewbox.Width, _baseViewbox.Height);
+            var targetPos = new Point(viewbox.X, viewbox.Y);
+            var targetSize = new Size(viewbox.Width, viewbox.Height);
+
+            // Wenn der Sprung zu groß ist (z.B. Erster Start oder Teleport), direkt setzen
+            double dist = Math.Sqrt(Math.Pow(targetPos.X - startPos.X, 2) + Math.Pow(targetPos.Y - startPos.Y, 2));
+            if (dist > 500)
+            {
+                _baseViewbox = viewbox;
+                ApplyViewbox();
+                return;
+            }
+
+            Dispatcher.InvokeAsync(async () =>
+            {
+                int steps = 120; // ca. 2 Sekunden bei 16ms (passend zum Polling/Marker-Animation)
+                for (int i = 1; i <= steps; i++)
+                {
+                    if (myId != _viewboxId) break;
+
+                    double t = i / (double)steps;
+                    // Linear lerp
+                    double curX = startPos.X + (targetPos.X - startPos.X) * t;
+                    double curY = startPos.Y + (targetPos.Y - startPos.Y) * t;
+                    double curW = startSize.Width + (targetSize.Width - startSize.Width) * t;
+                    double curH = startSize.Height + (targetSize.Height - startSize.Height) * t;
+
+                    _baseViewbox = new Rect(curX, curY, curW, curH);
+                    ApplyViewbox();
+
+                    await System.Threading.Tasks.Task.Delay(16);
+                }
+            });
         }
 
         private void MiniMapWindow_MouseWheel(object sender, MouseWheelEventArgs e)

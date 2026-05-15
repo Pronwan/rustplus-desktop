@@ -14,7 +14,15 @@ public class TrackedPlayer
     public string BMId { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string LastServerName { get; set; } = string.Empty;
+    public string GroupName { get; set; } = string.Empty;
+    public string GroupColor { get; set; } = string.Empty;
     public List<PlayerSession> Sessions { get; set; } = new();
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool IsOnline { get; set; }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public string PlayTimeStr { get; set; } = string.Empty;
 }
 
 public class HarborInfo
@@ -70,6 +78,8 @@ public class TrackingSettings
     public bool AnnounceSpawnsMaster { get; set; } = false;
     public bool SaveAlertSelection { get; set; } = true;
     public string LastSeenVersion { get; set; } = "";
+    public DateTime? FcmIssuedAt { get; set; }
+    public DateTime? FcmExpiresAt { get; set; }
 }
 
 
@@ -98,6 +108,87 @@ public static class TrackingService
     private static readonly string _settingsPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "RustPlusDesk", "tracking_settings.json");
+
+    private static readonly string _fcmConfigPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "RustPlusDesk", "rustplusjs-config.json");
+
+    public static bool IsFcmConfigured()
+        => File.Exists(_fcmConfigPath) && new FileInfo(_fcmConfigPath).Length > 50;
+
+    /// <summary>
+    /// Reads steam_id, issue_date, expiry_date from rustplusjs-config.json and seeds
+    /// the in-memory TrackingSettings if those values are missing.  Call this on startup
+    /// and after every pairing event.
+    /// </summary>
+    public static void ReadFcmConfig()
+    {
+        try
+        {
+            if (!File.Exists(_fcmConfigPath)) return;
+            var json = File.ReadAllText(_fcmConfigPath);
+            using var doc = JsonDocument.Parse(json);
+            var root = doc.RootElement;
+
+            if (root.TryGetProperty("steam_id", out var sid) && sid.ValueKind == JsonValueKind.String)
+            {
+                var s = sid.GetString() ?? "";
+                if (!string.IsNullOrEmpty(s) && string.IsNullOrEmpty(_settings.SteamId64))
+                    _settings.SteamId64 = s;
+            }
+
+            if (root.TryGetProperty("issue_date", out var iss) && iss.ValueKind == JsonValueKind.String)
+            {
+                if (DateTime.TryParse(iss.GetString(), null,
+                    System.Globalization.DateTimeStyles.RoundtripKind, out var dt))
+                {
+                    if (_settings.FcmIssuedAt == null)
+                        _settings.FcmIssuedAt = dt.ToLocalTime();
+                }
+            }
+
+            if (root.TryGetProperty("expiry_date", out var exp) && exp.ValueKind == JsonValueKind.String)
+            {
+                if (DateTime.TryParse(exp.GetString(), null,
+                    System.Globalization.DateTimeStyles.RoundtripKind, out var dt))
+                {
+                    if (_settings.FcmExpiresAt == null)
+                        _settings.FcmExpiresAt = dt.ToLocalTime();
+                }
+            }
+        }
+        catch { }
+    }
+
+    /// <summary>
+    /// Patches only the steam_id field in rustplusjs-config.json without
+    /// touching the rest of the file.  Safe to call after pairing.
+    /// </summary>
+    public static void PatchFcmConfigSteamId(string steamId)
+    {
+        try
+        {
+            if (!File.Exists(_fcmConfigPath) || string.IsNullOrEmpty(steamId)) return;
+            var json = File.ReadAllText(_fcmConfigPath);
+            using var doc = JsonDocument.Parse(json);
+            var root = doc.RootElement;
+
+            using var ms  = new System.IO.MemoryStream();
+            using var wtr = new System.Text.Json.Utf8JsonWriter(ms,
+                new JsonWriterOptions { Indented = true });
+            wtr.WriteStartObject();
+            foreach (var prop in root.EnumerateObject())
+            {
+                if (prop.Name == "steam_id") continue; // skip old value
+                prop.WriteTo(wtr);
+            }
+            wtr.WriteString("steam_id", steamId);
+            wtr.WriteEndObject();
+            wtr.Flush();
+            File.WriteAllBytes(_fcmConfigPath, ms.ToArray());
+        }
+        catch { }
+    }
     
     private static Dictionary<string, TrackedPlayer> _trackedPlayers = new();
     private static TrackingSettings _settings = new();
@@ -227,6 +318,16 @@ public static class TrackingService
             OnOnlinePlayersUpdated?.Invoke();
         }
     }
+    public static void SetPlayerGroup(string bmId, string groupName, string groupColor)
+    {
+        if (_trackedPlayers.TryGetValue(bmId, out var player))
+        {
+            player.GroupName = groupName;
+            player.GroupColor = groupColor;
+            SaveDB();
+            OnOnlinePlayersUpdated?.Invoke();
+        }
+    }
     public static List<TrackedPlayer> GetTrackedPlayers() => _trackedPlayers.Values.ToList();
     public static bool IsTracked(string bmId) => _trackedPlayers.ContainsKey(bmId);
 
@@ -288,6 +389,18 @@ public static class TrackingService
     {
         get => _settings.SteamId64;
         set { _settings.SteamId64 = value; SaveDB(); }
+    }
+
+    public static DateTime? FcmIssuedAt
+    {
+        get => _settings.FcmIssuedAt;
+        set { _settings.FcmIssuedAt = value; SaveDB(); }
+    }
+
+    public static DateTime? FcmExpiresAt
+    {
+        get => _settings.FcmExpiresAt;
+        set { _settings.FcmExpiresAt = value; SaveDB(); }
     }
 
     public static bool AnnounceCargo

@@ -142,6 +142,8 @@ public partial class MainWindow
             {
                 RefreshShopIconScales();
             }, DispatcherPriority.Loaded);
+
+            UpdateShopPollingWarning();
         }
         else
         {
@@ -150,6 +152,8 @@ public partial class MainWindow
 
             foreach (var kv in _shopEls) Overlay.Children.Remove(kv.Value);
             _shopEls.Clear();
+
+            UpdateShopPollingWarning();
         }
     }
 
