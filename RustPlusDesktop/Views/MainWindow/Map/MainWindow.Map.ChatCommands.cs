@@ -219,7 +219,7 @@ public partial class MainWindow
         var profile = _vm.Selected;
         if (profile == null) return;
 
-        var dev = profile.Devices.FirstOrDefault(d => d.EntityId == entityId && (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor"));
+        var dev = profile.AllDevices.FirstOrDefault(d => d.EntityId == entityId && (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor"));
         if (dev != null && dev.Storage?.IsToolCupboard == true)
         {
             var secs = dev.UpkeepSeconds ?? 0;
@@ -255,7 +255,7 @@ public partial class MainWindow
         var profile = _vm.Selected;
         if (profile == null) return;
         
-        var dev = profile.Devices.FirstOrDefault(d => d.EntityId == entityId && d.Kind == "SmartSwitch");
+        var dev = profile.AllDevices.FirstOrDefault(d => d.EntityId == entityId && d.Kind == "SmartSwitch");
         if (dev != null)
         {
             bool newState = !(dev.IsOn ?? false);

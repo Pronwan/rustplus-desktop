@@ -92,6 +92,25 @@ public class ServerProfile : INotifyPropertyChanged
     public double LearnedNightSpeed { get; set; } = 12.0 / 10.0;
 
     // --- CHAT COMMANDS SETTINGS ---
+    [System.Text.Json.Serialization.JsonIgnore]
+    public System.Collections.Generic.IEnumerable<SmartDevice> AllDevices
+    {
+        get
+        {
+            var list = new System.Collections.Generic.List<SmartDevice>();
+            void Flatten(System.Collections.Generic.IEnumerable<SmartDevice> source)
+            {
+                foreach (var d in source)
+                {
+                    if (!d.IsGroup) list.Add(d);
+                    if (d.Children != null) Flatten(d.Children);
+                }
+            }
+            Flatten(Devices);
+            return list;
+        }
+    }
+
     private bool _chatCommandsEnabled;
     public bool ChatCommandsEnabled
     {
@@ -106,7 +125,7 @@ public class ServerProfile : INotifyPropertyChanged
         {
             var list = new System.Collections.Generic.List<SmartDevice>();
             list.Add(new SmartDevice { Name = "(None)", EntityId = 0 });
-            list.AddRange(System.Linq.Enumerable.Where(Devices, d => d.Kind == "SmartSwitch"));
+            list.AddRange(System.Linq.Enumerable.Where(AllDevices, d => d.Kind == "SmartSwitch"));
             return list;
         }
     }
@@ -118,7 +137,7 @@ public class ServerProfile : INotifyPropertyChanged
         {
             var list = new System.Collections.Generic.List<SmartDevice>();
             list.Add(new SmartDevice { Name = "(None)", EntityId = 0 });
-            list.AddRange(System.Linq.Enumerable.Where(Devices, d => (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor") && d.Storage?.IsToolCupboard == true));
+            list.AddRange(System.Linq.Enumerable.Where(AllDevices, d => (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor") && d.Storage?.IsToolCupboard == true));
             return list;
         }
     }
@@ -219,7 +238,7 @@ public class ServerProfile : INotifyPropertyChanged
     public void SyncChatCommands()
     {
         // Sync Switches
-        var switches = Devices.Where(d => d.Kind == "SmartSwitch").ToList();
+        var switches = AllDevices.Where(d => d.Kind == "SmartSwitch").ToList();
         while (SwitchCommandMappings.Count < switches.Count)
         {
             int next = SwitchCommandMappings.Count + 1;
@@ -240,7 +259,7 @@ public class ServerProfile : INotifyPropertyChanged
         }
 
         // Sync Upkeep (Storage Monitors on TCs)
-        var tcs = Devices.Where(d => d.Kind == "StorageMonitor" && d.Storage?.IsToolCupboard == true).ToList();
+        var tcs = AllDevices.Where(d => d.Kind == "StorageMonitor" && d.Storage?.IsToolCupboard == true).ToList();
         while (UpkeepCommandMappings.Count < tcs.Count)
         {
             int next = UpkeepCommandMappings.Count + 1;
