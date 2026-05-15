@@ -1195,7 +1195,8 @@ public partial class MainWindow
                             8 => TrackingService.AnnounceHeli,
                             4 => TrackingService.AnnounceChinook,
                             6 => TrackingService.AnnounceVendor,
-                            9 => false, // Oil Rig handled by MonumentWatcher (sends its own triggered message)
+                            9 => false,   // Oil Rig handled by MonumentWatcher (sends its own triggered message)
+                            150 => false, // Virtual markers for Oil Rig handled by MonumentWatcher
                             _ => true 
                         };
 
