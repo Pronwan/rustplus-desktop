@@ -481,51 +481,55 @@ public partial class MainWindow
 
     private (FrameworkElement UI, Func<string> Getter, Action<string> Setter) CreateColorSelector(string initialColor)
     {
-        var wrap = new WrapPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 5, 0, 10) };
+        var combo = new ComboBox { 
+            Margin = new Thickness(0, 5, 0, 10), 
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Style = (Style)FindResource("DarkComboBox")
+        };
+
         var colors = new[] { "None", "Red", "Green", "Blue", "Yellow", "Purple", "Cyan", "Orange", "Pink", "White", "Gray" };
         
-        string selectedColor = initialColor;
-        var buttons = new Dictionary<string, Border>();
-
         foreach (var c in colors)
         {
-            var btn = new Border { 
-                Width = 28, Height = 28, 
-                Margin = new Thickness(4), 
-                Cursor = Cursors.Hand, 
-                ToolTip = c,
-                CornerRadius = new CornerRadius(14),
-                BorderThickness = new Thickness(2), 
-                BorderBrush = Brushes.Transparent
-            };
-            
+            var stack = new StackPanel { Orientation = Orientation.Horizontal };
             var brush = c == "None" ? Brushes.Transparent : (SolidColorBrush)new BrushConverter().ConvertFromString(c);
-            btn.Background = brush;
             
-            if (c == "None") {
-                btn.Child = new ui.SymbolIcon { Symbol = ui.SymbolRegular.Dismiss24, FontSize = 16, Foreground = Brushes.Gray };
-            }
-
-            btn.MouseLeftButtonUp += (s, e) => {
-                selectedColor = c;
-                foreach(var b in buttons.Values) { b.BorderBrush = Brushes.Transparent; }
-                btn.BorderBrush = (Brush)FindResource("Accent");
-            };
-            buttons[c] = btn;
-            wrap.Children.Add(btn);
+            stack.Children.Add(new System.Windows.Shapes.Ellipse { 
+                Width = 12, Height = 12, 
+                Fill = brush, 
+                Stroke = Brushes.Gray, 
+                StrokeThickness = 1, 
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 10, 0) 
+            });
+            stack.Children.Add(new TextBlock { 
+                Text = c, 
+                VerticalAlignment = VerticalAlignment.Center,
+                Foreground = Brushes.White
+            });
+            
+            combo.Items.Add(new ComboBoxItem { Content = stack, Tag = c });
         }
 
         Action<string> setter = (color) => {
-            selectedColor = string.IsNullOrEmpty(color) ? "None" : color;
-            foreach(var loopBtn in buttons.Values) { loopBtn.BorderBrush = Brushes.Transparent; }
-            if (buttons.TryGetValue(selectedColor, out var foundBtn)) {
-                foundBtn.BorderBrush = (Brush)FindResource("Accent");
+            string colorToSelect = string.IsNullOrEmpty(color) ? "None" : color;
+            foreach (ComboBoxItem item in combo.Items)
+            {
+                if (item.Tag.ToString() == colorToSelect)
+                {
+                    combo.SelectedItem = item;
+                    break;
+                }
             }
         };
 
         setter(initialColor);
 
-        return (wrap, () => selectedColor == "None" ? "" : selectedColor, setter);
+        return (combo, () => {
+            if (combo.SelectedItem is ComboBoxItem selectedItem)
+                return selectedItem.Tag.ToString() == "None" ? "" : selectedItem.Tag.ToString();
+            return "";
+        }, setter);
     }
 
     private bool ShowBulkGroupEditorDialog()
