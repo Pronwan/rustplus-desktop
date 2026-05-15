@@ -3137,6 +3137,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         4 => "CH47",
         8 => "Patrol Helicopter",
         9 => "Oilrig Crate",
+        150 => "Oilrig Crate",
         2 => "Explosion",
         7 => "Building Blocked",
         _ => "Event"
