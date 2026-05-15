@@ -22,7 +22,7 @@
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="v4.9.9-beta1  |  The Version 5 Foundation (May 14, 2026)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="v5.0.0 |  The Game Changer Update (May 15, 2026)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
 
                             <!-- Features -->
                             <TextBlock Text="&#x2022; Integrated Auto-Update System &amp; Runtime Management" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
@@ -52,7 +52,7 @@
 
                             <TextBlock Text="&#x2022; Enhanced Background Stability &amp; FCM Hardening" FontWeight="Bold" Margin="0,0,0,4"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
-                                Major architectural hardening to prevent crashes and UI freezes. We've modernized how the app talks to the background Node.js process, ensuring 100% responsiveness even during complex connection transitions.
+                                Major architectural hardening to prevent crashes and UI freezes. We've modernized how the app talks to the background Node.js process, ensuring 100% responsiveness even during complex connection transitions. Auto-reconnect will now start a new connection and dispose the old one. This should also prevent you from being kicked from the API after some hours.
                             </TextBlock>
 
                             <TextBlock Text="&#x2022; UI Polish &amp; Overhauled Settings" FontWeight="Bold" Margin="0,0,0,4"/>

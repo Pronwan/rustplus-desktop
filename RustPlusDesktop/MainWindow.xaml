@@ -1000,7 +1000,21 @@
                                                 Foreground="White"
                                                 Opacity="0.4"
                                                 Symbol="Person24" />
-                                            <Image x:Name="ImgSteam" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
+                                            <Image
+                                                x:Name="ImgSteam"
+                                                Source="{Binding MyAvatar}"
+                                                Stretch="UniformToFill">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding MyAvatar}" Value="{x:Null}">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
                                         </Grid>
                                     </Border>
                                 </Grid>
@@ -2574,18 +2588,82 @@
                                                 x:Name="ChkProfileMarkers"
                                                 Margin="0,0,12,0"
                                                 Checked="ChkProfileMarkers_Toggled"
-                                                Content="Profile markers"
                                                 IsChecked="True"
-                                                Unchecked="ChkProfileMarkers_Toggled" />
+                                                Style="{StaticResource DotCheckBox}"
+                                                Unchecked="ChkProfileMarkers_Toggled">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Grid
+                                                        Width="20"
+                                                        Height="20"
+                                                        Margin="0,0,6,0">
+                                                        <!--  Avatar Preview (Visible when checked)  -->
+                                                        <Ellipse
+                                                            Width="18"
+                                                            Height="18"
+                                                            Stroke="Black"
+                                                            StrokeThickness="1"
+                                                            Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibility}}">
+                                                            <Ellipse.Fill>
+                                                                <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
+                                                            </Ellipse.Fill>
+                                                        </Ellipse>
+                                                        <!--  Dot Preview (Visible when unchecked)  -->
+                                                        <Ellipse
+                                                            Width="10"
+                                                            Height="10"
+                                                            Fill="LimeGreen"
+                                                            Stroke="Black"
+                                                            StrokeThickness="1.5"
+                                                            Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
+                                                    </Grid>
+                                                    <TextBlock VerticalAlignment="Center" Text="Profile markers" />
+                                                </StackPanel>
+                                            </CheckBox>
 
                                             <!--  Death markers toggle (default OFF)  -->
                                             <CheckBox
                                                 x:Name="ChkDeathMarkers"
                                                 Margin="0,0,12,0"
                                                 Checked="ChkDeathMarkers_Toggled"
-                                                Content="Death markers"
                                                 IsChecked="False"
-                                                Unchecked="ChkDeathMarkers_Toggled" />
+                                                Style="{StaticResource DotCheckBox}"
+                                                Unchecked="ChkDeathMarkers_Toggled">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Grid
+                                                        Width="20"
+                                                        Height="20"
+                                                        Margin="0,0,6,0">
+                                                        <!--  Death Preview (Visible when checked)  -->
+                                                        <Grid Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibility}}">
+                                                            <Path
+                                                                Width="16"
+                                                                Height="20"
+                                                                Data="M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z"
+                                                                Fill="IndianRed"
+                                                                Stretch="Uniform"
+                                                                Stroke="Black"
+                                                                StrokeThickness="1" />
+                                                            <Ellipse
+                                                                Width="10"
+                                                                Height="10"
+                                                                Margin="0,0,0,5">
+                                                                <Ellipse.Fill>
+                                                                    <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
+                                                                </Ellipse.Fill>
+                                                            </Ellipse>
+                                                        </Grid>
+                                                        <!--  Grey dot (Visible when unchecked - indicates hidden/none)  -->
+                                                        <Ellipse
+                                                            Width="10"
+                                                            Height="10"
+                                                            Fill="#444"
+                                                            Stroke="#666"
+                                                            StrokeThickness="1.5"
+                                                            Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
+                                                    </Grid>
+                                                    <TextBlock VerticalAlignment="Center" Text="Death markers" />
+                                                </StackPanel>
+                                            </CheckBox>
                                         </StackPanel>
                                     </Grid>
                                 </Grid>
