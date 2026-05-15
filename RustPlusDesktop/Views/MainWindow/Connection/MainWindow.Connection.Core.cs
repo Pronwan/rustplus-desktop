@@ -211,6 +211,9 @@ public partial class MainWindow
         }
         else
         {
+            // Ensure the interface disconnects before recreating
+            try { await _rust.DisconnectAsync(); } catch { }
+
             _shopTimer?.Stop();
             StopDynPolling(clearKnown: false);
             StopTeamPolling();
