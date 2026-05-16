@@ -77,13 +77,13 @@ public partial class MainWindow
         catch { }
 
         // 6) ViewModel "entkoppeln"
-        if (_vm?.Selected != null)
-        {
-            _vm.Selected.IsConnected = false;
-            _vm.Selected.IsFullConnected = false;
-        }
         if (_vm != null)
         {
+            foreach (var profile in _vm.Servers)
+            {
+                profile.IsConnected = false;
+                profile.IsFullConnected = false;
+            }
             _vm.IsBusy = false;
             _vm.BusyText = "";
         }
