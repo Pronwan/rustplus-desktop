@@ -101,6 +101,12 @@ public partial class MainWindow
     {
         _lastChatTsForCurrentServer = null;
 
+        if (_vm.Servers.Any(s => s.IsConnected || s.IsFullConnected))
+        {
+            AppendLog("Server selection changed. Disconnecting from previous server...");
+            await HardResetAsync(reconnect: false);
+        }
+
         if (_vm.Selected is { } prof)
         {
             if (!string.IsNullOrWhiteSpace(prof.SteamId64))

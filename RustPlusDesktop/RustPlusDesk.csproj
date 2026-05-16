@@ -19,12 +19,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>4.9.9-beta1</Version>
+		<Version>5.0.1</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>4.9.9</AssemblyVersion>
-		<FileVersion>4.9.9.0</FileVersion>
-		<InformationalVersion>4.9.9-beta1</InformationalVersion>
+		<AssemblyVersion>5.0.1</AssemblyVersion>
+		<FileVersion>5.0.1</FileVersion>
+		<InformationalVersion>5.0.1</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -136,6 +136,7 @@
 	  <None Remove="Assets\icons\waterwell.png" />
 	  <None Remove="Assets\Data\rust-item-list.json" />
 	  <None Remove="Assets\icons\discord.png" />
+	  <None Remove="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
 	  <None Remove="Assets\rustplus-desktop-icon.ico" />
 	  <None Remove="Assets\Data\rust_items.json" />
 	  <None Remove="Assets\Screenshots\3.0_1.png" />
@@ -292,6 +293,7 @@
     <Resource Include="Assets\icons\waterwell.png" />
     <Resource Include="Assets\Data\rust-item-list.json" />
     <Resource Include="Assets\icons\discord.png" />
+    <Resource Include="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
     <Resource Include="Assets\rustplus-desktop-icon.ico" />
     <Resource Include="Assets\Screenshots\3.0_1.png" />
     <Resource Include="Assets\Screenshots\3.0_2.png" />

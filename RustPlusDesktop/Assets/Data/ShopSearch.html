@@ -208,10 +208,10 @@
     }
 
     .btn-action {
-      background: rgba(0, 173, 239, .1);
-      border: 1px solid rgba(0, 173, 239, .3);
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid var(--border);
       border-radius: 4px;
-      color: var(--accent);
+      color: var(--sub);
       padding: 2px 8px;
       font: 11px 'Segoe UI', sans-serif;
       cursor: pointer;
@@ -222,6 +222,22 @@
     .btn-action:hover {
       background: rgba(0, 173, 239, .2);
       border-color: var(--accent)
+    }
+
+    .btn-action.on {
+      background: var(--accent2);
+      border-color: var(--accent);
+      box-shadow: 0 0 8px rgba(0, 173, 239, 0.4);
+    }
+
+    @keyframes flash {
+      0% { background: rgba(0, 173, 239, .1); }
+      50% { background: var(--accent); color: white; }
+      100% { background: rgba(0, 173, 239, .1); }
+    }
+
+    .btn-flash {
+      animation: flash 0.4s ease;
     }
 
     /* ── Alert section ── */
@@ -462,19 +478,19 @@
         <div id="clearBtn" title="Clear search" onclick="clearSearch()">✕</div>
         <div id="dropdown" style="display:none"></div>
       </div>
-      <button class="btn-action" onclick="post('openAnalysis',{})" title="Profit analysis">💰 Profit</button>
-      <button class="btn-action" onclick="post('openPathFinder',{})" title="Buy X for Y">🔍 Buy X</button>
-      <button class="btn-action" onclick="addAlert()" title="Create item alert">🔔 Alert</button>
+      <button class="btn-action" id="btnProfit" onclick="post('openAnalysis',{})" title="Analyze Profit Trades">💰 Profit</button>
+      <button class="btn-action" id="btnBuyX" onclick="post('openPathFinder',{})" title="Buy resource X for Resource Y">🔍 Buy X</button>
+      <button class="btn-action" id="btnAlert" onclick="addAlert()" title="Add Alert for current search">🔔 Alert</button>
     </div>
 
     <!-- Filter toggles -->
     <div id="filterRow">
-      <button class="tgl on" id="tSell" onclick="toggle(this,'sell')">💰 Sells</button>
-      <button class="tgl on" id="tBuy" onclick="toggle(this,'buy')">🛒 Buys</button>
-      <button class="tgl" id="tHide" onclick="toggle(this,'hide')">👁 Hide 0-stock</button>
+      <button class="tgl on" id="tSell" onclick="toggle(this,'sell')" title="Shop shops that sell item">💰 Sells</button>
+      <button class="tgl on" id="tBuy" onclick="toggle(this,'buy')" title="Show Shops that buy item">🛒 Buys</button>
+      <button class="tgl" id="tHide" onclick="toggle(this,'hide')" title="Don't show offers without stock">👁 Hide 0-stock</button>
       <div class="sep"></div>
-      <button class="tgl tgl-red" id="tNew" onclick="toggle(this,'new')">🔔 New→chat</button>
-      <button class="tgl tgl-red" id="tSusp" onclick="toggle(this,'susp')">⚠ Suspicious</button>
+      <button class="tgl tgl-red" id="tNew" onclick="toggle(this,'new')" title="Chat Alert for new shops">🔔 New→chat</button>
+      <button class="tgl tgl-red" id="tSusp" onclick="toggle(this,'susp')" title="Chat Alert for shops online < 60s">⚠ Suspicious</button>
     </div>
 
     <!-- Alert panel -->
@@ -533,6 +549,13 @@
       }
       renderAlerts();
       render();
+    };
+
+    window.updateToolHighlights = function (profitOpen, pathOpen) {
+      const p = document.getElementById('btnProfit');
+      const x = document.getElementById('btnBuyX');
+      if (p) p.classList.toggle('on', profitOpen);
+      if (x) x.classList.toggle('on', pathOpen);
     };
 
     // ── Post to C# ──────────────────────────────────────────────────────────────
@@ -699,6 +722,14 @@
       if (!body.classList.contains('show')) toggleAlerts();
 
       post('addAlert', { query: q, sell: filters.sell, buy: filters.buy });
+
+      // Flash feedback
+      const btn = document.getElementById('btnAlert');
+      if (btn) {
+        btn.classList.remove('btn-flash');
+        void btn.offsetWidth; // trigger reflow
+        btn.classList.add('btn-flash');
+      }
     }
 
     function renderAlerts() {

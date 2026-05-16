@@ -413,6 +413,52 @@ public partial class MainWindow
             _pathResultList = BuyXForY_ResultList;
             _wantPreviewList = BuyXForY_WantPreview;
             _payPreviewList = BuyXForY_PayPreview;
+        var w = new Wpf.Ui.Controls.FluentWindow
+        {
+            Title = "Buy X for Y",
+            Width = 950,
+            Height = 650,
+            Owner = this,
+            Background = SearchWinBg,
+            Foreground = SearchText,
+            ExtendsContentIntoTitleBar = true,
+            WindowBackdropType = Wpf.Ui.Controls.WindowBackdropType.Mica,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner
+        };
+
+        // Root dock
+        var root = new DockPanel();
+        var titleBar = new Wpf.Ui.Controls.TitleBar
+        {
+            Title = "Buy X for Y",
+            Icon = new Wpf.Ui.Controls.SymbolIcon(Wpf.Ui.Controls.SymbolRegular.Search24)
+        };
+        DockPanel.SetDock(titleBar, Dock.Top);
+        root.Children.Add(titleBar);
+
+        var contentArea = new DockPanel { Margin = new Thickness(12) };
+        root.Children.Add(contentArea);
+
+        // === Kopfbereich: zwei Suchfelder nebeneinander + Tiefe + Analyze ===
+        var header = new Grid
+        {
+            Margin = new Thickness(0, 0, 0, 8)
+        };
+        header.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // left want
+        header.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // right pay
+        header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });                      // depth
+        header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });                      // analyze btn
+        DockPanel.SetDock(header, Dock.Top);
+
+        // SUCHFELD LINKS ("I want to GET ...")
+        var wantControl = BuildRoundedSearchField(out _wantTb, "🎯", "Enter, what you want to buy");
+        Grid.SetColumn(wantControl, 0);
+        header.Children.Add(wantControl);
+
+        // SUCHFELD RECHTS ("...pay WITH ...")
+        var payControl = BuildRoundedSearchField(out _payTb, "💰", "Enter what you want to pay with");
+        Grid.SetColumn(payControl, 1);
+        header.Children.Add(payControl);
 
             _wantTb.TextChanged += (_, __) => RefreshPathfinderPreviews();
             _payTb.TextChanged += (_, __) => RefreshPathfinderPreviews();
@@ -654,27 +700,44 @@ public partial class MainWindow
         Grid.SetColumn(iconHost, 0);
         grid.Children.Add(iconHost);
 
-        tb = new TextBox
+        var localTb = new TextBox
         {
             Background = Brushes.Transparent,
             BorderThickness = new Thickness(0),
             Foreground = Brushes.White,
             CaretBrush = Brushes.White,
             SelectionBrush = new SolidColorBrush(Color.FromArgb(160, 0, 173, 239)),
-            Padding = new Thickness(2, 4, 6, 4),
+            Padding = new Thickness(6, 4, 6, 4),
             VerticalContentAlignment = VerticalAlignment.Center,
-            MinWidth = 250,
-            ToolTip = placeholder
+            MinWidth = 160,
+            FontSize = 12
         };
+        tb = localTb;
+
+        var placeholderBlock = new TextBlock
+        {
+            Text = placeholder,
+            Foreground = new SolidColorBrush(Color.FromArgb(180, 255, 255, 255)),
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(10, 0, 0, 0),
+            IsHitTestVisible = false,
+            Opacity = 0.6
+        };
+
+        localTb.TextChanged += (s, e) =>
+        {
+            placeholderBlock.Visibility = string.IsNullOrEmpty(localTb.Text) ? Visibility.Visible : Visibility.Collapsed;
+        };
+
         Grid.SetColumn(tb, 1);
+        Grid.SetColumn(placeholderBlock, 1);
+
+        grid.Children.Add(placeholderBlock);
         grid.Children.Add(tb);
 
-        // <<< WICHTIG: lokale Kopie für die Lambdas
-        var tbLocal = tb;
-        outer.MouseLeftButtonDown += (_, __) => tbLocal.Focus();
-        grid.MouseLeftButtonDown += (_, __) => tbLocal.Focus();
-
         outer.Child = grid;
+        outer.MouseDown += (s, e) => localTb.Focus();
+
         return outer;
     }
 
@@ -685,15 +748,17 @@ public partial class MainWindow
         {
             Content = text,
             Margin = new Thickness(0, 0, 0, 0),
-            Padding = new Thickness(10, 4, 10, 4),
+            Padding = new Thickness(14, 5, 14, 5),
             Cursor = Cursors.Hand,
-            Background = new SolidColorBrush(Color.FromRgb(24, 26, 28)),
+            Background = new SolidColorBrush(Color.FromRgb(35, 38, 41)),
             Foreground = Brushes.White,
             BorderBrush = new SolidColorBrush(Color.FromArgb(160, 0, 173, 239)),
             BorderThickness = new Thickness(1),
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Template = BuildRoundedButtonTemplate()
+            Template = BuildRoundedButtonTemplate(),
+            FontSize = 12,
+            FontWeight = FontWeights.SemiBold
         };
     }
 
@@ -1904,18 +1969,185 @@ public partial class MainWindow
             return;
         }
 
-        BuyXForYPanel.Visibility = Visibility.Collapsed;
-
-        if (!_profitTradesInitialized)
+        var w = new Window
         {
-            _profitTradesInitialized = true;
-            _analysisListBox = ProfitTradesList;
-            BtnRefreshProfitTrades.Click += (_, __) => RefreshAnalysisWindow();
-            BtnCloseProfitTrades.Click += (_, __) => ProfitTradesPanel.Visibility = Visibility.Collapsed;
-        }
+            Title = "Profit Trades",
+            Width = 900,
+            Height = 600,
+            Owner = this,
+            Background = SearchWinBg,
+            Foreground = SearchText,
+            WindowStyle = WindowStyle.SingleBorderWindow,
+            ResizeMode = ResizeMode.CanResizeWithGrip
+        };
 
-        ProfitTradesPanel.Visibility = Visibility.Visible;
+        // Root Dock
+        var root = new DockPanel
+        {
+            LastChildFill = true,
+            Margin = new Thickness(0)
+        };
+        w.Content = root;
+
+        // ===== HEADER BAR (oben dunkel, mit Icon links + Titel + Refresh-Button rechts) =====
+        var headerBar = new Grid
+        {
+            Background = new SolidColorBrush(Color.FromRgb(20, 22, 25)),
+            Height = 32,
+        };
+        headerBar.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        headerBar.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+        // Linker Teil vom Header: kleines Icon + "Profit Trades"
+        var headerLeft = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(8, 0, 0, 0),
+        };
+
+        // Du kannst hier ein echtes Bild/Icon nehmen – ich nehme erstmal ein Emoji
+        var headerIcon = new TextBlock
+        {
+            Text = "💰",
+            Foreground = Brushes.Gold,
+            FontSize = 14,
+            Margin = new Thickness(0, -1, 6, 0),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        var headerTitle = new TextBlock
+        {
+            Text = "Profit Trades",
+            Foreground = Brushes.White,
+            FontSize = 13,
+            FontWeight = FontWeights.SemiBold,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        headerLeft.Children.Add(headerIcon);
+        headerLeft.Children.Add(headerTitle);
+
+        Grid.SetColumn(headerLeft, 0);
+        headerBar.Children.Add(headerLeft);
+
+        // Rechts im Header: der "runde Refresh"-Button
+        var btnRefresh = new Button
+        {
+            Width = 24,
+            Height = 24,
+            Margin = new Thickness(0, 0, 8, 0),
+            Padding = new Thickness(0),
+            Background = new SolidColorBrush(Color.FromRgb(40, 44, 48)),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+            BorderThickness = new Thickness(1),
+            Cursor = Cursors.Hand,
+            ToolTip = "Refresh profit scan",
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Center,
+            Content = new TextBlock
+            {
+                Text = "⟳", // kannst auch ein eigenes Icon-Bild einsetzen
+                Foreground = Brushes.White,
+                FontWeight = FontWeights.Bold,
+                FontSize = 16,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextAlignment = TextAlignment.Center
+            }
+        };
+
+       
+
+        btnRefresh.Click += (_, __) => RefreshAnalysisWindow();
+
+        Grid.SetColumn(btnRefresh, 1);
+        headerBar.Children.Add(btnRefresh);
+
+        DockPanel.SetDock(headerBar, Dock.Top);
+        root.Children.Add(headerBar);
+
+        // ===== INFO BAR direkt unter Header =====
+        var infoBar = new Border
+        {
+            Background = new SolidColorBrush(Color.FromRgb(28, 30, 33)),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)),
+            BorderThickness = new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(10, 8, 10, 8)
+        };
+
+        var infoText = new TextBlock
+        {
+            Foreground = new SolidColorBrush(Color.FromArgb(220, 220, 220, 220)),
+            FontSize = 12,
+            Text =
+                "Direct arbitrage opportunities | buy low → sell high." +
+                
+                " (Click Go to center shop.)"
+        };
+
+        infoBar.Child = infoText;
+
+        DockPanel.SetDock(infoBar, Dock.Top);
+        root.Children.Add(infoBar);
+
+        // ===== MAIN SCROLL AREA =====
+        _analysisListBox = new ListBox
+        {
+            Background = SearchWinBg,
+            BorderThickness = new Thickness(0),
+            Foreground = SearchText,
+            HorizontalContentAlignment = HorizontalAlignment.Stretch,
+            Padding = new Thickness(10),
+        };
+
+        // dünnere Scrollbar für diese ListBox
+        var thinScrollStyle = new Style(typeof(ScrollBar));
+        thinScrollStyle.Setters.Add(new Setter(ScrollBar.WidthProperty, 6.0));
+        thinScrollStyle.Setters.Add(new Setter(Control.BackgroundProperty,
+            new SolidColorBrush(Color.FromArgb(40, 255, 255, 255))));
+        thinScrollStyle.Setters.Add(new Setter(Control.ForegroundProperty,
+            new SolidColorBrush(Color.FromArgb(160, 255, 255, 255))));
+        _analysisListBox.Resources.Add(typeof(ScrollBar), thinScrollStyle);
+
+        var scrollHost = new ScrollViewer
+        {
+            Content = _analysisListBox,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            Background = SearchWinBg,
+        };
+        ApplyThinScrollbar(scrollHost);
+
+        w.PreviewMouseWheel += (s, e) =>
+        {
+            // nur scrollen, wenn Maus auch über dem Scrollbereich ist
+            if (!scrollHost.IsMouseOver) return;
+
+            const double step = 30;               // 30px pro Tick, kannst du ändern
+            double dir = e.Delta > 0 ? -1 : 1;    // nach oben / nach unten
+            double target = scrollHost.VerticalOffset + dir * step;
+
+            if (target < 0) target = 0;
+            if (target > scrollHost.ScrollableHeight) target = scrollHost.ScrollableHeight;
+
+            scrollHost.ScrollToVerticalOffset(target);
+            e.Handled = true;
+        };
+
+        root.Children.Add(scrollHost);
+
+        // Fenster events
+        _analysisWin = w;
+
+        w.Closed += (_, __) =>
+        {
+            _analysisWin = null;
+            _analysisListBox = null;
+        };
+
         RefreshAnalysisWindow();
+        UpdateShopSearchToolHighlights();
     }
     private void RefreshAnalysisWindow()
     {
