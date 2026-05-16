@@ -267,8 +267,8 @@ public partial class MainWindow
     public void UpdateShopSearchToolHighlights()
     {
         if (_shopSearchWebView == null) return;
-        bool profitOpen = _analysisWin != null && _analysisWin.IsVisible;
-        bool pathOpen = _pathFinderWin != null && _pathFinderWin.IsVisible;
+        bool profitOpen = ProfitTradesPanel.Visibility == Visibility.Visible;
+        bool pathOpen = BuyXForYPanel.Visibility == Visibility.Visible;
 
         _ = _shopSearchWebView.ExecuteScriptAsync($"window.updateToolHighlights({profitOpen.ToString().ToLower()}, {pathOpen.ToString().ToLower()})");
     }

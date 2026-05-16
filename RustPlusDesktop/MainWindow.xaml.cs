@@ -1309,7 +1309,9 @@ public partial class MainWindow : ui.FluentWindow
         {
             Text = ResolveItemName(o.ItemId, o.ItemShortName),
             Foreground = Brushes.White,
-            FontSize = 13
+            FontSize = 13,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            MaxWidth = 200
         });
         var stockPanel = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
         stockPanel.Children.Add(new TextBlock
