@@ -498,12 +498,12 @@ public partial class MainWindow
                         break;
 
                     case "openAnalysis":
-                        AppendLog("[ShopSearch] Opening Analysis window");
+                        AppendLog("[ShopSearch] Toggling Profit Trades panel");
                         OpenAnalysisWindow();
                         break;
 
                     case "openPathFinder":
-                        AppendLog("[ShopSearch] Opening PathFinder window");
+                        AppendLog("[ShopSearch] Toggling Buy X for Y panel");
                         OpenPathFinderWindow();
                         break;
 
