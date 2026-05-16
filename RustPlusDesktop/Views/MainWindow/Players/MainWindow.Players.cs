@@ -854,12 +854,12 @@ public partial class MainWindow
                 TrackingService.OnOnlinePlayersUpdated -= onUpdated;
                 return;
             }
-            try { Dispatcher.Invoke(() => { PopulateOnlinePlayers(onlineStack); PopulateTrackedPlayers(trackedStack); }); } catch { }
+            try { Dispatcher.Invoke(() => { PopulateOnlinePlayers(onlineStack, bmId => ShowTrackingAnalysisWindow(bmId)); PopulateTrackedPlayers(trackedStack); }); } catch { }
         };
 
         win.Loaded += (_, _) =>
         {
-            try { PopulateOnlinePlayers(onlineStack); } catch { }
+            try { PopulateOnlinePlayers(onlineStack, bmId => ShowTrackingAnalysisWindow(bmId)); } catch { }
             try { PopulateTrackedPlayers(trackedStack); } catch { }
             TrackingService.OnOnlinePlayersUpdated += onUpdated;
         };
@@ -872,7 +872,7 @@ public partial class MainWindow
         return win;
     }
 
-    private static void PopulateOnlinePlayers(StackPanel stack)
+    private static void PopulateOnlinePlayers(StackPanel stack, Action<string>? showAnalysis = null)
     {
         stack.Children.Clear();
         var players = TrackingService.LastOnlinePlayers;
@@ -949,7 +949,7 @@ public partial class MainWindow
             {
                 if (TrackingService.GetTrackedPlayers().Any(tp => tp.BMId == capturedBmId))
                 {
-                    Process.Start(new ProcessStartInfo($"https://www.battlemetrics.com/players/{capturedBmId}") { UseShellExecute = true });
+                    showAnalysis?.Invoke(capturedBmId);
                 }
                 else
                 {
