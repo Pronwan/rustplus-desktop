@@ -784,4 +784,308 @@ public partial class MainWindow
     {
         ShowTrackingAnalysisWindow(bmId);
     }
+
+    private Window? _playersPopoutWin;
+
+    private void BtnPopoutPlayers_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (_playersPopoutWin != null)
+            {
+                _playersPopoutWin.Activate();
+                return;
+            }
+
+            _playersPopoutWin = BuildPlayersPopoutWindow();
+            _playersPopoutWin.Closed += (_, _) => _playersPopoutWin = null;
+            _playersPopoutWin.Show();
+        }
+        catch (Exception ex)
+        {
+            _playersPopoutWin = null;
+            MessageBox.Show($"Failed to open players window:\n\n{ex.GetType().Name}: {ex.Message}\n\nStack:\n{ex.StackTrace}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private Window BuildPlayersPopoutWindow()
+    {
+        var win = new Window
+        {
+            Title = "Players",
+            Width = 500,
+            Height = 700,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Owner = this,
+            Background = new SolidColorBrush(Color.FromRgb(30, 32, 36)),
+        };
+
+        var tabControl = new TabControl
+        {
+            Background = Brushes.Transparent,
+            BorderThickness = new Thickness(0),
+            Margin = new Thickness(8),
+        };
+
+        // === Online Tab ===
+        var onlineScroll = new ScrollViewer { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
+        var onlineStack = new StackPanel { Margin = new Thickness(8) };
+        onlineScroll.Content = onlineStack;
+
+        var onlineTab = new TabItem { Header = "Online", Content = onlineScroll };
+
+        // === Tracked Tab ===
+        var trackedScroll = new ScrollViewer { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
+        var trackedStack = new StackPanel { Margin = new Thickness(8) };
+        trackedScroll.Content = trackedStack;
+
+        var trackedTab = new TabItem { Header = "Tracked", Content = trackedScroll };
+
+        tabControl.Items.Add(onlineTab);
+        tabControl.Items.Add(trackedTab);
+
+        win.Content = tabControl;
+
+        Action? onUpdated = null;
+        onUpdated = () =>
+        {
+            if (!win.IsLoaded)
+            {
+                TrackingService.OnOnlinePlayersUpdated -= onUpdated;
+                return;
+            }
+            try { Dispatcher.Invoke(() => { PopulateOnlinePlayers(onlineStack); PopulateTrackedPlayers(trackedStack); }); } catch { }
+        };
+
+        win.Loaded += (_, _) =>
+        {
+            try { PopulateOnlinePlayers(onlineStack); } catch { }
+            try { PopulateTrackedPlayers(trackedStack); } catch { }
+            TrackingService.OnOnlinePlayersUpdated += onUpdated;
+        };
+
+        win.Closed += (_, _) =>
+        {
+            TrackingService.OnOnlinePlayersUpdated -= onUpdated;
+        };
+
+        return win;
+    }
+
+    private static void PopulateOnlinePlayers(StackPanel stack)
+    {
+        stack.Children.Clear();
+        var players = TrackingService.LastOnlinePlayers;
+        if (players.Count == 0)
+        {
+            stack.Children.Add(new TextBlock
+            {
+                Text = TrackingService.StatusMessage,
+                Foreground = Brushes.Gray,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, 20, 0, 0),
+            });
+            return;
+        }
+        foreach (var p in players)
+        {
+            var row = new Grid { Margin = new Thickness(0, 4, 0, 4) };
+            row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+            var hp = new StackPanel { Orientation = Orientation.Horizontal };
+            var dot = new Ellipse
+            {
+                Width = 8, Height = 8,
+                Margin = new Thickness(0, 0, 8, 0),
+                VerticalAlignment = VerticalAlignment.Center,
+                Fill = p.IsTracked
+                    ? new SolidColorBrush(Color.FromRgb(0xFF, 0xD1, 0x66))
+                    : (SolidColorBrush)new BrushConverter().ConvertFromString("#60CDFF"),
+            };
+            hp.Children.Add(dot);
+
+            var name = new TextBlock
+            {
+                Text = p.Name,
+                FontSize = 13,
+                FontWeight = FontWeights.SemiBold,
+                VerticalAlignment = VerticalAlignment.Center,
+                MaxWidth = 160,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                ToolTip = p.Name,
+            };
+            hp.Children.Add(name);
+            row.Children.Add(hp);
+
+            if (!string.IsNullOrEmpty(p.PlayTimeStr))
+            {
+                var pt = new TextBlock
+                {
+                    Text = p.PlayTimeStr,
+                    FontSize = 11,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 8, 0),
+                    Foreground = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88)),
+                };
+                Grid.SetColumn(pt, 1);
+                row.Children.Add(pt);
+            }
+
+            var btnTrack = new ui.Button
+            {
+                Content = p.IsTracked ? "Details" : "Track",
+                Padding = new Thickness(6, 2, 6, 2),
+                FontSize = 11,
+                Appearance = p.IsTracked ? ui.ControlAppearance.Primary : ui.ControlAppearance.Secondary,
+                Tag = p.BMId,
+            };
+            Grid.SetColumn(btnTrack, 2);
+            row.Children.Add(btnTrack);
+            string capturedBmId = p.BMId;
+            string capturedName = p.Name;
+            btnTrack.Click += (_, _) =>
+            {
+                if (TrackingService.GetTrackedPlayers().Any(tp => tp.BMId == capturedBmId))
+                {
+                    Process.Start(new ProcessStartInfo($"https://www.battlemetrics.com/players/{capturedBmId}") { UseShellExecute = true });
+                }
+                else
+                {
+                    var srvName = TrackingService.LastServer.name ?? "Unknown";
+                    TrackingService.TrackPlayer(capturedBmId, capturedName, srvName);
+                    btnTrack.Content = "Details";
+                    btnTrack.Appearance = ui.ControlAppearance.Primary;
+                }
+            };
+
+            stack.Children.Add(row);
+        }
+    }
+
+    private static void PopulateTrackedPlayers(StackPanel stack)
+    {
+        stack.Children.Clear();
+        var players = TrackingService.GetTrackedPlayers();
+        var serversGrouped = players.GroupBy(p => string.IsNullOrEmpty(p.LastServerName) ? "Global / Legacy" : p.LastServerName);
+        foreach (var serverGrp in serversGrouped)
+        {
+            stack.Children.Add(new TextBlock
+            {
+                Text = serverGrp.Key,
+                FontWeight = FontWeights.Bold,
+                Foreground = new SolidColorBrush(Color.FromRgb(88, 166, 255)),
+                Margin = new Thickness(0, 15, 0, 5),
+                FontSize = 14,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                ToolTip = serverGrp.Key,
+            });
+
+            var subgroups = serverGrp.GroupBy(p => string.IsNullOrEmpty(p.GroupName) ? "Ungrouped" : p.GroupName)
+                .OrderBy(g => g.Key == "Ungrouped" ? 1 : 0)
+                .ThenBy(g => g.Key);
+
+            foreach (var group in subgroups)
+            {
+                var groupHeaderPanel = new Grid { Margin = new Thickness(5, 5, 0, 5) };
+                groupHeaderPanel.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                groupHeaderPanel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+                var headerColor = "None";
+                if (group.Key != "Ungrouped")
+                {
+                    var firstWithColor = group.FirstOrDefault(x => !string.IsNullOrEmpty(x.GroupColor) && x.GroupColor != "None");
+                    if (firstWithColor != null) headerColor = firstWithColor.GroupColor;
+
+                    if (headerColor != "None")
+                    {
+                        try
+                        {
+                            var groupColorBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(headerColor);
+                            var dot = new Ellipse
+                            {
+                                Width = 10, Height = 10, Fill = groupColorBrush,
+                                Margin = new Thickness(0, 0, 8, 0), VerticalAlignment = VerticalAlignment.Center,
+                            };
+                            Grid.SetColumn(dot, 0);
+                            groupHeaderPanel.Children.Add(dot);
+                        }
+                        catch { }
+                    }
+                }
+
+                var groupNameTxt = new TextBlock
+                {
+                    Text = group.Key,
+                    FontWeight = FontWeights.SemiBold,
+                    Foreground = group.Key == "Ungrouped" ? Brushes.Gray : new SolidColorBrush(Color.FromRgb(150, 200, 255)),
+                    FontSize = 13,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                    ToolTip = group.Key,
+                };
+                Grid.SetColumn(groupNameTxt, 1);
+                groupHeaderPanel.Children.Add(groupNameTxt);
+
+                var expander = new Expander { IsExpanded = true, Margin = new Thickness(10, 0, 0, 5), Foreground = Brushes.White, Header = groupHeaderPanel };
+                var groupStack = new StackPanel();
+
+                var sortedGroup = group
+                    .OrderByDescending(p => TrackingService.LastOnlinePlayers.Any(op => op.BMId == p.BMId))
+                    .ThenByDescending(p => TrackingService.LastOnlinePlayers.FirstOrDefault(op => op.BMId == p.BMId)?.Duration ?? TimeSpan.Zero)
+                    .ThenByDescending(p => p.Sessions.Count > 0 ? p.Sessions.Max(s => s.DisconnectTime ?? s.ConnectTime) : DateTime.MinValue)
+                    .ToList();
+
+                foreach (var p in sortedGroup)
+                {
+                    var onlineInfo = TrackingService.LastOnlinePlayers.FirstOrDefault(op => op.BMId == p.BMId);
+                    p.IsOnline = onlineInfo != null;
+                    p.PlayTimeStr = onlineInfo?.PlayTimeStr ?? "";
+
+                    var row = new Grid { Margin = new Thickness(0, 2, 0, 2) };
+                    row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                    row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+                    var stack2 = new StackPanel { Orientation = Orientation.Horizontal };
+                    var sDot = new Ellipse
+                    {
+                        Width = 8, Height = 8,
+                        Margin = new Thickness(0, 0, 8, 0),
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Fill = p.IsOnline ? new SolidColorBrush(Color.FromRgb(98, 211, 139)) : new SolidColorBrush(Color.FromRgb(102, 102, 102)),
+                    };
+                    stack2.Children.Add(sDot);
+
+                    var nameBlock = new TextBlock
+                    {
+                        Text = p.Name,
+                        FontSize = 13,
+                        Foreground = p.IsOnline ? Brushes.White : new SolidColorBrush(Color.FromRgb(0xBB, 0xBB, 0xBB)),
+                        VerticalAlignment = VerticalAlignment.Center,
+                    };
+                    stack2.Children.Add(nameBlock);
+                    row.Children.Add(stack2);
+
+                    if (p.IsOnline)
+                    {
+                        var playTime = new TextBlock
+                        {
+                            Text = p.PlayTimeStr,
+                            FontSize = 10,
+                            Foreground = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88)),
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(8, 0, 0, 0),
+                        };
+                        Grid.SetColumn(playTime, 1);
+                        row.Children.Add(playTime);
+                    }
+
+                    groupStack.Children.Add(row);
+                }
+                expander.Content = groupStack;
+                stack.Children.Add(expander);
+            }
+        }
+    }
 }

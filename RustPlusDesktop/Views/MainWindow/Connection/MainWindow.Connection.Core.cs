@@ -35,6 +35,7 @@ public partial class MainWindow
         await _webView.EnsureCoreWebView2Async(env);
         _webView.DefaultBackgroundColor = System.Drawing.Color.Transparent;
         _webView.CoreWebView2.Settings.AreDevToolsEnabled = true;
+        _webView.Visibility = Visibility.Collapsed;
 
         // Optional: etwas "normaleren" UA setzen
         _webView.CoreWebView2.Settings.UserAgent =
