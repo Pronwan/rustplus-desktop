@@ -44,9 +44,39 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 
 *(I publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
+[![YouTube V5](./RustPlusDesktop/Assets/Images/RustPlus_V5_Thumbnail.jpg?raw=true)](https://www.youtube.com/watch?v=tmbAn3lIKmM) 
 
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
+
+## 🚀 Rust+ Desk v5.0  – Game Changer Update!
+This release is packed with architectural hardening by @JawadYzbk & significant QoL upgrades.
+
+**🛠️ Core & System**
+- Auto-Update System: No more manual downloads! The app now features a background update checker with detailed progress reporting (speed, size, percentage).
+- Centralized Runtime Management: More reliable detection and management of Node.js and background CLI processes.
+- FCM Hardening: A complete architectural rewrite of background communication to eliminate UI freezes and crashes during connection transitions.
+
+**🗺️ Interface & Map**
+Modern Edge-to-Edge Design: A sleek, borderless layout for a truly modern look.
+Interpolated Map Movement: Silky-smooth real-time tracking for players and map events.
+BattleMetrics Refactor: The BM button has been upgraded to a clean icon and moved directly onto the server connection card.
+
+**👤 Player & Team Tracking**
+- Advanced Player List: Rebuilt from the ground up for better performance and styling.
+- Custom Grouping: Organize your tracked players with custom Group Names and Colors.
+- Live Indicators: Added "Is Online" status and Play Time counters directly to the player cards.
+
+**🏠 Smart Home & Automation**
+- Storage Monitor Support: Automatic recognition of Storage Monitors for chat commands.
+- Enhanced !Upkeep: Now supports an arbitrary number of connected Tool Cupboards simultaneously.
+- Smart Alarm Fix: Audio alerts for Smart Alarms are now working reliably again.
+
+**🛡️ Security & Identity**
+- FCM Token Expiry Tracking: The app now proactively warns you via a new sidebar InfoBar before your pairing expires.
+- Steam Identity (Preview): New Steam profile integration in the sidebar, laying the groundwork for future account-linked features.
+
+**🛠️ Bug Fixes:** We fixed a LOT of smaller bugs, issues, improved the UI dramatically, the Battlemetrics integration etc. 
 
 ## Update 4.5.1 — The Intelligence Update (May 12th) + Shop Polling Hotfix
 <img width="595" height="331" alt="grafik" src="RustPlusDesktop/Assets/Screenshots/4.5.0.png" />
