@@ -3015,7 +3015,7 @@
                         x:Name="ProfitTradesPanel"
                         Background="{DynamicResource Surface}"
                         Visibility="Collapsed">
-                        <Grid>
+                        <Grid ClipToBounds="True">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="36" />
                                 <RowDefinition Height="Auto" />
@@ -3039,7 +3039,7 @@
                                 <TextBlock Text="Direct arbitrage opportunities | buy low → sell high." Foreground="{DynamicResource TextSubtle}" FontSize="11" />
                             </Border>
 
-                            <ListBox x:Name="ProfitTradesList" Grid.Row="2" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Padding="10" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                            <ListBox x:Name="ProfitTradesList" Grid.Row="2" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Padding="10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                         </Grid>
                     </Border>
 
@@ -3048,11 +3048,11 @@
                         x:Name="BuyXForYPanel"
                         Background="{DynamicResource Surface}"
                         Visibility="Collapsed">
-                        <Grid>
+                        <Grid ClipToBounds="True">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="36" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="110" />
+                                <RowDefinition Height="130" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
@@ -3107,19 +3107,19 @@
                                 <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="5">
                                     <DockPanel>
                                         <TextBlock DockPanel.Dock="Top" Text="I want to GET" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="SemiBold" Margin="0,0,0,3" />
-                                        <ListBox x:Name="BuyXForY_WantPreview" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                                        <ListBox x:Name="BuyXForY_WantPreview" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                                     </DockPanel>
                                 </Border>
 
                                 <Border Grid.Column="1" Margin="4,0,0,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="5">
                                     <DockPanel>
                                         <TextBlock DockPanel.Dock="Top" Text="I can PAY WITH" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="SemiBold" Margin="0,0,0,3" />
-                                        <ListBox x:Name="BuyXForY_PayPreview" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                                        <ListBox x:Name="BuyXForY_PayPreview" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                                     </DockPanel>
                                 </Border>
                             </Grid>
 
-                            <ListBox x:Name="BuyXForY_ResultList" Grid.Row="3" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Margin="12,0,12,10" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                            <ListBox x:Name="BuyXForY_ResultList" Grid.Row="3" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Margin="12,0,12,10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                         </Grid>
                     </Border>
                 </Grid>
