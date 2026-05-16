@@ -240,7 +240,12 @@ public partial class MainWindow
                 if (hours > 0 || days > 0) timeStr += $"{hours} hours, ";
                 timeStr += $"{mins} minutes";
 
-                _ = SendTeamChatSafeAsync($"Upkeep in {dev.PureName} TC: {timeStr}.");
+                var dailyMaterials = FormatUpkeepMaterialsPer24h(dev, secs);
+                var materialsSuffix = string.IsNullOrWhiteSpace(dailyMaterials)
+                    ? ""
+                    : $" Need/24h: {dailyMaterials}.";
+
+                _ = SendTeamChatSafeAsync($"Upkeep in {dev.PureName} TC: {timeStr}.{materialsSuffix}");
             }
             AppendLog($"[ChatCommand] Upkeep for {dev.Name} executed by {author}");
         }
@@ -248,6 +253,91 @@ public partial class MainWindow
         {
             _ = SendTeamChatSafeAsync("Bound Tool Cupboard monitor not found or not paired.");
         }
+    }
+
+    private static string FormatUpkeepMaterialsPer24h(SmartDevice dev, int upkeepSeconds)
+    {
+        if (upkeepSeconds <= 0 || dev.Storage?.Items == null || dev.Storage.Items.Count == 0)
+            return string.Empty;
+
+        var parts = dev.Storage.Items
+            .Where(IsUpkeepMaterial)
+            .GroupBy(GetUpkeepMaterialKey)
+            .Select(g =>
+            {
+                var sample = g.First();
+                var amount = g.Sum(x => Math.Max(0, x.Amount));
+                var per24h = (int)Math.Ceiling(amount * 86400.0 / upkeepSeconds);
+                return new
+                {
+                    Sort = GetUpkeepMaterialSort(sample),
+                    Name = GetShortUpkeepMaterialName(sample),
+                    Amount = per24h
+                };
+            })
+            .Where(x => x.Amount > 0)
+            .OrderBy(x => x.Sort)
+            .Select(x => $"{x.Name} {x.Amount:N0}".Replace(",", ""))
+            .ToList();
+
+        return parts.Count == 0 ? string.Empty : string.Join(", ", parts);
+    }
+
+    private static bool IsUpkeepMaterial(StorageItemVM item)
+    {
+        var shortName = (item.ShortName ?? string.Empty).Trim().ToLowerInvariant();
+        if (shortName is "wood" or "stones" or "metal.fragments" or "metal.refined")
+            return true;
+
+        // do not touch this mf hardcoded item ID list, it's the only way to reliably identify these items for upkeep calculations without false positives from modded items with similar names
+        return item.ItemId is -151838493 or -2099697608 or 69511070 or 317398316;
+    }
+
+    private static string GetUpkeepMaterialKey(StorageItemVM item)
+    {
+        var shortName = (item.ShortName ?? string.Empty).Trim().ToLowerInvariant();
+        if (!string.IsNullOrWhiteSpace(shortName)) return shortName;
+        return item.ItemId.ToString(System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    private static int GetUpkeepMaterialSort(StorageItemVM item)
+    {
+        var shortName = (item.ShortName ?? string.Empty).Trim().ToLowerInvariant();
+        return shortName switch
+        {
+            "wood" => 10,
+            "stones" => 20,
+            "metal.fragments" => 30,
+            "metal.refined" => 40,
+            _ => item.ItemId switch
+            {
+                -151838493 => 10,
+                -2099697608 => 20,
+                69511070 => 30,
+                317398316 => 40,
+                _ => 100
+            }
+        };
+    }
+
+    private static string GetShortUpkeepMaterialName(StorageItemVM item)
+    {
+        var shortName = (item.ShortName ?? string.Empty).Trim().ToLowerInvariant();
+        return shortName switch
+        {
+            "wood" => "Wood",
+            "stones" => "Stone",
+            "metal.fragments" => "Metal",
+            "metal.refined" => "HQM",
+            _ => item.ItemId switch
+            {
+                -151838493 => "Wood",
+                -2099697608 => "Stone",
+                69511070 => "Metal",
+                317398316 => "HQM",
+                _ => MainWindow.ResolveItemName(item.ItemId, item.ShortName)
+            }
+        };
     }
 
     private async Task ToggleCommandSwitch(RustPlusClientReal real, uint entityId, string author)
