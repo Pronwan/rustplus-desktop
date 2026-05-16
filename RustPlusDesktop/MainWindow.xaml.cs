@@ -337,6 +337,8 @@ public partial class MainWindow : ui.FluentWindow
         {
             if (e.PropertyName == nameof(MainViewModel.Selected))
                 SwitchCameraSourceTo(_vm.Selected);
+            if (e.PropertyName == nameof(MainViewModel.IsDownloadingUpdate) && !_vm.IsDownloadingUpdate)
+                UpdateDownloadPopup.IsOpen = false;
         };
 
         // MapTransform.Changed += (_, __) => UpdateMarkerPositions();
@@ -4427,9 +4429,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
+    private void BtnCheckUpdates_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        if (_vm.IsDownloadingUpdate)
+            UpdateDownloadPopup.IsOpen = true;
+    }
+
+    private void BtnCheckUpdates_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        UpdateDownloadPopup.IsOpen = false;
+    }
+
     /// DEVICE HOTKEYS
     /// 
-
+    
     private readonly SemaphoreSlim _hotkeySeqGate = new(1, 1);
 
     private GlobalHotkeyManager? _hotkeyMgr;

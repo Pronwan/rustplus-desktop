@@ -1055,6 +1055,8 @@
                                             x:Name="BtnCheckUpdates"
                                             Appearance="Transparent"
                                             Click="BtnCheckUpdates_Click"
+                                            MouseEnter="BtnCheckUpdates_MouseEnter"
+                                            MouseLeave="BtnCheckUpdates_MouseLeave"
                                             ToolTip="Check for Updates">
                                             <ui:Button.Icon>
                                                 <ui:SymbolIcon Symbol="ArrowDownload24">
@@ -1140,19 +1142,10 @@
                                         <Popup
                                             x:Name="UpdateDownloadPopup"
                                             AllowsTransparency="True"
-                                            IsOpen="{Binding ElementName=BtnCheckUpdates, Path=IsMouseOver, Mode=OneWay}"
+                                            IsOpen="False"
                                             Placement="Bottom"
                                             PlacementTarget="{Binding ElementName=BtnCheckUpdates}"
                                             VerticalOffset="5">
-                                            <Popup.Style>
-                                                <Style TargetType="Popup">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsDownloadingUpdate}" Value="False">
-                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Popup.Style>
                                             <Border
                                                 Width="220"
                                                 Padding="12"
@@ -2780,6 +2773,7 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock
                                                     VerticalAlignment="Center"
@@ -2805,6 +2799,16 @@
                                                     Click="BtnShowOnline_Click"
                                                     Content="Refresh"
                                                     Icon="ArrowClockwise24" />
+
+                                                <ui:Button
+                                                    x:Name="BtnPopoutPlayers"
+                                                    Grid.Column="3"
+                                                    Margin="4,0,0,0"
+                                                    Padding="8,4"
+                                                    Appearance="Secondary"
+                                                    Click="BtnPopoutPlayers_Click"
+                                                    ToolTip="Open Players in separate window"
+                                                    Content="Popout" />
                                             </Grid>
 
                                             <DockPanel Grid.Row="1" Margin="0,0,0,8">
