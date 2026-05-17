@@ -41,9 +41,10 @@ public class CargoTriggerPoint
 public class TrackingSettings
 {
     public string LastHost { get; set; } = string.Empty;
-    public int LastPort { get; set; } = 0;
+    public int LastPort { get; set; }
     public string LastServerName { get; set; } = string.Empty;
-    public bool BackgroundTrackingEnabled { get; set; } = false;
+    public string? LastBMId { get; set; } = null;
+    public bool BackgroundTrackingEnabled { get; set; } = true;
     public bool CloseToTrayEnabled { get; set; } = false;
     public bool StartMinimizedEnabled { get; set; } = false;
     public bool AutoConnectEnabled { get; set; } = false;
@@ -602,6 +603,7 @@ public static class TrackingService
     }
 
     public static (string host, int port, string name) LastServer => (_settings.LastHost, _settings.LastPort, _settings.LastServerName);
+    public static string? LastBMId => _settings.LastBMId;
 
     public static async Task<string> FetchPlayerNameAsync(string bmId)
     {
@@ -928,16 +930,17 @@ public static class TrackingService
 
     private static string? _foundServerId;
 
-    public static void StartPolling(string host, int port, string name)
+    public static void StartPolling(string host, int port, string name, string? bmId = null)
     {
         _lastServerHost = host;
         _lastServerPort = port;
         _lastServerName = name;
-        _foundServerId = null; // Reset to force new lookup
+        _foundServerId = bmId; // Use provided ID if available, otherwise it stays null for auto-lookup
 
         _settings.LastHost = host;
         _settings.LastPort = port;
         _settings.LastServerName = name;
+        _settings.LastBMId = bmId;
         SaveDB();
 
         // Poll every 2 minutes only if we have players
