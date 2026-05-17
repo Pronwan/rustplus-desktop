@@ -23,6 +23,22 @@ public class TrackedPlayer
 
     [System.Text.Json.Serialization.JsonIgnore]
     public string PlayTimeStr { get; set; } = string.Empty;
+
+    public TrackedPlayer CloneWithSnapshots()
+    {
+        lock (Sessions) // Extra safety for the list itself
+        {
+            return new TrackedPlayer
+            {
+                BMId = this.BMId,
+                Name = this.Name,
+                LastServerName = this.LastServerName,
+                GroupName = this.GroupName,
+                GroupColor = this.GroupColor,
+                Sessions = this.Sessions.ToList() // Take snapshot of sessions
+            };
+        }
+    }
 }
 
 public class HarborInfo
@@ -355,7 +371,7 @@ public static class TrackingService
     {
         lock (_dbLock)
         {
-            return _trackedPlayers.Values.ToList();
+            return _trackedPlayers.Values.Select(p => p.CloneWithSnapshots()).ToList();
         }
     }
     public static bool IsTracked(string bmId)
@@ -861,7 +877,13 @@ public static class TrackingService
                 int[] hourActivity = new int[24];
                 Dictionary<DateTime, int> dailyActivity = new Dictionary<DateTime, int>();
 
-                foreach (var session in p.Sessions)
+                List<PlayerSession> sessionsSnapshot;
+                lock (_dbLock)
+                {
+                    sessionsSnapshot = p.Sessions.ToList();
+                }
+
+                foreach (var session in sessionsSnapshot)
                 {
                     var end = session.DisconnectTime ?? now;
                     var dur = end - session.ConnectTime;
@@ -881,7 +903,7 @@ public static class TrackingService
                 }
 
                 double avgSessionMins = p.Sessions.Any() ? totalTime.TotalMinutes / p.Sessions.Count : 0;
-                var isOnline = p.Sessions.Any() && !p.Sessions.Last().DisconnectTime.HasValue;
+                var isOnline = sessionsSnapshot.Any() && !sessionsSnapshot.Last().DisconnectTime.HasValue;
                 var themeClass = isOnline ? "theme-online" : "theme-offline";
 
                 sb.AppendLine($"<div class='player-card {themeClass}'>");
@@ -891,7 +913,7 @@ public static class TrackingService
                 var statusText = isOnline ? "Online" : "Offline";
                 sb.AppendLine($"<div style='margin-bottom:20px;'><span class='badge {statusClass}'>{statusText}</span></div>");
 
-                var lastS = p.Sessions.LastOrDefault();
+                var lastS = sessionsSnapshot.LastOrDefault();
                 string lastConnectedStr = lastS != null ? lastS.ConnectTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm") : "Never";
                 string lastSeenStr = lastS != null ? (lastS.DisconnectTime?.ToLocalTime().ToString("yyyy-MM-dd HH:mm") ?? "Active Now") : "Never";
 
@@ -1263,6 +1285,35 @@ public static class TrackingService
             SaveDB();
         }
     }
+
+    private static async Task<DateTime> FetchLastSeenTimeAsync(string bmId)
+    {
+        if (string.IsNullOrEmpty(_foundServerId)) return DateTime.MinValue;
+
+        try
+        {
+            // Fetch server-specific player information (free endpoint)
+            var url = $"https://api.battlemetrics.com/players/{bmId}/servers/{_foundServerId}";
+            var json = await _http.GetStringAsync(url);
+            using var doc = JsonDocument.Parse(json);
+            
+            if (doc.RootElement.TryGetProperty("data", out var data) && 
+                data.TryGetProperty("attributes", out var attr))
+            {
+                if (attr.TryGetProperty("lastSeen", out var stopProp) && stopProp.ValueKind == JsonValueKind.String)
+                {
+                    if (DateTimeOffset.TryParse(stopProp.GetString(), out var stop))
+                    {
+                        return stop.UtcDateTime;
+                    }
+                }
+            }
+        }
+        catch { }
+        return DateTime.MinValue;
+    }
+}
+
 
     private static async Task<DateTime> FetchLastSeenTimeAsync(string bmId)
     {
