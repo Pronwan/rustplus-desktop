@@ -191,6 +191,7 @@ public static class TrackingService
         catch { }
     }
     
+    private static readonly object _dbLock = new();
     private static Dictionary<string, TrackedPlayer> _trackedPlayers = new();
     private static TrackingSettings _settings = new();
     private static Timer? _trackingTimer;
@@ -237,7 +238,11 @@ public static class TrackingService
             var dir = Path.GetDirectoryName(_dbPath);
             if (dir != null && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
-            var jsonP = JsonSerializer.Serialize(_trackedPlayers.Values.ToList(), new JsonSerializerOptions { WriteIndented = true });
+            string jsonP;
+            lock (_dbLock)
+            {
+                jsonP = JsonSerializer.Serialize(_trackedPlayers.Values.ToList(), new JsonSerializerOptions { WriteIndented = true });
+            }
             File.WriteAllText(_dbPath, jsonP);
 
             var jsonS = JsonSerializer.Serialize(_settings, new JsonSerializerOptions { WriteIndented = true });
@@ -262,26 +267,29 @@ public static class TrackingService
 
     public static void TrackPlayer(string bmId, string name, string serverName, PlayerSession? initialSession = null)
     {
-        TrackedPlayer? player;
-        if (!_trackedPlayers.TryGetValue(bmId, out player))
+        lock (_dbLock)
         {
-            player = new TrackedPlayer { BMId = bmId, Name = name, LastServerName = serverName };
-            _trackedPlayers[bmId] = player;
-        }
-        else
-        {
-            player.LastServerName = serverName;
-            // Update name if we got a real one
-            if (name != "Unknown Player") player.Name = name;
-        }
-
-        if (initialSession != null)
-        {
-            // Only add if we don't have overlapping sessions already
-            if (!player.Sessions.Any(s => s.ConnectTime == initialSession.ConnectTime))
+            TrackedPlayer? player;
+            if (!_trackedPlayers.TryGetValue(bmId, out player))
             {
-                player.Sessions.Add(initialSession);
-                player.Sessions = player.Sessions.OrderBy(s => s.ConnectTime).ToList();
+                player = new TrackedPlayer { BMId = bmId, Name = name, LastServerName = serverName };
+                _trackedPlayers[bmId] = player;
+            }
+            else
+            {
+                player.LastServerName = serverName;
+                // Update name if we got a real one
+                if (name != "Unknown Player") player.Name = name;
+            }
+
+            if (initialSession != null)
+            {
+                // Only add if we don't have overlapping sessions already
+                if (!player.Sessions.Any(s => s.ConnectTime == initialSession.ConnectTime))
+                {
+                    player.Sessions.Add(initialSession);
+                    player.Sessions = player.Sessions.OrderBy(s => s.ConnectTime).ToList();
+                }
             }
         }
 
@@ -297,10 +305,16 @@ public static class TrackingService
     
     public static void UntrackPlayer(string bmId)
     {
-        if (_trackedPlayers.Remove(bmId))
+        bool removed = false;
+        lock (_dbLock)
+        {
+            removed = _trackedPlayers.Remove(bmId);
+        }
+
+        if (removed)
         {
             SaveDB();
-            if (_trackedPlayers.Count == 0)
+            if (GetTrackedPlayers().Count == 0)
             {
                 StopPolling();
             }
@@ -312,25 +326,45 @@ public static class TrackingService
 
     public static void RenameTrackedPlayer(string bmId, string newName)
     {
-        if (_trackedPlayers.TryGetValue(bmId, out var player))
+        lock (_dbLock)
         {
-            player.Name = newName;
-            SaveDB();
-            OnOnlinePlayersUpdated?.Invoke();
+            if (_trackedPlayers.TryGetValue(bmId, out var player))
+            {
+                player.Name = newName;
+            }
+            else return;
         }
+        SaveDB();
+        OnOnlinePlayersUpdated?.Invoke();
     }
     public static void SetPlayerGroup(string bmId, string groupName, string groupColor)
     {
-        if (_trackedPlayers.TryGetValue(bmId, out var player))
+        lock (_dbLock)
         {
-            player.GroupName = groupName;
-            player.GroupColor = groupColor;
-            SaveDB();
-            OnOnlinePlayersUpdated?.Invoke();
+            if (_trackedPlayers.TryGetValue(bmId, out var player))
+            {
+                player.GroupName = groupName;
+                player.GroupColor = groupColor;
+            }
+            else return;
+        }
+        SaveDB();
+        OnOnlinePlayersUpdated?.Invoke();
+    }
+    public static List<TrackedPlayer> GetTrackedPlayers() 
+    {
+        lock (_dbLock)
+        {
+            return _trackedPlayers.Values.ToList();
         }
     }
-    public static List<TrackedPlayer> GetTrackedPlayers() => _trackedPlayers.Values.ToList();
-    public static bool IsTracked(string bmId) => _trackedPlayers.ContainsKey(bmId);
+    public static bool IsTracked(string bmId)
+    {
+        lock (_dbLock)
+        {
+            return _trackedPlayers.ContainsKey(bmId);
+        }
+    }
 
     public static bool IsBackgroundTrackingEnabled
     {
@@ -673,34 +707,37 @@ public static class TrackingService
 
     public static void LoadDemoData()
     {
-        _trackedPlayers.Clear();
-        var now = DateTime.UtcNow;
+        lock (_dbLock)
+        {
+            _trackedPlayers.Clear();
+            var now = DateTime.UtcNow;
 
-        // 1. The Night Owl (Plays 00:00 - 06:00)
-        var owl = new TrackedPlayer { BMId = "demo_1", Name = "NightOwl_X" };
-        for (int d = 0; d < 14; d++) {
-            var date = now.Date.AddDays(-d).AddHours(1); // 01:00
-            owl.Sessions.Add(new PlayerSession { ConnectTime = date, DisconnectTime = date.AddHours(4) });
-        }
-        _trackedPlayers[owl.BMId] = owl;
-
-        // 2. The Grinder (Huge playtime, active 12:00 - 02:00)
-        var grinder = new TrackedPlayer { BMId = "demo_2", Name = "IndustrialPvP" };
-        for (int d = 0; d < 7; d++) {
-            var date = now.Date.AddDays(-d).AddHours(12); // Noon
-            grinder.Sessions.Add(new PlayerSession { ConnectTime = date, DisconnectTime = date.AddHours(14) }); // Until 02:00
-        }
-        _trackedPlayers[grinder.BMId] = grinder;
-
-        // 3. The Weekend Warrior (Only Sat/Sun)
-        var weekend = new TrackedPlayer { BMId = "demo_3", Name = "CasualFriday" };
-        for (int d = 0; d < 30; d++) {
-            var date = now.Date.AddDays(-d);
-            if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) {
-                weekend.Sessions.Add(new PlayerSession { ConnectTime = date.AddHours(10), DisconnectTime = date.AddHours(18) });
+            // 1. The Night Owl (Plays 00:00 - 06:00)
+            var owl = new TrackedPlayer { BMId = "demo_1", Name = "NightOwl_X" };
+            for (int d = 0; d < 14; d++) {
+                var date = now.Date.AddDays(-d).AddHours(1); // 01:00
+                owl.Sessions.Add(new PlayerSession { ConnectTime = date, DisconnectTime = date.AddHours(4) });
             }
+            _trackedPlayers[owl.BMId] = owl;
+
+            // 2. The Grinder (Huge playtime, active 12:00 - 02:00)
+            var grinder = new TrackedPlayer { BMId = "demo_2", Name = "IndustrialPvP" };
+            for (int d = 0; d < 7; d++) {
+                var date = now.Date.AddDays(-d).AddHours(12); // Noon
+                grinder.Sessions.Add(new PlayerSession { ConnectTime = date, DisconnectTime = date.AddHours(14) }); // Until 02:00
+            }
+            _trackedPlayers[grinder.BMId] = grinder;
+
+            // 3. The Weekend Warrior (Only Sat/Sun)
+            var weekend = new TrackedPlayer { BMId = "demo_3", Name = "CasualFriday" };
+            for (int d = 0; d < 30; d++) {
+                var date = now.Date.AddDays(-d);
+                if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) {
+                    weekend.Sessions.Add(new PlayerSession { ConnectTime = date.AddHours(10), DisconnectTime = date.AddHours(18) });
+                }
+            }
+            _trackedPlayers[weekend.BMId] = weekend;
         }
-        _trackedPlayers[weekend.BMId] = weekend;
 
         SaveDB();
         OnOnlinePlayersUpdated?.Invoke();
@@ -796,9 +833,13 @@ public static class TrackingService
 
         sb.AppendLine("<h1>Activity Intelligence Report</h1>");
         
-        var playersToReport = targetBmId == null 
-            ? _trackedPlayers.Values.ToList() 
-            : _trackedPlayers.Values.Where(p => p.BMId == targetBmId).ToList();
+        List<TrackedPlayer> playersToReport;
+        lock (_dbLock)
+        {
+            playersToReport = targetBmId == null 
+                ? _trackedPlayers.Values.ToList() 
+                : _trackedPlayers.Values.Where(p => p.BMId == targetBmId).ToList();
+        }
 
         if (!playersToReport.Any())
         {
@@ -945,7 +986,7 @@ public static class TrackingService
 
         // Poll every 2 minutes only if we have players
         _trackingTimer?.Dispose();
-        if (_trackedPlayers.Count > 0)
+        if (GetTrackedPlayers().Count > 0)
         {
             _trackingTimer = new Timer(async _ => await PollOnceAsync(), null, 0, 120_000);
         }
@@ -1105,13 +1146,16 @@ public static class TrackingService
                             }
                         }
 
+                        bool isTr = false;
+                        lock (_dbLock) isTr = _trackedPlayers.ContainsKey(bmId);
+
                         onlineList.Add(new OnlinePlayerBM
                         {
                             BMId = bmId,
                             Name = name,
                             SessionStartTimeUtc = actualStart,
                             Duration = TimeSpan.FromSeconds(Math.Max(0, seconds)),
-                            IsTracked = _trackedPlayers.ContainsKey(bmId)
+                            IsTracked = isTr
                         });
                         currentlyOnlineInfo[bmId] = (actualStart, name);
                     }
@@ -1146,7 +1190,8 @@ public static class TrackingService
         bool changed = false;
         var now = DateTime.UtcNow;
 
-        foreach (var tp in _trackedPlayers.Values)
+        var players = GetTrackedPlayers();
+        foreach (var tp in players)
         {
             bool isOnline = currentlyOnlineInfo.TryGetValue(tp.BMId, out var info);
             var lastSession = tp.Sessions.LastOrDefault();
