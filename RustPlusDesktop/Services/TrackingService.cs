@@ -1313,32 +1313,3 @@ public static class TrackingService
         return DateTime.MinValue;
     }
 }
-
-
-    private static async Task<DateTime> FetchLastSeenTimeAsync(string bmId)
-    {
-        if (string.IsNullOrEmpty(_foundServerId)) return DateTime.MinValue;
-
-        try
-        {
-            // Fetch server-specific player information (free endpoint)
-            var url = $"https://api.battlemetrics.com/players/{bmId}/servers/{_foundServerId}";
-            var json = await _http.GetStringAsync(url);
-            using var doc = JsonDocument.Parse(json);
-            
-            if (doc.RootElement.TryGetProperty("data", out var data) && 
-                data.TryGetProperty("attributes", out var attr))
-            {
-                if (attr.TryGetProperty("lastSeen", out var stopProp) && stopProp.ValueKind == JsonValueKind.String)
-                {
-                    if (DateTimeOffset.TryParse(stopProp.GetString(), out var stop))
-                    {
-                        return stop.UtcDateTime;
-                    }
-                }
-            }
-        }
-        catch { }
-        return DateTime.MinValue;
-    }
-}
