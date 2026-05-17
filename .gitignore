@@ -6,7 +6,7 @@
 **/*.suo
 *.cache
 *.log
-
+/graphify-out/
 # Publish-Output (dotnet publish)
 **/publish/
 

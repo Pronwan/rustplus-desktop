@@ -56,7 +56,7 @@ public partial class App : Application
         {
             var (host, port, name) = TrackingService.LastServer;
             if (!string.IsNullOrEmpty(host))
-                TrackingService.StartPolling(host, port, name);
+                TrackingService.StartPolling(host, port, name, TrackingService.LastBMId);
         }
 
         if (isBackgroundArg && TrackingService.StartMinimizedEnabled)

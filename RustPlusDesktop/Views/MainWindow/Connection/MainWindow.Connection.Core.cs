@@ -244,7 +244,7 @@ public partial class MainWindow
             AppendLog("Connected.");
             _connectedProfile = _vm.Selected;
 
-            TrackingService.StartPolling(_vm.Selected.Host ?? "", _vm.Selected.Port, _vm.Selected.Name ?? "");
+            TrackingService.StartPolling(_vm.Selected.Host ?? "", _vm.Selected.Port, _vm.Selected.Name ?? "", _vm.Selected.BattleMetricsId);
 
             // Shorter initial delay — just enough for the WS to be ready
             await Task.Delay(500);

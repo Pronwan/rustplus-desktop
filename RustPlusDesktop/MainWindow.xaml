@@ -1281,6 +1281,12 @@
                                         Style="{StaticResource DarkContextMenu}">
                                         <!--  Der Trick: den aktuellen Server ins Tag binden  -->
                                         <MenuItem
+                                            Click="Server_RelinkBM_Click"
+                                            Foreground="Black"
+                                            Header="Relink Battlemetrics ID&#x2026;"
+                                            Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                                        <Separator />
+                                        <MenuItem
                                             Click="Server_Delete_Click"
                                             Foreground="Black"
                                             Header="Delete server&#x2026;"
@@ -2843,7 +2849,13 @@
                                                 Grid.Row="3"
                                                 Margin="20"
                                                 VerticalAlignment="Center"
-                                                Visibility="Collapsed">
+                                                Visibility="Collapsed"
+                                                Background="Transparent">
+                                                <Grid.ContextMenu>
+                                                    <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                                        <MenuItem Click="Server_RelinkBM_Click" Header="Relink Battlemetrics ID&#x2026;" />
+                                                    </ContextMenu>
+                                                </Grid.ContextMenu>
                                                 <StackPanel>
                                                     <ui:ProgressRing
                                                         x:Name="PbOnlineLoading"
