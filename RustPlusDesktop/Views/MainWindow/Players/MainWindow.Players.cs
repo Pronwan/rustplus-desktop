@@ -84,89 +84,113 @@ public partial class MainWindow
     }
     private void OnOnlinePlayersUpdated()
     {
-        Dispatcher.Invoke(() =>
+        try
         {
-            RefreshOnlinePlayersList();
-            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
-            // Update tracking status indicator
-            bool anyTracked = TrackingService.GetTrackedPlayers().Count > 0;
-            _vm.IsTrackingActive = TrackingService.IsTracking;
+            Dispatcher.Invoke(() =>
+            {
+                RefreshOnlinePlayersList();
+                RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+                // Update tracking status indicator
+                bool anyTracked = TrackingService.GetTrackedPlayers().Count > 0;
+                _vm.IsTrackingActive = TrackingService.IsTracking;
 
-            if (!anyTracked)
-            {
-                TxtTrackingStatus.Text = "Add players to tracker to start tracking";
-                TxtTrackingStatus.Foreground = Brushes.Gray;
-                TxtTrackingStatus.FontStyle = FontStyles.Italic;
-            }
-            else
-            {
-                TxtTrackingStatus.Text = TrackingService.IsTracking ? "Tracking Active" : "Tracking Idle";
-                TxtTrackingStatus.Foreground = TrackingService.IsTracking ? Brushes.White : Brushes.Gray;
-                TxtTrackingStatus.FontStyle = FontStyles.Normal;
-            }
-            
-            if (TrackingService.LastPullTime.HasValue && anyTracked)
-            {
-                TxtLastPull.Text = $"Last pull: {TrackingService.LastPullTime.Value:HH:mm:ss}";
-            }
-            else
-            {
-                TxtLastPull.Text = "Last pull: --:--";
-            }
-        });
+                if (!anyTracked)
+                {
+                    if (TxtTrackingStatus != null)
+                    {
+                        TxtTrackingStatus.Text = "Add players to tracker to start tracking";
+                        TxtTrackingStatus.Foreground = Brushes.Gray;
+                        TxtTrackingStatus.FontStyle = FontStyles.Italic;
+                    }
+                }
+                else
+                {
+                    if (TxtTrackingStatus != null)
+                    {
+                        TxtTrackingStatus.Text = TrackingService.IsTracking ? "Tracking Active" : "Tracking Idle";
+                        TxtTrackingStatus.Foreground = TrackingService.IsTracking ? Brushes.White : Brushes.Gray;
+                        TxtTrackingStatus.FontStyle = FontStyles.Normal;
+                    }
+                }
+                
+                if (TrackingService.LastPullTime.HasValue && anyTracked)
+                {
+                    if (TxtLastPull != null) TxtLastPull.Text = $"Last pull: {TrackingService.LastPullTime.Value:HH:mm:ss}";
+                }
+                else
+                {
+                    if (TxtLastPull != null) TxtLastPull.Text = "Last pull: --:--";
+                }
+            });
+        }
+        catch { }
     }
 
     private void OnServerInfoUpdated(string description)
     {
-        Dispatcher.Invoke(() => {
-            if (_vm.Selected != null && string.IsNullOrWhiteSpace(_vm.Selected.Description))
-            {
-                _vm.Selected.Description = description;
-            }
-        });
+        try
+        {
+            Dispatcher.Invoke(() => {
+                if (_vm.Selected != null && string.IsNullOrWhiteSpace(_vm.Selected.Description))
+                {
+                    _vm.Selected.Description = description;
+                }
+            });
+        }
+        catch { }
     }
 
     private void RefreshOnlinePlayersList()
     {
-        var players = TrackingService.LastOnlinePlayers;
-        
-        // Dynamic Filter visibility
-        if (players.Count > 0) {
-            TxtOnlineFilter.Visibility = Visibility.Visible;
-            if (string.IsNullOrEmpty(TxtOnlineFilter.Text) && !TxtOnlineFilter.IsFocused) {
-                TxtOnlineFilter.Text = "Filter players...";
-                TxtOnlineFilter.Foreground = Brushes.Gray;
+        try
+        {
+            var players = TrackingService.LastOnlinePlayers;
+            
+            // Dynamic Filter visibility
+            if (players.Count > 0) {
+                if (TxtOnlineFilter != null)
+                {
+                    TxtOnlineFilter.Visibility = Visibility.Visible;
+                    if (string.IsNullOrEmpty(TxtOnlineFilter.Text) && !TxtOnlineFilter.IsFocused) {
+                        TxtOnlineFilter.Text = "Filter players...";
+                        TxtOnlineFilter.Foreground = Brushes.Gray;
+                    }
+                }
+            } else {
+                if (TxtOnlineFilter != null) TxtOnlineFilter.Visibility = Visibility.Collapsed;
             }
-        } else {
-            TxtOnlineFilter.Visibility = Visibility.Collapsed;
-        }
 
-        var filterTxt = TxtOnlineFilter.Text;
-        if (!string.IsNullOrEmpty(filterTxt) && filterTxt != "Filter players...")
-        {
-            players = players.Where(p => p.Name.Contains(filterTxt, StringComparison.OrdinalIgnoreCase)).ToList();
-        }
+            var filterTxt = TxtOnlineFilter?.Text;
+            if (!string.IsNullOrEmpty(filterTxt) && filterTxt != "Filter players...")
+            {
+                players = players.Where(p => p.Name.Contains(filterTxt, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
 
-        ListOnlinePlayers.ItemsSource = null;
-        ListOnlinePlayers.ItemsSource = players;
+            if (ListOnlinePlayers != null)
+            {
+                ListOnlinePlayers.ItemsSource = null;
+                ListOnlinePlayers.ItemsSource = players;
+            }
 
-        if (TrackingService.LastOnlinePlayers.Count == 0)
-        {
-            TxtOnlinePlayersStatus.Text = TrackingService.StatusMessage;
-            PnlOnlineStatus.Visibility = Visibility.Visible;
-            PbOnlineLoading.Visibility = string.IsNullOrEmpty(TrackingService.StatusMessage) || TrackingService.StatusMessage.Contains("Fetching") || TrackingService.StatusMessage.Contains("Looking") ? Visibility.Visible : Visibility.Collapsed;
-        }
-        else
-        {
-            PnlOnlineStatus.Visibility = Visibility.Collapsed;
-        }
+            if (TrackingService.LastOnlinePlayers.Count == 0)
+            {
+                if (TxtOnlinePlayersStatus != null) TxtOnlinePlayersStatus.Text = TrackingService.StatusMessage;
+                if (PnlOnlineStatus != null) PnlOnlineStatus.Visibility = Visibility.Visible;
+                if (PbOnlineLoading != null) PbOnlineLoading.Visibility = string.IsNullOrEmpty(TrackingService.StatusMessage) || TrackingService.StatusMessage.Contains("Fetching") || TrackingService.StatusMessage.Contains("Looking") ? Visibility.Visible : Visibility.Collapsed;
+            }
+            else
+            {
+                if (PnlOnlineStatus != null) PnlOnlineStatus.Visibility = Visibility.Collapsed;
+            }
 
-        // Update Server BM button visibility
-        var bmVisibility = string.IsNullOrEmpty(TrackingService.CurrentServerBMId) 
-            ? Visibility.Collapsed 
-            : Visibility.Visible;
-        BtnServerBMHeader.Visibility = bmVisibility;
-        BtnServerBMPlayers.Visibility = bmVisibility;
+            // Update Server BM button visibility
+            var bmVisibility = string.IsNullOrEmpty(TrackingService.CurrentServerBMId) 
+                ? Visibility.Collapsed 
+                : Visibility.Visible;
+            if (BtnServerBMHeader != null) BtnServerBMHeader.Visibility = bmVisibility;
+            if (BtnServerBMPlayers != null) BtnServerBMPlayers.Visibility = bmVisibility;
+        }
+        catch { }
     }
 
     private void TxtOnlineFilter_GotFocus(object sender, RoutedEventArgs e) {
@@ -815,8 +839,7 @@ public partial class MainWindow
             Title = "Players",
             Width = 500,
             Height = 700,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Owner = this,
+            WindowStartupLocation = WindowStartupLocation.CenterScreen,
             Background = new SolidColorBrush(Color.FromRgb(30, 32, 36)),
         };
 
