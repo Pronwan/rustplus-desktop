@@ -49,6 +49,20 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+## 🛠️ v5.1.0-beta1 — NEW BETA RELEASE! 🛠️
+(internal build 5.0.95 | [Download here](https://github.com/Pronwan/rustplus-desktop/releases/download/v5.0.99-beta1/RustPlusDesk-Setup.exe))
+
+The "Game Changer" just got a lot more polish. This beta is all about workflow and stability.
+
+What’s new in this version?
+
+- **📦 Shop Integration:** No more popups! Arbitrage and "Buy X" are now built directly into the Shop Detail Panel.
+- **⏳ Precise Timers:** Live countdowns for all events in the dock + chat commands to query event status.
+- **🗺️ Minimap Upgrade:** Added Circle/Square/16:9 layouts, opacity slider, and a real-time server clock!
+- **🏗️ Builder Heaven:** Added !upkeepdetail for granular 24h upkeep reports from your Storage Monitors.
+- **🔔 Smart Alerts:** New In-App popup alerts and "Alarm to Team Chat" options.
+- **🛡️ Lag Protection:** Increased handshake timeout (15s) and added a chat-alert delay to prevent spam on laggy API servers.
+
 ## 🚀 Rust+ Desk v5.0  – Game Changer Update!
 This release is packed with architectural hardening by @JawadYzbk & significant QoL upgrades.
 
