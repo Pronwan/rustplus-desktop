@@ -358,7 +358,8 @@ public partial class MainWindow
     private void CenterMapOnWorld(double x, double y, bool keepTracking = false)
     {
         // Use animated centering for manual/one-shot actions to avoid conflict with the follow loop
-        CenterMapOnWorldAnimated(x, y, allowDip: false, fast: true, keepTracking: keepTracking);
+        double curZoom = MapTransform.Matrix.M11;
+        CenterMapOnWorldAnimated(x, y, allowDip: false, fast: true, keepTracking: keepTracking, targetZoom: curZoom);
     }
 
     private void CenterMapOnWorldInstant(double x, double y)
