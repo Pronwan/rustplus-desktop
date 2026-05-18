@@ -272,6 +272,11 @@ public partial class MainWindow : ui.FluentWindow
         base.OnClosing(e);
     }
 
+    // --- Overlay State ---
+    private readonly List<(SmartDevice? Device, AlarmNotification Notification)> _overlayAlarms = new();
+    private int _overlayAlarmIndex = -1;
+    private DispatcherTimer? _overlayHideTimer;
+
     public MainWindow()
     {
         // Nur freiwillig zum Diagnostizieren:
@@ -1926,6 +1931,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 });
             }
 
+            if (dev.OverlayEnabled)
+            {
+                AddAlarmToOverlay(dev, n);
+            }
+
             if (!dev.PopupEnabled) 
             {
                 AppendLog($"[alarm/debug] ({source}) Skipping popup window because PopupEnabled is false for this device.");
@@ -1938,6 +1948,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 AppendLog($"[alarm/debug] ({source}) No device found for ID {n.EntityId.Value}. Showing generic popup.");
             else
                 AppendLog($"[alarm/debug] ({source}) Generic alarm (no ID). Showing generic popup.");
+
+            // Generic overlay fallback
+            AddAlarmToOverlay(null, n);
         }
 
         AppendLog($"[alarm/debug] ({source}) Executing: Show Alarm Window");
@@ -1950,6 +1963,109 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         _alarmWin.Add(n);
     }
+
+    private void AddAlarmToOverlay(SmartDevice? dev, AlarmNotification n)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            _overlayAlarms.Add((dev, n));
+            _overlayAlarmIndex = _overlayAlarms.Count - 1;
+            UpdateAlarmOverlayUi();
+
+            AlarmOverlayBorder.Visibility = Visibility.Visible;
+
+            if (AlarmOverlayAutoHideChk.IsChecked == true)
+            {
+                RestartAlarmOverlayTimer();
+            }
+            else
+            {
+                _overlayHideTimer?.Stop();
+            }
+        });
+    }
+
+    private void UpdateAlarmOverlayUi()
+    {
+        if (_overlayAlarms.Count == 0 || _overlayAlarmIndex < 0 || _overlayAlarmIndex >= _overlayAlarms.Count)
+        {
+            AlarmOverlayBorder.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        var current = _overlayAlarms[_overlayAlarmIndex];
+        
+        string srvName = string.IsNullOrWhiteSpace(current.Notification.Server) ? "Unknown Server" : current.Notification.Server;
+        AlarmOverlayServerTxt.Text = $"{srvName} - {current.Notification.Timestamp:HH:mm}";
+        AlarmOverlayNameTxt.Text = current.Device?.PureName ?? "Smart Alarm";
+        AlarmOverlayMsgTxt.Text = current.Notification.Message ?? "Alarm activated!";
+        
+        AlarmOverlayPagingTxt.Text = $"{_overlayAlarmIndex + 1}/{_overlayAlarms.Count}";
+
+        AlarmOverlayPrevBtn.IsEnabled = _overlayAlarmIndex > 0;
+        AlarmOverlayNextBtn.IsEnabled = _overlayAlarmIndex < _overlayAlarms.Count - 1;
+        
+        bool multi = _overlayAlarms.Count > 1;
+        AlarmOverlayPrevBtn.Visibility = multi ? Visibility.Visible : Visibility.Collapsed;
+        AlarmOverlayPagingTxt.Visibility = multi ? Visibility.Visible : Visibility.Collapsed;
+        AlarmOverlayNextBtn.Visibility = multi ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void AlarmOverlayPrev_Click(object sender, RoutedEventArgs e)
+    {
+        if (_overlayAlarmIndex > 0)
+        {
+            _overlayAlarmIndex--;
+            UpdateAlarmOverlayUi();
+            if (AlarmOverlayAutoHideChk.IsChecked == true) RestartAlarmOverlayTimer();
+        }
+    }
+
+    private void AlarmOverlayNext_Click(object sender, RoutedEventArgs e)
+    {
+        if (_overlayAlarmIndex < _overlayAlarms.Count - 1)
+        {
+            _overlayAlarmIndex++;
+            UpdateAlarmOverlayUi();
+            if (AlarmOverlayAutoHideChk.IsChecked == true) RestartAlarmOverlayTimer();
+        }
+    }
+
+    private void AlarmOverlayClose_Click(object sender, RoutedEventArgs e)
+    {
+        AlarmOverlayBorder.Visibility = Visibility.Collapsed;
+        _overlayAlarms.Clear();
+        _overlayAlarmIndex = -1;
+        _overlayHideTimer?.Stop();
+    }
+
+    private void AlarmOverlayAutoHideChk_Changed(object sender, RoutedEventArgs e)
+    {
+        if (AlarmOverlayAutoHideChk.IsChecked == true)
+        {
+            RestartAlarmOverlayTimer();
+        }
+        else
+        {
+            _overlayHideTimer?.Stop();
+        }
+    }
+
+    private void RestartAlarmOverlayTimer()
+    {
+        if (_overlayHideTimer == null)
+        {
+            _overlayHideTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
+            _overlayHideTimer.Tick += (s, ev) =>
+            {
+                _overlayHideTimer.Stop();
+                AlarmOverlayClose_Click(null!, null!);
+            };
+        }
+        _overlayHideTimer.Stop();
+        _overlayHideTimer.Start();
+    }
+
     // Hilfsfunktion: stabiler Schlüssel für eine Chat-Nachricht
 
 

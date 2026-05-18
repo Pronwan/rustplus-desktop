@@ -2138,14 +2138,25 @@
 
                                                                 <CheckBox
                                                                     Margin="0,0,8,0"
-                                                                    Content="Popup"
+                                                                    ToolTip="Popup-Window"
                                                                     IsChecked="{Binding PopupEnabled, Mode=TwoWay}"
-                                                                    Style="{StaticResource DotCheckBox}" />
+                                                                    Style="{StaticResource DotCheckBox}">
+                                                                    <Image Source="pack://application:,,,/Assets/icons/Popup.png" Width="16" Height="16" Stretch="Uniform"/>
+                                                                </CheckBox>
 
                                                                 <CheckBox
-                                                                    Content="Audio"
+                                                                    Margin="0,0,8,0"
+                                                                    ToolTip="In-App Alert"
+                                                                    IsChecked="{Binding OverlayEnabled, Mode=TwoWay}"
+                                                                    Style="{StaticResource DotCheckBox}">
+                                                                    <Image Source="pack://application:,,,/Assets/icons/PiP.png" Width="16" Height="16" Stretch="Uniform"/>
+                                                                </CheckBox>
+
+                                                                <CheckBox
+                                                                    ToolTip="Audio Alert"
                                                                     IsChecked="{Binding AudioEnabled, Mode=TwoWay}"
                                                                     Style="{StaticResource DotCheckBox}">
+                                                                    <ui:SymbolIcon Symbol="Speaker224" FontSize="16"/>
                                                                     <CheckBox.ContextMenu>
                                                                         <ContextMenu Style="{StaticResource DarkContextMenu}">
                                                                             <MenuItem
@@ -4752,6 +4763,60 @@
                     </StackPanel>
                 </Border>
             </Grid>
+
+            <!--  Custom Smart Alarm Overlay  -->
+            <Border
+                x:Name="AlarmOverlayBorder"
+                Grid.ColumnSpan="3"
+                Margin="20,20,20,130"
+                Padding="16"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Background="#EE660000"
+                BorderBrush="#FFFF5555"
+                BorderThickness="1"
+                CornerRadius="8"
+                Panel.ZIndex="9998"
+                Visibility="Collapsed"
+                Width="360">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" Direction="270" Opacity="0.3" ShadowDepth="2" Color="Black" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Width="18" Height="18" Margin="0,0,8,0" Source="pack://application:,,,/Assets/icons/smartalarm.png" Stretch="Uniform" />
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="Smart Alarm" />
+
+                        <StackPanel Grid.Column="2" Margin="0,0,12,0" VerticalAlignment="Center" Orientation="Horizontal">
+                            <ui:Button x:Name="AlarmOverlayPrevBtn" Padding="4" Appearance="Transparent" Click="AlarmOverlayPrev_Click" Icon="{ui:SymbolIcon Symbol=ChevronLeft24}" />
+                            <TextBlock x:Name="AlarmOverlayPagingTxt" Margin="6,0" VerticalAlignment="Center" Text="1/1" />
+                            <ui:Button x:Name="AlarmOverlayNextBtn" Padding="4" Appearance="Transparent" Click="AlarmOverlayNext_Click" Icon="{ui:SymbolIcon Symbol=ChevronRight24}" />
+                        </StackPanel>
+
+                        <ui:Button Grid.Column="3" Padding="4" Appearance="Transparent" Click="AlarmOverlayClose_Click" Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
+                    </Grid>
+
+                    <TextBlock x:Name="AlarmOverlayServerTxt" Grid.Row="1" Margin="0,0,0,4" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Server Name - 14:30" />
+                    <TextBlock x:Name="AlarmOverlayNameTxt" Grid.Row="2" Margin="0,0,0,2" FontSize="16" FontWeight="Bold" Text="Custom Alarm Name" TextWrapping="Wrap" />
+                    <TextBlock x:Name="AlarmOverlayMsgTxt" Grid.Row="3" Margin="0,0,0,12" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Alarm activated!" TextWrapping="Wrap" />
+
+                    <CheckBox x:Name="AlarmOverlayAutoHideChk" Grid.Row="4" Content="Auto-hide after 3s" FontSize="12" IsChecked="False" Checked="AlarmOverlayAutoHideChk_Changed" Unchecked="AlarmOverlayAutoHideChk_Changed"/>
+                </Grid>
+            </Border>
 
             <!--  Wpf.Ui: WinUI 3 Snackbar presenter (toast notifications)  -->
             <ui:SnackbarPresenter
