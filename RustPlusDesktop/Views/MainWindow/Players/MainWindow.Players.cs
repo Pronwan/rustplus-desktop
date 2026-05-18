@@ -18,6 +18,9 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
+    private Point _trackedGroupDragStartPoint;
+    private Expander? _draggedTrackedGroup;
+
     private void BtnViewTracked_Click(object sender, RoutedEventArgs e)
     {
         var bmId = (sender as FrameworkElement)?.Tag as string 
@@ -343,7 +346,7 @@ public partial class MainWindow
             var serversGrouped = players.GroupBy(p => string.IsNullOrEmpty(p.LastServerName) ? "Global / Legacy" : p.LastServerName);
             foreach (var serverGrp in serversGrouped)
             {
-                ListTrackedPlayers.Children.Add(new TextBlock
+                var serverHeader = new TextBlock
                 {
                     Text = serverGrp.Key,
                     FontWeight = FontWeights.Bold,
@@ -352,10 +355,16 @@ public partial class MainWindow
                     FontSize = 14,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                     ToolTip = serverGrp.Key
-                });
+                };
+                ListTrackedPlayers.Children.Add(serverHeader);
 
+                var order = TrackingService.GetGroupOrder(serverGrp.Key);
                 var subgroups = serverGrp.GroupBy(p => string.IsNullOrEmpty(p.GroupName) ? "Ungrouped" : p.GroupName)
-                    .OrderBy(g => g.Key == "Ungrouped" ? 1 : 0)
+                    .OrderBy(g => {
+                        int idx = order.IndexOf(g.Key);
+                        if (idx >= 0) return idx;
+                        return g.Key == "Ungrouped" ? 1000 : 500;
+                    })
                     .ThenBy(g => g.Key);
 
                 foreach (var group in subgroups)
@@ -403,7 +412,25 @@ public partial class MainWindow
                     Grid.SetColumn(groupNameTxt, 1);
                     groupHeaderPanel.Children.Add(groupNameTxt);
 
-                    var expander = new Expander { IsExpanded = true, Margin = new Thickness(10, 0, 0, 5), Foreground = Brushes.White, Header = groupHeaderPanel };
+                    var isExp = TrackingService.GetGroupState(serverGrp.Key, group.Key);
+                    var expander = new Expander { 
+                        IsExpanded = isExp, 
+                        Margin = new Thickness(10, 0, 0, 5), 
+                        Foreground = Brushes.White, 
+                        Header = groupHeaderPanel,
+                        AllowDrop = true,
+                        Tag = (serverGrp.Key, group.Key)
+                    };
+                    
+                    expander.Expanded += (s, e) => TrackingService.SetGroupState(serverGrp.Key, group.Key, true);
+                    expander.Collapsed += (s, e) => TrackingService.SetGroupState(serverGrp.Key, group.Key, false);
+                    
+                    // Drag & Drop
+                    expander.PreviewMouseLeftButtonDown += TrackedGroup_PreviewMouseLeftButtonDown;
+                    expander.PreviewMouseMove += TrackedGroup_PreviewMouseMove;
+                    expander.DragOver += TrackedGroup_DragOver;
+                    expander.Drop += TrackedGroup_Drop;
+
                     var groupStack = new StackPanel();
 
                     var sortedGroup = group
@@ -440,6 +467,89 @@ public partial class MainWindow
         {
             Debug.WriteLine($"RefreshTrackedPlayersList Crash: {ex.Message}");
         }
+    }
+
+    private void TrackedGroup_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        _trackedGroupDragStartPoint = e.GetPosition(null);
+        if (sender is Expander exp)
+        {
+            _draggedTrackedGroup = exp;
+        }
+    }
+
+    private void TrackedGroup_PreviewMouseMove(object sender, MouseEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed && _draggedTrackedGroup != null)
+        {
+            Point currentPosition = e.GetPosition(null);
+            if (Math.Abs(currentPosition.X - _trackedGroupDragStartPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                Math.Abs(currentPosition.Y - _trackedGroupDragStartPoint.Y) > SystemParameters.MinimumVerticalDragDistance)
+            {
+                DragDrop.DoDragDrop(_draggedTrackedGroup, _draggedTrackedGroup, DragDropEffects.Move);
+            }
+        }
+    }
+
+    private void TrackedGroup_DragOver(object sender, DragEventArgs e)
+    {
+        if (!e.Data.GetDataPresent(typeof(Expander)))
+        {
+            e.Effects = DragDropEffects.None;
+        }
+        else
+        {
+            e.Effects = DragDropEffects.Move;
+        }
+        e.Handled = true;
+    }
+
+    private void TrackedGroup_Drop(object sender, DragEventArgs e)
+    {
+        e.Handled = true;
+        if (_draggedTrackedGroup == null || !e.Data.GetDataPresent(typeof(Expander)))
+            return;
+
+        var targetExpander = sender as Expander;
+        if (targetExpander == null || ReferenceEquals(_draggedTrackedGroup, targetExpander))
+            return;
+
+        if (_draggedTrackedGroup.Tag is not (string sourceServer, string sourceGroup) ||
+            targetExpander.Tag is not (string targetServer, string targetGroup))
+            return;
+
+        if (sourceServer != targetServer) return; // Only reorder within same server
+
+        var order = TrackingService.GetGroupOrder(sourceServer);
+        if (order.Count == 0)
+        {
+            // Initialize order if empty
+            var players = TrackingService.GetTrackedPlayers();
+            order = players.Where(p => (string.IsNullOrEmpty(p.LastServerName) ? "Global / Legacy" : p.LastServerName) == sourceServer)
+                           .Select(p => string.IsNullOrEmpty(p.GroupName) ? "Ungrouped" : p.GroupName)
+                           .Distinct()
+                           .ToList();
+        }
+
+        int sourceIdx = order.IndexOf(sourceGroup);
+        int targetIdx = order.IndexOf(targetGroup);
+
+        if (sourceIdx >= 0 && targetIdx >= 0)
+        {
+            order.RemoveAt(sourceIdx);
+            order.Insert(targetIdx, sourceGroup);
+            TrackingService.SetGroupOrder(sourceServer, order);
+            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+        }
+        else if (targetIdx >= 0)
+        {
+            // Source wasn't in order yet (maybe it was just created)
+            order.Insert(targetIdx, sourceGroup);
+            TrackingService.SetGroupOrder(sourceServer, order);
+            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+        }
+
+        _draggedTrackedGroup = null;
     }
 
     private void TxtTrackedFilter_GotFocus(object sender, RoutedEventArgs e) {
@@ -1069,7 +1179,11 @@ public partial class MainWindow
                     Grid.SetColumn(groupNameTxt, 1);
                     groupHeaderPanel.Children.Add(groupNameTxt);
 
-                    var expander = new Expander { IsExpanded = true, Margin = new Thickness(10, 0, 0, 5), Foreground = Brushes.White, Header = groupHeaderPanel };
+                    var isExp = TrackingService.GetGroupState(serverGrp.Key, group.Key);
+                    var expander = new Expander { IsExpanded = isExp, Margin = new Thickness(10, 0, 0, 5), Foreground = Brushes.White, Header = groupHeaderPanel };
+                    expander.Expanded += (s, e) => TrackingService.SetGroupState(serverGrp.Key, group.Key, true);
+                    expander.Collapsed += (s, e) => TrackingService.SetGroupState(serverGrp.Key, group.Key, false);
+
                     var groupStack = new StackPanel();
 
                     var sortedGroup = group
