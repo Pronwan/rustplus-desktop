@@ -84,89 +84,113 @@ public partial class MainWindow
     }
     private void OnOnlinePlayersUpdated()
     {
-        Dispatcher.Invoke(() =>
+        try
         {
-            RefreshOnlinePlayersList();
-            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
-            // Update tracking status indicator
-            bool anyTracked = TrackingService.GetTrackedPlayers().Count > 0;
-            _vm.IsTrackingActive = TrackingService.IsTracking;
+            Dispatcher.Invoke(() =>
+            {
+                RefreshOnlinePlayersList();
+                RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+                // Update tracking status indicator
+                bool anyTracked = TrackingService.GetTrackedPlayers().Count > 0;
+                _vm.IsTrackingActive = TrackingService.IsTracking;
 
-            if (!anyTracked)
-            {
-                TxtTrackingStatus.Text = "Add players to tracker to start tracking";
-                TxtTrackingStatus.Foreground = Brushes.Gray;
-                TxtTrackingStatus.FontStyle = FontStyles.Italic;
-            }
-            else
-            {
-                TxtTrackingStatus.Text = TrackingService.IsTracking ? "Tracking Active" : "Tracking Idle";
-                TxtTrackingStatus.Foreground = TrackingService.IsTracking ? Brushes.White : Brushes.Gray;
-                TxtTrackingStatus.FontStyle = FontStyles.Normal;
-            }
-            
-            if (TrackingService.LastPullTime.HasValue && anyTracked)
-            {
-                TxtLastPull.Text = $"Last pull: {TrackingService.LastPullTime.Value:HH:mm:ss}";
-            }
-            else
-            {
-                TxtLastPull.Text = "Last pull: --:--";
-            }
-        });
+                if (!anyTracked)
+                {
+                    if (TxtTrackingStatus != null)
+                    {
+                        TxtTrackingStatus.Text = "Add players to tracker to start tracking";
+                        TxtTrackingStatus.Foreground = Brushes.Gray;
+                        TxtTrackingStatus.FontStyle = FontStyles.Italic;
+                    }
+                }
+                else
+                {
+                    if (TxtTrackingStatus != null)
+                    {
+                        TxtTrackingStatus.Text = TrackingService.IsTracking ? "Tracking Active" : "Tracking Idle";
+                        TxtTrackingStatus.Foreground = TrackingService.IsTracking ? Brushes.White : Brushes.Gray;
+                        TxtTrackingStatus.FontStyle = FontStyles.Normal;
+                    }
+                }
+                
+                if (TrackingService.LastPullTime.HasValue && anyTracked)
+                {
+                    if (TxtLastPull != null) TxtLastPull.Text = $"Last pull: {TrackingService.LastPullTime.Value:HH:mm:ss}";
+                }
+                else
+                {
+                    if (TxtLastPull != null) TxtLastPull.Text = "Last pull: --:--";
+                }
+            });
+        }
+        catch { }
     }
 
     private void OnServerInfoUpdated(string description)
     {
-        Dispatcher.Invoke(() => {
-            if (_vm.Selected != null && string.IsNullOrWhiteSpace(_vm.Selected.Description))
-            {
-                _vm.Selected.Description = description;
-            }
-        });
+        try
+        {
+            Dispatcher.Invoke(() => {
+                if (_vm.Selected != null && string.IsNullOrWhiteSpace(_vm.Selected.Description))
+                {
+                    _vm.Selected.Description = description;
+                }
+            });
+        }
+        catch { }
     }
 
     private void RefreshOnlinePlayersList()
     {
-        var players = TrackingService.LastOnlinePlayers;
-        
-        // Dynamic Filter visibility
-        if (players.Count > 0) {
-            TxtOnlineFilter.Visibility = Visibility.Visible;
-            if (string.IsNullOrEmpty(TxtOnlineFilter.Text) && !TxtOnlineFilter.IsFocused) {
-                TxtOnlineFilter.Text = "Filter players...";
-                TxtOnlineFilter.Foreground = Brushes.Gray;
+        try
+        {
+            var players = TrackingService.LastOnlinePlayers;
+            
+            // Dynamic Filter visibility
+            if (players.Count > 0) {
+                if (TxtOnlineFilter != null)
+                {
+                    TxtOnlineFilter.Visibility = Visibility.Visible;
+                    if (string.IsNullOrEmpty(TxtOnlineFilter.Text) && !TxtOnlineFilter.IsFocused) {
+                        TxtOnlineFilter.Text = "Filter players...";
+                        TxtOnlineFilter.Foreground = Brushes.Gray;
+                    }
+                }
+            } else {
+                if (TxtOnlineFilter != null) TxtOnlineFilter.Visibility = Visibility.Collapsed;
             }
-        } else {
-            TxtOnlineFilter.Visibility = Visibility.Collapsed;
-        }
 
-        var filterTxt = TxtOnlineFilter.Text;
-        if (!string.IsNullOrEmpty(filterTxt) && filterTxt != "Filter players...")
-        {
-            players = players.Where(p => p.Name.Contains(filterTxt, StringComparison.OrdinalIgnoreCase)).ToList();
-        }
+            var filterTxt = TxtOnlineFilter?.Text;
+            if (!string.IsNullOrEmpty(filterTxt) && filterTxt != "Filter players...")
+            {
+                players = players.Where(p => p.Name.Contains(filterTxt, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
 
-        ListOnlinePlayers.ItemsSource = null;
-        ListOnlinePlayers.ItemsSource = players;
+            if (ListOnlinePlayers != null)
+            {
+                ListOnlinePlayers.ItemsSource = null;
+                ListOnlinePlayers.ItemsSource = players;
+            }
 
-        if (TrackingService.LastOnlinePlayers.Count == 0)
-        {
-            TxtOnlinePlayersStatus.Text = TrackingService.StatusMessage;
-            PnlOnlineStatus.Visibility = Visibility.Visible;
-            PbOnlineLoading.Visibility = string.IsNullOrEmpty(TrackingService.StatusMessage) || TrackingService.StatusMessage.Contains("Fetching") || TrackingService.StatusMessage.Contains("Looking") ? Visibility.Visible : Visibility.Collapsed;
-        }
-        else
-        {
-            PnlOnlineStatus.Visibility = Visibility.Collapsed;
-        }
+            if (TrackingService.LastOnlinePlayers.Count == 0)
+            {
+                if (TxtOnlinePlayersStatus != null) TxtOnlinePlayersStatus.Text = TrackingService.StatusMessage;
+                if (PnlOnlineStatus != null) PnlOnlineStatus.Visibility = Visibility.Visible;
+                if (PbOnlineLoading != null) PbOnlineLoading.Visibility = string.IsNullOrEmpty(TrackingService.StatusMessage) || TrackingService.StatusMessage.Contains("Fetching") || TrackingService.StatusMessage.Contains("Looking") ? Visibility.Visible : Visibility.Collapsed;
+            }
+            else
+            {
+                if (PnlOnlineStatus != null) PnlOnlineStatus.Visibility = Visibility.Collapsed;
+            }
 
-        // Update Server BM button visibility
-        var bmVisibility = string.IsNullOrEmpty(TrackingService.CurrentServerBMId) 
-            ? Visibility.Collapsed 
-            : Visibility.Visible;
-        BtnServerBMHeader.Visibility = bmVisibility;
-        BtnServerBMPlayers.Visibility = bmVisibility;
+            // Update Server BM button visibility
+            var bmVisibility = string.IsNullOrEmpty(TrackingService.CurrentServerBMId) 
+                ? Visibility.Collapsed 
+                : Visibility.Visible;
+            if (BtnServerBMHeader != null) BtnServerBMHeader.Visibility = bmVisibility;
+            if (BtnServerBMPlayers != null) BtnServerBMPlayers.Visibility = bmVisibility;
+        }
+        catch { }
     }
 
     private void TxtOnlineFilter_GotFocus(object sender, RoutedEventArgs e) {
@@ -736,48 +760,52 @@ public partial class MainWindow
 
     private void ShowTrackingAnalysisWindow(string? bmId = null)
     {
-        var html = TrackingService.GetAnalysisReport(bmId);
-
-        var win = new Window
+        try
         {
-            Title = "Player Activity Analytics & Forecasts",
-            Width = 900,
-            Height = 750,
-            Background = new SolidColorBrush(Color.FromRgb(18, 20, 23)),
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Owner = this,
-        };
+            var html = TrackingService.GetAnalysisReport(bmId);
 
-        var grid = new Grid();
-        var wv = new WebView2 { Margin = new Thickness(0) };
-        grid.Children.Add(wv);
-        win.Content = grid;
-        
-        win.Loaded += async (s, e) =>
-        {
-            try 
+            var win = new Window
             {
-                var dataPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "WebView2_Report");
-                var env = await Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync(userDataFolder: dataPath);
-                await wv.EnsureCoreWebView2Async(env);
-                wv.NavigateToString(html);
-            } 
-            catch (Exception ex) 
-            {
-                win.Content = new ScrollViewer 
-                { 
-                   Content = new TextBlock 
-                   { 
-                      Text = "Error loading analytics view: " + ex.Message + "\n\nEnsure WebView2 Runtime is installed.", 
-                      Foreground = Brushes.White,
-                      TextWrapping = TextWrapping.Wrap,
-                      Margin = new Thickness(20) 
-                   } 
-                };
-            }
-        };
+                Title = "Player Activity Analytics & Forecasts",
+                Width = 900,
+                Height = 750,
+                Background = new SolidColorBrush(Color.FromRgb(18, 20, 23)),
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
+            };
 
-        win.Show();
+            var grid = new Grid();
+            var wv = new WebView2 { Margin = new Thickness(0) };
+            grid.Children.Add(wv);
+            win.Content = grid;
+            
+            win.Loaded += async (s, e) =>
+            {
+                try 
+                {
+                    var dataPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "WebView2_Report");
+                    var env = await Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync(userDataFolder: dataPath);
+                    if (!win.IsLoaded) return;
+                    await wv.EnsureCoreWebView2Async(env);
+                    if (wv.CoreWebView2 != null) wv.NavigateToString(html);
+                } 
+                catch (Exception ex) 
+                {
+                    win.Content = new ScrollViewer 
+                    { 
+                       Content = new TextBlock 
+                       { 
+                          Text = "Error loading analytics view: " + ex.Message + "\n\nEnsure WebView2 Runtime is installed.", 
+                          Foreground = Brushes.White,
+                          TextWrapping = TextWrapping.Wrap,
+                          Margin = new Thickness(20) 
+                       } 
+                    };
+                }
+            };
+
+            win.Show();
+        }
+        catch { }
     }
 
     private void ShowPlayerAnalysis(string bmId, string name)
@@ -815,8 +843,7 @@ public partial class MainWindow
             Title = "Players",
             Width = 500,
             Height = 700,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Owner = this,
+            WindowStartupLocation = WindowStartupLocation.CenterScreen,
             Background = new SolidColorBrush(Color.FromRgb(30, 32, 36)),
         };
 
@@ -849,12 +876,19 @@ public partial class MainWindow
         Action? onUpdated = null;
         onUpdated = () =>
         {
-            if (!win.IsLoaded)
-            {
-                TrackingService.OnOnlinePlayersUpdated -= onUpdated;
-                return;
-            }
-            try { Dispatcher.Invoke(() => { PopulateOnlinePlayers(onlineStack, bmId => ShowTrackingAnalysisWindow(bmId)); PopulateTrackedPlayers(trackedStack); }); } catch { }
+            try 
+            { 
+                win?.Dispatcher.BeginInvoke(new Action(() => { 
+                    try 
+                    {
+                        if (win == null || !win.IsLoaded) return;
+                        PopulateOnlinePlayers(onlineStack, bmId => ShowTrackingAnalysisWindow(bmId)); 
+                        PopulateTrackedPlayers(trackedStack); 
+                    } 
+                    catch { }
+                })); 
+            } 
+            catch { }
         };
 
         win.Loaded += (_, _) =>
@@ -874,218 +908,227 @@ public partial class MainWindow
 
     private static void PopulateOnlinePlayers(StackPanel stack, Action<string>? showAnalysis = null)
     {
-        stack.Children.Clear();
-        var players = TrackingService.LastOnlinePlayers;
-        if (players.Count == 0)
+        try
         {
-            stack.Children.Add(new TextBlock
+            stack.Children.Clear();
+            var players = TrackingService.LastOnlinePlayers.ToList(); // Snapshot
+            if (players.Count == 0)
             {
-                Text = TrackingService.StatusMessage,
-                Foreground = Brushes.Gray,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                Margin = new Thickness(0, 20, 0, 0),
-            });
-            return;
-        }
-        foreach (var p in players)
-        {
-            var row = new Grid { Margin = new Thickness(0, 4, 0, 4) };
-            row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-            row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-
-            var hp = new StackPanel { Orientation = Orientation.Horizontal };
-            var dot = new Ellipse
-            {
-                Width = 8, Height = 8,
-                Margin = new Thickness(0, 0, 8, 0),
-                VerticalAlignment = VerticalAlignment.Center,
-                Fill = p.IsTracked
-                    ? new SolidColorBrush(Color.FromRgb(0xFF, 0xD1, 0x66))
-                    : (SolidColorBrush)new BrushConverter().ConvertFromString("#60CDFF"),
-            };
-            hp.Children.Add(dot);
-
-            var name = new TextBlock
-            {
-                Text = p.Name,
-                FontSize = 13,
-                FontWeight = FontWeights.SemiBold,
-                VerticalAlignment = VerticalAlignment.Center,
-                MaxWidth = 160,
-                TextTrimming = TextTrimming.CharacterEllipsis,
-                ToolTip = p.Name,
-            };
-            hp.Children.Add(name);
-            row.Children.Add(hp);
-
-            if (!string.IsNullOrEmpty(p.PlayTimeStr))
-            {
-                var pt = new TextBlock
+                stack.Children.Add(new TextBlock
                 {
-                    Text = p.PlayTimeStr,
-                    FontSize = 11,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Margin = new Thickness(0, 0, 8, 0),
-                    Foreground = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88)),
-                };
-                Grid.SetColumn(pt, 1);
-                row.Children.Add(pt);
+                    Text = TrackingService.StatusMessage,
+                    Foreground = Brushes.Gray,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Margin = new Thickness(0, 20, 0, 0),
+                });
+                return;
             }
-
-            var btnTrack = new ui.Button
+            foreach (var p in players)
             {
-                Content = p.IsTracked ? "Details" : "Track",
-                Padding = new Thickness(6, 2, 6, 2),
-                FontSize = 11,
-                Appearance = p.IsTracked ? ui.ControlAppearance.Primary : ui.ControlAppearance.Secondary,
-                Tag = p.BMId,
-            };
-            Grid.SetColumn(btnTrack, 2);
-            row.Children.Add(btnTrack);
-            string capturedBmId = p.BMId;
-            string capturedName = p.Name;
-            btnTrack.Click += (_, _) =>
-            {
-                if (TrackingService.GetTrackedPlayers().Any(tp => tp.BMId == capturedBmId))
-                {
-                    showAnalysis?.Invoke(capturedBmId);
-                }
-                else
-                {
-                    var srvName = TrackingService.LastServer.name ?? "Unknown";
-                    TrackingService.TrackPlayer(capturedBmId, capturedName, srvName);
-                    btnTrack.Content = "Details";
-                    btnTrack.Appearance = ui.ControlAppearance.Primary;
-                }
-            };
+                var row = new Grid { Margin = new Thickness(0, 4, 0, 4) };
+                row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-            stack.Children.Add(row);
+                var hp = new StackPanel { Orientation = Orientation.Horizontal };
+                var dot = new Ellipse
+                {
+                    Width = 8, Height = 8,
+                    Margin = new Thickness(0, 0, 8, 0),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Fill = p.IsTracked
+                        ? new SolidColorBrush(Color.FromRgb(0xFF, 0xD1, 0x66))
+                        : (SolidColorBrush)new BrushConverter().ConvertFromString("#60CDFF"),
+                };
+                hp.Children.Add(dot);
+
+                var name = new TextBlock
+                {
+                    Text = p.Name,
+                    FontSize = 13,
+                    FontWeight = FontWeights.SemiBold,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    MaxWidth = 160,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                    ToolTip = p.Name,
+                };
+                hp.Children.Add(name);
+                row.Children.Add(hp);
+
+                if (!string.IsNullOrEmpty(p.PlayTimeStr))
+                {
+                    var pt = new TextBlock
+                    {
+                        Text = p.PlayTimeStr,
+                        FontSize = 11,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Margin = new Thickness(0, 0, 8, 0),
+                        Foreground = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88)),
+                    };
+                    Grid.SetColumn(pt, 1);
+                    row.Children.Add(pt);
+                }
+
+                var btnTrack = new ui.Button
+                {
+                    Content = p.IsTracked ? "Details" : "Track",
+                    Padding = new Thickness(6, 2, 6, 2),
+                    FontSize = 11,
+                    Appearance = p.IsTracked ? ui.ControlAppearance.Primary : ui.ControlAppearance.Secondary,
+                    Tag = p.BMId,
+                };
+                Grid.SetColumn(btnTrack, 2);
+                row.Children.Add(btnTrack);
+                string capturedBmId = p.BMId;
+                string capturedName = p.Name;
+                btnTrack.Click += (_, _) =>
+                {
+                    if (TrackingService.GetTrackedPlayers().Any(tp => tp.BMId == capturedBmId))
+                    {
+                        showAnalysis?.Invoke(capturedBmId);
+                    }
+                    else
+                    {
+                        var srvName = TrackingService.LastServer.name ?? "Unknown";
+                        TrackingService.TrackPlayer(capturedBmId, capturedName, srvName);
+                        btnTrack.Content = "Details";
+                        btnTrack.Appearance = ui.ControlAppearance.Primary;
+                    }
+                };
+
+                stack.Children.Add(row);
+            }
         }
+        catch { }
     }
 
     private static void PopulateTrackedPlayers(StackPanel stack)
     {
-        stack.Children.Clear();
-        var players = TrackingService.GetTrackedPlayers();
-        var serversGrouped = players.GroupBy(p => string.IsNullOrEmpty(p.LastServerName) ? "Global / Legacy" : p.LastServerName);
-        foreach (var serverGrp in serversGrouped)
+        try
         {
-            stack.Children.Add(new TextBlock
+            stack.Children.Clear();
+            var players = TrackingService.GetTrackedPlayers();
+            var onlineSnapshot = TrackingService.LastOnlinePlayers.ToList(); // Snapshot
+            var serversGrouped = players.GroupBy(p => string.IsNullOrEmpty(p.LastServerName) ? "Global / Legacy" : p.LastServerName);
+            foreach (var serverGrp in serversGrouped)
             {
-                Text = serverGrp.Key,
-                FontWeight = FontWeights.Bold,
-                Foreground = new SolidColorBrush(Color.FromRgb(88, 166, 255)),
-                Margin = new Thickness(0, 15, 0, 5),
-                FontSize = 14,
-                TextTrimming = TextTrimming.CharacterEllipsis,
-                ToolTip = serverGrp.Key,
-            });
-
-            var subgroups = serverGrp.GroupBy(p => string.IsNullOrEmpty(p.GroupName) ? "Ungrouped" : p.GroupName)
-                .OrderBy(g => g.Key == "Ungrouped" ? 1 : 0)
-                .ThenBy(g => g.Key);
-
-            foreach (var group in subgroups)
-            {
-                var groupHeaderPanel = new Grid { Margin = new Thickness(5, 5, 0, 5) };
-                groupHeaderPanel.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-                groupHeaderPanel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-
-                var headerColor = "None";
-                if (group.Key != "Ungrouped")
+                stack.Children.Add(new TextBlock
                 {
-                    var firstWithColor = group.FirstOrDefault(x => !string.IsNullOrEmpty(x.GroupColor) && x.GroupColor != "None");
-                    if (firstWithColor != null) headerColor = firstWithColor.GroupColor;
-
-                    if (headerColor != "None")
-                    {
-                        try
-                        {
-                            var groupColorBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(headerColor);
-                            var dot = new Ellipse
-                            {
-                                Width = 10, Height = 10, Fill = groupColorBrush,
-                                Margin = new Thickness(0, 0, 8, 0), VerticalAlignment = VerticalAlignment.Center,
-                            };
-                            Grid.SetColumn(dot, 0);
-                            groupHeaderPanel.Children.Add(dot);
-                        }
-                        catch { }
-                    }
-                }
-
-                var groupNameTxt = new TextBlock
-                {
-                    Text = group.Key,
-                    FontWeight = FontWeights.SemiBold,
-                    Foreground = group.Key == "Ungrouped" ? Brushes.Gray : new SolidColorBrush(Color.FromRgb(150, 200, 255)),
-                    FontSize = 13,
-                    VerticalAlignment = VerticalAlignment.Center,
+                    Text = serverGrp.Key,
+                    FontWeight = FontWeights.Bold,
+                    Foreground = new SolidColorBrush(Color.FromRgb(88, 166, 255)),
+                    Margin = new Thickness(0, 15, 0, 5),
+                    FontSize = 14,
                     TextTrimming = TextTrimming.CharacterEllipsis,
-                    ToolTip = group.Key,
-                };
-                Grid.SetColumn(groupNameTxt, 1);
-                groupHeaderPanel.Children.Add(groupNameTxt);
+                    ToolTip = serverGrp.Key,
+                });
 
-                var expander = new Expander { IsExpanded = true, Margin = new Thickness(10, 0, 0, 5), Foreground = Brushes.White, Header = groupHeaderPanel };
-                var groupStack = new StackPanel();
+                var subgroups = serverGrp.GroupBy(p => string.IsNullOrEmpty(p.GroupName) ? "Ungrouped" : p.GroupName)
+                    .OrderBy(g => g.Key == "Ungrouped" ? 1 : 0)
+                    .ThenBy(g => g.Key);
 
-                var sortedGroup = group
-                    .OrderByDescending(p => TrackingService.LastOnlinePlayers.Any(op => op.BMId == p.BMId))
-                    .ThenByDescending(p => TrackingService.LastOnlinePlayers.FirstOrDefault(op => op.BMId == p.BMId)?.Duration ?? TimeSpan.Zero)
-                    .ThenByDescending(p => p.Sessions.Count > 0 ? p.Sessions.Max(s => s.DisconnectTime ?? s.ConnectTime) : DateTime.MinValue)
-                    .ToList();
-
-                foreach (var p in sortedGroup)
+                foreach (var group in subgroups)
                 {
-                    var onlineInfo = TrackingService.LastOnlinePlayers.FirstOrDefault(op => op.BMId == p.BMId);
-                    p.IsOnline = onlineInfo != null;
-                    p.PlayTimeStr = onlineInfo?.PlayTimeStr ?? "";
+                    var groupHeaderPanel = new Grid { Margin = new Thickness(5, 5, 0, 5) };
+                    groupHeaderPanel.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                    groupHeaderPanel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
-                    var row = new Grid { Margin = new Thickness(0, 2, 0, 2) };
-                    row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                    row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-
-                    var stack2 = new StackPanel { Orientation = Orientation.Horizontal };
-                    var sDot = new Ellipse
+                    var headerColor = "None";
+                    if (group.Key != "Ungrouped")
                     {
-                        Width = 8, Height = 8,
-                        Margin = new Thickness(0, 0, 8, 0),
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Fill = p.IsOnline ? new SolidColorBrush(Color.FromRgb(98, 211, 139)) : new SolidColorBrush(Color.FromRgb(102, 102, 102)),
-                    };
-                    stack2.Children.Add(sDot);
+                        var firstWithColor = group.FirstOrDefault(x => !string.IsNullOrEmpty(x.GroupColor) && x.GroupColor != "None");
+                        if (firstWithColor != null) headerColor = firstWithColor.GroupColor;
 
-                    var nameBlock = new TextBlock
-                    {
-                        Text = p.Name,
-                        FontSize = 13,
-                        Foreground = p.IsOnline ? Brushes.White : new SolidColorBrush(Color.FromRgb(0xBB, 0xBB, 0xBB)),
-                        VerticalAlignment = VerticalAlignment.Center,
-                    };
-                    stack2.Children.Add(nameBlock);
-                    row.Children.Add(stack2);
-
-                    if (p.IsOnline)
-                    {
-                        var playTime = new TextBlock
+                        if (headerColor != "None")
                         {
-                            Text = p.PlayTimeStr,
-                            FontSize = 10,
-                            Foreground = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88)),
-                            VerticalAlignment = VerticalAlignment.Center,
-                            Margin = new Thickness(8, 0, 0, 0),
-                        };
-                        Grid.SetColumn(playTime, 1);
-                        row.Children.Add(playTime);
+                            try
+                            {
+                                var groupColorBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(headerColor);
+                                var dot = new Ellipse
+                                {
+                                    Width = 10, Height = 10, Fill = groupColorBrush,
+                                    Margin = new Thickness(0, 0, 8, 0), VerticalAlignment = VerticalAlignment.Center,
+                                };
+                                Grid.SetColumn(dot, 0);
+                                groupHeaderPanel.Children.Add(dot);
+                            }
+                            catch { }
+                        }
                     }
 
-                    groupStack.Children.Add(row);
+                    var groupNameTxt = new TextBlock
+                    {
+                        Text = group.Key,
+                        FontWeight = FontWeights.SemiBold,
+                        Foreground = group.Key == "Ungrouped" ? Brushes.Gray : new SolidColorBrush(Color.FromRgb(150, 200, 255)),
+                        FontSize = 13,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        TextTrimming = TextTrimming.CharacterEllipsis,
+                        ToolTip = group.Key,
+                    };
+                    Grid.SetColumn(groupNameTxt, 1);
+                    groupHeaderPanel.Children.Add(groupNameTxt);
+
+                    var expander = new Expander { IsExpanded = true, Margin = new Thickness(10, 0, 0, 5), Foreground = Brushes.White, Header = groupHeaderPanel };
+                    var groupStack = new StackPanel();
+
+                    var sortedGroup = group
+                        .OrderByDescending(p => onlineSnapshot.Any(op => op.BMId == p.BMId))
+                        .ThenByDescending(p => onlineSnapshot.FirstOrDefault(op => op.BMId == p.BMId)?.Duration ?? TimeSpan.Zero)
+                        .ThenByDescending(p => p.Sessions.Count > 0 ? p.Sessions.Max(s => s.DisconnectTime ?? s.ConnectTime) : DateTime.MinValue)
+                        .ToList();
+
+                    foreach (var p in sortedGroup)
+                    {
+                        var onlineInfo = onlineSnapshot.FirstOrDefault(op => op.BMId == p.BMId);
+                        p.IsOnline = onlineInfo != null;
+                        p.PlayTimeStr = onlineInfo?.PlayTimeStr ?? "";
+
+                        var row = new Grid { Margin = new Thickness(0, 2, 0, 2) };
+                        row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                        row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+                        var stack2 = new StackPanel { Orientation = Orientation.Horizontal };
+                        var sDot = new Ellipse
+                        {
+                            Width = 8, Height = 8,
+                            Margin = new Thickness(0, 0, 8, 0),
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Fill = p.IsOnline ? new SolidColorBrush(Color.FromRgb(98, 211, 139)) : new SolidColorBrush(Color.FromRgb(102, 102, 102)),
+                        };
+                        stack2.Children.Add(sDot);
+
+                        var nameBlock = new TextBlock
+                        {
+                            Text = p.Name,
+                            FontSize = 13,
+                            Foreground = p.IsOnline ? Brushes.White : new SolidColorBrush(Color.FromRgb(0xBB, 0xBB, 0xBB)),
+                            VerticalAlignment = VerticalAlignment.Center,
+                        };
+                        stack2.Children.Add(nameBlock);
+                        row.Children.Add(stack2);
+
+                        if (p.IsOnline)
+                        {
+                            var playTime = new TextBlock
+                            {
+                                Text = p.PlayTimeStr,
+                                FontSize = 10,
+                                Foreground = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88)),
+                                VerticalAlignment = VerticalAlignment.Center,
+                                Margin = new Thickness(8, 0, 0, 0),
+                            };
+                            Grid.SetColumn(playTime, 1);
+                            row.Children.Add(playTime);
+                        }
+
+                        groupStack.Children.Add(row);
+                    }
+                    expander.Content = groupStack;
+                    stack.Children.Add(expander);
                 }
-                expander.Content = groupStack;
-                stack.Children.Add(expander);
             }
         }
+        catch { }
     }
 }

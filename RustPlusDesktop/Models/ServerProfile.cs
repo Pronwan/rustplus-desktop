@@ -29,6 +29,7 @@ public class ServerProfile : INotifyPropertyChanged
     public int Port { get; set; } = 28082;
     public string SteamId64 { get; set; } = "";
     public string PlayerToken { get; set; } = "";
+    public string? BattleMetricsId { get; set; } = null;
 
     private bool _isConnected;
     public bool IsConnected
