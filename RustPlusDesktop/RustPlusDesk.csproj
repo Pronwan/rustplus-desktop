@@ -19,12 +19,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>5.0.1</Version>
+		<Version>5.1.0-beta1</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>5.0.1</AssemblyVersion>
-		<FileVersion>5.0.1</FileVersion>
-		<InformationalVersion>5.0.1</InformationalVersion>
+		<AssemblyVersion>5.0.95</AssemblyVersion>
+		<FileVersion>5.0.95</FileVersion>
+		<InformationalVersion>5.1.0-beta1</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -321,6 +321,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Screenshots\4.4_1.png" />
+    <Resource Include="Assets\Screenshots\beta-5.1_1.png" />
+    <Resource Include="Assets\Screenshots\beta-5.1_2.png" />
+    <Resource Include="Assets\Screenshots\beta-5.1_3.png" />
+    <Resource Include="Assets\Screenshots\beta-5.1_4.png" />
+    <Resource Include="Assets\Screenshots\beta-5.1_5.png" />
+    <Resource Include="Assets\Screenshots\beta-5.1_6.png" />
+    <Resource Include="Assets\Screenshots\beta-5.1_7.png" />
     <Resource Include="Assets\Screenshots\Notifications.png" />
     <Resource Include="Assets\TitleScreen-rust-plus-desktop.png" />
     <Resource Include="Assets\Data\rust_items.json" />

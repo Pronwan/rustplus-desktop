@@ -384,8 +384,19 @@ public partial class MainWindow : ui.FluentWindow
             _ = Task.Run(async () => await AutoCheckUpdatesAsync());
         }));
 
-        // One-time migration notice for v4.5 — The Intelligence Update
-        const string AppVersion = "4.5.0";
+        // One-time migration notice for v5.1.0-beta1
+        const string AppVersion = "5.1.0-beta1";
+
+        bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
+        {
+            string cleanVer = versionStr.Split('-')[0];
+            string cleanTarget = targetStr.Split('-')[0];
+            if (System.Version.TryParse(cleanVer, out var v1) && System.Version.TryParse(cleanTarget, out var v2))
+            {
+                return v1 <= v2;
+            }
+            return false;
+        }
         
         if (string.IsNullOrEmpty(TrackingService.LastSeenVersion))
         {
@@ -394,18 +405,26 @@ public partial class MainWindow : ui.FluentWindow
         }
         else if (TrackingService.LastSeenVersion != AppVersion)
         {
-            // Upgrade: Popup zeigen
-            Dispatcher.InvokeAsync(() =>
+            if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "5.0.1"))
             {
-                var dlg = new Views.MigrationNoticeWindow { Owner = this };
-                dlg.ShowDialog();
-                
-                // Nur speichern, wenn der User "Don't show again" angehakt hat (Standard ist true)
-                if (dlg.DontShowAgain)
+                // Upgrade von 5.0.1 oder geringer: Popup zeigen
+                Dispatcher.InvokeAsync(() =>
                 {
-                    TrackingService.LastSeenVersion = AppVersion;
-                }
-            }, System.Windows.Threading.DispatcherPriority.Loaded);
+                    var dlg = new Views.MigrationNoticeWindow { Owner = this };
+                    dlg.ShowDialog();
+                    
+                    // Nur speichern, wenn der User "Don't show again" angehakt hat (Standard ist true)
+                    if (dlg.DontShowAgain)
+                    {
+                        TrackingService.LastSeenVersion = AppVersion;
+                    }
+                }, System.Windows.Threading.DispatcherPriority.Loaded);
+            }
+            else
+            {
+                // Kommt von einer neueren/gleichen Version: Einfach Version updaten ohne Popup
+                TrackingService.LastSeenVersion = AppVersion;
+            }
         }
 
         // Initial tracking status update and hook global events
