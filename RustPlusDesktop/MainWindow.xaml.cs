@@ -4245,9 +4245,24 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void ApplySettings()
     {
+        if (TxtLog != null)
+        {
+            TxtLog.Visibility = TrackingService.HideConsole ? Visibility.Collapsed : Visibility.Visible;
+        }
+
         if (ColSidebar != null)
         {
-            ColSidebar.Width = new GridLength(TrackingService.SidebarWidth);
+            double w = TrackingService.SidebarWidth;
+            if (w < 400) w = 400;
+
+            // Ensure we don't squash the map below 800 if window is small
+            if (this.ActualWidth > 0)
+            {
+                double maxW = this.ActualWidth - 850; // 800 map + 50 padding/splitter
+                if (w > maxW && maxW > 400) w = maxW;
+            }
+
+            ColSidebar.Width = new GridLength(w, GridUnitType.Pixel);
         }
         _announceSpawns = TrackingService.AnnounceSpawnsMaster;
     }
@@ -4302,8 +4317,31 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void BtnSettings_Click(object sender, RoutedEventArgs e)
     {
-        var dlg = new SettingsModal { Owner = this };
-        dlg.ShowDialog();
+        var modal = new SettingsModal { Owner = this };
+        modal.ShowDialog();
+        ApplySettings();
+
+        if (modal.RequestAction == "ModifyChatAlerts")
+        {
+            Dispatcher.BeginInvoke(new Action(() => {
+                if (ChatAnnounceLabel.ContextMenu != null)
+                {
+                    ChatAnnounceLabel.ContextMenu.PlacementTarget = ChatAnnounceLabel;
+                    ChatAnnounceLabel.ContextMenu.Placement = PlacementMode.Bottom;
+                    ChatAnnounceLabel.ContextMenu.IsOpen = true;
+                }
+            }), System.Windows.Threading.DispatcherPriority.Input);
+        }
+        else if (modal.RequestAction == "ChatCommands")
+        {
+            // Open Chat if closed
+            if (ChatContentBorder.Visibility != Visibility.Visible)
+            {
+                BtnToggleChat_Click(null, null);
+            }
+            // Show commands
+            BtnOpenChatCommands_Click(null, null);
+        }
     }
 
     private async Task PerformUpdateDownloadAsync(string tag, string dlUrl)
