@@ -272,6 +272,11 @@ public partial class MainWindow : ui.FluentWindow
         base.OnClosing(e);
     }
 
+    // --- Overlay State ---
+    private readonly List<(SmartDevice? Device, AlarmNotification Notification)> _overlayAlarms = new();
+    private int _overlayAlarmIndex = -1;
+    private DispatcherTimer? _overlayHideTimer;
+
     public MainWindow()
     {
         // Nur freiwillig zum Diagnostizieren:
@@ -1868,6 +1873,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // n.Server ebenfalls bereinigen für konsistentes UI/Matching
         n = n with { Server = cleanSrv };
 
+        // Override DeviceName with Custom Name / PureName if device is identified
+        if (dev != null)
+        {
+            n = n with { DeviceName = dev.PureName };
+        }
+
         if (n.EntityId.HasValue)
         {
             // Dedup primär über ID (ignoriere Server-Namensunterschiede wie ANSI-Farben)
@@ -1910,6 +1921,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // 4) Play Audio (Respects settings if device is identified, otherwise plays default)
         PlayAlarmAudio(dev);
 
+        // Send smart alert to team chat if setting and master switch are enabled
+        if (TrackingService.AnnounceSmartAlerts && _announceSpawns)
+        {
+            string alarmName = dev?.PureName ?? (!string.IsNullOrEmpty(n.DeviceName) ? n.DeviceName : "Smart Alarm");
+            _ = SendTeamChatSafeAsync($"ALARM: {alarmName} triggered!");
+        }
+
         if (dev != null)
         {
             AppendLog($"[alarm/debug] ({source}) Device identified: {dev.Name} (Kind: {dev.Kind}, ID: {dev.EntityId})");
@@ -1926,6 +1944,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 });
             }
 
+            if (dev.OverlayEnabled)
+            {
+                AddAlarmToOverlay(dev, n);
+            }
+
             if (!dev.PopupEnabled) 
             {
                 AppendLog($"[alarm/debug] ({source}) Skipping popup window because PopupEnabled is false for this device.");
@@ -1938,6 +1961,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 AppendLog($"[alarm/debug] ({source}) No device found for ID {n.EntityId.Value}. Showing generic popup.");
             else
                 AppendLog($"[alarm/debug] ({source}) Generic alarm (no ID). Showing generic popup.");
+
+            // Generic overlay fallback
+            AddAlarmToOverlay(null, n);
         }
 
         AppendLog($"[alarm/debug] ({source}) Executing: Show Alarm Window");
@@ -1950,6 +1976,109 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         _alarmWin.Add(n);
     }
+
+    private void AddAlarmToOverlay(SmartDevice? dev, AlarmNotification n)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            _overlayAlarms.Add((dev, n));
+            _overlayAlarmIndex = _overlayAlarms.Count - 1;
+            UpdateAlarmOverlayUi();
+
+            AlarmOverlayBorder.Visibility = Visibility.Visible;
+
+            if (AlarmOverlayAutoHideChk.IsChecked == true)
+            {
+                RestartAlarmOverlayTimer();
+            }
+            else
+            {
+                _overlayHideTimer?.Stop();
+            }
+        });
+    }
+
+    private void UpdateAlarmOverlayUi()
+    {
+        if (_overlayAlarms.Count == 0 || _overlayAlarmIndex < 0 || _overlayAlarmIndex >= _overlayAlarms.Count)
+        {
+            AlarmOverlayBorder.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        var current = _overlayAlarms[_overlayAlarmIndex];
+        
+        string srvName = string.IsNullOrWhiteSpace(current.Notification.Server) ? "Unknown Server" : current.Notification.Server;
+        AlarmOverlayServerTxt.Text = $"{srvName} - {current.Notification.Timestamp:HH:mm}";
+        AlarmOverlayNameTxt.Text = current.Device?.PureName ?? "Smart Alarm";
+        AlarmOverlayMsgTxt.Text = current.Notification.Message ?? "Alarm activated!";
+        
+        AlarmOverlayPagingTxt.Text = $"{_overlayAlarmIndex + 1}/{_overlayAlarms.Count}";
+
+        AlarmOverlayPrevBtn.IsEnabled = _overlayAlarmIndex > 0;
+        AlarmOverlayNextBtn.IsEnabled = _overlayAlarmIndex < _overlayAlarms.Count - 1;
+        
+        bool multi = _overlayAlarms.Count > 1;
+        AlarmOverlayPrevBtn.Visibility = multi ? Visibility.Visible : Visibility.Collapsed;
+        AlarmOverlayPagingTxt.Visibility = multi ? Visibility.Visible : Visibility.Collapsed;
+        AlarmOverlayNextBtn.Visibility = multi ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void AlarmOverlayPrev_Click(object sender, RoutedEventArgs e)
+    {
+        if (_overlayAlarmIndex > 0)
+        {
+            _overlayAlarmIndex--;
+            UpdateAlarmOverlayUi();
+            if (AlarmOverlayAutoHideChk.IsChecked == true) RestartAlarmOverlayTimer();
+        }
+    }
+
+    private void AlarmOverlayNext_Click(object sender, RoutedEventArgs e)
+    {
+        if (_overlayAlarmIndex < _overlayAlarms.Count - 1)
+        {
+            _overlayAlarmIndex++;
+            UpdateAlarmOverlayUi();
+            if (AlarmOverlayAutoHideChk.IsChecked == true) RestartAlarmOverlayTimer();
+        }
+    }
+
+    private void AlarmOverlayClose_Click(object sender, RoutedEventArgs e)
+    {
+        AlarmOverlayBorder.Visibility = Visibility.Collapsed;
+        _overlayAlarms.Clear();
+        _overlayAlarmIndex = -1;
+        _overlayHideTimer?.Stop();
+    }
+
+    private void AlarmOverlayAutoHideChk_Changed(object sender, RoutedEventArgs e)
+    {
+        if (AlarmOverlayAutoHideChk.IsChecked == true)
+        {
+            RestartAlarmOverlayTimer();
+        }
+        else
+        {
+            _overlayHideTimer?.Stop();
+        }
+    }
+
+    private void RestartAlarmOverlayTimer()
+    {
+        if (_overlayHideTimer == null)
+        {
+            _overlayHideTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
+            _overlayHideTimer.Tick += (s, ev) =>
+            {
+                _overlayHideTimer.Stop();
+                AlarmOverlayClose_Click(null!, null!);
+            };
+        }
+        _overlayHideTimer.Stop();
+        _overlayHideTimer.Start();
+    }
+
     // Hilfsfunktion: stabiler Schlüssel für eine Chat-Nachricht
 
 
@@ -2948,6 +3077,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TrackingService.AnnouncePlayerRespawnTeam = val;
         TrackingService.AnnounceNewShops = val;
         TrackingService.AnnounceSuspiciousShops = val;
+        TrackingService.AnnounceSmartAlerts = val;
         TrackingService.AnnounceTradeAlerts = val;
     }
 
@@ -2961,7 +3091,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                !TrackingService.AnnouncePlayerDeathSelf && !TrackingService.AnnouncePlayerDeathTeam &&
                !TrackingService.AnnouncePlayerRespawnSelf && !TrackingService.AnnouncePlayerRespawnTeam &&
                !TrackingService.AnnounceNewShops && !TrackingService.AnnounceSuspiciousShops &&
-               !TrackingService.AnnounceTradeAlerts;
+               !TrackingService.AnnounceSmartAlerts && !TrackingService.AnnounceTradeAlerts;
     }
 
     private void UpdateMasterToggleState()
@@ -2972,7 +3102,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                      TrackingService.AnnouncePlayerDeathSelf && TrackingService.AnnouncePlayerDeathTeam &&
                      TrackingService.AnnouncePlayerRespawnSelf && TrackingService.AnnouncePlayerRespawnTeam &&
                      TrackingService.AnnounceNewShops && TrackingService.AnnounceSuspiciousShops &&
-                     TrackingService.AnnounceCargoDocking && TrackingService.AnnounceCargoEgress;
+                     TrackingService.AnnounceCargoDocking && TrackingService.AnnounceCargoEgress &&
+                     TrackingService.AnnounceSmartAlerts;
 
         bool anyOn = TrackingService.AnnounceCargo || TrackingService.AnnounceHeli || TrackingService.AnnounceChinook ||
                      TrackingService.AnnounceVendor || TrackingService.AnnounceOilRig || TrackingService.AnnounceDeepSea ||
@@ -2980,7 +3111,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                      TrackingService.AnnouncePlayerDeathSelf || TrackingService.AnnouncePlayerDeathTeam ||
                      TrackingService.AnnouncePlayerRespawnSelf || TrackingService.AnnouncePlayerRespawnTeam ||
                      TrackingService.AnnounceNewShops || TrackingService.AnnounceSuspiciousShops ||
-                     TrackingService.AnnounceCargoDocking || TrackingService.AnnounceCargoEgress;
+                     TrackingService.AnnounceCargoDocking || TrackingService.AnnounceCargoEgress ||
+                     TrackingService.AnnounceSmartAlerts;
 
         if (_alertRules.Count > 0)
         {
@@ -3020,6 +3152,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "Vendor": TrackingService.AnnounceVendor = val; break;
                 case "OilRig": TrackingService.AnnounceOilRig = val; break;
                 case "DeepSea": TrackingService.AnnounceDeepSea = val; break;
+                case "SmartAlerts": TrackingService.AnnounceSmartAlerts = val; break;
                 case "PlayerOnline": TrackingService.AnnouncePlayerOnline = val; break;
                 case "PlayerOffline": TrackingService.AnnouncePlayerOffline = val; break;
                 case "PlayerDeathSelf": TrackingService.AnnouncePlayerDeathSelf = val; break;
@@ -3090,6 +3223,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "Vendor": isSelected = TrackingService.AnnounceVendor; break;
                 case "OilRig": isSelected = TrackingService.AnnounceOilRig; break;
                 case "DeepSea": isSelected = TrackingService.AnnounceDeepSea; break;
+                case "SmartAlerts": isSelected = TrackingService.AnnounceSmartAlerts; break;
                 case "PlayerOnline": isSelected = TrackingService.AnnouncePlayerOnline; break;
                 case "PlayerOffline": isSelected = TrackingService.AnnouncePlayerOffline; break;
                 case "PlayerDeathSelf": isSelected = TrackingService.AnnouncePlayerDeathSelf; break;

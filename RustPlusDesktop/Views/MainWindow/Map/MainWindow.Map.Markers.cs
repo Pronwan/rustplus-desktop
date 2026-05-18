@@ -47,6 +47,13 @@ public partial class MainWindow
     private DateTime? _heliLastEventUtc;   // Session memory: last crash or despawn
     private bool _heliLastEventWasCrash;    // Was the last event a crash (shot down)?
     private bool _firstPollDyn = true;
+
+    // Patrol Heli & Traveling Vendor Spawning / Despawning memory
+    private DateTime? _heliSpawnTime;
+    private bool _heliMidEvent;
+    private DateTime? _vendorSpawnTime;
+    private DateTime? _vendorDespawnTime;
+    private bool _vendorMidEvent;
     private int _pollFailCount = 0;
     private bool _isAutoReconnecting = false;
 
@@ -664,15 +671,27 @@ public partial class MainWindow
         string? heliTip = null;
         if (heli.Id != 0)
         {
-            heliTip = "Patrol Heli active on map";
+            if (_heliSpawnTime.HasValue)
+            {
+                var elapsed = DateTime.UtcNow - _heliSpawnTime.Value;
+                heliTimer = elapsed.TotalHours >= 1
+                    ? $"{(int)elapsed.TotalHours}h {elapsed.Minutes:D2}m"
+                    : $"{(int)elapsed.TotalMinutes}m {elapsed.Seconds:D2}s";
+                heliTip = $"Patrol Heli active – running for {FormatAgo(elapsed)}";
+            }
+            else
+            {
+                heliTimer = "??:??";
+                heliTip = _heliMidEvent ? "Connected mid-event – spawn time unknown" : "Patrol Heli active (spawn time unknown)";
+            }
         }
         else if (_heliLastEventUtc.HasValue)
         {
             var ago = DateTime.UtcNow - _heliLastEventUtc.Value;
             heliTimer = $"-{(int)ago.TotalMinutes}:{ago.Seconds:D2}";
             heliTip = _heliLastEventWasCrash 
-                ? $"Patrol Heli shot down {(int)ago.TotalMinutes}m {ago.Seconds}s ago this session"
-                : $"Patrol Heli left the map {(int)ago.TotalMinutes}m {ago.Seconds}s ago this session";
+                ? $"Patrol Heli shot down {FormatAgo(ago)} ago this session"
+                : $"Patrol Heli left the map {FormatAgo(ago)} ago this session";
         }
         activeEvents.Add(new EventDockItem { Name = "Patrol Heli", Icon = "pack://application:,,,/Assets/icons/animat-Icons/patrol_helicopter.png", Active = heli.Id != 0, Id = heli.Id, X = heli.X, Y = heli.Y, Trackable = true, Type = 8, TimerText = heliTimer, ToolTip = heliTip });
 
@@ -735,10 +754,34 @@ public partial class MainWindow
         // 3. Chinook (Type 4)
         var chinook = GetPersistentEvent(markers, 4);
         activeEvents.Add(new EventDockItem { Name = "Chinook", Icon = "pack://application:,,,/Assets/icons/ch47.png", Active = chinook.Id != 0, Id = chinook.Id, X = chinook.X, Y = chinook.Y, Trackable = true, Type = 4 });
- 
+
         // 4. Vendor (Type 6)
         var vendor = GetPersistentEvent(markers, 6);
-        activeEvents.Add(new EventDockItem { Name = "Travelling Vendor", Icon = "pack://application:,,,/Assets/icons/vendor.png", Active = vendor.Id != 0, Id = vendor.Id, X = vendor.X, Y = vendor.Y, Trackable = true, Type = 6 });
+        string? vendorTimer = null;
+        string? vendorTip = null;
+        if (vendor.Id != 0)
+        {
+            if (_vendorSpawnTime.HasValue)
+            {
+                var elapsed = DateTime.UtcNow - _vendorSpawnTime.Value;
+                vendorTimer = elapsed.TotalHours >= 1
+                    ? $"{(int)elapsed.TotalHours}h {elapsed.Minutes:D2}m"
+                    : $"{(int)elapsed.TotalMinutes}m {elapsed.Seconds:D2}s";
+                vendorTip = $"Travelling Vendor active – running for {FormatAgo(elapsed)}";
+            }
+            else
+            {
+                vendorTimer = "??:??";
+                vendorTip = _vendorMidEvent ? "Connected mid-event – spawn time unknown" : "Travelling Vendor active (spawn time unknown)";
+            }
+        }
+        else if (_vendorDespawnTime.HasValue)
+        {
+            var ago = DateTime.UtcNow - _vendorDespawnTime.Value;
+            vendorTimer = $"-{(int)ago.TotalMinutes}:{ago.Seconds:D2}";
+            vendorTip = $"Travelling Vendor despawned {FormatAgo(ago)} ago this session";
+        }
+        activeEvents.Add(new EventDockItem { Name = "Travelling Vendor", Icon = "pack://application:,,,/Assets/icons/vendor.png", Active = vendor.Id != 0, Id = vendor.Id, X = vendor.X, Y = vendor.Y, Trackable = true, Type = 6, TimerText = vendorTimer, ToolTip = vendorTip });
  
         // 5. Deep Sea (Using native _deepSeaActive logic)
         string? dsTimer = null;
@@ -1189,6 +1232,35 @@ public partial class MainWindow
                         _dynKnown.Add(key);
                         AppendLog($"[DynEvent] New: Type={m.Type}, Kind={m.Kind}, Label={m.Label}");
 
+                        if (m.Type == 8) // Patrol Heli
+                        {
+                            if (_firstPollDyn)
+                            {
+                                _heliMidEvent = true;
+                                _heliSpawnTime = null;
+                            }
+                            else
+                            {
+                                _heliSpawnTime = DateTime.UtcNow;
+                                _heliMidEvent = false;
+                            }
+                        }
+                        else if (m.Type == 6) // Travelling Vendor
+                        {
+                            if (_firstPollDyn)
+                            {
+                                _vendorMidEvent = true;
+                                _vendorSpawnTime = null;
+                                _vendorDespawnTime = null;
+                            }
+                            else
+                            {
+                                _vendorSpawnTime = DateTime.UtcNow;
+                                _vendorMidEvent = false;
+                                _vendorDespawnTime = null;
+                            }
+                        }
+
                         bool shouldAnnounce = m.Type switch
                         {
                             5 => false, // Handled exclusively by ProcessCargoDocking to avoid duplicates
@@ -1441,6 +1513,8 @@ public partial class MainWindow
                     bool crashed = IsInsideMap(state.LastRealX, state.LastRealY);
                     _heliLastEventUtc = DateTime.UtcNow;
                     _heliLastEventWasCrash = crashed;
+                    _heliSpawnTime = null;
+                    _heliMidEvent = false;
 
                     if (crashed)
                     {
@@ -1457,6 +1531,13 @@ public partial class MainWindow
                     {
                         AppendLog($"[Heli] Patrol Heli left the map area.");
                     }
+                }
+                else if (state != null && state.Type == 6) // Travelling Vendor
+                {
+                    _vendorDespawnTime = DateTime.UtcNow;
+                    _vendorSpawnTime = null;
+                    _vendorMidEvent = false;
+                    AppendLog("[Vendor] Travelling Vendor despawned or left the map area.");
                 }
 
                 Overlay.Children.Remove(oldEl);
