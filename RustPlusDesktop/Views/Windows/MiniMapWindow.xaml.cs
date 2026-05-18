@@ -53,6 +53,25 @@ namespace RustPlusDesk
                     OnClicked?.Invoke();
                 }
             };
+
+            Loaded += (s, e) =>
+            {
+                var settings = RustPlusDesk.Services.StorageService.LoadCache<RustPlusDesk.Services.MiniMapSettings>("minimap_settings");
+                if (settings != null)
+                {
+                    CmbShape.SelectedIndex = settings.ShapeIndex;
+                    SliOpacity.Value = settings.Opacity;
+                    ChkShowTime.IsChecked = settings.ShowTime;
+                    UpdateSize(settings.Size, updateSlider: true);
+                }
+                else
+                {
+                    CmbShape.SelectedIndex = 0; // Standard Circle
+                    SliOpacity.Value = 1.0;
+                    ChkShowTime.IsChecked = false;
+                    UpdateSize(260.0, updateSlider: true);
+                }
+            };
         }
 
         private int _viewboxId = 0;
@@ -112,32 +131,8 @@ namespace RustPlusDesk
             {
                 // SHIFT gedrückt → Fenstergröße ändern
                 double factor = e.Delta > 0 ? 1.1 : 1.0 / 1.1;
-
-                // aktuelle Größe
                 double newW = Width * factor;
-                double newH = Height * factor;
-
-                // Mindest- und Maximalwerte, damit’s nicht verschwindet oder riesig wird
-                newW = Math.Max(160, Math.Min(newW, 600));
-                newH = Math.Max(160, Math.Min(newH, 600));
-
-                Width = newW;
-                Height = newH;
-
-                // Kreis und Rand anpassen
-                Circle.Width = newW;
-                Circle.Height = newH;
-
-                if (Content is Grid g)
-                {
-                    foreach (var child in g.Children)
-                    {
-                        if (child is Border b)
-                        {
-                            b.CornerRadius = new CornerRadius(newW / 2.0);
-                        }
-                    }
-                }
+                UpdateSize(newW, updateSlider: true);
 
                 e.Handled = true;
                 return;
@@ -202,8 +197,8 @@ namespace RustPlusDesk
 
             // Verhältnis: wieviel Karten-Pixel steckt in 1 Fenster-Pixel?
             // (Window.Width/Height nimmst du aus dem tatsächlichen Fenster)
-            double winW = Math.Max(1.0, this.ActualWidth);
-            double winH = Math.Max(1.0, this.ActualHeight);
+            double winW = Math.Max(1.0, MapContainer.ActualWidth);
+            double winH = Math.Max(1.0, MapContainer.ActualHeight);
 
             double scaleX = shownW / winW;
             double scaleY = shownH / winH;
@@ -242,33 +237,110 @@ namespace RustPlusDesk
             MirrorBrush.Stretch = Stretch.Uniform;
         }
 
-        // Falls du später eckig statt rund willst:
-        public void SetSquare(bool square)
+        private void BtnSettings_Click(object sender, RoutedEventArgs e)
         {
-            if (square)
+            SettingsPopup.Visibility = Visibility.Visible;
+            SettingsHoverBorder.Visibility = Visibility.Collapsed;
+        }
+
+        private void BtnSettingsClose_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsPopup.Visibility = Visibility.Collapsed;
+            SettingsHoverBorder.Visibility = Visibility.Visible;
+        }
+
+        private void CmbShape_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateSize(Width, updateSlider: true);
+        }
+
+        private void SliOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (MapShapeBorder != null)
+                MapShapeBorder.Opacity = e.NewValue;
+
+            int pct = (int)Math.Round(e.NewValue * 100);
+            if (LblOpacity != null)
+                LblOpacity.Text = $"Opacity: {pct}%";
+
+            SaveSettings();
+        }
+
+        private void SliSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            UpdateSize(e.NewValue, updateSlider: false);
+        }
+
+        private void SaveSettings()
+        {
+            if (CmbShape == null || SliOpacity == null || SliSize == null || ChkShowTime == null) return;
+
+            var settings = new RustPlusDesk.Services.MiniMapSettings(
+                CmbShape.SelectedIndex,
+                SliSize.Value,
+                SliOpacity.Value,
+                ChkShowTime.IsChecked == true
+            );
+
+            RustPlusDesk.Services.StorageService.SaveCache("minimap_settings", settings);
+        }
+
+        private bool _isUpdatingSize = false;
+        private void UpdateSize(double newSize, bool updateSlider = true)
+        {
+            if (_isUpdatingSize) return;
+            _isUpdatingSize = true;
+            try
             {
-                Circle.Visibility = Visibility.Collapsed;
-                Content = new Border
+                newSize = Math.Max(160, Math.Min(newSize, 800));
+                
+                Width = newSize;
+                Height = newSize;
+
+                int idx = CmbShape?.SelectedIndex ?? 0;
+                if (MapContainer != null && MapShapeBorder != null)
                 {
-                    Width = Width,
-                    Height = Height,
-                    CornerRadius = new CornerRadius(12),
-                    BorderBrush = new SolidColorBrush(Color.FromArgb(102, 0, 0, 0)),
-                    BorderThickness = new Thickness(1),
-                    Background = Brushes.Transparent,
-                  //  Child = new Rectangle
-                  //  {
-                  //      Fill = MirrorBrush,
-                  //      RadiusX = 12,
-                  //      RadiusY = 12
-                   // }
-                };
+                    if (idx == 0) // Circle
+                    {
+                        MapContainer.Width = newSize;
+                        MapContainer.Height = newSize;
+                        MapShapeBorder.CornerRadius = new CornerRadius(newSize / 2.0);
+                    }
+                    else if (idx == 1) // Square
+                    {
+                        MapContainer.Width = newSize;
+                        MapContainer.Height = newSize;
+                        MapShapeBorder.CornerRadius = new CornerRadius(12);
+                    }
+                    else if (idx == 2) // Rectangle (16:9)
+                    {
+                        MapContainer.Width = newSize;
+                        MapContainer.Height = newSize * 9.0 / 16.0;
+                        MapShapeBorder.CornerRadius = new CornerRadius(12);
+                    }
+                }
+
+                int pct = (int)Math.Round((newSize / 260.0) * 100);
+                if (LblSize != null)
+                    LblSize.Text = $"Size: {pct}% (SHIFT+Mousewheel)";
+
+                if (updateSlider && SliSize != null)
+                    SliSize.Value = newSize;
             }
-            else
+            finally
             {
-                // zurück auf rund
-                InitializeComponent();
+                _isUpdatingSize = false;
             }
+
+            SaveSettings();
+        }
+
+        private void ChkShowTime_Changed(object sender, RoutedEventArgs e)
+        {
+            if (TimeOverlayBorder != null)
+                TimeOverlayBorder.Visibility = (ChkShowTime.IsChecked == true) ? Visibility.Visible : Visibility.Collapsed;
+
+            SaveSettings();
         }
     }
 }

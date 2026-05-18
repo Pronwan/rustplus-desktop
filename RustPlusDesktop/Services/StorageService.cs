@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -72,3 +72,5 @@ public static class StorageService
         }
     }
 }
+
+public record MiniMapSettings(int ShapeIndex, double Size, double Opacity, bool ShowTime);
