@@ -12,13 +12,59 @@
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
                 <TextBlock Text="Patch Notes &amp; Version History" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,2"/>
                 <!-- UPDATE VERSION NUMBER HERE -->
-                <TextBlock Text="Current Version: v5.0.0" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
+                <TextBlock Text="Current Version: v5.1.0-beta1" Foreground="{DynamicResource Accent}" FontSize="11" Margin="0,0,0,4"/>
             </StackPanel>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v4.6.0 PATCH NOTES -->
+                    <!-- NEW v5.1.0-beta1 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v5.1.0-beta1 |  Upkeep, Smart Alerts &amp; Minimap Polish (May 18, 2026)" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            
+                            <TextBlock Text="&#x2022; Embedded Shop Mechanics &amp; Profit Trades" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                No more annoying popups! The Profit Trades (Arbitrage) and "Buy X" features are now fully integrated directly into the main window's shop detail panel for a seamless, unified trading workflow.
+                            </TextBlock>
+                            <Image Source="pack://application:,,,/Assets/Screenshots/beta-5.1_1.png" Stretch="Uniform" MaxHeight="350" Margin="0,4,0,12" />
+
+                            <TextBlock Text="&#x2022; Live Event Timers &amp; Chat Commands" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                All map events (Patrol Heli, Cargo Ship, Chinook, Oil Rig, and Deep Sea) now feature precise, live countdown timers inside the Event Dock. Additionally, you can now query the state and time remaining for all active events instantly using direct chat commands in your team chat.
+                            </TextBlock>
+                            <Image Source="pack://application:,,,/Assets/Screenshots/beta-5.1_2.png" Stretch="Uniform" MaxHeight="250" Margin="0,4,0,4" />
+                            <Image Source="pack://application:,,,/Assets/Screenshots/beta-5.1_4.png" Stretch="Uniform" MaxHeight="250" Margin="0,0,0,12" />
+
+                            <TextBlock Text="&#x2022; Minimap Upgrade: Layouts, Opacity &amp; Clock" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                The Minimap has received a major polish! You can now choose between multiple shape layouts (Circle, Square, and 16:9 Rectangle), dynamically adjust the overlay opacity, and toggle a real-time server clock to keep track of wipe cycles.
+                            </TextBlock>
+                            <Image Source="pack://application:,,,/Assets/Screenshots/beta-5.1_3.png" Stretch="Uniform" MaxHeight="280" Margin="0,4,0,12" />
+
+                            <TextBlock Text="&#x2022; Advanced TC Upkeep &amp; Detail Reports" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Builder heaven! You can now query the upkeep status of multiple Tool Cupboards simultaneously in a compact overview. Plus, we've introduced the new <Run FontWeight="Bold">!upkeepdetail</Run> command which outputs granular upkeep reports for all Storage Monitors in separate chat messages (with a configurable delay) and projects resources calculated for a full 24-hour cycle.
+                            </TextBlock>
+                            <Image Source="pack://application:,,,/Assets/Screenshots/beta-5.1_6.png" Stretch="Uniform" MaxHeight="350" Margin="0,4,0,12" />
+
+                            <TextBlock Text="&#x2022; Expanded Smart Alerts Options" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                Smart Alerts have become much more powerful. Beyond local sounds and popups, you can now toggle a beautiful In-App visual popup alert, or have the alarm event printed directly to your team chat as a team message when a smart alarm is triggered.
+                            </TextBlock>
+                            <Image Source="pack://application:,,,/Assets/Screenshots/beta-5.1_7.png" Stretch="Uniform" MaxHeight="350" Margin="0,4,0,12" />
+
+                            <TextBlock Text="&#x2022; Connection Resilience &amp; Alert Fixes" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                                <Run FontWeight="Bold">&#x2022; Chat Alert Delay:</Run> Slightly increased the delay between sequential chat alerts to prevent duplicate or spam notifications on laggy API servers.<LineBreak/>
+                                <Run FontWeight="Bold">&#x2022; Handshake Timeout:</Run> Increased the connection/handshake timeout limit from 5 seconds to 15 seconds, ensuring a successful map download even on highly congested or high-ping connections.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
+                    <!-- OLD v5.0.0 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
