@@ -876,15 +876,9 @@ public partial class MainWindow
         Action? onUpdated = null;
         onUpdated = () =>
         {
-            if (win == null || !win.IsLoaded)
-            {
-                TrackingService.OnOnlinePlayersUpdated -= onUpdated;
-                return;
-            }
-            
             try 
             { 
-                win.Dispatcher.BeginInvoke(new Action(() => { 
+                win?.Dispatcher.BeginInvoke(new Action(() => { 
                     try 
                     {
                         if (win == null || !win.IsLoaded) return;
