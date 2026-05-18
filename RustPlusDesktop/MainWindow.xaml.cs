@@ -2596,6 +2596,36 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     }
 
     private ServerProfile? _serverToDelete;
+
+    private void Server_RelinkBM_Click(object sender, RoutedEventArgs e)
+    {
+        ServerProfile? prof = null;
+        if (sender is FrameworkElement fe && fe.Tag is ServerProfile p)
+        {
+            prof = p;
+        }
+        else
+        {
+            prof = _vm.Selected;
+        }
+
+        if (prof == null) return;
+
+        var newId = ShowInputBox($"Enter Battlemetrics Server ID for \"{prof.Name}\":", "Relink Battlemetrics", prof.BattleMetricsId ?? "");
+        if (newId != null)
+        {
+            prof.BattleMetricsId = string.IsNullOrWhiteSpace(newId) ? null : newId.Trim();
+            _vm.Save();
+            AppendLog($"BM ID updated for {prof.Name}: {prof.BattleMetricsId ?? "Auto"}");
+
+            // If it's the current server, restart polling
+            if (_vm.Selected == prof)
+            {
+                TrackingService.StartPolling(prof.Host ?? "", prof.Port, prof.Name ?? "", prof.BattleMetricsId);
+            }
+        }
+    }
+
     private void Server_Delete_Click(object sender, RoutedEventArgs e)
     {
         if (((FrameworkElement)sender).Tag is not ServerProfile prof) return;
