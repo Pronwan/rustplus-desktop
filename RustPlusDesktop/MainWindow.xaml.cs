@@ -59,6 +59,7 @@ public partial class MainWindow : ui.FluentWindow
 {
 
     private readonly MainViewModel _vm = new();
+    private readonly UpdateService _updateService = new();
 
     private DateTime _lastPairingPingAt = DateTime.MinValue;
     private readonly IRustPlusClient _rust;  // Interface statt fester Klasse
@@ -212,47 +213,6 @@ public partial class MainWindow : ui.FluentWindow
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
     }
 
-    public static class AppInfo
-    {
-        public static string VersionRaw
-        {
-            get
-            {
-                var attr = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-                if (attr != null && !string.IsNullOrWhiteSpace(attr.InformationalVersion))
-                    return attr.InformationalVersion;
-
-                var path = Environment.ProcessPath;
-                if (!string.IsNullOrEmpty(path))
-                {
-                    try
-                    {
-                        var fvi = FileVersionInfo.GetVersionInfo(path);
-                        if (!string.IsNullOrWhiteSpace(fvi.ProductVersion))
-                            return fvi.ProductVersion;
-                    }
-                    catch { }
-                }
-
-                return Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0";
-            }
-        }
-
-        public static string VersionShort => NormalizeVer(VersionRaw);
-
-        public static Version VersionForCompare =>
-            Version.TryParse(VersionShort, out var v) ? v : new Version(0, 0, 0);
-
-        private static string NormalizeVer(string s)
-        {
-            if (string.IsNullOrWhiteSpace(s)) return "0.0.0";
-            s = s.Trim();
-            if (s.StartsWith("v", StringComparison.OrdinalIgnoreCase)) s = s[1..];
-            int cut = s.IndexOfAny(new[] { '-', '+' }); 
-            return cut > 0 ? s[..cut] : s;
-        }
-    }
-
     private BitmapSource? _mapBaseBmp; // Original-Map ohne Marker
     private readonly List<(double uPx, double vPx, string? label)> _staticMarkers = new();
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -290,10 +250,10 @@ public partial class MainWindow : ui.FluentWindow
         // ── Wpf.Ui: Apply Fluent dark theme to all controls ───────────────────
         ApplicationThemeManager.Apply(ApplicationTheme.Dark, updateAccent: true);
         
-        if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
-        this.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
+        if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
+        this.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
         if (FindName("TxtVersion") is TextBlock txt)
-            txt.Text = $"v{AppInfo.VersionRaw}";
+            txt.Text = $"v{_updateService.VersionRaw}";
         InitCameraUi();
         InitSmoothFollowLoop();
         ApplySettings();
@@ -1048,6 +1008,12 @@ public partial class MainWindow : ui.FluentWindow
 
             // Kontextmenü sauber schließen (optional)
             BtnCrosshair.ContextMenu?.IsOpen.Equals(false);
+
+            // Launch pending update installer if available
+            if (!string.IsNullOrEmpty(_updateService.PendingInstallerPath))
+            {
+                _updateService.StartInstaller(_updateService.PendingInstallerPath);
+            }
         }
         catch (Exception ex)
         { }
@@ -4204,289 +4170,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     // CHECK FOR UPDATES
 
     // --- Konfiguration ---
-    private const string RepoOwner = "Pronwan";
-    private const string RepoName = "rustplus-desktop";
-    private const string InstallerAssetName = "RustPlusDesk-Setup.exe";
-
-    // aktuelle App-Version ermitteln (fallback auf 0.0.0 wenn nicht gesetzt)
-    private static Version GetCurrentVersion()
-    {
-        try
-        {
-            // Zuerst versuchen wir es über unsere robuste AppInfo
-            if (Version.TryParse(AppInfo.VersionShort, out var v0))
-                return v0;
-
-            // Fallback auf ProcessPath
-            var path = Environment.ProcessPath;
-            if (!string.IsNullOrEmpty(path))
-            {
-                var fvi = FileVersionInfo.GetVersionInfo(path);
-                if (!string.IsNullOrWhiteSpace(fvi.ProductVersion) && Version.TryParse(NormalizeVer(fvi.ProductVersion), out var v1))
-                    return v1;
-            }
-
-            // dann AssemblyVersion
-            var v2 = Assembly.GetExecutingAssembly().GetName().Version;
-            if (v2 != null) return v2;
-
-            return new Version(0, 0, 0);
-        }
-        catch { return new Version(0, 0, 0); }
-    }
-
-    private static string NormalizeVer(string s)
-    {
-        // entfernt leading 'v' und schneidet evtl. Suffixe (z.B. "-beta") ab
-        if (string.IsNullOrWhiteSpace(s)) return "0.0.0";
-        s = s.Trim();
-        if (s.StartsWith("v", StringComparison.OrdinalIgnoreCase)) s = s[1..];
-        // „1.2.3-beta+build“ -> „1.2.3“
-        int dash = s.IndexOfAny(new[] { '-', '+' });
-        if (dash > 0) s = s[..dash];
-        return s;
-    }
-
-    private sealed record GitHubRelease(string TagName, string? Name, string? Body, List<GitHubAsset> Assets);
-    private sealed record GitHubAsset(string Name, string BrowserDownloadUrl);
-
-    private async Task<(Version latest, string tag, string? downloadUrl)?> GetLatestReleaseAsync()
-    {
-        using var http = new HttpClient();
-        http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("RustPlusDesk", GetCurrentVersion().ToString()));
-        http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
-        http.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
-
-        var url = $"https://api.github.com/repos/{RepoOwner}/{RepoName}/releases/latest";
-        using var resp = await http.GetAsync(url);
-        if (!resp.IsSuccessStatusCode)
-        {
-            AppendLog($"❌ GitHub API error: {(int)resp.StatusCode} {resp.ReasonPhrase}");
-            return null;
-        }
-
-        using var stream = await resp.Content.ReadAsStreamAsync();
-        using var doc = await JsonDocument.ParseAsync(stream);
-        var root = doc.RootElement;
-
-        var tag = root.GetProperty("tag_name").GetString() ?? "";
-        var assets = root.GetProperty("assets").EnumerateArray();
-
-        string? dl = null;
-        foreach (var a in assets)
-        {
-            var name = a.GetProperty("name").GetString() ?? "";
-            if (string.Equals(name, InstallerAssetName, StringComparison.OrdinalIgnoreCase))
-            {
-                dl = a.GetProperty("browser_download_url").GetString();
-                break;
-            }
-        }
-
-        var v = NormalizeVer(tag);
-        if (!Version.TryParse(v, out var latest))
-        {
-            AppendLog($"⚠️ Could not parse version from tag “{tag}”.");
-            return null;
-        }
-        return (latest, tag, dl);
-    }
-
-    private async Task<string?> DownloadInstallerAsync(string url, IProgress<DownloadReport>? progress = null)
-    {
-        var target = System.IO.Path.Combine(System.IO.Path.GetTempPath(), InstallerAssetName);
-        try
-        {
-            using var http = new HttpClient();
-            http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("RustPlusDesk", GetCurrentVersion().ToString()));
-
-            using var resp = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-            resp.EnsureSuccessStatusCode();
-
-            var total = resp.Content.Headers.ContentLength;
-            using var input = await resp.Content.ReadAsStreamAsync();
-            using var file = new FileStream(target, FileMode.Create, FileAccess.Write, FileShare.None);
-
-            var buffer = new byte[81920];
-            long readTotal = 0;
-            int read;
-            var sw = Stopwatch.StartNew();
-            var lastReport = sw.ElapsedMilliseconds;
-
-            while ((read = await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
-            {
-                await file.WriteAsync(buffer, 0, read);
-                readTotal += read;
-
-                var now = sw.ElapsedMilliseconds;
-                if (now - lastReport > 200 || readTotal == total)
-                {
-                    lastReport = now;
-                    var report = new DownloadReport
-                    {
-                        Progress = total.HasValue ? (double)readTotal / total.Value : 0,
-                        Percentage = total.HasValue ? $"{(double)readTotal / total.Value:P0}" : "0%",
-                        BytesReceived = FormatBytes(readTotal),
-                        TotalBytes = total.HasValue ? FormatBytes(total.Value) : "Unknown",
-                        Speed = FormatBytes((long)(readTotal / (sw.Elapsed.TotalSeconds > 0 ? sw.Elapsed.TotalSeconds : 1))) + "/s"
-                    };
-                    progress?.Report(report);
-                }
-            }
-            return target;
-        }
-        catch (Exception ex)
-        {
-            AppendLog("❌ Download failed: " + ex.Message);
-            return null;
-        }
-    }
-
-    private static string FormatBytes(long bytes)
-    {
-        string[] Suffix = { "B", "KB", "MB", "GB", "TB" };
-        int i;
-        double dblSByte = bytes;
-        for (i = 0; i < Suffix.Length && bytes >= 1024; i++, bytes /= 1024)
-        {
-            dblSByte = bytes / 1024.0;
-        }
-
-        return $"{dblSByte:0.##} {Suffix[i]}";
-    }
-
-    private async Task<bool> StartInstallerAndExitAsync(string installerPath)
-    {
-        try
-        {
-            AppendLog("Starting installer …");
-            var psi = new ProcessStartInfo
-            {
-                FileName = installerPath,
-                UseShellExecute = true,
-                Verb = "runas" // UAC prompt, falls nötig
-            };
-            Process.Start(psi);
-
-            // optional: Listener ordentlich stoppen
-            try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
-
-            // kleines Delay, dann App schließen
-            await Task.Delay(500);
-            System.Windows.Application.Current.Shutdown();
-            return true;
-        }
-        catch (Exception ex)
-        {
-            AppendLog("❌ Could not start installer: " + ex.Message);
-            return false;
-        }
-    }
-    private void BtnPatchNotes_Click(object sender, RoutedEventArgs e)
-    {
-        var win = new Views.PatchNotesWindow
-        {
-            Owner = this
-        };
-        win.Show();
-        win.Activate();
-    }
-
-    private void BtnSettings_Click(object sender, RoutedEventArgs e)
-    {
-        var modal = new SettingsModal { Owner = this };
-        modal.ShowDialog();
-        ApplySettings();
-
-        if (modal.RequestAction == "ModifyChatAlerts")
-        {
-            Dispatcher.BeginInvoke(new Action(() => {
-                if (ChatAnnounceLabel.ContextMenu != null)
-                {
-                    ChatAnnounceLabel.ContextMenu.PlacementTarget = ChatAnnounceLabel;
-                    ChatAnnounceLabel.ContextMenu.Placement = PlacementMode.Bottom;
-                    ChatAnnounceLabel.ContextMenu.IsOpen = true;
-                }
-            }), System.Windows.Threading.DispatcherPriority.Input);
-        }
-        else if (modal.RequestAction == "ChatCommands")
-        {
-            // Open Chat if closed
-            if (ChatContentBorder.Visibility != Visibility.Visible)
-            {
-                BtnToggleChat_Click(null, null);
-            }
-            // Show commands
-            BtnOpenChatCommands_Click(null, null);
-        }
-    }
-    
-    private void ShowInfoSnackbar(string title, string message, ui.ControlAppearance appearance = ui.ControlAppearance.Secondary)
-    {
-        if (RootSnackbar == null) return;
-        
-        var snackbar = new ui.Snackbar(RootSnackbar)
-        {
-            Title = title,
-            Content = message,
-            Appearance = appearance,
-            Icon = new ui.SymbolIcon(ui.SymbolRegular.Info24),
-            Timeout = TimeSpan.FromSeconds(3.5)
-        };
-        snackbar.Show();
-    }
-
-    private void ApplySettings()
-    {
-        if (TxtLog != null)
-        {
-            TxtLog.Visibility = TrackingService.HideConsole ? Visibility.Collapsed : Visibility.Visible;
-        }
-
-        if (ColSidebar != null)
-        {
-            double w = TrackingService.SidebarWidth;
-            if (w < 400) w = 400;
-            
-            // Ensure we don't squash the map below 800 if window is small
-            if (this.ActualWidth > 0)
-            {
-                double maxW = this.ActualWidth - 850; // 800 map + 50 padding/splitter
-                if (w > maxW && maxW > 400) w = maxW;
-            }
-
-            ColSidebar.Width = new GridLength(w, GridUnitType.Pixel);
-        }
-    }
-
-    private void SidebarSplitter_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
-    {
-        if (ColSidebar != null)
-        {
-            TrackingService.SidebarWidth = ColSidebar.ActualWidth;
-        }
-    }
-    private void BtnDiscord_Click(object sender, RoutedEventArgs e)
-    {
-        try { Process.Start(new ProcessStartInfo("https://discord.gg/v4X584wye4") { UseShellExecute = true }); }
-        catch { }
-    }
-
     private async Task AutoCheckUpdatesAsync()
     {
         try
         {
-            var latestInfo = await GetLatestReleaseAsync();
+            var latestInfo = await _updateService.GetLatestReleaseAsync();
             if (latestInfo is null) return;
 
-            var (latest, tag, _) = latestInfo.Value;
-            var curr = AppInfo.VersionForCompare;
+            var (latest, tag, dlUrl) = latestInfo.Value;
+            var curr = _updateService.VersionForCompare;
 
             bool updateAvailable = false;
             if (latest > curr) updateAvailable = true;
             else if (latest == curr)
             {
-                bool localIsBeta = AppInfo.VersionRaw.Contains("-", StringComparison.OrdinalIgnoreCase);
+                bool localIsBeta = _updateService.VersionRaw.Contains("-", StringComparison.OrdinalIgnoreCase);
                 bool remoteIsBeta = tag.Contains("-", StringComparison.OrdinalIgnoreCase);
                 if (localIsBeta && !remoteIsBeta) updateAvailable = true;
             }
@@ -4498,87 +4196,120 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     _vm.IsUpdateAvailable = true;
                     _vm.UpdateTag = tag;
                     AppendLog($"✨ Update found: {tag}");
+                    ShowUpdateSnackbar(tag, dlUrl);
                 });
             }
         }
         catch { /* silent */ }
     }
 
-    private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
+    private void ShowUpdateSnackbar(string tag, string? dlUrl)
     {
-        if (_listenerStarting) return;
+        if (RootSnackbar == null) return;
 
+        var snackbar = new ui.Snackbar(RootSnackbar)
+        {
+            Title = "Update Available",
+            Appearance = ui.ControlAppearance.Success,
+            Icon = new ui.SymbolIcon(ui.SymbolRegular.ArrowDownload24),
+            Timeout = TimeSpan.FromSeconds(7),
+            MaxWidth = 350,
+            HorizontalAlignment = HorizontalAlignment.Right
+        };
+
+        var stack = new StackPanel { Orientation = Orientation.Vertical };
+        stack.Children.Add(new TextBlock { Text = $"Version {tag} is available. Download now?", Margin = new Thickness(0, 0, 0, 8) });
+
+        if (!string.IsNullOrEmpty(dlUrl))
+        {
+            var btn = new ui.Button
+            {
+                Content = "Download & Update on Close",
+                Appearance = ui.ControlAppearance.Primary,
+                HorizontalAlignment = HorizontalAlignment.Left
+            };
+            btn.Click += async (s, e) =>
+            {
+                // In Wpf.Ui 3.0 the Snackbar is controlled via its Visibility or IsShown property if used directly
+                // but if it's a separate window/control it might be different. 
+                // Using IsOpen = false is common for many popup-like controls in Wpf.Ui
+                snackbar.Visibility = Visibility.Collapsed; 
+                await PerformUpdateDownloadAsync(tag, dlUrl);
+            };
+            stack.Children.Add(btn);
+        }
+
+        snackbar.Content = stack;
+        snackbar.Show();
+    }
+
+    private void ApplySettings()
+    {
+        if (ColSidebar != null)
+        {
+            ColSidebar.Width = new GridLength(TrackingService.SidebarWidth);
+        }
+        _announceSpawns = TrackingService.AnnounceSpawnsMaster;
+    }
+
+    private void ShowInfoSnackbar(string title, string message, ui.ControlAppearance appearance)
+    {
+        if (RootSnackbar == null) return;
+        var snackbar = new ui.Snackbar(RootSnackbar)
+        {
+            Title = title,
+            Content = message,
+            Appearance = appearance,
+            Icon = new ui.SymbolIcon(ui.SymbolRegular.Info24),
+            Timeout = TimeSpan.FromSeconds(5),
+            MaxWidth = 350,
+            HorizontalAlignment = HorizontalAlignment.Right
+        };
+        snackbar.Show();
+    }
+
+    private void SidebarSplitter_DragCompleted(object sender, DragCompletedEventArgs e)
+    {
+        if (ColSidebar != null)
+        {
+            TrackingService.SidebarWidth = ColSidebar.ActualWidth;
+        }
+    }
+
+    private void BtnDiscord_Click(object sender, RoutedEventArgs e)
+    {
         try
         {
-            // _vm.IsBusy = true; // No overlay during update check if we want it to be non-intrusive
-            // _vm.BusyText = "Checking GitHub release …";
+            Process.Start(new ProcessStartInfo("https://discord.gg/v4X584wye4") { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            AppendLog("❌ Could not open Discord link: " + ex.Message);
+        }
+    }
 
-            var curr = AppInfo.VersionForCompare;
-            var latestInfo = await GetLatestReleaseAsync();
-            if (latestInfo is null)
-            {
-                // _vm.IsBusy = false; _vm.BusyText = "";
-                System.Windows.MessageBox.Show(
-                    "Could not query latest release. Please try again or open Releases page.",
-                    "Update", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
+    private void BtnPatchNotes_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo("https://github.com/Pronwan/rustplus-desktop/releases") { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            AppendLog("❌ Could not open Patch Notes link: " + ex.Message);
+        }
+    }
 
-            var (latest, tag, dlUrl) = latestInfo.Value;
-            AppendLog($"Current: {AppInfo.VersionShort} | Latest: {latest} ({tag})");
+    private void BtnSettings_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new SettingsModal { Owner = this };
+        dlg.ShowDialog();
+    }
 
-            bool updateAvailable = false;
-            if (latest > curr)
-            {
-                updateAvailable = true;
-            }
-            else if (latest == curr)
-            {
-                // Spezialfall: Wenn wir eine Beta haben (Raw enthält '-') und GitHub den exakt gleichen numerischen Tag hat,
-                // aber der GitHub-Tag KEIN '-' enthält, dann ist GitHub neuer (Final Release).
-                bool localIsBeta = AppInfo.VersionRaw.Contains("-", StringComparison.OrdinalIgnoreCase);
-                bool remoteIsBeta = tag.Contains("-", StringComparison.OrdinalIgnoreCase);
-
-                if (localIsBeta && !remoteIsBeta)
-                {
-                    updateAvailable = true;
-                }
-            }
-
-            if (!updateAvailable)
-            {
-                // _vm.IsBusy = false; _vm.BusyText = "";
-                _vm.IsUpdateAvailable = false;
-                System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
-
-            _vm.IsUpdateAvailable = true;
-            _vm.UpdateTag = tag;
-
-            // neuere Version vorhanden
-            if (string.IsNullOrWhiteSpace(dlUrl))
-            {
-                // _vm.IsBusy = false; _vm.BusyText = "";
-                var open = System.Windows.MessageBox.Show(
-                    $"New version available: {tag}\nOpen Releases page?",
-                    "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (open == MessageBoxResult.Yes)
-                    Process.Start(new ProcessStartInfo($"https://github.com/{RepoOwner}/{RepoName}/releases/latest") { UseShellExecute = true });
-                return;
-            }
-
-            var ask = System.Windows.MessageBox.Show(
-                $"New version available: {tag}\nDownload and install now?",
-                "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (ask != MessageBoxResult.Yes)
-            {
-                // _vm.IsBusy = false; _vm.BusyText = "";
-                return;
-            }
-
-            // Download mit detailliertem Progress
+    private async Task PerformUpdateDownloadAsync(string tag, string dlUrl)
+    {
+        try
+        {
             _vm.IsDownloadingUpdate = true;
             var prog = new Progress<DownloadReport>(r =>
             {
@@ -4588,10 +4319,98 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
                 _vm.UpdateDownloadPercentage = r.Percentage;
             });
-            var path = await DownloadInstallerAsync(dlUrl!, prog);
+
+            var path = await _updateService.DownloadInstallerAsync(dlUrl, prog);
+            _vm.IsDownloadingUpdate = false;
+
+            if (path == null)
+            {
+                ShowInfoSnackbar("Update", "Download failed.", ui.ControlAppearance.Danger);
+                return;
+            }
+
+            _updateService.PendingInstallerPath = path;
+            ShowInfoSnackbar("Update Downloaded", "The update will be installed automatically when you close the app.", ui.ControlAppearance.Success);
+        }
+        catch (Exception ex)
+        {
+            _vm.IsDownloadingUpdate = false;
+            AppendLog("❌ Update download failed: " + ex.Message);
+            ShowInfoSnackbar("Update", "Download failed: " + ex.Message, ui.ControlAppearance.Danger);
+        }
+    }
+
+    private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
+    {
+        if (_listenerStarting || _vm.IsDownloadingUpdate) return;
+        if (!string.IsNullOrEmpty(_updateService.PendingInstallerPath))
+        {
+            ShowInfoSnackbar("Update", "Update already downloaded. It will be installed when you close the app.", ui.ControlAppearance.Info);
+            return;
+        }
+
+        try
+        {
+            var curr = _updateService.VersionForCompare;
+            var latestInfo = await _updateService.GetLatestReleaseAsync();
+            if (latestInfo is null)
+            {
+                System.Windows.MessageBox.Show(
+                    "Could not query latest release. Please try again or open Releases page.",
+                    "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var (latest, tag, dlUrl) = latestInfo.Value;
+            AppendLog($"Current: {_updateService.VersionShort} | Latest: {latest} ({tag})");
+
+            bool updateAvailable = false;
+            if (latest > curr) updateAvailable = true;
+            else if (latest == curr)
+            {
+                bool localIsBeta = _updateService.VersionRaw.Contains("-", StringComparison.OrdinalIgnoreCase);
+                bool remoteIsBeta = tag.Contains("-", StringComparison.OrdinalIgnoreCase);
+                if (localIsBeta && !remoteIsBeta) updateAvailable = true;
+            }
+
+            if (!updateAvailable)
+            {
+                _vm.IsUpdateAvailable = false;
+                System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            _vm.IsUpdateAvailable = true;
+            _vm.UpdateTag = tag;
+
+            if (string.IsNullOrWhiteSpace(dlUrl))
+            {
+                var open = System.Windows.MessageBox.Show(
+                    $"New version available: {tag}\nOpen Releases page?",
+                    "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (open == MessageBoxResult.Yes)
+                    Process.Start(new ProcessStartInfo(UpdateService.LatestReleaseUrl) { UseShellExecute = true });
+                return;
+            }
+
+            var ask = System.Windows.MessageBox.Show(
+                $"New version available: {tag}\nDownload and install now?",
+                "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (ask != MessageBoxResult.Yes) return;
+
+            _vm.IsDownloadingUpdate = true;
+            var prog = new Progress<DownloadReport>(r =>
+            {
+                _vm.BusyText = $"Downloading installer … {r.Percentage}";
+                _vm.UpdateDownloadProgress = r.Progress * 100;
+                _vm.UpdateDownloadSpeed = r.Speed;
+                _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
+                _vm.UpdateDownloadPercentage = r.Percentage;
+            });
+            var path = await _updateService.DownloadInstallerAsync(dlUrl!, prog);
 
             _vm.IsDownloadingUpdate = false;
-            // _vm.IsBusy = false; _vm.BusyText = "";
 
             if (path == null)
             {
@@ -4599,14 +4418,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 return;
             }
 
-            await StartInstallerAndExitAsync(path);
+            AppendLog("Starting installer …");
+            _updateService.StartInstaller(path);
+            try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
+            await Task.Delay(500);
+            System.Windows.Application.Current.Shutdown();
         }
         catch (Exception ex)
         {
             _vm.IsUpdateAvailable = false;
             _vm.IsDownloadingUpdate = false;
-            // _vm.IsBusy = false;
-            // _vm.BusyText = "";
             AppendLog("❌ Update check failed: " + ex.Message);
             System.Windows.MessageBox.Show("Update check failed.\n" + ex.Message, "Update", MessageBoxButton.OK, MessageBoxImage.Error);
         }
@@ -4657,8 +4478,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         base.OnSourceInitialized(e);
 
         // Spätestens hier sollte Windows den Titel im Rahmen akzeptieren
-        if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
-        this.Title = $"RUST+ DESKTOP v{AppInfo.VersionRaw}";
+        if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
+        this.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
 
         var hwnd = new WindowInteropHelper(this).Handle;
         _hotkeyMgr = new GlobalHotkeyManager(hwnd);

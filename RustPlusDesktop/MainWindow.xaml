@@ -4842,8 +4842,9 @@
                 x:Name="RootSnackbar"
                 Grid.ColumnSpan="3"
                 Margin="20,0,20,20"
-                HorizontalAlignment="Stretch"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
+                MaxWidth="400"
                 Panel.ZIndex="9999" />
 
         </Grid>
