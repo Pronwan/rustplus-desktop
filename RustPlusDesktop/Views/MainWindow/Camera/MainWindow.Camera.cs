@@ -148,7 +148,8 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             {
                 Owner = this,                         // optional
                 Left = SystemParameters.WorkArea.Right - 280,
-                Top = SystemParameters.WorkArea.Top + 20
+                Top = SystemParameters.WorkArea.Top + 20,
+                DataContext = _vm
             };
 
             _miniMap.OnClicked = () =>
