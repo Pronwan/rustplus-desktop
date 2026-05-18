@@ -3288,6 +3288,13 @@
                                                     StaysOpenOnClick="True"
                                                     Style="{StaticResource DarkMenuItem}"
                                                     Tag="DeepSea" />
+                                                <MenuItem
+                                                    Click="Alert_MenuItem_Click"
+                                                    Header="Smart Alerts"
+                                                    IsCheckable="True"
+                                                    StaysOpenOnClick="True"
+                                                    Style="{StaticResource DarkMenuItem}"
+                                                    Tag="SmartAlerts" />
                                                 <Separator Style="{StaticResource DarkSeparator}" />
                                                 <MenuItem
                                                     FontWeight="Bold"

@@ -1873,6 +1873,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // n.Server ebenfalls bereinigen für konsistentes UI/Matching
         n = n with { Server = cleanSrv };
 
+        // Override DeviceName with Custom Name / PureName if device is identified
+        if (dev != null)
+        {
+            n = n with { DeviceName = dev.PureName };
+        }
+
         if (n.EntityId.HasValue)
         {
             // Dedup primär über ID (ignoriere Server-Namensunterschiede wie ANSI-Farben)
@@ -1914,6 +1920,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         // 4) Play Audio (Respects settings if device is identified, otherwise plays default)
         PlayAlarmAudio(dev);
+
+        // Send smart alert to team chat if setting and master switch are enabled
+        if (TrackingService.AnnounceSmartAlerts && _announceSpawns)
+        {
+            string alarmName = dev?.PureName ?? (!string.IsNullOrEmpty(n.DeviceName) ? n.DeviceName : "Smart Alarm");
+            _ = SendTeamChatSafeAsync($"ALARM: {alarmName} triggered!");
+        }
 
         if (dev != null)
         {
@@ -3034,6 +3047,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TrackingService.AnnouncePlayerRespawnTeam = val;
         TrackingService.AnnounceNewShops = val;
         TrackingService.AnnounceSuspiciousShops = val;
+        TrackingService.AnnounceSmartAlerts = val;
         TrackingService.AnnounceTradeAlerts = val;
     }
 
@@ -3047,7 +3061,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                !TrackingService.AnnouncePlayerDeathSelf && !TrackingService.AnnouncePlayerDeathTeam &&
                !TrackingService.AnnouncePlayerRespawnSelf && !TrackingService.AnnouncePlayerRespawnTeam &&
                !TrackingService.AnnounceNewShops && !TrackingService.AnnounceSuspiciousShops &&
-               !TrackingService.AnnounceTradeAlerts;
+               !TrackingService.AnnounceSmartAlerts && !TrackingService.AnnounceTradeAlerts;
     }
 
     private void UpdateMasterToggleState()
@@ -3058,7 +3072,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                      TrackingService.AnnouncePlayerDeathSelf && TrackingService.AnnouncePlayerDeathTeam &&
                      TrackingService.AnnouncePlayerRespawnSelf && TrackingService.AnnouncePlayerRespawnTeam &&
                      TrackingService.AnnounceNewShops && TrackingService.AnnounceSuspiciousShops &&
-                     TrackingService.AnnounceCargoDocking && TrackingService.AnnounceCargoEgress;
+                     TrackingService.AnnounceCargoDocking && TrackingService.AnnounceCargoEgress &&
+                     TrackingService.AnnounceSmartAlerts;
 
         bool anyOn = TrackingService.AnnounceCargo || TrackingService.AnnounceHeli || TrackingService.AnnounceChinook ||
                      TrackingService.AnnounceVendor || TrackingService.AnnounceOilRig || TrackingService.AnnounceDeepSea ||
@@ -3066,7 +3081,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                      TrackingService.AnnouncePlayerDeathSelf || TrackingService.AnnouncePlayerDeathTeam ||
                      TrackingService.AnnouncePlayerRespawnSelf || TrackingService.AnnouncePlayerRespawnTeam ||
                      TrackingService.AnnounceNewShops || TrackingService.AnnounceSuspiciousShops ||
-                     TrackingService.AnnounceCargoDocking || TrackingService.AnnounceCargoEgress;
+                     TrackingService.AnnounceCargoDocking || TrackingService.AnnounceCargoEgress ||
+                     TrackingService.AnnounceSmartAlerts;
 
         if (_alertRules.Count > 0)
         {
@@ -3106,6 +3122,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "Vendor": TrackingService.AnnounceVendor = val; break;
                 case "OilRig": TrackingService.AnnounceOilRig = val; break;
                 case "DeepSea": TrackingService.AnnounceDeepSea = val; break;
+                case "SmartAlerts": TrackingService.AnnounceSmartAlerts = val; break;
                 case "PlayerOnline": TrackingService.AnnouncePlayerOnline = val; break;
                 case "PlayerOffline": TrackingService.AnnouncePlayerOffline = val; break;
                 case "PlayerDeathSelf": TrackingService.AnnouncePlayerDeathSelf = val; break;
@@ -3176,6 +3193,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "Vendor": isSelected = TrackingService.AnnounceVendor; break;
                 case "OilRig": isSelected = TrackingService.AnnounceOilRig; break;
                 case "DeepSea": isSelected = TrackingService.AnnounceDeepSea; break;
+                case "SmartAlerts": isSelected = TrackingService.AnnounceSmartAlerts; break;
                 case "PlayerOnline": isSelected = TrackingService.AnnouncePlayerOnline; break;
                 case "PlayerOffline": isSelected = TrackingService.AnnouncePlayerOffline; break;
                 case "PlayerDeathSelf": isSelected = TrackingService.AnnouncePlayerDeathSelf; break;
