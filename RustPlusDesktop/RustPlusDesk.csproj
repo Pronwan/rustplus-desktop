@@ -107,6 +107,8 @@
 	  <None Remove="Assets\icons\pen.png" />
 	  <None Remove="Assets\icons\pencil.png" />
 	  <None Remove="Assets\icons\pin.png" />
+	  <None Remove="Assets\icons\PiP.png" />
+	  <None Remove="Assets\icons\Popup.png" />
 	  <None Remove="Assets\icons\powerplant.png" />
 	  <None Remove="Assets\icons\powerstation.png" />
 	  <None Remove="Assets\icons\radtown.png" />
@@ -178,6 +180,8 @@
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Content>
+	  <Resource Include="Assets\icons\PiP.png" />
+	  <Resource Include="Assets\icons\Popup.png" />
 	  <Resource Include="Assets\icons\save.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>

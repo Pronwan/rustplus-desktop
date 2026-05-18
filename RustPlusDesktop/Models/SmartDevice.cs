@@ -219,6 +219,13 @@ public class SmartDevice : INotifyPropertyChanged
         set { if (_audioEnabled != value) { _audioEnabled = value; OnProp(); } }
     }
 
+    private bool _overlayEnabled = true;
+    public bool OverlayEnabled
+    {
+        get => _overlayEnabled;
+        set { if (_overlayEnabled != value) { _overlayEnabled = value; OnProp(); } }
+    }
+
     private string? _audioFilePath;
     public string? AudioFilePath
     {
