@@ -294,8 +294,25 @@ namespace RustPlusDesk
             {
                 newSize = Math.Max(160, Math.Min(newSize, 800));
                 
-                Width = newSize;
-                Height = newSize;
+                double targetWindowSize = Math.Max(260, newSize); // Ensure Window is at least 260x260 so SettingsPopup (~204px) never clips!
+
+                if (!double.IsNaN(Left) && !double.IsNaN(Top) && Width > 0 && Height > 0)
+                {
+                    // Keep the center stationary on the screen during resize
+                    double oldCenterX = Left + Width / 2.0;
+                    double oldCenterY = Top + Height / 2.0;
+
+                    Width = targetWindowSize;
+                    Height = targetWindowSize;
+
+                    Left = oldCenterX - targetWindowSize / 2.0;
+                    Top = oldCenterY - targetWindowSize / 2.0;
+                }
+                else
+                {
+                    Width = targetWindowSize;
+                    Height = targetWindowSize;
+                }
 
                 int idx = CmbShape?.SelectedIndex ?? 0;
                 if (MapContainer != null && MapShapeBorder != null)

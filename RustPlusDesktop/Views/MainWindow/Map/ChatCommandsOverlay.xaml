@@ -27,44 +27,91 @@
             <!-- Content -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <StackPanel DataContext="{Binding Selected}">
-                    <CheckBox Content="Enable Chat Commands" IsChecked="{Binding ChatCommandsEnabled}" Margin="0,0,0,15" FontWeight="SemiBold" />
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Content="Enable Chat Commands" IsChecked="{Binding ChatCommandsEnabled}" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="Prefix:" Foreground="#8090A0" VerticalAlignment="Center" Margin="0,0,5,0" />
+                            <ComboBox SelectedValue="{Binding ChatCommandPrefix}" SelectedValuePath="Content" Width="50" Style="{StaticResource DarkComboBox}" HorizontalContentAlignment="Center">
+                                <ComboBoxItem Content="!" />
+                                <ComboBoxItem Content="." />
+                                <ComboBoxItem Content="," />
+                                <ComboBoxItem Content="\" />
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
                     
                     <TextBlock Text="Standard Commands" Foreground="#8090A0" Margin="0,0,0,5" FontWeight="SemiBold" />
                     <Grid Margin="0,0,0,5">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="100"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="120"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                         <TextBlock Text="Population:" VerticalAlignment="Center" Foreground="White" />
-                        <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                        <TextBlock Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
                         <TextBox Grid.Column="2" Text="{Binding CmdPop}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
                     </Grid>
                     <Grid Margin="0,0,0,5">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="100"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="120"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                         <TextBlock Text="Time:" VerticalAlignment="Center" Foreground="White" />
-                        <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                        <TextBlock Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
                         <TextBox Grid.Column="2" Text="{Binding CmdTime}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
                     </Grid>
                     <Grid Margin="0,0,0,5">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="100"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="120"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                         <TextBlock Text="Promote:" VerticalAlignment="Center" Foreground="White" />
-                        <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                        <TextBlock Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
                         <TextBox Grid.Column="2" Text="{Binding CmdPromote}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
                     </Grid>
                     <Grid Margin="0,0,0,5">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="100"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="120"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                         <TextBlock Text="Deep Sea:" VerticalAlignment="Center" Foreground="White" />
-                        <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                        <TextBlock Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
                         <TextBox Grid.Column="2" Text="{Binding CmdDeepSea}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
                     </Grid>
                     <Grid Margin="0,0,0,5">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="100"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="120"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                         <TextBlock Text="Cargo Ship:" VerticalAlignment="Center" Foreground="White" />
-                        <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                        <TextBlock Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
                         <TextBox Grid.Column="2" Text="{Binding CmdCargo}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
                     </Grid>
-                    <Grid Margin="0,0,0,15">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="100"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                    <Grid Margin="0,0,0,5">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="120"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                         <TextBlock Text="Oil Rig:" VerticalAlignment="Center" Foreground="White" />
-                        <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                        <TextBlock Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
                         <TextBox Grid.Column="2" Text="{Binding CmdOilRig}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
+                    </Grid>
+                    <Grid Margin="0,0,0,5">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="120"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <TextBlock Text="Patrol Heli:" VerticalAlignment="Center" Foreground="White" />
+                        <TextBlock Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                        <TextBox Grid.Column="2" Text="{Binding CmdHeli}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
+                    </Grid>
+                    <Grid Margin="0,0,0,5">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="120"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <TextBlock Text="Travelling Vendor:" VerticalAlignment="Center" Foreground="White" />
+                        <TextBlock Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                        <TextBox Grid.Column="2" Text="{Binding CmdVendor}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
+                    </Grid>
+                    <Grid Margin="0,0,0,5">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="120"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <TextBlock Text="Upkeep Details:" VerticalAlignment="Center" Foreground="White" />
+                        <TextBlock Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                        <TextBox Grid.Column="2" Text="{Binding CmdUpkeepDetail}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
+                    </Grid>
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="120"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <TextBlock Text="Command Delay:" VerticalAlignment="Center" Foreground="White" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <ComboBox SelectedValue="{Binding ChatCommandDelaySeconds}" SelectedValuePath="Content" Width="65" Style="{StaticResource DarkComboBox}" HorizontalContentAlignment="Center">
+                                <ComboBoxItem Content="1" />
+                                <ComboBoxItem Content="2" />
+                                <ComboBoxItem Content="3" />
+                                <ComboBoxItem Content="4" />
+                                <ComboBoxItem Content="5" />
+                            </ComboBox>
+                            <TextBlock Text="seconds between base reports" Foreground="#8090A0" VerticalAlignment="Center" Margin="8,0,0,0" />
+                        </StackPanel>
                     </Grid>
                     
                     <StackPanel Visibility="{Binding HasSmartSwitches, Converter={StaticResource Vis}}">
@@ -80,7 +127,7 @@
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="{Binding Label, StringFormat='{}{0}:'}" VerticalAlignment="Center" Foreground="White" />
-                                        <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                                        <TextBlock Grid.Column="1" Text="{Binding DataContext.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=StackPanel}}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
                                         <TextBox Grid.Column="2" Text="{Binding Command, UpdateSourceTrigger=PropertyChanged}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" Margin="0,0,10,0" />
                                         <ComboBox Grid.Column="3" ItemsSource="{Binding DataContext.SmartSwitches, RelativeSource={RelativeSource AncestorType=ItemsControl}}" SelectedValue="{Binding EntityId}" SelectedValuePath="EntityId" DisplayMemberPath="PureName" Style="{StaticResource DarkComboBox}" />
                                     </Grid>
@@ -102,7 +149,7 @@
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="{Binding Label, StringFormat='{}{0}:'}" VerticalAlignment="Center" Foreground="White" />
-                                        <TextBlock Grid.Column="1" Text="!" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                                        <TextBlock Grid.Column="1" Text="{Binding DataContext.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=StackPanel}}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
                                         <TextBox Grid.Column="2" Text="{Binding Command, UpdateSourceTrigger=PropertyChanged}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" Margin="0,0,10,0" />
                                         <ComboBox Grid.Column="3" ItemsSource="{Binding DataContext.TcMonitors, RelativeSource={RelativeSource AncestorType=ItemsControl}}" SelectedValue="{Binding EntityId}" SelectedValuePath="EntityId" DisplayMemberPath="PureName" Style="{StaticResource DarkComboBox}" />
                                     </Grid>

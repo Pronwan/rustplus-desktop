@@ -126,7 +126,7 @@ public partial class MainWindow
         // die Nachricht als Echo zurückbekomnt. Wenn sie ankommt, entfernt die Schleife den trackKey.
         int waitMs = 0;
         int intervalMs = 150;
-        int timeoutMs = 3000; // max 3 Sekunden warten pro Versuch
+        int timeoutMs = 4000; // max 4 Sekunden warten pro Versuch
 
         while (waitMs < timeoutMs)
         {
@@ -193,7 +193,9 @@ public partial class MainWindow
 
     private bool AppendChatIfNew(TeamChatMessage m, bool isHistorical = false)
     {
-        bool isCommand = m.Text.TrimStart().StartsWith("!");
+        var profile = _vm?.Selected;
+        string prefix = profile?.ChatCommandPrefix ?? "!";
+        bool isCommand = m.Text.TrimStart().StartsWith(prefix);
 
         lock (_chatHistoryLog)
         {

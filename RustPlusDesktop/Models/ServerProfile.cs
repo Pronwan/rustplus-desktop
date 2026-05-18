@@ -188,11 +188,46 @@ public class ServerProfile : INotifyPropertyChanged
         set { _cmdCargo = ValidateCommand(value, "cargo"); OnProp(); }
     }
 
+    private string _chatCommandPrefix = "!";
+    public string ChatCommandPrefix
+    {
+        get => string.IsNullOrEmpty(_chatCommandPrefix) ? "!" : _chatCommandPrefix;
+        set { if (value == "!" || value == "." || value == "," || value == "\\") { _chatCommandPrefix = value; OnProp(); } }
+    }
+
     private string _cmdOilRig = "oilrig";
     public string CmdOilRig
     {
         get => _cmdOilRig;
         set { _cmdOilRig = ValidateCommand(value, "oilrig"); OnProp(); }
+    }
+
+    private string _cmdHeli = "heli";
+    public string CmdHeli
+    {
+        get => _cmdHeli;
+        set { _cmdHeli = ValidateCommand(value, "heli"); OnProp(); }
+    }
+
+    private string _cmdVendor = "vendor";
+    public string CmdVendor
+    {
+        get => _cmdVendor;
+        set { _cmdVendor = ValidateCommand(value, "vendor"); OnProp(); }
+    }
+
+    private string _cmdUpkeepDetail = "upkeepdetail";
+    public string CmdUpkeepDetail
+    {
+        get => _cmdUpkeepDetail;
+        set { _cmdUpkeepDetail = ValidateCommand(value, "upkeepdetail"); OnProp(); }
+    }
+
+    private int _chatCommandDelaySeconds = 2;
+    public int ChatCommandDelaySeconds
+    {
+        get => _chatCommandDelaySeconds;
+        set { if (value >= 1 && value <= 5) { _chatCommandDelaySeconds = value; OnProp(); } }
     }
 
     private ObservableCollection<ChatCommandMapping> _switchCommandMappings = new();
