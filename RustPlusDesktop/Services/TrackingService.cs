@@ -84,6 +84,8 @@ public class TrackingSettings
     public bool AnnounceNewShops { get; set; } = false;
     public bool AnnounceSuspiciousShops { get; set; } = false;
     public bool AnnounceTradeAlerts { get; set; } = false;
+    public Dictionary<string, bool> GroupStates { get; set; } = new();
+    public Dictionary<string, List<string>> GroupOrder { get; set; } = new();
     public bool AnnounceCargoDocking { get; set; } = false;
     public bool AnnounceCargoEgress { get; set; } = false;
     public bool AnnounceCargoArrival { get; set; } = false;
@@ -381,6 +383,32 @@ public static class TrackingService
         {
             return _trackedPlayers.ContainsKey(bmId);
         }
+    }
+
+    public static bool GetGroupState(string serverName, string groupName)
+    {
+        var key = $"{serverName}|{groupName}";
+        if (_settings.GroupStates.TryGetValue(key, out var expanded)) return expanded;
+        return true; // Default to expanded
+    }
+
+    public static void SetGroupState(string serverName, string groupName, bool expanded)
+    {
+        var key = $"{serverName}|{groupName}";
+        _settings.GroupStates[key] = expanded;
+        SaveDB();
+    }
+
+    public static List<string> GetGroupOrder(string serverName)
+    {
+        if (_settings.GroupOrder.TryGetValue(serverName, out var order)) return order;
+        return new List<string>();
+    }
+
+    public static void SetGroupOrder(string serverName, List<string> order)
+    {
+        _settings.GroupOrder[serverName] = order;
+        SaveDB();
     }
 
     public static bool IsBackgroundTrackingEnabled
