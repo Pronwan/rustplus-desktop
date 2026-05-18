@@ -70,6 +70,7 @@ public class TrackingSettings
     public bool AnnounceCargoDocking { get; set; } = false;
     public bool AnnounceCargoEgress { get; set; } = false;
     public bool AnnounceCargoArrival { get; set; } = false;
+    public bool AnnounceSmartAlerts { get; set; } = false;
     public Dictionary<string, int> LearnedDockingDurations { get; set; } = new();
     public Dictionary<string, int> LearnedCargoFullLifeMinutes { get; set; } = new();
     public Dictionary<string, int> LearnedCargoTravelMinutes { get; set; } = new();
@@ -509,6 +510,11 @@ public static class TrackingService
     {
         get => _settings.AnnounceCargoArrival;
         set { _settings.AnnounceCargoArrival = value; SaveDB(); }
+    }
+    public static bool AnnounceSmartAlerts
+    {
+        get => _settings.AnnounceSmartAlerts;
+        set { _settings.AnnounceSmartAlerts = value; SaveDB(); }
     }
     public static string LastSeenVersion
     {
