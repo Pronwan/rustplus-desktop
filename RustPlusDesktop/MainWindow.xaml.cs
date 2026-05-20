@@ -2674,17 +2674,25 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private void Monuments_Checked(object sender, RoutedEventArgs e)
     {
         ToggleMonuments(true);
+        UpdateSelectAllState();
     }
 
     private void Monuments_Unchecked(object sender, RoutedEventArgs e)
     {
         ToggleMonuments(false);
+        UpdateSelectAllState();
     }
     private void ToggleMonuments(bool on)
     {
         _showMonuments = on;
         foreach (var fe in _monEls.Values)
             fe.Visibility = on ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void UpdateSelectAllState()
+    {
+        // Placeholder to fix build errors. 
+        // Logic to update a 'Select All' checkbox state based on individual filters could go here.
     }
 
 
@@ -3006,41 +3014,28 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void ChatAnnounce_Toggle(object sender, RoutedEventArgs e)
     {
-        // User clicked the master checkbox. WPF has already toggled IsChecked.
-        // Normal cycle: Unchecked (false) -> Checked (true) -> Indeterminate (null) -> Unchecked (false)
-        bool? current = ChatAnnounce.IsChecked;
+        TrackingService.AnnounceSpawnsMaster = ChatAnnounce.IsChecked ?? false;
+        _announceSpawns = TrackingService.AnnounceSpawnsMaster;
 
-        if (current == true)
-        {
-            // User clicked while it was OFF or Indeterminate -> Turn EVERYTHING ON
-            TrackingService.AnnounceSpawnsMaster = true;
-            SetAllAlerts(true);
-        }
-        else
-        {
-            // User clicked while it was ON (becoming null) or already Indeterminate (becoming false)
-            // In both cases, the user wants to turn EVERYTHING OFF.
-            TrackingService.AnnounceSpawnsMaster = false;
-            SetAllAlerts(false);
-            
-            // Force the checkbox to be visually unchecked (false) if it was null
-            if (current == null) ChatAnnounce.IsChecked = false;
-        }
+        SyncAlertMenuItems();
+        UpdateShopSearchConfig();
+    }
 
+    private void SelectAllAlerts_Click(object sender, RoutedEventArgs e)
+    {
+        SetAllAlerts(true);
+        TrackingService.AnnounceSpawnsMaster = true;
         UpdateMasterToggleState();
         SyncAlertMenuItems();
         UpdateShopSearchConfig();
     }
 
-    private void ChatAnnounceLabel_Click(object sender, MouseButtonEventArgs e)
+    private void DeselectAllAlerts_Click(object sender, RoutedEventArgs e)
     {
-        if (ChatAnnounceLabel.ContextMenu != null)
-        {
-            ChatAnnounceLabel.ContextMenu.PlacementTarget = ChatAnnounceLabel;
-            ChatAnnounceLabel.ContextMenu.Placement = PlacementMode.Bottom;
-            ChatAnnounceLabel.ContextMenu.IsOpen = true;
-            e.Handled = true;
-        }
+        SetAllAlerts(false);
+        UpdateMasterToggleState();
+        SyncAlertMenuItems();
+        UpdateShopSearchConfig();
     }
 
     private void SetAllAlerts(bool val)
@@ -3081,43 +3076,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void UpdateMasterToggleState()
     {
-        bool allOn = TrackingService.AnnounceCargo && TrackingService.AnnounceHeli && TrackingService.AnnounceChinook &&
-                     TrackingService.AnnounceVendor && TrackingService.AnnounceOilRig && TrackingService.AnnounceDeepSea &&
-                     TrackingService.AnnouncePlayerOnline && TrackingService.AnnouncePlayerOffline &&
-                     TrackingService.AnnouncePlayerDeathSelf && TrackingService.AnnouncePlayerDeathTeam &&
-                     TrackingService.AnnouncePlayerRespawnSelf && TrackingService.AnnouncePlayerRespawnTeam &&
-                     TrackingService.AnnounceNewShops && TrackingService.AnnounceSuspiciousShops &&
-                     TrackingService.AnnounceCargoDocking && TrackingService.AnnounceCargoEgress &&
-                     TrackingService.AnnounceSmartAlerts;
-
-        bool anyOn = TrackingService.AnnounceCargo || TrackingService.AnnounceHeli || TrackingService.AnnounceChinook ||
-                     TrackingService.AnnounceVendor || TrackingService.AnnounceOilRig || TrackingService.AnnounceDeepSea ||
-                     TrackingService.AnnouncePlayerOnline || TrackingService.AnnouncePlayerOffline ||
-                     TrackingService.AnnouncePlayerDeathSelf || TrackingService.AnnouncePlayerDeathTeam ||
-                     TrackingService.AnnouncePlayerRespawnSelf || TrackingService.AnnouncePlayerRespawnTeam ||
-                     TrackingService.AnnounceNewShops || TrackingService.AnnounceSuspiciousShops ||
-                     TrackingService.AnnounceCargoDocking || TrackingService.AnnounceCargoEgress ||
-                     TrackingService.AnnounceSmartAlerts;
-
-        if (_alertRules.Count > 0)
-        {
-            // Trade alerts no longer affect the master button state per user request
-            // We just keep the existing anyOn/allOn which are based on categories
-        }
-
-        if (anyOn) TrackingService.AnnounceSpawnsMaster = true;
         _announceSpawns = TrackingService.AnnounceSpawnsMaster;
-
-        if (!_announceSpawns)
-        {
-            ChatAnnounce.IsChecked = false;
-        }
-        else
-        {
-            if (allOn) ChatAnnounce.IsChecked = true;
-            else if (!anyOn) ChatAnnounce.IsChecked = false; 
-            else ChatAnnounce.IsChecked = null; // Smaller dot
-        }
+        ChatAnnounce.IsChecked = _announceSpawns;
     }
 
     private void Alert_MenuItem_Click(object sender, RoutedEventArgs e)
@@ -3148,11 +3108,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "SuspiciousShops": TrackingService.AnnounceSuspiciousShops = val; break;
             }
 
-            if (val)
-            {
-                TrackingService.AnnounceSpawnsMaster = true;
-            }
-
             UpdateMasterToggleState();
             UpdateShopSearchConfig();
             SyncAlertMenuItems();
@@ -3164,12 +3119,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         bool masterOn = TrackingService.AnnounceSpawnsMaster;
         PopulateTradeAlertsSubMenu(masterOn);
 
-        if (ChatAnnounceLabel.ContextMenu == null) return;
-        
+        SyncContextMenu(ChatAnnounce.ContextMenu, masterOn);
+        if (ChatAlertsConfigureButton.Flyout is ContextMenu cm)
+        {
+            SyncContextMenu(cm, masterOn);
+        }
+    }
+
+    private void SyncContextMenu(ContextMenu menu, bool masterOn)
+    {
+        if (menu == null) return;
+
         string host = _rust?.Host ?? "unknown";
         bool hasTravelData = TrackingService.HasAnyCargoTrigger(host);
 
-        foreach (var item in ChatAnnounceLabel.ContextMenu.Items)
+        foreach (var item in menu.Items)
         {
             if (item is MenuItem mi)
             {
@@ -4324,11 +4288,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (modal.RequestAction == "ModifyChatAlerts")
         {
             Dispatcher.BeginInvoke(new Action(() => {
-                if (ChatAnnounceLabel.ContextMenu != null)
+                if (ChatAnnounce.ContextMenu != null)
                 {
-                    ChatAnnounceLabel.ContextMenu.PlacementTarget = ChatAnnounceLabel;
-                    ChatAnnounceLabel.ContextMenu.Placement = PlacementMode.Bottom;
-                    ChatAnnounceLabel.ContextMenu.IsOpen = true;
+                    ChatAnnounce.ContextMenu.PlacementTarget = ChatAnnounce;
+                    ChatAnnounce.ContextMenu.Placement = PlacementMode.Bottom;
+                    ChatAnnounce.ContextMenu.IsOpen = true;
                 }
             }), System.Windows.Threading.DispatcherPriority.Input);
         }

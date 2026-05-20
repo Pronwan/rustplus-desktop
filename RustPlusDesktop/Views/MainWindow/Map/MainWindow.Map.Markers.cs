@@ -256,6 +256,7 @@ public partial class MainWindow
                     kv.Value.Visibility = _showPlayers ? Visibility.Visible : Visibility.Collapsed;
             }
         }
+        UpdateSelectAllState();
     }
 
     private FrameworkElement BuildEventIconHost(FrameworkElement inner, string? tooltip, int size, double? scaleExp = null, double? baseMult = null)
