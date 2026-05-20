@@ -49,8 +49,7 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
-## 🛠️ v5.1.0-beta1 — NEW BETA RELEASE! 🛠️
-(internal build 5.0.95 | [Download here](https://github.com/Pronwan/rustplus-desktop/releases/download/v5.0.99-beta1/RustPlusDesk-Setup.exe))
+## 🛠️ v5.1.0 🛠️
 
 The "Game Changer" just got a lot more polish. This beta is all about workflow and stability.
 
@@ -62,6 +61,7 @@ What’s new in this version?
 - **🏗️ Builder Heaven:** Added !upkeepdetail for granular 24h upkeep reports from your Storage Monitors.
 - **🔔 Smart Alerts:** New In-App popup alerts and "Alarm to Team Chat" options.
 - **🛡️ Lag Protection:** Increased handshake timeout (15s) and added a chat-alert delay to prevent spam on laggy API servers.
+- **⚠️ Player Tracking Overhaul:** The player Tracking System has been changed completely. Please review the changes in Patch Notes in-app to understand what's happening.
 
 ## 🚀 Rust+ Desk v5.0  – Game Changer Update!
 This release is packed with architectural hardening by @JawadYzbk & significant QoL upgrades.
