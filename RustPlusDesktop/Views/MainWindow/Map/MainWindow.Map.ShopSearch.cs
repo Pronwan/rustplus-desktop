@@ -138,7 +138,7 @@ public partial class MainWindow
     {
         if (ShopSearchContent.Visibility == Visibility.Collapsed)
         {
-            if (_shopSearchWebView == null) InitEmbeddedShopSearch();
+            if (_shopSearchWebView == null) _ = InitEmbeddedShopSearchAsync();
             UpdateShopPollingWarning();
             
             ShopSearchContent.Visibility = Visibility.Visible;
@@ -204,7 +204,7 @@ public partial class MainWindow
         UpdateShopPollingWarning();
     }
 
-    private async void InitEmbeddedShopSearch()
+    internal async Task InitEmbeddedShopSearchAsync()
     {
         if (_shopSearchWebView != null) return;
 
