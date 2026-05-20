@@ -2,6 +2,7 @@
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ApplicationIcon>Assets\rustplus-desktop-icon.ico</ApplicationIcon>
@@ -19,12 +20,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>5.0.1</Version>
+		<Version>5.1.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>5.0.1</AssemblyVersion>
-		<FileVersion>5.0.1</FileVersion>
-		<InformationalVersion>5.0.1</InformationalVersion>
+		<AssemblyVersion>5.1.0</AssemblyVersion>
+		<FileVersion>5.1.0</FileVersion>
+		<InformationalVersion>5.1.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -107,6 +108,8 @@
 	  <None Remove="Assets\icons\pen.png" />
 	  <None Remove="Assets\icons\pencil.png" />
 	  <None Remove="Assets\icons\pin.png" />
+	  <None Remove="Assets\icons\PiP.png" />
+	  <None Remove="Assets\icons\Popup.png" />
 	  <None Remove="Assets\icons\powerplant.png" />
 	  <None Remove="Assets\icons\powerstation.png" />
 	  <None Remove="Assets\icons\radtown.png" />
@@ -155,6 +158,11 @@
 	  <None Remove="Assets\Screenshots\Cargo_docked_countdown.png" />
 	  <None Remove="Assets\Screenshots\Cargo_notification_settings.png" />
 	  <None Remove="Assets\Screenshots\Cargo_remaining-on-map.png" />
+	  <None Remove="Assets\Screenshots\Tracking1.jpg" />
+	  <None Remove="Assets\Screenshots\Tracking2.jpg" />
+	  <None Remove="Assets\Screenshots\Tracking3.jpg" />
+	  <None Remove="Assets\Screenshots\Tracking4.jpg" />
+	  <None Remove="Assets\Screenshots\Tracking5.jpg" />
 	  <None Remove="Assets\Screenshots\v4_map_overhaul.png" />
 	  <None Remove="Assets\Screenshots\v4_shop_hover.png" />
 	  <None Remove="Assets\TitleScreen-rust-plus-desktop.png" />
@@ -178,6 +186,8 @@
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Content>
+	  <Resource Include="Assets\icons\PiP.png" />
+	  <Resource Include="Assets\icons\Popup.png" />
 	  <Resource Include="Assets\icons\save.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -311,12 +321,24 @@
     <Resource Include="Assets\Screenshots\Cargo_docked_countdown.png" />
     <Resource Include="Assets\Screenshots\Cargo_notification_settings.png" />
     <Resource Include="Assets\Screenshots\Cargo_remaining-on-map.png" />
+    <Resource Include="Assets\Screenshots\Tracking1.jpg" />
+    <Resource Include="Assets\Screenshots\Tracking2.jpg" />
+    <Resource Include="Assets\Screenshots\Tracking3.jpg" />
+    <Resource Include="Assets\Screenshots\Tracking4.jpg" />
+    <Resource Include="Assets\Screenshots\Tracking5.jpg" />
     <Resource Include="Assets\Screenshots\v4_map_overhaul.png" />
     <Resource Include="Assets\Screenshots\v4_shop_hover.png" />
     <Resource Include="Assets\Screenshots\v4_5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Screenshots\4.4_1.png" />
+    <Resource Include="Assets\Screenshots\beta-5.1_1.png" />
+    <Resource Include="Assets\Screenshots\beta-5.1_2.png" />
+    <Resource Include="Assets\Screenshots\beta-5.1_3.png" />
+    <Resource Include="Assets\Screenshots\beta-5.1_4.png" />
+    <Resource Include="Assets\Screenshots\beta-5.1_5.png" />
+    <Resource Include="Assets\Screenshots\beta-5.1_6.png" />
+    <Resource Include="Assets\Screenshots\beta-5.1_7.png" />
     <Resource Include="Assets\Screenshots\Notifications.png" />
     <Resource Include="Assets\TitleScreen-rust-plus-desktop.png" />
     <Resource Include="Assets\Data\rust_items.json" />

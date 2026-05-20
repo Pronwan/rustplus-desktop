@@ -1,6 +1,7 @@
-﻿<Window x:Class="RustPlusDesk.MiniMapWindow"
+<Window x:Class="RustPlusDesk.MiniMapWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         WindowStyle="None"
         ResizeMode="NoResize"
         AllowsTransparency="True"
@@ -9,18 +10,104 @@
         ShowInTaskbar="False"
         Width="260" Height="260">
     <Grid>
-        <!-- Runde Mini-Map -->
-        <Ellipse x:Name="Circle" Width="260" Height="260">
-            <Ellipse.Fill>
-                <VisualBrush x:Name="MirrorBrush"
-                             Stretch="UniformToFill"
-                             AlignmentX="Center" AlignmentY="Center" />
-            </Ellipse.Fill>
-        </Ellipse>
+        <!-- Container that has the exact size of the Map shape -->
+        <Grid x:Name="MapContainer" Width="260" Height="260" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <!-- Runde / Eckige Mini-Map -->
+            <Border x:Name="MapShapeBorder" CornerRadius="130" BorderBrush="#66000000" BorderThickness="1" SnapsToDevicePixels="True">
+                <Border.Background>
+                    <VisualBrush x:Name="MirrorBrush"
+                                 Stretch="UniformToFill"
+                                 AlignmentX="Center" AlignmentY="Center" />
+                </Border.Background>
+            </Border>
 
-        <!-- hauchdünner Rand / Shadow optional -->
-        <Border CornerRadius="130"
-                BorderBrush="#66000000" BorderThickness="1"
-                SnapsToDevicePixels="True" />
+            <!-- Time Overlay -->
+            <Border x:Name="TimeOverlayBorder" 
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Bottom" 
+                    Margin="0,0,0,12" 
+                    Background="#AA000000" 
+                    CornerRadius="6" 
+                    Padding="6,4" 
+                    Visibility="Collapsed"
+                    IsHitTestVisible="False">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:SymbolIcon Symbol="Clock24" FontSize="12" Margin="0,0,4,0" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="TxtServerTime" Text="{Binding ServerTime}" FontSize="12" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Settings Hover Area -->
+            <Border x:Name="SettingsHoverBorder" Background="Transparent" Opacity="0">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                
+                <ui:Button x:Name="BtnSettings" 
+                           HorizontalAlignment="Right" 
+                           VerticalAlignment="Top" 
+                           Margin="10" 
+                           Padding="4"
+                           Appearance="Transparent"
+                           Background="#88000000"
+                           Foreground="White"
+                           Click="BtnSettings_Click"
+                           Icon="{ui:SymbolIcon Symbol=Settings24}"
+                           Panel.ZIndex="10"/>
+            </Border>
+        </Grid>
+
+        <!-- Settings Popup (centered in outer Grid so it never gets clipped) -->
+        <Border x:Name="SettingsPopup" Background="#E51E1E1E" BorderBrush="#44FFFFFF" BorderThickness="1" CornerRadius="8" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="12" Visibility="Collapsed" Panel.ZIndex="100">
+            <StackPanel>
+                <!-- Title Header with Red X Close Button -->
+                <Grid Margin="0,0,0,12" Width="180">
+                    <TextBlock Text="Mini-Map Settings" FontWeight="SemiBold" FontSize="14" Foreground="White" VerticalAlignment="Center"/>
+                    <ui:Button x:Name="BtnSettingsClose" 
+                               HorizontalAlignment="Right" 
+                               VerticalAlignment="Center" 
+                               Padding="2"
+                               Appearance="Transparent"
+                               Background="Transparent"
+                               Foreground="#FFFF5555"
+                               Click="BtnSettingsClose_Click"
+                               Icon="{ui:SymbolIcon Symbol=Dismiss24}"/>
+                </Grid>
+                
+                <TextBlock Text="Shape" FontSize="12" Foreground="#AAAAAA" Margin="0,0,0,4"/>
+                <ComboBox x:Name="CmbShape" SelectionChanged="CmbShape_SelectionChanged" Margin="0,0,0,12" Width="180">
+                    <ComboBoxItem Content="Circle"/>
+                    <ComboBoxItem Content="Square"/>
+                    <ComboBoxItem Content="Rectangle (16:9)"/>
+                </ComboBox>
+
+                <TextBlock x:Name="LblOpacity" Text="Opacity: 100%" FontSize="12" Foreground="#AAAAAA" Margin="0,0,0,4"/>
+                <Slider x:Name="SliOpacity" Minimum="0.2" Maximum="1.0" Value="1.0" ValueChanged="SliOpacity_ValueChanged" Margin="0,0,0,12" IsSnapToTickEnabled="True" TickFrequency="0.05" Width="180"/>
+
+                <TextBlock x:Name="LblSize" Text="Size: 100% (SHIFT+Mousewheel)" FontSize="12" Foreground="#AAAAAA" Margin="0,0,0,4"/>
+                <Slider x:Name="SliSize" Minimum="160" Maximum="800" Value="260" ValueChanged="SliSize_ValueChanged" Margin="0,0,0,12" IsSnapToTickEnabled="True" TickFrequency="10" Width="180"/>
+
+                <CheckBox x:Name="ChkShowTime" Content="Show Server Time" Foreground="White" Checked="ChkShowTime_Changed" Unchecked="ChkShowTime_Changed" Margin="0,0,0,4"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

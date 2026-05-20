@@ -51,12 +51,11 @@ public partial class App : Application
 
         SetupTrayIcon();
 
-        // Start polling if enabled and we have a server
+        // Start polling if enabled
         if (TrackingService.IsBackgroundTrackingEnabled)
         {
             var (host, port, name) = TrackingService.LastServer;
-            if (!string.IsNullOrEmpty(host))
-                TrackingService.StartPolling(host, port, name);
+            TrackingService.StartPolling(host ?? "", port, name ?? "", TrackingService.LastBMId);
         }
 
         if (isBackgroundArg && TrackingService.StartMinimizedEnabled)
@@ -148,8 +147,12 @@ public partial class App : Application
         // Also update tray tooltip periodically or on event
         TrackingService.OnOnlinePlayersUpdated += () => {
             var last = TrackingService.LastPullTime?.ToString("HH:mm:ss") ?? "--:--";
-            if (_trayIcon != null)
-                _trayIcon.Text = $"Rust+ Desk (Tracking {last})";
+            Dispatcher.Invoke(() => {
+                try {
+                    if (_trayIcon != null)
+                        _trayIcon.Text = $"Rust+ Desk (Tracking {last})";
+                } catch { }
+            });
         };
     }
 

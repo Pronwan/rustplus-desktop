@@ -804,7 +804,18 @@
                         <MenuItem
                             Click="BtnViewTracked_Click"
                             Header="View Profile"
-                            Icon="{ui:SymbolIcon Symbol=Eye24}" />
+                            Icon="{ui:SymbolIcon Symbol=Eye24}">
+                            <MenuItem.Style>
+                                <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsBMOnly}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+
                         <MenuItem
                             Click="BtnGroupTracked_Click"
                             Header="Change Group"
@@ -866,6 +877,7 @@
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
                     <ui:Button
+                        x:Name="BtnViewAction"
                         Padding="8,2"
                         Appearance="Transparent"
                         Click="BtnViewTracked_Click"
@@ -892,6 +904,9 @@
                 <Trigger SourceName="PlayerRow" Property="IsMouseOver" Value="True">
                     <Setter TargetName="BtnMore" Property="Opacity" Value="1" />
                 </Trigger>
+                <DataTrigger Binding="{Binding IsBMOnly}" Value="True">
+                    <Setter TargetName="BtnViewAction" Property="Content" Value="View on BM" />
+                </DataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>
 
@@ -964,8 +979,8 @@
                         ShadowDepth="0"
                         Color="#000000" />
                 </Border.Effect>
-                <!--  WICHTIG: DockPanel statt StackPanel, damit die Mitte flexibel ist  -->
-                <DockPanel LastChildFill="True">
+                <Grid>
+                    <DockPanel x:Name="LeftPanelContent" LastChildFill="True">
 
                     <!--  TOP: Account + Serverliste  -->
                     <StackPanel DockPanel.Dock="Top">
@@ -1055,6 +1070,8 @@
                                             x:Name="BtnCheckUpdates"
                                             Appearance="Transparent"
                                             Click="BtnCheckUpdates_Click"
+                                            MouseEnter="BtnCheckUpdates_MouseEnter"
+                                            MouseLeave="BtnCheckUpdates_MouseLeave"
                                             ToolTip="Check for Updates">
                                             <ui:Button.Icon>
                                                 <ui:SymbolIcon Symbol="ArrowDownload24">
@@ -1140,19 +1157,10 @@
                                         <Popup
                                             x:Name="UpdateDownloadPopup"
                                             AllowsTransparency="True"
-                                            IsOpen="{Binding ElementName=BtnCheckUpdates, Path=IsMouseOver, Mode=OneWay}"
+                                            IsOpen="False"
                                             Placement="Bottom"
                                             PlacementTarget="{Binding ElementName=BtnCheckUpdates}"
                                             VerticalOffset="5">
-                                            <Popup.Style>
-                                                <Style TargetType="Popup">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsDownloadingUpdate}" Value="False">
-                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Popup.Style>
                                             <Border
                                                 Width="220"
                                                 Padding="12"
@@ -1287,6 +1295,12 @@
                                         Foreground="White"
                                         Style="{StaticResource DarkContextMenu}">
                                         <!--  Der Trick: den aktuellen Server ins Tag binden  -->
+                                        <MenuItem
+                                            Click="Server_RelinkBM_Click"
+                                            Foreground="Black"
+                                            Header="Relink Battlemetrics ID&#x2026;"
+                                            Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                                        <Separator />
                                         <MenuItem
                                             Click="Server_Delete_Click"
                                             Foreground="Black"
@@ -1475,16 +1489,7 @@
                                         Icon="{ui:SymbolIcon Symbol=Info20}"
                                         ToolTip="Server Details" />
 
-                                    <!--  BattleMetrics  -->
-                                    <ui:Button
-                                        x:Name="BtnServerBMHeader"
-                                        Margin="4,0,0,0"
-                                        Padding="10,4"
-                                        Appearance="Secondary"
-                                        Click="BtnServerBM_Click"
-                                        Icon="{ui:SymbolIcon Symbol=Globe20}"
-                                        ToolTip="Open Server on BattleMetrics"
-                                        Visibility="Collapsed" />
+
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -2145,14 +2150,25 @@
 
                                                                 <CheckBox
                                                                     Margin="0,0,8,0"
-                                                                    Content="Popup"
+                                                                    ToolTip="Popup-Window"
                                                                     IsChecked="{Binding PopupEnabled, Mode=TwoWay}"
-                                                                    Style="{StaticResource DotCheckBox}" />
+                                                                    Style="{StaticResource DotCheckBox}">
+                                                                    <Image Source="pack://application:,,,/Assets/icons/Popup.png" Width="16" Height="16" Stretch="Uniform"/>
+                                                                </CheckBox>
 
                                                                 <CheckBox
-                                                                    Content="Audio"
+                                                                    Margin="0,0,8,0"
+                                                                    ToolTip="In-App Alert"
+                                                                    IsChecked="{Binding OverlayEnabled, Mode=TwoWay}"
+                                                                    Style="{StaticResource DotCheckBox}">
+                                                                    <Image Source="pack://application:,,,/Assets/icons/PiP.png" Width="16" Height="16" Stretch="Uniform"/>
+                                                                </CheckBox>
+
+                                                                <CheckBox
+                                                                    ToolTip="Audio Alert"
                                                                     IsChecked="{Binding AudioEnabled, Mode=TwoWay}"
                                                                     Style="{StaticResource DotCheckBox}">
+                                                                    <ui:SymbolIcon Symbol="Speaker224" FontSize="16"/>
                                                                     <CheckBox.ContextMenu>
                                                                         <ContextMenu Style="{StaticResource DarkContextMenu}">
                                                                             <MenuItem
@@ -2743,13 +2759,30 @@
                                                 <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="*" />
                                             </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            
                                             <TabPanel
-                                                Grid.Row="0"
+                                                Grid.Row="0" Grid.Column="0"
                                                 Margin="0"
                                                 Panel.ZIndex="1"
                                                 IsItemsHost="True" />
+                                                
+                                            <ui:Button
+                                                Grid.Row="0" Grid.Column="1"
+                                                Margin="0,0,12,0"
+                                                Padding="8,4"
+                                                VerticalAlignment="Center"
+                                                Appearance="Secondary"
+                                                Click="BtnHowToTrack_Click"
+                                                ToolTip="Learn how player tracking works"
+                                                Icon="{ui:SymbolIcon Symbol=QuestionCircle24}"
+                                                Content="How to Track" />
+
                                             <ContentPresenter
-                                                Grid.Row="1"
+                                                Grid.Row="1" Grid.ColumnSpan="2"
                                                 Margin="0,8,0,0"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
@@ -2780,6 +2813,7 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock
                                                     VerticalAlignment="Center"
@@ -2788,15 +2822,17 @@
                                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                     Text="Online Players" />
 
+
+
                                                 <ui:Button
-                                                    x:Name="BtnServerBMPlayers"
+                                                    x:Name="BtnSearchBM"
                                                     Grid.Column="1"
-                                                    Margin="0,0,8,0"
+                                                    Margin="0,0,4,0"
                                                     Padding="8,4"
-                                                    Click="BtnServerBM_Click"
-                                                    Content="Battlemetrics"
-                                                    Icon="Open24"
-                                                    Visibility="Collapsed" />
+                                                    Appearance="Primary"
+                                                    Click="BtnSearchBM_Click"
+                                                    Content="Search BM"
+                                                    ToolTip="Search current server on BattleMetrics" />
 
                                                 <ui:Button
                                                     Grid.Column="2"
@@ -2804,24 +2840,34 @@
                                                     Appearance="Secondary"
                                                     Click="BtnShowOnline_Click"
                                                     Content="Refresh"
-                                                    Icon="ArrowClockwise24" />
+                                                    Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" />
+
+                                                <ui:Button
+                                                    x:Name="BtnPopoutPlayers"
+                                                    Grid.Column="3"
+                                                    Margin="4,0,0,0"
+                                                    Padding="8,4"
+                                                    Appearance="Secondary"
+                                                    Click="BtnPopoutPlayers_Click"
+                                                    ToolTip="Open Players in separate window"
+                                                    Content="Popout" />
                                             </Grid>
 
-                                            <DockPanel Grid.Row="1" Margin="0,0,0,8">
+                                            <DockPanel x:Name="PnlManualTrack" Grid.Row="1" Margin="0,0,0,8">
                                                 <ui:Button
                                                     x:Name="BtnAddManual"
                                                     Margin="4,0,0,0"
                                                     Padding="8,4"
                                                     Appearance="Primary"
                                                     Click="BtnAddManual_Click"
-                                                    Content="Track ID"
+                                                    Content="Track"
                                                     DockPanel.Dock="Right" />
                                                 <ui:TextBox
                                                     x:Name="TxtManualBMId"
                                                     GotFocus="TxtManualBMId_GotFocus"
                                                     LostFocus="TxtManualBMId_LostFocus"
-                                                    PlaceholderText="Manual Battlemetrics ID..."
-                                                    Text="Manual BM ID..." />
+                                                    PlaceholderText="Manual Track Name or Steam ID..."
+                                                    Text="Manual Track Name or Steam ID..." />
                                             </DockPanel>
 
                                             <ui:TextBox
@@ -2839,7 +2885,13 @@
                                                 Grid.Row="3"
                                                 Margin="20"
                                                 VerticalAlignment="Center"
-                                                Visibility="Collapsed">
+                                                Visibility="Collapsed"
+                                                Background="Transparent">
+                                                <Grid.ContextMenu>
+                                                    <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                                        <MenuItem Click="Server_RelinkBM_Click" Header="Relink Battlemetrics ID&#x2026;" />
+                                                    </ContextMenu>
+                                                </Grid.ContextMenu>
                                                 <StackPanel>
                                                     <ui:ProgressRing
                                                         x:Name="PbOnlineLoading"
@@ -2897,16 +2949,7 @@
                                                                 FontSize="11"
                                                                 Foreground="{DynamicResource TextFillColorTertiaryBrush}"
                                                                 Text="{Binding PlayTimeStr}" />
-                                                            <ui:Button
-                                                                x:Name="BtnPlayerBM"
-                                                                Grid.Column="2"
-                                                                Margin="0,0,4,0"
-                                                                Padding="6,2"
-                                                                Appearance="Secondary"
-                                                                Click="BtnPlayerBM_Click"
-                                                                Content="BM"
-                                                                FontSize="11"
-                                                                Tag="{Binding}" />
+
                                                             <ui:Button
                                                                 x:Name="BtnAction"
                                                                 Grid.Column="3"
@@ -2927,11 +2970,9 @@
                                                             </DataTrigger>
                                                             <Trigger Property="IsMouseOver" Value="False">
                                                                 <Setter TargetName="BtnAction" Property="Opacity" Value="0.6" />
-                                                                <Setter TargetName="BtnPlayerBM" Property="Opacity" Value="0.6" />
                                                             </Trigger>
                                                             <Trigger Property="IsMouseOver" Value="True">
                                                                 <Setter TargetName="BtnAction" Property="Opacity" Value="1" />
-                                                                <Setter TargetName="BtnPlayerBM" Property="Opacity" Value="1" />
                                                             </Trigger>
                                                         </DataTemplate.Triggers>
                                                     </DataTemplate>
@@ -3008,7 +3049,121 @@
                         </TabItem>
                     </TabControl>
 
-                </DockPanel>
+                    </DockPanel>
+
+                    <!--  Profit Trades Overlay  -->
+                    <Border
+                        x:Name="ProfitTradesPanel"
+                        Background="{DynamicResource Surface}"
+                        Visibility="Collapsed">
+                        <Grid ClipToBounds="True">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="36" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.Row="0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="12,0">
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="💰" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="Profit Trades" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <Button x:Name="BtnRefreshProfitTrades" Content="⟳" Style="{StaticResource GhostButton}" Width="26" Height="26" Padding="0" FontSize="15" Margin="0,0,6,0" ToolTip="Refresh" />
+                                        <Button x:Name="BtnCloseProfitTrades" Content="&#x2715;" Style="{StaticResource GhostButton}" Width="26" Height="26" Padding="0" FontSize="12" Foreground="{DynamicResource TextSubtle}" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <Border Grid.Row="1" Padding="12,7" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="Direct arbitrage opportunities | buy low → sell high." Foreground="{DynamicResource TextSubtle}" FontSize="11" />
+                            </Border>
+
+                            <ListBox x:Name="ProfitTradesList" Grid.Row="2" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Padding="10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
+                        </Grid>
+                    </Border>
+
+                    <!--  Buy X For Y Overlay  -->
+                    <Border
+                        x:Name="BuyXForYPanel"
+                        Background="{DynamicResource Surface}"
+                        Visibility="Collapsed">
+                        <Grid ClipToBounds="True">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="36" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="130" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.Row="0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="12,0">
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="🔁" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="Buy X for Y" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                                    </StackPanel>
+                                    <Button x:Name="BtnCloseBuyXForY" Content="&#x2715;" Style="{StaticResource GhostButton}" Width="26" Height="26" Padding="0" FontSize="12" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+
+                            <Grid Grid.Row="1" Margin="12,8,12,6" HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="6,3">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="🎯" Margin="0,0,4,0" VerticalAlignment="Center" FontSize="13" />
+                                        <TextBox x:Name="BuyXForY_WantTb" Grid.Column="1" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextPrimary}" CaretBrush="{DynamicResource TextPrimary}" Padding="2,3" VerticalContentAlignment="Center" ToolTip="I want to GET (e.g. Crude Oil)" FontSize="12" />
+                                    </Grid>
+                                </Border>
+
+                                <Border Grid.Column="1" Margin="4,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="6,3">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="💰" Margin="0,0,4,0" VerticalAlignment="Center" FontSize="13" />
+                                        <TextBox x:Name="BuyXForY_PayTb" Grid.Column="1" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextPrimary}" CaretBrush="{DynamicResource TextPrimary}" Padding="2,3" VerticalContentAlignment="Center" ToolTip="I want to PAY WITH (e.g. Scrap)" FontSize="12" />
+                                    </Grid>
+                                </Border>
+
+                                <Button x:Name="BuyXForY_AnalyzeBtn" Grid.Column="2" Content="Analyze" Style="{StaticResource PrimaryButton}" Margin="4,0,0,0" Padding="12,3" FontSize="12" />
+                            </Grid>
+
+                            <Grid Grid.Row="2" Margin="12,0,12,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="5">
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Top" Text="I want to GET" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="SemiBold" Margin="0,0,0,3" />
+                                        <ListBox x:Name="BuyXForY_WantPreview" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
+                                    </DockPanel>
+                                </Border>
+
+                                <Border Grid.Column="1" Margin="4,0,0,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="5">
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Top" Text="I can PAY WITH" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="SemiBold" Margin="0,0,0,3" />
+                                        <ListBox x:Name="BuyXForY_PayPreview" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
+                                    </DockPanel>
+                                </Border>
+                            </Grid>
+
+                            <ListBox x:Name="BuyXForY_ResultList" Grid.Row="3" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Margin="12,0,12,10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
+                        </Grid>
+                    </Border>
+                </Grid>
             </Border>
 
             <!--  Rechte Spalte: Login/Status + WebViewHost  -->
@@ -3159,6 +3314,13 @@
                                                     StaysOpenOnClick="True"
                                                     Style="{StaticResource DarkMenuItem}"
                                                     Tag="DeepSea" />
+                                                <MenuItem
+                                                    Click="Alert_MenuItem_Click"
+                                                    Header="Smart Alerts"
+                                                    IsCheckable="True"
+                                                    StaysOpenOnClick="True"
+                                                    Style="{StaticResource DarkMenuItem}"
+                                                    Tag="SmartAlerts" />
                                                 <Separator Style="{StaticResource DarkSeparator}" />
                                                 <MenuItem
                                                     FontWeight="Bold"
@@ -3179,6 +3341,13 @@
                                                     StaysOpenOnClick="True"
                                                     Style="{StaticResource DarkMenuItem}"
                                                     Tag="PlayerOffline" />
+                                                <MenuItem
+                                                    Click="Alert_MenuItem_Click"
+                                                    Header="Tracking Notifications"
+                                                    IsCheckable="True"
+                                                    StaysOpenOnClick="True"
+                                                    Style="{StaticResource DarkMenuItem}"
+                                                    Tag="AnnounceTracking" />
                                                 <MenuItem
                                                     Click="Alert_MenuItem_Click"
                                                     Header="Self Death"
@@ -3870,6 +4039,86 @@
                         </Border>
 
                         <!--  Integrated Shop Search Overlay (Roll-up)  -->
+                        <Border
+                            x:Name="BMBrowserPanel"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Margin="20"
+                            Panel.ZIndex="2000"
+                            Background="#16181C"
+                            BorderBrush="#40FFFFFF"
+                            BorderThickness="1"
+                            CornerRadius="12"
+                            Visibility="Collapsed">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <!-- Header Area -->
+                                <Grid Grid.Row="0" Background="#1E2126">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
+                                        <Button x:Name="BtnBMBack" Content="&#x25C0;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMBack_Click" ToolTip="Back" />
+                                        <Button x:Name="BtnBMForward" Content="&#x25B6;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMForward_Click" ToolTip="Forward" />
+                                        <Button x:Name="BtnBMRefresh" Content="&#x21BB;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMRefresh_Click" ToolTip="Refresh" />
+                                        <Button x:Name="BtnBMPopout" Content="&#x2197;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMPopout_Click" ToolTip="Open in external browser" />
+                                        <ui:TextBox
+                                            x:Name="TxtBMSearch"
+                                            Width="150"
+                                            Margin="8,0,0,0"
+                                            PlaceholderText="Search BM..."
+                                            KeyDown="TxtBMSearch_KeyDown" />
+                                        <Button
+                                            x:Name="BtnBMSearch"
+                                            Width="30"
+                                            Height="30"
+                                            Content="&#x1F50D;"
+                                            Click="BtnBMSearch_Click"
+                                            Style="{StaticResource GhostButton}"
+                                            ToolTip="Search" />
+                                    </StackPanel>
+
+                                    <ui:Button
+                                        x:Name="BtnBMTrack"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Appearance="Primary"
+                                        Content="TRACK PLAYER"
+                                        Visibility="Collapsed"
+                                        Click="BtnBMTrack_Click" />
+
+                                    <Button
+                                        x:Name="BtnCloseBMBrowser"
+                                        Grid.Column="2"
+                                        Width="30"
+                                        Height="30"
+                                        Margin="0,0,8,0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Click="BtnCloseBMBrowser_Click"
+                                        Content="&#x2715;"
+                                        Cursor="Hand"
+                                        FontSize="14"
+                                        Foreground="#99FFFFFF"
+                                        Style="{StaticResource GhostButton}"
+                                        ToolTip="Close BattleMetrics Browser" />
+                                </Grid>
+
+                                <!-- Browser Content -->
+                                <Grid Grid.Row="1">
+                                    <wv2:WebView2 x:Name="EmbeddedBMBrowser" SourceChanged="EmbeddedBMBrowser_SourceChanged" />
+                                </Grid>
+                            </Grid>
+                        </Border>
+
                         <Border
                             x:Name="ShopSearchPanel"
                             Width="400"
@@ -4635,13 +4884,68 @@
                 </Border>
             </Grid>
 
+            <!--  Custom Smart Alarm Overlay  -->
+            <Border
+                x:Name="AlarmOverlayBorder"
+                Grid.ColumnSpan="3"
+                Margin="20,20,20,130"
+                Padding="16"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Background="#EE660000"
+                BorderBrush="#FFFF5555"
+                BorderThickness="1"
+                CornerRadius="8"
+                Panel.ZIndex="9998"
+                Visibility="Collapsed"
+                Width="360">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" Direction="270" Opacity="0.3" ShadowDepth="2" Color="Black" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Width="18" Height="18" Margin="0,0,8,0" Source="pack://application:,,,/Assets/icons/smartalarm.png" Stretch="Uniform" />
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="Smart Alarm" />
+
+                        <StackPanel Grid.Column="2" Margin="0,0,12,0" VerticalAlignment="Center" Orientation="Horizontal">
+                            <ui:Button x:Name="AlarmOverlayPrevBtn" Padding="4" Appearance="Transparent" Click="AlarmOverlayPrev_Click" Icon="{ui:SymbolIcon Symbol=ChevronLeft24}" />
+                            <TextBlock x:Name="AlarmOverlayPagingTxt" Margin="6,0" VerticalAlignment="Center" Text="1/1" />
+                            <ui:Button x:Name="AlarmOverlayNextBtn" Padding="4" Appearance="Transparent" Click="AlarmOverlayNext_Click" Icon="{ui:SymbolIcon Symbol=ChevronRight24}" />
+                        </StackPanel>
+
+                        <ui:Button Grid.Column="3" Padding="4" Appearance="Transparent" Click="AlarmOverlayClose_Click" Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
+                    </Grid>
+
+                    <TextBlock x:Name="AlarmOverlayServerTxt" Grid.Row="1" Margin="0,0,0,4" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Server Name - 14:30" />
+                    <TextBlock x:Name="AlarmOverlayNameTxt" Grid.Row="2" Margin="0,0,0,2" FontSize="16" FontWeight="Bold" Text="Custom Alarm Name" TextWrapping="Wrap" />
+                    <TextBlock x:Name="AlarmOverlayMsgTxt" Grid.Row="3" Margin="0,0,0,12" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Alarm activated!" TextWrapping="Wrap" />
+
+                    <CheckBox x:Name="AlarmOverlayAutoHideChk" Grid.Row="4" Content="Auto-hide after 3s" FontSize="12" IsChecked="False" Checked="AlarmOverlayAutoHideChk_Changed" Unchecked="AlarmOverlayAutoHideChk_Changed"/>
+                </Grid>
+            </Border>
+
             <!--  Wpf.Ui: WinUI 3 Snackbar presenter (toast notifications)  -->
             <ui:SnackbarPresenter
                 x:Name="RootSnackbar"
                 Grid.ColumnSpan="3"
                 Margin="20,0,20,20"
-                HorizontalAlignment="Stretch"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
+                MaxWidth="400"
                 Panel.ZIndex="9999" />
 
         </Grid>
