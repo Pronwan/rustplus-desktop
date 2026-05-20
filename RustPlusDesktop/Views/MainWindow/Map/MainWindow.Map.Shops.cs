@@ -155,6 +155,7 @@ public partial class MainWindow
 
             UpdateShopPollingWarning();
         }
+        UpdateSelectAllState();
     }
 
     private void RefreshShopIconScales()
@@ -569,7 +570,7 @@ public partial class MainWindow
         ShopDetailsPopup.MouseLeave += (s, e) => StartShopDetailHideTimer();
     }
 
-    private void ShowShopDetails(List<RustPlusClientReal.ShopMarker> cluster, FrameworkElement anchor = null)
+    private void ShowShopDetails(List<RustPlusClientReal.ShopMarker> cluster, FrameworkElement? anchor = null)
     {
         if (ShopDetailsPopup == null || ShopDetailsContent == null) return;
         

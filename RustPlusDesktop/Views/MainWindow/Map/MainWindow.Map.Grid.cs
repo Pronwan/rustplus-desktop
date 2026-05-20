@@ -8,7 +8,11 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
-    private void ChkGrid_Checked(object sender, RoutedEventArgs e) => RedrawGrid();
+    private void ChkGrid_Checked(object sender, RoutedEventArgs e)
+    {
+        RedrawGrid();
+        UpdateSelectAllState();
+    }
 
     private void RedrawGrid()
     {
