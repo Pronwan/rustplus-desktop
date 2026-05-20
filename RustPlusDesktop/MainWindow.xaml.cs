@@ -392,6 +392,8 @@ public partial class MainWindow : ui.FluentWindow
         TrackingService.OnOnlinePlayersUpdated += OnOnlinePlayersUpdated;
         TrackingService.OnServerInfoUpdated -= OnServerInfoUpdated;
         TrackingService.OnServerInfoUpdated += OnServerInfoUpdated;
+        TrackingService.OnTrackingNotification -= OnTrackingNotification;
+        TrackingService.OnTrackingNotification += OnTrackingNotification;
         OnOnlinePlayersUpdated();
         _vm.IsInitializing = false;
         
@@ -505,6 +507,8 @@ public partial class MainWindow : ui.FluentWindow
         // AppendLog($"DEBUG: Selected={_vm.Selected?.Name ?? "(null)"}  Devices={_vm.Selected?.Devices?.Count.ToString() ?? "(null)"}");
 
 
+
+
         TxtSteamId.Text = string.IsNullOrEmpty(_vm.SteamId64) ? "(nicht angemeldet)" : _vm.SteamId64;
 
         this.Closing += MainWindow_Closing;
@@ -538,6 +542,11 @@ public partial class MainWindow : ui.FluentWindow
         
         _monumentWatcher.OnDebug += (s, msg) => Dispatcher.BeginInvoke(new Action(() => AppendLog(msg)));
 
+    }
+
+    private void OnTrackingNotification(string msg)
+    {
+        Dispatcher.InvokeAsync(async () => await SendTeamChatSafeAsync(msg));
     }
 
     // CROSSHAIR \\
@@ -3140,6 +3149,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "SmartAlerts": TrackingService.AnnounceSmartAlerts = val; break;
                 case "PlayerOnline": TrackingService.AnnouncePlayerOnline = val; break;
                 case "PlayerOffline": TrackingService.AnnouncePlayerOffline = val; break;
+                case "AnnounceTracking": TrackingService.AnnounceTracking = val; break;
                 case "PlayerDeathSelf": TrackingService.AnnouncePlayerDeathSelf = val; break;
                 case "PlayerDeathTeam": TrackingService.AnnouncePlayerDeathTeam = val; break;
                 case "PlayerRespawnSelf": TrackingService.AnnouncePlayerRespawnSelf = val; break;
@@ -3211,6 +3221,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "SmartAlerts": isSelected = TrackingService.AnnounceSmartAlerts; break;
                 case "PlayerOnline": isSelected = TrackingService.AnnouncePlayerOnline; break;
                 case "PlayerOffline": isSelected = TrackingService.AnnouncePlayerOffline; break;
+                case "AnnounceTracking": isSelected = TrackingService.AnnounceTracking; break;
                 case "PlayerDeathSelf": isSelected = TrackingService.AnnouncePlayerDeathSelf; break;
                 case "PlayerDeathTeam": isSelected = TrackingService.AnnouncePlayerDeathTeam; break;
                 case "PlayerRespawnSelf": isSelected = TrackingService.AnnouncePlayerRespawnSelf; break;
