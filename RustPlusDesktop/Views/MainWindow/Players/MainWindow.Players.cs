@@ -121,8 +121,18 @@ public partial class MainWindow
                 {
                     if (TxtTrackingStatus != null)
                     {
-                        TxtTrackingStatus.Text = TrackingService.IsTracking ? "Tracking Active" : "Tracking Idle";
-                        TxtTrackingStatus.Foreground = TrackingService.IsTracking ? Brushes.White : Brushes.Gray;
+                        bool hasRealTracked = TrackingService.GetTrackedPlayers().Any(p => !p.IsBMOnly);
+                        if (hasRealTracked)
+                        {
+                            TxtTrackingStatus.Text = TrackingService.IsTracking ? "Tracking Active" : "Tracking Idle";
+                            TxtTrackingStatus.Foreground = TrackingService.IsTracking ? Brushes.White : Brushes.Gray;
+                        }
+                        else
+                        {
+                            // Only BM shortcuts — no UDP polling needed
+                            TxtTrackingStatus.Text = "BM Shortcuts";
+                            TxtTrackingStatus.Foreground = Brushes.Gray;
+                        }
                         TxtTrackingStatus.FontStyle = FontStyles.Normal;
                     }
                 }

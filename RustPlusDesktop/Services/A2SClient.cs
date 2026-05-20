@@ -34,36 +34,39 @@ namespace RustPlusDesk.Services
 
             using var cts = new CancellationTokenSource(timeoutMs);
 
-            // 1. Send initial challenge request
+            // 1. Send initial A2S_PLAYER request with dummy challenge 0xFFFFFFFF
             byte[] req = new byte[] { 0xFF, 0xFF, 0xFF, 0xFF, 0x55, 0xFF, 0xFF, 0xFF, 0xFF };
             await udp.SendAsync(req, req.Length);
 
-            byte[]? challenge = null;
-
-            // Wait for challenge response
-            var res = await udp.ReceiveAsync().WithCancellation(cts.Token);
-            using var ms = new MemoryStream(res.Buffer);
-            using var br = new BinaryReader(ms);
-
-            uint header = br.ReadUInt32();
-            if (header == 0xFFFFFFFF)
+            // 2. Read the first response — could be:
+            //    0x41  A2S_CHALLENGE: server wants us to re-send with a real token
+            //    0x44  A2S_PLAYER:    server skipped the challenge and sent the list directly (valid per spec)
+            var firstRes = await udp.ReceiveAsync().WithCancellation(cts.Token);
             {
-                byte cmd = br.ReadByte();
-                if (cmd == 0x41) // Challenge response
+                using var ms0 = new MemoryStream(firstRes.Buffer);
+                using var br0 = new BinaryReader(ms0);
+                if (ms0.Length >= 5)
                 {
-                    challenge = br.ReadBytes(4);
+                    uint h0 = br0.ReadUInt32();
+                    if (h0 == 0xFFFFFFFF)
+                    {
+                        byte cmd0 = br0.ReadByte();
+                        if (cmd0 == 0x44) // Direct player list — no challenge required by this server
+                            return ParsePlayers(br0);
+
+                        if (cmd0 == 0x41) // Challenge: re-send with the real token
+                        {
+                            byte[] challenge = br0.ReadBytes(4);
+                            var req2 = new List<byte> { 0xFF, 0xFF, 0xFF, 0xFF, 0x55 };
+                            req2.AddRange(challenge);
+                            await udp.SendAsync(req2.ToArray(), req2.Count);
+                            // fall through to multi-packet receive below
+                        }
+                    }
                 }
             }
 
-            if (challenge == null)
-                throw new Exception("Did not receive A2S_PLAYER challenge.");
-
-            // 2. Send request with challenge
-            var req2 = new List<byte> { 0xFF, 0xFF, 0xFF, 0xFF, 0x55 };
-            req2.AddRange(challenge);
-            await udp.SendAsync(req2.ToArray(), req2.Count);
-
-            // 3. Receive players (might be split)
+            // 3. Receive player list (may be multi-packet / split)
             var packets = new Dictionary<int, byte[]>();
             int totalPackets = -1;
             uint packetId = 0;
@@ -128,7 +131,7 @@ namespace RustPlusDesk.Services
                         // Check if compressed
                         if ((packetId & 0x80000000) != 0)
                         {
-                            throw new Exception("BZIP2 Compression not supported in this simple client.");
+                            throw new Exception("BZIP2 Compression not supported.");
                         }
 
                         var cBr = new BinaryReader(combined);

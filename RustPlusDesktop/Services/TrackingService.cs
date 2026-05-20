@@ -1023,9 +1023,10 @@ public static class TrackingService
         _settings.LastBMId = bmId;
         SaveDB();
 
-        // Poll every 2 minutes only if we have players
+        // Poll every 2 minutes only if we have *real* (non-BM-only) tracked players.
+        // BM-only shortcuts don't need any UDP queries.
         _trackingTimer?.Dispose();
-        if (GetTrackedPlayers().Count > 0)
+        if (GetTrackedPlayers().Any(p => !p.IsBMOnly))
         {
             _trackingTimer = new Timer(async _ => await PollOnceAsync(), null, 0, 120_000);
         }
@@ -1048,57 +1049,53 @@ public static class TrackingService
 
     private static async Task<int?> AutoDiscoverQueryPortAsync(string host, int appPort)
     {
-        var candidates = new HashSet<int> { appPort, appPort - 67, 28015 };
-        
+        // Ask Steam which query ports exist for this IP.
+        // The API is authoritative — no need to probe with A2S first.
         try
         {
-            var json = await _http.GetStringAsync($"https://api.steampowered.com/ISteamApps/GetServersAtAddress/v1?addr={host}");
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            var json = await _http.GetStringAsync(
+                $"https://api.steampowered.com/ISteamApps/GetServersAtAddress/v1?addr={host}",
+                cts.Token);
             using var doc = JsonDocument.Parse(json);
             if (doc.RootElement.TryGetProperty("response", out var resp) && 
                 resp.TryGetProperty("servers", out var servers) && 
                 servers.ValueKind == JsonValueKind.Array)
             {
+                // Find all Rust (appid 252490) ports for this IP
+                var rustPorts = new List<int>();
                 foreach (var s in servers.EnumerateArray())
                 {
-                    if (s.TryGetProperty("appid", out var appid) && appid.GetInt32() == 252490) // Rust
+                    if (s.TryGetProperty("appid", out var appid) && appid.GetInt32() == 252490)
                     {
                         if (s.TryGetProperty("addr", out var addrStr))
                         {
                             var parts = addrStr.GetString()?.Split(':');
-                            if (parts != null && parts.Length == 2 && int.TryParse(parts[1], out int sp))
-                            {
-                                candidates.Add(sp);
-                            }
+                            if (parts?.Length == 2 && int.TryParse(parts[1], out int sp))
+                                rustPorts.Add(sp);
                         }
                     }
+                }
+
+                if (rustPorts.Count == 1)
+                {
+                    // Exactly one Rust server on this IP — trust it immediately, no probe needed
+                    Log($"[AutoDiscover] Steam API: single Rust port {rustPorts[0]} for {host}");
+                    return rustPorts[0];
+                }
+
+                if (rustPorts.Count > 1)
+                {
+                    // Multiple servers on same IP: pick the one closest to appPort
+                    var best = rustPorts.OrderBy(p => Math.Abs(p - appPort)).First();
+                    Log($"[AutoDiscover] Steam API: multiple ports, chose {best} for {host}");
+                    return best;
                 }
             }
         }
         catch { }
 
-        foreach (var port in candidates.Where(p => p > 0 && p <= 65535))
-        {
-            try
-            {
-                var fetchTask = Task.Run(async () =>
-                {
-                    var players = await A2SClient.QueryPlayersAsync(host, port, 2000);
-                    return players;
-                });
-                
-                if (await Task.WhenAny(fetchTask, Task.Delay(2500)) == fetchTask)
-                {
-                    var players = await fetchTask;
-                    if (players != null)
-                    {
-                        Log($"[AutoDiscover] Found valid Rust query port: {port} for {host}");
-                        return port;
-                    }
-                }
-            }
-            catch { }
-        }
-        
+        // Steam API gave nothing — caller will try common port offsets in the main query
         return null;
     }
 
@@ -1178,14 +1175,12 @@ public static class TrackingService
                 if (discovered.HasValue)
                 {
                     queryPort = discovered.Value;
+                    // Save immediately so subsequent calls skip discovery
                     _settings.LearnedQueryPorts[hostKey] = queryPort;
                     SaveDB();
                 }
-                else
-                {
-                    // Fallback to app port if discovery failed
-                    queryPort = port; 
-                }
+                // If discovery failed, queryPort stays at appPort.
+                // We'll try common offsets below in the multi-port fallback.
             }
 
             if (isCurrentServer)
@@ -1196,18 +1191,39 @@ public static class TrackingService
             var onlineList = new List<OnlinePlayerBM>();
             var currentlyOnlineInfo = new Dictionary<string, (DateTime start, string name)>();
 
-            await Task.Run(async () =>
+            // Try the discovered/learned port first, then fall back to common offsets
+            // if the port was not learned from the API (only probing with a 8s timeout each).
+            var portCandidates = new List<int> { queryPort };
+            bool portWasLearned = _settings.LearnedQueryPorts.ContainsKey(hostKey);
+            if (!portWasLearned)
             {
-                var fetchTask = Task.Run(async () =>
-                {
-                    // Wir nutzen unseren eigenen A2SClient!
-                    var p = await A2SClient.QueryPlayersAsync(host, queryPort, 3000);
-                    return p;
-                });
+                // API gave nothing; try the most common Rust query ports
+                foreach (var fb in new[] { port - 67, 28015, port - 1, port })
+                    if (fb > 0 && fb != queryPort) portCandidates.Add(fb);
+            }
 
-                if (await Task.WhenAny(fetchTask, Task.Delay(5000)) == fetchTask)
+            List<A2SPlayer>? playersResult = null;
+            int successPort = queryPort;
+            foreach (var tryPort in portCandidates)
+            {
+                try
                 {
-                    var playersResult = await fetchTask;
+                    playersResult = await A2SClient.QueryPlayersAsync(host, tryPort, 8000);
+                    if (playersResult != null)
+                    {
+                        successPort = tryPort;
+                        if (tryPort != queryPort)
+                        {
+                            // Learned a new port mid-fallback — save it
+                            _settings.LearnedQueryPorts[hostKey] = tryPort;
+                            SaveDB();
+                            Log($"[A2S] Fallback port {tryPort} succeeded for {host}");
+                        }
+                        break;
+                    }
+                }
+                catch { }
+            }
                     
                     int totalFetched = playersResult?.Count ?? 0;
                     int validNames = 0;
@@ -1240,13 +1256,6 @@ public static class TrackingService
                             }
                         }
                     }
-                    Log($"[A2S] Valid names: {validNames}/{totalFetched}");
-                }
-                else
-                {
-                    throw new Exception("Steam Query Timeout! Falscher Query-Port?");
-                }
-            });
 
             if (isCurrentServer)
             {
