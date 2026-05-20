@@ -51,12 +51,11 @@ public partial class App : Application
 
         SetupTrayIcon();
 
-        // Start polling if enabled and we have a server
+        // Start polling if enabled
         if (TrackingService.IsBackgroundTrackingEnabled)
         {
             var (host, port, name) = TrackingService.LastServer;
-            if (!string.IsNullOrEmpty(host))
-                TrackingService.StartPolling(host, port, name, TrackingService.LastBMId);
+            TrackingService.StartPolling(host ?? "", port, name ?? "", TrackingService.LastBMId);
         }
 
         if (isBackgroundArg && TrackingService.StartMinimizedEnabled)

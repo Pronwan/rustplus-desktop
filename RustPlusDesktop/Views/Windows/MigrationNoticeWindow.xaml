@@ -1,8 +1,8 @@
 <Window x:Class="RustPlusDesk.Views.MigrationNoticeWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Rust+ Desktop — v5.1.0-beta1 Update"
-        Width="490" Height="450"
+        Title="Rust+ Desktop — v5.1.0 Update"
+        Width="490" Height="540"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         Background="#0F1215"
@@ -76,10 +76,9 @@
             <Border Grid.Row="0" Background="#161B22" CornerRadius="12,12,0,0" Padding="20,14">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Border Background="#E8611A" CornerRadius="5" Padding="6,3" Margin="0,0,10,0">
-                        <TextBlock Text="v5.1.0-beta1" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="v5.1.0" FontSize="11" FontWeight="Bold" Foreground="White"/>
                     </Border>
-                    <TextBlock Text="Upkeep &amp; Minimap Update" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
-                    <TextBlock Text=" — Beta Release" FontSize="15" Foreground="#5A6A7A" VerticalAlignment="Center"/>
+                    <TextBlock Text="Upkeep, Minimap &amp; Tracking Update" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
                 </StackPanel>
             </Border>
 
@@ -131,7 +130,7 @@
                 </Border>
 
                 <!-- Info box -->
-                <Border Background="#0D2137" BorderBrush="#1A4A7A" BorderThickness="1" CornerRadius="8" Padding="12,10">
+                <Border Background="#0D2137" BorderBrush="#1A4A7A" BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,10">
                     <TextBlock TextWrapping="Wrap" Foreground="#90C8FF" FontSize="12" LineHeight="18">
                         <Run FontWeight="Bold">⚠️ Action Required:</Run>
                         <Run>Please check your </Run>
@@ -141,6 +140,18 @@
                         <Run> settings to configure the new options. For a detailed list of all changes, please open the </Run>
                         <Run FontWeight="Bold" Foreground="White">Patch Notes</Run>
                         <Run> at the top. Happy surviving!</Run>
+                    </TextBlock>
+                </Border>
+
+                <!-- Tracking warning box -->
+                <Border Background="#331414" BorderBrush="#8A2323" BorderThickness="1" CornerRadius="8" Padding="12,10">
+                    <TextBlock TextWrapping="Wrap" Foreground="#FFCCCC" FontSize="12" LineHeight="18">
+                        <Run FontWeight="Bold" Foreground="#FF5555">⚠️ Player Tracking Changes:</Run>
+                        <Run>The player tracking system has been fundamentally overhauled. For details on native tracking vs. BattleMetrics shortcuts, please open the </Run>
+                        <Run FontWeight="Bold" Foreground="White">Patch Notes</Run>
+                        <Run> and read the </Run>
+                        <Run FontWeight="Bold" Foreground="White">How Player Tracking Works</Run>
+                        <Run> guide.</Run>
                     </TextBlock>
                 </Border>
             </StackPanel>

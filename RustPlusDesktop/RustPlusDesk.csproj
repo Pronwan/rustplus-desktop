@@ -20,12 +20,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>5.1.0-beta1</Version>
+		<Version>5.1.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>5.0.95</AssemblyVersion>
-		<FileVersion>5.0.95</FileVersion>
-		<InformationalVersion>5.1.0-beta1</InformationalVersion>
+		<AssemblyVersion>5.1.0</AssemblyVersion>
+		<FileVersion>5.1.0</FileVersion>
+		<InformationalVersion>5.1.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -158,6 +158,11 @@
 	  <None Remove="Assets\Screenshots\Cargo_docked_countdown.png" />
 	  <None Remove="Assets\Screenshots\Cargo_notification_settings.png" />
 	  <None Remove="Assets\Screenshots\Cargo_remaining-on-map.png" />
+	  <None Remove="Assets\Screenshots\Tracking1.jpg" />
+	  <None Remove="Assets\Screenshots\Tracking2.jpg" />
+	  <None Remove="Assets\Screenshots\Tracking3.jpg" />
+	  <None Remove="Assets\Screenshots\Tracking4.jpg" />
+	  <None Remove="Assets\Screenshots\Tracking5.jpg" />
 	  <None Remove="Assets\Screenshots\v4_map_overhaul.png" />
 	  <None Remove="Assets\Screenshots\v4_shop_hover.png" />
 	  <None Remove="Assets\TitleScreen-rust-plus-desktop.png" />
@@ -316,6 +321,11 @@
     <Resource Include="Assets\Screenshots\Cargo_docked_countdown.png" />
     <Resource Include="Assets\Screenshots\Cargo_notification_settings.png" />
     <Resource Include="Assets\Screenshots\Cargo_remaining-on-map.png" />
+    <Resource Include="Assets\Screenshots\Tracking1.jpg" />
+    <Resource Include="Assets\Screenshots\Tracking2.jpg" />
+    <Resource Include="Assets\Screenshots\Tracking3.jpg" />
+    <Resource Include="Assets\Screenshots\Tracking4.jpg" />
+    <Resource Include="Assets\Screenshots\Tracking5.jpg" />
     <Resource Include="Assets\Screenshots\v4_map_overhaul.png" />
     <Resource Include="Assets\Screenshots\v4_shop_hover.png" />
     <Resource Include="Assets\Screenshots\v4_5.png">
