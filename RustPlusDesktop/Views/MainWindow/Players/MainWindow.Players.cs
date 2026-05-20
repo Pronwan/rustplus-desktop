@@ -18,11 +18,30 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
+    private Point _trackedGroupDragStartPoint;
+    private Expander? _draggedTrackedGroup;
+
+    private void BtnHowToTrack_Click(object sender, RoutedEventArgs e)
+    {
+        HowToTrackWindow.Show(this);
+    }
+
     private void BtnViewTracked_Click(object sender, RoutedEventArgs e)
     {
-        var bmId = (sender as FrameworkElement)?.Tag as string 
-                   ?? ((sender as FrameworkElement)?.DataContext as TrackedPlayer)?.BMId;
-        if (!string.IsNullOrEmpty(bmId)) ShowTrackingAnalysisWindow(bmId);
+        var player = ((sender as FrameworkElement)?.DataContext as TrackedPlayer);
+        var bmId = (sender as FrameworkElement)?.Tag as string ?? player?.BMId;
+        if (!string.IsNullOrEmpty(bmId))
+        {
+            if (player != null && player.IsBMOnly)
+            {
+                // Navigate to BM directly
+                BtnOpenTrackedBM_Click(sender, e);
+            }
+            else
+            {
+                ShowTrackingAnalysisWindow(bmId);
+            }
+        }
     }
 
     private void BtnGroupTracked_Click(object sender, RoutedEventArgs e)
@@ -84,89 +103,129 @@ public partial class MainWindow
     }
     private void OnOnlinePlayersUpdated()
     {
-        Dispatcher.Invoke(() =>
+        try
         {
-            RefreshOnlinePlayersList();
-            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
-            // Update tracking status indicator
-            bool anyTracked = TrackingService.GetTrackedPlayers().Count > 0;
-            _vm.IsTrackingActive = TrackingService.IsTracking;
+            Dispatcher.Invoke(() =>
+            {
+                RefreshOnlinePlayersList();
+                RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+                // Update tracking status indicator
+                bool anyTracked = TrackingService.GetTrackedPlayers().Count > 0;
+                _vm.IsTrackingActive = TrackingService.IsTracking;
 
-            if (!anyTracked)
-            {
-                TxtTrackingStatus.Text = "Add players to tracker to start tracking";
-                TxtTrackingStatus.Foreground = Brushes.Gray;
-                TxtTrackingStatus.FontStyle = FontStyles.Italic;
-            }
-            else
-            {
-                TxtTrackingStatus.Text = TrackingService.IsTracking ? "Tracking Active" : "Tracking Idle";
-                TxtTrackingStatus.Foreground = TrackingService.IsTracking ? Brushes.White : Brushes.Gray;
-                TxtTrackingStatus.FontStyle = FontStyles.Normal;
-            }
-            
-            if (TrackingService.LastPullTime.HasValue && anyTracked)
-            {
-                TxtLastPull.Text = $"Last pull: {TrackingService.LastPullTime.Value:HH:mm:ss}";
-            }
-            else
-            {
-                TxtLastPull.Text = "Last pull: --:--";
-            }
-        });
+                if (!anyTracked)
+                {
+                    if (TxtTrackingStatus != null)
+                    {
+                        TxtTrackingStatus.Text = "Add players to tracker to start tracking";
+                        TxtTrackingStatus.Foreground = Brushes.Gray;
+                        TxtTrackingStatus.FontStyle = FontStyles.Italic;
+                    }
+                }
+                else
+                {
+                    if (TxtTrackingStatus != null)
+                    {
+                        bool hasRealTracked = TrackingService.GetTrackedPlayers().Any(p => !p.IsBMOnly);
+                        if (hasRealTracked)
+                        {
+                            TxtTrackingStatus.Text = TrackingService.IsTracking ? "Tracking Active" : "Tracking Idle";
+                            TxtTrackingStatus.Foreground = TrackingService.IsTracking ? Brushes.White : Brushes.Gray;
+                        }
+                        else
+                        {
+                            // Only BM shortcuts — no UDP polling needed
+                            TxtTrackingStatus.Text = "BM Shortcuts";
+                            TxtTrackingStatus.Foreground = Brushes.Gray;
+                        }
+                        TxtTrackingStatus.FontStyle = FontStyles.Normal;
+                    }
+                }
+                
+                if (TrackingService.LastPullTime.HasValue && anyTracked)
+                {
+                    if (TxtLastPull != null) TxtLastPull.Text = $"Last pull: {TrackingService.LastPullTime.Value:HH:mm:ss}";
+                }
+                else
+                {
+                    if (TxtLastPull != null) TxtLastPull.Text = "Last pull: --:--";
+                }
+            });
+        }
+        catch { }
     }
 
     private void OnServerInfoUpdated(string description)
     {
-        Dispatcher.Invoke(() => {
-            if (_vm.Selected != null && string.IsNullOrWhiteSpace(_vm.Selected.Description))
-            {
-                _vm.Selected.Description = description;
-            }
-        });
+        try
+        {
+            Dispatcher.Invoke(() => {
+                if (_vm.Selected != null && string.IsNullOrWhiteSpace(_vm.Selected.Description))
+                {
+                    _vm.Selected.Description = description;
+                }
+            });
+        }
+        catch { }
     }
 
     private void RefreshOnlinePlayersList()
     {
-        var players = TrackingService.LastOnlinePlayers;
-        
-        // Dynamic Filter visibility
-        if (players.Count > 0) {
-            TxtOnlineFilter.Visibility = Visibility.Visible;
-            if (string.IsNullOrEmpty(TxtOnlineFilter.Text) && !TxtOnlineFilter.IsFocused) {
-                TxtOnlineFilter.Text = "Filter players...";
-                TxtOnlineFilter.Foreground = Brushes.Gray;
+        try
+        {
+            var players = TrackingService.LastOnlinePlayers;
+            
+            // Dynamic Filter visibility
+            if (players.Count > 0) {
+                if (TxtOnlineFilter != null)
+                {
+                    TxtOnlineFilter.Visibility = Visibility.Visible;
+                    if (string.IsNullOrEmpty(TxtOnlineFilter.Text) && !TxtOnlineFilter.IsFocused) {
+                        TxtOnlineFilter.Text = "Filter players...";
+                        TxtOnlineFilter.Foreground = Brushes.Gray;
+                    }
+                }
+            } else {
+                if (TxtOnlineFilter != null) TxtOnlineFilter.Visibility = Visibility.Collapsed;
             }
-        } else {
-            TxtOnlineFilter.Visibility = Visibility.Collapsed;
-        }
 
-        var filterTxt = TxtOnlineFilter.Text;
-        if (!string.IsNullOrEmpty(filterTxt) && filterTxt != "Filter players...")
-        {
-            players = players.Where(p => p.Name.Contains(filterTxt, StringComparison.OrdinalIgnoreCase)).ToList();
-        }
+            var filterTxt = TxtOnlineFilter?.Text;
+            if (!string.IsNullOrEmpty(filterTxt) && filterTxt != "Filter players...")
+            {
+                players = players.Where(p => p.Name.Contains(filterTxt, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
 
-        ListOnlinePlayers.ItemsSource = null;
-        ListOnlinePlayers.ItemsSource = players;
+            if (ListOnlinePlayers != null)
+            {
+                ListOnlinePlayers.ItemsSource = null;
+                ListOnlinePlayers.ItemsSource = players;
+            }
 
-        if (TrackingService.LastOnlinePlayers.Count == 0)
-        {
-            TxtOnlinePlayersStatus.Text = TrackingService.StatusMessage;
-            PnlOnlineStatus.Visibility = Visibility.Visible;
-            PbOnlineLoading.Visibility = string.IsNullOrEmpty(TrackingService.StatusMessage) || TrackingService.StatusMessage.Contains("Fetching") || TrackingService.StatusMessage.Contains("Looking") ? Visibility.Visible : Visibility.Collapsed;
-        }
-        else
-        {
-            PnlOnlineStatus.Visibility = Visibility.Collapsed;
-        }
+            if (TrackingService.LastOnlinePlayers.Count == 0)
+            {
+                if (ListOnlinePlayers != null) ListOnlinePlayers.Visibility = Visibility.Collapsed;
+                if (TxtOnlinePlayersStatus != null) TxtOnlinePlayersStatus.Text = TrackingService.StatusMessage;
+                if (PnlOnlineStatus != null) PnlOnlineStatus.Visibility = Visibility.Visible;
+                
+                bool isWorking = string.IsNullOrEmpty(TrackingService.StatusMessage) || 
+                                 TrackingService.StatusMessage.Contains("Fetching") || 
+                                 TrackingService.StatusMessage.Contains("Looking") ||
+                                 TrackingService.StatusMessage.Contains("Auto-Discovering");
+                                 
+                if (PbOnlineLoading != null) PbOnlineLoading.Visibility = isWorking ? Visibility.Visible : Visibility.Collapsed;
+                
+                if (PnlManualTrack != null) PnlManualTrack.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                if (ListOnlinePlayers != null) ListOnlinePlayers.Visibility = Visibility.Visible;
+                if (PnlOnlineStatus != null) PnlOnlineStatus.Visibility = Visibility.Collapsed;
+                if (PnlManualTrack != null) PnlManualTrack.Visibility = Visibility.Visible;
+            }
 
-        // Update Server BM button visibility
-        var bmVisibility = string.IsNullOrEmpty(TrackingService.CurrentServerBMId) 
-            ? Visibility.Collapsed 
-            : Visibility.Visible;
-        BtnServerBMHeader.Visibility = bmVisibility;
-        BtnServerBMPlayers.Visibility = bmVisibility;
+
+        }
+        catch { }
     }
 
     private void TxtOnlineFilter_GotFocus(object sender, RoutedEventArgs e) {
@@ -201,10 +260,12 @@ public partial class MainWindow
             return;
         }
 
-        TxtOnlinePlayersStatus.Text = "Synchronizing with Battlemetrics...";
+        TxtOnlinePlayersStatus.Text = "Fetching players via Steam Query...";
         PnlOnlineStatus.Visibility = Visibility.Visible;
         PbOnlineLoading.Visibility = Visibility.Visible;
+        if (PnlManualTrack != null) PnlManualTrack.Visibility = Visibility.Visible;
         ListOnlinePlayers.ItemsSource = null;
+        ListOnlinePlayers.Visibility = Visibility.Collapsed;
 
         try
         {
@@ -215,6 +276,200 @@ public partial class MainWindow
             TxtOnlinePlayersStatus.Text = $"Error: {ex.Message}";
             PnlOnlineStatus.Visibility = Visibility.Visible;
             PbOnlineLoading.Visibility = Visibility.Collapsed;
+            if (PnlManualTrack != null) PnlManualTrack.Visibility = Visibility.Visible;
+        }
+    }
+
+    private async void BtnSearchBM_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.Selected != null && !string.IsNullOrEmpty(_vm.Selected.Host))
+        {
+            var serverHost = _vm.Selected.Host;
+            var serverName = _vm.Selected.Name ?? "";
+            
+            // Clean up the server name for better search results (strip special chars, use just words)
+            var cleanName = System.Text.RegularExpressions.Regex.Replace(serverName, @"[^a-zA-Z0-9 ]", " ");
+            var searchTokens = cleanName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var query = string.Join(" ", searchTokens);
+            
+            var bmUrl = $"https://www.battlemetrics.com/servers/rust?q={Uri.EscapeDataString(query)}&sort=score";
+
+            // Initialize webview if needed
+            if (EmbeddedBMBrowser != null && EmbeddedBMBrowser.CoreWebView2 == null)
+            {
+                var dataPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "WebView2_BM");
+                System.IO.Directory.CreateDirectory(dataPath);
+                var env = await Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync(userDataFolder: dataPath);
+                await EmbeddedBMBrowser.EnsureCoreWebView2Async(env);
+            }
+
+            // Navigate the embedded BM webview to BM
+            if (EmbeddedBMBrowser != null && EmbeddedBMBrowser.CoreWebView2 != null)
+            {
+                EmbeddedBMBrowser.CoreWebView2.Navigate(bmUrl);
+            }
+
+            // Show the floating webview panel
+            if (BMBrowserPanel != null)
+            {
+                BMBrowserPanel.Visibility = Visibility.Visible;
+            }
+            
+            // Switch to the Map tab so the WebView overlay is visible!
+            if (MainTabs != null)
+            {
+                MainTabs.SelectedIndex = 1;
+            }
+        }
+    }
+
+    private void BtnCloseBMBrowser_Click(object sender, RoutedEventArgs e)
+    {
+        if (BMBrowserPanel != null)
+        {
+            BMBrowserPanel.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void BtnBMBack_Click(object sender, RoutedEventArgs e)
+    {
+        if (EmbeddedBMBrowser != null && EmbeddedBMBrowser.CanGoBack)
+        {
+            EmbeddedBMBrowser.GoBack();
+        }
+    }
+
+    private void BtnBMForward_Click(object sender, RoutedEventArgs e)
+    {
+        if (EmbeddedBMBrowser != null && EmbeddedBMBrowser.CanGoForward)
+        {
+            EmbeddedBMBrowser.GoForward();
+        }
+    }
+
+    private void BtnBMRefresh_Click(object sender, RoutedEventArgs e)
+    {
+        if (EmbeddedBMBrowser != null)
+        {
+            EmbeddedBMBrowser.Reload();
+        }
+    }
+
+    private void BtnBMPopout_Click(object sender, RoutedEventArgs e)
+    {
+        if (EmbeddedBMBrowser != null && EmbeddedBMBrowser.Source != null)
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = EmbeddedBMBrowser.Source.ToString(),
+                UseShellExecute = true
+            });
+        }
+    }
+
+    private void EmbeddedBMBrowser_SourceChanged(object sender, Microsoft.Web.WebView2.Core.CoreWebView2SourceChangedEventArgs e)
+    {
+        if (EmbeddedBMBrowser != null && EmbeddedBMBrowser.Source != null)
+        {
+            string url = EmbeddedBMBrowser.Source.ToString();
+            if (url.Contains("battlemetrics.com/players/") && BtnBMTrack != null)
+            {
+                BtnBMTrack.Visibility = Visibility.Visible;
+                BtnBMTrack.Tag = url;
+            }
+            else if (BtnBMTrack != null)
+            {
+                BtnBMTrack.Visibility = Visibility.Collapsed;
+            }
+        }
+    }
+
+    private async void BtnBMTrack_Click(object sender, RoutedEventArgs e)
+    {
+        if (BtnBMTrack?.Tag is string url && EmbeddedBMBrowser?.CoreWebView2 != null)
+        {
+            try
+            {
+                // Extract ID from URL
+                var match = System.Text.RegularExpressions.Regex.Match(url, @"battlemetrics\.com/players/(\d+)");
+                if (match.Success)
+                {
+                    var idStr = match.Groups[1].Value;
+                    if (ulong.TryParse(idStr, out ulong bmId))
+                    {
+                        // Get selected text as name
+                        var json = await EmbeddedBMBrowser.CoreWebView2.ExecuteScriptAsync("window.getSelection().toString();");
+                        var selectedText = System.Text.Json.JsonSerializer.Deserialize<string>(json);
+                        var name = !string.IsNullOrWhiteSpace(selectedText) ? selectedText.Trim() : "Tracked " + bmId;
+
+                        var bmIdStr = bmId.ToString();
+                        TrackingService.TrackPlayer(bmIdStr, name, _vm.Selected?.Name ?? "Unknown", null, isBMOnly: true);
+                        RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+                        
+                        // Close overlay optionally or show confirmation
+                        BtnBMTrack.Content = "TRACKED!";
+                        await Task.Delay(2000);
+                        if (BtnBMTrack != null) BtnBMTrack.Content = "TRACK PLAYER";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[BattleMetrics] Error tracking player: {ex.Message}");
+            }
+        }
+    }
+
+
+
+    private async void BtnOpenTrackedBM_Click(object sender, RoutedEventArgs e)
+    {
+        var player = (sender as FrameworkElement)?.DataContext as TrackedPlayer;
+        if (player == null) return;
+        
+        var bmUrl = $"https://www.battlemetrics.com/players/{player.BMId}";
+        
+        if (EmbeddedBMBrowser != null && EmbeddedBMBrowser.CoreWebView2 == null)
+        {
+            var dataPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "WebView2_BM");
+            System.IO.Directory.CreateDirectory(dataPath);
+            var env = await Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync(userDataFolder: dataPath);
+            await EmbeddedBMBrowser.EnsureCoreWebView2Async(env);
+        }
+
+        if (EmbeddedBMBrowser != null && EmbeddedBMBrowser.CoreWebView2 != null)
+        {
+            EmbeddedBMBrowser.CoreWebView2.Navigate(bmUrl);
+        }
+
+        if (BMBrowserPanel != null)
+        {
+            BMBrowserPanel.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void BtnBMSearch_Click(object sender, RoutedEventArgs e)
+    {
+        PerformBMSearch();
+    }
+
+    private void TxtBMSearch_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            PerformBMSearch();
+        }
+    }
+
+    private void PerformBMSearch()
+    {
+        var query = TxtBMSearch?.Text?.Trim();
+        if (string.IsNullOrEmpty(query)) return;
+        
+        var url = $"https://www.battlemetrics.com/players?filter[search]={Uri.EscapeDataString(query)}";
+        if (EmbeddedBMBrowser?.CoreWebView2 != null)
+        {
+            EmbeddedBMBrowser.CoreWebView2.Navigate(url);
         }
     }
 
@@ -242,32 +497,17 @@ public partial class MainWindow
         ShowTrackingAnalysisWindow();
     }
 
-    private void BtnServerBM_Click(object sender, RoutedEventArgs e)
-    {
-        var serverId = TrackingService.CurrentServerBMId;
-        if (!string.IsNullOrEmpty(serverId))
-        {
-            OpenUrl("https://www.battlemetrics.com/servers/rust/" + serverId);
-        }
-    }
 
-    private void BtnPlayerBM_Click(object sender, RoutedEventArgs e)
-    {
-        if ((sender as Button)?.Tag is OnlinePlayerBM player)
-        {
-            OpenUrl("https://www.battlemetrics.com/players/" + player.BMId);
-        }
-    }
 
     private void TxtManualBMId_GotFocus(object sender, RoutedEventArgs e) {
-        if (TxtManualBMId.Text == "Manual BM ID...") {
+        if (TxtManualBMId.Text == "Manual Track Name...") {
             TxtManualBMId.Text = "";
             TxtManualBMId.Foreground = Brushes.White;
         }
     }
     private void TxtManualBMId_LostFocus(object sender, RoutedEventArgs e) {
         if (string.IsNullOrWhiteSpace(TxtManualBMId.Text)) {
-            TxtManualBMId.Text = "Manual BM ID...";
+            TxtManualBMId.Text = "Manual Track Name...";
             TxtManualBMId.Foreground = Brushes.Gray;
         }
     }
@@ -275,7 +515,7 @@ public partial class MainWindow
     private async void BtnAddManual_Click(object sender, RoutedEventArgs e)
     {
         var bmId = TxtManualBMId.Text?.Trim();
-        if (string.IsNullOrEmpty(bmId) || bmId == "Manual BM ID..." || !bmId.All(char.IsDigit)) return;
+        if (string.IsNullOrEmpty(bmId) || bmId == "Manual Track Name...") return;
 
         TxtManualBMId.IsEnabled = false;
         BtnAddManual.Content = "...";
@@ -288,7 +528,7 @@ public partial class MainWindow
 
         TrackingService.TrackPlayer(bmId, name, serverName, lastSession);
         
-        TxtManualBMId.Text = "Manual BM ID...";
+        TxtManualBMId.Text = "Manual Track Name...";
         TxtManualBMId.Foreground = Brushes.Gray;
         TxtManualBMId.IsEnabled = true;
         BtnAddManual.Content = "Track ID";
@@ -319,7 +559,7 @@ public partial class MainWindow
             var serversGrouped = players.GroupBy(p => string.IsNullOrEmpty(p.LastServerName) ? "Global / Legacy" : p.LastServerName);
             foreach (var serverGrp in serversGrouped)
             {
-                ListTrackedPlayers.Children.Add(new TextBlock
+                var serverHeader = new TextBlock
                 {
                     Text = serverGrp.Key,
                     FontWeight = FontWeights.Bold,
@@ -328,10 +568,16 @@ public partial class MainWindow
                     FontSize = 14,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                     ToolTip = serverGrp.Key
-                });
+                };
+                ListTrackedPlayers.Children.Add(serverHeader);
 
+                var order = TrackingService.GetGroupOrder(serverGrp.Key);
                 var subgroups = serverGrp.GroupBy(p => string.IsNullOrEmpty(p.GroupName) ? "Ungrouped" : p.GroupName)
-                    .OrderBy(g => g.Key == "Ungrouped" ? 1 : 0)
+                    .OrderBy(g => {
+                        int idx = order.IndexOf(g.Key);
+                        if (idx >= 0) return idx;
+                        return g.Key == "Ungrouped" ? 1000 : 500;
+                    })
                     .ThenBy(g => g.Key);
 
                 foreach (var group in subgroups)
@@ -379,7 +625,25 @@ public partial class MainWindow
                     Grid.SetColumn(groupNameTxt, 1);
                     groupHeaderPanel.Children.Add(groupNameTxt);
 
-                    var expander = new Expander { IsExpanded = true, Margin = new Thickness(10, 0, 0, 5), Foreground = Brushes.White, Header = groupHeaderPanel };
+                    var isExp = TrackingService.GetGroupState(serverGrp.Key, group.Key);
+                    var expander = new Expander { 
+                        IsExpanded = isExp, 
+                        Margin = new Thickness(10, 0, 0, 5), 
+                        Foreground = Brushes.White, 
+                        Header = groupHeaderPanel,
+                        AllowDrop = true,
+                        Tag = (serverGrp.Key, group.Key)
+                    };
+                    
+                    expander.Expanded += (s, e) => TrackingService.SetGroupState(serverGrp.Key, group.Key, true);
+                    expander.Collapsed += (s, e) => TrackingService.SetGroupState(serverGrp.Key, group.Key, false);
+                    
+                    // Drag & Drop
+                    expander.PreviewMouseLeftButtonDown += TrackedGroup_PreviewMouseLeftButtonDown;
+                    expander.PreviewMouseMove += TrackedGroup_PreviewMouseMove;
+                    expander.DragOver += TrackedGroup_DragOver;
+                    expander.Drop += TrackedGroup_Drop;
+
                     var groupStack = new StackPanel();
 
                     var sortedGroup = group
@@ -390,9 +654,16 @@ public partial class MainWindow
 
                     foreach (var p in sortedGroup)
                     {
-                        var onlineInfo = TrackingService.LastOnlinePlayers.FirstOrDefault(op => op.BMId == p.BMId);
-                        p.IsOnline = onlineInfo != null;
-                        p.PlayTimeStr = onlineInfo?.PlayTimeStr ?? "";
+                        p.IsOnline = p.Sessions.Count > 0 && !p.Sessions.Last().DisconnectTime.HasValue;
+                        if (p.IsOnline)
+                        {
+                            var d = DateTime.UtcNow - p.Sessions.Last().ConnectTime;
+                            p.PlayTimeStr = $"{(int)d.TotalHours:D2}:{d.Minutes:D2}";
+                        }
+                        else
+                        {
+                            p.PlayTimeStr = "";
+                        }
 
                         var contentControl = new ContentControl
                         {
@@ -416,6 +687,89 @@ public partial class MainWindow
         {
             Debug.WriteLine($"RefreshTrackedPlayersList Crash: {ex.Message}");
         }
+    }
+
+    private void TrackedGroup_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        _trackedGroupDragStartPoint = e.GetPosition(null);
+        if (sender is Expander exp)
+        {
+            _draggedTrackedGroup = exp;
+        }
+    }
+
+    private void TrackedGroup_PreviewMouseMove(object sender, MouseEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed && _draggedTrackedGroup != null)
+        {
+            Point currentPosition = e.GetPosition(null);
+            if (Math.Abs(currentPosition.X - _trackedGroupDragStartPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                Math.Abs(currentPosition.Y - _trackedGroupDragStartPoint.Y) > SystemParameters.MinimumVerticalDragDistance)
+            {
+                DragDrop.DoDragDrop(_draggedTrackedGroup, _draggedTrackedGroup, DragDropEffects.Move);
+            }
+        }
+    }
+
+    private void TrackedGroup_DragOver(object sender, DragEventArgs e)
+    {
+        if (!e.Data.GetDataPresent(typeof(Expander)))
+        {
+            e.Effects = DragDropEffects.None;
+        }
+        else
+        {
+            e.Effects = DragDropEffects.Move;
+        }
+        e.Handled = true;
+    }
+
+    private void TrackedGroup_Drop(object sender, DragEventArgs e)
+    {
+        e.Handled = true;
+        if (_draggedTrackedGroup == null || !e.Data.GetDataPresent(typeof(Expander)))
+            return;
+
+        var targetExpander = sender as Expander;
+        if (targetExpander == null || ReferenceEquals(_draggedTrackedGroup, targetExpander))
+            return;
+
+        if (_draggedTrackedGroup.Tag is not (string sourceServer, string sourceGroup) ||
+            targetExpander.Tag is not (string targetServer, string targetGroup))
+            return;
+
+        if (sourceServer != targetServer) return; // Only reorder within same server
+
+        var order = TrackingService.GetGroupOrder(sourceServer);
+        if (order.Count == 0)
+        {
+            // Initialize order if empty
+            var players = TrackingService.GetTrackedPlayers();
+            order = players.Where(p => (string.IsNullOrEmpty(p.LastServerName) ? "Global / Legacy" : p.LastServerName) == sourceServer)
+                           .Select(p => string.IsNullOrEmpty(p.GroupName) ? "Ungrouped" : p.GroupName)
+                           .Distinct()
+                           .ToList();
+        }
+
+        int sourceIdx = order.IndexOf(sourceGroup);
+        int targetIdx = order.IndexOf(targetGroup);
+
+        if (sourceIdx >= 0 && targetIdx >= 0)
+        {
+            order.RemoveAt(sourceIdx);
+            order.Insert(targetIdx, sourceGroup);
+            TrackingService.SetGroupOrder(sourceServer, order);
+            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+        }
+        else if (targetIdx >= 0)
+        {
+            // Source wasn't in order yet (maybe it was just created)
+            order.Insert(targetIdx, sourceGroup);
+            TrackingService.SetGroupOrder(sourceServer, order);
+            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+        }
+
+        _draggedTrackedGroup = null;
     }
 
     private void TxtTrackedFilter_GotFocus(object sender, RoutedEventArgs e) {
@@ -736,52 +1090,433 @@ public partial class MainWindow
 
     private void ShowTrackingAnalysisWindow(string? bmId = null)
     {
-        var html = TrackingService.GetAnalysisReport(bmId);
-
-        var win = new Window
+        try
         {
-            Title = "Player Activity Analytics & Forecasts",
-            Width = 900,
-            Height = 750,
-            Background = new SolidColorBrush(Color.FromRgb(18, 20, 23)),
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Owner = this,
-        };
+            var html = TrackingService.GetAnalysisReport(bmId);
 
-        var grid = new Grid();
-        var wv = new WebView2 { Margin = new Thickness(0) };
-        grid.Children.Add(wv);
-        win.Content = grid;
-        
-        win.Loaded += async (s, e) =>
-        {
-            try 
+            var win = new Window
             {
-                var dataPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "WebView2_Report");
-                var env = await Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync(userDataFolder: dataPath);
-                await wv.EnsureCoreWebView2Async(env);
-                wv.NavigateToString(html);
-            } 
-            catch (Exception ex) 
-            {
-                win.Content = new ScrollViewer 
-                { 
-                   Content = new TextBlock 
-                   { 
-                      Text = "Error loading analytics view: " + ex.Message + "\n\nEnsure WebView2 Runtime is installed.", 
-                      Foreground = Brushes.White,
-                      TextWrapping = TextWrapping.Wrap,
-                      Margin = new Thickness(20) 
-                   } 
-                };
-            }
-        };
+                Title = "Player Activity Analytics & Forecasts",
+                Width = 900,
+                Height = 750,
+                Background = new SolidColorBrush(Color.FromRgb(18, 20, 23)),
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
+            };
 
-        win.Show();
+            var grid = new Grid();
+            var wv = new WebView2 { Margin = new Thickness(0) };
+            grid.Children.Add(wv);
+            win.Content = grid;
+            
+            win.Loaded += async (s, e) =>
+            {
+                try 
+                {
+                    var dataPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "WebView2_Report");
+                    var env = await Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync(userDataFolder: dataPath);
+                    if (!win.IsLoaded) return;
+                    await wv.EnsureCoreWebView2Async(env);
+                    if (wv.CoreWebView2 != null) 
+                    {
+                        wv.CoreWebView2.NewWindowRequested += (sender, args) =>
+                        {
+                            args.Handled = true;
+                            try
+                            {
+                                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                                {
+                                    FileName = args.Uri,
+                                    UseShellExecute = true
+                                });
+                            }
+                            catch { }
+                        };
+                        wv.NavigateToString(html);
+                    }
+                } 
+                catch (Exception ex) 
+                {
+                    win.Content = new ScrollViewer 
+                    { 
+                       Content = new TextBlock 
+                       { 
+                          Text = "Error loading analytics view: " + ex.Message + "\n\nEnsure WebView2 Runtime is installed.", 
+                          Foreground = Brushes.White,
+                          TextWrapping = TextWrapping.Wrap,
+                          Margin = new Thickness(20) 
+                       } 
+                    };
+                }
+            };
+
+            win.Show();
+        }
+        catch { }
     }
 
     private void ShowPlayerAnalysis(string bmId, string name)
     {
         ShowTrackingAnalysisWindow(bmId);
+    }
+
+    private Window? _playersPopoutWin;
+
+    private void BtnPopoutPlayers_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (_playersPopoutWin != null)
+            {
+                _playersPopoutWin.Activate();
+                return;
+            }
+
+            _playersPopoutWin = BuildPlayersPopoutWindow();
+            _playersPopoutWin.Closed += (_, _) => _playersPopoutWin = null;
+            _playersPopoutWin.Show();
+        }
+        catch (Exception ex)
+        {
+            _playersPopoutWin = null;
+            MessageBox.Show($"Failed to open players window:\n\n{ex.GetType().Name}: {ex.Message}\n\nStack:\n{ex.StackTrace}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private Window BuildPlayersPopoutWindow()
+    {
+        var win = new Window
+        {
+            Title = "Players",
+            Width = 500,
+            Height = 700,
+            WindowStartupLocation = WindowStartupLocation.CenterScreen,
+            Background = new SolidColorBrush(Color.FromRgb(30, 32, 36)),
+        };
+
+        var tabControl = new TabControl
+        {
+            Background = Brushes.Transparent,
+            BorderThickness = new Thickness(0),
+            Margin = new Thickness(8),
+        };
+
+        // === Online Tab ===
+        var onlineScroll = new ScrollViewer { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
+        var onlineStack = new StackPanel { Margin = new Thickness(8) };
+        onlineScroll.Content = onlineStack;
+
+        var onlineTab = new TabItem { Header = "Online", Content = onlineScroll };
+
+        // === Tracked Tab ===
+        var trackedScroll = new ScrollViewer { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
+        var trackedStack = new StackPanel { Margin = new Thickness(8) };
+        trackedScroll.Content = trackedStack;
+
+        var trackedTab = new TabItem { Header = "Tracked", Content = trackedScroll };
+
+        tabControl.Items.Add(onlineTab);
+        tabControl.Items.Add(trackedTab);
+
+        win.Content = tabControl;
+
+        Action? onUpdated = null;
+        onUpdated = () =>
+        {
+            try 
+            { 
+                win?.Dispatcher.BeginInvoke(new Action(() => { 
+                    try 
+                    {
+                        if (win == null || !win.IsLoaded) return;
+                        PopulateOnlinePlayers(onlineStack, bmId => ShowTrackingAnalysisWindow(bmId)); 
+                        PopulateTrackedPlayers(trackedStack, bmId => ShowTrackingAnalysisWindow(bmId)); 
+                    } 
+                    catch { }
+                })); 
+            } 
+            catch { }
+        };
+
+        win.Loaded += (_, _) =>
+        {
+            try { PopulateOnlinePlayers(onlineStack, bmId => ShowTrackingAnalysisWindow(bmId)); } catch { }
+            try { PopulateTrackedPlayers(trackedStack, bmId => ShowTrackingAnalysisWindow(bmId)); } catch { }
+            TrackingService.OnOnlinePlayersUpdated += onUpdated;
+        };
+
+        win.Closed += (_, _) =>
+        {
+            TrackingService.OnOnlinePlayersUpdated -= onUpdated;
+        };
+
+        return win;
+    }
+
+    private static void PopulateOnlinePlayers(StackPanel stack, Action<string>? showAnalysis = null)
+    {
+        try
+        {
+            stack.Children.Clear();
+            var players = TrackingService.LastOnlinePlayers.ToList(); // Snapshot
+            if (players.Count == 0)
+            {
+                stack.Children.Add(new TextBlock
+                {
+                    Text = TrackingService.StatusMessage,
+                    Foreground = Brushes.Gray,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Margin = new Thickness(0, 20, 0, 0),
+                });
+                return;
+            }
+            foreach (var p in players)
+            {
+                var row = new Grid { Margin = new Thickness(0, 4, 0, 4) };
+                row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+                var hp = new StackPanel { Orientation = Orientation.Horizontal };
+                var dot = new Ellipse
+                {
+                    Width = 8, Height = 8,
+                    Margin = new Thickness(0, 0, 8, 0),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Fill = p.IsTracked
+                        ? new SolidColorBrush(Color.FromRgb(0xFF, 0xD1, 0x66))
+                        : (SolidColorBrush)new BrushConverter().ConvertFromString("#60CDFF"),
+                };
+                hp.Children.Add(dot);
+
+                var name = new TextBlock
+                {
+                    Text = p.Name,
+                    FontSize = 13,
+                    FontWeight = FontWeights.SemiBold,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    MaxWidth = 160,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                    ToolTip = p.Name,
+                };
+                hp.Children.Add(name);
+                row.Children.Add(hp);
+
+                if (!string.IsNullOrEmpty(p.PlayTimeStr))
+                {
+                    var pt = new TextBlock
+                    {
+                        Text = p.PlayTimeStr,
+                        FontSize = 11,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Margin = new Thickness(0, 0, 8, 0),
+                        Foreground = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88)),
+                    };
+                    Grid.SetColumn(pt, 1);
+                    row.Children.Add(pt);
+                }
+
+                var btnTrack = new ui.Button
+                {
+                    Content = p.IsTracked ? "Details" : "Track",
+                    Padding = new Thickness(6, 2, 6, 2),
+                    FontSize = 11,
+                    Appearance = p.IsTracked ? ui.ControlAppearance.Primary : ui.ControlAppearance.Secondary,
+                    Tag = p.BMId,
+                };
+                Grid.SetColumn(btnTrack, 2);
+                row.Children.Add(btnTrack);
+                string capturedBmId = p.BMId;
+                string capturedName = p.Name;
+                btnTrack.Click += (_, _) =>
+                {
+                    if (TrackingService.GetTrackedPlayers().Any(tp => tp.BMId == capturedBmId))
+                    {
+                        showAnalysis?.Invoke(capturedBmId);
+                    }
+                    else
+                    {
+                        var srvName = TrackingService.LastServer.name ?? "Unknown";
+                        TrackingService.TrackPlayer(capturedBmId, capturedName, srvName);
+                        btnTrack.Content = "Details";
+                        btnTrack.Appearance = ui.ControlAppearance.Primary;
+                    }
+                };
+
+                stack.Children.Add(row);
+            }
+        }
+        catch { }
+    }
+
+    private static void PopulateTrackedPlayers(StackPanel stack, Action<string>? showAnalysis = null)
+    {
+        try
+        {
+            stack.Children.Clear();
+            var players = TrackingService.GetTrackedPlayers();
+            var onlineSnapshot = TrackingService.LastOnlinePlayers.ToList(); // Snapshot
+            var serversGrouped = players.GroupBy(p => string.IsNullOrEmpty(p.LastServerName) ? "Global / Legacy" : p.LastServerName);
+            foreach (var serverGrp in serversGrouped)
+            {
+                stack.Children.Add(new TextBlock
+                {
+                    Text = serverGrp.Key,
+                    FontWeight = FontWeights.Bold,
+                    Foreground = new SolidColorBrush(Color.FromRgb(88, 166, 255)),
+                    Margin = new Thickness(0, 15, 0, 5),
+                    FontSize = 14,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                    ToolTip = serverGrp.Key,
+                });
+
+                var subgroups = serverGrp.GroupBy(p => string.IsNullOrEmpty(p.GroupName) ? "Ungrouped" : p.GroupName)
+                    .OrderBy(g => g.Key == "Ungrouped" ? 1 : 0)
+                    .ThenBy(g => g.Key);
+
+                foreach (var group in subgroups)
+                {
+                    var groupHeaderPanel = new Grid { Margin = new Thickness(5, 5, 0, 5) };
+                    groupHeaderPanel.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                    groupHeaderPanel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+                    var headerColor = "None";
+                    if (group.Key != "Ungrouped")
+                    {
+                        var firstWithColor = group.FirstOrDefault(x => !string.IsNullOrEmpty(x.GroupColor) && x.GroupColor != "None");
+                        if (firstWithColor != null) headerColor = firstWithColor.GroupColor;
+
+                        if (headerColor != "None")
+                        {
+                            try
+                            {
+                                var groupColorBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(headerColor);
+                                var dot = new Ellipse
+                                {
+                                    Width = 10, Height = 10, Fill = groupColorBrush,
+                                    Margin = new Thickness(0, 0, 8, 0), VerticalAlignment = VerticalAlignment.Center,
+                                };
+                                Grid.SetColumn(dot, 0);
+                                groupHeaderPanel.Children.Add(dot);
+                            }
+                            catch { }
+                        }
+                    }
+
+                    var groupNameTxt = new TextBlock
+                    {
+                        Text = group.Key,
+                        FontWeight = FontWeights.SemiBold,
+                        Foreground = group.Key == "Ungrouped" ? Brushes.Gray : new SolidColorBrush(Color.FromRgb(150, 200, 255)),
+                        FontSize = 13,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        TextTrimming = TextTrimming.CharacterEllipsis,
+                        ToolTip = group.Key,
+                    };
+                    Grid.SetColumn(groupNameTxt, 1);
+                    groupHeaderPanel.Children.Add(groupNameTxt);
+
+                    var isExp = TrackingService.GetGroupState(serverGrp.Key, group.Key);
+                    var expander = new Expander { IsExpanded = isExp, Margin = new Thickness(10, 0, 0, 5), Foreground = Brushes.White, Header = groupHeaderPanel };
+                    expander.Expanded += (s, e) => TrackingService.SetGroupState(serverGrp.Key, group.Key, true);
+                    expander.Collapsed += (s, e) => TrackingService.SetGroupState(serverGrp.Key, group.Key, false);
+
+                    var groupStack = new StackPanel();
+
+                    var sortedGroup = group
+                        .OrderByDescending(p => onlineSnapshot.Any(op => op.BMId == p.BMId))
+                        .ThenByDescending(p => onlineSnapshot.FirstOrDefault(op => op.BMId == p.BMId)?.Duration ?? TimeSpan.Zero)
+                        .ThenByDescending(p => p.Sessions.Count > 0 ? p.Sessions.Max(s => s.DisconnectTime ?? s.ConnectTime) : DateTime.MinValue)
+                        .ToList();
+
+                    foreach (var p in sortedGroup)
+                    {
+                        p.IsOnline = p.Sessions.Count > 0 && !p.Sessions.Last().DisconnectTime.HasValue;
+                        if (p.IsOnline)
+                        {
+                            var d = DateTime.UtcNow - p.Sessions.Last().ConnectTime;
+                            p.PlayTimeStr = $"{(int)d.TotalHours:D2}:{d.Minutes:D2}";
+                        }
+                        else
+                        {
+                            p.PlayTimeStr = "";
+                        }
+
+                        var row = new Grid { Margin = new Thickness(0, 2, 0, 2) };
+                        row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                        row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                        row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+                        var stack2 = new StackPanel { Orientation = Orientation.Horizontal };
+                        var sDot = new Ellipse
+                        {
+                            Width = 8, Height = 8,
+                            Margin = new Thickness(0, 0, 8, 0),
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Fill = p.IsOnline ? new SolidColorBrush(Color.FromRgb(98, 211, 139)) : new SolidColorBrush(Color.FromRgb(102, 102, 102)),
+                        };
+                        stack2.Children.Add(sDot);
+
+                        var nameBlock = new TextBlock
+                        {
+                            Text = p.Name,
+                            FontSize = 13,
+                            Foreground = p.IsOnline ? Brushes.White : new SolidColorBrush(Color.FromRgb(0xBB, 0xBB, 0xBB)),
+                            VerticalAlignment = VerticalAlignment.Center,
+                        };
+                        stack2.Children.Add(nameBlock);
+                        row.Children.Add(stack2);
+
+                        if (p.IsOnline)
+                        {
+                            var playTime = new TextBlock
+                            {
+                                Text = p.PlayTimeStr,
+                                FontSize = 10,
+                                Foreground = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88)),
+                                VerticalAlignment = VerticalAlignment.Center,
+                                Margin = new Thickness(8, 0, 0, 0),
+                            };
+                            Grid.SetColumn(playTime, 1);
+                            row.Children.Add(playTime);
+                        }
+
+                        // Action button: BM-only → "View on BM" opens BM browser; native → "View" opens Analysis
+                        string capturedBmId2 = p.BMId;
+                        bool capturedIsBmOnly = p.IsBMOnly;
+                        var actionBtn = new ui.Button
+                        {
+                            Content = capturedIsBmOnly ? "View on BM" : "View",
+                            Padding = new Thickness(6, 2, 6, 2),
+                            FontSize = 11,
+                            Appearance = capturedIsBmOnly ? ui.ControlAppearance.Secondary : ui.ControlAppearance.Primary,
+                            Margin = new Thickness(6, 0, 0, 0),
+                            VerticalAlignment = VerticalAlignment.Center,
+                        };
+                        actionBtn.Click += async (_, _) =>
+                        {
+                            if (capturedIsBmOnly)
+                            {
+                                var bmUrl = $"https://www.battlemetrics.com/players/{capturedBmId2}";
+                                try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(bmUrl) { UseShellExecute = true }); }
+                                catch { }
+                            }
+                            else
+                            {
+                                await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
+                                    showAnalysis?.Invoke(capturedBmId2));
+                            }
+                        };
+                        Grid.SetColumn(actionBtn, 2);
+                        row.Children.Add(actionBtn);
+
+                        groupStack.Children.Add(row);
+
+                    }
+                    expander.Content = groupStack;
+                    stack.Children.Add(expander);
+                }
+            }
+        }
+        catch { }
     }
 }

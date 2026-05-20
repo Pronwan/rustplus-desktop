@@ -2764,7 +2764,7 @@ rp.connect();
                                                          : m.Invoke(_api, Array.Empty<object>());
                 if (call is Task task)
                 {
-                    await task.WaitAsync(TimeSpan.FromSeconds(5), ct).ConfigureAwait(false);
+                    await task.WaitAsync(TimeSpan.FromSeconds(15), ct).ConfigureAwait(false);
                     var result = task.GetType().GetProperty("Result")?.GetValue(task);
                     var data = result?.GetType().GetProperty("Data")?.GetValue(result) ?? result;
                     worldSize = ReadInt(data, "WorldSize", "MapSize");
@@ -2785,7 +2785,7 @@ rp.connect();
                                                          : m.Invoke(_api, Array.Empty<object>());
                 if (call is Task task)
                 {
-                    await task.WaitAsync(TimeSpan.FromSeconds(5), ct).ConfigureAwait(false);
+                    await task.WaitAsync(TimeSpan.FromSeconds(15), ct).ConfigureAwait(false);
                     var result = task.GetType().GetProperty("Result")?.GetValue(task);
                     var mapObj = result?.GetType().GetProperty("Data")?.GetValue(result) ?? result;
 
@@ -2876,7 +2876,7 @@ rp.connect();
                 : mMap.Invoke(_api, Array.Empty<object>());
 
             if (call is not Task task) return null;
-            await task.WaitAsync(TimeSpan.FromSeconds(5), ct).ConfigureAwait(false);
+            await task.WaitAsync(TimeSpan.FromSeconds(15), ct).ConfigureAwait(false);
 
             var result = task.GetType().GetProperty("Result")?.GetValue(task);
             if (!IsResponseValid(result)) return null;
@@ -3082,7 +3082,7 @@ rp.connect();
 
                 if (call is Task task)
                 {
-                    await task.WaitAsync(TimeSpan.FromSeconds(5), ct).ConfigureAwait(false);
+                    await task.WaitAsync(TimeSpan.FromSeconds(15), ct).ConfigureAwait(false);
                     resultObj = task.GetType().GetProperty("Result")?.GetValue(task);
                 }
 

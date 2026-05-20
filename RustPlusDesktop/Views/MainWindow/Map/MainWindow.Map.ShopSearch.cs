@@ -138,7 +138,7 @@ public partial class MainWindow
     {
         if (ShopSearchContent.Visibility == Visibility.Collapsed)
         {
-            if (_shopSearchWebView == null) InitEmbeddedShopSearch();
+            if (_shopSearchWebView == null) _ = InitEmbeddedShopSearchAsync();
             UpdateShopPollingWarning();
             
             ShopSearchContent.Visibility = Visibility.Visible;
@@ -204,7 +204,7 @@ public partial class MainWindow
         UpdateShopPollingWarning();
     }
 
-    private async void InitEmbeddedShopSearch()
+    internal async Task InitEmbeddedShopSearchAsync()
     {
         if (_shopSearchWebView != null) return;
 
@@ -267,8 +267,8 @@ public partial class MainWindow
     public void UpdateShopSearchToolHighlights()
     {
         if (_shopSearchWebView == null) return;
-        bool profitOpen = _analysisWin != null && _analysisWin.IsVisible;
-        bool pathOpen = _pathFinderWin != null && _pathFinderWin.IsVisible;
+        bool profitOpen = ProfitTradesPanel.Visibility == Visibility.Visible;
+        bool pathOpen = BuyXForYPanel.Visibility == Visibility.Visible;
 
         _ = _shopSearchWebView.ExecuteScriptAsync($"window.updateToolHighlights({profitOpen.ToString().ToLower()}, {pathOpen.ToString().ToLower()})");
     }
@@ -524,12 +524,12 @@ public partial class MainWindow
                         break;
 
                     case "openAnalysis":
-                        AppendLog("[ShopSearch] Opening Analysis window");
+                        AppendLog("[ShopSearch] Toggling Profit Trades panel");
                         OpenAnalysisWindow();
                         break;
 
                     case "openPathFinder":
-                        AppendLog("[ShopSearch] Opening PathFinder window");
+                        AppendLog("[ShopSearch] Toggling Buy X for Y panel");
                         OpenPathFinderWindow();
                         break;
 

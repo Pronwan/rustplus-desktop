@@ -35,6 +35,7 @@ public partial class MainWindow
         await _webView.EnsureCoreWebView2Async(env);
         _webView.DefaultBackgroundColor = System.Drawing.Color.Transparent;
         _webView.CoreWebView2.Settings.AreDevToolsEnabled = true;
+        _webView.Visibility = Visibility.Collapsed;
 
         // Optional: etwas "normaleren" UA setzen
         _webView.CoreWebView2.Settings.UserAgent =
@@ -243,7 +244,7 @@ public partial class MainWindow
             AppendLog("Connected.");
             _connectedProfile = _vm.Selected;
 
-            TrackingService.StartPolling(_vm.Selected.Host ?? "", _vm.Selected.Port, _vm.Selected.Name ?? "");
+            TrackingService.StartPolling(_vm.Selected.Host ?? "", _vm.Selected.Port, _vm.Selected.Name ?? "", _vm.Selected.BattleMetricsId);
 
             // Shorter initial delay — just enough for the WS to be ready
             await Task.Delay(500);

@@ -90,20 +90,23 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         if (!TryGetFollowingWorldPos(out mapX, out mapY)) return;
 
         Point pHost;
-        if (_isSmoothingFollow)
+        try
         {
-            // Während der aktiven Glättung ist das Ziel IMMER exakt in der Mitte des WebViewHost
-            pHost = new Point(WebViewHost.ActualWidth * 0.5, WebViewHost.ActualHeight * 0.5);
-        }
-        else
-        {
-            // Statisches Zentrieren (Fallback)
+            Point pOverlay = WorldToImagePx(mapX, mapY);
+            pHost = Overlay.TransformToVisual(WebViewHost).Transform(pOverlay);
+
+            // Add the VisualBrush parent layout offset (Grid Rows and Margins) dynamically
             try
             {
-                Point pOverlay = WorldToImagePx(mapX, mapY);
-                pHost = Overlay.TransformToVisual(WebViewHost).Transform(pOverlay);
+                var offset = VisualTreeHelper.GetOffset(WebViewHost);
+                pHost.X += offset.X;
+                pHost.Y += offset.Y;
             }
-            catch { return; }
+            catch { }
+        }
+        catch
+        {
+            pHost = new Point(WebViewHost.ActualWidth * 0.5, WebViewHost.ActualHeight * 0.5);
         }
 
         double hostW = Math.Max(1, WebViewHost.ActualWidth);
@@ -112,13 +115,9 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         // Quadratischen Ausschnitt wählen
         double side = Math.Min(hostW, hostH) * (MINI_VIEW_FRACTION * Math.Pow(GetEffectiveZoom(), 0.0025));
 
-        // Um den Punkt zentrieren
+        // Um den Punkt zentrieren - OHNE CLAMPING, damit der Spieler IMMER 100% in der Mitte bleibt!
         double vx = pHost.X - side / 2.0;
         double vy = pHost.Y - side / 2.0;
-
-        // Innerhalb des Hosts clampen
-        vx = Math.Max(0, Math.Min(vx, hostW - side));
-        vy = Math.Max(0, Math.Min(vy, hostH - side));
 
         _miniMap.SetViewbox(new Rect(vx, vy, side, side), _isSmoothingFollow);
     }
@@ -135,7 +134,7 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             // WICHTIG: mapRoot muss dein existierendes Karten-Root-Element sein!
             // Beispiele: SceneGrid, MapRootGrid, OverlayHostGrid – je nach deinem x:Name.
             var mapRoot = WebViewHost;
-            var vb = new VisualBrush(WebViewHost)
+            var vb = new VisualBrush(mapRoot)
             {
                 // Wir schneiden selbst zu, daher:
                 Stretch = Stretch.None,
@@ -148,7 +147,8 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             {
                 Owner = this,                         // optional
                 Left = SystemParameters.WorkArea.Right - 280,
-                Top = SystemParameters.WorkArea.Top + 20
+                Top = SystemParameters.WorkArea.Top + 20,
+                DataContext = _vm
             };
 
             _miniMap.OnClicked = () =>
