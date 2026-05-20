@@ -318,6 +318,7 @@ public partial class MainWindow : ui.FluentWindow
         _upkeepTimer.Start();
 
         ListServers.ItemsSource = _vm.Servers;
+        _vm.Servers.CollectionChanged += (_, __) => Dispatcher.Invoke(() => UpdatePairingGuideSnackbar());
         
         UpdateMasterToggleState();
         SyncAlertMenuItems();
@@ -342,6 +343,8 @@ public partial class MainWindow : ui.FluentWindow
 
             // Auto-check for updates
             _ = Task.Run(async () => await AutoCheckUpdatesAsync());
+
+            UpdatePairingGuideSnackbar();
         }));
 
         // One-time migration notice for v5.1.0-beta1
@@ -392,6 +395,8 @@ public partial class MainWindow : ui.FluentWindow
         TrackingService.OnOnlinePlayersUpdated += OnOnlinePlayersUpdated;
         TrackingService.OnServerInfoUpdated -= OnServerInfoUpdated;
         TrackingService.OnServerInfoUpdated += OnServerInfoUpdated;
+        TrackingService.OnTrackingNotification -= OnTrackingNotification;
+        TrackingService.OnTrackingNotification += OnTrackingNotification;
         OnOnlinePlayersUpdated();
         _vm.IsInitializing = false;
         
@@ -413,6 +418,7 @@ public partial class MainWindow : ui.FluentWindow
             _vm.IsPairingRunning = true;
             _vm.IsPairingBusy = true; // Update UI button state
             TxtPairingState.Text = "Pairing: listening…";
+            UpdatePairingGuideSnackbar();
         }));
         _pairing.Stopped += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
         {
@@ -505,6 +511,8 @@ public partial class MainWindow : ui.FluentWindow
         // AppendLog($"DEBUG: Selected={_vm.Selected?.Name ?? "(null)"}  Devices={_vm.Selected?.Devices?.Count.ToString() ?? "(null)"}");
 
 
+
+
         TxtSteamId.Text = string.IsNullOrEmpty(_vm.SteamId64) ? "(nicht angemeldet)" : _vm.SteamId64;
 
         this.Closing += MainWindow_Closing;
@@ -538,6 +546,14 @@ public partial class MainWindow : ui.FluentWindow
         
         _monumentWatcher.OnDebug += (s, msg) => Dispatcher.BeginInvoke(new Action(() => AppendLog(msg)));
 
+    }
+
+    private void OnTrackingNotification(string msg, string serverName)
+    {
+        if (_vm.Selected != null && _vm.Selected.Name == serverName)
+        {
+            Dispatcher.InvokeAsync(async () => await SendTeamChatSafeAsync(msg));
+        }
     }
 
     // CROSSHAIR \\
@@ -2513,7 +2529,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _pairing.Failed -= onFail;
 
             _vm.IsPairingBusy = false; _vm.BusyText = "";
-            if (ok) TxtPairingState.Text = "Pairing: listening…";
+            if (ok) { TxtPairingState.Text = "Pairing: listening."; UpdatePairingGuideSnackbar(); }
         }
         finally { _listenerStarting = false; }
     }
@@ -2524,13 +2540,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         Dispatcher.Invoke(() =>
         {
             if (st == "starting") _vm.BusyText = "Starte Pairing-Listener …";
-            else if (st == "listening") TxtPairingState.Text = "Pairing: listening…";
+            else if (st == "listening") { TxtPairingState.Text = "Pairing: listening."; UpdatePairingGuideSnackbar(); }
             else if (st == "error") TxtPairingState.Text = "Pairing: error";
         });
     }
     private void Real_Listening(object? s, EventArgs e)
     {
-        Dispatcher.Invoke(() => TxtPairingState.Text = "Pairing: listening…");
+        Dispatcher.Invoke(() => { TxtPairingState.Text = "Pairing: listening."; UpdatePairingGuideSnackbar(); });
     }
     private void Real_Failed(object? s, string msg)
     {
@@ -2546,6 +2562,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _vm.IsBusy = false;
         _vm.BusyText = "";
         TxtPairingState.Text = "Pairing: listening…";
+        UpdatePairingGuideSnackbar();
     }
 
     private void OnFailed(object? s, string msg)
@@ -3100,6 +3117,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "SmartAlerts": TrackingService.AnnounceSmartAlerts = val; break;
                 case "PlayerOnline": TrackingService.AnnouncePlayerOnline = val; break;
                 case "PlayerOffline": TrackingService.AnnouncePlayerOffline = val; break;
+                case "AnnounceTracking": TrackingService.AnnounceTracking = val; break;
                 case "PlayerDeathSelf": TrackingService.AnnouncePlayerDeathSelf = val; break;
                 case "PlayerDeathTeam": TrackingService.AnnouncePlayerDeathTeam = val; break;
                 case "PlayerRespawnSelf": TrackingService.AnnouncePlayerRespawnSelf = val; break;
@@ -3175,6 +3193,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "SmartAlerts": isSelected = TrackingService.AnnounceSmartAlerts; break;
                 case "PlayerOnline": isSelected = TrackingService.AnnouncePlayerOnline; break;
                 case "PlayerOffline": isSelected = TrackingService.AnnouncePlayerOffline; break;
+                case "AnnounceTracking": isSelected = TrackingService.AnnounceTracking; break;
                 case "PlayerDeathSelf": isSelected = TrackingService.AnnouncePlayerDeathSelf; break;
                 case "PlayerDeathTeam": isSelected = TrackingService.AnnouncePlayerDeathTeam; break;
                 case "PlayerRespawnSelf": isSelected = TrackingService.AnnouncePlayerRespawnSelf; break;
@@ -4247,6 +4266,55 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         snackbar.Show();
     }
 
+    private ui.Snackbar? _guideSnackbar;
+
+    private void UpdatePairingGuideSnackbar()
+    {
+        if (RootSnackbar == null) return;
+        
+        if (_vm.Servers.Count > 0)
+        {
+            if (_guideSnackbar != null)
+            {
+                _guideSnackbar.Visibility = Visibility.Collapsed;
+                _guideSnackbar = null;
+            }
+            return;
+        }
+
+        bool isListening = TxtPairingState.Text != null && TxtPairingState.Text.Contains("listening");
+
+        string title = isListening ? "Pairing Active" : "Action Required";
+        string msg = isListening 
+            ? "Please pair your server in-game with Rust+" 
+            : "Please pair your Steam account to start.";
+        var appearance = isListening ? ui.ControlAppearance.Info : ui.ControlAppearance.Caution;
+        var icon = isListening ? ui.SymbolRegular.Phone24 : ui.SymbolRegular.Warning24;
+
+        if (_guideSnackbar == null)
+        {
+            _guideSnackbar = new ui.Snackbar(RootSnackbar)
+            {
+                Title = title,
+                Content = msg,
+                Appearance = appearance,
+                Icon = new ui.SymbolIcon(icon),
+                Timeout = TimeSpan.FromHours(24),
+                MaxWidth = 350,
+                HorizontalAlignment = HorizontalAlignment.Right
+            };
+            _guideSnackbar.Show();
+        }
+        else
+        {
+            _guideSnackbar.Title = title;
+            _guideSnackbar.Content = msg;
+            _guideSnackbar.Appearance = appearance;
+            _guideSnackbar.Icon = new ui.SymbolIcon(icon);
+            if (_guideSnackbar.Visibility != Visibility.Visible)
+                _guideSnackbar.Show();
+        }
+    }
     private void SidebarSplitter_DragCompleted(object sender, DragCompletedEventArgs e)
     {
         if (ColSidebar != null)
@@ -4271,11 +4339,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         try
         {
-            Process.Start(new ProcessStartInfo("https://github.com/Pronwan/rustplus-desktop/releases") { UseShellExecute = true });
+            var patchNotesWin = new PatchNotesWindow { Owner = this };
+            patchNotesWin.ShowDialog();
         }
         catch (Exception ex)
         {
-            AppendLog("❌ Could not open Patch Notes link: " + ex.Message);
+            AppendLog("❌ Could not open Patch Notes window: " + ex.Message);
         }
     }
 

@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 
 namespace RustPlusDesk.Views
 {
@@ -21,6 +21,16 @@ namespace RustPlusDesk.Views
                 e.Handled = true;
             }
             catch { /* Fehler beim Öffnen des Browsers abfangen */ }
+        }
+
+        private void TrackingLink_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                HowToTrackWindow.Show(this.Owner ?? this);
+                this.Close();
+            }
+            catch { }
         }
     }
 }
