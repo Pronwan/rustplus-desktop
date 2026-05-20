@@ -225,7 +225,7 @@ public static class TrackingService
 
     public static event Action? OnOnlinePlayersUpdated;
     public static event Action<string>? OnServerInfoUpdated;
-    public static event Action<string>? OnTrackingNotification;
+    public static event Action<string, string>? OnTrackingNotification;
     public static string StatusMessage { get; private set; } = "";
     public static List<OnlinePlayerBM> LastOnlinePlayers { get; private set; } = new();
     public static DateTime? LastPullTime { get; private set; }
@@ -1321,7 +1321,7 @@ public static class TrackingService
                     if (AnnounceTracking)
                     {
                         var groupStr = string.IsNullOrWhiteSpace(tp.GroupName) ? "" : $" [{tp.GroupName}]";
-                        OnTrackingNotification?.Invoke($"[Tracking] {tp.Name}{groupStr} is now ONLINE");
+                        OnTrackingNotification?.Invoke($"[Tracking] {tp.Name}{groupStr} is now ONLINE", serverName);
                     }
                 }
                 else
@@ -1354,7 +1354,8 @@ public static class TrackingService
                     // Newly disconnected. Or did they change their name?
                     var possibleNameChange = currentlyOnlineInfo.FirstOrDefault(kvp => 
                         !players.Any(p => p.BMId == kvp.Key || p.Name == kvp.Key) &&
-                        Math.Abs((kvp.Value.start - lastSession.ConnectTime).TotalSeconds) <= 25);
+                        Math.Abs((kvp.Value.start - lastSession.ConnectTime).TotalSeconds) <= 1 &&
+                        (now - lastSession.ConnectTime).TotalSeconds > 60);
 
                     if (possibleNameChange.Key != null)
                     {
@@ -1375,7 +1376,7 @@ public static class TrackingService
                         if (AnnounceTracking)
                         {
                             var groupStr = string.IsNullOrWhiteSpace(tp.GroupName) ? "" : $" [{tp.GroupName}]";
-                            OnTrackingNotification?.Invoke($"[Tracking] {oldName}{groupStr} hat sich in {newName} umbenannt!");
+                            OnTrackingNotification?.Invoke($"[Tracking] {oldName}{groupStr} renamed to {newName}!", serverName);
                         }
                         
                         continue; // Skip the disconnect logic
@@ -1398,7 +1399,7 @@ public static class TrackingService
                     if (AnnounceTracking)
                     {
                         var groupStr = string.IsNullOrWhiteSpace(tp.GroupName) ? "" : $" [{tp.GroupName}]";
-                        OnTrackingNotification?.Invoke($"[Tracking] {tp.Name}{groupStr} is now OFFLINE");
+                        OnTrackingNotification?.Invoke($"[Tracking] {tp.Name}{groupStr} is now OFFLINE", serverName);
                     }
                 }
             }
