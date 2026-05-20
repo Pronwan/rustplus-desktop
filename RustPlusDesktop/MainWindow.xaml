@@ -3317,178 +3317,211 @@
                                             </MenuItem>
                                         </ContextMenu>
                                     </CheckBox.ContextMenu>
-                                    <TextBlock
-                                        x:Name="ChatAnnounceLabel"
-                                        PreviewMouseLeftButtonDown="ChatAnnounceLabel_Click"
-                                        Text="Chat Alerts">
-                                        <TextBlock.ContextMenu>
-                                            <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                                <MenuItem
-                                                    FontWeight="Bold"
-                                                    Foreground="{StaticResource TextBrushMuted}"
-                                                    Header="Events"
-                                                    IsHitTestVisible="False" />
-                                                <MenuItem
-                                                    Header="Cargo Ship"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="Cargo">
-                                                    <MenuItem
-                                                        Click="Alert_MenuItem_Click"
-                                                        Header="Spawn"
-                                                        IsCheckable="True"
-                                                        StaysOpenOnClick="True"
-                                                        Style="{StaticResource DarkMenuItem}"
-                                                        Tag="CargoSpawn" />
-                                                    <MenuItem
-                                                        Click="Alert_MenuItem_Click"
-                                                        Header="Harbor Docking"
-                                                        IsCheckable="True"
-                                                        StaysOpenOnClick="True"
-                                                        Style="{StaticResource DarkMenuItem}"
-                                                        Tag="CargoDock" />
-                                                    <MenuItem
-                                                        Click="Alert_MenuItem_Click"
-                                                        Header="Departure (5m Warning)"
-                                                        IsCheckable="True"
-                                                        StaysOpenOnClick="True"
-                                                        Style="{StaticResource DarkMenuItem}"
-                                                        Tag="CargoEgress" />
-                                                    <MenuItem
-                                                        x:Name="MenuCargoArrival"
-                                                        Click="Alert_MenuItem_Click"
-                                                        Header="Arrival Warning (5m before Dock)"
-                                                        IsCheckable="True"
-                                                        StaysOpenOnClick="True"
-                                                        Style="{StaticResource DarkMenuItem}"
-                                                        Tag="CargoArrival" />
-                                                </MenuItem>
+                                    <CheckBox.Content>
+                                        <TextBlock
+                                            x:Name="ChatAnnounceLabel"
+                                            Text="Alerts" />
+                                    </CheckBox.Content>
+                                </CheckBox>
+
+                                <!--  Chat Alerts Dropdown  -->
+                                <ui:DropDownButton
+                                    x:Name="ChatAlertsConfigureButton"
+                                    Padding="12,6"
+                                    VerticalAlignment="Center"
+                                    Appearance="Secondary"
+                                    Content="Configure"
+                                    FontSize="12"
+                                    FontWeight="SemiBold"
+                                    Icon="{ui:SymbolIcon Symbol=Settings24}">
+                                    <ui:DropDownButton.Flyout>
+                                        <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                            <MenuItem
+                                                Click="SelectAllAlerts_Click"
+                                                Header="Select All"
+                                                Style="{StaticResource DarkMenuItem}">
+                                                <MenuItem.Icon>
+                                                    <ui:SymbolIcon Symbol="CheckmarkSquare24" />
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <MenuItem
+                                                Click="DeselectAllAlerts_Click"
+                                                Header="Deselect All"
+                                                Style="{StaticResource DarkMenuItem}">
+                                                <MenuItem.Icon>
+                                                    <ui:SymbolIcon Symbol="DismissSquare24" />
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            
+                                            <Separator Margin="0,8" Style="{StaticResource DarkSeparator}" />
+                                            
+                                            <!--  Category: Events  -->
+                                            <MenuItem
+                                                Padding="0,6"
+                                                FontSize="11"
+                                                FontWeight="Bold"
+                                                Foreground="{DynamicResource TextSubtle}"
+                                                Header="EVENTS"
+                                                IsHitTestVisible="False" />
+                                            <MenuItem
+                                                Header="Cargo Ship"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="Cargo">
                                                 <MenuItem
                                                     Click="Alert_MenuItem_Click"
-                                                    Header="Patrol Helicopter"
+                                                    Header="Spawn"
                                                     IsCheckable="True"
                                                     StaysOpenOnClick="True"
                                                     Style="{StaticResource DarkMenuItem}"
-                                                    Tag="Heli" />
+                                                    Tag="CargoSpawn" />
                                                 <MenuItem
                                                     Click="Alert_MenuItem_Click"
-                                                    Header="Chinook (CH47)"
+                                                    Header="Harbor Docking"
                                                     IsCheckable="True"
                                                     StaysOpenOnClick="True"
                                                     Style="{StaticResource DarkMenuItem}"
-                                                    Tag="Chinook" />
+                                                    Tag="CargoDock" />
                                                 <MenuItem
                                                     Click="Alert_MenuItem_Click"
-                                                    Header="Travelling Vendor"
+                                                    Header="Departure (5m Warning)"
                                                     IsCheckable="True"
                                                     StaysOpenOnClick="True"
                                                     Style="{StaticResource DarkMenuItem}"
-                                                    Tag="Vendor" />
+                                                    Tag="CargoEgress" />
                                                 <MenuItem
+                                                    x:Name="MenuCargoArrival"
                                                     Click="Alert_MenuItem_Click"
-                                                    Header="Oil Rig Trigger"
+                                                    Header="Arrival Warning (5m before Dock)"
                                                     IsCheckable="True"
                                                     StaysOpenOnClick="True"
                                                     Style="{StaticResource DarkMenuItem}"
-                                                    Tag="OilRig" />
-                                                <MenuItem
-                                                    Click="Alert_MenuItem_Click"
-                                                    Header="Deep Sea Event"
-                                                    IsCheckable="True"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="DeepSea" />
-                                                <MenuItem
-                                                    Click="Alert_MenuItem_Click"
-                                                    Header="Smart Alerts"
-                                                    IsCheckable="True"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="SmartAlerts" />
-                                                <Separator Style="{StaticResource DarkSeparator}" />
-                                                <MenuItem
-                                                    FontWeight="Bold"
-                                                    Foreground="{StaticResource TextBrushMuted}"
-                                                    Header="Players"
-                                                    IsHitTestVisible="False" />
-                                                <MenuItem
-                                                    Click="Alert_MenuItem_Click"
-                                                    Header="Online Status"
-                                                    IsCheckable="True"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="PlayerOnline" />
-                                                <MenuItem
-                                                    Click="Alert_MenuItem_Click"
-                                                    Header="Offline Status"
-                                                    IsCheckable="True"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="PlayerOffline" />
-                                                <MenuItem
-                                                    Click="Alert_MenuItem_Click"
-                                                    Header="Tracking Notifications"
-                                                    IsCheckable="True"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="AnnounceTracking" />
-                                                <MenuItem
-                                                    Click="Alert_MenuItem_Click"
-                                                    Header="Self Death"
-                                                    IsCheckable="True"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="PlayerDeathSelf" />
-                                                <MenuItem
-                                                    Click="Alert_MenuItem_Click"
-                                                    Header="Team Death"
-                                                    IsCheckable="True"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="PlayerDeathTeam" />
-                                                <MenuItem
-                                                    Click="Alert_MenuItem_Click"
-                                                    Header="Self Respawn"
-                                                    IsCheckable="True"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="PlayerRespawnSelf" />
-                                                <MenuItem
-                                                    Click="Alert_MenuItem_Click"
-                                                    Header="Team Respawn"
-                                                    IsCheckable="True"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="PlayerRespawnTeam" />
-                                                <Separator Style="{StaticResource DarkSeparator}" />
-                                                <MenuItem
-                                                    FontWeight="Bold"
-                                                    Foreground="{StaticResource TextBrushMuted}"
-                                                    Header="Shops"
-                                                    IsHitTestVisible="False" />
-                                                <MenuItem
-                                                    Click="Alert_MenuItem_Click"
-                                                    Header="New Shops"
-                                                    IsCheckable="True"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="NewShops" />
-                                                <MenuItem
-                                                    Click="Alert_MenuItem_Click"
-                                                    Header="Suspicious Shops"
-                                                    IsCheckable="True"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="SuspiciousShops" />
-                                                <MenuItem
-                                                    x:Name="TradeAlertsMenuItem"
-                                                    Header="Trade Alerts"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}" />
-                                            </ContextMenu>
-                                        </TextBlock.ContextMenu>
-                                    </TextBlock>
-                                </CheckBox.Content>
-                            </CheckBox>
+                                                    Tag="CargoArrival" />
+                                            </MenuItem>
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Patrol Helicopter"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="Heli" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Chinook (CH47)"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="Chinook" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Travelling Vendor"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="Vendor" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Oil Rig Trigger"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="OilRig" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Deep Sea Event"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="DeepSea" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Smart Alerts"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="SmartAlerts" />
+                                            <Separator Style="{StaticResource DarkSeparator}" />
+                                            <MenuItem
+                                                FontWeight="Bold"
+                                                Foreground="{StaticResource TextBrushMuted}"
+                                                Header="Players"
+                                                IsHitTestVisible="False" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Online Status"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="PlayerOnline" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Offline Status"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="PlayerOffline" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Tracking Notifications"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="AnnounceTracking" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Self Death"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="PlayerDeathSelf" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Team Death"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="PlayerDeathTeam" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Self Respawn"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="PlayerRespawnSelf" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Team Respawn"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="PlayerRespawnTeam" />
+                                            <Separator Style="{StaticResource DarkSeparator}" />
+                                            <MenuItem
+                                                FontWeight="Bold"
+                                                Foreground="{DynamicResource TextBrushMuted}"
+                                                Header="Shops"
+                                                IsHitTestVisible="False" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="New Shops"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="NewShops" />
+                                            <MenuItem
+                                                Click="Alert_MenuItem_Click"
+                                                Header="Suspicious Shops"
+                                                IsCheckable="True"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}"
+                                                Tag="SuspiciousShops" />
+                                            <MenuItem
+                                                x:Name="TradeAlertsMenuItem"
+                                                Header="Trade Alerts"
+                                                StaysOpenOnClick="True"
+                                                Style="{StaticResource DarkMenuItem}" />
+                                        </ContextMenu>
+                                    </ui:DropDownButton.Flyout>
+                                </ui:DropDownButton>
                             <Button
                                 Width="80"
                                 Margin="8,0,0,0"
