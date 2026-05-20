@@ -21,6 +21,11 @@ public partial class MainWindow
     private Point _trackedGroupDragStartPoint;
     private Expander? _draggedTrackedGroup;
 
+    private void BtnHowToTrack_Click(object sender, RoutedEventArgs e)
+    {
+        HowToTrackWindow.Show(this);
+    }
+
     private void BtnViewTracked_Click(object sender, RoutedEventArgs e)
     {
         var player = ((sender as FrameworkElement)?.DataContext as TrackedPlayer);
@@ -1224,7 +1229,7 @@ public partial class MainWindow
                     {
                         if (win == null || !win.IsLoaded) return;
                         PopulateOnlinePlayers(onlineStack, bmId => ShowTrackingAnalysisWindow(bmId)); 
-                        PopulateTrackedPlayers(trackedStack); 
+                        PopulateTrackedPlayers(trackedStack, bmId => ShowTrackingAnalysisWindow(bmId)); 
                     } 
                     catch { }
                 })); 
@@ -1235,7 +1240,7 @@ public partial class MainWindow
         win.Loaded += (_, _) =>
         {
             try { PopulateOnlinePlayers(onlineStack, bmId => ShowTrackingAnalysisWindow(bmId)); } catch { }
-            try { PopulateTrackedPlayers(trackedStack); } catch { }
+            try { PopulateTrackedPlayers(trackedStack, bmId => ShowTrackingAnalysisWindow(bmId)); } catch { }
             TrackingService.OnOnlinePlayersUpdated += onUpdated;
         };
 
@@ -1343,7 +1348,7 @@ public partial class MainWindow
         catch { }
     }
 
-    private static void PopulateTrackedPlayers(StackPanel stack)
+    private static void PopulateTrackedPlayers(StackPanel stack, Action<string>? showAnalysis = null)
     {
         try
         {
@@ -1439,6 +1444,7 @@ public partial class MainWindow
                         var row = new Grid { Margin = new Thickness(0, 2, 0, 2) };
                         row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
                         row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                        row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
                         var stack2 = new StackPanel { Orientation = Orientation.Horizontal };
                         var sDot = new Ellipse
@@ -1474,7 +1480,37 @@ public partial class MainWindow
                             row.Children.Add(playTime);
                         }
 
+                        // Action button: BM-only → "View on BM" opens BM browser; native → "View" opens Analysis
+                        string capturedBmId2 = p.BMId;
+                        bool capturedIsBmOnly = p.IsBMOnly;
+                        var actionBtn = new ui.Button
+                        {
+                            Content = capturedIsBmOnly ? "View on BM" : "View",
+                            Padding = new Thickness(6, 2, 6, 2),
+                            FontSize = 11,
+                            Appearance = capturedIsBmOnly ? ui.ControlAppearance.Secondary : ui.ControlAppearance.Primary,
+                            Margin = new Thickness(6, 0, 0, 0),
+                            VerticalAlignment = VerticalAlignment.Center,
+                        };
+                        actionBtn.Click += async (_, _) =>
+                        {
+                            if (capturedIsBmOnly)
+                            {
+                                var bmUrl = $"https://www.battlemetrics.com/players/{capturedBmId2}";
+                                try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(bmUrl) { UseShellExecute = true }); }
+                                catch { }
+                            }
+                            else
+                            {
+                                await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
+                                    showAnalysis?.Invoke(capturedBmId2));
+                            }
+                        };
+                        Grid.SetColumn(actionBtn, 2);
+                        row.Children.Add(actionBtn);
+
                         groupStack.Children.Add(row);
+
                     }
                     expander.Content = groupStack;
                     stack.Children.Add(expander);

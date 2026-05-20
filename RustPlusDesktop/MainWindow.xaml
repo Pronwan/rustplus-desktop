@@ -2759,13 +2759,30 @@
                                                 <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="*" />
                                             </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            
                                             <TabPanel
-                                                Grid.Row="0"
+                                                Grid.Row="0" Grid.Column="0"
                                                 Margin="0"
                                                 Panel.ZIndex="1"
                                                 IsItemsHost="True" />
+                                                
+                                            <ui:Button
+                                                Grid.Row="0" Grid.Column="1"
+                                                Margin="0,0,12,0"
+                                                Padding="8,4"
+                                                VerticalAlignment="Center"
+                                                Appearance="Secondary"
+                                                Click="BtnHowToTrack_Click"
+                                                ToolTip="Learn how player tracking works"
+                                                Icon="{ui:SymbolIcon Symbol=QuestionCircle24}"
+                                                Content="How to Track" />
+
                                             <ContentPresenter
-                                                Grid.Row="1"
+                                                Grid.Row="1" Grid.ColumnSpan="2"
                                                 Margin="0,8,0,0"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
