@@ -347,8 +347,8 @@ public partial class MainWindow : ui.FluentWindow
             UpdatePairingGuideSnackbar();
         }));
 
-        // One-time migration notice for v5.1.0-beta1
-        const string AppVersion = "5.1.0-beta1";
+        // One-time migration notice for v5.2.0
+        const string AppVersion = "5.2.0";
 
         bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
         {
@@ -368,9 +368,9 @@ public partial class MainWindow : ui.FluentWindow
         }
         else if (TrackingService.LastSeenVersion != AppVersion)
         {
-            if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "5.0.1"))
+            if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "5.1.0"))
             {
-                // Upgrade von 5.0.1 oder geringer: Popup zeigen
+                // Upgrade von 5.1.0 oder geringer: Popup zeigen
                 Dispatcher.InvokeAsync(() =>
                 {
                     var dlg = new Views.MigrationNoticeWindow { Owner = this };
