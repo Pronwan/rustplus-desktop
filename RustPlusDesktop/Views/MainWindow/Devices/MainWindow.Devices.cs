@@ -816,12 +816,12 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
         }
     }
 
-private void Device_Rename_Click(object sender, RoutedEventArgs e)
+    private void Device_Rename_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev) return;
 
-        var title = dev.IsGroup ? "Rename Group" : "Rename Device";
-        var promptText = dev.IsGroup ? "New name for group:" : $"New name for #{dev.EntityId}:";
+        var title = dev.IsGroup ? Properties.Resources.RenameGroup : Properties.Resources.RenameDevice;
+        var promptText = dev.IsGroup ? Properties.Resources.NewNameForGroup : string.Format(Properties.Resources.NewNameForDevice, dev.EntityId);
         var preset = string.IsNullOrWhiteSpace(dev.Alias) ? (dev.Name ?? "") : dev.Alias!;
         var input = PromptText(this, title, promptText, preset);
 

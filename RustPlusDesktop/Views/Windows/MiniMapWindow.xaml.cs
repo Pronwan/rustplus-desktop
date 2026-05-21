@@ -261,7 +261,7 @@ namespace RustPlusDesk
 
             int pct = (int)Math.Round(e.NewValue * 100);
             if (LblOpacity != null)
-                LblOpacity.Text = $"Opacity: {pct}%";
+                LblOpacity.Text = string.Format(Properties.Resources.OpacityLabel, pct);
 
             SaveSettings();
         }
@@ -339,7 +339,7 @@ namespace RustPlusDesk
 
                 int pct = (int)Math.Round((newSize / 260.0) * 100);
                 if (LblSize != null)
-                    LblSize.Text = $"Size: {pct}% (SHIFT+Mousewheel)";
+                    LblSize.Text = string.Format(Properties.Resources.SizeLabel, pct);
 
                 if (updateSlider && SliSize != null)
                     SliSize.Value = newSize;

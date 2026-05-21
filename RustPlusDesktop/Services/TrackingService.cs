@@ -87,6 +87,7 @@ public class TrackingSettings
     public bool AnnounceNewShops { get; set; } = false;
     public bool AnnounceSuspiciousShops { get; set; } = false;
     public bool AnnounceTradeAlerts { get; set; } = false;
+    public string SelectedLanguage { get; set; } = "en";
     public Dictionary<string, bool> GroupStates { get; set; } = new();
     public Dictionary<string, List<string>> GroupOrder { get; set; } = new();
     public bool AnnounceCargoDocking { get; set; } = false;
@@ -592,6 +593,13 @@ public static class TrackingService
         get => _settings.AnnounceTradeAlerts;
         set { _settings.AnnounceTradeAlerts = value; SaveDB(); }
     }
+
+    public static string SelectedLanguage
+    {
+        get => _settings.SelectedLanguage;
+        set { _settings.SelectedLanguage = value; SaveDB(); }
+    }
+
     public static bool AnnounceSpawnsMaster
     {
         get => _settings.AnnounceSpawnsMaster;

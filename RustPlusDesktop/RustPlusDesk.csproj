@@ -8,7 +8,6 @@
 		<ApplicationIcon>Assets\rustplus-desktop-icon.ico</ApplicationIcon>
 		
 		<!-- Fixes for Single-File Publish and Cleanup -->
-		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
 		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
 		<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>

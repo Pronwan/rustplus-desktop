@@ -11,14 +11,14 @@ namespace RustPlusDesk.Views
         public AlarmWindow()
         {
             InitializeComponent();
-            List.ItemsSource = _items;
+            ListAlarms.ItemsSource = _items;
         }
 
         public void Add(AlarmNotification n)
         {
             _items.Insert(0, n);
             // Optional: Scroll zum neuesten Element am Anfang
-            List.ScrollIntoView(_items[0]);
+            ListAlarms.ScrollIntoView(_items[0]);
         }
 
         public void UpdateOrAdd(AlarmNotification n)
@@ -26,7 +26,7 @@ namespace RustPlusDesk.Views
             for (int i = _items.Count - 1; i >= 0; i--)
             {
                 // Wir aktualisieren nur Einträge, die noch die Standard-Nachricht haben
-                if (_items[i].Message == "Alarm activated!" && _items[i].Server == n.Server)
+                if (_items[i].Message == Properties.Resources.AlarmActivated && _items[i].Server == n.Server)
                 {
                     // Match, wenn IDs identisch ODER wenn einer von beiden keine ID hat (Fuzzy-Match für FCM ohne ID)
                     if (_items[i].EntityId == n.EntityId || _items[i].EntityId == null || n.EntityId == null)

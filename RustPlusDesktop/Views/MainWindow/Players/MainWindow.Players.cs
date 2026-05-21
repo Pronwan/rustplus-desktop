@@ -12,7 +12,7 @@ using Microsoft.Web.WebView2.Wpf;
 using RustPlusDesk.Helpers;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
-using ui = Wpf.Ui.Controls;
+using WpfUi = Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views;
 
@@ -135,7 +135,7 @@ public partial class MainWindow
                         else
                         {
                             // Only BM shortcuts — no UDP polling needed
-                            TxtTrackingStatus.Text = "BM Shortcuts";
+                            TxtTrackingStatus.Text = Properties.Resources.BmShortcuts;
                             TxtTrackingStatus.Foreground = Brushes.Gray;
                         }
                         TxtTrackingStatus.FontStyle = FontStyles.Normal;
@@ -144,11 +144,11 @@ public partial class MainWindow
                 
                 if (TrackingService.LastPullTime.HasValue && anyTracked)
                 {
-                    if (TxtLastPull != null) TxtLastPull.Text = $"Last pull: {TrackingService.LastPullTime.Value:HH:mm:ss}";
+                    if (TxtLastPull != null) TxtLastPull.Text = string.Format(Properties.Resources.LastPull, TrackingService.LastPullTime.Value.ToString("HH:mm:ss"));
                 }
                 else
                 {
-                    if (TxtLastPull != null) TxtLastPull.Text = "Last pull: --:--";
+                    if (TxtLastPull != null) TxtLastPull.Text = string.Format(Properties.Resources.LastPull, "--:--");
                 }
             });
         }
@@ -925,7 +925,7 @@ public partial class MainWindow
         Grid.SetRow(nameLabel, 1);
         grid.Children.Add(nameLabel);
 
-        var nameInput = new ui.TextBox { PlaceholderText = "Enter group name..." };
+        var nameInput = new WpfUi.TextBox { PlaceholderText = "Enter group name..." };
         Grid.SetRow(nameInput, 2);
         grid.Children.Add(nameInput);
         
@@ -953,11 +953,11 @@ public partial class MainWindow
 
         foreach(var g in existingGroups)
         {
-            var gBtn = new ui.Button { 
+            var gBtn = new WpfUi.Button { 
                 Content = g, 
                 Margin = new Thickness(0,0,4,4), 
                 Padding = new Thickness(8,4,8,4),
-                Appearance = ui.ControlAppearance.Secondary
+                Appearance = WpfUi.ControlAppearance.Secondary
             };
             gBtn.Click += (s, e) => {
                 nameInput.Text = g;
@@ -985,8 +985,8 @@ public partial class MainWindow
         grid.Children.Add(scroll);
 
         var btnPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
-        var okBtn = new ui.Button { Content = "Save Group", Width = 120, Margin = new Thickness(0, 0, 12, 0), Appearance = ui.ControlAppearance.Primary };
-        var cancelBtn = new ui.Button { Content = "Cancel", Width = 90 };
+        var okBtn = new WpfUi.Button { Content = "Save Group", Width = 120, Margin = new Thickness(0, 0, 12, 0), Appearance = WpfUi.ControlAppearance.Primary };
+        var cancelBtn = new WpfUi.Button { Content = "Cancel", Width = 90 };
 
         bool saved = false;
         okBtn.Click += (s, e) => { 
@@ -1055,7 +1055,7 @@ public partial class MainWindow
         stack.Children.Add(new TextBlock { Text = $"Group Settings: {player.Name}", FontSize = 20, FontWeight = FontWeights.Bold, Margin = new Thickness(0,0,0,16) });
         
         stack.Children.Add(new TextBlock { Text = "Group Name", Foreground = (Brush)FindResource("TextSubtle") });
-        var input = new ui.TextBox { 
+        var input = new WpfUi.TextBox { 
             Text = player.GroupName, 
             PlaceholderText = "Enter group name..."
         };
@@ -1069,10 +1069,10 @@ public partial class MainWindow
         
         (string, string)? result = null;
 
-        var saveBtn = new ui.Button { Content = "Save Changes", Appearance = ui.ControlAppearance.Primary, Width = 130, Margin = new Thickness(0,0,12,0) };
+        var saveBtn = new WpfUi.Button { Content = "Save Changes", Appearance = WpfUi.ControlAppearance.Primary, Width = 130, Margin = new Thickness(0,0,12,0) };
         saveBtn.Click += (s, e) => { result = (input.Text.Trim(), colorSelector.Getter()); win.DialogResult = true; };
 
-        var cancelBtn = new ui.Button { Content = "Cancel", Width = 90 };
+        var cancelBtn = new WpfUi.Button { Content = "Cancel", Width = 90 };
         cancelBtn.Click += (s, e) => { win.DialogResult = false; };
 
         btnPanel.Children.Add(saveBtn);
@@ -1315,12 +1315,12 @@ public partial class MainWindow
                     row.Children.Add(pt);
                 }
 
-                var btnTrack = new ui.Button
+                var btnTrack = new WpfUi.Button
                 {
                     Content = p.IsTracked ? "Details" : "Track",
                     Padding = new Thickness(6, 2, 6, 2),
                     FontSize = 11,
-                    Appearance = p.IsTracked ? ui.ControlAppearance.Primary : ui.ControlAppearance.Secondary,
+                    Appearance = p.IsTracked ? WpfUi.ControlAppearance.Primary : WpfUi.ControlAppearance.Secondary,
                     Tag = p.BMId,
                 };
                 Grid.SetColumn(btnTrack, 2);
@@ -1338,7 +1338,7 @@ public partial class MainWindow
                         var srvName = TrackingService.LastServer.name ?? "Unknown";
                         TrackingService.TrackPlayer(capturedBmId, capturedName, srvName);
                         btnTrack.Content = "Details";
-                        btnTrack.Appearance = ui.ControlAppearance.Primary;
+                        btnTrack.Appearance = WpfUi.ControlAppearance.Primary;
                     }
                 };
 
@@ -1483,12 +1483,12 @@ public partial class MainWindow
                         // Action button: BM-only → "View on BM" opens BM browser; native → "View" opens Analysis
                         string capturedBmId2 = p.BMId;
                         bool capturedIsBmOnly = p.IsBMOnly;
-                        var actionBtn = new ui.Button
+                        var actionBtn = new WpfUi.Button
                         {
                             Content = capturedIsBmOnly ? "View on BM" : "View",
                             Padding = new Thickness(6, 2, 6, 2),
                             FontSize = 11,
-                            Appearance = capturedIsBmOnly ? ui.ControlAppearance.Secondary : ui.ControlAppearance.Primary,
+                            Appearance = capturedIsBmOnly ? WpfUi.ControlAppearance.Secondary : WpfUi.ControlAppearance.Primary,
                             Margin = new Thickness(6, 0, 0, 0),
                             VerticalAlignment = VerticalAlignment.Center,
                         };
