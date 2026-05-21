@@ -2632,7 +2632,7 @@
                                                             StrokeThickness="1.5"
                                                             Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
                                                     </Grid>
-                                                    <TextBlock VerticalAlignment="Center" Text="Profile markers" />
+                                                    <TextBlock VerticalAlignment="Center" Text="Steam marker" />
                                                 </StackPanel>
                                             </CheckBox>
 
@@ -2677,9 +2677,59 @@
                                                             StrokeThickness="1.5"
                                                             Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
                                                     </Grid>
-                                                    <TextBlock VerticalAlignment="Center" Text="Death markers" />
+                                                    <TextBlock VerticalAlignment="Center" Text="Death Tag" />
                                                 </StackPanel>
                                             </CheckBox>
+
+                                            <!-- Abbreviate Names Toggle -->
+                                            <ToggleButton x:Name="BtnAbbreviateNames"
+                                                          Margin="0,0,12,0"
+                                                          Width="24" Height="24"
+                                                          ToolTip="Only show first letter of Player Name"
+                                                          Checked="BtnAbbreviateNames_Toggled"
+                                                          Unchecked="BtnAbbreviateNames_Toggled"
+                                                          Background="Transparent" BorderThickness="1" BorderBrush="#444">
+                                                <ToggleButton.Style>
+                                                    <Style TargetType="ToggleButton">
+                                                        <Setter Property="Foreground" Value="#CCC"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                    <Border Background="{TemplateBinding Background}"
+                                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                                            CornerRadius="3">
+                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="#222"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Setter Property="Background" Value="#1C4B82"/>
+                                                                <Setter Property="BorderBrush" Value="#2A6CA6"/>
+                                                                <Setter Property="Foreground" Value="White"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ToggleButton.Style>
+                                                <TextBlock Text="A..." FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                            </ToggleButton>
+
+                                            <!-- Player Icon Scale Slider -->
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="Scale:" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10"/>
+                                                <Slider x:Name="SliderPlayerIconSize" 
+                                                        Width="50" Minimum="0.5" Maximum="1.5" Value="1.0" 
+                                                        TickFrequency="0.05" IsSnapToTickEnabled="True" 
+                                                        ValueChanged="SliderPlayerIconSize_ValueChanged"
+                                                        VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding Value, ElementName=SliderPlayerIconSize, StringFormat={}{0:P0}}" 
+                                                           VerticalAlignment="Center" Margin="4,0,0,0" Foreground="#AAA" FontSize="10" Width="30"/>
+                                            </StackPanel>
                                         </StackPanel>
                                     </Grid>
                                 </Grid>
