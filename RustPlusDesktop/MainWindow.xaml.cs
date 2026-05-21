@@ -2197,13 +2197,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var q = System.Web.HttpUtility.ParseQueryString(uri.Query);
 
         string host = q["ip"] ?? q["address"] ?? throw new ArgumentException("ip/address fehlt");
-        if (!int.TryParse(q["port"], out var port)) throw new ArgumentException("port fehlt/ungültig");
+        if (!int.TryParse(q["port"], NumberStyles.Integer, CultureInfo.InvariantCulture, out var port)) throw new ArgumentException("port fehlt/ungültig");
 
         var sidStr = q["playerId"] ?? q["playerid"] ?? throw new ArgumentException("playerId fehlt");
-        if (!ulong.TryParse(sidStr, out var playerId)) throw new ArgumentException("playerId ungültig");
+        if (!ulong.TryParse(sidStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out var playerId)) throw new ArgumentException("playerId ungültig");
 
         var tokStr = q["playerToken"] ?? q["playertoken"] ?? q["token"] ?? throw new ArgumentException("playerToken fehlt");
-        if (!int.TryParse(tokStr, out var token)) throw new ArgumentException("playerToken ungültig");
+        if (!int.TryParse(tokStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out var token)) throw new ArgumentException("playerToken ungültig");
 
         var name = q["name"];
         return (host, port, playerId, token, name);

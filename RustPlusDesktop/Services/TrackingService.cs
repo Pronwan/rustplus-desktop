@@ -763,7 +763,7 @@ public static class TrackingService
 
     public static async Task<string> FetchPlayerNameAsync(string bmId)
     {
-        if (bmId.Length == 17 && bmId.StartsWith("7656") && ulong.TryParse(bmId, out _))
+        if (bmId.Length == 17 && bmId.StartsWith("7656") && ulong.TryParse(bmId, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             try
             {

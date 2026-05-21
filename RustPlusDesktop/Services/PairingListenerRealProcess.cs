@@ -264,7 +264,7 @@ namespace RustPlusDesk.Services
                     string.IsNullOrWhiteSpace(playerToken))
                     return false;
 
-                if (!int.TryParse(portStr, out var port)) port = 28082;
+                if (!int.TryParse(portStr, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var port)) port = 28082;
 
                 p = new PairingPayload
                 {
@@ -326,7 +326,7 @@ namespace RustPlusDesk.Services
             foreach (var n in names)
             {
                 var s = GetJsonString(root, n);
-                if (uint.TryParse(s, out var u)) return u;
+                if (uint.TryParse(s, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var u)) return u;
             }
             return null;
         }
@@ -479,8 +479,8 @@ namespace RustPlusDesk.Services
                     string? issueDateStr = GetJsonString(root, "issueDate");
                     string? expiryDateStr = GetJsonString(root, "expiryDate") ?? GetJsonString(root, "expirtyDate");
 
-                    if (!int.TryParse(portStr, out var port)) port = 28082;
-                    uint? entityId = (uint.TryParse(entityIdStr, out var eid) ? eid : (uint?)null);
+                    if (!int.TryParse(portStr, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var port)) port = 28082;
+                    uint? entityId = (uint.TryParse(entityIdStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var eid) ? eid : (uint?)null);
 
                     // entityType → Kind mappen
                     string? kind = null;
