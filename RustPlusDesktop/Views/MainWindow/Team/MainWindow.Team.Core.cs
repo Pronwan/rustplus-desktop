@@ -250,7 +250,8 @@ public partial class MainWindow
                 if (shouldAnnounce)
                 {
                     var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : "unknown";
-                    var txt = now.online ? $"{vm.Name} came online @ {where}" : $"{vm.Name} went offline";
+                    var dispName = GetDisplayPlayerName(vm.Name);
+                    var txt = now.online ? $"{dispName} came online @ {where}" : $"{dispName} went offline";
                     await SendTeamChatSafeAsync(txt);
                 }
             }
@@ -278,7 +279,8 @@ public partial class MainWindow
                     if (shouldAnnounce)
                     {
                         var where = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : "unknown";
-                        var txt = now.dead ? $"{vm.Name} died @ {where}" : $"{vm.Name} respawned @ {where}";
+                        var dispName = GetDisplayPlayerName(vm.Name);
+                        var txt = now.dead ? $"{dispName} died @ {where}" : $"{dispName} respawned @ {where}";
                         await SendTeamChatSafeAsync(txt);
                     }
                 }

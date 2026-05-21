@@ -684,9 +684,10 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
         {
             var r = await ProbeWithRetryAsync(dev.EntityId, log, maxRetries);
 
-            // Kind nur setzen, NIE SmartAlarm überschreiben
-            if (!string.IsNullOrWhiteSpace(r.Kind) &&
-                !string.Equals(dev.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase))
+            // Kind nur setzen, wenn noch keines bekannt ist – nie ein bestehendes Kind überschreiben.
+            // Verhindert, dass ein SmartSwitch durch eine verzögerte/falsche Probe-Antwort
+            // zu einem SmartAlarm oder anderem Typ degradiert wird.
+            if (!string.IsNullOrWhiteSpace(r.Kind) && string.IsNullOrWhiteSpace(dev.Kind))
             {
                 dev.Kind = r.Kind;
             }
@@ -696,12 +697,16 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
             _suppressToggleHandler = true;
             if ((dev.Kind ?? r.Kind)?.Equals("SmartAlarm", StringComparison.OrdinalIgnoreCase) == true)
             {
-                // Alarmstatus nicht aus Probe übernehmen
+                // Alarmstatus nie aus Probe übernehmen – immer false lassen
                 dev.IsOn = false;
             }
             else
             {
-                dev.IsOn = r.IsOn;
+                // IsOn nur aktualisieren wenn der Probe-Wert sich vom bekannten Zustand
+                // unterscheidet. Verhindert, dass ein gerade manuell gesetzter Zustand
+                // durch einen zeitversetzten Probe überschrieben wird.
+                if (r.IsOn.HasValue && r.IsOn != dev.IsOn)
+                    dev.IsOn = r.IsOn;
             }
             _suppressToggleHandler = false;
 
@@ -781,25 +786,33 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
 
             if (saved?.Devices is { Count: > 0 })
             {
-                // 1) upsert
-                foreach (var s in saved.Devices)
+                _suppressToggleHandler = true;
+                try
                 {
-                    var ex = FindDeviceById(current.Devices, s.EntityId);
-                    if (ex == null)
+                    // 1) upsert
+                    foreach (var s in saved.Devices)
                     {
-                        current.Devices.Add(s);
+                        var ex = FindDeviceById(current.Devices, s.EntityId);
+                        if (ex == null)
+                        {
+                            current.Devices.Add(s);
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrWhiteSpace(s.Name)) ex.Name = s.Name;
+                            if (!string.IsNullOrWhiteSpace(s.Kind)) ex.Kind = s.Kind;
+                            ex.IsOn = s.IsOn;
+                            // ⚠️ SmartAlarm nie als "true" aus Storage hochholen
+                            if (string.Equals(ex.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase))
+                                ex.IsOn = false;
+                            ex.IsMissing = s.IsMissing;
+                            if (!string.IsNullOrWhiteSpace(s.Alias)) ex.Alias = s.Alias;
+                        }
                     }
-                    else
-                    {
-                        if (!string.IsNullOrWhiteSpace(s.Name)) ex.Name = s.Name;
-                        if (!string.IsNullOrWhiteSpace(s.Kind)) ex.Kind = s.Kind;
-                        ex.IsOn = s.IsOn;
-                        // ⚠️ SmartAlarm nie als "true" aus Storage hochholen
-                        if (string.Equals(ex.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase))
-                            ex.IsOn = false;
-                        ex.IsMissing = s.IsMissing;
-                        if (!string.IsNullOrWhiteSpace(s.Alias)) ex.Alias = s.Alias;
-                    }
+                }
+                finally
+                {
+                    _suppressToggleHandler = false;
                 }
 
                 // 2) optional: entfernen, was im Storage nicht mehr existiert
@@ -1333,12 +1346,18 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
                     d.Kind = r.Kind;
                 d.IsMissing = !r.Exists;
                 
-                // Update state immediately from probe
-                if (r.Exists)
+                // Update state immediately from probe — only when it actually differs
+                // to avoid overwriting a state the user just set manually.
+                // Use Dispatcher.Invoke so that the UI-thread-only _suppressToggleHandler
+                // flag is set and cleared on the correct thread (parallel tasks run off-thread).
+                if (r.Exists && r.IsOn.HasValue && r.IsOn != d.IsOn)
                 {
-                    _suppressToggleHandler = true;
-                    d.IsOn = r.IsOn;
-                    _suppressToggleHandler = false;
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        _suppressToggleHandler = true;
+                        d.IsOn = r.IsOn;
+                        _suppressToggleHandler = false;
+                    });
                 }
             }
             catch (Exception ex)

@@ -242,8 +242,8 @@ public partial class MainWindow : ui.FluentWindow
         // Nur freiwillig zum Diagnostizieren:
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
-        InitializeComponent();
         _vm.IsInitializing = true;
+        InitializeComponent();
         
         // ── WinUI 3: Apply OS-level Mica backdrop via DWM ────────────────────
         WindowBackdropHelper.Apply(this, WindowBackdropHelper.BackdropType.Mica);
@@ -4284,6 +4284,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             ColSidebar.Width = new GridLength(w, GridUnitType.Pixel);
         }
         _announceSpawns = TrackingService.AnnounceSpawnsMaster;
+
+        _showProfileMarkers = TrackingService.MapShowSteamMarkers;
+        if (ChkProfileMarkers != null) ChkProfileMarkers.IsChecked = _showProfileMarkers;
+
+        _showDeathMarkers = TrackingService.MapShowDeathTags;
+        if (ChkDeathMarkers != null) ChkDeathMarkers.IsChecked = _showDeathMarkers;
+
+        _abbreviateNames = TrackingService.MapAbbreviateNames;
+        if (BtnAbbreviateNames != null) BtnAbbreviateNames.IsChecked = _abbreviateNames;
+
+        _playerMarkerScale = TrackingService.MapPlayerIconScale;
+        if (SliderPlayerIconSize != null) SliderPlayerIconSize.Value = _playerMarkerScale;
     }
 
     private void ShowInfoSnackbar(string title, string message, ui.ControlAppearance appearance)
