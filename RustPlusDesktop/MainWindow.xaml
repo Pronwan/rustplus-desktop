@@ -1271,12 +1271,26 @@
                             Margin="0,0,0,12"
                             Background="#12FFFFFF" />
 
-                        <TextBlock
-                            Margin="0,4,0,6"
-                            FontSize="11"
-                            FontWeight="SemiBold"
-                            Foreground="{StaticResource TextBrushMuted}"
-                            Text="PAIRED SERVERS" />
+                        <Grid Margin="0,4,0,6">
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                FontSize="11"
+                                FontWeight="SemiBold"
+                                Foreground="{StaticResource TextBrushMuted}"
+                                Text="PAIRED SERVERS" />
+                            <ToggleButton
+                                x:Name="BtnToggleServerArea"
+                                HorizontalAlignment="Right"
+                                Padding="4,2"
+                                IsChecked="False"
+                                Click="BtnToggleServerArea_Click"
+                                ToolTip="Toggle Server Area">
+                                <ui:SymbolIcon x:Name="IconToggleServerArea" Symbol="ChevronUp20" />
+                            </ToggleButton>
+                        </Grid>
+
+                        <StackPanel x:Name="PanelServerArea">
 
                         <Grid x:Name="ServerListGrid">
                             <ListBox
@@ -1569,6 +1583,7 @@
                                     Opacity="0.5"
                                     Text="Right-click for options" />
                             </Grid>
+                        </StackPanel>
                         </StackPanel>
 
                         <Border
@@ -2560,7 +2575,7 @@
                                                             <!--  Name: Standard weiÃŸ, offline leicht ausgrauen, tot = rot  -->
                                                             <TextBlock FontSize="14" FontWeight="SemiBold">
                                                                 <TextBlock.Text>
-                                                                    <Binding Path="Name" />
+                                                                    <Binding Path="DisplayName" />
                                                                 </TextBlock.Text>
                                                                 <TextBlock.Style>
                                                                     <Style TargetType="TextBlock">
@@ -2584,7 +2599,7 @@
                                                                 FontSize="11"
                                                                 Foreground="White"
                                                                 Opacity="0.65"
-                                                                Text="{Binding SteamId}" />
+                                                                Text="{Binding DisplaySteamId}" />
                                                         </StackPanel>
                                                     </Grid>
                                                 </Border>
@@ -2632,7 +2647,7 @@
                                                             StrokeThickness="1.5"
                                                             Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
                                                     </Grid>
-                                                    <TextBlock VerticalAlignment="Center" Text="Profile markers" />
+                                                    <TextBlock VerticalAlignment="Center" Text="Steam marker" />
                                                 </StackPanel>
                                             </CheckBox>
 
@@ -2677,9 +2692,61 @@
                                                             StrokeThickness="1.5"
                                                             Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
                                                     </Grid>
-                                                    <TextBlock VerticalAlignment="Center" Text="Death markers" />
+                                                    <TextBlock VerticalAlignment="Center" Text="Death Tag" />
                                                 </StackPanel>
                                             </CheckBox>
+
+                                            <!-- Abbreviate Names Toggle -->
+                                            <ToggleButton x:Name="BtnAbbreviateNames"
+                                                          Margin="0,0,12,0"
+                                                          Width="24" Height="24"
+                                                          ToolTip="Streamer Mode"
+                                                          Checked="BtnAbbreviateNames_Toggled"
+                                                          Unchecked="BtnAbbreviateNames_Toggled">
+                                                <ToggleButton.Style>
+                                                    <Style TargetType="ToggleButton">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Setter Property="BorderThickness" Value="1"/>
+                                                        <Setter Property="BorderBrush" Value="#444"/>
+                                                        <Setter Property="Foreground" Value="#CCC"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                    <Border Background="{TemplateBinding Background}"
+                                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                                            CornerRadius="3">
+                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="#222"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Setter Property="Background" Value="#1C4B82"/>
+                                                                <Setter Property="BorderBrush" Value="#2A6CA6"/>
+                                                                <Setter Property="Foreground" Value="White"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ToggleButton.Style>
+                                                <TextBlock Text="A..." FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                            </ToggleButton>
+
+                                            <!-- Player Icon Scale Slider -->
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="Scale:" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10"/>
+                                                <Slider x:Name="SliderPlayerIconSize" 
+                                                        Width="50" Minimum="0.5" Maximum="1.5" Value="1.0" 
+                                                        TickFrequency="0.05" IsSnapToTickEnabled="True" 
+                                                        ValueChanged="SliderPlayerIconSize_ValueChanged"
+                                                        VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding Value, ElementName=SliderPlayerIconSize, StringFormat={}{0:P0}}" 
+                                                           VerticalAlignment="Center" Margin="4,0,0,0" Foreground="#AAA" FontSize="10" Width="30"/>
+                                            </StackPanel>
                                         </StackPanel>
                                     </Grid>
                                 </Grid>
@@ -2823,16 +2890,6 @@
                                                     Text="Online Players" />
 
 
-
-                                                <ui:Button
-                                                    x:Name="BtnSearchBM"
-                                                    Grid.Column="1"
-                                                    Margin="0,0,4,0"
-                                                    Padding="8,4"
-                                                    Appearance="Primary"
-                                                    Click="BtnSearchBM_Click"
-                                                    Content="Search BM"
-                                                    ToolTip="Search current server on BattleMetrics" />
 
                                                 <ui:Button
                                                     Grid.Column="2"
@@ -4035,87 +4092,6 @@
                                     VerticalScrollBarVisibility="Auto">
                                     <StackPanel x:Name="ShopDetailsContent" Margin="12,4,12,12" />
                                 </ScrollViewer>
-                            </Grid>
-                        </Border>
-
-                        <!--  Integrated Shop Search Overlay (Roll-up)  -->
-                        <Border
-                            x:Name="BMBrowserPanel"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Margin="20"
-                            Panel.ZIndex="2000"
-                            Background="#16181C"
-                            BorderBrush="#40FFFFFF"
-                            BorderThickness="1"
-                            CornerRadius="12"
-                            Visibility="Collapsed">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="40" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-
-                                <!-- Header Area -->
-                                <Grid Grid.Row="0" Background="#1E2126">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
-                                        <Button x:Name="BtnBMBack" Content="&#x25C0;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMBack_Click" ToolTip="Back" />
-                                        <Button x:Name="BtnBMForward" Content="&#x25B6;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMForward_Click" ToolTip="Forward" />
-                                        <Button x:Name="BtnBMRefresh" Content="&#x21BB;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMRefresh_Click" ToolTip="Refresh" />
-                                        <Button x:Name="BtnBMPopout" Content="&#x2197;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMPopout_Click" ToolTip="Open in external browser" />
-                                        <ui:TextBox
-                                            x:Name="TxtBMSearch"
-                                            Width="150"
-                                            Margin="8,0,0,0"
-                                            PlaceholderText="Search BM..."
-                                            KeyDown="TxtBMSearch_KeyDown" />
-                                        <Button
-                                            x:Name="BtnBMSearch"
-                                            Width="30"
-                                            Height="30"
-                                            Content="&#x1F50D;"
-                                            Click="BtnBMSearch_Click"
-                                            Style="{StaticResource GhostButton}"
-                                            ToolTip="Search" />
-                                    </StackPanel>
-
-                                    <ui:Button
-                                        x:Name="BtnBMTrack"
-                                        Grid.Column="1"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Appearance="Primary"
-                                        Content="TRACK PLAYER"
-                                        Visibility="Collapsed"
-                                        Click="BtnBMTrack_Click" />
-
-                                    <Button
-                                        x:Name="BtnCloseBMBrowser"
-                                        Grid.Column="2"
-                                        Width="30"
-                                        Height="30"
-                                        Margin="0,0,8,0"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
-                                        Click="BtnCloseBMBrowser_Click"
-                                        Content="&#x2715;"
-                                        Cursor="Hand"
-                                        FontSize="14"
-                                        Foreground="#99FFFFFF"
-                                        Style="{StaticResource GhostButton}"
-                                        ToolTip="Close BattleMetrics Browser" />
-                                </Grid>
-
-                                <!-- Browser Content -->
-                                <Grid Grid.Row="1">
-                                    <wv2:WebView2 x:Name="EmbeddedBMBrowser" SourceChanged="EmbeddedBMBrowser_SourceChanged" />
-                                </Grid>
                             </Grid>
                         </Border>
 
