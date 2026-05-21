@@ -2700,7 +2700,7 @@
                                             <ToggleButton x:Name="BtnAbbreviateNames"
                                                           Margin="0,0,12,0"
                                                           Width="24" Height="24"
-                                                          ToolTip="Only show first letter of Player Name"
+                                                          ToolTip="Streamer Mode"
                                                           Checked="BtnAbbreviateNames_Toggled"
                                                           Unchecked="BtnAbbreviateNames_Toggled">
                                                 <ToggleButton.Style>
@@ -2890,16 +2890,6 @@
                                                     Text="Online Players" />
 
 
-
-                                                <ui:Button
-                                                    x:Name="BtnSearchBM"
-                                                    Grid.Column="1"
-                                                    Margin="0,0,4,0"
-                                                    Padding="8,4"
-                                                    Appearance="Primary"
-                                                    Click="BtnSearchBM_Click"
-                                                    Content="Search BM"
-                                                    ToolTip="Search current server on BattleMetrics" />
 
                                                 <ui:Button
                                                     Grid.Column="2"
@@ -4102,87 +4092,6 @@
                                     VerticalScrollBarVisibility="Auto">
                                     <StackPanel x:Name="ShopDetailsContent" Margin="12,4,12,12" />
                                 </ScrollViewer>
-                            </Grid>
-                        </Border>
-
-                        <!--  Integrated Shop Search Overlay (Roll-up)  -->
-                        <Border
-                            x:Name="BMBrowserPanel"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Margin="20"
-                            Panel.ZIndex="2000"
-                            Background="#16181C"
-                            BorderBrush="#40FFFFFF"
-                            BorderThickness="1"
-                            CornerRadius="12"
-                            Visibility="Collapsed">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="40" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-
-                                <!-- Header Area -->
-                                <Grid Grid.Row="0" Background="#1E2126">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
-                                        <Button x:Name="BtnBMBack" Content="&#x25C0;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMBack_Click" ToolTip="Back" />
-                                        <Button x:Name="BtnBMForward" Content="&#x25B6;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMForward_Click" ToolTip="Forward" />
-                                        <Button x:Name="BtnBMRefresh" Content="&#x21BB;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMRefresh_Click" ToolTip="Refresh" />
-                                        <Button x:Name="BtnBMPopout" Content="&#x2197;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMPopout_Click" ToolTip="Open in external browser" />
-                                        <ui:TextBox
-                                            x:Name="TxtBMSearch"
-                                            Width="150"
-                                            Margin="8,0,0,0"
-                                            PlaceholderText="Search BM..."
-                                            KeyDown="TxtBMSearch_KeyDown" />
-                                        <Button
-                                            x:Name="BtnBMSearch"
-                                            Width="30"
-                                            Height="30"
-                                            Content="&#x1F50D;"
-                                            Click="BtnBMSearch_Click"
-                                            Style="{StaticResource GhostButton}"
-                                            ToolTip="Search" />
-                                    </StackPanel>
-
-                                    <ui:Button
-                                        x:Name="BtnBMTrack"
-                                        Grid.Column="1"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Appearance="Primary"
-                                        Content="TRACK PLAYER"
-                                        Visibility="Collapsed"
-                                        Click="BtnBMTrack_Click" />
-
-                                    <Button
-                                        x:Name="BtnCloseBMBrowser"
-                                        Grid.Column="2"
-                                        Width="30"
-                                        Height="30"
-                                        Margin="0,0,8,0"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
-                                        Click="BtnCloseBMBrowser_Click"
-                                        Content="&#x2715;"
-                                        Cursor="Hand"
-                                        FontSize="14"
-                                        Foreground="#99FFFFFF"
-                                        Style="{StaticResource GhostButton}"
-                                        ToolTip="Close BattleMetrics Browser" />
-                                </Grid>
-
-                                <!-- Browser Content -->
-                                <Grid Grid.Row="1">
-                                    <wv2:WebView2 x:Name="EmbeddedBMBrowser" SourceChanged="EmbeddedBMBrowser_SourceChanged" />
-                                </Grid>
                             </Grid>
                         </Border>
 
