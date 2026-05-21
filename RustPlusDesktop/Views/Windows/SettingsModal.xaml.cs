@@ -23,6 +23,7 @@ namespace RustPlusDesk.Views
             ChkBackgroundTracking.IsChecked = TrackingService.IsBackgroundTrackingEnabled;
             ChkAutoLoadShops.IsChecked = TrackingService.AutoLoadShops;
             ChkHideConsole.IsChecked = TrackingService.HideConsole;
+            ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
         }
 
         private void OnSettingChanged(object sender, RoutedEventArgs e)
@@ -36,6 +37,7 @@ namespace RustPlusDesk.Views
             TrackingService.IsBackgroundTrackingEnabled = ChkBackgroundTracking.IsChecked == true;
             TrackingService.AutoLoadShops = ChkAutoLoadShops.IsChecked == true;
             TrackingService.HideConsole = ChkHideConsole.IsChecked == true;
+            TrackingService.MapAbbreviateNames = ChkStreamerMode.IsChecked == true;
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)

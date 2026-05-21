@@ -1271,12 +1271,26 @@
                             Margin="0,0,0,12"
                             Background="#12FFFFFF" />
 
-                        <TextBlock
-                            Margin="0,4,0,6"
-                            FontSize="11"
-                            FontWeight="SemiBold"
-                            Foreground="{StaticResource TextBrushMuted}"
-                            Text="PAIRED SERVERS" />
+                        <Grid Margin="0,4,0,6">
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                FontSize="11"
+                                FontWeight="SemiBold"
+                                Foreground="{StaticResource TextBrushMuted}"
+                                Text="PAIRED SERVERS" />
+                            <ToggleButton
+                                x:Name="BtnToggleServerArea"
+                                HorizontalAlignment="Right"
+                                Padding="4,2"
+                                IsChecked="False"
+                                Click="BtnToggleServerArea_Click"
+                                ToolTip="Toggle Server Area">
+                                <ui:SymbolIcon x:Name="IconToggleServerArea" Symbol="ChevronUp20" />
+                            </ToggleButton>
+                        </Grid>
+
+                        <StackPanel x:Name="PanelServerArea">
 
                         <Grid x:Name="ServerListGrid">
                             <ListBox
@@ -1569,6 +1583,7 @@
                                     Opacity="0.5"
                                     Text="Right-click for options" />
                             </Grid>
+                        </StackPanel>
                         </StackPanel>
 
                         <Border
@@ -2560,7 +2575,7 @@
                                                             <!--  Name: Standard weiÃŸ, offline leicht ausgrauen, tot = rot  -->
                                                             <TextBlock FontSize="14" FontWeight="SemiBold">
                                                                 <TextBlock.Text>
-                                                                    <Binding Path="Name" />
+                                                                    <Binding Path="DisplayName" />
                                                                 </TextBlock.Text>
                                                                 <TextBlock.Style>
                                                                     <Style TargetType="TextBlock">
@@ -2584,7 +2599,7 @@
                                                                 FontSize="11"
                                                                 Foreground="White"
                                                                 Opacity="0.65"
-                                                                Text="{Binding SteamId}" />
+                                                                Text="{Binding DisplaySteamId}" />
                                                         </StackPanel>
                                                     </Grid>
                                                 </Border>
@@ -2687,10 +2702,12 @@
                                                           Width="24" Height="24"
                                                           ToolTip="Only show first letter of Player Name"
                                                           Checked="BtnAbbreviateNames_Toggled"
-                                                          Unchecked="BtnAbbreviateNames_Toggled"
-                                                          Background="Transparent" BorderThickness="1" BorderBrush="#444">
+                                                          Unchecked="BtnAbbreviateNames_Toggled">
                                                 <ToggleButton.Style>
                                                     <Style TargetType="ToggleButton">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Setter Property="BorderThickness" Value="1"/>
+                                                        <Setter Property="BorderBrush" Value="#444"/>
                                                         <Setter Property="Foreground" Value="#CCC"/>
                                                         <Setter Property="Template">
                                                             <Setter.Value>
