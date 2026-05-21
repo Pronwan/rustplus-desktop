@@ -569,6 +569,24 @@ public partial class MainWindow
         _abbreviateNames = BtnAbbreviateNames.IsChecked == true;
         if (_vm != null && !_vm.IsInitializing) TrackingService.MapAbbreviateNames = _abbreviateNames;
         
+        foreach (var t in TeamMembers) t.Abbreviate = _abbreviateNames;
+        RefreshStreamerModeUI();
+
+        if (_abbreviateNames)
+        {
+            if (BtnToggleServerArea != null && BtnToggleServerArea.IsChecked == false)
+            {
+                BtnToggleServerArea.IsChecked = true;
+                BtnToggleServerArea_Click(null, null);
+            }
+
+            if (!TrackingService.HideConsole)
+            {
+                TrackingService.HideConsole = true;
+                if (TxtLog != null) TxtLog.Visibility = Visibility.Collapsed;
+            }
+        }
+
         foreach (var kv in _dynEls.ToList())
         {
             if (kv.Value is FrameworkElement el && el.Tag is PlayerMarkerTag tag)

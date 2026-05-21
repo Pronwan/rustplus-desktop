@@ -35,7 +35,47 @@ public partial class MainWindow
         public string Name
         {
             get => _name;
-            set { if (_name == value) return; _name = value; OnChanged(nameof(Name)); }
+            set 
+            { 
+                if (_name == value) return; 
+                _name = value; 
+                OnChanged(nameof(Name)); 
+                OnChanged(nameof(DisplayName)); 
+            }
+        }
+
+        private bool _abbreviate;
+        public bool Abbreviate
+        {
+            get => _abbreviate;
+            set
+            {
+                if (_abbreviate == value) return;
+                _abbreviate = value;
+                OnChanged(nameof(Abbreviate));
+                OnChanged(nameof(DisplayName));
+                OnChanged(nameof(DisplaySteamId));
+            }
+        }
+
+        public string DisplayName
+        {
+            get
+            {
+                if (!Abbreviate || string.IsNullOrWhiteSpace(Name)) return Name;
+                return Name.Length > 0 ? Name.Substring(0, 1) + "..." : Name;
+            }
+        }
+
+        public string DisplaySteamId
+        {
+            get
+            {
+                var s = SteamId.ToString();
+                if (!Abbreviate) return s;
+                if (s.Length <= 3) return s + "...";
+                return s.Substring(0, 3) + "...";
+            }
         }
 
         private bool _isLeader;
@@ -188,7 +228,7 @@ public partial class MainWindow
                 var vm = TeamMembers.FirstOrDefault(t => t.SteamId == sid);
                 if (vm == null)
                 {
-                    vm = new TeamMemberVM { SteamId = sid };
+                    vm = new TeamMemberVM { SteamId = sid, Abbreviate = _abbreviateNames };
                     TeamMembers.Add(vm);
                     _ = LoadAvatarAsync(vm);
                     if (vm.Avatar == null && CanTryAvatar(sid))
@@ -379,7 +419,7 @@ public partial class MainWindow
     {
         if ((sender as FrameworkElement)?.DataContext is TeamMemberVM vm)
         {
-            StartFollowing(vm.SteamId, vm.Name);
+            StartFollowing(vm.SteamId, vm.DisplayName);
         }
     }
 
