@@ -131,8 +131,8 @@ public partial class MainWindow : ui.FluentWindow
             foreach (var member in TeamMembers)
             {
                 if (member.SteamId == _mySteamId) continue;
-                var mi = new MenuItem { Header = $"Follow {member.Name}", Tag = member.SteamId };
-                mi.Click += (s, ev) => StartFollowing(member.SteamId, member.Name);
+                var mi = new MenuItem { Header = $"Follow {member.DisplayName}", Tag = member.SteamId };
+                mi.Click += (s, ev) => StartFollowing(member.SteamId, member.DisplayName);
                 MenuFollowPlayer.Items.Add(mi);
             }
         }
@@ -242,8 +242,8 @@ public partial class MainWindow : ui.FluentWindow
         // Nur freiwillig zum Diagnostizieren:
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
-        InitializeComponent();
         _vm.IsInitializing = true;
+        InitializeComponent();
         
         // ── WinUI 3: Apply OS-level Mica backdrop via DWM ────────────────────
         WindowBackdropHelper.Apply(this, WindowBackdropHelper.BackdropType.Mica);
@@ -347,8 +347,8 @@ public partial class MainWindow : ui.FluentWindow
             UpdatePairingGuideSnackbar();
         }));
 
-        // One-time migration notice for v5.1.0-beta1
-        const string AppVersion = "5.1.0-beta1";
+        // One-time migration notice for v5.2.0
+        const string AppVersion = "5.2.0";
 
         bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
         {
@@ -368,9 +368,9 @@ public partial class MainWindow : ui.FluentWindow
         }
         else if (TrackingService.LastSeenVersion != AppVersion)
         {
-            if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "5.0.1"))
+            if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "5.1.0"))
             {
-                // Upgrade von 5.0.1 oder geringer: Popup zeigen
+                // Upgrade von 5.1.0 oder geringer: Popup zeigen
                 Dispatcher.InvokeAsync(() =>
                 {
                     var dlg = new Views.MigrationNoticeWindow { Owner = this };
@@ -2731,6 +2731,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var sidText = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Not Logged In" : _vm.SteamId64;
         TxtSteamId.Text = sidText;
         TxtSteamName.Text = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Steam Account" : "Logged In";
+        ImgSteam.ToolTip = TxtSteamName.Text;
+        RefreshStreamerModeUI();
         
 
 
@@ -2739,6 +2741,49 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         // Notify VM of FCM data (for expiry badge)
         _vm.NotifyFcmChanged();
+    }
+
+    public void RefreshStreamerModeUI()
+    {
+        if (TxtSteamId == null || TxtSteamName == null || _vm == null) return;
+        
+        var sid = _vm.SteamId64;
+        if (string.IsNullOrWhiteSpace(sid))
+        {
+            TxtSteamId.Text = "(nicht angemeldet)";
+            TxtSteamName.Text = "Steam Account";
+            return;
+        }
+
+        TxtSteamId.Text = _abbreviateNames && sid.Length > 3 ? sid.Substring(0, 3) + "..." : sid;
+        
+        var originalName = (ImgSteam.ToolTip as string) ?? "Logged In";
+        TxtSteamName.Text = _abbreviateNames ? "STREAMER MODE" : originalName;
+
+        if (_vm.IsFollowing && _vm.FollowingSteamId != _mySteamId)
+        {
+            var fMember = TeamMembers.FirstOrDefault(t => t.SteamId == _vm.FollowingSteamId);
+            if (fMember != null)
+            {
+                _vm.FollowingPlayerName = fMember.DisplayName;
+            }
+        }
+    }
+
+    private void BtnToggleServerArea_Click(object sender, RoutedEventArgs e)
+    {
+        if (PanelServerArea == null || IconToggleServerArea == null) return;
+
+        if (BtnToggleServerArea.IsChecked == true)
+        {
+            PanelServerArea.Visibility = Visibility.Collapsed;
+            IconToggleServerArea.Symbol = Wpf.Ui.Controls.SymbolRegular.ChevronDown20;
+        }
+        else
+        {
+            PanelServerArea.Visibility = Visibility.Visible;
+            IconToggleServerArea.Symbol = Wpf.Ui.Controls.SymbolRegular.ChevronUp20;
+        }
     }
 
     private async Task TryLoadSteamAvatarAsync(string? steamId64)
@@ -2772,8 +2817,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
             if (nameMatch.Success)
             {
-                TxtSteamName.Text = nameMatch.Groups[1].Value;
-                ImgSteam.ToolTip = nameMatch.Groups[1].Value;
+                var originalName = nameMatch.Groups[1].Value;
+                ImgSteam.ToolTip = originalName;
+                Dispatcher.Invoke(() => RefreshStreamerModeUI());
             }
         }
         catch
@@ -4284,6 +4330,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             ColSidebar.Width = new GridLength(w, GridUnitType.Pixel);
         }
         _announceSpawns = TrackingService.AnnounceSpawnsMaster;
+
+        _showProfileMarkers = TrackingService.MapShowSteamMarkers;
+        if (ChkProfileMarkers != null) ChkProfileMarkers.IsChecked = _showProfileMarkers;
+
+        _showDeathMarkers = TrackingService.MapShowDeathTags;
+        if (ChkDeathMarkers != null) ChkDeathMarkers.IsChecked = _showDeathMarkers;
+
+        _abbreviateNames = TrackingService.MapAbbreviateNames;
+        if (BtnAbbreviateNames != null) BtnAbbreviateNames.IsChecked = _abbreviateNames;
+
+        _playerMarkerScale = TrackingService.MapPlayerIconScale;
+        if (SliderPlayerIconSize != null) SliderPlayerIconSize.Value = _playerMarkerScale;
     }
 
     private void ShowInfoSnackbar(string title, string message, ui.ControlAppearance appearance)
