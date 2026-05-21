@@ -352,6 +352,13 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Map nested localized resources using Link to keep culture naming intact while avoiding manifest name collisions -->
+    <EmbeddedResource Update="Properties/lang/**/*.resx">
+      <Link>Properties\%(Filename)%(Extension)</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+
 
 	
 	<PropertyGroup>

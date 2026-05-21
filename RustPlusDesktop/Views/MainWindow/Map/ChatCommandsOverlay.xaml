@@ -1,29 +1,46 @@
 <UserControl x:Class="RustPlusDesk.Views.ChatCommandsOverlay"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:conv="clr-namespace:RustPlusDesk.Converters"
              xmlns:p="clr-namespace:RustPlusDesk.Properties"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="400"
              Background="{DynamicResource AppBg}"
              Foreground="{DynamicResource TextPrimary}">
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="Vis" />
+        <conv:BoolToVisibilityConverter x:Key="VisInv" Invert="True" />
+    </UserControl.Resources>
+
     <Border Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="12" Margin="10">
         <Grid Margin="15">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
+            <!-- Header -->
             <Grid Grid.Row="0" Margin="0,0,0,15">
                 <TextBlock Text="{x:Static p:Resources.ChatCommandsSettings}" FontSize="16" FontWeight="SemiBold" Foreground="White" />
                 <Button HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Click="BtnClose_Click" Foreground="#888" FontSize="16" Content="✕" />
             </Grid>
 
+            <!-- Content -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                <StackPanel>
+                <StackPanel DataContext="{Binding Selected}">
                     <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
                         <CheckBox Content="{x:Static p:Resources.EnableChatCommands}" IsChecked="{Binding ChatCommandsEnabled}" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0" />
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Text="{x:Static p:Resources.Prefix}" Foreground="#8090A0" VerticalAlignment="Center" Margin="0,0,5,0" />
-                            <ComboBox x:Name="CmbPrefix" SelectedValue="{Binding ChatCommandPrefix}" Width="60" Background="#2A2E35" Foreground="White" BorderThickness="0">
+                            <ComboBox SelectedValue="{Binding ChatCommandPrefix}" SelectedValuePath="Content" Width="60" Style="{StaticResource DarkComboBox}" HorizontalContentAlignment="Center">
                                 <ComboBoxItem Content="!" />
                                 <ComboBoxItem Content="." />
                                 <ComboBoxItem Content="," />
@@ -100,7 +117,7 @@
 
                             <!-- Delay -->
                             <TextBlock Grid.Row="9" Text="{x:Static p:Resources.CommandDelay}" VerticalAlignment="Center" Foreground="White" />
-                            <ComboBox Grid.Row="9" Grid.Column="2" SelectedValue="{Binding ChatCommandDelay}" Background="#2A2E35" Foreground="White" BorderThickness="0">
+                            <ComboBox Grid.Row="9" Grid.Column="2" SelectedValue="{Binding ChatCommandDelaySeconds}" SelectedValuePath="Content" Background="#2A2E35" Foreground="White" BorderThickness="0">
                                 <ComboBoxItem Content="1" />
                                 <ComboBoxItem Content="2" />
                                 <ComboBoxItem Content="3" />
@@ -109,8 +126,58 @@
                             </ComboBox>
                         </Grid>
                     </Border>
+
+                    <!-- Smart Switches Section -->
+                    <StackPanel Visibility="{Binding HasSmartSwitches, Converter={StaticResource Vis}}">
+                        <TextBlock Text="{x:Static p:Resources.SmartSwitches}" Foreground="#8090A0" Margin="0,10,0,5" FontWeight="SemiBold" />
+                        <ItemsControl ItemsSource="{Binding SwitchCommandMappings}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Label, StringFormat='{}{0}:'}" VerticalAlignment="Center" Foreground="White" />
+                                        <TextBlock Grid.Column="1" Text="{Binding DataContext.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=StackPanel}}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                                        <TextBox Grid.Column="2" Text="{Binding Command, UpdateSourceTrigger=PropertyChanged}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" Margin="0,0,10,0" />
+                                        <ComboBox Grid.Column="3" ItemsSource="{Binding DataContext.SmartSwitches, RelativeSource={RelativeSource AncestorType=ItemsControl}}" SelectedValue="{Binding EntityId}" SelectedValuePath="EntityId" DisplayMemberPath="PureName" Style="{StaticResource DarkComboBox}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+
+                    <!-- Upkeep TC Monitors Section -->
+                    <StackPanel Margin="0,15,0,0">
+                        <TextBlock Text="{x:Static p:Resources.UpkeepTcMonitors}" Foreground="#8090A0" Margin="0,0,0,5" FontWeight="SemiBold" />
+                        <ItemsControl ItemsSource="{Binding UpkeepCommandMappings}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Label, StringFormat='{}{0}:'}" VerticalAlignment="Center" Foreground="White" />
+                                        <TextBlock Grid.Column="1" Text="{Binding DataContext.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=StackPanel}}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
+                                        <TextBox Grid.Column="2" Text="{Binding Command, UpdateSourceTrigger=PropertyChanged}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" Margin="0,0,10,0" />
+                                        <ComboBox Grid.Column="3" ItemsSource="{Binding DataContext.TcMonitors, RelativeSource={RelativeSource AncestorType=ItemsControl}}" SelectedValue="{Binding EntityId}" SelectedValuePath="EntityId" DisplayMemberPath="PureName" Style="{StaticResource DarkComboBox}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Text="{x:Static p:Resources.NoTcMonitorsFound}" Foreground="#607080" FontSize="11" FontStyle="Italic" Visibility="{Binding UpkeepCommandMappings.Count, Converter={StaticResource VisInv}, FallbackValue=Visible}" />
+                    </StackPanel>
                 </StackPanel>
             </ScrollViewer>
+
+            <!-- Footer -->
+            <Button Grid.Row="2" Content="{x:Static p:Resources.SaveAndClose}" Margin="0,15,0,0" Style="{StaticResource PrimaryButton}" Click="BtnClose_Click" HorizontalAlignment="Right" Width="120" />
         </Grid>
     </Border>
 </UserControl>
