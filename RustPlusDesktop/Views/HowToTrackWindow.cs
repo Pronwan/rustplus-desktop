@@ -74,7 +74,7 @@ public static class HowToTrackWindow
         });
         titleBlock.Children.Add(new TextBlock
         {
-            Text = "Two tracking methods — native UDP or BattleMetrics shortcuts",
+            Text = "Native UDP tracking",
             FontSize = 12,
             Foreground = new SolidColorBrush(Color.FromRgb(140, 150, 170)),
         });
@@ -97,24 +97,10 @@ public static class HowToTrackWindow
 
         // ── Sections ─────────────────────────────────────────────────────────
 
-        // 1 — Overview
-        content.Children.Add(SectionHeader("Overview", "🎯"));
-        content.Children.Add(InfoBox(
-            "Rust+ Desk supports two complementary tracking methods. Choose based on the server you play on:",
-            isNote: false));
-
-        content.Children.Add(TwoColumnCards(
-            ("🔵  Native UDP Tracking",
-             "Full local tracking with session times, online/offline alerts, and Activity Reports.\n\nRequires a server that:\n• Has Facepunch's name randomizer disabled\n• Accepts A2S / Steam Query UDP requests\n\nYou own all collected data — nothing leaves your machine."),
-            ("🟡  BattleMetrics Shortcuts",
-             "One-click access to a player's BattleMetrics profile to check online status manually.\n\nWorks on any server indexed by BattleMetrics — including servers with anonymized player names.\n\nNo local session data is stored. Perfect for casual tracking on large official servers.")
-        ));
-
-        // 2 — Native tracking
-        content.Children.Add(Divider());
-        content.Children.Add(SectionHeader("Method 1 — Native UDP Tracking", "🔵"));
+        // 1 — Native tracking
+        content.Children.Add(SectionHeader("Native UDP Tracking", "🔵"));
         content.Children.Add(BodyText(
-            "Use this method on servers that show real Steam names in the player list. The app sends a direct A2S query to the game server — no third-party service involved."));
+            "Rust+ Desk uses a direct A2S (Steam Query) UDP request to the game server to track players locally. No third-party service involved. You own all collected data — nothing leaves your machine."));
 
         content.Children.Add(Step("1", "Click  Refresh  in the Online Players header to fetch the live player list."));
         content.Children.Add(ScreenshotCard("Tracking5.jpg",
@@ -129,40 +115,17 @@ public static class HowToTrackWindow
         content.Children.Add(InfoBox(
             "💬  Chat Alerts: Go to Chat Alerts settings to enable in-game notifications when tracked players or groups log in or out.", isNote: true));
 
-        // 3 — BM tracking
-        content.Children.Add(Divider());
-        content.Children.Add(SectionHeader("Method 2 — BattleMetrics Shortcuts", "🟡"));
-        content.Children.Add(BodyText(
-            "Use this method when the server shows randomized / anonymous names, or when you simply want a quick link to a player's public BattleMetrics profile without local data collection."));
-
-        content.Children.Add(Step("1", "Click  Search BM  in the Online Players header. A built-in browser opens over the map and searches for the connected server on BattleMetrics automatically."));
-        content.Children.Add(ScreenshotCard("Tracking2.jpg",
-            "The built-in BattleMetrics browser. The current server is pre-searched at the top."));
-
-        content.Children.Add(Step("2", "Click the matching server entry, then browse to the player you want to track and click their name."));
-        content.Children.Add(ScreenshotCard("Tracking3.jpg",
-            "Navigating to a player profile inside the BM browser. The URL changes to battlemetrics.com/players/…"));
-
-        content.Children.Add(Step("3",
-            "Once you are on a player profile page (URL starts with battlemetrics.com/players/…), a  TRACK PLAYER  button appears in the browser toolbar.\n\n" +
-            "Optionally select (highlight) the player's name on the page first — the app will use that as the display name."));
-        content.Children.Add(ScreenshotCard("Tracking4.jpg",
-            "The TRACK PLAYER toolbar button appears on any player profile page. The selected text is used as the display name."));
-
-        content.Children.Add(Step("4",
-            "The player is instantly added to the Tracked tab as a BattleMetrics Shortcut.\n\n" +
-            "• Tap  View on BM  to open their profile directly in your system browser\n" +
-            "• No local session data is collected — BM is the source of truth for these players"));
-
-        // 4 — Limitations
+        // 2 — Limitations
         content.Children.Add(Divider());
         content.Children.Add(SectionHeader("Limitations & ToS", "⚠️"));
-        content.Children.Add(InfoBox(
-            "Servers that block UDP queries AND do not expose data through BattleMetrics' RCON integration cannot be tracked with either method. For those servers, online-status checking must be done manually on the BattleMetrics website.",
-            isNote: false));
         content.Children.Add(BodyText(
-            "Both methods are fully compliant with BattleMetrics' Terms of Service. The BM browser integration only accesses publicly visible profile pages — no scraping, no private API calls, no automation beyond what a regular browser visit would do.\n\n" +
-            "Even when native tracking is not possible, BattleMetrics Shortcuts let you organize players in groups and check their status with a single click — without keeping a RAM-hungry browser open in the background."));
+            "Native UDP tracking is the ONLY method of tracking players that is officially intended and supported by Facepunch."));
+        content.Children.Add(InfoBox(
+            "If a server has the Facepunch Name Randomizer enabled, the player list will only show those randomized names instead of the real Steam names. You will only be able to track the randomized names in this case. BattleMetrics tracking is no longer supported in Rust+ Desk.",
+            isNote: false));
+
+        content.Children.Add(BodyText(
+            "Stay Tuned for more about this topic. There's something coming..."));
 
         // ── Footer ───────────────────────────────────────────────────────────
         var footerBorder = new Border

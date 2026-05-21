@@ -35,7 +35,47 @@ public partial class MainWindow
         public string Name
         {
             get => _name;
-            set { if (_name == value) return; _name = value; OnChanged(nameof(Name)); }
+            set 
+            { 
+                if (_name == value) return; 
+                _name = value; 
+                OnChanged(nameof(Name)); 
+                OnChanged(nameof(DisplayName)); 
+            }
+        }
+
+        private bool _abbreviate;
+        public bool Abbreviate
+        {
+            get => _abbreviate;
+            set
+            {
+                if (_abbreviate == value) return;
+                _abbreviate = value;
+                OnChanged(nameof(Abbreviate));
+                OnChanged(nameof(DisplayName));
+                OnChanged(nameof(DisplaySteamId));
+            }
+        }
+
+        public string DisplayName
+        {
+            get
+            {
+                if (!Abbreviate || string.IsNullOrWhiteSpace(Name)) return Name;
+                return Name.Length > 0 ? Name.Substring(0, 1) + "..." : Name;
+            }
+        }
+
+        public string DisplaySteamId
+        {
+            get
+            {
+                var s = SteamId.ToString();
+                if (!Abbreviate) return s;
+                if (s.Length <= 3) return s + "...";
+                return s.Substring(0, 3) + "...";
+            }
         }
 
         private bool _isLeader;
@@ -188,7 +228,7 @@ public partial class MainWindow
                 var vm = TeamMembers.FirstOrDefault(t => t.SteamId == sid);
                 if (vm == null)
                 {
-                    vm = new TeamMemberVM { SteamId = sid };
+                    vm = new TeamMemberVM { SteamId = sid, Abbreviate = _abbreviateNames };
                     TeamMembers.Add(vm);
                     _ = LoadAvatarAsync(vm);
                     if (vm.Avatar == null && CanTryAvatar(sid))
@@ -250,7 +290,8 @@ public partial class MainWindow
                 if (shouldAnnounce)
                 {
                     var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : "unknown";
-                    var txt = now.online ? $"{vm.Name} came online @ {where}" : $"{vm.Name} went offline";
+                    var dispName = GetDisplayPlayerName(vm.Name);
+                    var txt = now.online ? $"{dispName} came online @ {where}" : $"{dispName} went offline";
                     await SendTeamChatSafeAsync(txt);
                 }
             }
@@ -278,7 +319,8 @@ public partial class MainWindow
                     if (shouldAnnounce)
                     {
                         var where = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : "unknown";
-                        var txt = now.dead ? $"{vm.Name} died @ {where}" : $"{vm.Name} respawned @ {where}";
+                        var dispName = GetDisplayPlayerName(vm.Name);
+                        var txt = now.dead ? $"{dispName} died @ {where}" : $"{dispName} respawned @ {where}";
                         await SendTeamChatSafeAsync(txt);
                     }
                 }
@@ -377,7 +419,7 @@ public partial class MainWindow
     {
         if ((sender as FrameworkElement)?.DataContext is TeamMemberVM vm)
         {
-            StartFollowing(vm.SteamId, vm.Name);
+            StartFollowing(vm.SteamId, vm.DisplayName);
         }
     }
 

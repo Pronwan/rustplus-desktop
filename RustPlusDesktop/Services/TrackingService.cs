@@ -63,6 +63,10 @@ public class TrackingSettings
     public int LastPort { get; set; }
     public string LastServerName { get; set; } = string.Empty;
     public string? LastBMId { get; set; } = null;
+    public bool MapShowSteamMarkers { get; set; } = true;
+    public bool MapShowDeathTags { get; set; } = false;
+    public bool MapAbbreviateNames { get; set; } = false;
+    public double MapPlayerIconScale { get; set; } = 1.0;
     public bool BackgroundTrackingEnabled { get; set; } = true;
     public bool CloseToTrayEnabled { get; set; } = false;
     public bool StartMinimizedEnabled { get; set; } = false;
@@ -636,6 +640,32 @@ public static class TrackingService
     {
         get => _settings.AnnounceSmartAlerts;
         set { _settings.AnnounceSmartAlerts = value; SaveDB(); }
+    }
+    public static string LastServerName
+    {
+        get => _settings.LastServerName;
+        set { _settings.LastServerName = value; SaveDB(); }
+    }
+
+    public static bool MapShowSteamMarkers
+    {
+        get => _settings.MapShowSteamMarkers;
+        set { _settings.MapShowSteamMarkers = value; SaveDB(); }
+    }
+    public static bool MapShowDeathTags
+    {
+        get => _settings.MapShowDeathTags;
+        set { _settings.MapShowDeathTags = value; SaveDB(); }
+    }
+    public static bool MapAbbreviateNames
+    {
+        get => _settings.MapAbbreviateNames;
+        set { _settings.MapAbbreviateNames = value; SaveDB(); }
+    }
+    public static double MapPlayerIconScale
+    {
+        get => _settings.MapPlayerIconScale;
+        set { _settings.MapPlayerIconScale = value; SaveDB(); }
     }
     public static string LastSeenVersion
     {

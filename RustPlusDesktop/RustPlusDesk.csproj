@@ -19,12 +19,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>5.1.0</Version>
+		<Version>5.2.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>5.1.0</AssemblyVersion>
-		<FileVersion>5.1.0</FileVersion>
-		<InformationalVersion>5.1.0</InformationalVersion>
+		<AssemblyVersion>5.2.0</AssemblyVersion>
+		<FileVersion>5.2.0</FileVersion>
+		<InformationalVersion>5.2.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -154,6 +154,7 @@
 	  <None Remove="Assets\Screenshots\3_5A.png" />
 	  <None Remove="Assets\Screenshots\3_5B.png" />
 	  <None Remove="Assets\Screenshots\4.5.0.png" />
+	  <None Remove="Assets\Screenshots\5.2.png" />
 	  <None Remove="Assets\Screenshots\Cargo_docked_countdown.png" />
 	  <None Remove="Assets\Screenshots\Cargo_notification_settings.png" />
 	  <None Remove="Assets\Screenshots\Cargo_remaining-on-map.png" />
@@ -317,6 +318,7 @@
     <Resource Include="Assets\Screenshots\3_5A.png" />
     <Resource Include="Assets\Screenshots\3_5B.png" />
     <Resource Include="Assets\Screenshots\4.5.0.png" />
+    <Resource Include="Assets\Screenshots\5.2.png" />
     <Resource Include="Assets\Screenshots\Cargo_docked_countdown.png" />
     <Resource Include="Assets\Screenshots\Cargo_notification_settings.png" />
     <Resource Include="Assets\Screenshots\Cargo_remaining-on-map.png" />

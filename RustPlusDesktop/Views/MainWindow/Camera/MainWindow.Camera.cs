@@ -87,7 +87,18 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         if (_miniMap == null || WebViewHost == null || Overlay == null) return;
 
         double mapX = 0, mapY = 0;
-        if (!TryGetFollowingWorldPos(out mapX, out mapY)) return;
+        
+        // If the Main Map is currently smooth-following, the Mini Map should just look at the Main Map's camera center!
+        // This prevents double-panning and stutter.
+        if ((_vm.IsFollowing || _trackingEntityId.HasValue) && _currentCamX.HasValue && _currentCamY.HasValue)
+        {
+            mapX = _currentCamX.Value;
+            mapY = _currentCamY.Value;
+        }
+        else if (!TryGetFollowingWorldPos(out mapX, out mapY)) 
+        {
+            return;
+        }
 
         Point pHost;
         try
