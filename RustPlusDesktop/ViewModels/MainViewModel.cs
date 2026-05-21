@@ -73,7 +73,7 @@ public class MainViewModel : INotifyPropertyChanged
             IsDay = true;
             double remainingGameHours = 20 - hours;
             double remainingRealMins = remainingGameHours / _observedDaySpeed;
-            TimeUntilNextPhase = FormatDuration(remainingRealMins / 60.0) + " until night";
+            TimeUntilNextPhase = string.Format(Properties.Resources.UntilNight, FormatDuration(remainingRealMins / 60.0));
         }
         else
         {
@@ -83,7 +83,7 @@ public class MainViewModel : INotifyPropertyChanged
             else remainingGameHours = 8 - hours;
             
             double remainingRealMins = remainingGameHours / _observedNightSpeed;
-            TimeUntilNextPhase = FormatDuration(remainingRealMins / 60.0) + " until day";
+            TimeUntilNextPhase = string.Format(Properties.Resources.UntilDay, FormatDuration(remainingRealMins / 60.0));
         }
     }
     private int _iconsTotal;
@@ -193,7 +193,7 @@ public class MainViewModel : INotifyPropertyChanged
         set { _updateDownloadPercentage = value; OnPropertyChanged(); }
     }
 
-    private string _busyText = "Bitte warten …";
+    private string _busyText = Properties.Resources.PleaseWait;
     public string BusyText
     {
         get => _busyText;
@@ -211,10 +211,10 @@ public class MainViewModel : INotifyPropertyChanged
     {
         get
         {
-            if (TrackingService.FcmExpiresAt == null) return "No token registered";
+            if (TrackingService.FcmExpiresAt == null) return Properties.Resources.NoTokenRegistered;
             var remaining = TrackingService.FcmExpiresAt.Value - DateTime.Now;
-            if (remaining.TotalDays < 0) return "Token expired!";
-            return $"Expires in {(int)remaining.TotalDays} days";
+            if (remaining.TotalDays < 0) return Properties.Resources.TokenExpired;
+            return string.Format(Properties.Resources.ExpiresInDays, (int)remaining.TotalDays);
         }
     }
 

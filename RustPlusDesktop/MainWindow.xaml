@@ -6,12 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="clr-namespace:RustPlusDesk.Properties"
     xmlns:services="clr-namespace:RustPlusDesk.Services"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:views="clr-namespace:RustPlusDesk.Views"
     xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
-    Title="RUST+ DESKTOP"
+    Title="{x:Static p:Resources.AppTitle}"
     Width="1600"
     Height="814"
     MinWidth="1300"
@@ -846,7 +847,7 @@
                     <ContextMenu Style="{StaticResource DarkContextMenu}">
                         <MenuItem
                             Click="BtnViewTracked_Click"
-                            Header="View Profile"
+                            Header="{x:Static p:Resources.ViewProfile}"
                             Icon="{ui:SymbolIcon Symbol=Eye24}">
                             <MenuItem.Style>
                                 <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
@@ -861,17 +862,17 @@
 
                         <MenuItem
                             Click="BtnGroupTracked_Click"
-                            Header="Change Group"
+                            Header="{x:Static p:Resources.ChangeGroup}"
                             Icon="{ui:SymbolIcon Symbol=Folder24}" />
                         <MenuItem
                             Click="BtnRenameTracked_Click"
-                            Header="Rename"
+                            Header="{x:Static p:Resources.Rename}"
                             Icon="{ui:SymbolIcon Symbol=Edit24}" />
                         <Separator />
                         <MenuItem
                             Click="BtnRemoveTracked_Click"
                             Foreground="{DynamicResource SystemFillColorCriticalBrush}"
-                            Header="Remove Tracked"
+                            Header="{x:Static p:Resources.RemoveTracked}"
                             Icon="{ui:SymbolIcon Symbol=Delete24}" />
                     </ContextMenu>
                 </Grid.ContextMenu>
@@ -924,7 +925,7 @@
                         Padding="8,2"
                         Appearance="Transparent"
                         Click="BtnViewTracked_Click"
-                        Content="View"
+                        Content="{x:Static p:Resources.View}"
                         FontSize="11"
                         Tag="{Binding BMId}" />
 
@@ -935,7 +936,7 @@
                         Click="BtnMore_Click"
                         Icon="{ui:SymbolIcon Symbol=MoreHorizontal24}"
                         Opacity="0"
-                        ToolTip="More Options" />
+                        ToolTip="{x:Static p:Resources.MoreOptions}" />
                 </StackPanel>
             </Grid>
             <DataTemplate.Triggers>
@@ -969,7 +970,7 @@
             BorderThickness="0,0,0,1">
             <ui:TitleBar
                 x:Name="AppTitleBar"
-                Title="RUST+ DESKTOP"
+                Title="{x:Static p:Resources.AppTitle}"
                 Background="Transparent"
                 Foreground="White">
                 <ui:TitleBar.Icon>
@@ -1085,7 +1086,7 @@
                                             FontSize="12"
                                             FontWeight="SemiBold"
                                             Foreground="White"
-                                            Text="Steam Account" />
+                                            Text="{x:Static p:Resources.SteamAccount}" />
                                         <TextBlock
                                             x:Name="TxtAppVersion"
                                             Margin="8,0,0,0"
@@ -1100,7 +1101,7 @@
                                         FontSize="9"
                                         Foreground="White"
                                         Opacity="0.6"
-                                        Text="Not Logged In" />
+                                        Text="{x:Static p:Resources.NotLoggedIn}" />
                                 </StackPanel>
 
                                 <!--  Action Buttons  -->
@@ -1115,7 +1116,7 @@
                                             Click="BtnCheckUpdates_Click"
                                             MouseEnter="BtnCheckUpdates_MouseEnter"
                                             MouseLeave="BtnCheckUpdates_MouseLeave"
-                                            ToolTip="Check for Updates">
+                                            ToolTip="{x:Static p:Resources.CheckForUpdates}">
                                             <ui:Button.Icon>
                                                 <ui:SymbolIcon Symbol="ArrowDownload24">
                                                     <ui:SymbolIcon.Style>
@@ -1222,7 +1223,7 @@
                                                         <TextBlock
                                                             FontSize="11"
                                                             Foreground="#BBFFFFFF"
-                                                            Text="Downloading..." />
+                                                            Text="{x:Static p:Resources.Downloading}" />
                                                         <TextBlock
                                                             HorizontalAlignment="Right"
                                                             FontSize="11"
@@ -1258,7 +1259,7 @@
                                         Margin="4,0,0,0"
                                         Appearance="Transparent"
                                         Click="BtnDiscord_Click"
-                                        ToolTip="Join Discord">
+                                        ToolTip="{x:Static p:Resources.JoinDiscord}">
                                         <Image
                                             Width="16"
                                             Height="16"
@@ -1272,7 +1273,7 @@
                                         Appearance="Transparent"
                                         Click="BtnPatchNotes_Click"
                                         Icon="{ui:SymbolIcon Symbol=DocumentBulletList24}"
-                                        ToolTip="Patch Notes" />
+                                        ToolTip="{x:Static p:Resources.PatchNotes}" />
                                     <ui:Button
                                         x:Name="BtnSettings"
                                         Margin="2,0,0,0"
@@ -1280,7 +1281,7 @@
                                         Appearance="Transparent"
                                         Click="BtnSettings_Click"
                                         Icon="{ui:SymbolIcon Symbol=Settings24}"
-                                        ToolTip="Settings" />
+                                        ToolTip="{x:Static p:Resources.Settings}" />
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -1288,7 +1289,7 @@
                         <!--  FCM Token Expiry Badge  -->
                         <ui:InfoBar
                             x:Name="FcmExpiryInfoBar"
-                            Title="FCM Credentials"
+                            Title="{x:Static p:Resources.FcmCredentials}"
                             Margin="0,0,0,10"
                             IsClosable="False"
                             IsOpen="True"
@@ -1319,7 +1320,7 @@
                             FontSize="11"
                             FontWeight="SemiBold"
                             Foreground="{StaticResource TextBrushMuted}"
-                            Text="PAIRED SERVERS" />
+                            Text="{x:Static p:Resources.PairedServers}" />
 
                         <Grid x:Name="ServerListGrid">
                             <ListBox
@@ -1341,13 +1342,13 @@
                                         <MenuItem
                                             Click="Server_RelinkBM_Click"
                                             Foreground="Black"
-                                            Header="Relink Battlemetrics ID&#x2026;"
+                                            Header="{x:Static p:Resources.RelinkBattlemetricsId}"
                                             Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
                                         <Separator />
                                         <MenuItem
                                             Click="Server_Delete_Click"
                                             Foreground="Black"
-                                            Header="Delete server&#x2026;"
+                                            Header="{x:Static p:Resources.DeleteServerEllipsis}"
                                             Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
                                     </ContextMenu>
                                 </ListBox.Resources>
@@ -1366,7 +1367,7 @@
                                 FontStyle="Italic"
                                 Foreground="{StaticResource TextSubtle}"
                                 IsHitTestVisible="False"
-                                Text="No servers paired yet">
+                                Text="{x:Static p:Resources.NoServersPaired}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Visibility" Value="Collapsed" />
@@ -1447,23 +1448,23 @@
                                         Opacity="0.7">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
-                                                <Setter Property="Text" Value="DISCONNECTED" />
+                                                <Setter Property="Text" Value="{x:Static p:Resources.StatusDisconnected}" />
                                                 <Setter Property="Foreground" Value="#EF5350" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsBusy}" Value="True">
-                                                        <Setter Property="Text" Value="CONNECTING..." />
+                                                        <Setter Property="Text" Value="{x:Static p:Resources.StatusConnecting}" />
                                                         <Setter Property="Foreground" Value="#FFCA28" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding IsInitializing}" Value="True">
-                                                        <Setter Property="Text" Value="INITIALIZING..." />
+                                                        <Setter Property="Text" Value="{x:Static p:Resources.StatusInitializing}" />
                                                         <Setter Property="Foreground" Value="#FFCA28" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True">
-                                                        <Setter Property="Text" Value="DEVICES ACTIVE" />
+                                                        <Setter Property="Text" Value="{x:Static p:Resources.StatusDevicesActive}" />
                                                         <Setter Property="Foreground" Value="#66BB6A" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Selected.IsFullConnected}" Value="True">
-                                                        <Setter Property="Text" Value="FULLY CONNECTED" />
+                                                        <Setter Property="Text" Value="{x:Static p:Resources.StatusFullyConnected}" />
                                                         <Setter Property="Foreground" Value="#66BB6A" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
@@ -1483,7 +1484,7 @@
                                         Padding="10,4"
                                         Appearance="Primary"
                                         Click="BtnConnect_Click"
-                                        Content="Connect"
+                                        Content="{x:Static p:Resources.Connect}"
                                         Icon="{ui:SymbolIcon Symbol=PlugConnected20}"
                                         Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}" />
 
@@ -1494,9 +1495,9 @@
                                         Padding="10,4"
                                         Appearance="Primary"
                                         Click="BtnConnect_Click"
-                                        Content="Full Connect"
+                                        Content="{x:Static p:Resources.FullConnect}"
                                         Icon="{ui:SymbolIcon Symbol=Play20}"
-                                        ToolTip="Load Map &amp; Team">
+                                        ToolTip="{x:Static p:Resources.LoadMapTeam}">
                                         <ui:Button.Style>
                                             <Style BasedOn="{StaticResource {x:Type ui:Button}}" TargetType="ui:Button">
                                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -1520,7 +1521,7 @@
                                         Appearance="Caution"
                                         Click="BtnDisconnect_Click"
                                         Icon="{ui:SymbolIcon Symbol=PlugDisconnected20}"
-                                        ToolTip="Disconnect"
+                                        ToolTip="{x:Static p:Resources.Disconnect}"
                                         Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}}" />
 
                                     <!--  Info  -->
@@ -1530,7 +1531,7 @@
                                         Appearance="Secondary"
                                         Click="BtnShowServerInfo_Click"
                                         Icon="{ui:SymbolIcon Symbol=Info20}"
-                                        ToolTip="Server Details" />
+                                        ToolTip="{x:Static p:Resources.ServerDetails}" />
 
 
                                 </StackPanel>
@@ -1544,7 +1545,7 @@
                                 FontWeight="Bold"
                                 Foreground="White"
                                 Opacity="0.6"
-                                Text="PAIRING &amp; MAINTENANCE" />
+                                Text="{x:Static p:Resources.PairingMaintenance}" />
 
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -1559,17 +1560,17 @@
                                         Padding="8,2"
                                         Appearance="Secondary"
                                         Click="BtnListenPairing_Click"
-                                        Content="Listen"
+                                        Content="{x:Static p:Resources.Listen}"
                                         Icon="{ui:SymbolIcon Symbol=Bluetooth24}"
                                         IsEnabled="{Binding CanStartPairing}"
                                         Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibilityInv}}">
                                         <ui:Button.ContextMenu>
                                             <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                                <MenuItem Click="BtnListenWithEdge_Click" Header="Try Pairing with Edge" />
+                                                <MenuItem Click="BtnListenWithEdge_Click" Header="{x:Static p:Resources.TryPairingEdge}" />
                                                 <Separator />
-                                                <MenuItem Click="BtnResetPairing_Click" Header="Reset pairing (delete config)" />
-                                                <MenuItem Click="BtnResetAndListen_Click" Header="Reset + Listen (re-pair)" />
-                                                <MenuItem Click="BtnResetAndListenEdge_Click" Header="Reset + Listen with Edge" />
+                                                <MenuItem Click="BtnResetPairing_Click" Header="{x:Static p:Resources.ResetPairingConfig}" />
+                                                <MenuItem Click="BtnResetAndListen_Click" Header="{x:Static p:Resources.ResetListenPairing}" />
+                                                <MenuItem Click="BtnResetAndListenEdge_Click" Header="{x:Static p:Resources.ResetListenEdge}" />
                                             </ContextMenu>
                                         </ui:Button.ContextMenu>
                                     </ui:Button>
@@ -1579,7 +1580,7 @@
                                         Padding="8,2"
                                         Appearance="Caution"
                                         Click="BtnStopPairing_Click"
-                                        Content="Stop"
+                                        Content="{x:Static p:Resources.Stop}"
                                         Icon="{ui:SymbolIcon Symbol=Stop24}"
                                         Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}" />
                                 </StackPanel>
@@ -1593,7 +1594,7 @@
                                         FontSize="11"
                                         FontWeight="SemiBold"
                                         Foreground="{StaticResource TextSubtle}"
-                                        Text="Pairing: idle" />
+                                        Text="{x:Static p:Resources.PairingIdle}" />
                                     <ProgressBar
                                         Height="3"
                                         Margin="0,4,0,0"
@@ -1610,7 +1611,7 @@
                                     FontStyle="Italic"
                                     Foreground="White"
                                     Opacity="0.5"
-                                    Text="Right-click for options" />
+                                    Text="{x:Static p:Resources.RightClickOptions}" />
                             </Grid>
                         </StackPanel>
 
@@ -1662,7 +1663,7 @@
                                     VerticalAlignment="Center"
                                     FontSize="11"
                                     FontWeight="SemiBold"
-                                    Text="Tracking Active" />
+                                    Text="{x:Static p:Resources.TrackingActive}" />
                             </StackPanel>
                             <TextBlock
                                 x:Name="TxtLastPull"
@@ -1671,7 +1672,7 @@
                                 VerticalAlignment="Center"
                                 FontSize="10"
                                 Foreground="{DynamicResource TextSubtle}"
-                                Text="Last pull: --:--" />
+                                Text="{x:Static p:Resources.LastPull}" />
                         </Grid>
 
                         <Border
@@ -1696,10 +1697,10 @@
                             Background="#991A1A00"
                             BorderBrush="#80FFD166"
                             Click="BtnDonate_Click"
-                            Content="Donate"
+                            Content="{x:Static p:Resources.Donate}"
                             Foreground="#FFD166"
                             Icon="{ui:SymbolIcon Symbol=Heart24}"
-                            ToolTip="Support the developer" />
+                            ToolTip="{x:Static p:Resources.SupportDeveloper}" />
 
                         <!--  Reset Connection  -->
                         <Border Grid.Column="1" VerticalAlignment="Center">
@@ -1707,98 +1708,101 @@
                                 Margin="0,0,8,0"
                                 Appearance="Secondary"
                                 Click="BtnHardReset_Click"
-                                Content="Reset"
+                                Content="{x:Static p:Resources.Reset}"
                                 Icon="{ui:SymbolIcon Symbol=ArrowReset24}"
-                                ToolTip="Reset WebSocket connection" />
+                                ToolTip="{x:Static p:Resources.ResetWebSocket}" />
                         </Border>
 
-                        <!--  Serverdaten (rechtsbÃ¼ndig, gleiche Zeile)  -->
+                        <!--  Serverdaten (rechtsbündig, gleiche Zeile)  -->
                         <StackPanel
                             Grid.Column="2"
                             HorizontalAlignment="Right"
                             Orientation="Horizontal">
-                            <TextBlock Text="Players:" />
+                            <TextBlock Text="{x:Static p:Resources.Players}" />
                             <TextBlock
                                 Margin="4,0,0,0"
                                 FontWeight="SemiBold"
                                 Text="{Binding ServerPlayers}" />
 
-                            <Button
-                                x:Name="BtnShowOnline"
-                                Width="18"
-                                Height="18"
-                                Margin="4,0,0,0"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Click="BtnShowOnline_Click"
-                                Content="&#x25BC;"
-                                Foreground="White"
-                                ToolTip="Show Online Players Tab" />
+                    <Button
+                        x:Name="BtnShowOnline"
+                        Width="18"
+                        Height="18"
+                        Margin="4,0,0,0"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Click="BtnShowOnline_Click"
+                        Content="&#x25BC;"
+                        Foreground="White"
+                        ToolTip="{x:Static p:Resources.ShowOnlinePlayers}" />
 
-                            <TextBlock Margin="6,0,0,0" Text="  |  Queue:" />
-                            <TextBlock
-                                Margin="4,0,0,0"
-                                FontWeight="SemiBold"
-                                Text="{Binding ServerQueue}" />
-                        </StackPanel>
+                    <TextBlock Margin="6,0,0,0" VerticalAlignment="Center">
+                        <Run Text=" | " />
+                        <Run Text="{x:Static p:Resources.Queue}" />
+                    </TextBlock>
+                    <TextBlock
+                        Margin="4,0,0,0"
+                        FontWeight="SemiBold"
+                        Text="{Binding ServerQueue}" />
+                </StackPanel>
                     </Grid>
 
-                    <!--  CENTER: TabControl fÃ¼llt den Rest, mit MindesthÃ¶he  -->
-                    <TabControl
-                        x:Name="MainTabs"
-                        VerticalAlignment="Stretch"
-                        Style="{StaticResource PrettyTabControl}">
-                        <!--  ===== DEVICES =====  -->
-                        <TabItem Header="🔌 Devices" Style="{StaticResource PrettyTabItem}">
-                            <DockPanel LastChildFill="True">
-                                <!--  Footer  -->
-                                <StackPanel
-                                    Margin="0,10,0,0"
-                                    HorizontalAlignment="Right"
-                                    DockPanel.Dock="Bottom"
-                                    Orientation="Horizontal">
-                                    <ui:Button
-                                        x:Name="BtnHotkeys"
-                                        Width="90"
-                                        Margin="0,0,10,0"
-                                        Appearance="Secondary"
-                                        Click="BtnHotkeys_Click"
-                                        Content="Hotkeys" />
-                                    <ui:Button
-                                        x:Name="BtnDevicesImport"
-                                        Width="36"
-                                        Height="36"
-                                        Margin="0,0,8,0"
-                                        Padding="4"
-                                        Appearance="Secondary"
-                                        Click="BtnDevicesImport_Click"
-                                        Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"
-                                        ToolTip="Import devices from teammates" />
-                                    <ui:Button
-                                        x:Name="BtnDevicesExport"
-                                        Width="36"
-                                        Height="36"
-                                        Margin="0,0,16,0"
-                                        Padding="4"
-                                        Appearance="Secondary"
-                                        Click="BtnDevicesExport_Click"
-                                        Icon="{ui:SymbolIcon Symbol=ArrowUpload24}"
-                                        ToolTip="Export devices to teammates" />
-                                    <ui:Button
-                                        Width="80"
-                                        Margin="10,0,0,0"
-                                        Appearance="Secondary"
-                                        Click="BtnDeviceRefresh_Click"
-                                        Content="Refresh" />
-                                    <ui:Button
-                                        Width="80"
-                                        Margin="10,0,0,0"
-                                        Appearance="Secondary"
-                                        Click="BtnDeleteDevice_Click"
-                                        Content="Delete"
-                                        IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem.IsMissing, Converter={StaticResource NotNull}}"
-                                        ToolTip="You can only delete missing devices" />
-                                </StackPanel>
+                    <!--  CENTER: TabControl füllt den Rest, mit Mindesthöhe  -->
+            <TabControl
+                x:Name="MainTabs"
+                VerticalAlignment="Stretch"
+                Style="{StaticResource PrettyTabControl}">
+                <!--  ===== DEVICES =====  -->
+                <TabItem Header="{x:Static p:Resources.DevicesTab}" Style="{StaticResource PrettyTabItem}">
+                    <DockPanel LastChildFill="True">
+                        <!--  Footer  -->
+                        <StackPanel
+                            Margin="0,10,0,0"
+                            HorizontalAlignment="Right"
+                            DockPanel.Dock="Bottom"
+                            Orientation="Horizontal">
+                            <ui:Button
+                                x:Name="BtnHotkeys"
+                                Width="90"
+                                Margin="0,0,10,0"
+                                Appearance="Secondary"
+                                Click="BtnHotkeys_Click"
+                                Content="{x:Static p:Resources.Hotkeys}" />
+                            <ui:Button
+                                x:Name="BtnDevicesImport"
+                                Width="36"
+                                Height="36"
+                                Margin="0,0,8,0"
+                                Padding="4"
+                                Appearance="Secondary"
+                                Click="BtnDevicesImport_Click"
+                                Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"
+                                ToolTip="{x:Static p:Resources.ImportDevices}" />
+                            <ui:Button
+                                x:Name="BtnDevicesExport"
+                                Width="36"
+                                Height="36"
+                                Margin="0,0,16,0"
+                                Padding="4"
+                                Appearance="Secondary"
+                                Click="BtnDevicesExport_Click"
+                                Icon="{ui:SymbolIcon Symbol=ArrowUpload24}"
+                                ToolTip="{x:Static p:Resources.ExportDevices}" />
+                            <ui:Button
+                                Width="80"
+                                Margin="10,0,0,0"
+                                Appearance="Secondary"
+                                Click="BtnDeviceRefresh_Click"
+                                Content="{x:Static p:Resources.Refresh}" />
+                            <ui:Button
+                                Width="80"
+                                Margin="10,0,0,0"
+                                Appearance="Secondary"
+                                Click="BtnDeleteDevice_Click"
+                                Content="{x:Static p:Resources.Delete}"
+                                IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem.IsMissing, Converter={StaticResource NotNull}}"
+                                ToolTip="{x:Static p:Resources.DeleteMissingOnly}" />
+                        </StackPanel>
 
                                 <Grid>
                                     <TreeView
@@ -1931,8 +1935,7 @@
                                                                         FontWeight="SemiBold"
                                                                         Foreground="#EAECEE"
                                                                         Text="{Binding PureName, TargetNullValue=Device}"
-                                                                        ToolTip="Right click to rename">
-                                                                        <TextBlock.Style>
+                                                                        ToolTip="{x:Static p:Resources.RightClickRename}">                                                                        <TextBlock.Style>
                                                                             <Style TargetType="TextBlock">
                                                                                 <Style.Triggers>
                                                                                     <DataTrigger Binding="{Binding IsMissing}" Value="True">
@@ -1944,7 +1947,7 @@
                                                                         </TextBlock.Style>
                                                                         <TextBlock.ContextMenu>
                                                                             <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                                                                <MenuItem Click="Device_Rename_Click" Header="Rename device" />
+                                                                                <MenuItem Click="Device_Rename_Click" Header="{x:Static p:Resources.RenameDevice}" />
                                                                             </ContextMenu>
                                                                         </TextBlock.ContextMenu>
                                                                     </TextBlock>
@@ -1997,60 +2000,60 @@
                                                                         Foreground="#EAF2FF">
                                                                         <TextBlock.Style>
                                                                             <Style TargetType="TextBlock">
-                                                                                <Setter Property="Text" Value="ONLINE" />
+                                                                                <Setter Property="Text" Value="{x:Static p:Resources.Online}" />
                                                                                 <Style.Triggers>
                                                                                     <!--  MISSING  -->
                                                                                     <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                                        <Setter Property="Text" Value="OFFLINE" />
+                                                                                        <Setter Property="Text" Value="{x:Static p:Resources.Offline}" />
                                                                                     </DataTrigger>
 
                                                                                     <!--  Smart Switch  -->
                                                                                     <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
-                                                                                        <Setter Property="Text" Value="OFF" />
+                                                                                        <Setter Property="Text" Value="{x:Static p:Resources.Off}" />
                                                                                     </DataTrigger>
                                                                                     <DataTrigger Binding="{Binding Kind}" Value="Smart Switch">
-                                                                                        <Setter Property="Text" Value="OFF" />
+                                                                                        <Setter Property="Text" Value="{x:Static p:Resources.Off}" />
                                                                                     </DataTrigger>
                                                                                     <MultiDataTrigger>
                                                                                         <MultiDataTrigger.Conditions>
                                                                                             <Condition Binding="{Binding Kind}" Value="SmartSwitch" />
                                                                                             <Condition Binding="{Binding IsOn}" Value="True" />
                                                                                         </MultiDataTrigger.Conditions>
-                                                                                        <Setter Property="Text" Value="ON" />
+                                                                                        <Setter Property="Text" Value="{x:Static p:Resources.On}" />
                                                                                     </MultiDataTrigger>
                                                                                     <MultiDataTrigger>
                                                                                         <MultiDataTrigger.Conditions>
                                                                                             <Condition Binding="{Binding Kind}" Value="Smart Switch" />
                                                                                             <Condition Binding="{Binding IsOn}" Value="True" />
                                                                                         </MultiDataTrigger.Conditions>
-                                                                                        <Setter Property="Text" Value="ON" />
+                                                                                        <Setter Property="Text" Value="{x:Static p:Resources.On}" />
                                                                                     </MultiDataTrigger>
 
                                                                                     <!--  Smart Alarm  -->
                                                                                     <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
-                                                                                        <Setter Property="Text" Value="INACTIVE" />
+                                                                                        <Setter Property="Text" Value="{x:Static p:Resources.Inactive}" />
                                                                                     </DataTrigger>
                                                                                     <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
-                                                                                        <Setter Property="Text" Value="INACTIVE" />
+                                                                                        <Setter Property="Text" Value="{x:Static p:Resources.Inactive}" />
                                                                                     </DataTrigger>
                                                                                     <MultiDataTrigger>
                                                                                         <MultiDataTrigger.Conditions>
                                                                                             <Condition Binding="{Binding Kind}" Value="SmartAlarm" />
                                                                                             <Condition Binding="{Binding IsOn}" Value="True" />
                                                                                         </MultiDataTrigger.Conditions>
-                                                                                        <Setter Property="Text" Value="ACTIVE" />
+                                                                                        <Setter Property="Text" Value="{x:Static p:Resources.Active}" />
                                                                                     </MultiDataTrigger>
                                                                                     <MultiDataTrigger>
                                                                                         <MultiDataTrigger.Conditions>
                                                                                             <Condition Binding="{Binding Kind}" Value="Smart Alarm" />
                                                                                             <Condition Binding="{Binding IsOn}" Value="True" />
                                                                                         </MultiDataTrigger.Conditions>
-                                                                                        <Setter Property="Text" Value="ACTIVE" />
+                                                                                        <Setter Property="Text" Value="{x:Static p:Resources.Active}" />
                                                                                     </MultiDataTrigger>
 
                                                                                     <!--  Group  -->
                                                                                     <DataTrigger Binding="{Binding IsGroup}" Value="True">
-                                                                                        <Setter Property="Text" Value="GROUP" />
+                                                                                        <Setter Property="Text" Value="{x:Static p:Resources.Group}" />
                                                                                     </DataTrigger>
                                                                                 </Style.Triggers>
                                                                             </Style>
@@ -2121,7 +2124,7 @@
                                                                 </ToggleButton.Style>
                                                             </ToggleButton>
 
-                                                            <!--  Spalte 3: Toggle NUR fÃ¼r Gruppen  -->
+                                                            <!--  Spalte 3: Toggle NUR für Gruppen  -->
                                                             <Button
                                                                 Grid.Column="2"
                                                                 Width="60"
@@ -2129,7 +2132,7 @@
                                                                 Margin="8,0,0,0"
                                                                 VerticalAlignment="Center"
                                                                 Click="GroupToggle_Click"
-                                                                Content="TOGGLE"
+                                                                Content="{x:Static p:Resources.Toggle}"
                                                                 Tag="{Binding}">
                                                                 <Button.Style>
                                                                     <Style TargetType="Button">
@@ -2167,7 +2170,7 @@
                                                                 </Button.Style>
                                                             </Button>
 
-                                                            <!--  Spalte 3: Toggles NUR fÃ¼r SmartAlarm  -->
+                                                            <!--  Spalte 3: Toggles NUR für SmartAlarm  -->
                                                             <StackPanel
                                                                 Grid.Column="2"
                                                                 Margin="8,0,0,0"
@@ -2193,7 +2196,7 @@
 
                                                                 <CheckBox
                                                                     Margin="0,0,8,0"
-                                                                    ToolTip="Popup-Window"
+                                                                    ToolTip="{x:Static p:Resources.PopupWindow}"
                                                                     IsChecked="{Binding PopupEnabled, Mode=TwoWay}"
                                                                     Style="{StaticResource DotCheckBox}">
                                                                     <Image Source="pack://application:,,,/Assets/icons/Popup.png" Width="16" Height="16" Stretch="Uniform"/>
@@ -2201,14 +2204,14 @@
 
                                                                 <CheckBox
                                                                     Margin="0,0,8,0"
-                                                                    ToolTip="In-App Alert"
+                                                                    ToolTip="{x:Static p:Resources.InAppAlert}"
                                                                     IsChecked="{Binding OverlayEnabled, Mode=TwoWay}"
                                                                     Style="{StaticResource DotCheckBox}">
                                                                     <Image Source="pack://application:,,,/Assets/icons/PiP.png" Width="16" Height="16" Stretch="Uniform"/>
                                                                 </CheckBox>
 
                                                                 <CheckBox
-                                                                    ToolTip="Audio Alert"
+                                                                    ToolTip="{x:Static p:Resources.AudioAlert}"
                                                                     IsChecked="{Binding AudioEnabled, Mode=TwoWay}"
                                                                     Style="{StaticResource DotCheckBox}">
                                                                     <ui:SymbolIcon Symbol="Speaker224" FontSize="16"/>
@@ -2216,17 +2219,16 @@
                                                                         <ContextMenu Style="{StaticResource DarkContextMenu}">
                                                                             <MenuItem
                                                                                 Click="OnSelectAlarmAudioFileClick"
-                                                                                Header="Custom Audio File..."
+                                                                                Header="{x:Static p:Resources.CustomAudioFile}"
                                                                                 Tag="{Binding}" />
                                                                             <MenuItem
                                                                                 Click="OnResetAlarmAudioFileClick"
-                                                                                Header="Reset to Default"
+                                                                                Header="{x:Static p:Resources.ResetToDefault}"
                                                                                 Tag="{Binding}" />
                                                                         </ContextMenu>
                                                                     </CheckBox.ContextMenu>
                                                                 </CheckBox>
                                                             </StackPanel>
-
                                                             <!--  Spalte 3: Pill NUR bei StorageMonitor  -->
                                                             <Border
                                                                 Grid.Column="2"
@@ -2403,10 +2405,10 @@
                       CornerRadius="8" Padding="6">
                                                     <StackPanel>
                                                         <TextBlock Foreground="#99FFFFFF" FontStyle="Italic" Margin="0,0,0,6">
-                    <Run Text="Snapshot: "/>
+                    <Run Text="{x:Static p:Resources.Snapshot}"/>
                     <Run Text="{Binding Storage.ItemsCount, Mode=OneWay, FallbackValue=0}" />
-                    <Run Text=" Items, Upkeep="/>
-                    <Run Text="{Binding UpkeepSeconds, Mode=OneWay, TargetNullValue=&#x2014;}"/>
+                    <Run Text="{x:Static p:Resources.ItemsUpkeep}"/>
+                    <Run Text="{Binding UpkeepSeconds, Mode=OneWay, TargetNullValue=—}"/>
                                                         </TextBlock>
 
                                                         <ItemsControl ItemsSource="{Binding Storage.Items, Mode=OneWay}">
@@ -2474,13 +2476,13 @@
                                                     FontSize="16"
                                                     FontWeight="SemiBold"
                                                     Foreground="#EAECEE"
-                                                    Text="No devices found" />
+                                                    Text="{x:Static p:Resources.NoDevicesFound}" />
                                                 <TextBlock
                                                     MaxWidth="200"
                                                     HorizontalAlignment="Center"
                                                     FontSize="12"
                                                     Foreground="#7F8A96"
-                                                    Text="Pair a smart device, switch or alarm to see it here"
+                                                    Text="{x:Static p:Resources.PairDeviceToSee}"
                                                     TextAlignment="Center"
                                                     TextWrapping="Wrap" />
                                             </StackPanel>
@@ -2495,7 +2497,7 @@
                         <!--  ===== TEAM =====  -->
                         <TabItem
                             x:Name="TabTeam"
-                            Header="👥 Team"
+                            Header="{x:Static p:Resources.TeamTab}"
                             Style="{StaticResource PrettyTabItem}">
                             <Grid>
                                 <Grid Background="#181A1E">
@@ -2527,15 +2529,15 @@
                                                 <WrapPanel />
                                             </ItemsPanelTemplate>
                                         </ListBox.ItemsPanel>
-                                        <!--  KontextmenÃ¼  -->
+                                        <!--  Kontextmenü  -->
                                         <ListBox.Resources>
                                             <ContextMenu x:Key="TeamContextMenu" Style="{StaticResource DarkContextMenu}">
-                                                <MenuItem Click="Team_Center_Click" Header="Center on map" />
-                                                <MenuItem Click="Team_Follow_Click" Header="Follow on Map" />
-                                                <MenuItem Click="Team_OpenProfile_Click" Header="Open Steam profile" />
+                                                <MenuItem Click="Team_Center_Click" Header="{x:Static p:Resources.CenterOnMap}" />
+                                                <MenuItem Click="Team_Follow_Click" Header="{x:Static p:Resources.FollowOnMap}" />
+                                                <MenuItem Click="Team_OpenProfile_Click" Header="{x:Static p:Resources.OpenSteamProfile}" />
                                                 <Separator />
-                                                <MenuItem Click="Team_Promote_Click" Header="Promote to Leader" />
-                                                <MenuItem Click="Team_Kick_Click" Header="Kick from Team" />
+                                                <MenuItem Click="Team_Promote_Click" Header="{x:Static p:Resources.PromoteToLeader}" />
+                                                <MenuItem Click="Team_Kick_Click" Header="{x:Static p:Resources.KickFromTeam}" />
                                             </ContextMenu>
                                         </ListBox.Resources>
 
@@ -2566,7 +2568,7 @@
                                                                 Source="{Binding Avatar}"
                                                                 Stretch="UniformToFill" />
 
-                                                            <!--  Online (grÃ¼n)  -->
+                                                            <!--  Online (grün)  -->
                                                             <Ellipse
                                                                 Width="12"
                                                                 Height="12"
@@ -2600,7 +2602,7 @@
 
                                                         <!--  Textseite  -->
                                                         <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                                                            <!--  Name: Standard weiÃŸ, offline leicht ausgrauen, tot = rot  -->
+                                                            <!--  Name: Standard weiß, offline leicht ausgrauen, tot = rot  -->
                                                             <TextBlock FontSize="14" FontWeight="SemiBold">
                                                                 <TextBlock.Text>
                                                                     <Binding Path="Name" />
@@ -2675,7 +2677,7 @@
                                                             StrokeThickness="1.5"
                                                             Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
                                                     </Grid>
-                                                    <TextBlock VerticalAlignment="Center" Text="Profile markers" />
+                                                    <TextBlock VerticalAlignment="Center" Text="{x:Static p:Resources.ProfileMarkers}" />
                                                 </StackPanel>
                                             </CheckBox>
 
@@ -2720,7 +2722,7 @@
                                                             StrokeThickness="1.5"
                                                             Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
                                                     </Grid>
-                                                    <TextBlock VerticalAlignment="Center" Text="Death markers" />
+                                                    <TextBlock VerticalAlignment="Center" Text="{x:Static p:Resources.DeathMarkers}" />
                                                 </StackPanel>
                                             </CheckBox>
                                         </StackPanel>
@@ -2730,7 +2732,7 @@
                         </TabItem>
 
                         <!--  ===== CAMERAS =====  -->
-                        <TabItem Header="🎥 Cameras" Style="{StaticResource PrettyTabItem}">
+                        <TabItem Header="{x:Static p:Resources.CamerasTab}" Style="{StaticResource PrettyTabItem}">
                             <DockPanel LastChildFill="True">
                                 <!--  Add Camera unten rechts  -->
                                 <StackPanel
@@ -2740,7 +2742,7 @@
                                     Orientation="Horizontal">
                                     <Button x:Name="BtnAddCam" Style="{StaticResource PrimaryButton}">
                                         <StackPanel Margin="6,1" Orientation="Horizontal">
-                                            <TextBlock Text="📷 Add Camera" />
+                                            <TextBlock Text="{x:Static p:Resources.AddCamera}" />
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
@@ -2774,13 +2776,13 @@
                                                 HorizontalAlignment="Center"
                                                 FontStyle="Italic"
                                                 Foreground="{StaticResource TextSubtle}"
-                                                Text="No cameras found" />
+                                                Text="{x:Static p:Resources.NoCamerasFound}" />
                                             <TextBlock
                                                 HorizontalAlignment="Center"
                                                 FontSize="10"
                                                 Foreground="{StaticResource TextSubtle}"
                                                 Opacity="0.6"
-                                                Text="Pair a camera to see its preview here" />
+                                                Text="{x:Static p:Resources.PairCameraToSee}" />
                                         </StackPanel>
                                     </Grid>
                                 </ScrollViewer>
@@ -2788,7 +2790,7 @@
                         </TabItem>
 
                         <!--  ===== PLAYERS =====  -->
-                        <TabItem Header="🌍 Players" Style="{StaticResource PrettyTabItem}">
+                        <TabItem Header="{x:Static p:Resources.PlayersTab}" Style="{StaticResource PrettyTabItem}">
                             <TabControl
                                 Margin="0,10,0,0"
                                 HorizontalAlignment="Stretch"
@@ -2820,9 +2822,9 @@
                                                 VerticalAlignment="Center"
                                                 Appearance="Secondary"
                                                 Click="BtnHowToTrack_Click"
-                                                ToolTip="Learn how player tracking works"
+                                                ToolTip="{x:Static p:Resources.LearnHowTrackingWorks}"
                                                 Icon="{ui:SymbolIcon Symbol=QuestionCircle24}"
-                                                Content="How to Track" />
+                                                Content="{x:Static p:Resources.HowToTrack}" />
 
                                             <ContentPresenter
                                                 Grid.Row="1" Grid.ColumnSpan="2"
@@ -2835,7 +2837,7 @@
                                 </TabControl.Template>
 
                                 <!--  Online Players Tab  -->
-                                <TabItem Header="Online" Style="{StaticResource PrettyTabItem}">
+                                <TabItem Header="{x:Static p:Resources.OnlineTab}" Style="{StaticResource PrettyTabItem}">
                                     <Border
                                         Padding="12"
                                         Background="{DynamicResource ControlFillColorDefaultBrush}"
@@ -2863,7 +2865,7 @@
                                                     FontSize="16"
                                                     FontWeight="Bold"
                                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                    Text="Online Players" />
+                                                    Text="{x:Static p:Resources.OnlinePlayers}" />
 
 
 
@@ -2874,15 +2876,15 @@
                                                     Padding="8,4"
                                                     Appearance="Primary"
                                                     Click="BtnSearchBM_Click"
-                                                    Content="Search BM"
-                                                    ToolTip="Search current server on BattleMetrics" />
+                                                    Content="{x:Static p:Resources.SearchBM}"
+                                                    ToolTip="{x:Static p:Resources.SearchServerBM}" />
 
                                                 <ui:Button
                                                     Grid.Column="2"
                                                     Padding="8,4"
                                                     Appearance="Secondary"
                                                     Click="BtnShowOnline_Click"
-                                                    Content="Refresh"
+                                                    Content="{x:Static p:Resources.Refresh}"
                                                     Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" />
 
                                                 <ui:Button
@@ -2892,8 +2894,8 @@
                                                     Padding="8,4"
                                                     Appearance="Secondary"
                                                     Click="BtnPopoutPlayers_Click"
-                                                    ToolTip="Open Players in separate window"
-                                                    Content="Popout" />
+                                                    ToolTip="{x:Static p:Resources.OpenPlayersSeparateWindow}"
+                                                    Content="{x:Static p:Resources.Popout}" />
                                             </Grid>
 
                                             <DockPanel x:Name="PnlManualTrack" Grid.Row="1" Margin="0,0,0,8">
@@ -2903,14 +2905,14 @@
                                                     Padding="8,4"
                                                     Appearance="Primary"
                                                     Click="BtnAddManual_Click"
-                                                    Content="Track"
+                                                    Content="{x:Static p:Resources.Track}"
                                                     DockPanel.Dock="Right" />
                                                 <ui:TextBox
                                                     x:Name="TxtManualBMId"
                                                     GotFocus="TxtManualBMId_GotFocus"
                                                     LostFocus="TxtManualBMId_LostFocus"
-                                                    PlaceholderText="Manual Track Name or Steam ID..."
-                                                    Text="Manual Track Name or Steam ID..." />
+                                                    PlaceholderText="{x:Static p:Resources.ManualTrackPlaceholder}"
+                                                    Text="{x:Static p:Resources.ManualTrackPlaceholder}" />
                                             </DockPanel>
 
                                             <ui:TextBox
@@ -2919,7 +2921,7 @@
                                                 Margin="0,0,0,8"
                                                 GotFocus="TxtOnlineFilter_GotFocus"
                                                 LostFocus="TxtOnlineFilter_LostFocus"
-                                                PlaceholderText="Filter players..."
+                                                PlaceholderText="{x:Static p:Resources.FilterPlayersPlaceholder}"
                                                 TextChanged="TxtOnlineFilter_TextChanged"
                                                 Visibility="Collapsed" />
 
@@ -2932,7 +2934,7 @@
                                                 Background="Transparent">
                                                 <Grid.ContextMenu>
                                                     <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                                        <MenuItem Click="Server_RelinkBM_Click" Header="Relink Battlemetrics ID&#x2026;" />
+                                                        <MenuItem Click="Server_RelinkBM_Click" Header="{x:Static p:Resources.RelinkBattlemetricsId}" />
                                                     </ContextMenu>
                                                 </Grid.ContextMenu>
                                                 <StackPanel>
@@ -2947,7 +2949,7 @@
                                                         HorizontalAlignment="Center"
                                                         FontSize="12"
                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                        Text="Loading players..."
+                                                        Text="{x:Static p:Resources.LoadingPlayers}"
                                                         TextAlignment="Center"
                                                         TextWrapping="Wrap" />
                                                 </StackPanel>
@@ -3001,7 +3003,7 @@
                                                                 Padding="6,2"
                                                                 Appearance="Secondary"
                                                                 Click="BtnTrackPlayer_Click"
-                                                                Content="Track"
+                                                                Content="{x:Static p:Resources.Track}"
                                                                 FontSize="11"
                                                                 Tag="{Binding}" />
                                                         </Grid>
@@ -3026,7 +3028,7 @@
                                 </TabItem>
 
                                 <!--  Tracked Players Tab  -->
-                                <TabItem Header="Tracked" Style="{StaticResource PrettyTabItem}">
+                                <TabItem Header="{x:Static p:Resources.TrackedTab}" Style="{StaticResource PrettyTabItem}">
                                     <Border
                                         Padding="12"
                                         Background="{DynamicResource ControlFillColorDefaultBrush}"
@@ -3052,13 +3054,13 @@
                                                     FontSize="16"
                                                     FontWeight="Bold"
                                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                    Text="Tracked Players" />
+                                                    Text="{x:Static p:Resources.TrackedPlayers}" />
                                                 <ui:Button
                                                     Grid.Column="1"
                                                     Padding="8,4"
                                                     Appearance="Secondary"
                                                     Click="BtnManageGroups_Click"
-                                                    Content="Manage Groups"
+                                                    Content="{x:Static p:Resources.ManageGroups}"
                                                     Icon="Group24" />
                                             </Grid>
 
@@ -3068,8 +3070,8 @@
                                                 Margin="0,0,0,8"
                                                 GotFocus="TxtTrackedFilter_GotFocus"
                                                 LostFocus="TxtTrackedFilter_LostFocus"
-                                                PlaceholderText="Filter players..."
-                                                Text="Filter players..."
+                                                PlaceholderText="{x:Static p:Resources.FilterPlayersPlaceholder}"
+                                                Text="{x:Static p:Resources.FilterPlayersPlaceholder}"
                                                 TextChanged="TxtTrackedFilter_TextChanged" />
 
                                             <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
@@ -3083,7 +3085,7 @@
                                                 HorizontalAlignment="Stretch"
                                                 Appearance="Primary"
                                                 Click="BtnViewAllAnalysis_Click"
-                                                Content="View Full Analysis Report"
+                                                Content="{x:Static p:Resources.ViewFullAnalysisReport}"
                                                 Icon="DataHistogram24" />
                                         </Grid>
                                     </Border>
@@ -3110,17 +3112,17 @@
                                 <Grid>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <TextBlock Text="💰" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                        <TextBlock Text="Profit Trades" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                                        <TextBlock Text="{x:Static p:Resources.ProfitTrades}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <Button x:Name="BtnRefreshProfitTrades" Content="⟳" Style="{StaticResource GhostButton}" Width="26" Height="26" Padding="0" FontSize="15" Margin="0,0,6,0" ToolTip="Refresh" />
+                                        <Button x:Name="BtnRefreshProfitTrades" Content="⟳" Style="{StaticResource GhostButton}" Width="26" Height="26" Padding="0" FontSize="15" Margin="0,0,6,0" ToolTip="{x:Static p:Resources.Refresh}" />
                                         <Button x:Name="BtnCloseProfitTrades" Content="&#x2715;" Style="{StaticResource GhostButton}" Width="26" Height="26" Padding="0" FontSize="12" Foreground="{DynamicResource TextSubtle}" />
                                     </StackPanel>
                                 </Grid>
                             </Border>
 
                             <Border Grid.Row="1" Padding="12,7" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="Direct arbitrage opportunities | buy low → sell high." Foreground="{DynamicResource TextSubtle}" FontSize="11" />
+                                <TextBlock Text="{x:Static p:Resources.ArbitrageOpportunities}" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
                             </Border>
 
                             <ListBox x:Name="ProfitTradesList" Grid.Row="2" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Padding="10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
@@ -3144,7 +3146,7 @@
                                 <Grid>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <TextBlock Text="🔁" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                        <TextBlock Text="Buy X for Y" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                                        <TextBlock Text="{x:Static p:Resources.BuyXForY}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
                                     </StackPanel>
                                     <Button x:Name="BtnCloseBuyXForY" Content="&#x2715;" Style="{StaticResource GhostButton}" Width="26" Height="26" Padding="0" FontSize="12" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Right" VerticalAlignment="Center" />
                                 </Grid>
@@ -3164,7 +3166,7 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="🎯" Margin="0,0,4,0" VerticalAlignment="Center" FontSize="13" />
-                                        <TextBox x:Name="BuyXForY_WantTb" Grid.Column="1" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextPrimary}" CaretBrush="{DynamicResource TextPrimary}" Padding="2,3" VerticalContentAlignment="Center" ToolTip="I want to GET (e.g. Crude Oil)" FontSize="12" />
+                                        <TextBox x:Name="BuyXForY_WantTb" Grid.Column="1" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextPrimary}" CaretBrush="{DynamicResource TextPrimary}" Padding="2,3" VerticalContentAlignment="Center" ToolTip="{x:Static p:Resources.IWantToGetToolTip}" FontSize="12" />
                                     </Grid>
                                 </Border>
 
@@ -3175,11 +3177,11 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="💰" Margin="0,0,4,0" VerticalAlignment="Center" FontSize="13" />
-                                        <TextBox x:Name="BuyXForY_PayTb" Grid.Column="1" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextPrimary}" CaretBrush="{DynamicResource TextPrimary}" Padding="2,3" VerticalContentAlignment="Center" ToolTip="I want to PAY WITH (e.g. Scrap)" FontSize="12" />
+                                        <TextBox x:Name="BuyXForY_PayTb" Grid.Column="1" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextPrimary}" CaretBrush="{DynamicResource TextPrimary}" Padding="2,3" VerticalContentAlignment="Center" ToolTip="{x:Static p:Resources.ICanPayWithToolTip}" FontSize="12" />
                                     </Grid>
                                 </Border>
 
-                                <Button x:Name="BuyXForY_AnalyzeBtn" Grid.Column="2" Content="Analyze" Style="{StaticResource PrimaryButton}" Margin="4,0,0,0" Padding="12,3" FontSize="12" />
+                                <Button x:Name="BuyXForY_AnalyzeBtn" Grid.Column="2" Content="{x:Static p:Resources.Analyze}" Style="{StaticResource PrimaryButton}" Margin="4,0,0,0" Padding="12,3" FontSize="12" />
                             </Grid>
 
                             <Grid Grid.Row="2" Margin="12,0,12,6">
@@ -3190,14 +3192,14 @@
 
                                 <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="5">
                                     <DockPanel>
-                                        <TextBlock DockPanel.Dock="Top" Text="I want to GET" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="SemiBold" Margin="0,0,0,3" />
+                                        <TextBlock DockPanel.Dock="Top" Text="{x:Static p:Resources.IWantToGet}" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="SemiBold" Margin="0,0,0,3" />
                                         <ListBox x:Name="BuyXForY_WantPreview" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                                     </DockPanel>
                                 </Border>
 
                                 <Border Grid.Column="1" Margin="4,0,0,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="5">
                                     <DockPanel>
-                                        <TextBlock DockPanel.Dock="Top" Text="I can PAY WITH" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="SemiBold" Margin="0,0,0,3" />
+                                        <TextBlock DockPanel.Dock="Top" Text="{x:Static p:Resources.ICanPayWith}" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="SemiBold" Margin="0,0,0,3" />
                                         <ListBox x:Name="BuyXForY_PayPreview" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                                     </DockPanel>
                                 </Border>
@@ -3248,20 +3250,20 @@
                                     FontWeight="Bold"
                                     Foreground="{DynamicResource TextSubtle}"
                                     Opacity="0.8"
-                                    Text="MAP FILTERS" />
+                                    Text="{x:Static p:Resources.MapFilters}" />
 
                                 <CheckBox
                                     x:Name="ChkGrid"
                                     Margin="0,0,8,0"
                                     Checked="ChkGrid_Checked"
-                                    Content="Grid"
+                                    Content="{x:Static p:Resources.Grid}"
                                     Style="{StaticResource PillToggleButton}"
                                     Unchecked="ChkGrid_Checked" />
                                 <CheckBox
                                     x:Name="ChkPlayers"
                                     Margin="0,0,8,0"
                                     Checked="ChkPlayers_Checked"
-                                    Content="Players"
+                                    Content="{x:Static p:Resources.PlayersOnly}"
                                     IsChecked="True"
                                     Style="{StaticResource PillToggleButton}"
                                     Unchecked="ChkPlayers_Checked" />
@@ -3269,7 +3271,7 @@
                                     x:Name="Monuments"
                                     Margin="0,0,8,0"
                                     Checked="Monuments_Checked"
-                                    Content="Monuments"
+                                    Content="{x:Static p:Resources.Monuments}"
                                     IsChecked="True"
                                     Style="{StaticResource PillToggleButton}"
                                     Unchecked="Monuments_Unchecked" />
@@ -3277,7 +3279,7 @@
                                     x:Name="ChkShops"
                                     Margin="0,0,24,0"
                                     Checked="ChkShops_Checked"
-                                    Content="Shops"
+                                    Content="{x:Static p:Resources.Shops}"
                                     Style="{StaticResource PillToggleButton}"
                                     Unchecked="ChkShops_Checked" />
 
@@ -3288,7 +3290,7 @@
                                     FontWeight="Bold"
                                     Foreground="{DynamicResource TextSubtle}"
                                     Opacity="0.8"
-                                    Text="CHAT ALERTS" />
+                                    Text="{x:Static p:Resources.ChatAlerts}" />
 
                                 <CheckBox
                                     x:Name="ChatAnnounce"
@@ -3296,12 +3298,12 @@
                                     Click="ChatAnnounce_Toggle"
                                     IsChecked="False"
                                     Style="{StaticResource PillToggleButton}"
-                                    ToolTip="Right-click to configure">
+                                    ToolTip="{x:Static p:Resources.RightClickConfigure}">
                                     <CheckBox.ContextMenu>
                                         <ContextMenu Style="{StaticResource DarkContextMenu}">
                                             <MenuItem
                                                 Click="SelectAllAlerts_Click"
-                                                Header="Select All"
+                                                Header="{x:Static p:Resources.SelectAll}"
                                                 Style="{StaticResource DarkMenuItem}">
                                                 <MenuItem.Icon>
                                                     <ui:SymbolIcon Symbol="CheckmarkSquare24" />
@@ -3309,7 +3311,7 @@
                                             </MenuItem>
                                             <MenuItem
                                                 Click="DeselectAllAlerts_Click"
-                                                Header="Deselect All"
+                                                Header="{x:Static p:Resources.DeselectAll}"
                                                 Style="{StaticResource DarkMenuItem}">
                                                 <MenuItem.Icon>
                                                     <ui:SymbolIcon Symbol="DismissSquare24" />
@@ -3320,7 +3322,7 @@
                                     <CheckBox.Content>
                                         <TextBlock
                                             x:Name="ChatAnnounceLabel"
-                                            Text="Alerts" />
+                                            Text="{x:Static p:Resources.Alerts}" />
                                     </CheckBox.Content>
                                 </CheckBox>
 
@@ -3330,7 +3332,7 @@
                                     Padding="12,6"
                                     VerticalAlignment="Center"
                                     Appearance="Secondary"
-                                    Content="Configure"
+                                    Content="{x:Static p:Resources.Configure}"
                                     FontSize="12"
                                     FontWeight="SemiBold"
                                     Icon="{ui:SymbolIcon Symbol=Settings24}">
@@ -3338,7 +3340,7 @@
                                         <ContextMenu Style="{StaticResource DarkContextMenu}">
                                             <MenuItem
                                                 Click="SelectAllAlerts_Click"
-                                                Header="Select All"
+                                                Header="{x:Static p:Resources.SelectAll}"
                                                 Style="{StaticResource DarkMenuItem}">
                                                 <MenuItem.Icon>
                                                     <ui:SymbolIcon Symbol="CheckmarkSquare24" />
@@ -3346,7 +3348,7 @@
                                             </MenuItem>
                                             <MenuItem
                                                 Click="DeselectAllAlerts_Click"
-                                                Header="Deselect All"
+                                                Header="{x:Static p:Resources.DeselectAll}"
                                                 Style="{StaticResource DarkMenuItem}">
                                                 <MenuItem.Icon>
                                                     <ui:SymbolIcon Symbol="DismissSquare24" />
@@ -3361,29 +3363,29 @@
                                                 FontSize="11"
                                                 FontWeight="Bold"
                                                 Foreground="{DynamicResource TextSubtle}"
-                                                Header="EVENTS"
+                                                Header="{x:Static p:Resources.Events}"
                                                 IsHitTestVisible="False" />
                                             <MenuItem
-                                                Header="Cargo Ship"
+                                                Header="{x:Static p:Resources.CargoShip}"
                                                 Style="{StaticResource DarkMenuItem}"
                                                 Tag="Cargo">
                                                 <MenuItem
                                                     Click="Alert_MenuItem_Click"
-                                                    Header="Spawn"
+                                                    Header="{x:Static p:Resources.CargoSpawn}"
                                                     IsCheckable="True"
                                                     StaysOpenOnClick="True"
                                                     Style="{StaticResource DarkMenuItem}"
                                                     Tag="CargoSpawn" />
                                                 <MenuItem
                                                     Click="Alert_MenuItem_Click"
-                                                    Header="Harbor Docking"
+                                                    Header="{x:Static p:Resources.CargoDock}"
                                                     IsCheckable="True"
                                                     StaysOpenOnClick="True"
                                                     Style="{StaticResource DarkMenuItem}"
                                                     Tag="CargoDock" />
                                                 <MenuItem
                                                     Click="Alert_MenuItem_Click"
-                                                    Header="Departure (5m Warning)"
+                                                    Header="{x:Static p:Resources.CargoEgress}"
                                                     IsCheckable="True"
                                                     StaysOpenOnClick="True"
                                                     Style="{StaticResource DarkMenuItem}"
@@ -3391,7 +3393,7 @@
                                                 <MenuItem
                                                     x:Name="MenuCargoArrival"
                                                     Click="Alert_MenuItem_Click"
-                                                    Header="Arrival Warning (5m before Dock)"
+                                                    Header="{x:Static p:Resources.CargoArrival}"
                                                     IsCheckable="True"
                                                     StaysOpenOnClick="True"
                                                     Style="{StaticResource DarkMenuItem}"
@@ -3399,42 +3401,42 @@
                                             </MenuItem>
                                             <MenuItem
                                                 Click="Alert_MenuItem_Click"
-                                                Header="Patrol Helicopter"
+                                                Header="{x:Static p:Resources.Heli}"
                                                 IsCheckable="True"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}"
                                                 Tag="Heli" />
                                             <MenuItem
                                                 Click="Alert_MenuItem_Click"
-                                                Header="Chinook (CH47)"
+                                                Header="{x:Static p:Resources.Chinook}"
                                                 IsCheckable="True"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}"
                                                 Tag="Chinook" />
                                             <MenuItem
                                                 Click="Alert_MenuItem_Click"
-                                                Header="Travelling Vendor"
+                                                Header="{x:Static p:Resources.Vendor}"
                                                 IsCheckable="True"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}"
                                                 Tag="Vendor" />
                                             <MenuItem
                                                 Click="Alert_MenuItem_Click"
-                                                Header="Oil Rig Trigger"
+                                                Header="{x:Static p:Resources.OilRig}"
                                                 IsCheckable="True"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}"
                                                 Tag="OilRig" />
                                             <MenuItem
                                                 Click="Alert_MenuItem_Click"
-                                                Header="Deep Sea Event"
+                                                Header="{x:Static p:Resources.DeepSea}"
                                                 IsCheckable="True"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}"
                                                 Tag="DeepSea" />
                                             <MenuItem
                                                 Click="Alert_MenuItem_Click"
-                                                Header="Smart Alerts"
+                                                Header="{x:Static p:Resources.SmartAlerts}"
                                                 IsCheckable="True"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}"
@@ -3443,53 +3445,53 @@
                                             <MenuItem
                                                 FontWeight="Bold"
                                                 Foreground="{StaticResource TextBrushMuted}"
-                                                Header="Players"
+                                                Header="{x:Static p:Resources.PlayersHeader}"
                                                 IsHitTestVisible="False" />
                                             <MenuItem
                                                 Click="Alert_MenuItem_Click"
-                                                Header="Online Status"
+                                                Header="{x:Static p:Resources.PlayerOnline}"
                                                 IsCheckable="True"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}"
                                                 Tag="PlayerOnline" />
                                             <MenuItem
                                                 Click="Alert_MenuItem_Click"
-                                                Header="Offline Status"
+                                                Header="{x:Static p:Resources.PlayerOffline}"
                                                 IsCheckable="True"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}"
                                                 Tag="PlayerOffline" />
                                             <MenuItem
                                                 Click="Alert_MenuItem_Click"
-                                                Header="Tracking Notifications"
+                                                Header="{x:Static p:Resources.AnnounceTracking}"
                                                 IsCheckable="True"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}"
                                                 Tag="AnnounceTracking" />
                                             <MenuItem
                                                 Click="Alert_MenuItem_Click"
-                                                Header="Self Death"
+                                                Header="{x:Static p:Resources.PlayerDeathSelf}"
                                                 IsCheckable="True"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}"
                                                 Tag="PlayerDeathSelf" />
                                             <MenuItem
                                                 Click="Alert_MenuItem_Click"
-                                                Header="Team Death"
+                                                Header="{x:Static p:Resources.PlayerDeathTeam}"
                                                 IsCheckable="True"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}"
                                                 Tag="PlayerDeathTeam" />
                                             <MenuItem
                                                 Click="Alert_MenuItem_Click"
-                                                Header="Self Respawn"
+                                                Header="{x:Static p:Resources.PlayerRespawnSelf}"
                                                 IsCheckable="True"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}"
                                                 Tag="PlayerRespawnSelf" />
                                             <MenuItem
                                                 Click="Alert_MenuItem_Click"
-                                                Header="Team Respawn"
+                                                Header="{x:Static p:Resources.PlayerRespawnTeam}"
                                                 IsCheckable="True"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}"
@@ -3498,25 +3500,25 @@
                                             <MenuItem
                                                 FontWeight="Bold"
                                                 Foreground="{DynamicResource TextBrushMuted}"
-                                                Header="Shops"
+                                                Header="{x:Static p:Resources.Shops}"
                                                 IsHitTestVisible="False" />
                                             <MenuItem
                                                 Click="Alert_MenuItem_Click"
-                                                Header="New Shops"
+                                                Header="{x:Static p:Resources.NewShops}"
                                                 IsCheckable="True"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}"
                                                 Tag="NewShops" />
                                             <MenuItem
                                                 Click="Alert_MenuItem_Click"
-                                                Header="Suspicious Shops"
+                                                Header="{x:Static p:Resources.SuspiciousShops}"
                                                 IsCheckable="True"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}"
                                                 Tag="SuspiciousShops" />
                                             <MenuItem
                                                 x:Name="TradeAlertsMenuItem"
-                                                Header="Trade Alerts"
+                                                Header="{x:Static p:Resources.TradeAlerts}"
                                                 StaysOpenOnClick="True"
                                                 Style="{StaticResource DarkMenuItem}" />
                                         </ContextMenu>
@@ -3526,14 +3528,14 @@
                                 Width="80"
                                 Margin="8,0,0,0"
                                 Click="BtnResetMap_Click"
-                                Content="Reset &#x27F2;"
+                                Content="{x:Static p:Resources.ResetMap}"
                                 Style="{StaticResource GhostButton}"
-                                ToolTip="Reset map zoom and position" />
+                                ToolTip="{x:Static p:Resources.ResetMapToolTip}" />
                             <Button
                                 x:Name="BtnMiniMap"
                                 Width="80"
                                 Click="BtnToggleMiniMap_Click"
-                                Content="Mini &#x1F5FA;"
+                                Content="{x:Static p:Resources.MiniMap}"
                                 Style="{StaticResource GhostButton}" />
 
                             <Button
@@ -3542,23 +3544,23 @@
                                 Click="BtnCrosshair_Click"
                                 PreviewMouseRightButtonDown="BtnCrosshair_PreviewMouseRightButtonDown"
                                 Style="{StaticResource IconButton}"
-                                ToolTip="Crosshair on/off (Right Click For Options)">
+                                ToolTip="{x:Static p:Resources.CrosshairToolTip}">
                                 <TextBlock FontSize="18" Text="&#x2316;" />
                                 <Button.ContextMenu>
                                     <ContextMenu
                                         x:Name="CrosshairContextMenu"
                                         Opened="CrosshairContextMenu_Opened"
                                         Style="{StaticResource DarkContextMenu}">
-                                        <!--  sorge dafÃ¼r, dass ALLE Items (auch SubmenÃ¼s) dunkel sind  -->
+                                        <!--  sorge dafür, dass ALLE Items (auch Submenüs) dunkel sind  -->
                                         <ContextMenu.Resources>
                                             <Style BasedOn="{StaticResource DarkMenuItem}" TargetType="MenuItem" />
                                             <Style BasedOn="{StaticResource DarkSeparator}" TargetType="Separator" />
                                         </ContextMenu.Resources>
 
-                                        <MenuItem x:Name="MenuCrosshairStyle" Header="Crosshair Style">
+                                        <MenuItem x:Name="MenuCrosshairStyle" Header="{x:Static p:Resources.CrosshairStyle}">
                                             <MenuItem
                                                 Click="Style_Click"
-                                                Header="Green Dot"
+                                                Header="{x:Static p:Resources.GreenDot}"
                                                 Tag="GreenDot">
                                                 <MenuItem.Icon>
                                                     <Grid Width="16" Height="16">
@@ -3571,7 +3573,7 @@
                                             </MenuItem>
                                             <MenuItem
                                                 Click="Style_Click"
-                                                Header="Mini Green"
+                                                Header="{x:Static p:Resources.MiniGreen}"
                                                 Tag="MiniGreen">
                                                 <MenuItem.Icon>
                                                     <Grid Width="16" Height="16">
@@ -3584,7 +3586,7 @@
                                             </MenuItem>
                                             <MenuItem
                                                 Click="Style_Click"
-                                                Header="Open Crosshair (R/G)"
+                                                Header="{x:Static p:Resources.OpenCrosshairRG}"
                                                 Tag="OpenCrossRG">
                                                 <MenuItem.Icon>
                                                     <Grid Width="16" Height="16">
@@ -3625,7 +3627,7 @@
                                             </MenuItem>
                                             <MenuItem
                                                 Click="Style_Click"
-                                                Header="Thin Circle (bright red)"
+                                                Header="{x:Static p:Resources.ThinRedCircle}"
                                                 Tag="ThinRedCircle">
                                                 <MenuItem.Icon>
                                                     <Grid Width="16" Height="16">
@@ -3640,7 +3642,7 @@
                                             </MenuItem>
                                             <MenuItem
                                                 Click="Style_Click"
-                                                Header="Square + Dot"
+                                                Header="{x:Static p:Resources.SquareDot}"
                                                 Tag="SquareDot">
                                                 <MenuItem.Icon>
                                                     <Grid Width="16" Height="16">
@@ -3659,7 +3661,7 @@
                                             </MenuItem>
                                             <MenuItem
                                                 Click="Style_Click"
-                                                Header="Magenta Dot"
+                                                Header="{x:Static p:Resources.MagentaDot}"
                                                 Tag="MagentaDot">
                                                 <MenuItem.Icon>
                                                     <Grid Width="16" Height="16">
@@ -3672,7 +3674,7 @@
                                             </MenuItem>
                                             <MenuItem
                                                 Click="Style_Click"
-                                                Header="Magenta Open Cross"
+                                                Header="{x:Static p:Resources.MagentaOpenCross}"
                                                 Tag="MagentaOpenCross">
                                                 <MenuItem.Icon>
                                                     <Grid Width="16" Height="16">
@@ -3709,7 +3711,7 @@
                                             </MenuItem>
                                             <MenuItem
                                                 Click="Style_Click"
-                                                Header="Range Line (ticks)"
+                                                Header="{x:Static p:Resources.RangeLineTicks}"
                                                 Tag="RangeLine">
                                                 <MenuItem.Icon>
                                                     <Grid Width="16" Height="16">
@@ -3738,12 +3740,12 @@
                                                 </MenuItem.Icon>
                                             </MenuItem>
                                             <Separator x:Name="CrosshairStyleSeparator" />
-                                            <MenuItem Click="DrawCustomCrosshair_Click" Header="Draw Crosshair..." />
+                                            <MenuItem Click="DrawCustomCrosshair_Click" Header="{x:Static p:Resources.DrawCrosshair}" />
                                         </MenuItem>
 
                                         <Separator />
 
-                                        <MenuItem x:Name="MonitorRoot" Header="Choose monitor" />
+                                        <MenuItem x:Name="MonitorRoot" Header="{x:Static p:Resources.ChooseMonitor}" />
                                     </ContextMenu>
                                 </Button.ContextMenu>
                             </Button>
@@ -3754,7 +3756,7 @@
                                 Height="32"
                                 Margin="4,0,0,0"
                                 Click="BtnToggleOverlayTools_Click"
-                                ToolTip="Draw Overlay">
+                                ToolTip="{x:Static p:Resources.DrawOverlay}">
                                 <Image Source="pack://application:,,,/Assets/icons/pencil.png" />
                             </Button>
 
@@ -3789,14 +3791,14 @@
                                         FontSize="20"
                                         FontWeight="SemiBold"
                                         Foreground="White"
-                                        Text="Ready to explore the map?"
+                                        Text="{x:Static p:Resources.ReadyToExploreMap}"
                                         TextAlignment="Center"
                                         TextWrapping="Wrap" />
                                     <TextBlock
                                         Margin="0,10,0,24"
                                         FontSize="13"
                                         Foreground="#D9FFFFFF"
-                                        Text="Connect to a selected server to load the live Rust map and team."
+                                        Text="{x:Static p:Resources.ConnectToLoadMap}"
                                         TextAlignment="Center"
                                         TextWrapping="Wrap" />
 
@@ -3805,7 +3807,7 @@
                                             Padding="16,8"
                                             Appearance="Primary"
                                             Click="BtnConnect_Click"
-                                            Content="Connect"
+                                            Content="{x:Static p:Resources.Connect}"
                                             Icon="{ui:SymbolIcon Symbol=PlugConnected20}"
                                             Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}" />
 
@@ -3813,9 +3815,9 @@
                                             Padding="16,8"
                                             Appearance="Primary"
                                             Click="BtnConnect_Click"
-                                            Content="Full Connect"
+                                            Content="{x:Static p:Resources.FullConnect}"
                                             Icon="{ui:SymbolIcon Symbol=Play20}"
-                                            ToolTip="Load Map &amp; Team">
+                                            ToolTip="{x:Static p:Resources.LoadMapTeam}">
                                             <ui:Button.Style>
                                                 <Style BasedOn="{StaticResource {x:Type ui:Button}}" TargetType="ui:Button">
                                                     <Setter Property="Visibility" Value="Collapsed" />
@@ -3836,7 +3838,7 @@
                             </Border>
                         </Border>
 
-                        <!--  2) Titelbild als &#x201E;contain&#x201C;, zentriert, unverzerrt  -->
+                        <!--  2) Titelbild als „contain“, zentriert, unverzerrt  -->
                         <Image
                             x:Name="SplashBg"
                             HorizontalAlignment="Center"
@@ -4015,7 +4017,7 @@
                                         BorderBrush="Transparent"
                                         Click="BtnFollowPlayer_Click"
                                         Style="{StaticResource GhostButton}"
-                                        ToolTip="Follow Player on Map">
+                                        ToolTip="{x:Static p:Resources.FollowPlayer}">
                                         <StackPanel Orientation="Horizontal">
                                             <!--  Avatar or Default Icon  -->
                                             <Grid Width="24" Height="24">
@@ -4182,15 +4184,15 @@
                                     </Grid.ColumnDefinitions>
                                     
                                     <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
-                                        <Button x:Name="BtnBMBack" Content="&#x25C0;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMBack_Click" ToolTip="Back" />
-                                        <Button x:Name="BtnBMForward" Content="&#x25B6;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMForward_Click" ToolTip="Forward" />
-                                        <Button x:Name="BtnBMRefresh" Content="&#x21BB;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMRefresh_Click" ToolTip="Refresh" />
-                                        <Button x:Name="BtnBMPopout" Content="&#x2197;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMPopout_Click" ToolTip="Open in external browser" />
+                                        <Button x:Name="BtnBMBack" Content="&#x25C0;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMBack_Click" ToolTip="{x:Static p:Resources.Back}" />
+                                        <Button x:Name="BtnBMForward" Content="&#x25B6;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMForward_Click" ToolTip="{x:Static p:Resources.Forward}" />
+                                        <Button x:Name="BtnBMRefresh" Content="&#x21BB;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMRefresh_Click" ToolTip="{x:Static p:Resources.Refresh}" />
+                                        <Button x:Name="BtnBMPopout" Content="&#x2197;" Style="{StaticResource GhostButton}" Width="30" Height="30" Foreground="#99FFFFFF" Click="BtnBMPopout_Click" ToolTip="{x:Static p:Resources.OpenInExternalBrowser}" />
                                         <ui:TextBox
                                             x:Name="TxtBMSearch"
                                             Width="150"
                                             Margin="8,0,0,0"
-                                            PlaceholderText="Search BM..."
+                                            PlaceholderText="{x:Static p:Resources.SearchBMPlaceholder}"
                                             KeyDown="TxtBMSearch_KeyDown" />
                                         <Button
                                             x:Name="BtnBMSearch"
@@ -4199,7 +4201,7 @@
                                             Content="&#x1F50D;"
                                             Click="BtnBMSearch_Click"
                                             Style="{StaticResource GhostButton}"
-                                            ToolTip="Search" />
+                                            ToolTip="{x:Static p:Resources.Search}" />
                                     </StackPanel>
 
                                     <ui:Button
@@ -4208,7 +4210,7 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         Appearance="Primary"
-                                        Content="TRACK PLAYER"
+                                        Content="{x:Static p:Resources.TrackPlayer}"
                                         Visibility="Collapsed"
                                         Click="BtnBMTrack_Click" />
 
@@ -4226,7 +4228,7 @@
                                         FontSize="14"
                                         Foreground="#99FFFFFF"
                                         Style="{StaticResource GhostButton}"
-                                        ToolTip="Close BattleMetrics Browser" />
+                                        ToolTip="{x:Static p:Resources.CloseBMBrowser}" />
                                 </Grid>
 
                                 <!-- Browser Content -->
@@ -4281,7 +4283,7 @@
                                                 FontSize="10"
                                                 FontWeight="Bold"
                                                 Foreground="#60FFFFFF"
-                                                Text="SHOP SEARCH" />
+                                                Text="{x:Static p:Resources.ShopSearchTitle}" />
 
                                             <Button
                                                 x:Name="BtnCloseShopSearch"
@@ -4296,7 +4298,7 @@
                                                 FontSize="12"
                                                 Foreground="#99FFFFFF"
                                                 Style="{StaticResource GhostButton}"
-                                                ToolTip="Close Search">
+                                                ToolTip="{x:Static p:Resources.CloseSearch}">
                                                 <Button.Resources>
                                                     <Style BasedOn="{StaticResource GhostButton}" TargetType="Button">
                                                         <Setter Property="Background" Value="Transparent" />
@@ -4321,12 +4323,12 @@
                                                         HorizontalAlignment="Center"
                                                         FontSize="14"
                                                         Foreground="#CCFFFFFF"
-                                                        Text="Please activate Shops first" />
+                                                        Text="{x:Static p:Resources.ActivateShopsFirst}" />
                                                     <Button
                                                         x:Name="BtnActivateShopPolling"
                                                         Padding="20,8"
                                                         Click="BtnActivateShopPolling_Click"
-                                                        Content="Activate Shop polling"
+                                                        Content="{x:Static p:Resources.ActivateShopPolling}"
                                                         FontSize="12"
                                                         FontWeight="SemiBold"
                                                         Style="{StaticResource DonateButton}" />
@@ -4382,7 +4384,7 @@
                                                 VerticalAlignment="Center"
                                                 FontSize="11"
                                                 FontWeight="SemiBold"
-                                                Text="Shop Search" />
+                                                Text="{x:Static p:Resources.Shops}" />
                                         </StackPanel>
                                     </Button>
                                 </Border>
@@ -4436,7 +4438,7 @@
                                                 FontSize="10"
                                                 FontWeight="Bold"
                                                 Foreground="#60FFFFFF"
-                                                Text="TEAM CHAT" />
+                                                Text="{x:Static p:Resources.TeamChatTitle}" />
 
                                             <Button
                                                 x:Name="BtnCloseChatOverlay"
@@ -4450,7 +4452,7 @@
                                                 Cursor="Hand"
                                                 FontSize="12"
                                                 Foreground="#99FFFFFF"
-                                                ToolTip="Close Chat">
+                                                ToolTip="{x:Static p:Resources.CloseChat}">
                                                 <Button.Resources>
                                                     <Style BasedOn="{StaticResource GhostButton}" TargetType="Button">
                                                         <Setter Property="Background" Value="Transparent" />
@@ -4580,7 +4582,7 @@
                                                         Background="{DynamicResource Accent}"
                                                         BorderThickness="0"
                                                         Click="BtnSendChat_Click"
-                                                        Content="Send"
+                                                        Content="{x:Static p:Resources.Send}"
                                                         Foreground="White"
                                                         Style="{StaticResource PrimaryButton}" />
                                                 </Border>
@@ -4612,7 +4614,7 @@
                                                 Background="Transparent"
                                                 BorderThickness="0"
                                                 Click="BtnOpenChatCommands_Click"
-                                                ToolTip="Chat Commands Settings">
+                                                ToolTip="{x:Static p:Resources.ChatCommandsSettings}">
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock
                                                         VerticalAlignment="Center"
@@ -4624,7 +4626,7 @@
                                                         VerticalAlignment="Center"
                                                         FontSize="10"
                                                         Foreground="#888"
-                                                        Text="Chat Commands" />
+                                                        Text="{x:Static p:Resources.ChatCommands}" />
                                                 </StackPanel>
                                             </Button>
                                         </StackPanel>
@@ -4685,7 +4687,7 @@
                                                 VerticalAlignment="Center"
                                                 FontSize="11"
                                                 FontWeight="SemiBold"
-                                                Text="Team Chat" />
+                                                Text="{x:Static p:Resources.TeamTab}" />
                                         </StackPanel>
                                     </Button>
                                 </Border>
@@ -4713,7 +4715,7 @@
                                     Margin="2,0"
                                     Click="ToolDrawButton_Click"
                                     PreviewMouseRightButtonDown="ToolDrawButton_RightClick"
-                                    ToolTip="Draw (Right Click: Size / Color)">
+                                    ToolTip="{x:Static p:Resources.DrawToolTip}">
                                     <Image Source="pack://application:,,,/Assets/icons/pen.png" />
                                 </Button>
 
@@ -4725,7 +4727,7 @@
                                     Margin="2,0"
                                     Click="ToolTextButton_Click"
                                     PreviewMouseRightButtonDown="ToolTextButton_RightClick"
-                                    ToolTip="Place Text (Right Click: Color / Size)">
+                                    ToolTip="{x:Static p:Resources.PlaceTextToolTip}">
                                     <Image Source="pack://application:,,,/Assets/icons/text.png" />
                                 </Button>
 
@@ -4737,7 +4739,7 @@
                                     Margin="2,0"
                                     Click="ToolIconButton_Click"
                                     PreviewMouseRightButtonDown="ToolIconButton_RightClick"
-                                    ToolTip="Place Icon (Right Click: Pick Icon)">
+                                    ToolTip="{x:Static p:Resources.PlaceIconToolTip}">
                                     <Image Source="pack://application:,,,/Assets/icons/pin.png" />
                                 </Button>
 
@@ -4749,20 +4751,20 @@
                                     Margin="2,0"
                                     Click="ToolEraseButton_Click"
                                     PreviewMouseRightButtonDown="ToolEraseButton_RightClick"
-                                    ToolTip="Eraser (hold or click)">
+                                    ToolTip="{x:Static p:Resources.EraserToolTip}">
                                     <Image Source="pack://application:,,,/Assets/icons/eraser.png" />
                                 </Button>
 
                                 <Rectangle Width="1" Height="20" Margin="6,0" Fill="#40FFFFFF" VerticalAlignment="Center" />
 
-                                <!--  LÃ¶schen  -->
+                                <!--  Löschen  -->
                                 <Button
                                     x:Name="ToolTrashButton"
                                     Width="32"
                                     Height="32"
                                     Margin="2,0"
                                     Click="ToolTrashButton_Click"
-                                    ToolTip="Delete own overlay">
+                                    ToolTip="{x:Static p:Resources.DeleteOverlayToolTip}">
                                     <Image Source="pack://application:,,,/Assets/icons/trash.png" />
                                 </Button>
 
@@ -4773,7 +4775,7 @@
                                     Height="32"
                                     Margin="2,0"
                                     Click="ToolUploadButton_Click"
-                                    ToolTip="Upload own Overlay / share">
+                                    ToolTip="{x:Static p:Resources.UploadOverlayToolTip}">
                                     <Image Source="pack://application:,,,/Assets/icons/upload.png" />
                                 </Button>
 
@@ -4842,7 +4844,7 @@
                             Margin="0,8,0,0"
                             FontSize="12"
                             Foreground="{DynamicResource TextSubtle}"
-                            Text="This may take a moment..."
+                            Text="{x:Static p:Resources.MayTakeAMoment}"
                             TextAlignment="Center" />
                     </StackPanel>
                 </Border>
@@ -4891,7 +4893,7 @@
                             FontSize="28"
                             FontWeight="Bold"
                             Foreground="White"
-                            Text="Ready to dominate Rust?"
+                            Text="{x:Static p:Resources.ReadyToDominate}"
                             TextAlignment="Center" />
 
                         <TextBlock
@@ -4899,7 +4901,7 @@
                             FontSize="14"
                             Foreground="{DynamicResource TextSubtle}"
                             LineHeight="20"
-                            Text="Pair your account to start tracking players, receiving base raid alerts, and controlling your smart devices instantly."
+                            Text="{x:Static p:Resources.PairAccountBenefits}"
                             TextAlignment="Center"
                             TextWrapping="Wrap" />
 
@@ -4913,7 +4915,7 @@
                             FontWeight="SemiBold"
                             Icon="{ui:SymbolIcon Symbol=BluetoothConnected24}">
                             <ui:Button.Content>
-                                <TextBlock Margin="8,0,0,0" Text="Login &amp; Pair Account" />
+                                <TextBlock Margin="8,0,0,0" Text="{x:Static p:Resources.LoginPairAccount}" />
                             </ui:Button.Content>
                         </ui:Button>
 
@@ -4921,7 +4923,7 @@
                             Margin="0,20,0,0"
                             FontSize="11"
                             Foreground="{DynamicResource TextCaption}"
-                            Text="Requires Steam login in your default browser."
+                            Text="{x:Static p:Resources.RequiresSteamLogin}"
                             TextAlignment="Center" />
                     </StackPanel>
                 </Border>
@@ -4960,7 +4962,7 @@
                             FontSize="20"
                             FontWeight="Bold"
                             Foreground="{DynamicResource TextPrimary}"
-                            Text="Delete Server?"
+                            Text="{x:Static p:Resources.DeleteServerHeader}"
                             TextAlignment="Center" />
 
                         <TextBlock
@@ -4969,7 +4971,7 @@
                             FontSize="14"
                             LineHeight="20"
                             Foreground="{DynamicResource TextSubtle}"
-                            Text="Are you sure you want to delete this server? This action cannot be undone."
+                            Text="{x:Static p:Resources.DeleteServerConfirm}"
                             TextAlignment="Center"
                             TextWrapping="Wrap" />
 
@@ -4985,7 +4987,7 @@
                                 Padding="12"
                                 HorizontalAlignment="Stretch"
                                 Click="BtnCancelDelete_Click"
-                                Content="Cancel" />
+                                Content="{x:Static p:Resources.Cancel}" />
 
                             <ui:Button
                                 Grid.Column="2"
@@ -4995,7 +4997,7 @@
                                 Background="#FFFF4B4B"
                                 BorderBrush="#FFFF4B4B"
                                 Click="BtnConfirmDelete_Click"
-                                Content="Delete" />
+                                Content="{x:Static p:Resources.DeleteAction}" />
                         </Grid>
                     </StackPanel>
                 </Border>
@@ -5036,7 +5038,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Width="18" Height="18" Margin="0,0,8,0" Source="pack://application:,,,/Assets/icons/smartalarm.png" Stretch="Uniform" />
-                        <TextBlock Grid.Column="1" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="Smart Alarm" />
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static p:Resources.SmartAlarm}" />
 
                         <StackPanel Grid.Column="2" Margin="0,0,12,0" VerticalAlignment="Center" Orientation="Horizontal">
                             <ui:Button x:Name="AlarmOverlayPrevBtn" Padding="4" Appearance="Transparent" Click="AlarmOverlayPrev_Click" Icon="{ui:SymbolIcon Symbol=ChevronLeft24}" />
@@ -5049,9 +5051,9 @@
 
                     <TextBlock x:Name="AlarmOverlayServerTxt" Grid.Row="1" Margin="0,0,0,4" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Server Name - 14:30" />
                     <TextBlock x:Name="AlarmOverlayNameTxt" Grid.Row="2" Margin="0,0,0,2" FontSize="16" FontWeight="Bold" Text="Custom Alarm Name" TextWrapping="Wrap" />
-                    <TextBlock x:Name="AlarmOverlayMsgTxt" Grid.Row="3" Margin="0,0,0,12" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Alarm activated!" TextWrapping="Wrap" />
+                    <TextBlock x:Name="AlarmOverlayMsgTxt" Grid.Row="3" Margin="0,0,0,12" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{x:Static p:Resources.AlarmActivated}" TextWrapping="Wrap" />
 
-                    <CheckBox x:Name="AlarmOverlayAutoHideChk" Grid.Row="4" Content="Auto-hide after 3s" FontSize="12" IsChecked="False" Checked="AlarmOverlayAutoHideChk_Changed" Unchecked="AlarmOverlayAutoHideChk_Changed"/>
+                    <CheckBox x:Name="AlarmOverlayAutoHideChk" Grid.Row="4" Content="{x:Static p:Resources.AutoHideAfter3s}" FontSize="12" IsChecked="False" Checked="AlarmOverlayAutoHideChk_Changed" Unchecked="AlarmOverlayAutoHideChk_Changed"/>
                 </Grid>
             </Border>
 

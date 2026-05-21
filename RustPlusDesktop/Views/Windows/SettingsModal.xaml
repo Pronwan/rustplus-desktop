@@ -1,7 +1,8 @@
 <Window x:Class="RustPlusDesk.Views.SettingsModal"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Application Settings" 
+        xmlns:properties="clr-namespace:RustPlusDesk.Properties"
+        Title="{x:Static properties:Resources.AppSettingsTitle}" 
         Width="500" Height="480"
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True" 
@@ -18,7 +19,7 @@
             <!-- Header -->
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,20">
                 <DockPanel>
-                    <TextBlock Text="Settings" 
+                    <TextBlock Text="{x:Static properties:Resources.Settings}" 
                                Foreground="White" 
                                FontSize="22" 
                                FontWeight="Bold" 
@@ -37,7 +38,7 @@
 
             <!-- Footer -->
             <Button DockPanel.Dock="Bottom" 
-                    Content="Close" 
+                    Content="{x:Static properties:Resources.Close}" 
                     Width="100" 
                     Height="35"
                     HorizontalAlignment="Right"
@@ -48,68 +49,80 @@
             <!-- Content -->
             <ScrollViewer VerticalScrollBarVisibility="Auto" Style="{StaticResource {x:Type ScrollViewer}}">
                 <StackPanel>
-                    <TextBlock Text="General" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <TextBlock Text="{x:Static properties:Resources.General}" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <TextBlock Text="{x:Static properties:Resources.Language}" VerticalAlignment="Center" Width="100" Foreground="{DynamicResource TextPrimary}"/>
+                        <ComboBox x:Name="CmbLanguage" Width="150" 
+                                  DisplayMemberPath="Name" SelectedValuePath="Code"
+                                  SelectionChanged="CmbLanguage_SelectionChanged"/>
+                    </StackPanel>
+                    
+                    <TextBlock x:Name="TxtRestartNote" 
+                               Text="{x:Static properties:Resources.RestartRequired}" 
+                               Foreground="#FFD166" FontSize="11" 
+                               Margin="100,0,0,12" Visibility="Collapsed"/>
                     
                     <CheckBox x:Name="ChkAutoStart" 
-                               Content="Launch with Windows (Minimized)" 
+                               Content="{x:Static properties:Resources.LaunchWithWindows}" 
                                Margin="0,0,0,12" 
                                Style="{StaticResource DotCheckBox}"
                                Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
 
                     <CheckBox x:Name="ChkStartMinimized" 
-                               Content="Start Minimized (Always)" 
+                               Content="{x:Static properties:Resources.StartMinimizedAlways}" 
                                Margin="0,0,0,12" 
                                Style="{StaticResource DotCheckBox}"
                                Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
 
                     <CheckBox x:Name="ChkAutoConnect" 
-                               Content="Auto-Connect to last server on startup" 
+                               Content="{x:Static properties:Resources.AutoConnectLastServer}" 
                                Margin="0,0,0,12" 
                                Style="{StaticResource DotCheckBox}"
                                Checked="OnSettingChanged" Unchecked="OnSettingChanged"
-                               ToolTip="Automatically reconnects to the last server and loads the map."/>
+                               ToolTip="{x:Static properties:Resources.AutoConnectToolTip}"/>
 
-                    <TextBlock Text="Behavior" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
+                    <TextBlock Text="{x:Static properties:Resources.Behavior}" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
 
                     <CheckBox x:Name="ChkCloseToTray" 
-                               Content="Minimize to Tray instead of closing" 
+                               Content="{x:Static properties:Resources.MinimizeToTray}" 
                                Margin="0,0,0,12" 
                                Style="{StaticResource DotCheckBox}"
                                Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
 
                     <CheckBox x:Name="ChkBackgroundTracking" 
-                               Content="Enable Background Player Tracking" 
+                               Content="{x:Static properties:Resources.BackgroundTracking}" 
                                Margin="0,0,0,12" 
                                Style="{StaticResource DotCheckBox}"
                                Checked="OnSettingChanged" Unchecked="OnSettingChanged"
-                               ToolTip="Keeps tracking players via BattleMetrics even when minimized."/>
+                               ToolTip="{x:Static properties:Resources.BackgroundTrackingToolTip}"/>
 
                     <CheckBox x:Name="ChkHideConsole" 
-                               Content="Hide System Console (Declutter)" 
+                               Content="{x:Static properties:Resources.HideSystemConsole}" 
                                Margin="0,0,0,12" 
                                Style="{StaticResource DotCheckBox}"
                                Checked="OnSettingChanged" Unchecked="OnSettingChanged"
-                               ToolTip="Hides the bottom log/console panel to save map space."/>
+                               ToolTip="{x:Static properties:Resources.HideConsoleToolTip}"/>
 
-                    <TextBlock Text="Map Settings" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
+                    <TextBlock Text="{x:Static properties:Resources.MapSettings}" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
                     
                     <CheckBox x:Name="ChkAutoLoadShops" 
-                               Content="Auto load shops on connection" 
+                               Content="{x:Static properties:Resources.AutoLoadShops}" 
                                Margin="0,0,0,12" 
                                Style="{StaticResource DotCheckBox}"
                                Checked="OnSettingChanged" Unchecked="OnSettingChanged"
-                               ToolTip="Automatically starts polling shops and alerts when connected to a server."/>
+                               ToolTip="{x:Static properties:Resources.AutoLoadShopsToolTip}"/>
 
                     <!-- Chat Section -->
-                    <TextBlock Text="Chat" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
+                    <TextBlock Text="{x:Static properties:Resources.Chat}" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                        <Button Content="Modify Chat Alerts" 
+                        <Button Content="{x:Static properties:Resources.ModifyChatAlerts}" 
                                 Style="{StaticResource PrimaryButton}"
                                 Background="#3D5A80"
                                 Height="36"
                                 Padding="32,0"
                                 Click="BtnModifyChatAlerts_Click"/>
-                        <Button Content="Chat Commands" 
+                        <Button Content="{x:Static properties:Resources.ChatCommands}" 
                                 Style="{StaticResource PrimaryButton}"
                                 Background="#3D5A80"
                                 Height="36"
@@ -118,8 +131,8 @@
                                 Click="BtnChatCommands_Click"/>
                     </StackPanel>
 
-                    <TextBlock Text="Steam Account" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
-                    <TextBlock Text="Manage your linked Steam account in the main window." 
+                    <TextBlock Text="{x:Static properties:Resources.SteamAccount}" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
+                    <TextBlock Text="{x:Static properties:Resources.ManageSteamAccountInfo}" 
                                Foreground="{DynamicResource TextSubtle}" 
                                FontSize="12" 
                                FontStyle="Italic"

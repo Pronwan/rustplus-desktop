@@ -29,6 +29,7 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
+        SetLanguage();
         base.OnStartup(e);
 
         EnsureUrlProtocolRegistered();
@@ -93,7 +94,7 @@ public partial class App : Application
     {
         _trayIcon = new System.Windows.Forms.NotifyIcon();
         _trayIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Diagnostics.Process.GetCurrentProcess().MainModule!.FileName!);
-        _trayIcon.Text = "Rust+ Desk Tracker";
+        _trayIcon.Text = RustPlusDesk.Properties.Resources.TrayIconDefault;
         _trayIcon.Visible = true;
 
         var menu = new System.Windows.Forms.ContextMenuStrip();
@@ -105,19 +106,19 @@ public partial class App : Application
             var status = TrackingService.IsTracking ? "Active" : "Idle";
             var last = TrackingService.LastPullTime?.ToString("HH:mm:ss") ?? "--:--:--";
             
-            var statusItem = new System.Windows.Forms.ToolStripMenuItem($"Tracking: {status}");
+            var statusItem = new System.Windows.Forms.ToolStripMenuItem(string.Format(RustPlusDesk.Properties.Resources.TrayTrackingStatus, status));
             statusItem.Enabled = false;
             menu.Items.Add(statusItem);
             
-            var lastItem = new System.Windows.Forms.ToolStripMenuItem($"Last update: {last}");
+            var lastItem = new System.Windows.Forms.ToolStripMenuItem(string.Format(RustPlusDesk.Properties.Resources.TrayLastUpdate, last));
             lastItem.Enabled = false;
             menu.Items.Add(lastItem);
             
             menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            menu.Items.Add("Open Rust+ Desk", null, (s, ex) => ShowMainWindow());
+            menu.Items.Add(RustPlusDesk.Properties.Resources.OpenRustPlusDesk, null, (s, ex) => ShowMainWindow());
             menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            menu.Items.Add("Exit", null, (s, ex) => {
-                _trayIcon.Visible = false;
+            menu.Items.Add(RustPlusDesk.Properties.Resources.Exit, null, (s, ex) => {
+                if (_trayIcon != null) _trayIcon.Visible = false;
                 Current.Shutdown();
             });
         };
@@ -150,7 +151,7 @@ public partial class App : Application
             Dispatcher.Invoke(() => {
                 try {
                     if (_trayIcon != null)
-                        _trayIcon.Text = $"Rust+ Desk (Tracking {last})";
+                        _trayIcon.Text = string.Format(RustPlusDesk.Properties.Resources.TrayIconTracking, last);
                 } catch { }
             });
         };
@@ -191,6 +192,33 @@ public partial class App : Application
     }
 
     private static async Task SendLinkToRunningInstanceAsync(string link) => await SendCommandToRunningInstanceAsync(link);
+
+    public void SetLanguage()
+    {
+        try
+        {
+            string lang = TrackingService.SelectedLanguage;
+            System.Globalization.CultureInfo culture;
+
+            if (string.IsNullOrEmpty(lang))
+            {
+                culture = System.Globalization.CultureInfo.InstalledUICulture;
+            }
+            else
+            {
+                culture = new System.Globalization.CultureInfo(lang);
+            }
+
+            System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
+            System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
+            System.Threading.Thread.CurrentThread.CurrentCulture = culture;
+            System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+
+            // Also set it for the generated Resources class
+            RustPlusDesk.Properties.Resources.Culture = culture;
+        }
+        catch { }
+    }
 
     private async Task StartPipeServerAsync()
     {

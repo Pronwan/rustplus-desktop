@@ -49,13 +49,13 @@ using IOPath = System.IO.Path;
 using RustPlusDesk.Helpers;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
-using ui = Wpf.Ui.Controls;
+using WpfUi = Wpf.Ui.Controls;
 
 
 namespace RustPlusDesk.Views;
 
 
-public partial class MainWindow : ui.FluentWindow
+public partial class MainWindow : WpfUi.FluentWindow
 {
 
     private readonly MainViewModel _vm = new();
@@ -74,13 +74,9 @@ public partial class MainWindow : ui.FluentWindow
     private readonly System.Windows.Threading.DispatcherTimer _upkeepTimer =
     new() { Interval = TimeSpan.FromSeconds(60) };
 
-    // Chat-Inkrement-Marker pro Fenster
-    private int _statusBusy = 0;
-
     private Viewbox? _mapView;
     private Grid? _scene;
     private bool _isPanning;
-    private Point _panLast;
     private const double ZoomStep = 1.1;   // ~10% pro Wheel-Klick
     private readonly MatrixTransform MapTransform = new MatrixTransform();
     // --- Dark theme brushes for search window ---
@@ -121,7 +117,7 @@ public partial class MainWindow : ui.FluentWindow
         // Build dynamic menu
         MenuFollowPlayer.Items.Clear();
 
-        var miMe = new MenuItem { Header = "Follow Me", Icon = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "\uE77B" } };
+        var miMe = new MenuItem { Header = Properties.Resources.FollowMe, Icon = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "\uE77B" } };
         miMe.Click += (s, ev) => StartFollowing(_mySteamId, "Me");
         MenuFollowPlayer.Items.Add(miMe);
 
@@ -131,7 +127,7 @@ public partial class MainWindow : ui.FluentWindow
             foreach (var member in TeamMembers)
             {
                 if (member.SteamId == _mySteamId) continue;
-                var mi = new MenuItem { Header = $"Follow {member.Name}", Tag = member.SteamId };
+                var mi = new MenuItem { Header = string.Format(Properties.Resources.FollowPlayer, member.Name), Tag = member.SteamId };
                 mi.Click += (s, ev) => StartFollowing(member.SteamId, member.Name);
                 MenuFollowPlayer.Items.Add(mi);
             }
@@ -417,21 +413,21 @@ public partial class MainWindow : ui.FluentWindow
         {
             _vm.IsPairingRunning = true;
             _vm.IsPairingBusy = true; // Update UI button state
-            TxtPairingState.Text = "Pairing: listening…";
+            TxtPairingState.Text = Properties.Resources.PairingListening;
             UpdatePairingGuideSnackbar();
         }));
         _pairing.Stopped += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
         {
             _vm.IsPairingRunning = false;
             _vm.IsPairingBusy = false; // Update UI button state
-            TxtPairingState.Text = "Pairing: stopped";
+            TxtPairingState.Text = Properties.Resources.PairingStopped;
         }));
         _pairing.RegistrationCompleted += (_, __) => Dispatcher.BeginInvoke(new Action(() => _vm.NotifyFcmChanged()));
         _pairing.Failed += (_, msg) => Dispatcher.BeginInvoke(new Action(() =>
         {
             _vm.IsPairingRunning = false;
             _vm.IsPairingBusy = false; // Error occurred, not busy anymore
-            TxtPairingState.Text = "Pairing: failed"; // show failure text
+            TxtPairingState.Text = Properties.Resources.PairingFailed; // show failure text
             AppendLog("[listener] " + msg);
             // Auto-retry after a short delay
             _ = Task.Delay(5000).ContinueWith(_ => Dispatcher.BeginInvoke(new Action(() => StartPairingSilent(true))));
@@ -513,7 +509,7 @@ public partial class MainWindow : ui.FluentWindow
 
 
 
-        TxtSteamId.Text = string.IsNullOrEmpty(_vm.SteamId64) ? "(nicht angemeldet)" : _vm.SteamId64;
+        TxtSteamId.Text = string.IsNullOrEmpty(_vm.SteamId64) ? Properties.Resources.NotLoggedIn : _vm.SteamId64;
 
         this.Closing += MainWindow_Closing;
         _ = EnsureWebView2Async();
@@ -2011,8 +2007,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         
         string srvName = string.IsNullOrWhiteSpace(current.Notification.Server) ? "Unknown Server" : current.Notification.Server;
         AlarmOverlayServerTxt.Text = $"{srvName} - {current.Notification.Timestamp:HH:mm}";
-        AlarmOverlayNameTxt.Text = current.Device?.PureName ?? "Smart Alarm";
-        AlarmOverlayMsgTxt.Text = current.Notification.Message ?? "Alarm activated!";
+        AlarmOverlayNameTxt.Text = current.Device?.PureName ?? Properties.Resources.SmartAlarm;
+        AlarmOverlayMsgTxt.Text = current.Notification.Message ?? Properties.Resources.AlarmActivated;
         
         AlarmOverlayPagingTxt.Text = $"{_overlayAlarmIndex + 1}/{_overlayAlarms.Count}";
 
@@ -2180,7 +2176,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         catch (Exception ex)
         {
             AppendLog("RustPlus-Link-Error: " + ex.Message);
-            MessageBox.Show("Unable to read RustPlus-Link: " + ex.Message + "\n\nFormat: rustplus://IP:PORT");
+            MessageBox.Show(string.Format(Properties.Resources.UnableToReadLink, ex.Message));
         }
     }
 
@@ -2475,7 +2471,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             catch (Exception ex) 
             { 
                 AppendLog("[pairing] silent start error: " + ex.Message); 
-                Dispatcher.Invoke(() => { _vm.IsPairingBusy = false; TxtPairingState.Text = "Pairing: error"; });
+                Dispatcher.Invoke(() => { _vm.IsPairingBusy = false; TxtPairingState.Text = Properties.Resources.PairingError; });
             }
             finally { Dispatcher.Invoke(() => { _listenerStarting = false; }); }
         });
@@ -2501,7 +2497,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (_pairing.IsRunning)
         {
             _vm.IsPairingBusy = false; _vm.BusyText = "";
-            TxtPairingState.Text = "Pairing: listening…";
+            TxtPairingState.Text = Properties.Resources.PairingListening;
             AppendLog("Listener already running.");
             return;
         }
@@ -2539,9 +2535,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         Dispatcher.Invoke(() =>
         {
-            if (st == "starting") _vm.BusyText = "Starte Pairing-Listener …";
-            else if (st == "listening") { TxtPairingState.Text = "Pairing: listening."; UpdatePairingGuideSnackbar(); }
-            else if (st == "error") TxtPairingState.Text = "Pairing: error";
+            if (st == "starting") _vm.BusyText = Properties.Resources.StartingPairingListener;
+            else if (st == "listening") { TxtPairingState.Text = Properties.Resources.PairingListening; UpdatePairingGuideSnackbar(); }
+            else if (st == "error") TxtPairingState.Text = Properties.Resources.PairingError;
         });
     }
     private void Real_Listening(object? s, EventArgs e)
@@ -2552,7 +2548,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         Dispatcher.Invoke(() =>
         {
-            TxtPairingState.Text = "Pairing: error";
+            TxtPairingState.Text = Properties.Resources.PairingError;
             AppendLog("[listener] " + msg);
         });
     }
@@ -2561,7 +2557,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         _vm.IsBusy = false;
         _vm.BusyText = "";
-        TxtPairingState.Text = "Pairing: listening…";
+        TxtPairingState.Text = Properties.Resources.PairingListening;
         UpdatePairingGuideSnackbar();
     }
 
@@ -2569,7 +2565,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         _vm.IsBusy = false;
         _vm.BusyText = "";
-        TxtPairingState.Text = "Pairing: error";
+        TxtPairingState.Text = Properties.Resources.PairingError;
         AppendLog("[listener] " + msg);
     }
 
@@ -2594,7 +2590,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (prof == null) return;
 
-        var newId = ShowInputBox($"Enter Battlemetrics Server ID for \"{prof.Name}\":", "Relink Battlemetrics", prof.BattleMetricsId ?? "");
+        var newId = ShowInputBox(string.Format(Properties.Resources.EnterBattlemetricsIdFor, prof.Name), Properties.Resources.RelinkBattlemetricsId, prof.BattleMetricsId ?? "");
         if (newId != null)
         {
             prof.BattleMetricsId = string.IsNullOrWhiteSpace(newId) ? null : newId.Trim();
@@ -3912,8 +3908,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     }
 
     // Flags, die wir aus den Checkboxes lesen:
-    private bool _notifyNewShopsToChat = false;
-    private bool _notifySuspiciousShops = false;
+    // private bool _notifyNewShopsToChat = false;
+    // private bool _notifySuspiciousShops = false;
 
 
     // ====== NEW SHOP TRACKING ======
@@ -4190,11 +4186,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (RootSnackbar == null) return;
 
-        var snackbar = new ui.Snackbar(RootSnackbar)
+        var snackbar = new WpfUi.Snackbar(RootSnackbar)
         {
             Title = "Update Available",
-            Appearance = ui.ControlAppearance.Success,
-            Icon = new ui.SymbolIcon(ui.SymbolRegular.ArrowDownload24),
+            Appearance = WpfUi.ControlAppearance.Success,
+            Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.ArrowDownload24),
             Timeout = TimeSpan.FromSeconds(7),
             MaxWidth = 350,
             HorizontalAlignment = HorizontalAlignment.Right
@@ -4205,10 +4201,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (!string.IsNullOrEmpty(dlUrl))
         {
-            var btn = new ui.Button
+            var btn = new WpfUi.Button
             {
                 Content = "Download & Update on Close",
-                Appearance = ui.ControlAppearance.Primary,
+                Appearance = WpfUi.ControlAppearance.Primary,
                 HorizontalAlignment = HorizontalAlignment.Left
             };
             btn.Click += async (s, e) =>
@@ -4250,15 +4246,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _announceSpawns = TrackingService.AnnounceSpawnsMaster;
     }
 
-    private void ShowInfoSnackbar(string title, string message, ui.ControlAppearance appearance)
+    private void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)
     {
         if (RootSnackbar == null) return;
-        var snackbar = new ui.Snackbar(RootSnackbar)
+        var snackbar = new WpfUi.Snackbar(RootSnackbar)
         {
             Title = title,
             Content = message,
             Appearance = appearance,
-            Icon = new ui.SymbolIcon(ui.SymbolRegular.Info24),
+            Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Info24),
             Timeout = TimeSpan.FromSeconds(5),
             MaxWidth = 350,
             HorizontalAlignment = HorizontalAlignment.Right
@@ -4266,7 +4262,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         snackbar.Show();
     }
 
-    private ui.Snackbar? _guideSnackbar;
+    private WpfUi.Snackbar? _guideSnackbar;
 
     private void UpdatePairingGuideSnackbar()
     {
@@ -4288,17 +4284,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         string msg = isListening 
             ? "Please pair your server in-game with Rust+" 
             : "Please pair your Steam account to start.";
-        var appearance = isListening ? ui.ControlAppearance.Info : ui.ControlAppearance.Caution;
-        var icon = isListening ? ui.SymbolRegular.Phone24 : ui.SymbolRegular.Warning24;
+        var appearance = isListening ? WpfUi.ControlAppearance.Info : WpfUi.ControlAppearance.Caution;
+        var icon = isListening ? WpfUi.SymbolRegular.Phone24 : WpfUi.SymbolRegular.Warning24;
 
         if (_guideSnackbar == null)
         {
-            _guideSnackbar = new ui.Snackbar(RootSnackbar)
+            _guideSnackbar = new WpfUi.Snackbar(RootSnackbar)
             {
                 Title = title,
                 Content = msg,
                 Appearance = appearance,
-                Icon = new ui.SymbolIcon(icon),
+                Icon = new WpfUi.SymbolIcon(icon),
                 Timeout = TimeSpan.FromHours(24),
                 MaxWidth = 350,
                 HorizontalAlignment = HorizontalAlignment.Right
@@ -4310,7 +4306,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _guideSnackbar.Title = title;
             _guideSnackbar.Content = msg;
             _guideSnackbar.Appearance = appearance;
-            _guideSnackbar.Icon = new ui.SymbolIcon(icon);
+            _guideSnackbar.Icon = new WpfUi.SymbolIcon(icon);
             if (_guideSnackbar.Visibility != Visibility.Visible)
                 _guideSnackbar.Show();
         }
@@ -4396,18 +4392,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (path == null)
             {
-                ShowInfoSnackbar("Update", "Download failed.", ui.ControlAppearance.Danger);
+                ShowInfoSnackbar("Update", "Download failed.", WpfUi.ControlAppearance.Danger);
                 return;
             }
 
             _updateService.PendingInstallerPath = path;
-            ShowInfoSnackbar("Update Downloaded", "The update will be installed automatically when you close the app.", ui.ControlAppearance.Success);
+            ShowInfoSnackbar("Update Downloaded", "The update will be installed automatically when you close the app.", WpfUi.ControlAppearance.Success);
         }
         catch (Exception ex)
         {
             _vm.IsDownloadingUpdate = false;
             AppendLog("❌ Update download failed: " + ex.Message);
-            ShowInfoSnackbar("Update", "Download failed: " + ex.Message, ui.ControlAppearance.Danger);
+            ShowInfoSnackbar("Update", "Download failed: " + ex.Message, WpfUi.ControlAppearance.Danger);
         }
     }
 
@@ -4416,7 +4412,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (_listenerStarting || _vm.IsDownloadingUpdate) return;
         if (!string.IsNullOrEmpty(_updateService.PendingInstallerPath))
         {
-            ShowInfoSnackbar("Update", "Update already downloaded. It will be installed when you close the app.", ui.ControlAppearance.Info);
+            ShowInfoSnackbar("Update", "Update already downloaded. It will be installed when you close the app.", WpfUi.ControlAppearance.Info);
             return;
         }
 
