@@ -126,7 +126,7 @@ public partial class MainWindow
 
     private readonly Dictionary<ulong, (double x, double y, string name)> _lastPlayersBySid = new();
     private readonly Dictionary<ulong, (bool online, bool dead)> _lastPresence = new();
-    private ulong _mySteamId => (ulong.TryParse(_vm?.SteamId64, out var v) ? v : 0UL);
+    private ulong _mySteamId => (ulong.TryParse(_vm?.SteamId64, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : 0UL);
 
     private readonly Dictionary<ulong, string> _steamNames = new();
     private DateTime _lastTeamRefresh = DateTime.MinValue;

@@ -435,7 +435,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                 if (v is short sh) return sh;
                 if (v is byte b) return b;
                 if (v != null && v.GetType().IsEnum) return Convert.ToInt32(v);
-                if (int.TryParse(v?.ToString(), out var ii)) return ii;
+                if (int.TryParse(v?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var ii)) return ii;
             }
             return 0;
         }
@@ -448,7 +448,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                 if (v is uint u) return u;
                 if (v is int i && i >= 0) return (uint)i;
                 if (v is long l && l >= 0) return (uint)l;
-                if (uint.TryParse(v?.ToString(), out var uu)) return uu;
+                if (uint.TryParse(v?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var uu)) return uu;
             }
             return 0u;
         }
@@ -461,7 +461,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                 if (v is ulong u) return u;
                 if (v is long l && l >= 0) return (ulong)l;
                 if (v is uint ui) return ui;
-                if (ulong.TryParse(v?.ToString(), out var uu)) return uu;
+                if (ulong.TryParse(v?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var uu)) return uu;
             }
             return 0UL;
         }
@@ -475,7 +475,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                 if (v is float f) return f;
                 if (v is int i) return i;
                 if (v is long l) return l;
-                if (double.TryParse(v?.ToString(), out var parsed)) return parsed;
+                if (double.TryParse(v?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var parsed)) return parsed;
             }
             return 0.0;
         }
@@ -1340,7 +1340,7 @@ rp.connect();
                 int w = (int)(RProp2(info, "Width") ?? 160);
                 int h = (int)(RProp2(info, "Height") ?? 90);
                 double vf = 0;
-                double.TryParse(RProp2(info, "VerticalFov")?.ToString(), out vf);
+                double.TryParse(RProp2(info, "VerticalFov")?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out vf);
                 if (vf <= 0) vf = _lastCamInfo.vfov;
                 _lastCamInfo = (w, h, vf);
             }
@@ -1350,7 +1350,7 @@ rp.connect();
             if (rays != null)
             {
                 double vf = _lastCamInfo.vfov;
-                double.TryParse(RProp2(rays, "VerticalFov")?.ToString(), out vf);
+                double.TryParse(RProp2(rays, "VerticalFov")?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out vf);
                 if (vf <= 0) vf = _lastCamInfo.vfov;
 
                 var entsNode = RProp2(rays, "Entities") ?? RProp2(rays, "Entity");
@@ -1361,13 +1361,13 @@ rp.connect();
                     {
                         var name = RStr(it, "Name", "Label", "UserName", "DisplayName") ?? "";
                         var pos = RProp2(it, "Position") ?? it;
-                        double.TryParse(RProp2(pos, "X")?.ToString(), out var ex);
-                        double.TryParse(RProp2(pos, "Y")?.ToString(), out var ey);
-                        double.TryParse(RProp2(pos, "Z")?.ToString(), out var ez);
+                        double.TryParse(RProp2(pos, "X")?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var ex);
+                        double.TryParse(RProp2(pos, "Y")?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var ey);
+                        double.TryParse(RProp2(pos, "Z")?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var ez);
                         // optional: id/type mitgeben, falls vorhanden
                         int id2 = 0, type = 0;
-                        if (int.TryParse(RProp2(en, "entityId")?.ToString(), out var eid)) id2 = eid;
-                        if (int.TryParse(RProp2(en, "type")?.ToString(), out var et)) type = et;
+                        if (int.TryParse(RProp2(en, "entityId")?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var eid)) id2 = eid;
+                        if (int.TryParse(RProp2(en, "type")?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var et)) type = et;
                     }
                 }
                 CameraEntities?.Invoke(_currentCamId ?? "", vf, _lastCamInfo.w, _lastCamInfo.h, list);
@@ -4758,9 +4758,9 @@ rp.connect();
 
         _isChatPrimed = false; // Reset bei Neuverbindung
         if (profile is null) throw new ArgumentNullException(nameof(profile));
-        if (!ulong.TryParse(profile.SteamId64, out var steamId))
+        if (!ulong.TryParse(profile.SteamId64, NumberStyles.Any, CultureInfo.InvariantCulture, out var steamId))
             throw new ArgumentException("Ungültige SteamID64.", nameof(profile));
-        if (!int.TryParse(profile.PlayerToken, out var playerToken))
+        if (!int.TryParse(profile.PlayerToken, NumberStyles.Any, CultureInfo.InvariantCulture, out var playerToken))
             throw new ArgumentException("Ungültiger PlayerToken.", nameof(profile));
 
         _host = profile.Host;
