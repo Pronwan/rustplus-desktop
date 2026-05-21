@@ -380,4 +380,8 @@ Download and install now?</value></data>
   <data name="Language" xml:space="preserve"><value>Language</value></data>
   <data name="SelectLanguage" xml:space="preserve"><value>Select Language</value></data>
   <data name="RestartRequired" xml:space="preserve"><value>Changing language requires a restart to take full effect.</value></data>
+  <data name="SmartSwitches" xml:space="preserve"><value>Smart Switches</value></data>
+  <data name="UpkeepTcMonitors" xml:space="preserve"><value>Upkeep (TC) Monitors</value></data>
+  <data name="NoTcMonitorsFound" xml:space="preserve"><value>No TC monitors found.</value></data>
+  <data name="SaveAndClose" xml:space="preserve"><value>Save &amp; Close</value></data>
 </root>

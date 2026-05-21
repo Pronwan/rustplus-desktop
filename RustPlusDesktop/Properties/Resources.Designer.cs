@@ -349,5 +349,9 @@ namespace RustPlusDesk.Properties {
         public static string Language => ResourceManager.GetString("Language", resourceCulture);
         public static string SelectLanguage => ResourceManager.GetString("SelectLanguage", resourceCulture);
         public static string RestartRequired => ResourceManager.GetString("RestartRequired", resourceCulture);
+        public static string SmartSwitches => ResourceManager.GetString("SmartSwitches", resourceCulture);
+        public static string UpkeepTcMonitors => ResourceManager.GetString("UpkeepTcMonitors", resourceCulture);
+        public static string NoTcMonitorsFound => ResourceManager.GetString("NoTcMonitorsFound", resourceCulture);
+        public static string SaveAndClose => ResourceManager.GetString("SaveAndClose", resourceCulture);
     }
 }
