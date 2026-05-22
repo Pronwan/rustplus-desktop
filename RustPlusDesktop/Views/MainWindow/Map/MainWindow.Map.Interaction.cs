@@ -167,6 +167,17 @@ public partial class MainWindow
         var hostPos = e.GetPosition(WebViewHost);
         var mapPos = HostToScenePreTransform(hostPos);
 
+        if (IsDragGridMode && e.ChangedButton == MouseButton.Left)
+        {
+            _isDraggingGrid = true;
+            _dragGridStartMapPos = mapPos;
+            _dragGridStartShiftX = GridShiftX;
+            _dragGridStartShiftY = GridShiftY;
+            WebViewHost.CaptureMouse();
+            e.Handled = true;
+            return;
+        }
+
         if (_overlayToolsVisible && _currentTool != OverlayToolMode.None)
         {
             HandleOverlayMouseDown(e, mapPos);
@@ -211,6 +222,31 @@ public partial class MainWindow
         var hostPos = e.GetPosition(WebViewHost);
         var mapPos = HostToScenePreTransform(hostPos);
 
+        if (IsDragGridMode && _isDraggingGrid)
+        {
+            double deltaX = mapPos.X - _dragGridStartMapPos.X;
+            double deltaY = mapPos.Y - _dragGridStartMapPos.Y;
+            if (_worldSizeS > 0 && _worldRectPx.Width > 0 && _worldRectPx.Height > 0)
+            {
+                double newShiftX = _dragGridStartShiftX + deltaX * (_worldSizeS / _worldRectPx.Width);
+                double newShiftY = _dragGridStartShiftY - deltaY * (_worldSizeS / _worldRectPx.Height);
+
+                newShiftX = Math.Clamp(newShiftX, -300.0, 300.0);
+                newShiftY = Math.Clamp(newShiftY, -300.0, 300.0);
+
+                newShiftX = Math.Round(newShiftX);
+                newShiftY = Math.Round(newShiftY);
+
+                GridShiftX = newShiftX;
+                GridShiftY = newShiftY;
+                ModRedrawGrid();
+
+                OnGridOffsetsDragged?.Invoke(newShiftX, newShiftY);
+            }
+            e.Handled = true;
+            return;
+        }
+
         if (_overlayToolsVisible && _currentTool != OverlayToolMode.None)
         {
             HandleOverlayMouseMove(e, mapPos);
@@ -236,6 +272,14 @@ public partial class MainWindow
     {
         var hostPos = e.GetPosition(WebViewHost);
         var mapPos = HostToScenePreTransform(hostPos);
+
+        if (IsDragGridMode && _isDraggingGrid && e.ChangedButton == MouseButton.Left)
+        {
+            _isDraggingGrid = false;
+            WebViewHost.ReleaseMouseCapture();
+            e.Handled = true;
+            return;
+        }
 
         if (_overlayToolsVisible && _currentTool != OverlayToolMode.None)
         {
