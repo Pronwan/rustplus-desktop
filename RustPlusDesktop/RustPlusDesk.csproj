@@ -358,43 +358,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Localized resources: explicit Culture so MSBuild builds proper satellite assemblies -->
-    <EmbeddedResource Update="Properties/lang/af/*.resx">     <Culture>af</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/ar/*.resx">     <Culture>ar</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/ca/*.resx">     <Culture>ca</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/cs/*.resx">     <Culture>cs</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/da/*.resx">     <Culture>da</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/de/*.resx">     <Culture>de</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/el/*.resx">     <Culture>el</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/en/*.resx">     <Culture>en</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/es/*.resx">     <Culture>es</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/es-ES/*.resx">  <Culture>es-ES</Culture>  </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/fi/*.resx">     <Culture>fi</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/fr/*.resx">     <Culture>fr</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/he/*.resx">     <Culture>he</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/hu/*.resx">     <Culture>hu</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/it/*.resx">     <Culture>it</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/ja/*.resx">     <Culture>ja</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/ko/*.resx">     <Culture>ko</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/nl/*.resx">     <Culture>nl</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/no/*.resx">     <Culture>no</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/pl/*.resx">     <Culture>pl</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/pt/*.resx">     <Culture>pt</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/pt-BR/*.resx">  <Culture>pt-BR</Culture>  </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/pt-PT/*.resx">  <Culture>pt-PT</Culture>  </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/pt_BR/*.resx">  <Culture>pt-BR</Culture>  </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/ro/*.resx">     <Culture>ro</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/ru/*.resx">     <Culture>ru</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/sr/*.resx">     <Culture>sr</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/sv/*.resx">     <Culture>sv</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/sv-SE/*.resx">  <Culture>sv-SE</Culture>  </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/tr/*.resx">     <Culture>tr</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/uk/*.resx">     <Culture>uk</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/vi/*.resx">     <Culture>vi</Culture>     </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/zh-CN/*.resx">  <Culture>zh-CN</Culture>  </EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/zh-Hans/*.resx"><Culture>zh-Hans</Culture></EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/zh-Hant/*.resx"><Culture>zh-Hant</Culture></EmbeddedResource>
-    <EmbeddedResource Update="Properties/lang/zh-TW/*.resx">  <Culture>zh-TW</Culture>  </EmbeddedResource>
+    <!-- Map nested localized resources using Link to keep culture naming intact while avoiding manifest name collisions -->
+    <EmbeddedResource Update="Properties/lang/**/*.resx">
+      <Link>Properties\%(Filename)%(Extension)</Link>
+    </EmbeddedResource>
   </ItemGroup>
 
 
