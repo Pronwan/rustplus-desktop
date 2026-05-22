@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
-        Title="{x:Static p:Resources.MiniMap}"
+        Title="{DynamicResource MiniMap}"
         WindowStyle="None"
         ResizeMode="NoResize"
         AllowsTransparency="True"
@@ -83,7 +83,7 @@
             <StackPanel>
                 <!-- Title Header with Red X Close Button -->
                 <Grid Margin="0,0,0,12" Width="180">
-                    <TextBlock Text="{x:Static p:Resources.MiniMapSettings}" FontWeight="SemiBold" FontSize="14" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock Text="{DynamicResource MiniMapSettings}" FontWeight="SemiBold" FontSize="14" Foreground="White" VerticalAlignment="Center"/>
                     <ui:Button x:Name="BtnSettingsClose" 
                                HorizontalAlignment="Right" 
                                VerticalAlignment="Center" 
@@ -95,11 +95,11 @@
                                Icon="{ui:SymbolIcon Symbol=Dismiss24}"/>
                 </Grid>
                 
-                <TextBlock Text="{x:Static p:Resources.Shape}" FontSize="12" Foreground="#AAAAAA" Margin="0,0,0,4"/>
+                <TextBlock Text="{DynamicResource Shape}" FontSize="12" Foreground="#AAAAAA" Margin="0,0,0,4"/>
                 <ComboBox x:Name="CmbShape" SelectionChanged="CmbShape_SelectionChanged" Margin="0,0,0,12" Width="180">
-                    <ComboBoxItem Content="{x:Static p:Resources.Circle}"/>
-                    <ComboBoxItem Content="{x:Static p:Resources.Square}"/>
-                    <ComboBoxItem Content="{x:Static p:Resources.Rectangle}"/>
+                    <ComboBoxItem Content="{DynamicResource Circle}"/>
+                    <ComboBoxItem Content="{DynamicResource Square}"/>
+                    <ComboBoxItem Content="{DynamicResource Rectangle}"/>
                 </ComboBox>
 
                 <TextBlock x:Name="LblOpacity" Text="Opacity: 100%" FontSize="12" Foreground="#AAAAAA" Margin="0,0,0,4"/>
@@ -108,7 +108,7 @@
                 <TextBlock x:Name="LblSize" Text="Size: 100% (SHIFT+Mousewheel)" FontSize="12" Foreground="#AAAAAA" Margin="0,0,0,4"/>
                 <Slider x:Name="SliSize" Minimum="160" Maximum="800" Value="260" ValueChanged="SliSize_ValueChanged" Margin="0,0,0,12" IsSnapToTickEnabled="True" TickFrequency="10" Width="180"/>
 
-                <CheckBox x:Name="ChkShowTime" Content="{x:Static p:Resources.ShowServerTime}" Foreground="White" Checked="ChkShowTime_Changed" Unchecked="ChkShowTime_Changed" Margin="0,0,0,4"/>
+                <CheckBox x:Name="ChkShowTime" Content="{DynamicResource ShowServerTime}" Foreground="White" Checked="ChkShowTime_Changed" Unchecked="ChkShowTime_Changed" Margin="0,0,0,4"/>
             </StackPanel>
         </Border>
     </Grid>

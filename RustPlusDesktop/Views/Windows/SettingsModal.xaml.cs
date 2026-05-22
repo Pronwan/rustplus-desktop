@@ -89,8 +89,6 @@ namespace RustPlusDesk.Views
                 {
                     app.SetLanguage();
                 }
-
-                TxtRestartNote.Visibility = Visibility.Visible;
             }
         }
 

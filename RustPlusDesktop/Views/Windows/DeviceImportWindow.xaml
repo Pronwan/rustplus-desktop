@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
-        Title="{x:Static p:Resources.ImportDevicesTitle}"
+        Title="{DynamicResource ImportDevicesTitle}"
         Width="720"
         Height="540"
         Background="{DynamicResource AppBg}"
@@ -25,7 +25,7 @@
 
             <!-- Header -->
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
-                <TextBlock Text="{x:Static p:Resources.ImportDevicesHeader}"
+                <TextBlock Text="{DynamicResource ImportDevicesHeader}"
                            FontSize="20"
                            FontWeight="SemiBold"
                            Margin="0,0,0,2"/>
@@ -37,7 +37,7 @@
                            Margin="0,0,0,4"/>
 
                 <!-- e.g. 'Select which devices you want to import for this server.' -->
-                <TextBlock Text="{x:Static p:Resources.ImportDevicesSelectPrompt}"
+                <TextBlock Text="{DynamicResource ImportDevicesSelectPrompt}"
                            Foreground="{DynamicResource TextSubtle}"
                            FontSize="13"/>
             </StackPanel>
@@ -57,12 +57,12 @@
                     <!-- Left side: selection helpers -->
                     <StackPanel Orientation="Horizontal"
             VerticalAlignment="Center">
-                        <Button Content="{x:Static p:Resources.SelectAll}"
+                        <Button Content="{DynamicResource SelectAll}"
             Click="BtnSelectAll_Click" />
-                        <Button Content="{x:Static p:Resources.DeselectAll}"
+                        <Button Content="{DynamicResource DeselectAll}"
             Margin="8,0,0,0"
             Click="BtnDeselectAll_Click" />
-                        <Button Content="{x:Static p:Resources.CheckDeviceStatus}"
+                        <Button Content="{DynamicResource CheckDeviceStatus}"
             Margin="16,0,0,0"
             Click="BtnCheckStatus_Click" />
                     </StackPanel>
@@ -71,10 +71,10 @@
                     <StackPanel Orientation="Horizontal"
             Grid.Column="1"
             VerticalAlignment="Center">
-                        <Button Content="{x:Static p:Resources.Cancel}"
+                        <Button Content="{DynamicResource Cancel}"
             IsCancel="True"
             Click="BtnCancel_Click" />
-                        <Button Content="{x:Static p:Resources.ImportSelected}"
+                        <Button Content="{DynamicResource ImportSelected}"
             IsDefault="True"
             Click="BtnImport_Click"
             Margin="8,0,0,0" />
