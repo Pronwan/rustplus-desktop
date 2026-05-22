@@ -68,7 +68,14 @@ namespace RustPlusDesk.Views
                 new() { Name = "简体中文", Code = "zh-CN" },
                 new() { Name = "繁體中文", Code = "zh-TW" },
                 new() { Name = "Català", Code = "ca" },
-                new() { Name = "Afrikaans", Code = "af" }
+                new() { Name = "Afrikaans", Code = "af" },
+                // Alias / generic locale folders
+                new() { Name = "Español (es)", Code = "es" },
+                new() { Name = "Português (pt)", Code = "pt" },
+                new() { Name = "Português (BR) [pt_BR]", Code = "pt_BR" },
+                new() { Name = "Svenska (sv)", Code = "sv" },
+                new() { Name = "简体中文 (Hans)", Code = "zh-Hans" },
+                new() { Name = "繁體中文 (Hant)", Code = "zh-Hant" }
             };
 
             CmbLanguage.ItemsSource = langs.OrderBy(l => l.Name).ToList();

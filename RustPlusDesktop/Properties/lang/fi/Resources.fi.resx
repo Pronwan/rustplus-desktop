@@ -195,6 +195,111 @@
   <data name="PleaseWait" xml:space="preserve">
     <value>Bitte warten …</value>
   </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>Vaihda Palvelimen Alue</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>Lähetystila</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>Mittakaava:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>Ota Lähetystila Käyttöön (Lyhentäjien Nimet)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>Lyhentää Steam-nimet ja tunnukset suojataksesi yksityisyyden lähetysten aikana. Tallenna automaattisesti konsoli ja palvelinlista.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>Ei sijaintia saatavilla (offline-tilassa tai ei ole luotu).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>Tallenna Ryhmä</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>Anna ryhmän nimi.</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>Viestiä ei voitu lähettää. Yritä uudelleen. (Tarkista, oletko joukkueessa!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Virhe: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>Määritä Ryhmä</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>Ryhmän Asetukset: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Ryhmän Nimi</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>Syötä ryhmän nimi...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>Ryhmän Väri</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Tallenna Muutokset</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>Soittimen Aktiivisuuden Analytiikka Ja Ennusteet</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>Pelaajat</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>Streamer-Mode &amp; Mini Map -peruskorjaus</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>Lähetystila</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>Pelaajan Merkin Skaalaus</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>Mini Kartta Puola</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>Toiminto Vaaditaan:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics Removal:</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>Pelaajan Seurantajärjestelmän Peruskorjaus</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>Kuinka Pelaajan Seuranta Toimii</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>Lisää pelaajia seurantaan aloittaaksesi seurannan</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>Seuranta Aktiivisena</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>Käyttämättömän Seuranta</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>Suodata pelaajia...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>Yhdistä palvelimeen ladataksesi soittolistan</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Haetaan pelaajia Steam Queryin kautta...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>Kappaleen Tunnus</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>Manuaalinen Kappaleen Nimi...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Ei laitteita.</value>
+  </data>
   <data name="NoTokenRegistered" xml:space="preserve">
     <value>Ei rekisteröitynyttä tunnusta</value>
   </data>
@@ -202,7 +307,7 @@
     <value>Tunnus vanhentunut!</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>Expires in {0} days</value>
+    <value>Vanhentuu {0} päivän kuluttua</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
     <value>{0} yöhön asti</value>
@@ -217,7 +322,7 @@
     <value>Seuraa {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>Pairing: listening…</value>
+    <value>Paritus: kuuntelu…</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
     <value>Paritus: pysäytetty</value>
@@ -1051,5 +1156,353 @@ Lataa ja asenna nyt?</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
     <value>Tallenna &amp; Sulje</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Viesti...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Virheilmoitus täällä</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Partio Heli</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Patrol Heli aktiivinen - käynnissä {0}.</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Yhdistetty kesken tapahtuman - kutuaika tuntematon</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Patrol Heli aktiivinen (kutuaika tuntematon)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Patrol Heli ammuttiin alas {0} sitten tässä istunnossa.</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Patrol Heli poistui kartalta {0} tämän istunnon aikana.</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Telakoituna osoitteessa {0} - lähtee ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>satama</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>On jo telakoitunut connectiin - lähtöaika tuntematon.</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Telakoituna osoitteessa {0} (telakoinnin kestoa ei ole vielä tiedossa).</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Kartalla jäljellä oleva aika (spawnista)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Kytkeytyi kesken matkan - aika tuntematon</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Yhteys katkesi kesken matkan - aika tuntematon (reitti ~{0}m yhteensä).</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Cargo Ship despawned {0}m {1}s ago this session</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Matkustava myyjä aktiivinen - juoksee {0} varten.</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Travelling Vendor aktiivinen (kutuaika tuntematon)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor despawned {0} ago this session</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea active - käynnissä {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Deep Sea active (kutuaika tuntematon)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea päättyi {0} tämän istunnon aikana</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} pelaajia tällä hetkellä verkossa.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Jono: {0} pelaajat.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Nykyinen peliaika: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} ylennettiin johtajaksi.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea on aktiivinen! Running for {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea on tällä hetkellä aktiivinen (kytketty tapahtuman puolivälissä - kutuaika tuntematon).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea päättyi {0} minuuttia sitten tässä istunnossa.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Deep Sea -tapahtuman tila tuntematon (ei nähty tässä istunnossa).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Rahtialus ei ole aktiivinen.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Rahtialus telakoitui osoitteessa {0}. Lähtee noin {1} minuutin kuluttua.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Rahtialus telakoitui osoitteeseen {0} ja valmistautuu lähtöön.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Rahtialus telakoitui osoitteessa {0} (lähtöaika tuntematon).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Rahtialus aktiivinen. Lähtee noin {0} minuutin kuluttua.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Rahtialus aktiivinen ja valmistautuu lähtemään pian.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Rahtialus aktiivinen (reitin kestoa ei ole vielä opittu tälle palvelimelle).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Rahtialus aktiivinen (yhdistetty spawnin jälkeen - jäljellä oleva aika tuntematon).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Rahtialus ei ole aktiivinen. Despawnattu {0} minuuttia sitten tässä istunnossa.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: laatikko osoitteessa {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: viimeksi soitettu {1}m sitten</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: ei kutsuttu tällä istuntokaudella</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Partio Heli on aktiivinen! Ehdolla {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Patrol Heli on tällä hetkellä aktiivinen (yhdistetty tapahtuman puolivälissä - spawn-aika tuntematon).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Patrol Heli ei ole aktiivinen. Se oli {0} {1} sitten tämän istunnon.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>ammuttiin alas</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>lähti kartalta</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Patrol Heli -tapahtuman tila tuntematon (ei nähty tässä istunnossa).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Travelling Vendor on aktiivinen! Ehdolla {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Matkustava myyjä on tällä hetkellä aktiivinen (kytketty tapahtuman puolivälissä - spawn-aika tuntematon).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Matkustava myyjä ei ole aktiivinen. Despawnattu {0} sitten tässä istunnossa.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Travelling Vendor -tapahtuman tila tuntematon (ei nähty tässä istunnossa).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Ylläpitokomentoja varten ei ole kartoitettu työkalukaappeja.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Ylläpito osoitteessa {0} TC: Tyhjä tai vanhentunut.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Tarve/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Ylläpito osoitteessa {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} päivät</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} tuntia</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} minuuttia</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Tyhjä / vanhentunut</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Ylläpito: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Bound Tool Cupboard -näyttöjä ei löydy tai niitä ei ole yhdistetty.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Sidottu työkalukaapin näyttöä ei löydy tai sitä ei ole yhdistetty.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} kääntyi {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Bound Smart Switchiä ei löydy tai sitä ei ole yhdistetty.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Puu</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Kivi</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Metalli</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Pieni öljynporauslautta</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Suuri öljynporauslautta</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Kauppa</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Rahtialus</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Matkustava myyjä</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Partiohelikopteri</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Öljynporauslaatikko</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Räjähdys</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Rakennus tukossa</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Tapahtuma</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] laukaistu! Laatikko avautuu osoitteessa {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>HÄLYTYS: {0} laukaistu!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Laatikko avautuu 10 minuutissa!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Laatikko avautuu 5 minuutissa!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Deep Sea on ylhäällä</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Uusi myymälä {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Epäilyttävä kauppa {0} [{1}] oli verkossa {2}s, myi {3}.</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Rahtialus kuti {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>kaukana merellä (lähellä {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Rahtialus telakoituna osoitteessa {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Rahtialuksen odotetaan telakoituvan osoitteeseen {0} ({1}) noin 5 minuutin kuluttua.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Rahtialus lähtee osoitteesta {0} 5 minuutin kuluttua ({1}).</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Kaatuminen havaittu palvelimen viiveen vuoksi - Heli on edelleen kartalla osoitteessa {0}.</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} kuti sisään osoitteessa {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Patrol Heli ammuttiin alas osoitteessa {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>tuntematon</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} tuli verkossa @ {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} meni offline-tilaan</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} kuoli @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} respawned @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Seuranta] {0}{1} on nyt ONLINE</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Seuranta] {0}{1} on nyt OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Seuranta] {0}{1} nimeksi {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>myy</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>ostaa</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Kauppa</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (kanta {5}) {6} {7} varten.</value>
   </data>
 </root>
