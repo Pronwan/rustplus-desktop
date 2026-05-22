@@ -347,8 +347,8 @@ Formato: rustplus://IP:PORT</value>
     <value>Reset pairing</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>Delete existing pairing config?
-You will need to pair again on next start.</value>
+    <value>Excluir a configuração de emparelhamento existente?
+Você precisará emparelhar novamente na próxima inicialização.</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
     <value>Reset + Listen</value>

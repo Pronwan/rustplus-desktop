@@ -190,7 +190,7 @@
     <value>Relink Battlemetrics ID…</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>Delete server…</value>
+    <value>Διαγραφή διακομιστή…</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
     <value>Bitte warten …</value>
@@ -310,10 +310,10 @@
     <value>Λήγει σε {0} ημέρες</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
-    <value>{0} until night</value>
+    <value>{0} μέχρι τη νύχτα</value>
   </data>
   <data name="UntilDay" xml:space="preserve">
-    <value>{0} until day</value>
+    <value>{0} μέχρι την ημέρα</value>
   </data>
   <data name="FollowMe" xml:space="preserve">
     <value>Ακολουθήστε Με</value>
@@ -347,8 +347,8 @@
     <value>Reset pairing</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>Delete existing pairing config?
-You will need to pair again on next start.</value>
+    <value>Διαγραφή της υπάρχουσας διαμόρφωσης ζεύξης;
+Θα χρειαστεί να πραγματοποιήσετε εκ νέου ζεύξη κατά την επόμενη εκκίνηση.</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
     <value>Reset + Listen</value>
@@ -411,7 +411,7 @@ Open Releases page?</value>
     <value>Relink Battlemetrics ID…</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>Delete server…</value>
+    <value>Διαγραφή διακομιστή…</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
     <value>Δεξί κλικ για μετονομασία</value>

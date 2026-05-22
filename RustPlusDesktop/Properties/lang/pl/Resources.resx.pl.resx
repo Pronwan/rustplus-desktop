@@ -307,7 +307,7 @@
     <value>Token wygasł!</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>Expires in {0} days</value>
+    <value>Wygasa za {0} dni</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
     <value>{0} do nocy</value>
@@ -972,7 +972,7 @@ Pobrać i zainstalować teraz?</value>
     <value>Nowa nazwa dla #{0}:</value>
   </data>
   <data name="EnterBattlemetricsIdFor" xml:space="preserve">
-    <value>Enter Battlemetrics Server ID for "{0}":</value>
+    <value>Wprowadź identyfikator serwera Battlemetrics dla "{0}":</value>
   </data>
   <data name="TrayTrackingStatus" xml:space="preserve">
     <value>Śledzenie: {0}</value>

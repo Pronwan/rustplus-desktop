@@ -322,7 +322,7 @@
     <value>跟随 {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>Pairing: listening…</value>
+    <value>配对：聆听…</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
     <value>配对：停止</value>
@@ -347,8 +347,8 @@
     <value>Reset pairing</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>Delete existing pairing config?
-You will need to pair again on next start.</value>
+    <value>删除现有配对配置？
+下次启动时需要重新配对。</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
     <value>Reset + Listen</value>
@@ -383,7 +383,7 @@ You will need to pair again on next start.</value>
     <value>下载失败。</value>
   </data>
   <data name="UpdateCheckFailed" xml:space="preserve">
-    <value>Update check failed.
+    <value>更新检查失败。
 {0}</value>
   </data>
   <data name="NoDevices" xml:space="preserve">

@@ -307,7 +307,7 @@
     <value>Tunnus vanhentunut!</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>Expires in {0} days</value>
+    <value>Vanhentuu {0} päivän kuluttua</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
     <value>{0} yöhön asti</value>
@@ -322,7 +322,7 @@
     <value>Seuraa {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>Pairing: listening…</value>
+    <value>Paritus: kuuntelu…</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
     <value>Paritus: pysäytetty</value>

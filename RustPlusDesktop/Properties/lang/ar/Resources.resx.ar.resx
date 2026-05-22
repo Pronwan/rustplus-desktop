@@ -307,7 +307,7 @@
     <value>انتهت صلاحية الرمز المميز!</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>Expires in {0} days</value>
+    <value>تنتهي صلاحيتها في {0} يوم</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
     <value>{0} حتى الليل</value>
@@ -347,8 +347,8 @@
     <value>Reset pairing</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>Delete existing pairing config?
-You will need to pair again on next start.</value>
+    <value>حذف تكوين الاقتران الحالي؟
+ستحتاج إلى الاقتران مرة أخرى عند البدء التالي.</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
     <value>Reset + Listen</value>
