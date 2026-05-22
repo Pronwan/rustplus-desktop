@@ -2,8 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:properties="clr-namespace:RustPlusDesk.Properties"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="{DynamicResource AppSettingsTitle}" 
-        Width="500" Height="480"
+        Width="500" Height="520"
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True" 
         WindowStyle="None"
@@ -11,134 +12,162 @@
         ShowInTaskbar="False"
         Topmost="True">
     
-    <Border Background="{DynamicResource SurfaceAlt}" 
+    <Border Background="{DynamicResource Surface}" 
             BorderBrush="{DynamicResource CardBorder}" 
-            BorderThickness="2" 
+            BorderThickness="1" 
             CornerRadius="12">
         <DockPanel Margin="20">
             <!-- Header -->
-            <StackPanel DockPanel.Dock="Top" Margin="0,0,0,20">
-                <DockPanel>
-                    <TextBlock Text="{DynamicResource Settings}" 
-                               Foreground="White" 
-                               FontSize="22" 
-                               FontWeight="Bold" 
-                               VerticalAlignment="Center"/>
-                    <Button Content="✕" 
-                            HorizontalAlignment="Right" 
-                            Width="30" Height="30"
-                            Style="{StaticResource GhostButton}"
-                            Click="BtnClose_Click"
-                            Cursor="Hand"
-                            FontSize="18"
-                            Foreground="{DynamicResource TextSubtle}"/>
-                </DockPanel>
+            <StackPanel DockPanel.Dock="Top" Margin="0,0,0,15">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <ui:SymbolIcon Symbol="Settings24" Margin="0,0,8,0" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" FontSize="20"/>
+                        <TextBlock Text="{DynamicResource Settings}" 
+                                   Foreground="{DynamicResource TextPrimary}" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold" 
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <ui:Button HorizontalAlignment="Right" 
+                               VerticalAlignment="Center" 
+                               Padding="4"
+                               Appearance="Transparent"
+                               Click="BtnClose_Click"
+                               Icon="{ui:SymbolIcon Symbol=Dismiss24}"/>
+                </Grid>
                 <Separator Background="{DynamicResource CardBorder}" Margin="0,10,0,0"/>
             </StackPanel>
 
             <!-- Footer -->
-            <Button DockPanel.Dock="Bottom" 
-                    Content="{DynamicResource Close}" 
-                    Width="100" 
-                    Height="35"
-                    HorizontalAlignment="Right"
-                    Style="{StaticResource PrimaryButton}"
-                    Click="BtnClose_Click"
-                    Margin="0,15,0,0"/>
+            <ui:Button DockPanel.Dock="Bottom" 
+                       Content="{DynamicResource Close}" 
+                       Width="100" 
+                       Height="32"
+                       HorizontalAlignment="Right"
+                       Appearance="Primary"
+                       Click="BtnClose_Click"
+                       Margin="0,15,0,0"/>
 
             <!-- Content -->
             <ScrollViewer VerticalScrollBarVisibility="Auto" Style="{StaticResource {x:Type ScrollViewer}}">
                 <StackPanel>
-                    <TextBlock Text="{DynamicResource General}" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <!-- General Section -->
+                    <TextBlock Text="{DynamicResource General}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{DynamicResource Language}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}"/>
+                                <ComboBox Grid.Column="1" x:Name="CmbLanguage" Width="150" 
+                                          DisplayMemberPath="Name" SelectedValuePath="Code"
+                                          SelectionChanged="CmbLanguage_SelectionChanged"/>
+                            </Grid>
+                            
+                            <CheckBox x:Name="ChkAutoStart" 
+                                      Content="{DynamicResource LaunchWithWindows}" 
+                                      Margin="0,0,0,10" 
+                                      Style="{StaticResource DotCheckBox}"
+                                      Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                        <TextBlock Text="{DynamicResource Language}" VerticalAlignment="Center" Width="100" Foreground="{DynamicResource TextPrimary}"/>
-                        <ComboBox x:Name="CmbLanguage" Width="150" 
-                                  DisplayMemberPath="Name" SelectedValuePath="Code"
-                                  SelectionChanged="CmbLanguage_SelectionChanged"/>
-                    </StackPanel>
-                    
-                    <CheckBox x:Name="ChkAutoStart" 
-                               Content="{DynamicResource LaunchWithWindows}" 
-                               Margin="0,0,0,12" 
-                               Style="{StaticResource DotCheckBox}"
-                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
+                            <CheckBox x:Name="ChkStartMinimized" 
+                                      Content="{DynamicResource StartMinimizedAlways}" 
+                                      Margin="0,0,0,10" 
+                                      Style="{StaticResource DotCheckBox}"
+                                      Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
 
-                    <CheckBox x:Name="ChkStartMinimized" 
-                               Content="{DynamicResource StartMinimizedAlways}" 
-                               Margin="0,0,0,12" 
-                               Style="{StaticResource DotCheckBox}"
-                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
+                            <CheckBox x:Name="ChkAutoConnect" 
+                                      Content="{DynamicResource AutoConnectLastServer}" 
+                                      Style="{StaticResource DotCheckBox}"
+                                      Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                                      ToolTip="{DynamicResource AutoConnectToolTip}"/>
+                        </StackPanel>
+                    </Border>
 
-                    <CheckBox x:Name="ChkAutoConnect" 
-                               Content="{DynamicResource AutoConnectLastServer}" 
-                               Margin="0,0,0,12" 
-                               Style="{StaticResource DotCheckBox}"
-                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"
-                               ToolTip="{DynamicResource AutoConnectToolTip}"/>
+                    <!-- Behavior Section -->
+                    <TextBlock Text="{DynamicResource Behavior}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <CheckBox x:Name="ChkCloseToTray" 
+                                      Content="{DynamicResource MinimizeToTray}" 
+                                      Margin="0,0,0,10" 
+                                      Style="{StaticResource DotCheckBox}"
+                                      Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
 
-                    <TextBlock Text="{DynamicResource Behavior}" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
+                            <CheckBox x:Name="ChkStreamerMode" 
+                                      Content="{DynamicResource EnableStreamerMode}" 
+                                      Margin="0,0,0,10" 
+                                      Style="{StaticResource DotCheckBox}"
+                                      Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                                      ToolTip="{DynamicResource StreamerModeToolTip}"/>
 
-                    <CheckBox x:Name="ChkCloseToTray" 
-                               Content="{DynamicResource MinimizeToTray}" 
-                               Margin="0,0,0,12" 
-                               Style="{StaticResource DotCheckBox}"
-                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
+                            <CheckBox x:Name="ChkBackgroundTracking" 
+                                      Content="{DynamicResource BackgroundTracking}" 
+                                      Margin="0,0,0,10" 
+                                      Style="{StaticResource DotCheckBox}"
+                                      Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                                      ToolTip="{DynamicResource BackgroundTrackingToolTip}"/>
 
-                    <CheckBox x:Name="ChkStreamerMode" 
-                               Content="{DynamicResource EnableStreamerMode}" 
-                               Margin="0,0,0,12" 
-                               Style="{StaticResource DotCheckBox}"
-                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"
-                               ToolTip="{DynamicResource StreamerModeToolTip}"/>
+                            <CheckBox x:Name="ChkHideConsole" 
+                                      Content="{DynamicResource HideSystemConsole}" 
+                                      Style="{StaticResource DotCheckBox}"
+                                      Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                                      ToolTip="{DynamicResource HideConsoleToolTip}"/>
+                        </StackPanel>
+                    </Border>
 
-                    <CheckBox x:Name="ChkBackgroundTracking" 
-                               Content="{DynamicResource BackgroundTracking}" 
-                               Margin="0,0,0,12" 
-                               Style="{StaticResource DotCheckBox}"
-                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"
-                               ToolTip="{DynamicResource BackgroundTrackingToolTip}"/>
-
-                    <CheckBox x:Name="ChkHideConsole" 
-                               Content="{DynamicResource HideSystemConsole}" 
-                               Margin="0,0,0,12" 
-                               Style="{StaticResource DotCheckBox}"
-                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"
-                               ToolTip="{DynamicResource HideConsoleToolTip}"/>
-
-                    <TextBlock Text="{DynamicResource MapSettings}" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
-                    
-                    <CheckBox x:Name="ChkAutoLoadShops" 
-                               Content="{DynamicResource AutoLoadShops}" 
-                               Margin="0,0,0,12" 
-                               Style="{StaticResource DotCheckBox}"
-                               Checked="OnSettingChanged" Unchecked="OnSettingChanged"
-                               ToolTip="{DynamicResource AutoLoadShopsToolTip}"/>
+                    <!-- Map Section -->
+                    <TextBlock Text="{DynamicResource MapSettings}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <CheckBox x:Name="ChkAutoLoadShops" 
+                                  Content="{DynamicResource AutoLoadShops}" 
+                                  Style="{StaticResource DotCheckBox}"
+                                  Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                                  ToolTip="{DynamicResource AutoLoadShopsToolTip}"/>
+                    </Border>
 
                     <!-- Chat Section -->
-                    <TextBlock Text="{DynamicResource Chat}" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                        <Button Content="{DynamicResource ModifyChatAlerts}" 
-                                Style="{StaticResource PrimaryButton}"
-                                Background="#3D5A80"
-                                Height="36"
-                                Padding="32,0"
-                                Click="BtnModifyChatAlerts_Click"/>
-                        <Button Content="{DynamicResource ChatCommands}" 
-                                Style="{StaticResource PrimaryButton}"
-                                Background="#3D5A80"
-                                Height="36"
-                                Margin="12,0,0,0"
-                                Padding="32,0"
-                                Click="BtnChatCommands_Click"/>
-                    </StackPanel>
+                    <TextBlock Text="{DynamicResource Chat}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <ui:Button x:Name="BtnModifyChatAlerts"
+                                       Grid.Column="0"
+                                       Content="{DynamicResource ModifyChatAlerts}" 
+                                       Icon="{ui:SymbolIcon Symbol=Alert24}"
+                                       HorizontalAlignment="Stretch"
+                                       Height="36"
+                                       Margin="0,0,6,0"
+                                       Click="BtnModifyChatAlerts_Click"/>
+                            <ui:Button x:Name="BtnChatCommands"
+                                       Grid.Column="1"
+                                       Content="{DynamicResource ChatCommands}" 
+                                       Icon="{ui:SymbolIcon Symbol=Chat24}"
+                                       HorizontalAlignment="Stretch"
+                                       Height="36"
+                                       Margin="6,0,0,0"
+                                       Click="BtnChatCommands_Click"/>
+                        </Grid>
+                    </Border>
 
-                    <TextBlock Text="{DynamicResource SteamAccount}" Foreground="{DynamicResource Accent}" FontWeight="Bold" Margin="0,10,0,10"/>
-                    <TextBlock Text="{DynamicResource ManageSteamAccountInfo}" 
-                               Foreground="{DynamicResource TextSubtle}" 
-                               FontSize="12" 
-                               FontStyle="Italic"
-                               TextWrapping="Wrap"/>
+                    <!-- Steam Account Section -->
+                    <TextBlock Text="{DynamicResource SteamAccount}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,8">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Person24" Margin="0,0,10,0" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" FontSize="18"/>
+                            <TextBlock Text="{DynamicResource ManageSteamAccountInfo}" 
+                                       Foreground="{DynamicResource TextSubtle}" 
+                                       FontSize="12" 
+                                       FontStyle="Italic"
+                                       TextWrapping="Wrap"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
             </ScrollViewer>
         </DockPanel>
