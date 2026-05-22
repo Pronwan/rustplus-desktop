@@ -1157,4 +1157,352 @@ Letöltés és telepítés most?</value>
   <data name="SaveAndClose" xml:space="preserve">
     <value>Mentés és bezárás</value>
   </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Üzenet...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Hibaüzenet itt</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Patrol Heli</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Patrol Heli aktív - fut a {0} oldalon.</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Csatlakozott az esemény közepén - a szaporodási idő ismeretlen</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Patrol Heli aktív (a szaporodási idő ismeretlen)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Patrol Heli lelőtték {0} ezelőtt ezen az ülésen</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Patrol Heli elhagyta a térképet {0} ezelőtt ez a munkamenet</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Kikötve a {0} - indul ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>kikötő</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Már dokkolt a connect-en - indulási idő ismeretlen</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Dokkolva a {0} címen (a dokkolás időtartama még nem ismert).</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>A térképen hátralévő idő (a spawntól)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Útközben csatlakozott - idő ismeretlen</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Csatlakozás útvonal közepén - idő ismeretlen (útvonal ~{0}m összesen)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Cargo Ship despawned {0}m {1}s ago this session</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Utazó eladó aktív - futás a {0} oldalon.</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Utazó árus aktív (szaporodási idő ismeretlen)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor despawned {0} ago this session</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea active - futás a {0} oldalon</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Deep Sea aktív (ívási idő ismeretlen)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea véget ért {0} ezelőtt ez az ülésszak</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} jelenleg online játékosok.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Sorban állás: {0} játékosok.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Jelenlegi játékidő: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} vezetőnek léptették elő.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>A Deep Sea aktív! Futás a {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>A Deep Sea jelenleg aktív (az esemény közepén kapcsolódik - a szaporodási idő ismeretlen).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>A Deep Sea a {0} percekkel ezelőtt ért véget.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>A Deep Sea esemény státusza ismeretlen (nem látta ezt az ülést).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>A teherhajó nem aktív.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Teherhajó kikötött a {0}címen. Indulás kb. {1} perc múlva.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Teherhajó dokkol a {0} címen és indulásra készül.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>A teherhajó kikötött a {0} címen (indulási idő ismeretlen).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Teherhajó aktív. Kb. {0} perc múlva indul.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>A teherhajó aktív és hamarosan indulni készül.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>A teherhajó aktív (az útvonal időtartama még nem tanult meg erre a kiszolgálóra).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>A teherhajó aktív (a spawn után csatlakozik - a hátralévő idő ismeretlen).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>A teherhajó nem aktív. Despawned {0} percekkel ezelőtt ebben a munkamenetben.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: láda {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: utoljára hívták {1}m ago</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: ebben az ülésszakban nem hívták</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Patrol Heli aktív! Futás a {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>A Patrol Heli jelenleg aktív (az esemény közepén kapcsolódik - a spawn ideje ismeretlen).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Patrol Heli nem aktív. Ez volt {0} {1} ezelőtt ezen az ülésen.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>lelőtték</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>elhagyta a térképet</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Patrol Heli esemény státusza ismeretlen (nem látta ezt az ülést).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Travelling Vendor aktív! Indul a {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Az Utazó árus jelenleg aktív (az esemény közepén csatlakozik - a spawn ideje ismeretlen).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Utazó eladó nem aktív. Despawned {0} ezelőtt ebben a munkamenetben.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Travelling Vendor esemény státusza ismeretlen (nem látta ezt az ülést).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>A karbantartási parancsokhoz nincsenek szerszámos szekrények leképezve.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Fenntartás a {0} TC-n: Üres vagy lejárt.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Szükség/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Fenntartás a {0} TC-n: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} napok</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} órák</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} percek</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Üres/lejárt</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Fenntartás: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Nem talált vagy nem párosított monitorok a szerszámos szekrényben.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Nem talált vagy nem párosított monitor a szerszámos szekrényhez.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} fordult {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Nem található vagy nem párosított Smart Switch.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Fa</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Kő</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Fém</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Kis olajfúrótorony</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Nagy olajfúrótorony</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Shop</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Teherhajó</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Utazó eladó</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Járőröző helikopter</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Oilrig láda</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Robbanás</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Épület blokkolva</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Esemény</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] beindult! A láda feloldása a {1} oldalon történik.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} beindult!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] A láda 10 perc alatt feloldódik!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] A láda 5 perc alatt feloldódik!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Deep Sea fel</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Új üzlet {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Gyanús üzlet {0} [{1}] online volt {2}s, eladva {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Teherhajó szaporodott {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>messze a tengeren (a {0} közelében)</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Teherhajó kikötve a {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>A teherhajó várhatóan kb. 5 perc múlva dokkol a {0} ({1}) címen.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>A teherhajó 5 perc múlva indul a {0} honlapról ({1}).</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>A szerver késése miatt észlelt összeomlás - Heli még mindig a térképen van a {0} címen.</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} a {1} címen indult el.</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Patrol Heli lelőtték a {0} oldalon.</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>unknown</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} bekapcsolódott a {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} offline lett</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} meghalt @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} respawned @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Tracking] {0}{1} most már ONLINE</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Tracking] {0}{1} most már OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Tracking] {0}{1} átnevezve {2} -re !</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>eladja</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>vásárol</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Bolt</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (állomány {5}) a {6} {7} esetében.</value>
+  </data>
 </root>

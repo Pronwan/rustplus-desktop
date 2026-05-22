@@ -1157,4 +1157,352 @@
   <data name="SaveAndClose" xml:space="preserve">
     <value>儲存與關閉</value>
   </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>訊息...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>錯誤訊息</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>巡邏直升機</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>巡邏直升機運作中 - 為 {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>活動中途連線 - 產卵時間未知</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>已啟用的巡邏直升機 (產卵時間未知)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>巡邏直升機在 {0} 前被擊落。</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Patrol Heli 在 {0} 前離開了地圖。</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>停靠於 {0} - 於 ~{1} 出發</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>港</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>已停靠在連線上 - 出發時間未知</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>停靠於 {0} (停靠時間尚未得知)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>地圖上剩餘的時間 (從產卵開始)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>中途連線 - 時間不明</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>中途連線 - 時間不明 (路線 ~{0}m 總長)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>貨船已於本會議 {0}m {1}s 前滅絕</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>活躍的旅遊供應商 - 為 {0} 奔跑</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>活躍的 Travelling Vendor (產卵時間未知)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor despawned {0} ago this session</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>深海活動 - 為 {0} 奔跑</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>深海活躍 (產卵時間未知)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>深海 {0} 前結束</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} 目前線上的玩家。{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> 隊列： {0} 玩家。</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>目前遊戲內時間: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} 晉升為領導人。</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea 正在運行！奔向 {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea 目前處於活動狀態 (連線中 - 產卵時間未知)。</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea 在 {0} 分鐘前結束了本節。</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>深海事件狀態不明（本場次未見）。</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>貨船未啟動。</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>貨船停靠於 {0}。約 {1} 分鐘後出發。</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>貨船停靠在 {0} 並準備離開。</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>貨船停靠於 {0} （離開時間不明）。</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>貨船已啟用。約 {0} 分鐘後出發。</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>貨船已啟動，並準備很快離開。</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>貨船已啟用 (路由持續時間尚未得知此伺服器)。</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>貨船啟動（產生後連線 - 剩餘時間未知）。</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>貨船未啟動。 {0} 分鐘前在此會話中滅絕。</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}：板條箱 {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}：最後電話號碼 {1}m 前</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}：本屆會議不會召開</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Patrol Heli 正在運行！競選 {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Patrol Heli 目前處於活動狀態 (連線中 - 產出時間未知)。</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Patrol Heli 未啟用。 {0} {1} 前。</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>击落</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>離開地圖</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Patrol Heli 事件狀態不明（本場次未見）。</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Travelling Vendor 正在活動！競選 {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Travelling Vendor 目前處於活動狀態 (連線中 - 產出時間未知)。</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor 未激活。於 {0} 前在此會話中滅絕。</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Travelling Vendor 事件狀態不明（此會話未見）。</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>沒有映射維修指令的工具列。</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>{0} TC 中的 Upkeep： 空或過期。</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> 需求/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>{0} TC 中的維護： {1}。</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} 天數</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} 時數</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} 分鐘</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: 空/過期</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>維護： {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Bound Tool Cupboard 顯示器未找到或未配對。</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Bound Tool Cupboard 顯示器未找到或未配對。</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} 轉為 {1}。</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>開啟</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Bound Smart Switch 未找到或未配對。</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>木材</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>石頭</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>金屬</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>小型石油鑽機</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>大型石油鑽機</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>購物</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>貨船</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>旅行供應商</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>巡邏直升機</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>石油鑽井箱</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>爆炸</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>建築受阻</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>活動</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] 已觸發！Crate 解鎖於 {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} 已觸發！</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] 木箱在 10 分鐘後解鎖！</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] 木箱在 5 分鐘內解鎖！</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>深海已啟用</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>新店 {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>可疑商店 {0} [{1}] 在線 {2}s，出售 {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>貨船產生 {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>遠洋 (近 {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>貨船停靠在 {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>貨船預計約 5 分鐘後停靠 {0} ({1})。</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>貨船於 5 分鐘內從 {0} 出發 ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>偵測到伺服器滯後導致當機 - Heli 仍在地圖上 {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} 在 {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>巡邏直升機在 {0} 被擊落</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} 已上線 @ {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} 下線</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} 去世 @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} 重生 @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Tracking] {0}{1} 現已上線</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Tracking] {0}{1} 現在是離線狀態</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Tracking] {0}{1} 更名為 {2}！</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>銷售</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>買</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>購物</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) 為 {6} {7}</value>
+  </data>
 </root>

@@ -1157,4 +1157,352 @@ Stáhnout a nainstalovat nyní?</value>
   <data name="SaveAndClose" xml:space="preserve">
     <value>Uložit a zavřít</value>
   </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Zpráva...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Chybová zpráva zde</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Hlídkový vrtulník</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Patrol Heli aktivní - běží na {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Připojen v polovině akce - čas spawnu neznámý</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Hlídková helikoptéra aktivní (čas tření neznámý)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Hlídkový vrtulník sestřelen {0} před touto relací</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Hlídka Heli opustila mapu {0} před touto relací</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Zakotveno na adrese {0} - odjezd za ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>přístav</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Již zakotveno na přípojce - čas odjezdu neznámý</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Zakotveno na adrese {0} (doba trvání doku zatím neznámá)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Zbývající čas na mapě (od spawnu)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Připojeno v polovině trasy - čas neznámý</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Připojení v polovině trasy - čas neznámý (trasa ~{0}m celkem)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Nákladní loď byla vypuštěna {0}m {1}s před touto relací.</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Cestování Prodejce aktivní - běh pro {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Cestující prodejce aktivní (doba spawnu neznámá)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Traveling Vendor despawned {0} ago this session</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea active - běh pro {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Hlubokomořský aktivní (doba tření neznámá)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea skončilo před tímto zasedáním {0}</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} hráčů, kteří jsou v současné době online.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Fronta: {0} hráčů.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Aktuální čas ve hře: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} byl povýšen na vedoucího.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea je aktivní! Běží na {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea je v současné době aktivní (připojeno v polovině akce - doba spawnu neznámá).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea skončila před {0} minutami.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Stav události Deep Sea neznámý (v této relaci nebyl zaznamenán).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Nákladní loď není aktivní.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Nákladní loď zakotvila na adrese {0}. Odplouvá přibližně za {1} minut.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Nákladní loď zakotvila na adrese {0} a připravuje se k odjezdu.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Nákladní loď zakotvila na adrese {0} (čas odjezdu neznámý).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Nákladní loď aktivní. Odplouvá přibližně za {0} minut.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Nákladní loď je aktivní a chystá se brzy odplout.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Nákladní loď aktivní (doba trvání trasy pro tento server ještě nebyla naučena).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Nákladní loď aktivní (připojena po spawnu - zbývající čas neznámý).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Nákladní loď není aktivní. Depawned {0} minut před touto relací.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: bedna na {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: naposledy voláno {1}m ago</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: v této relaci se nevolá</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Hlídka Heli je aktivní! Běží na {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Hlídka Heli je v současné době aktivní (připojena v polovině akce - čas spawnu neznámý).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Hlídková helikoptéra není aktivní. Před tímto zasedáním to bylo {0} {1}.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>sestřelen</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>opustil mapu</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Stav události Patrol Heli neznámý (v této relaci nebyl zaznamenán).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Cestující prodejce je aktivní! Běží na {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Cestující prodejce je v současné době aktivní (připojen v polovině akce - čas spawnu neznámý).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Cestující prodejce není aktivní. Před touto relací byl vyřazen {0}.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Stav události Travelling Vendor neznámý (v této relaci nebyl viděn).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Pro příkazy údržby nejsou mapovány žádné skříně s nářadím.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Údržba na {0} TC: Prázdná nebo prošlá.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Potřeba/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Údržba na {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} dny</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} hodin</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} minuty</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Prázdný/vypršel</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Údržba: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Vázané monitory skříně na nářadí nebyly nalezeny nebo nebyly spárovány.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Vázaný monitor Tool Cupboard nebyl nalezen nebo nebyl spárován.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} obrátil {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>NA</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Vázaný přepínač Smart Switch nebyl nalezen nebo nebyl spárován.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Dřevo</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Kámen</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Kov</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Malá ropná plošina</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Velká ropná plošina</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Obchod</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Nákladní loď</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Cestující prodejce</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Hlídkový vrtulník</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Bedna na ropné soupravy</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Výbuch</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Zablokovaná budova</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Událost</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] spuštěno! Bedna se odemkne na {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} spuštěn!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Bedna se odemkne za 10 minut!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Bedna se odemkne za 5 minut!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Deep Sea je nahoře</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Nový obchod {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Podezřelý obchod {0} [{1}] byl online {2}s, prodával {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Nákladní loď zplozená {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>daleko na moři (poblíž {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Nákladní loď zakotvila na adrese {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Nákladní loď by měla zakotvit na adrese {0} ({1}) přibližně za 5 minut.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Nákladní loď odplouvá z {0} za 5 minut ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Zjištěn pád kvůli zpoždění serveru - Heli je stále na mapě na adrese {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} se objevil na adrese {1}.</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Hlídkový vrtulník sestřelen na adrese {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>neznámý</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} přišel online @ {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} přešel do režimu offline</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} zemřel @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} respawned @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Sledování] {0}{1} je nyní ONLINE</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Sledování] {0}{1} je nyní OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Sledování] {0}{1} přejmenován na {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>prodává</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>kupuje</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Obchod</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (zásoba {5}) pro {6} {7}.</value>
+  </data>
 </root>

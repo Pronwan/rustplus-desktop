@@ -1157,4 +1157,352 @@
   <data name="SaveAndClose" xml:space="preserve">
     <value>Зберегти і закрити</value>
   </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Повідомлення...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Повідомлення про помилку</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Патрульний вертоліт</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Патрульний гелікоптер активний - балотується на {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>З'єднані в середині події - час нересту невідомий</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Патрульний гелікоптер активний (час зародження невідомий)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Патрульний гелікоптер збитий {0} тому на цій сесії</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Патруль Heli залишив карту {0} тому в цій сесії</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Причалює в {0} - відправляється в ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>гавань</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Вже пристиковано на з'єднанні - час відправлення невідомий</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Док-станція {0} (тривалість док-станції ще не відома)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Час, що залишився на карті (з моменту відтворення)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Підключення на півдорозі - час невідомий</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>З'єднання на півдорозі - час невідомий (маршрут ~{0}м загалом)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Вантажне судно було спущено на воду {0}м {1}с тому на цій сесії</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Мандрівний продавець активний - балотується на {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Мандрівний продавець активний (час появи невідомий)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Мандрівний продавець був виведений з гри {0} тому в цій сесії</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea active - біг на {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Глибоководні активні (час нересту невідомий)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea закінчилася {0} тому ця сесія</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} гравців, які зараз онлайн.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Черга: {0} гравців.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Поточний ігровий час: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} був підвищений до керівника.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Глибоке море активне! Біг на {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Глибоководна зараз активна (підключена в середині події - час нересту невідомий).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea закінчилася {0} хвилин тому ця сесія.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Статус глибоководної події невідомий (не бачив цієї сесії).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Вантажний корабель не активний.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Вантажне судно пришвартоване до причалу {0}. Відправлення приблизно через {1} хвилин.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Вантажний корабель пришвартований до {0} і готується до відплиття.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Вантажне судно пришвартоване в порту {0} (час відправлення невідомий).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Вантажний корабель активний. Відправлення приблизно через {0} хвилин.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Вантажне судно активне і готується до відплиття.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Вантажний корабель активний (тривалість маршруту ще не вивчена для цього сервера).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Вантажний корабель активний (підключено після зародження - час невідомий).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Вантажний корабель не активний. Департизовано {0} хвилин тому в цьому сеансі.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: ящик в {1}м {2}с</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: востаннє дзвонили {1}м тому</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: не викликав цю сесію</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Патруль Гелі активний! Балотуємось на {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Патрульний гелікоптер наразі активний (підключений в середині події - час появи невідомий).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Патрульний вертоліт не активний. Це було {0} {1} років тому.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>збитий</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>залишив карту</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Статус події "Патрульний гелікоптер" невідомий (не спостерігався під час сеансу).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Мандрівний продавець активний! Балотується на {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Мандрівний продавець наразі активний (підключений в середині події - час появи невідомий).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Мандрівний продавець не активний. Департизовано {0} років тому в цій сесії.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Статус події Travelling Vendor невідомий (не бачив цю сесію).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Для команд обслуговування не зіставлено жодної шафи для інструментів.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Підтримка в {0} TC: Порожній або прострочений.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Потреба/24 години: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Підтримка в {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} днів</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} годин</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} хвилини</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Порожній/прострочений</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Підтримка: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Зв'язані монітори шафи для інструментів не знайдено або не сполучено.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Зв'язаний монітор шафи для інструментів не знайдено або не сполучено.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} перетворився на {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>УВІМКНЕНО</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>ВИМКНЕНО</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Прив'язаний інтелектуальний перемикач не знайдено або не спарено.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Дерево</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Камінь</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Метал</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Невелика нафтова вишка</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Велика нафтова вишка</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Магазин</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Вантажний корабель</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Мандрівний продавець</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Патрульний вертоліт</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Ящик для ойлріг</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Вибух!</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Будівля заблокована</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Подія</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] спрацювало! Ящик розблоковується в {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ТРИВОГА: {0} спрацював!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Ящик розблоковується за 10 хвилин!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Ящик розблоковується за 5 хвилин!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Глибоке море піднялося</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Новий магазин {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Підозрілий магазин {0} [{1}] був онлайн {2}с, продавав {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>З'явився вантажний корабель {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>далеко в морі (біля {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Вантажне судно пришвартоване в порту {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Очікується, що вантажне судно причалить до причалу {0} ({1}) приблизно через 5 хвилин.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Вантажне судно відправляється з {0} через 5 хвилин ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Виявлено збій через затримку сервера - Heli все ще на мапі за адресою {0}.</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} з'явився на {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Патрульний гелікоптер збитий {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>невідомо</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} з'явився онлайн @ {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} вимкнувся.</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} помер @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} respawned @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Відстеження] {0}{1} зараз ОНЛАЙН</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Відстеження] {0}{1} зараз не працює</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Відстеження] {0}{1} перейменовано на {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>продає</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>купує</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Магазин</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) для {6} {7}</value>
+  </data>
 </root>

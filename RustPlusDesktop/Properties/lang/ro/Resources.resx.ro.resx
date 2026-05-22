@@ -1157,4 +1157,352 @@ Descărcați și instalați acum?</value>
   <data name="SaveAndClose" xml:space="preserve">
     <value>Salvează și închide</value>
   </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Mesaj...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Mesaj de eroare aici</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Patrulă Heli</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Patrol Heli activ - rulează pentru {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Conectat la mijlocul evenimentului - timp de reproducere necunoscut</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Patrol Heli activ (timp de depunere necunoscut)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Patrol Heli doborât {0} acum această sesiune</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Patrol Heli a părăsit harta {0} acum această sesiune</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Docat la {0} - pleacă în ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>port</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Deja andocat pe conexiune - ora de plecare necunoscută</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Andocat la {0} (durata andocării nu a fost încă stabilită)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Timpul rămas pe hartă (de la spawn)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Conectat la mijlocul traseului - timp necunoscut</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Conectat la mijlocul traseului - timp necunoscut (traseu ~{0}m total)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Cargo Ship a dispărut {0}m {1}s în urmă cu această sesiune</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Travelling Vendor activ - rulează pentru {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Furnizor călător activ (timp de depunere necunoscut)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor a dispărut acum {0} în această sesiune</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea active - în curs de desfășurare pentru {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Deep Sea active (timp de reproducere necunoscut)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea s-a încheiat cu {0} în urmă cu această sesiune</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} jucători online în prezent.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Coadă: {0} jucători.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Ora curentă în joc: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} a fost promovat ca lider.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea este activ! În cursă pentru {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea este în prezent activă (conectată la mijlocul evenimentului - timp de reproducere necunoscut).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea a încheiat {0} minute în urmă această sesiune.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Statutul evenimentului Deep Sea necunoscut (nu a fost văzut în această sesiune).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Nava de marfă nu este activă.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Navă de marfă andocată la {0}. Plecare în aprox. {1} minute.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Navă de marfă andocată la {0} și pregătindu-se să plece.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Navă de marfă andocată la {0} (ora plecării necunoscută).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Navă de marfă activă. Plecare în aprox. {0} minute.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Navă de marfă activă și se pregătește să plece în curând.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Cargo Ship activ (durata rutei nu a fost încă învățată pentru acest server).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Navă de marfă activă (conectată după spawn - timp rămas necunoscut).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Nava de marfă nu este activă. Despawned {0} minute în urmă în această sesiune.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: ladă în {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: ultimul apel {1}m în urmă</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: nu a fost apelat în această sesiune</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Patrula Heli este activă! În cursă pentru {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Patrula Heli este în prezent activă (conectată la mijlocul evenimentului - timp de apariție necunoscut).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Patrula Heli nu este activă. Acesta a fost {0} {1} în urmă cu această sesiune.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>doborât</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>a părăsit harta</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Statutul evenimentului Patrol Heli necunoscut (nu a fost văzut în această sesiune).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Travelling Vendor este activ! Candidez pentru {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Vânzătorul călător este în prezent activ (conectat la mijlocul evenimentului - timpul de apariție necunoscut).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor nu este activ. Despawned {0} acum această sesiune.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Statutul evenimentului Travelling Vendor necunoscut (nu a fost văzut în această sesiune).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Nu există dulapuri de scule cartografiate pentru comenzile de întreținere.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Upkeep în {0} TC: gol sau expirat.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Necesar/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Menținerea în {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} zile</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} ore</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} minute</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Gol/expirat</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Întreținere: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Monitoarele Bound Tool Cupboard nu au fost găsite sau nu au fost împerecheate.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Monitorul Bound Tool Cupboard nu a fost găsit sau nu a fost asociat.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} transformat {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Bound Smart Switch nu a fost găsit sau nu este asociat.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Lemn</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Piatră</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Metal</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>platformă petrolieră mică</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Mare platformă petrolieră</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Magazin</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Navă de marfă</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Furnizor itinerant</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Elicopter de patrulare</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Ladă Oilrig</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Explozie</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Clădire blocată</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Eveniment</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] declanșat! Lada se deblochează în {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARMĂ: {0} declanșată!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Coșul se deblochează în 10 minute!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Lada se deblochează în 5 minute!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Deep Sea este sus</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Magazin nou {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Magazin suspect {0} [{1}] a fost online {2}s, a vândut {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Nava de marfă a generat {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>departe pe mare (lângă {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Navă de marfă andocată la {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Nava de marfă este așteptată să acosteze la {0} ({1}) în aproximativ 5 minute.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Nava de marfă pleacă de la {0} în 5 minute ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Crash detectat din cauza întârzierii serverului - Heli este încă pe hartă la {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} născută la {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Heli de patrulare doborât la {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>necunoscut</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} a venit online @ {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} a plecat offline</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} a murit @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} reapărut @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Urmărire] {0}{1} este acum ONLINE</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Urmărire] {0}{1} este acum OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Urmărire] {0}{1} redenumit în {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>vinde</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>cumpărători</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Magazin</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (Stoc {5}) pentru {6} {7}</value>
+  </data>
 </root>

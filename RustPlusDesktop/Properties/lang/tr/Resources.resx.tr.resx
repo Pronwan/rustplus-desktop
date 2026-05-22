@@ -1157,4 +1157,352 @@ Sürümler sayfasını aç?</value>
   <data name="SaveAndClose" xml:space="preserve">
     <value>Kaydet ve Kapat</value>
   </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Mesaj.</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Hata mesajı burada</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Devriye Helikopteri</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Devriye Helikopteri aktif - {0} için çalışıyor</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Etkinliğin ortasında bağlandı - ortaya çıkma zamanı bilinmiyor</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Devriye Helikopteri aktif (ortaya çıkma zamanı bilinmiyor)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Devriye Helikopteri {0} bu oturumdan önce düşürüldü</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Devriye Heli bu oturumdan {0} önce haritadan ayrıldı</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>{0} adresinde demirledi - ~{1} adresinden kalkıyor</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>liman</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Halihazırda bağlantı noktasına yanaşmış durumda - kalkış saati bilinmiyor</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>{0} adresinde demirledi (demirlenme süresi henüz öğrenilmedi)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Haritada kalan süre (yumurtlamadan itibaren)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Rotanın ortasında bağlandı - zaman bilinmiyor</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Rotanın ortasında bağlandı - zaman bilinmiyor (rota ~{0}m toplam)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Kargo Gemisi bu oturumdan {0}m {1}s önce çözüldü</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Seyahat eden Satıcı aktif - {0} için koşuyor</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Gezgin Satıcı aktif (ortaya çıkma zamanı bilinmiyor)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Gezgin Satıcı {0} bu oturumdan önce despaw oldu</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea active - {0} için çalışıyor</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Derin Deniz aktif (yumurtlama zamanı bilinmiyor)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea {0} bu oturumdan önce sona erdi</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} şu anda çevrimiçi olan oyuncular.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Sıra: {0} oyuncular.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Şu anki oyun içi zaman: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} liderliğe terfi etti.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Derin Deniz aktif! {0} için koşuyor.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Derin Deniz şu anda aktif (etkinliğin ortasında bağlı - ortaya çıkma zamanı bilinmiyor).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea bu seans {0} dakika önce sona erdi.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Derin Deniz etkinlik durumu bilinmiyor (bu oturumda görülmedi).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Kargo gemisi aktif değil.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Kargo gemisi {0}adresine yanaşmıştır. Yaklaşık {1} dakika içinde kalkacaktır.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Kargo gemisi {0} adresine yanaştı ve yola çıkmaya hazırlanıyor.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Kargo gemisi {0} adresine yanaştı (kalkış saati bilinmiyor).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Kargo gemisi aktif. Yaklaşık {0} dakika içinde kalkıyor.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Kargo gemisi aktif ve yakında ayrılmaya hazırlanıyor.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Kargo Gemisi aktif (rota süresi bu sunucu için henüz öğrenilmedi).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Kargo Gemisi aktif (doğduktan sonra bağlandı - kalan süre bilinmiyor).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Kargo Gemisi aktif değil. Bu oturumda {0} dakika önce çözüldü.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: {1}m {2}s adresindeki sandık</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: son arama {1}m önce</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: bu oturumda çağrılmadı</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Devriye Heli aktif! {0} için koşuyor.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Devriye Heli şu anda aktif (etkinliğin ortasında bağlandı - ortaya çıkma zamanı bilinmiyor).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Devriye Helikopteri aktif değil. Bu oturumdan önce {0} {1} idi.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>vuruldu</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>haritayı terk etti</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Devriye Heli olay durumu bilinmiyor (bu oturumda görülmedi).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Gezgin Satıcı aktif! {0} için koşuyor.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Gezgin Satıcı şu anda aktif (etkinliğin ortasında bağlandı - ortaya çıkma zamanı bilinmiyor).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Gezgin Satıcı aktif değil. Bu oturumdan {0} önce çözüldü.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Gezgin Satıcı etkinlik durumu bilinmiyor (bu oturumda görülmedi).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Bakım komutları için Alet Dolabı eşleştirilmemiştir.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>{0} TC'de bakım: Boş veya süresi dolmuş.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> İhtiyaç/24 saat: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>{0} TC'de bakım: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} günler</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} saatler</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} dakika</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Boş/süresi dolmuş</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Bakım: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Bağlı Alet Dolabı monitörleri bulunamadı veya eşleştirilmedi.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Bağlı Alet Dolabı monitörü bulunamadı veya eşleştirilmedi.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} {1} adresine döndü.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>AÇIK</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>KAPALI</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Bağlı Akıllı Anahtar bulunamadı veya eşleştirilmedi.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Ahşap</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Taş</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Metal</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Küçük Petrol Kulesi</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Büyük Petrol Kulesi</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Mağaza</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Kargo Gemisi</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Gezgin Satıcı</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Devriye Helikopteri</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Oilrig Sandığı</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Patlama</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Bina Engellendi</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Etkinlik</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] tetiklendi! Sandık {1} adresinde açılır.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} tetiklendi!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Sandık 10 dakika içinde açılıyor!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Sandık 5 dakika içinde açılıyor!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Derin Deniz çıktı</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Yeni mağaza {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Şüpheli mağaza {0} [{1}] çevrimiçiydi {2}s, satıldı {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Kargo Gemisi yumurtladı {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>denizden uzakta ( {0} yakınında)</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Kargo Gemisi {0} ({1} ) adresinde demirledi</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Kargo gemisinin yaklaşık 5 dakika içinde {0} ({1}) adresine yanaşması beklenmektedir.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Kargo Gemisi 5 dakika içinde {0} adresinden kalkıyor ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Sunucu gecikmesi nedeniyle çökme algılandı - Heli {0} adresinde hala haritada</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} {1} adresinde ortaya çıktı.</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Devriye Helikopteri {0} adresinde vuruldu</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Bilinmiyor</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} {1} adresinde çevrimiçi oldu</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} çevrimdışı oldu</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} {1} adresinde öldü</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} yeniden doğdu @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Takip] {0}{1} artık ÇEVRİMİÇİ</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Takip] {0}{1} artık ÇEVRİMDIŞI</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[İzleme] {0}{1} , {2} olarak yeniden adlandırıldı!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>satıyor</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>satın alır</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Mağaza</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (Stok {5}) {6} {7} için</value>
+  </data>
 </root>
