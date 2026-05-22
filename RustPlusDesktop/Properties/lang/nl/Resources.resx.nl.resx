@@ -190,7 +190,7 @@
     <value>Battlemetrics ID… hersturenchar@@0</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>Delete server…</value>
+    <value>Server verwijderen…</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
     <value>Bitte warten …</value>
@@ -310,7 +310,7 @@
     <value>Verloopt in {0} dagen</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
-    <value>{0} until night</value>
+    <value>{0} tot de nacht</value>
   </data>
   <data name="UntilDay" xml:space="preserve">
     <value>{0} tot dag</value>
@@ -322,7 +322,7 @@
     <value>Volg {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>Pairing: listening…</value>
+    <value>Koppeling: luisteren…</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
     <value>Koppelen: gestopt</value>
@@ -411,7 +411,7 @@ Download en installeer nu?</value>
     <value>Battlemetrics ID… hersturenchar@@0</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>Delete server…</value>
+    <value>Server verwijderen…</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
     <value>Rechtsklik om te hernoemen</value>

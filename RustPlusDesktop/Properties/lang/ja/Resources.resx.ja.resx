@@ -190,7 +190,7 @@
     <value>Relink Battlemetrics ID…</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>Delete server…</value>
+    <value>サーバーの削除…</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
     <value>Bitte warten …</value>
@@ -307,7 +307,7 @@
     <value>トークンの有効期限が切れました！</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>Expires in {0} days</value>
+    <value>有効期限： {0} 日</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
     <value>夜まで {0}</value>
@@ -322,7 +322,7 @@
     <value>{0}をフォロー</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>Pairing: listening…</value>
+    <value>ペアリング：リスニング…</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
     <value>ペアリング: 停止</value>
@@ -411,7 +411,7 @@
     <value>Relink Battlemetrics ID…</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>Delete server…</value>
+    <value>サーバーの削除…</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
     <value>右クリックして名前を変更</value>

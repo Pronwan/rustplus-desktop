@@ -100,7 +100,7 @@
     <value>Відстеження активоване</value>
   </data>
   <data name="LastPull" xml:space="preserve">
-    <value>Last pull: {0}</value>
+    <value>Останній розіграш: {0}</value>
   </data>
   <data name="Donate" xml:space="preserve">
     <value>Пожертвувати</value>
@@ -307,13 +307,13 @@
     <value>Термін дії токена минув!</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>Expires in {0} days</value>
+    <value>Термін дії закінчується через {0} днів</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
     <value>{0} до ночі</value>
   </data>
   <data name="UntilDay" xml:space="preserve">
-    <value>{0} until day</value>
+    <value>{0} до дня</value>
   </data>
   <data name="FollowMe" xml:space="preserve">
     <value>Слідкуйте за мною</value>
@@ -383,7 +383,7 @@
     <value>Помилка завантаження.</value>
   </data>
   <data name="UpdateCheckFailed" xml:space="preserve">
-    <value>Update check failed.
+    <value>Перевірка оновлення не вдалася.
 {0}</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
@@ -900,7 +900,7 @@
     <value>Я хочу PAY WITH (напр. Scrap)</value>
   </data>
   <data name="DeleteServerConfirmFormatted" xml:space="preserve">
-    <value>Are you sure you want to delete Server "{0}"? This action cannot be undone.</value>
+    <value>Ви дійсно хочете видалити Сервер "{0}"? Ця дія не може бути скасована.</value>
   </data>
   <data name="PairingError" xml:space="preserve">
     <value>Pairing: error</value>
@@ -972,13 +972,13 @@
     <value>Нове ім'я для #{0}:</value>
   </data>
   <data name="EnterBattlemetricsIdFor" xml:space="preserve">
-    <value>Enter Battlemetrics Server ID for "{0}":</value>
+    <value>Введіть ідентифікатор сервера Battlemetrics для "{0}":</value>
   </data>
   <data name="TrayTrackingStatus" xml:space="preserve">
     <value>Слідка: {0}</value>
   </data>
   <data name="TrayLastUpdate" xml:space="preserve">
-    <value>Last update: {0}</value>
+    <value>Останнє оновлення: {0}</value>
   </data>
   <data name="OpenRustPlusDesk" xml:space="preserve">
     <value>Відкрити Rust+ Desk</value>
@@ -1077,7 +1077,7 @@
     <value>Прямокутник</value>
   </data>
   <data name="OpacityLabel" xml:space="preserve">
-    <value>Opacity: {0}%</value>
+    <value>Непрозорість: {0}%.</value>
   </data>
   <data name="SizeLabel" xml:space="preserve">
     <value>Розмір: {0}% (SHIFT+Mousewheel)</value>
@@ -1092,7 +1092,7 @@
     <value>Опис відсутній.</value>
   </data>
   <data name="CurrentVersion" xml:space="preserve">
-    <value>Current Version: {0}</value>
+    <value>Поточна версія: {0}</value>
   </data>
   <data name="PatchNotesHeader" xml:space="preserve">
     <value>Історія патчів і версій</value>
