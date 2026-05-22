@@ -125,5 +125,28 @@ namespace RustPlusDesk.Views
             _currentIndex = (_currentIndex + 1) % Items.Count;
             UpdateGallery();
         }
+
+        private void ImgPreview_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (ImgPreview.Source == null) return;
+            try
+            {
+                var parentWindow = Window.GetWindow(this);
+                var zoomWin = new ImageZoomWindow(ImgPreview.Source)
+                {
+                    Owner = parentWindow
+                };
+                zoomWin.ShowDialog();
+            }
+            catch
+            {
+                try
+                {
+                    var zoomWin = new ImageZoomWindow(ImgPreview.Source);
+                    zoomWin.Show();
+                }
+                catch { }
+            }
+        }
     }
 }

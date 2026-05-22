@@ -20,10 +20,11 @@
             <!-- Active Image Preview with Nav Buttons -->
             <Grid Grid.Row="0" Margin="0,0,0,10" x:Name="ImageGrid">
                 <!-- Large Image -->
-                <Border CornerRadius="8" ClipToBounds="True" Background="#0A0D10" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+                <Border Height="360" CornerRadius="8" ClipToBounds="True" Background="#0A0D10" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
                     <Image x:Name="ImgPreview" 
                            Stretch="Uniform" 
-                           MaxHeight="380"
+                           Cursor="Hand"
+                           MouseLeftButtonDown="ImgPreview_MouseLeftButtonDown"
                            RenderOptions.BitmapScalingMode="HighQuality"/>
                 </Border>
 
