@@ -3286,6 +3286,11 @@
                             <ListBox x:Name="BuyXForY_ResultList" Grid.Row="3" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Margin="12,0,12,10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                         </Grid>
                     </Border>
+
+                    <!--  App Settings Overlay  -->
+                    <views:AppSettingsOverlay
+                        x:Name="AppSettingsPanel"
+                        Visibility="Collapsed" />
                 </Grid>
             </Border>
 

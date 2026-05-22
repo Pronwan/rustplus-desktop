@@ -241,6 +241,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _vm.IsInitializing = true;
         InitializeComponent();
+        InitializeAppSettings();
         
         // ── WinUI 3: Apply OS-level Mica backdrop via DWM ────────────────────
         WindowBackdropHelper.Apply(this, WindowBackdropHelper.BackdropType.Mica);
@@ -4276,7 +4277,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         snackbar.Show();
     }
 
-    private void ApplySettings()
+    public void ApplySettings()
     {
         if (TxtLog != null)
         {
@@ -4412,35 +4413,53 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void BtnSettings_Click(object sender, RoutedEventArgs e)
     {
-        var modal = new SettingsModal { Owner = this };
-        modal.ShowDialog();
-        ApplySettings();
+        if (AppSettingsPanel.Visibility == Visibility.Visible)
+        {
+            AppSettingsPanel.Visibility = Visibility.Collapsed;
+            ApplySettings();
+        }
+        else
+        {
+            ProfitTradesPanel.Visibility = Visibility.Collapsed;
+            BuyXForYPanel.Visibility = Visibility.Collapsed;
+            AppSettingsPanel.LoadSettings();
+            AppSettingsPanel.Visibility = Visibility.Visible;
+        }
+    }
 
-        if (modal.RequestAction == "ModifyChatAlerts")
+    private void InitializeAppSettings()
+    {
+        if (AppSettingsPanel != null)
         {
-            Dispatcher.BeginInvoke(new Action(() => {
-                if (ChatAlertsConfigureButton.Flyout is ContextMenu cm)
-                {
-                    cm.PlacementTarget = ChatAlertsConfigureButton;
-                    cm.Placement = PlacementMode.Bottom;
-                    cm.IsOpen = true;
-                }
-            }), System.Windows.Threading.DispatcherPriority.Input);
+            AppSettingsPanel.ParentWindow = this;
         }
-        else if (modal.RequestAction == "ChatCommands")
+    }
+
+    public void OpenChatAlertsFromSettings()
+    {
+        Dispatcher.BeginInvoke(new Action(() => {
+            if (ChatAlertsConfigureButton.Flyout is ContextMenu cm)
+            {
+                cm.PlacementTarget = ChatAlertsConfigureButton;
+                cm.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                cm.IsOpen = true;
+            }
+        }), System.Windows.Threading.DispatcherPriority.Input);
+    }
+
+    public void OpenChatCommandsFromSettings()
+    {
+        if (ChatContentBorder.Visibility != Visibility.Visible)
         {
-            if (ChatContentBorder.Visibility != Visibility.Visible)
-            {
-                _chatOpenedForCommandsOnly = true;
-                ChatContentBorder.Visibility = Visibility.Visible;
-                ChatContentBorder.Opacity = 1.0;
-            }
-            else
-            {
-                _chatOpenedForCommandsOnly = false;
-            }
-            BtnOpenChatCommands_Click(null, null);
+            _chatOpenedForCommandsOnly = true;
+            ChatContentBorder.Visibility = Visibility.Visible;
+            ChatContentBorder.Opacity = 1.0;
         }
+        else
+        {
+            _chatOpenedForCommandsOnly = false;
+        }
+        BtnOpenChatCommands_Click(null, null);
     }
 
     private async Task PerformUpdateDownloadAsync(string tag, string dlUrl)
