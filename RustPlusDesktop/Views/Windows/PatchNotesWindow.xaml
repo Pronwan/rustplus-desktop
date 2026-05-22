@@ -76,9 +76,11 @@
 
                             <!-- v5.3.0 Dynamic Image Gallery -->
                             <views:ImageGallery>
-                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/beta-5.1_1.png" Description="Modern sidebar overlay integrating shop tools and Profit Trades."/>
-                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/beta-5.1_6.png" Description="Advanced TC Upkeep reports in a unified overview."/>
-                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/Notifications.png" Description="Sleek and highly customisable Chat Alerts and smart notification preferences."/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.3.0/NewSettingOverlayOnLeftPanel.png" Description="Premium sidebar overlay integrating the main application settings."/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.3.0/NewLanguageSelector.png" Description="On-the-fly multi-language selection supporting 30+ dynamic locales."/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.3.0/ChatCommandsUI-1.png" Description="Isolated Chat Commands view, keeping team chat logs clean and structured."/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.3.0/ChatCommandsUI-2.png" Description="Dynamic configure menu for custom in-game chat commands and smart alerts."/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.3.0/newTeamChatUI.png" Description="Polished, isolated Team Chat layout with real-time refresh snap controls."/>
                             </views:ImageGallery>
                         </StackPanel>
                     </Border>

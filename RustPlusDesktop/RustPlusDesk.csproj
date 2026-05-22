@@ -344,6 +344,11 @@
     <Resource Include="Assets\TitleScreen-rust-plus-desktop.png" />
     <Resource Include="Assets\Data\rust_items.json" />
     <Resource Include="Assets\Data\ShopSearch.html" />
+    <Resource Include="Assets\Images\5.3.0\ChatCommandsUI-1.png" />
+    <Resource Include="Assets\Images\5.3.0\ChatCommandsUI-2.png" />
+    <Resource Include="Assets\Images\5.3.0\NewLanguageSelector.png" />
+    <Resource Include="Assets\Images\5.3.0\NewSettingOverlayOnLeftPanel.png" />
+    <Resource Include="Assets\Images\5.3.0\newTeamChatUI.png" />
   </ItemGroup>
 
   <ItemGroup>
