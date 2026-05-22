@@ -250,6 +250,16 @@ public partial class App : Application
             {
                 if (entry.Value is string s)
                 {
+                    if (string.IsNullOrWhiteSpace(s))
+                    {
+                        var fallback = rm.GetString(entry.Key.ToString() ?? "", System.Globalization.CultureInfo.InvariantCulture);
+                        if (!string.IsNullOrWhiteSpace(fallback))
+                        {
+                            Resources[entry.Key] = fallback;
+                            continue;
+                        }
+                    }
+
                     Resources[entry.Key] = s;
                 }
             }
