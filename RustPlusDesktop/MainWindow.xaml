@@ -1329,7 +1329,7 @@
                                 Padding="4,2"
                                 IsChecked="False"
                                 Click="BtnToggleServerArea_Click"
-                                ToolTip="Toggle Server Area">
+                                ToolTip="{x:Static p:Resources.ToggleServerArea}">
                                 <ui:SymbolIcon x:Name="IconToggleServerArea" Symbol="ChevronUp20" />
                             </ToggleButton>
                         </Grid>
@@ -2745,8 +2745,7 @@
                                             <ToggleButton x:Name="BtnAbbreviateNames"
                                                           Margin="0,0,12,0"
                                                           Width="24" Height="24"
-                                                          ToolTip="Streamer Mode"
-                                                          Checked="BtnAbbreviateNames_Toggled"
+                                                          ToolTip="{x:Static p:Resources.StreamerMode}"                                                          Checked="BtnAbbreviateNames_Toggled"
                                                           Unchecked="BtnAbbreviateNames_Toggled">
                                                 <ToggleButton.Style>
                                                     <Style TargetType="ToggleButton">
@@ -2781,9 +2780,8 @@
                                                 <TextBlock Text="A..." FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
                                             </ToggleButton>
 
-                                            <!-- Player Icon Scale Slider -->
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <TextBlock Text="Scale:" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10"/>
+                                                <TextBlock Text="{x:Static p:Resources.ScaleLabel}" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10"/>
                                                 <Slider x:Name="SliderPlayerIconSize" 
                                                         Width="50" Minimum="0.5" Maximum="1.5" Value="1.0" 
                                                         TickFrequency="0.05" IsSnapToTickEnabled="True" 

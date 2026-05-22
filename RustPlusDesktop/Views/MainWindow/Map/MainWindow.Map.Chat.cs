@@ -388,19 +388,19 @@ public partial class MainWindow
             {
                 // Nicht bestätigt -> Error-Box im Overlay anzeigen, KEIN Popup
                 ChatErrorBox.Visibility = Visibility.Visible;
-                ChatErrorText.Text = "Message could not be sent. Please try again. (Check if you are in a team!)";
+                ChatErrorText.Text = Properties.Resources.MessageNotSentError;
             }
         }
         catch (Exception ex)
         {
             ChatErrorBox.Visibility = Visibility.Visible;
-            ChatErrorText.Text = "Error: " + ex.Message;
+            ChatErrorText.Text = Properties.Resources.ErrorPrefix + ex.Message;
         }
         finally
         {
             BtnSendChat.IsEnabled = true;
             TxtChatInput.IsEnabled = true;
-            BtnSendChat.Content = "Send";
+            BtnSendChat.Content = Properties.Resources.Send;
             TxtChatInput.Focus();
         }
     }

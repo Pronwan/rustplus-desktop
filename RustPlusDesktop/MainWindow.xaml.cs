@@ -4857,7 +4857,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         DeactivateHotkeys();
 
         IEnumerable? src = (ListDevices.ItemsSource as IEnumerable) ?? (DataContext as IEnumerable);
-        if (src == null) { MessageBox.Show("No devices."); return; }
+        if (src == null) { MessageBox.Show(Properties.Resources.NoDevices); return; }
         
         var flatAssignable = GetHotkeyAssignableDevices(src.OfType<SmartDevice>());
 

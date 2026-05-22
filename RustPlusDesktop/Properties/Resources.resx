@@ -94,7 +94,42 @@
   <data name="ResetListenEdge" xml:space="preserve"><value>Reset + Listen with Edge</value></data>
   <data name="RelinkBattlemetrics" xml:space="preserve"><value>Relink Battlemetrics ID…</value></data>
   <data name="DeleteServer" xml:space="preserve"><value>Delete server…</value></data>
-  <data name="PleaseWait" xml:space="preserve"><value>Bitte warten …</value></data>
+  <data name="PleaseWait" xml:space="preserve"><value>Please wait...</value></data>
+  <data name="ToggleServerArea" xml:space="preserve"><value>Toggle Server Area</value></data>
+  <data name="StreamerMode" xml:space="preserve"><value>Streamer Mode</value></data>
+  <data name="ScaleLabel" xml:space="preserve"><value>Scale:</value></data>
+  <data name="EnableStreamerMode" xml:space="preserve"><value>Enable Streamer Mode (Abbreviates Names)</value></data>
+  <data name="StreamerModeToolTip" xml:space="preserve"><value>Abbreviates Steam Names and IDs to protect privacy during streams. Auto-hides console and server list.</value></data>
+  <data name="NoPositionAvailable" xml:space="preserve"><value>No position available (offline or not spawned).</value></data>
+  <data name="SaveGroup" xml:space="preserve"><value>Save Group</value></data>
+  <data name="EnterGroupName" xml:space="preserve"><value>Please enter a group name.</value></data>
+  <data name="MessageNotSentError" xml:space="preserve"><value>Message could not be sent. Please try again. (Check if you are in a team!)</value></data>
+  <data name="ErrorPrefix" xml:space="preserve"><value>Error: </value></data>
+  <data name="AssignGroup" xml:space="preserve"><value>Assign Group</value></data>
+  <data name="GroupSettingsTitle" xml:space="preserve"><value>Group Settings: {0}</value></data>
+  <data name="GroupName" xml:space="preserve"><value>Group Name</value></data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve"><value>Enter group name...</value></data>
+  <data name="GroupColor" xml:space="preserve"><value>Group Color</value></data>
+  <data name="SaveChanges" xml:space="preserve"><value>Save Changes</value></data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve"><value>Player Activity Analytics &amp; Forecasts</value></data>
+  <data name="PlayersTitle" xml:space="preserve"><value>Players</value></data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve"><value>Streamer-Mode &amp; Mini Map Overhaul</value></data>
+  <data name="StreamerModeTitle" xml:space="preserve"><value>Streamer Mode</value></data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve"><value>Player Marker Scaling</value></data>
+  <data name="MiniMapPolishTitle" xml:space="preserve"><value>Mini Map Polish</value></data>
+  <data name="ActionRequiredTitle" xml:space="preserve"><value>⚠️ Action Required:</value></data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve"><value>⚠️ BattleMetrics Removal:</value></data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve"><value>⚠️ Player Tracking System Overhaul</value></data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve"><value>How Player Tracking Works</value></data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve"><value>Add players to tracker to start tracking</value></data>
+  <data name="TrackingActiveStatus" xml:space="preserve"><value>Tracking Active</value></data>
+  <data name="TrackingIdleStatus" xml:space="preserve"><value>Tracking Idle</value></data>
+  <data name="FilterPlayers" xml:space="preserve"><value>Filter players...</value></data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve"><value>Connect to a server to load players list</value></data>
+  <data name="FetchingPlayersSteam" xml:space="preserve"><value>Fetching players via Steam Query...</value></data>
+  <data name="TrackID" xml:space="preserve"><value>Track ID</value></data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve"><value>Manual Track Name...</value></data>
+  <data name="NoDevices" xml:space="preserve"><value>No devices.</value></data>
   <data name="NoTokenRegistered" xml:space="preserve"><value>No token registered</value></data>
   <data name="TokenExpired" xml:space="preserve"><value>Token expired!</value></data>
   <data name="ExpiresInDays" xml:space="preserve"><value>Expires in {0} days</value></data>

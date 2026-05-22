@@ -485,8 +485,7 @@ public partial class MainWindow
             CenterMapOnWorld(x, y);
             return;
         }
-        MessageBox.Show("Keine Position verfugbar (offline oder nicht gespawnt).");
-    }
+        MessageBox.Show(Properties.Resources.NoPositionAvailable);    }
 
     private bool TryResolvePosFromDynMarkers(ulong sid, out double x, out double y)
     {

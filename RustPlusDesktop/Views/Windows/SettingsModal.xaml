@@ -91,11 +91,11 @@
                                Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
 
                     <CheckBox x:Name="ChkStreamerMode" 
-                               Content="Enable Streamer Mode (Abbreviates Names)" 
+                               Content="{x:Static properties:Resources.EnableStreamerMode}" 
                                Margin="0,0,0,12" 
                                Style="{StaticResource DotCheckBox}"
                                Checked="OnSettingChanged" Unchecked="OnSettingChanged"
-                               ToolTip="Abbreviates Steam Names and IDs to protect privacy during streams. Auto-hides console and server list."/>
+                               ToolTip="{x:Static properties:Resources.StreamerModeToolTip}"/>
 
                     <CheckBox x:Name="ChkBackgroundTracking" 
                                Content="{x:Static properties:Resources.BackgroundTracking}" 
