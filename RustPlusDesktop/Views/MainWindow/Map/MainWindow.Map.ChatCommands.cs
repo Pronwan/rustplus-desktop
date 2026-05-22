@@ -283,7 +283,7 @@ public partial class MainWindow
                 foreach (var mapping in tcs)
                 {
                     var dev = profile.AllDevices.FirstOrDefault(d => d.EntityId == mapping.EntityId && (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor"));
-                    if (dev != null && dev.Storage?.IsToolCupboard == true)
+                    if (dev != null && (dev.Storage == null || dev.Storage.IsToolCupboard || dev.Storage.ItemsCount == 0))
                     {
                         if (!first)
                         {
@@ -339,7 +339,7 @@ public partial class MainWindow
             foreach (var mapping in matchedMappings)
             {
                 var dev = profile.AllDevices.FirstOrDefault(d => d.EntityId == mapping.EntityId && (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor"));
-                if (dev != null && dev.Storage?.IsToolCupboard == true)
+                if (dev != null && (dev.Storage == null || dev.Storage.IsToolCupboard || dev.Storage.ItemsCount == 0))
                 {
                     var secs = dev.UpkeepSeconds ?? 0;
                     if (secs <= 0)
@@ -374,7 +374,7 @@ public partial class MainWindow
         if (profile == null) return;
 
         var dev = profile.AllDevices.FirstOrDefault(d => d.EntityId == entityId && (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor"));
-        if (dev != null && dev.Storage?.IsToolCupboard == true)
+        if (dev != null && (dev.Storage == null || dev.Storage.IsToolCupboard || dev.Storage.ItemsCount == 0))
         {
             var secs = dev.UpkeepSeconds ?? 0;
             if (secs <= 0)
