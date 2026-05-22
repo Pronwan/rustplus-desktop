@@ -1359,7 +1359,7 @@ public static class TrackingService
                     if (AnnounceTracking)
                     {
                         var groupStr = string.IsNullOrWhiteSpace(tp.GroupName) ? "" : $" [{tp.GroupName}]";
-                        OnTrackingNotification?.Invoke($"[Tracking] {tp.Name}{groupStr} is now ONLINE", serverName);
+                        OnTrackingNotification?.Invoke(string.Format(Properties.Resources.AlertTrackingOnline, tp.Name, groupStr), serverName);
                     }
                 }
                 else
@@ -1414,7 +1414,7 @@ public static class TrackingService
                         if (AnnounceTracking)
                         {
                             var groupStr = string.IsNullOrWhiteSpace(tp.GroupName) ? "" : $" [{tp.GroupName}]";
-                            OnTrackingNotification?.Invoke($"[Tracking] {oldName}{groupStr} renamed to {newName}!", serverName);
+                            OnTrackingNotification?.Invoke(string.Format(Properties.Resources.AlertTrackingRenamed, oldName, groupStr, newName), serverName);
                         }
                         
                         continue; // Skip the disconnect logic
@@ -1437,7 +1437,7 @@ public static class TrackingService
                     if (AnnounceTracking)
                     {
                         var groupStr = string.IsNullOrWhiteSpace(tp.GroupName) ? "" : $" [{tp.GroupName}]";
-                        OnTrackingNotification?.Invoke($"[Tracking] {tp.Name}{groupStr} is now OFFLINE", serverName);
+                        OnTrackingNotification?.Invoke(string.Format(Properties.Resources.AlertTrackingOffline, tp.Name, groupStr), serverName);
                     }
                 }
             }

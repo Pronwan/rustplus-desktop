@@ -1052,4 +1052,120 @@ You will need to pair again on next start.</value>
   <data name="SaveAndClose" xml:space="preserve">
     <value>حفظ و إغلاق</value>
   </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve"><value>الرسالة...</value></data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve"><value>رسالة الخطأ هنا</value></data>
+  <data name="HeliEventName" xml:space="preserve"><value>مروحية دورية</value></data>
+  <data name="HeliActiveRunningFor" xml:space="preserve"><value>مروحية الدورية نشطة – مستمرة منذ {0}</value></data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve"><value>تم الاتصال في منتصف الحدث – وقت الظهور غير معروف</value></data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve"><value>مروحية الدورية نشطة (وقت الظهور غير معروف)</value></data>
+  <data name="HeliShotDownAgo" xml:space="preserve"><value>تم إسقاط مروحية الدورية منذ {0} في هذه الجلسة</value></data>
+  <data name="HeliLeftMapAgo" xml:space="preserve"><value>غادرت مروحية الدورية الخريطة منذ {0} في هذه الجلسة</value></data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve"><value>رست في {0} – تغادر خلال ~{1}</value></data>
+  <data name="HarborFallback" xml:space="preserve"><value>الميناء</value></data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve"><value>رست بالفعل عند الاتصال – وقت المغادرة غير معروف</value></data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve"><value>رست في {0} (لم يتم تحديد مدة الرسو بعد)</value></data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve"><value>الوقت المتبقي على الخريطة (منذ الظهور)</value></data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve"><value>تم الاتصال في منتصف المسار – الوقت غير معروف</value></data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve"><value>تم الاتصال في منتصف المسار – الوقت غير معروف (إجمالي المسار ~{0} دقيقة)</value></data>
+  <data name="CargoDespawnedAgo" xml:space="preserve"><value>اختفت سفينة الشحن منذ {0} د {1} ث في هذه الجلسة</value></data>
+  <data name="VendorActiveRunningFor" xml:space="preserve"><value>البائع المتجول نشط – مستمر منذ {0}</value></data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve"><value>البائع المتجول نشط (وقت الظهور غير معروف)</value></data>
+  <data name="VendorDespawnedAgo" xml:space="preserve"><value>اختفى البائع المتجول منذ {0} في هذه الجلسة</value></data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve"><value>حدث أعماق البحار نشط – مستمر منذ {0}</value></data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve"><value>حدث أعماق البحار نشط (وقت الظهور غير معروف)</value></data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve"><value>انتهى حدث أعماق البحار منذ {0} في هذه الجلسة</value></data>
+  <data name="TimerHoursMinutes" xml:space="preserve"><value>{0} س {1:D2} د</value></data>
+  <data name="TimerMinutesSeconds" xml:space="preserve"><value>{0} د {1:D2} ث</value></data>
+  <data name="AgoHoursMinutes" xml:space="preserve"><value>{0} س {1} د</value></data>
+  <data name="AgoMinutes" xml:space="preserve"><value>{0} د</value></data>
+  <data name="DurationMinutesSeconds" xml:space="preserve"><value>{0} د {1} ث</value></data>
+  <data name="DurationSeconds" xml:space="preserve"><value>{0} ث</value></data>
+  <data name="ChatCmdPopResponse" xml:space="preserve"><value>اللاعبون المتصلون حالياً {0}.{1}</value></data>
+  <data name="ChatCmdPopQueue" xml:space="preserve"><value> قائمة الانتظار: {0} لاعبين.</value></data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve"><value>الوقت الحالي في اللعبة: {0}.</value></data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve"><value>تمت ترقية {0} إلى قائد.</value></data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve"><value>حدث أعماق البحار نشط! مستمر منذ {0}.</value></data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve"><value>حدث أعماق البحار نشط حالياً (تم الاتصال في منتصف الحدث – وقت الظهور غير معروف).</value></data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve"><value>انتهى حدث أعماق البحار منذ {0} دقيقة في هذه الجلسة.</value></data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve"><value>حالة حدث أعماق البحار غير معروفة (لم يُرَ في هذه الجلسة).</value></data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve"><value>سفينة الشحن غير نشطة.</value></data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve"><value>سفينة الشحن راسية في {0}. تغادر خلال {1} دقيقة تقريباً.</value></data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve"><value>سفينة الشحن راسية في {0} وتستعد للمغادرة.</value></data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve"><value>سفينة الشحن راسية في {0} (وقت المغادرة غير معروف).</value></data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve"><value>سفينة الشحن نشطة. تغادر خلال {0} دقيقة تقريباً.</value></data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve"><value>سفينة الشحن نشطة وتستعد للمغادرة قريباً.</value></data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve"><value>سفينة الشحن نشطة (لم يتم تحديد مدة المسار بعد لهذا الخادم).</value></data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve"><value>سفينة الشحن نشطة (تم الاتصال بعد الظهور – الوقت المتبقي غير معروف).</value></data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve"><value>سفينة الشحن غير نشطة. اختفت منذ {0} دقيقة في هذه الجلسة.</value></data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve"><value>{0}: الصندوق خلال {1} د {2} ث</value></data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve"><value>{0}: تم الاستدعاء الأخير منذ {1} د</value></data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve"><value>{0}: لم يتم استدعاؤها في هذه الجلسة</value></data>
+  <data name="ChatCmdHeliActive" xml:space="preserve"><value>مروحية الدورية نشطة! مستمرة منذ {0}.</value></data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve"><value>مروحية الدورية نشطة حالياً (تم الاتصال في منتصف الحدث – وقت الظهور غير معروف).</value></data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve"><value>مروحية الدورية غير نشطة. كانت {0} منذ {1} في هذه الجلسة.</value></data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve"><value>مُسقطة</value></data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve"><value>مغادرة للخريطة</value></data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve"><value>حالة حدث مروحية الدورية غير معروفة (لم تُرَ في هذه الجلسة).</value></data>
+  <data name="ChatCmdVendorActive" xml:space="preserve"><value>البائع المتجول نشط! مستمر منذ {0}.</value></data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve"><value>البائع المتجول نشط حالياً (تم الاتصال في منتصف الحدث – وقت الظهور غير معروف).</value></data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve"><value>البائع المتجول غير نشط. اختفى منذ {0} في هذه الجلسة.</value></data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve"><value>حالة حدث البائع المتجول غير معروفة (لم يُرَ في هذه الجلسة).</value></data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve"><value>لا توجد خزائن أدوات (TC) محددة لأوامر الصيانة.</value></data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve"><value>الصيانة في {0} TC: فارغة أو منتهية الصلاحية.</value></data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve"><value> الحاجة/24ساعة: {0}.</value></data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve"><value>الصيانة في {0} TC: {1}.</value></data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve"><value>{0} يوم</value></data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve"><value>{0} ساعة</value></data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve"><value>{0} دقيقة</value></data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve"><value>{0}: فارغة/منتهية الصلاحية</value></data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve"><value>{0}: {1}ي, {2}س</value></data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve"><value>الصيانة: {0}</value></data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve"><value>أجهزة مراقبة خزانة الأدوات المرتبطة غير موجودة أو غير مقترنة.</value></data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve"><value>جهاز مراقبة خزانة الأدوات المرتبط غير موجود أو غير مقترن.</value></data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve"><value>تم تحويل {0} إلى {1}.</value></data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve"><value>تشغيل</value></data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve"><value>إيقاف</value></data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve"><value>المفتاح الذكي المرتبط غير موجود أو غير مقترن.</value></data>
+  <data name="MaterialWood" xml:space="preserve"><value>خشب</value></data>
+  <data name="MaterialStone" xml:space="preserve"><value>حجر</value></data>
+  <data name="MaterialMetal" xml:space="preserve"><value>معدن</value></data>
+  <data name="MaterialHQM" xml:space="preserve"><value>معدن عالي الجودة</value></data>
+  <data name="SmallOilRig" xml:space="preserve"><value>خزان النفط الصغير</value></data>
+  <data name="LargeOilRig" xml:space="preserve"><value>خزان النفط الكبير</value></data>
+  <data name="ShopWord" xml:space="preserve"><value>متجر</value></data>
+  <data name="EventCargoShip" xml:space="preserve"><value>سفينة الشحن</value></data>
+  <data name="EventTravellingVendor" xml:space="preserve"><value>البائع المتجول</value></data>
+  <data name="EventCH47" xml:space="preserve"><value>شينوك CH47</value></data>
+  <data name="EventPatrolHelicopter" xml:space="preserve"><value>مروحية دورية</value></data>
+  <data name="EventOilrigCrate" xml:space="preserve"><value>صندوق خزان النفط</value></data>
+  <data name="EventExplosion" xml:space="preserve"><value>انفجار</value></data>
+  <data name="EventBuildingBlocked" xml:space="preserve"><value>البناء محظور</value></data>
+  <data name="EventGeneric" xml:space="preserve"><value>حدث</value></data>
+  <data name="AlertOilRigTriggered" xml:space="preserve"><value>تم تفعيل [{0}]! يفتح الصندوق خلال {1}.</value></data>
+  <data name="AlertAlarmTriggered" xml:space="preserve"><value>إنذار: تم تفعيل {0}!</value></data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve"><value>[{0}] يفتح الصندوق خلال 10 دقائق!</value></data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve"><value>[{0}] يفتح الصندوق خلال 5 دقائق!</value></data>
+  <data name="AlertDeepSeaUp" xml:space="preserve"><value>حدث أعماق البحار نشط حالياً</value></data>
+  <data name="AlertNewShop" xml:space="preserve"><value>متجر جديد {0} [{1}]: {2}</value></data>
+  <data name="AlertSuspiciousShop" xml:space="preserve"><value>متجر مشبوه {0} [{1}] كان متصلاً لـ {2} ثانية، باع {3}</value></data>
+  <data name="AlertCargoSpawned" xml:space="preserve"><value>ظهرت سفينة الشحن {0}</value></data>
+  <data name="CargoFarOutAtSea" xml:space="preserve"><value>بعيداً في البحر (بالقرب من {0})</value></data>
+  <data name="AlertCargoDocked" xml:space="preserve"><value>رست سفينة الشحن في {0} ({1})</value></data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve"><value>من المتوقع أن ترسو سفينة الشحن في {0} ({1}) خلال 5 دقائق تقريباً.</value></data>
+  <data name="AlertCargoDeparting" xml:space="preserve"><value>ستغادر سفينة الشحن من {0} خلال 5 دقائق ({1})</value></data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve"><value>تم اكتشاف تحطم بسبب تأخر الخادم — لا تزال المروحية على الخريطة في {0}</value></data>
+  <data name="AlertEventSpawned" xml:space="preserve"><value>ظهر {0} في {1}</value></data>
+  <data name="AlertHeliShotDown" xml:space="preserve"><value>تم إسقاط مروحية الدورية في {0}</value></data>
+  <data name="Unknown" xml:space="preserve"><value>غير معروف</value></data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve"><value>{0} أصبح متصلاً في {1}</value></data>
+  <data name="AlertPlayerOffline" xml:space="preserve"><value>{0} أصبح غير متصل</value></data>
+  <data name="AlertPlayerDied" xml:space="preserve"><value>مات {0} في {1}</value></data>
+  <data name="AlertPlayerRespawned" xml:space="preserve"><value>عاد {0} للحياة في {1}</value></data>
+  <data name="AlertTrackingOnline" xml:space="preserve"><value>[تتبع] {0}{1} أصبح متصلاً الآن</value></data>
+  <data name="AlertTrackingOffline" xml:space="preserve"><value>[تتبع] {0}{1} أصبح غير متصل الآن</value></data>
+  <data name="AlertTrackingRenamed" xml:space="preserve"><value>[تتبع] {0}{1} غيّر اسمه إلى {2}!</value></data>
+  <data name="AlertShopSells" xml:space="preserve"><value>يبيع</value></data>
+  <data name="AlertShopBuys" xml:space="preserve"><value>يشتري</value></data>
+  <data name="AlertShopLabelFallback" xml:space="preserve"><value>متجر</value></data>
+  <data name="AlertShopMatch" xml:space="preserve"><value>{0} [{1}] {2} x{3} {4} (مخزون {5}) مقابل {6} {7}</value></data>
 </root>

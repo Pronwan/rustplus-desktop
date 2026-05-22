@@ -56,8 +56,8 @@ public partial class MainWindow
         // Command: Pop
         if (cmd == profile.CmdPop.ToLowerInvariant())
         {
-            string qText = _vm.ServerQueue != "0" && _vm.ServerQueue != "-" ? $" Queue: {_vm.ServerQueue} players." : "";
-            string msg = $"{_vm.ServerPlayers} players currently online.{qText}";
+            string qText = _vm.ServerQueue != "0" && _vm.ServerQueue != "-" ? string.Format(Properties.Resources.ChatCmdPopQueue, _vm.ServerQueue) : "";
+            string msg = string.Format(Properties.Resources.ChatCmdPopResponse, _vm.ServerPlayers, qText);
             _ = SendTeamChatSafeAsync(msg);
             AppendLog($"[ChatCommand] Pop executed by {m.Author}");
             return;
@@ -66,7 +66,7 @@ public partial class MainWindow
         // Command: Time
         if (cmd == profile.CmdTime.ToLowerInvariant())
         {
-            string msg = $"Current in-game time: {_vm.ServerTime}.";
+            string msg = string.Format(Properties.Resources.ChatCmdTimeResponse, _vm.ServerTime);
             if (!string.IsNullOrWhiteSpace(_vm.TimeUntilNextPhase))
             {
                 msg += $" ({_vm.TimeUntilNextPhase})";
@@ -80,7 +80,7 @@ public partial class MainWindow
         if (cmd == profile.CmdPromote.ToLowerInvariant())
         {
             _ = real.PromoteToLeaderAsync(m.SteamId);
-            _ = SendTeamChatSafeAsync($"{m.Author} was promoted to leader.");
+            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdPromoteResponse, m.Author));
             AppendLog($"[ChatCommand] Promote executed by {m.Author}");
             return;
         }
@@ -94,21 +94,21 @@ public partial class MainWindow
                 if (_deepSeaSpawnTime.HasValue)
                 {
                     var elapsed = DateTime.UtcNow - _deepSeaSpawnTime.Value;
-                    msg = $"Deep Sea is active! Running for {(int)elapsed.TotalHours}h {elapsed.Minutes}m.";
+                    msg = string.Format(Properties.Resources.ChatCmdDeepSeaActive, FormatAgo(elapsed));
                 }
                 else
                 {
-                    msg = "Deep Sea is currently active (connected mid-event – spawn time unknown).";
+                    msg = Properties.Resources.ChatCmdDeepSeaActiveMidEvent;
                 }
             }
             else if (_deepSeaDespawnTime.HasValue)
             {
                 var ago = DateTime.UtcNow - _deepSeaDespawnTime.Value;
-                msg = $"Deep Sea ended {(int)ago.TotalMinutes} minutes ago this session.";
+                msg = string.Format(Properties.Resources.ChatCmdDeepSeaEndedMinutesAgo, (int)ago.TotalMinutes);
             }
             else
             {
-                msg = "Deep Sea event status unknown (not seen this session).";
+                msg = Properties.Resources.ChatCmdDeepSeaStatusUnknown;
             }
             _ = SendTeamChatSafeAsync(msg);
             AppendLog($"[ChatCommand] DeepSea executed by {m.Author}");
@@ -118,10 +118,11 @@ public partial class MainWindow
         // Command: Cargo
         if (cmd == profile.CmdCargo.ToLowerInvariant())
         {
-            string msg = "Cargo Ship not active.";
+            string msg = Properties.Resources.ChatCmdCargoNotActive;
             var activeCargo = _cargoDockStates.Values.FirstOrDefault();
             if (activeCargo != null)
             {
+                string harborName = activeCargo.HarborName ?? Properties.Resources.HarborFallback;
                 if (activeCargo.IsDocked && activeCargo.DockTime.HasValue)
                 {
                     int dockDuration = TrackingService.GetLearnedDockingDuration(profile.Host);
@@ -129,13 +130,13 @@ public partial class MainWindow
                     {
                         var dockRemain = TimeSpan.FromMinutes(dockDuration) - (DateTime.UtcNow - activeCargo.DockTime.Value);
                         if (dockRemain.TotalMinutes > 0)
-                            msg = $"Cargo Ship docked at {activeCargo.HarborName ?? "harbor"}. Departs in approx. {(int)dockRemain.TotalMinutes} minutes.";
+                            msg = string.Format(Properties.Resources.ChatCmdCargoDockedDeparts, harborName, (int)dockRemain.TotalMinutes);
                         else
-                            msg = $"Cargo Ship docked at {activeCargo.HarborName ?? "harbor"} and preparing to depart.";
+                            msg = string.Format(Properties.Resources.ChatCmdCargoDockedPreparingDepart, harborName);
                     }
                     else
                     {
-                        msg = $"Cargo Ship docked at {activeCargo.HarborName ?? "harbor"} (departure time unknown).";
+                        msg = string.Format(Properties.Resources.ChatCmdCargoDockedUnknown, harborName);
                     }
                 }
                 else if (activeCargo.SeenAtEdge)
@@ -146,25 +147,25 @@ public partial class MainWindow
                     {
                         var remain = TimeSpan.FromMinutes(fullLife) - (DateTime.UtcNow - activeCargo.FirstSeen.Value);
                         if (remain.TotalMinutes > 0)
-                            msg = $"Cargo Ship active. Leaves in approx. {(int)remain.TotalMinutes} minutes.";
+                            msg = string.Format(Properties.Resources.ChatCmdCargoActiveLeaves, (int)remain.TotalMinutes);
                         else
-                            msg = "Cargo Ship active and preparing to leave soon.";
+                            msg = Properties.Resources.ChatCmdCargoActivePreparingLeave;
                     }
                     else
                     {
-                        msg = "Cargo Ship active (route duration not yet learned for this server).";
+                        msg = Properties.Resources.ChatCmdCargoActiveDurationNotLearned;
                     }
                 }
                 else
                 {
                     // Mid-connect — we don't know how long it's been on the map
-                    msg = "Cargo Ship active (connected after spawn – remaining time unknown).";
+                    msg = Properties.Resources.ChatCmdCargoActiveMidRoute;
                 }
             }
             else if (_cargoLastDespawnUtc.HasValue)
             {
                 var ago = DateTime.UtcNow - _cargoLastDespawnUtc.Value;
-                msg = $"Cargo Ship not active. Despawned {(int)ago.TotalMinutes} minutes ago this session.";
+                msg = string.Format(Properties.Resources.ChatCmdCargoDespawnedMinutesAgo, (int)ago.TotalMinutes);
             }
             _ = SendTeamChatSafeAsync(msg);
             AppendLog($"[ChatCommand] Cargo executed by {m.Author}");
@@ -180,7 +181,7 @@ public partial class MainWindow
                 var timeLeft = _monumentWatcher.GetActiveEventTimeLeft(rigName);
                 if (timeLeft.HasValue)
                 {
-                    parts.Add($"{rigName}: crate in {(int)timeLeft.Value.TotalMinutes}m {timeLeft.Value.Seconds}s");
+                    parts.Add(string.Format(Properties.Resources.ChatCmdOilRigCrateIn, rigName, (int)timeLeft.Value.TotalMinutes, timeLeft.Value.Seconds));
                 }
                 else
                 {
@@ -188,11 +189,11 @@ public partial class MainWindow
                     if (lastTrig.HasValue)
                     {
                         var ago = DateTime.UtcNow - lastTrig.Value;
-                        parts.Add($"{rigName}: last called {(int)ago.TotalMinutes}m ago");
+                        parts.Add(string.Format(Properties.Resources.ChatCmdOilRigLastCalledAgo, rigName, (int)ago.TotalMinutes));
                     }
                     else
                     {
-                        parts.Add($"{rigName}: not called this session");
+                        parts.Add(string.Format(Properties.Resources.ChatCmdOilRigNotCalled, rigName));
                     }
                 }
             }
@@ -211,22 +212,22 @@ public partial class MainWindow
                 if (_heliSpawnTime.HasValue)
                 {
                     var elapsed = DateTime.UtcNow - _heliSpawnTime.Value;
-                    msg = $"Patrol Heli is active! Running for {FormatAgo(elapsed)}.";
+                    msg = string.Format(Properties.Resources.ChatCmdHeliActive, FormatAgo(elapsed));
                 }
                 else
                 {
-                    msg = "Patrol Heli is currently active (connected mid-event – spawn time unknown).";
+                    msg = Properties.Resources.ChatCmdHeliActiveMidEvent;
                 }
             }
             else if (_heliLastEventUtc.HasValue)
             {
                 var ago = DateTime.UtcNow - _heliLastEventUtc.Value;
-                string reason = _heliLastEventWasCrash ? "shot down" : "left the map";
-                msg = $"Patrol Heli not active. It was {reason} {FormatAgo(ago)} ago this session.";
+                string reason = _heliLastEventWasCrash ? Properties.Resources.ChatCmdHeliReasonShotDown : Properties.Resources.ChatCmdHeliReasonLeftMap;
+                msg = string.Format(Properties.Resources.ChatCmdHeliNotActiveAgo, reason, FormatAgo(ago));
             }
             else
             {
-                msg = "Patrol Heli event status unknown (not seen this session).";
+                msg = Properties.Resources.ChatCmdHeliStatusUnknown;
             }
             _ = SendTeamChatSafeAsync(msg);
             AppendLog($"[ChatCommand] Heli executed by {m.Author}");
@@ -243,21 +244,21 @@ public partial class MainWindow
                 if (_vendorSpawnTime.HasValue)
                 {
                     var elapsed = DateTime.UtcNow - _vendorSpawnTime.Value;
-                    msg = $"Travelling Vendor is active! Running for {FormatAgo(elapsed)}.";
+                    msg = string.Format(Properties.Resources.ChatCmdVendorActive, FormatAgo(elapsed));
                 }
                 else
                 {
-                    msg = "Travelling Vendor is currently active (connected mid-event – spawn time unknown).";
+                    msg = Properties.Resources.ChatCmdVendorActiveMidEvent;
                 }
             }
             else if (_vendorDespawnTime.HasValue)
             {
                 var ago = DateTime.UtcNow - _vendorDespawnTime.Value;
-                msg = $"Travelling Vendor not active. Despawned {FormatAgo(ago)} ago this session.";
+                msg = string.Format(Properties.Resources.ChatCmdVendorDespawnedAgo, FormatAgo(ago));
             }
             else
             {
-                msg = "Travelling Vendor event status unknown (not seen this session).";
+                msg = Properties.Resources.ChatCmdVendorStatusUnknown;
             }
             _ = SendTeamChatSafeAsync(msg);
             AppendLog($"[ChatCommand] Vendor executed by {m.Author}");
@@ -280,7 +281,7 @@ public partial class MainWindow
             var tcs = profile.UpkeepCommandMappings.Where(mapping => mapping.EntityId != 0).ToList();
             if (tcs.Count == 0)
             {
-                _ = SendTeamChatSafeAsync("No Tool Cupboards are mapped for upkeep commands.");
+                _ = SendTeamChatSafeAsync(Properties.Resources.ChatCmdUpkeepNoTcMapped);
             }
             else
             {
@@ -299,7 +300,7 @@ public partial class MainWindow
                         var secs = dev.UpkeepSeconds ?? 0;
                         if (secs <= 0)
                         {
-                            _ = SendTeamChatSafeAsync($"Upkeep in {dev.PureName} TC: Empty or expired.");
+                            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcEmptyExpired, dev.PureName));
                         }
                         else
                         {
@@ -309,17 +310,19 @@ public partial class MainWindow
                             rem = rem % 3600;
                             int mins = rem / 60;
 
-                            string timeStr = "";
-                            if (days > 0) timeStr += $"{days} days, ";
-                            if (hours > 0 || days > 0) timeStr += $"{hours} hours, ";
-                            timeStr += $"{mins} minutes";
+                            var timeParts = new List<string>();
+                            if (days > 0) timeParts.Add(string.Format(Properties.Resources.ChatCmdUpkeepDays, days));
+                            if (hours > 0 || days > 0) timeParts.Add(string.Format(Properties.Resources.ChatCmdUpkeepHours, hours));
+                            timeParts.Add(string.Format(Properties.Resources.ChatCmdUpkeepMinutes, mins));
+
+                            string timeStr = string.Join(", ", timeParts);
 
                             var dailyMaterials = FormatUpkeepMaterialsPer24h(dev, secs);
                             var materialsSuffix = string.IsNullOrWhiteSpace(dailyMaterials)
                                 ? ""
-                                : $" Need/24h: {dailyMaterials}.";
+                                : string.Format(Properties.Resources.ChatCmdUpkeepNeed24h, dailyMaterials);
 
-                            _ = SendTeamChatSafeAsync($"Upkeep in {dev.PureName} TC: {timeStr}.{materialsSuffix}");
+                            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcTime, dev.PureName, timeStr) + materialsSuffix);
                         }
                     }
                 }
@@ -349,24 +352,24 @@ public partial class MainWindow
                     var secs = dev.UpkeepSeconds ?? 0;
                     if (secs <= 0)
                     {
-                        parts.Add($"{dev.PureName}: Empty/expired");
+                        parts.Add(string.Format(Properties.Resources.ChatCmdUpkeepEmptyExpiredShort, dev.PureName));
                     }
                     else
                     {
                         int days = secs / 86400;
                         int rem = secs % 86400;
                         int hours = rem / 3600;
-                        parts.Add($"{dev.PureName}: {days}d, {hours}h");
+                        parts.Add(string.Format(Properties.Resources.ChatCmdUpkeepTimeShort, dev.PureName, days, hours));
                     }
                 }
             }
             if (parts.Count > 0)
             {
-                _ = SendTeamChatSafeAsync("Upkeep: " + string.Join(" | ", parts));
+                _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdUpkeepHeader, string.Join(" | ", parts)));
             }
             else
             {
-                _ = SendTeamChatSafeAsync("Bound Tool Cupboard monitors not found or not paired.");
+                _ = SendTeamChatSafeAsync(Properties.Resources.ChatCmdUpkeepNotPaired);
             }
             AppendLog($"[ChatCommand] Multi-Upkeep for cmd={cmd} executed by {m.Author}");
             return;
@@ -384,7 +387,7 @@ public partial class MainWindow
             var secs = dev.UpkeepSeconds ?? 0;
             if (secs <= 0)
             {
-                _ = SendTeamChatSafeAsync($"Upkeep in {dev.PureName} TC: Empty or expired.");
+                _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcEmptyExpired, dev.PureName));
             }
             else
             {
@@ -394,18 +397,20 @@ public partial class MainWindow
                 rem = rem % 3600;
                 int mins = rem / 60;
 
-                string timeStr = "";
-                if (days > 0) timeStr += $"{days} days, ";
-                if (hours > 0 || days > 0) timeStr += $"{hours} hours, ";
-                timeStr += $"{mins} minutes";
+                var timeParts = new List<string>();
+                if (days > 0) timeParts.Add(string.Format(Properties.Resources.ChatCmdUpkeepDays, days));
+                if (hours > 0 || days > 0) timeParts.Add(string.Format(Properties.Resources.ChatCmdUpkeepHours, hours));
+                timeParts.Add(string.Format(Properties.Resources.ChatCmdUpkeepMinutes, mins));
 
-                _ = SendTeamChatSafeAsync($"Upkeep in {dev.PureName} TC: {timeStr}.");
+                string timeStr = string.Join(", ", timeParts);
+
+                _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcTime, dev.PureName, timeStr));
             }
             AppendLog($"[ChatCommand] Upkeep for {dev.Name} executed by {author}");
         }
         else
         {
-            _ = SendTeamChatSafeAsync("Bound Tool Cupboard monitor not found or not paired.");
+            _ = SendTeamChatSafeAsync(Properties.Resources.ChatCmdUpkeepNotPairedSingle);
         }
     }
 
@@ -421,7 +426,8 @@ public partial class MainWindow
             try
             {
                 await real.ToggleSmartSwitchAsync(entityId, newState);
-                _ = SendTeamChatSafeAsync($"{dev.Name} turned {(newState ? "ON" : "OFF")}.");
+                string stateStr = newState ? Properties.Resources.ChatCmdSwitchStateOn : Properties.Resources.ChatCmdSwitchStateOff;
+                _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdSwitchToggled, dev.Name, stateStr));
                 AppendLog($"[ChatCommand] {dev.Name} toggled to {newState} by {author}");
             }
             catch (Exception ex)
@@ -431,7 +437,7 @@ public partial class MainWindow
         }
         else
         {
-            _ = SendTeamChatSafeAsync("Bound Smart Switch not found or not paired.");
+            _ = SendTeamChatSafeAsync(Properties.Resources.ChatCmdSwitchNotPaired);
         }
     }
 
@@ -505,16 +511,16 @@ public partial class MainWindow
         var shortName = (item.ShortName ?? string.Empty).Trim().ToLowerInvariant();
         return shortName switch
         {
-            "wood" => "Wood",
-            "stones" => "Stone",
-            "metal.fragments" => "Metal",
-            "metal.refined" => "HQM",
+            "wood" => Properties.Resources.MaterialWood,
+            "stones" => Properties.Resources.MaterialStone,
+            "metal.fragments" => Properties.Resources.MaterialMetal,
+            "metal.refined" => Properties.Resources.MaterialHQM,
             _ => item.ItemId switch
             {
-                -151838493 => "Wood",
-                -2099697608 => "Stone",
-                69511070 => "Metal",
-                317398316 => "HQM",
+                -151838493 => Properties.Resources.MaterialWood,
+                -2099697608 => Properties.Resources.MaterialStone,
+                69511070 => Properties.Resources.MaterialMetal,
+                317398316 => Properties.Resources.MaterialHQM,
                 _ => MainWindow.ResolveItemName(item.ItemId, item.ShortName)
             }
         };
