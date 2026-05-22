@@ -124,7 +124,7 @@
     <value>Queue:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Devices</value>
+    <value>Devices</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Hotkeys</value>
@@ -342,7 +342,7 @@ Download and install now?</value>
     <value>Pair a smart device, switch or alarm to see it here</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Team</value>
+    <value>Team</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Center on map</value>
@@ -366,10 +366,10 @@ Download and install now?</value>
     <value>Death markers</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Cameras</value>
+    <value>Cameras</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Add Camera</value>
+    <value>Add Camera</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>No cameras found</value>
@@ -378,7 +378,7 @@ Download and install now?</value>
     <value>Pair a camera to see its preview here</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Players</value>
+    <value>Players</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>How to Track</value>
@@ -639,13 +639,13 @@ Download and install now?</value>
     <value>Right-click to configure</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Reset map zoom and position</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Crosshair on/off (Right Click For Options)</value>

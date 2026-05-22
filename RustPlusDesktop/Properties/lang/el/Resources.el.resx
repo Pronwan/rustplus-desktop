@@ -124,7 +124,7 @@
     <value>Ουρά:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Συσκευές</value>
+    <value>Συσκευές</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Πλήκτρα συντόμευσης</value>
@@ -342,7 +342,7 @@ Open Releases page?</value>
     <value>Σύζευξη μιας έξυπνης συσκευής, διακόπτη ή συναγερμού για να την δείτε εδώ</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Ομάδα</value>
+    <value>Ομάδα</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Κεντράρισμα στο χάρτη</value>
@@ -366,10 +366,10 @@ Open Releases page?</value>
     <value>Δείκτες θανάτου</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Κάμερες</value>
+    <value>Κάμερες</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Προσθήκη Κάμερας</value>
+    <value>Προσθήκη Κάμερας</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Δεν βρέθηκαν κάμερες</value>
@@ -378,7 +378,7 @@ Open Releases page?</value>
     <value>Σύζευξη μιας κάμερας για να δείτε την προεπισκόπηση εδώ</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Παίκτες</value>
+    <value>Παίκτες</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Πώς να παρακολουθείτε</value>
@@ -639,13 +639,13 @@ Open Releases page?</value>
     <value>Δεξί κλικ για ρύθμιση</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Επαναφορά μεγέθυνσης και θέσης χάρτη</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Μίνι 🗺️</value>
+    <value>Μίνι</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Crosshair on/off (Κάντε κλικ για Επιλογές)</value>

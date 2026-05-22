@@ -124,7 +124,7 @@
     <value>Fronta:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Zařízení</value>
+    <value>Zařízení</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Klávesy</value>
@@ -342,7 +342,7 @@ Stáhnout a nainstalovat nyní?</value>
     <value>Spárujte chytré zařízení, přepněte nebo budík a uvidíte ho zde</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Tým</value>
+    <value>Tým</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Vycentrovat na mapě</value>
@@ -366,10 +366,10 @@ Stáhnout a nainstalovat nyní?</value>
     <value>Značky smrti</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Fotoaparáty</value>
+    <value>Fotoaparáty</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Přidat kameru</value>
+    <value>Přidat kameru</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Nenalezeny žádné kamery</value>
@@ -378,7 +378,7 @@ Stáhnout a nainstalovat nyní?</value>
     <value>Spárujte kameru a podívejte se zde na její náhled</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Hráči</value>
+    <value>Hráči</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Jak sledovat</value>
@@ -639,13 +639,13 @@ Stáhnout a nainstalovat nyní?</value>
     <value>Klikněte pravým tlačítkem myši pro konfiguraci</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Resetovat přiblížení a pozici mapy</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺️</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Zapnout/vypnout (Klepněte pravým tlačítkem pro možnosti)</value>

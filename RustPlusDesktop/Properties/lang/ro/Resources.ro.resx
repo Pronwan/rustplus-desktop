@@ -124,7 +124,7 @@
     <value>Coadă:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Dispozitive</value>
+    <value>Dispozitive</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Taste</value>
@@ -342,7 +342,7 @@ Descărcați și instalați acum?</value>
     <value>Asociază un dispozitiv inteligent, comută sau alarmă pentru a-l vedea aici</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Echipa</value>
+    <value>Echipa</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Centrează pe hartă</value>
@@ -366,10 +366,10 @@ Descărcați și instalați acum?</value>
     <value>Markeri de deces</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Camere</value>
+    <value>Camere</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Adaugă cameră foto</value>
+    <value>Adaugă cameră foto</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Nici o cameră foto găsită</value>
@@ -378,7 +378,7 @@ Descărcați și instalați acum?</value>
     <value>Asociază o cameră foto pentru a-i vedea previzualizarea aici</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 jucători</value>
+    <value>jucători</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Cum să urmărești</value>
@@ -639,13 +639,13 @@ Descărcați și instalați acum?</value>
     <value>Click dreapta pentru a configura</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Resetează zoom-ul hărții și poziția</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺️</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Crosshair on/off (Right Click for Options)</value>

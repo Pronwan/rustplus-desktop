@@ -124,7 +124,7 @@
     <value>Rij:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Toestelle</value>
+    <value>Toestelle</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Kortpadtoetse</value>
@@ -262,13 +262,13 @@
     <value>Mini-kaartversiering</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>⚠️ Aksie vereis:</value>
+    <value>Aksie vereis:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>⚠️ Verwydering van BattleMetrics:</value>
+    <value>Verwydering van BattleMetrics:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>⚠️ Hersiening van die speleropsporingstelsel</value>
+    <value>Hersiening van die speleropsporingstelsel</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>Hoe speleropsporing werk</value>
@@ -447,7 +447,7 @@ Aflaai en installeer nou?</value>
     <value>Pareer 'n slim toestel, skakelaar of alarm om dit hier te sien.</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Span</value>
+    <value>Span</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Sentrum op kaart</value>
@@ -471,10 +471,10 @@ Aflaai en installeer nou?</value>
     <value>Doodsmerkers</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Kamera's</value>
+    <value>Kamera's</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Voeg kamera by</value>
+    <value>Voeg kamera by</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Geen kameras gevind nie</value>
@@ -483,7 +483,7 @@ Aflaai en installeer nou?</value>
     <value>Pareer 'n kamera om hier sy voorskou te sien.</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Spelers</value>
+    <value>Spelers</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Hoe om op te spoor</value>
@@ -744,13 +744,13 @@ Aflaai en installeer nou?</value>
     <value>Regskliek om te konfigureer</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Herstel ⟲</value>
+    <value>Herstel</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Herstel kaartzoom en posisie</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Kruisvisier aan/af (Regskliek vir opsies)</value>

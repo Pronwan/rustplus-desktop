@@ -71,7 +71,7 @@
   <data name="Players" xml:space="preserve"><value>Players:</value></data>
   <data name="ShowOnlinePlayers" xml:space="preserve"><value>Show Online Players Tab</value></data>
   <data name="Queue" xml:space="preserve"><value>Queue:</value></data>
-  <data name="DevicesTab" xml:space="preserve"><value>🔌 Devices</value></data>
+  <data name="DevicesTab" xml:space="preserve"><value>Devices</value></data>
   <data name="Hotkeys" xml:space="preserve"><value>Hotkeys</value></data>
   <data name="ImportDevices" xml:space="preserve"><value>Import devices from teammates</value></data>
   <data name="ExportDevices" xml:space="preserve"><value>Export devices to teammates</value></data>
@@ -117,9 +117,9 @@
   <data name="StreamerModeTitle" xml:space="preserve"><value>Streamer Mode</value></data>
   <data name="PlayerMarkerScalingTitle" xml:space="preserve"><value>Player Marker Scaling</value></data>
   <data name="MiniMapPolishTitle" xml:space="preserve"><value>Mini Map Polish</value></data>
-  <data name="ActionRequiredTitle" xml:space="preserve"><value>⚠️ Action Required:</value></data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve"><value>⚠️ BattleMetrics Removal:</value></data>
-  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve"><value>⚠️ Player Tracking System Overhaul</value></data>
+  <data name="ActionRequiredTitle" xml:space="preserve"><value>Action Required:</value></data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve"><value>BattleMetrics Removal:</value></data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve"><value>Player Tracking System Overhaul</value></data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve"><value>How Player Tracking Works</value></data>
   <data name="AddPlayersToStartTracking" xml:space="preserve"><value>Add players to tracker to start tracking</value></data>
   <data name="TrackingActiveStatus" xml:space="preserve"><value>Tracking Active</value></data>
@@ -182,7 +182,7 @@ Download and install now?</value></data>
   <data name="ItemsUpkeep" xml:space="preserve"><value> Items, Upkeep=</value></data>
   <data name="NoDevicesFound" xml:space="preserve"><value>No devices found</value></data>
   <data name="PairDeviceToSee" xml:space="preserve"><value>Pair a smart device, switch or alarm to see it here</value></data>
-  <data name="TeamTab" xml:space="preserve"><value>👥 Team</value></data>
+  <data name="TeamTab" xml:space="preserve"><value>Team</value></data>
   <data name="CenterOnMap" xml:space="preserve"><value>Center on map</value></data>
   <data name="FollowOnMap" xml:space="preserve"><value>Follow on Map</value></data>
   <data name="OpenSteamProfile" xml:space="preserve"><value>Open Steam profile</value></data>
@@ -190,11 +190,11 @@ Download and install now?</value></data>
   <data name="KickFromTeam" xml:space="preserve"><value>Kick from Team</value></data>
   <data name="ProfileMarkers" xml:space="preserve"><value>Profile markers</value></data>
   <data name="DeathMarkers" xml:space="preserve"><value>Death markers</value></data>
-  <data name="CamerasTab" xml:space="preserve"><value>🎥 Cameras</value></data>
-  <data name="AddCamera" xml:space="preserve"><value>📷 Add Camera</value></data>
+  <data name="CamerasTab" xml:space="preserve"><value>Cameras</value></data>
+  <data name="AddCamera" xml:space="preserve"><value>Add Camera</value></data>
   <data name="NoCamerasFound" xml:space="preserve"><value>No cameras found</value></data>
   <data name="PairCameraToSee" xml:space="preserve"><value>Pair a camera to see its preview here</value></data>
-  <data name="PlayersTab" xml:space="preserve"><value>🌍 Players</value></data>
+  <data name="PlayersTab" xml:space="preserve"><value>Players</value></data>
   <data name="HowToTrack" xml:space="preserve"><value>How to Track</value></data>
   <data name="LearnHowTrackingWorks" xml:space="preserve"><value>Learn how player tracking works</value></data>
   <data name="OnlineTab" xml:space="preserve"><value>Online</value></data>
@@ -281,9 +281,9 @@ Download and install now?</value></data>
   <data name="Send" xml:space="preserve"><value>Send</value></data>
   <data name="FcmCredentials" xml:space="preserve"><value>FCM Credentials</value></data>
   <data name="RightClickConfigure" xml:space="preserve"><value>Right-click to configure</value></data>
-  <data name="ResetMap" xml:space="preserve"><value>Reset ⟲</value></data>
+  <data name="ResetMap" xml:space="preserve"><value>Reset</value></data>
   <data name="ResetMapToolTip" xml:space="preserve"><value>Reset map zoom and position</value></data>
-  <data name="MiniMap" xml:space="preserve"><value>Mini 🗺</value></data>
+  <data name="MiniMap" xml:space="preserve"><value>Mini</value></data>
   <data name="CrosshairToolTip" xml:space="preserve"><value>Crosshair on/off (Right Click For Options)</value></data>
   <data name="TrackPlayer" xml:space="preserve"><value>TRACK PLAYER</value></data>
   <data name="CloseBMBrowser" xml:space="preserve"><value>Close BattleMetrics Browser</value></data>

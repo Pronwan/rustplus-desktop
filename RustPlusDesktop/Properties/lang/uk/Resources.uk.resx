@@ -124,7 +124,7 @@
     <value>Черга:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Пристрої</value>
+    <value>Пристрої</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Гарячі клавіші</value>
@@ -342,7 +342,7 @@
     <value>Підключіть смарт-пристрій, перемкніть або будильник, щоб побачити його тут</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Команда</value>
+    <value>Команда</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Центр на карті</value>
@@ -366,10 +366,10 @@
     <value>Маркери смерті</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Камери</value>
+    <value>Камери</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Додати камеру</value>
+    <value>Додати камеру</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Камер не знайдено</value>
@@ -378,7 +378,7 @@
     <value>З'єднайте камеру, щоб побачити її попередній перегляд тут</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Гравці</value>
+    <value>Гравці</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Як відстежувати</value>
@@ -639,13 +639,13 @@
     <value>Клацніть правою кнопкою миші щоб налаштувати</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Скинути масштаб та розташування карти</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Міні: world_map:</value>
+    <value>Міні</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Вкл/викл приціл (Клацніть правою кнопкою миші для параметрів)</value>

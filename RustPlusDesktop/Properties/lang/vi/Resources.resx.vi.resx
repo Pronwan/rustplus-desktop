@@ -124,7 +124,7 @@
     <value>Hàng đợi:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Thiết bị</value>
+    <value>Thiết bị</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Phím tắt</value>
@@ -262,13 +262,13 @@
     <value>Bản đồ thu nhỏ (tiếng Ba Lan)</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>⚠️ Cần thực hiện:</value>
+    <value>Cần thực hiện:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>⚠️ Xóa BattleMetrics:</value>
+    <value>Xóa BattleMetrics:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>⚠️ Cải tổ hệ thống theo dõi cầu thủ</value>
+    <value>Cải tổ hệ thống theo dõi cầu thủ</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>Cách thức hoạt động của tính năng theo dõi cầu thủ</value>
@@ -447,7 +447,7 @@ Tải xuống và cài đặt ngay bây giờ?</value>
     <value>Kết nối một thiết bị thông minh, công tắc hoặc thiết bị báo động để xem tại đây</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Đội ngũ</value>
+    <value>Đội ngũ</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Định vị trên bản đồ</value>
@@ -471,10 +471,10 @@ Tải xuống và cài đặt ngay bây giờ?</value>
     <value>Dấu hiệu tử vong</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Máy ảnh</value>
+    <value>Máy ảnh</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Thêm máy ảnh</value>
+    <value>Thêm máy ảnh</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Không tìm thấy máy ảnh nào</value>
@@ -483,7 +483,7 @@ Tải xuống và cài đặt ngay bây giờ?</value>
     <value>Kết nối máy ảnh để xem hình xem trước tại đây</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Người chơi</value>
+    <value>Người chơi</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Cách theo dõi</value>
@@ -744,13 +744,13 @@ Tải xuống và cài đặt ngay bây giờ?</value>
     <value>Nhấp chuột phải để cấu hình</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Đặt lại ⟲</value>
+    <value>Đặt lại</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Đặt lại mức thu phóng và vị trí trên bản đồ</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Bật/tắt tâm ngắm (Nhấp chuột phải để xem các tùy chọn)</value>

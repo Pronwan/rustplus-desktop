@@ -124,7 +124,7 @@
     <value>Ред:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Уређаји</value>
+    <value>Уређаји</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Пречице</value>
@@ -262,13 +262,13 @@
     <value>Полирање мини мапе</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>⚠️ Потребно је предузети акцију:</value>
+    <value>Потребно је предузети акцију:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>⚠️ Уклањање BattleMetrics:</value>
+    <value>Уклањање BattleMetrics:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>⚠️ Преуређење система за праћење играча</value>
+    <value>Преуређење система за праћење играча</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>Како функционише праћење играча</value>
@@ -447,7 +447,7 @@
     <value>Парајте паметни уређај, прекидач или аларм да бисте га овде видели</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Тим</value>
+    <value>Тим</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Центар на мапи</value>
@@ -471,10 +471,10 @@
     <value>Маркери смрти</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Камере</value>
+    <value>Камере</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Додај камеру</value>
+    <value>Додај камеру</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Није пронађена ниједна камера</value>
@@ -483,7 +483,7 @@
     <value>Спарите камеру да бисте овде видели њен преглед</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Играчи</value>
+    <value>Играчи</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Како пратити</value>
@@ -744,13 +744,13 @@
     <value>Десни клик да бисте конфигурисали</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Ресетовање ⟲</value>
+    <value>Ресетовање</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Ресетовати зум мапе и положај</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Мини 🗺</value>
+    <value>Мини</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Крстник укључи/искључи (десни клик за опције)</value>

@@ -124,7 +124,7 @@
     <value>File d'attente :</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Appareils</value>
+    <value>Appareils</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Raccourcis clavier</value>
@@ -342,7 +342,7 @@ Télécharger et installer maintenant ?</value>
     <value>Associer un appareil intelligent, un interrupteur ou une alarme pour le voir ici</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Equipe</value>
+    <value>Equipe</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Centrer sur la carte</value>
@@ -366,10 +366,10 @@ Télécharger et installer maintenant ?</value>
     <value>Marqueurs de mort</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Caméras</value>
+    <value>Caméras</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Ajouter une caméra</value>
+    <value>Ajouter une caméra</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Aucune caméra trouvée</value>
@@ -378,7 +378,7 @@ Télécharger et installer maintenant ?</value>
     <value>Associer une caméra pour voir son aperçu ici</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Joueurs</value>
+    <value>Joueurs</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Comment suivre</value>
@@ -639,13 +639,13 @@ Télécharger et installer maintenant ?</value>
     <value>Clic droit pour configurer</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Réinitialiser le zoom et la position de la carte</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺️</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Crosshair on/off (clic droit pour les options)</value>

@@ -124,7 +124,7 @@
     <value>תור:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 מכשירים</value>
+    <value>מכשירים</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>מקשי קיצור</value>
@@ -262,13 +262,13 @@
     <value>מפת מיני - פולנית</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>⚠️ נדרשת פעולה:</value>
+    <value>נדרשת פעולה:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>⚠️ הסרת BattleMetrics:</value>
+    <value>הסרת BattleMetrics:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>⚠️ שיפוץ מקיף של מערכת מעקב השחקנים</value>
+    <value>שיפוץ מקיף של מערכת מעקב השחקנים</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>כיצד פועל מעקב אחר שחקנים</value>
@@ -447,7 +447,7 @@
     <value>חבר מכשיר חכם, מתג או אזעקה כדי לראות זאת כאן</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 הצוות</value>
+    <value>הצוות</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>מרכז על המפה</value>
@@ -471,10 +471,10 @@
     <value>סימני מוות</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 מצלמות</value>
+    <value>מצלמות</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 הוסף מצלמה</value>
+    <value>הוסף מצלמה</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>לא נמצאו מצלמות</value>
@@ -483,7 +483,7 @@
     <value>חבר מצלמה כדי לראות את התצוגה המקדימה שלה כאן</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 שחקנים</value>
+    <value>שחקנים</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>כיצד לעקוב</value>
@@ -744,13 +744,13 @@
     <value>לחץ לחיצה ימנית כדי להגדיר</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>איפוס ⟲</value>
+    <value>איפוס</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>איפוס זום המפה ומיקומה</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>מיני 🗺</value>
+    <value>מיני</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>הפעלה/כיבוי של הכוונת (לחץ לחיצה ימנית לאפשרויות)</value>

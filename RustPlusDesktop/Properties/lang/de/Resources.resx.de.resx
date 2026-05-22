@@ -124,7 +124,7 @@
     <value>Warteschlange:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Geräte</value>
+    <value>Geräte</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Hotkeys</value>
@@ -262,13 +262,13 @@
     <value>Mini-Karte Polnisch</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>:warnung: Aktion erforderlich:</value>
+    <value>Aktion erforderlich:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>:Warnung: BattleMetrics entfernen:</value>
+    <value>BattleMetrics entfernen:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>:Warnung: Spielerverfolgungssystem überholt</value>
+    <value>Spielerverfolgungssystem überholt</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>So funktioniert die Spielerverfolgung</value>
@@ -447,7 +447,7 @@ jetzt herunterladen und installieren?</value>
     <value>Koppeln Sie ein intelligentes Gerät, wechseln oder Alarm, um es hier zu sehen</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Team</value>
+    <value>Team</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Auf Karte zentrieren</value>
@@ -471,10 +471,10 @@ jetzt herunterladen und installieren?</value>
     <value>Todesmarker</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>:movie_kamera: Kameras</value>
+    <value>Kameras</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Kamera hinzufügen</value>
+    <value>Kamera hinzufügen</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Keine Kameras gefunden</value>
@@ -483,7 +483,7 @@ jetzt herunterladen und installieren?</value>
     <value>Kopiere eine Kamera, um ihre Vorschau hier zu sehen</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Spieler</value>
+    <value>Spieler</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Wie man verfolgt</value>
@@ -744,13 +744,13 @@ jetzt herunterladen und installieren?</value>
     <value>Rechtsklick zum Konfigurieren</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Karte Zoom und Position zurücksetzen</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺️</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Fadenkreuz an/aus (Rechtsklick für Optionen)</value>

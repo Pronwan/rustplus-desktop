@@ -124,7 +124,7 @@
     <value>Kø:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Enheter</value>
+    <value>Enheter</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Hurtigtaster</value>
@@ -262,13 +262,13 @@
     <value>Mini kart polsk</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>⚠️ Handling påkrevd:</value>
+    <value>Handling påkrevd:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>⚠️ BattleMetrics Fjerning:</value>
+    <value>BattleMetrics Fjerning:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>⚠️ Spillersporingssystem overhaling</value>
+    <value>Spillersporingssystem overhaling</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>Hvordan Spilleren sporer arbeider</value>
@@ -447,7 +447,7 @@ Last ned og installer nå?</value>
     <value>Koble til en smartenhet, bryter eller alarm for å se den her</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Team</value>
+    <value>Team</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Midtstill på kart</value>
@@ -471,10 +471,10 @@ Last ned og installer nå?</value>
     <value>Dødsmarkører</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Kameraer</value>
+    <value>Kameraer</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Legg til kamera</value>
+    <value>Legg til kamera</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Ingen kameraer funnet</value>
@@ -483,7 +483,7 @@ Last ned og installer nå?</value>
     <value>Koble til et kamera for å se forhåndsvisningen her</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Spillere</value>
+    <value>Spillere</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Hvordan følge opp</value>
@@ -744,13 +744,13 @@ Last ned og installer nå?</value>
     <value>Høyreklikk for å konfigurere</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Nullstill kart-zoom og -posisjon</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺️</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Trådkors på/av (Trykk for alternativer)</value>

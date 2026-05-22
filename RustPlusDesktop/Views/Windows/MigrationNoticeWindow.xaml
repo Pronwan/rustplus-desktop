@@ -73,7 +73,7 @@
                 <!-- Info box -->
                 <Border Background="#0D2137" BorderBrush="#1A4A7A" BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,10">
                     <TextBlock TextWrapping="Wrap" Foreground="#90C8FF" FontSize="12" LineHeight="18">
-                        <Run FontWeight="Bold">{DynamicResource ActionRequiredTitle}</Run>
+                        <Run FontWeight="Bold">⚠️ {DynamicResource ActionRequiredTitle}</Run>
                         <Run> You can enable </Run>
                         <Run FontWeight="Bold" Foreground="White">{DynamicResource StreamerMode}</Run>
                         <Run> via Settings or the new toggle in the Team tab. For a detailed list of all changes, please open the Patch Notes at the top. Happy surviving!</Run>
@@ -83,7 +83,7 @@
                 <!-- Tracking warning box -->
                 <Border Background="#331414" BorderBrush="#8A2323" BorderThickness="1" CornerRadius="8" Padding="12,10">
                     <TextBlock TextWrapping="Wrap" Foreground="#FFCCCC" FontSize="12" LineHeight="18">
-                        <Run FontWeight="Bold" Foreground="#FF5555">{DynamicResource BattleMetricsRemovalTitle}</Run>
+                        <Run FontWeight="Bold" Foreground="#FF5555">⚠️ {DynamicResource BattleMetricsRemovalTitle}</Run>
                         <Run> We have completely removed the BattleMetrics integration from Rust+ Desk. BattleMetrics does not want us as a partner, and we want to protect the users of our app at all costs. Player tracking is now exclusively handled natively via direct UDP queries.</Run>
                     </TextBlock>
                 </Border>
