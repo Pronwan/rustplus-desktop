@@ -289,9 +289,9 @@ public partial class MainWindow
 
                 if (shouldAnnounce)
                 {
-                    var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : "unknown";
+                    var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : Properties.Resources.Unknown;
                     var dispName = GetDisplayPlayerName(vm.Name);
-                    var txt = now.online ? $"{dispName} came online @ {where}" : $"{dispName} went offline";
+                    var txt = now.online ? string.Format(Properties.Resources.AlertPlayerOnlineWithPos, dispName, where) : string.Format(Properties.Resources.AlertPlayerOffline, dispName);
                     await SendTeamChatSafeAsync(txt);
                 }
             }
@@ -318,9 +318,9 @@ public partial class MainWindow
 
                     if (shouldAnnounce)
                     {
-                        var where = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : "unknown";
+                        var where = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : Properties.Resources.Unknown;
                         var dispName = GetDisplayPlayerName(vm.Name);
-                        var txt = now.dead ? $"{dispName} died @ {where}" : $"{dispName} respawned @ {where}";
+                        var txt = now.dead ? string.Format(Properties.Resources.AlertPlayerDied, dispName, where) : string.Format(Properties.Resources.AlertPlayerRespawned, dispName, where);
                         await SendTeamChatSafeAsync(txt);
                     }
                 }

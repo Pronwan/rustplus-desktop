@@ -150,18 +150,22 @@ namespace RustPlusDesk.Services
                 var timeLeft = evt.EndTime - now;
                 double minutesLeft = timeLeft.TotalMinutes;
 
+                var localizedRigName = rigName == "Small Oil Rig" ? Properties.Resources.SmallOilRig :
+                                       rigName == "Large Oil Rig" ? Properties.Resources.LargeOilRig :
+                                       rigName;
+
                 // 10 Min Warnung
                 if (minutesLeft <= 10.0 && minutesLeft > 9.0 && !evt.Announce10Min)
                 {
                     evt.Announce10Min = true;
-                    OnOilRigChatUpdate?.Invoke(this, $"[{rigName}] Crate unlocks in 10 minutes!");
+                    OnOilRigChatUpdate?.Invoke(this, string.Format(Properties.Resources.AlertCrateUnlocksIn10Min, localizedRigName));
                 }
 
                 // 5 Min Warnung
                 if (minutesLeft <= 5.0 && minutesLeft > 4.0 && !evt.Announce5Min)
                 {
                     evt.Announce5Min = true;
-                    OnOilRigChatUpdate?.Invoke(this, $"[{rigName}] Crate unlocks in 5 minutes!");
+                    OnOilRigChatUpdate?.Invoke(this, string.Format(Properties.Resources.AlertCrateUnlocksIn5Min, localizedRigName));
                 }
 
                 // Position für Marker

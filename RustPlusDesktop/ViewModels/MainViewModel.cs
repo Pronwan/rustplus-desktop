@@ -431,8 +431,8 @@ public class MainViewModel : INotifyPropertyChanged
         int s = (int)Math.Round((totalMins - m) * 60);
         if (s == 60) { m++; s = 0; }
         
-        if (m > 0) return $"{m}m {s}s";
-        return $"{s}s";
+        if (m > 0) return string.Format(Properties.Resources.DurationMinutesSeconds, m, s);
+        return string.Format(Properties.Resources.DurationSeconds, s);
     }
 
     private string _serverWipe = "-";

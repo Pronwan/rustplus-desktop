@@ -531,8 +531,11 @@ public partial class MainWindow : WpfUi.FluentWindow
         {
             if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
             string timeStr = data.Duration >= 800 ? "~15m" : "~12:30m";
+            string rigName = data.Name == "Small Oil Rig" ? Properties.Resources.SmallOilRig :
+                             data.Name == "Large Oil Rig" ? Properties.Resources.LargeOilRig :
+                             data.Name;
             Dispatcher.InvokeAsync(async () =>
-                await SendTeamChatSafeAsync($"[{data.Name}] triggered! Crate unlocks in {timeStr}."));
+                await SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertOilRigTriggered, rigName, timeStr)));
         };
 
         // NEU: Update Events (10m / 5m Warnungen)
@@ -549,6 +552,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 RebuildChatMessages();
+                RefreshEventDock();
             }));
         };
     }
@@ -1931,7 +1935,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (TrackingService.AnnounceSmartAlerts && _announceSpawns)
         {
             string alarmName = dev?.PureName ?? (!string.IsNullOrEmpty(n.DeviceName) ? n.DeviceName : "Smart Alarm");
-            _ = SendTeamChatSafeAsync($"ALARM: {alarmName} triggered!");
+            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertAlarmTriggered, alarmName));
         }
 
         if (dev != null)
@@ -3335,16 +3339,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private static string EventKindText(int type) => type switch
     {
-        5 => "Cargo Ship",
-        //6 => "Locked Crate",
-        6 => "Travelling Vendor",
-        4 => "CH47",
-        8 => "Patrol Helicopter",
-        9 => "Oilrig Crate",
-        150 => "Oilrig Crate",
-        2 => "Explosion",
-        7 => "Building Blocked",
-        _ => "Event"
+        5 => Properties.Resources.EventCargoShip,
+        6 => Properties.Resources.EventTravellingVendor,
+        4 => Properties.Resources.EventCH47,
+        8 => Properties.Resources.EventPatrolHelicopter,
+        9 => Properties.Resources.EventOilrigCrate,
+        150 => Properties.Resources.EventOilrigCrate,
+        2 => Properties.Resources.EventExplosion,
+        7 => Properties.Resources.EventBuildingBlocked,
+        _ => Properties.Resources.EventGeneric
     };
 
     private List<RustPlusClientReal.ShopMarker> _lastShops = new(); // füllen wir beim Polling
@@ -3899,12 +3902,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 string grid         = GetGridLabel(shop);
                 string itemName     = ResolveItemName(order.ItemId, order.ItemShortName);
                 string currencyName = ResolveItemName(order.CurrencyItemId, order.CurrencyShortName);
-                string verb         = rule.MatchSellSide ? "sells" : "buys";
+                string verb         = rule.MatchSellSide ? Properties.Resources.AlertShopSells : Properties.Resources.AlertShopBuys;
+                string shopLabel    = shop.Label ?? Properties.Resources.AlertShopLabelFallback;
 
-                string msg =
-                    $"{(shop.Label ?? "Shop")} [{grid}] {verb} " +
-                    $"x{order.Quantity} {itemName} (Stock {order.Stock}) " +
-                    $"for {order.CurrencyAmount} {currencyName}";
+                string msg = string.Format(
+                    Properties.Resources.AlertShopMatch,
+                    shopLabel,
+                    grid,
+                    verb,
+                    order.Quantity,
+                    itemName,
+                    order.Stock,
+                    order.CurrencyAmount,
+                    currencyName
+                );
 
                 AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert: {msg}");
 
