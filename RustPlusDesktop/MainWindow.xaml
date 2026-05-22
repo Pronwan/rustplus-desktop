@@ -4419,8 +4419,8 @@
                                     x:Name="ChatContentBorder"
                                     Grid.Row="0"
                                     Height="420"
-                                    Background="#16181C"
-                                    BorderBrush="#40FFFFFF"
+                                    Background="#14171C"
+                                    BorderBrush="#1F242E"
                                     BorderThickness="1"
                                     CornerRadius="12"
                                     RenderTransformOrigin="0.5,1"
@@ -4433,118 +4433,139 @@
                                     </Border.RenderTransform>
                                     <Grid>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="30" />
+                                            <RowDefinition Height="38" />
                                             <RowDefinition Height="*" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
 
                                         <!--  Header / Drag / Close Area  -->
-                                        <Grid Grid.Row="0" Background="#1E2126">
-                                            <StackPanel Margin="12,0,0,0" Orientation="Horizontal">
-                                                <TextBlock
-                                                    VerticalAlignment="Center"
-                                                    FontSize="10"
-                                                    Text="💬 " />
+                                        <Grid Grid.Row="0" Background="#1B1E24">
+                                            <StackPanel Margin="12,0,0,0" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <ui:SymbolIcon Symbol="Chat24" Margin="0,0,8,0" FontSize="16" Foreground="{DynamicResource Accent}" />
                                                 <TextBlock
                                                     HorizontalAlignment="Left"
                                                     VerticalAlignment="Center"
-                                                    FontSize="10"
-                                                    FontWeight="Bold"
-                                                    Foreground="#60FFFFFF"
+                                                    FontSize="11"
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource TextPrimary}"
                                                     Text="{DynamicResource TeamChatTitle}" />
                                             </StackPanel>
-                                            <Button
+                                            <ui:Button
                                                 x:Name="BtnCloseChatOverlay"
-                                                Width="26"
-                                                Height="26"
-                                                Margin="0,0,4,0"
+                                                Width="28"
+                                                Height="28"
+                                                Margin="0,0,6,0"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Center"
                                                 Click="BtnCloseChatOverlay_Click"
-                                                Content="&#x2715;"
-                                                Cursor="Hand"
-                                                FontSize="12"
-                                                Foreground="#99FFFFFF"
-                                                ToolTip="{DynamicResource CloseChat}">
-                                                <Button.Resources>
-                                                    <Style BasedOn="{StaticResource GhostButton}" TargetType="Button">
-                                                        <Setter Property="Background" Value="Transparent" />
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Foreground" Value="White" />
-                                                                <Setter Property="Background" Value="#20FFFFFF" />
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Button.Resources>
-                                            </Button>
+                                                Appearance="Transparent"
+                                                Icon="{ui:SymbolIcon Symbol=Dismiss24}"
+                                                Foreground="{DynamicResource TextSubtle}"
+                                                ToolTip="{DynamicResource CloseChat}"
+                                                Padding="0" />
                                         </Grid>
 
                                         <!--  Chat-History  -->
                                         <ListBox
                                             x:Name="ChatList"
                                             Grid.Row="1"
+                                            ScrollViewer.ScrollChanged="ChatScrollViewer_ScrollChanged"
+                                            PreviewMouseWheel="ChatList_PreviewMouseWheel"
                                             HorizontalContentAlignment="Stretch"
                                             Background="Transparent"
                                             BorderThickness="0"
                                             ItemsSource="{Binding ChatMessages, RelativeSource={RelativeSource AncestorType=Window}}"
-                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                            Padding="4,8">
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
-                                                    <StackPanel>
+                                                    <StackPanel Margin="0,2">
                                                         <!--  Day Separator  -->
                                                         <Border
-                                                            Margin="0,8,0,8"
-                                                            Padding="8,4"
+                                                            Margin="0,8"
+                                                            Padding="10,4"
                                                             HorizontalAlignment="Center"
-                                                            Background="#141A22"
-                                                            CornerRadius="8"
+                                                            Background="#1B1E24"
+                                                            BorderBrush="#10FFFFFF"
+                                                            BorderThickness="1"
+                                                            CornerRadius="10"
                                                             Visibility="{Binding ShowSeparator, Converter={StaticResource BoolToVisibility}}">
                                                             <TextBlock
-                                                                FontSize="11"
-                                                                FontWeight="Bold"
-                                                                Foreground="{DynamicResource TextSecondary}"
+                                                                FontSize="10"
+                                                                FontWeight="SemiBold"
+                                                                Foreground="{DynamicResource TextSubtle}"
                                                                 Text="{Binding SeparatorText}" />
                                                         </Border>
 
-                                                        <!--  Message Entry  -->
-                                                        <Grid Margin="10,4,10,4">
+                                                        <!--  Message Bubble Grid  -->
+                                                        <Grid x:Name="MsgGrid" Margin="6,2">
                                                             <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="36" />
+                                                                <ColumnDefinition Width="Auto" />
                                                                 <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
                                                             </Grid.ColumnDefinitions>
 
-                                                            <Ellipse
-                                                                Width="28"
-                                                                Height="28"
-                                                                Margin="0,2,0,0"
-                                                                VerticalAlignment="Top">
-                                                                <Ellipse.Fill>
-                                                                    <ImageBrush ImageSource="{Binding Avatar}" Stretch="UniformToFill" />
-                                                                </Ellipse.Fill>
-                                                            </Ellipse>
+                                                            <!-- Column 0: Left Avatar (for Me) -->
+                                                            <Border x:Name="LeftAvatarBorder" Grid.Column="0" Width="26" Height="26" Margin="0,0,8,0" CornerRadius="13" ClipToBounds="True" Background="#2B303C" VerticalAlignment="Top" Visibility="Visible">
+                                                                <Grid>
+                                                                    <ui:SymbolIcon Symbol="Person24" Filled="True" FontSize="14" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                    <Image Source="{Binding Avatar}" Stretch="UniformToFill" />
+                                                                </Grid>
+                                                            </Border>
 
-                                                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                                                                <DockPanel>
-                                                                    <TextBlock
-                                                                        FontWeight="Bold"
-                                                                        Foreground="{DynamicResource Accent}"
-                                                                        Text="{Binding Author}" />
-                                                                    <TextBlock
-                                                                        Margin="8,0,0,0"
-                                                                        VerticalAlignment="Bottom"
-                                                                        FontSize="10"
-                                                                        Foreground="{DynamicResource TextSecondary}"
-                                                                        Text="{Binding Timestamp, StringFormat=HH:mm}" />
-                                                                </DockPanel>
-                                                                <TextBlock
-                                                                    Margin="0,2,0,0"
-                                                                    Foreground="{DynamicResource TextPrimary}"
-                                                                    Text="{Binding Text}"
-                                                                    TextWrapping="Wrap" />
+                                                            <!-- Column 1: Bubble Content -->
+                                                            <StackPanel Grid.Column="1" x:Name="BubbleStack" VerticalAlignment="Top">
+                                                                <!-- Sender Name & Time Metadata -->
+                                                                <StackPanel x:Name="MetaStack" Orientation="Horizontal" Margin="4,0,4,2">
+                                                                    <TextBlock x:Name="SenderText" FontWeight="SemiBold" FontSize="11" Foreground="{DynamicResource Accent}" Text="{Binding Author}" />
+                                                                    <TextBlock x:Name="TimeText" Margin="6,0,0,0" VerticalAlignment="Center" FontSize="9" Foreground="{DynamicResource TextSubtle}" Text="{Binding Timestamp, StringFormat=HH:mm}" />
+                                                                </StackPanel>
+
+                                                                <!-- Actual Message Bubble -->
+                                                                <Border x:Name="MsgBubble" Padding="10,6" CornerRadius="12,12,12,2" BorderThickness="1" Background="#22252C" BorderBrush="#323846" HorizontalAlignment="Left">
+                                                                    <TextBlock Foreground="{DynamicResource TextPrimary}" Text="{Binding Text}" TextWrapping="Wrap" FontSize="12" LineHeight="16"/>
+                                                                </Border>
                                                             </StackPanel>
+
+                                                            <!-- Column 2: Right Avatar (for Teammates) -->
+                                                            <Border x:Name="RightAvatarBorder" Grid.Column="2" Width="26" Height="26" Margin="8,0,0,0" CornerRadius="13" ClipToBounds="True" Background="#2B303C" VerticalAlignment="Top" Visibility="Collapsed">
+                                                                <Grid>
+                                                                    <ui:SymbolIcon Symbol="Person24" Filled="True" FontSize="14" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                    <Image Source="{Binding Avatar}" Stretch="UniformToFill" />
+                                                                </Grid>
+                                                            </Border>
                                                         </Grid>
                                                     </StackPanel>
+
+                                                    <!-- Triggers to shift layout to Left vs Right based on IsMe -->
+                                                    <DataTemplate.Triggers>
+                                                        <!-- ME: Left Sided -->
+                                                        <DataTrigger Binding="{Binding IsMe}" Value="True">
+                                                            <Setter TargetName="LeftAvatarBorder" Property="Visibility" Value="Visible" />
+                                                            <Setter TargetName="RightAvatarBorder" Property="Visibility" Value="Collapsed" />
+                                                            <Setter TargetName="BubbleStack" Property="HorizontalAlignment" Value="Left" />
+                                                            <Setter TargetName="MetaStack" Property="HorizontalAlignment" Value="Left" />
+                                                            <Setter TargetName="MsgBubble" Property="HorizontalAlignment" Value="Left" />
+                                                            <Setter TargetName="MsgBubble" Property="Background" Value="#22252C" />
+                                                            <Setter TargetName="MsgBubble" Property="BorderBrush" Value="#323846" />
+                                                            <Setter TargetName="MsgBubble" Property="CornerRadius" Value="12,12,12,2" />
+                                                            <Setter TargetName="SenderText" Property="Foreground" Value="{DynamicResource Accent}" />
+                                                        </DataTrigger>
+                                                        
+                                                        <!-- TEAMMATE: Right Sided -->
+                                                        <DataTrigger Binding="{Binding IsMe}" Value="False">
+                                                            <Setter TargetName="LeftAvatarBorder" Property="Visibility" Value="Collapsed" />
+                                                            <Setter TargetName="RightAvatarBorder" Property="Visibility" Value="Visible" />
+                                                            <Setter TargetName="BubbleStack" Property="HorizontalAlignment" Value="Right" />
+                                                            <Setter TargetName="MetaStack" Property="HorizontalAlignment" Value="Right" />
+                                                            <Setter TargetName="MetaStack" Property="FlowDirection" Value="RightToLeft" />
+                                                            <Setter TargetName="MsgBubble" Property="HorizontalAlignment" Value="Right" />
+                                                            <Setter TargetName="MsgBubble" Property="Background" Value="#1A4D6B" />
+                                                            <Setter TargetName="MsgBubble" Property="BorderBrush" Value="#2C6B91" />
+                                                            <Setter TargetName="MsgBubble" Property="CornerRadius" Value="12,12,2,12" />
+                                                            <Setter TargetName="SenderText" Property="Foreground" Value="#60CDFF" />
+                                                        </DataTrigger>
+                                                    </DataTemplate.Triggers>
                                                 </DataTemplate>
                                             </ListBox.ItemTemplate>
                                             <ListBox.ItemContainerStyle>
@@ -4563,85 +4584,66 @@
                                         <!--  Input-Bar  -->
                                         <StackPanel
                                             Grid.Row="2"
-                                            Margin="0,0,0,12"
-                                            Background="#141A22">
+                                            Margin="0"
+                                            Background="#111317">
                                             <!--  Inline Error Box  -->
                                             <Border
                                                 x:Name="ChatErrorBox"
-                                                Margin="12,12,12,0"
-                                                Padding="6"
+                                                Margin="12,8,12,0"
+                                                Padding="8"
                                                 Background="#33FF0000"
                                                 BorderBrush="Red"
                                                 BorderThickness="1"
-                                                CornerRadius="4"
+                                                CornerRadius="6"
                                                 Visibility="Collapsed">
                                                 <TextBlock
                                                     x:Name="ChatErrorText"
                                                     FontSize="11"
                                                     Foreground="White"
-                                                    Text="Error message here"
+                                                    Text="{DynamicResource ChatErrorPlaceholder}"
                                                     TextWrapping="Wrap" />
                                             </Border>
 
-                                            <DockPanel Margin="12,12,12,0">
-                                                <Border
+                                            <DockPanel Margin="12,10,12,4">
+                                                <ui:Button
+                                                    x:Name="BtnSendChat"
+                                                    Width="Auto"
+                                                    Padding="12,0"
+                                                    Height="36"
                                                     Margin="8,0,0,0"
                                                     VerticalAlignment="Bottom"
-                                                    DockPanel.Dock="Right">
-                                                    <Button
-                                                        x:Name="BtnSendChat"
-                                                        Width="70"
-                                                        Height="36"
-                                                        Background="{DynamicResource Accent}"
-                                                        BorderThickness="0"
-                                                        Click="BtnSendChat_Click"
-                                                        Content="{DynamicResource Send}"
-                                                        Foreground="White"
-                                                        Style="{StaticResource PrimaryButton}" />
-                                                </Border>
+                                                    DockPanel.Dock="Right"
+                                                    Click="BtnSendChat_Click"
+                                                    Content="{DynamicResource Send}"
+                                                    Icon="{ui:SymbolIcon Symbol=Send20}"
+                                                    Appearance="Primary" />
 
-                                                <Border
-                                                    Height="36"
-                                                    Padding="6"
-                                                    Background="#1E2126"
-                                                    BorderBrush="#40FFFFFF"
-                                                    BorderThickness="1"
-                                                    CornerRadius="6">
-                                                    <TextBox
-                                                        x:Name="TxtChatInput"
-                                                        VerticalContentAlignment="Center"
-                                                        Background="Transparent"
-                                                        BorderThickness="0"
-                                                        Foreground="{DynamicResource TextPrimary}"
-                                                        KeyDown="TxtChatInput_KeyDown"
-                                                        MaxLength="128"
-                                                        MaxLines="1" />
-                                                </Border>
+                                                <ui:TextBox
+                                                    x:Name="TxtChatInput"
+                                                    PlaceholderText="{DynamicResource ChatMessagePlaceholder}"
+                                                    VerticalContentAlignment="Center"
+                                                    KeyDown="TxtChatInput_KeyDown"
+                                                    MaxLength="128"
+                                                    MaxLines="1" />
                                             </DockPanel>
 
-                                            <Button
+                                            <ui:Button
                                                 x:Name="BtnOpenChatCommands"
-                                                Margin="12,4,0,0"
-                                                Padding="4"
+                                                Margin="12,0,0,8"
+                                                Padding="6,4"
                                                 HorizontalAlignment="Left"
-                                                Background="Transparent"
-                                                BorderThickness="0"
+                                                Appearance="Transparent"
                                                 Click="BtnOpenChatCommands_Click"
                                                 ToolTip="{DynamicResource ChatCommandsSettings}">
                                                 <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="Settings24" Margin="0,0,6,0" FontSize="14" Foreground="{DynamicResource TextSubtle}"/>
                                                     <TextBlock
-                                                        VerticalAlignment="Center"
-                                                        FontSize="16"
-                                                        Foreground="#888"
-                                                        Text="⚙" />
-                                                    <TextBlock
-                                                        Margin="4,0,0,0"
                                                         VerticalAlignment="Center"
                                                         FontSize="10"
-                                                        Foreground="#888"
+                                                        Foreground="{DynamicResource TextSubtle}"
                                                         Text="{DynamicResource ChatCommands}" />
                                                 </StackPanel>
-                                            </Button>
+                                            </ui:Button>
                                         </StackPanel>
 
                                         <!--  Chat Commands Overlay  -->

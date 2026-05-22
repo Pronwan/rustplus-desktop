@@ -419,4 +419,6 @@ Download and install now?</value></data>
   <data name="UpkeepTcMonitors" xml:space="preserve"><value>Upkeep (TC) Monitors</value></data>
   <data name="NoTcMonitorsFound" xml:space="preserve"><value>No TC monitors found.</value></data>
   <data name="SaveAndClose" xml:space="preserve"><value>Save &amp; Close</value></data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve"><value>Message...</value></data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve"><value>Error message here</value></data>
 </root>

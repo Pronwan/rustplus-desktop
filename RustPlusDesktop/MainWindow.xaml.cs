@@ -542,6 +542,13 @@ public partial class MainWindow : WpfUi.FluentWindow
         
         _monumentWatcher.OnDebug += (s, msg) => Dispatcher.BeginInvoke(new Action(() => AppendLog(msg)));
 
+        App.CultureChanged += () =>
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                RebuildChatMessages();
+            }));
+        };
     }
 
     private void OnTrackingNotification(string msg, string serverName)

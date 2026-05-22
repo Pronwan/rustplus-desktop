@@ -7,8 +7,8 @@
              xmlns:conv="clr-namespace:RustPlusDesk.Converters"
              xmlns:p="clr-namespace:RustPlusDesk.Properties"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="400"
-             Background="{DynamicResource AppBg}"
+             d:DesignHeight="550" d:DesignWidth="420"
+             Background="Transparent"
              Foreground="{DynamicResource TextPrimary}">
     <UserControl.Resources>
         <conv:BoolToVisibilityConverter x:Key="Vis" />
@@ -25,8 +25,8 @@
 
             <!-- Header -->
             <Grid Grid.Row="0" Margin="0,0,0,15">
-                <TextBlock Text="{DynamicResource ChatCommandsSettings}" FontSize="16" FontWeight="SemiBold" Foreground="White" />
-                <Button HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Click="BtnClose_Click" Foreground="#888" FontSize="16" Content="✕" />
+                <TextBlock Text="{DynamicResource ChatCommandsSettings}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" />
+                <ui:Button HorizontalAlignment="Right" VerticalAlignment="Center" Padding="4" Appearance="Transparent" Click="BtnClose_Click" Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
             </Grid>
 
             <!-- Content -->
@@ -37,10 +37,10 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <CheckBox Content="{DynamicResource EnableChatCommands}" IsChecked="{Binding ChatCommandsEnabled}" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0" />
+                        <CheckBox Content="{DynamicResource EnableChatCommands}" IsChecked="{Binding ChatCommandsEnabled}" Style="{StaticResource DotCheckBox}" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0" />
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="{DynamicResource Prefix}" Foreground="#8090A0" VerticalAlignment="Center" Margin="0,0,5,0" />
-                            <ComboBox SelectedValue="{Binding ChatCommandPrefix}" SelectedValuePath="Content" Width="60" Style="{StaticResource DarkComboBox}" HorizontalContentAlignment="Center">
+                            <TextBlock Text="{DynamicResource Prefix}" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" Margin="0,0,5,0" />
+                            <ComboBox SelectedValue="{Binding ChatCommandPrefix}" SelectedValuePath="Content" Width="60" HorizontalContentAlignment="Center" VerticalAlignment="Center">
                                 <ComboBoxItem Content="!" />
                                 <ComboBoxItem Content="." />
                                 <ComboBoxItem Content="," />
@@ -49,8 +49,8 @@
                         </StackPanel>
                     </Grid>
 
-                    <TextBlock Text="{DynamicResource StandardCommands}" Foreground="#8090A0" Margin="0,0,0,5" FontWeight="SemiBold" />
-                    <Border Background="#1E2228" CornerRadius="8" Padding="10">
+                    <TextBlock Text="{DynamicResource StandardCommands}" Foreground="{DynamicResource Accent}" Margin="0,0,0,5" FontWeight="SemiBold" />
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="12">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="120" />
@@ -58,66 +58,66 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="30" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
                             <!-- Population -->
-                            <TextBlock Grid.Row="0" Text="{DynamicResource Population}" VerticalAlignment="Center" Foreground="White" />
-                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
-                            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding CmdPop}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
+                            <TextBlock Grid.Row="0" Text="{DynamicResource Population}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                            <ui:TextBox Grid.Row="0" Grid.Column="2" Text="{Binding CmdPop}" Margin="0,4" VerticalAlignment="Center" />
 
                             <!-- Time -->
-                            <TextBlock Grid.Row="1" Text="{DynamicResource Time}" VerticalAlignment="Center" Foreground="White" />
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
-                            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding CmdTime}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
+                            <TextBlock Grid.Row="1" Text="{DynamicResource Time}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                            <ui:TextBox Grid.Row="1" Grid.Column="2" Text="{Binding CmdTime}" Margin="0,4" VerticalAlignment="Center" />
 
                             <!-- Promote -->
-                            <TextBlock Grid.Row="2" Text="{DynamicResource Promote}" VerticalAlignment="Center" Foreground="White" />
-                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
-                            <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding CmdPromote}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
+                            <TextBlock Grid.Row="2" Text="{DynamicResource Promote}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                            <ui:TextBox Grid.Row="2" Grid.Column="2" Text="{Binding CmdPromote}" Margin="0,4" VerticalAlignment="Center" />
 
                             <!-- Deep Sea -->
-                            <TextBlock Grid.Row="3" Text="{DynamicResource DeepSeaCommand}" VerticalAlignment="Center" Foreground="White" />
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
-                            <TextBox Grid.Row="3" Grid.Column="2" Text="{Binding CmdDeepSea}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
+                            <TextBlock Grid.Row="3" Text="{DynamicResource DeepSeaCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                            <ui:TextBox Grid.Row="3" Grid.Column="2" Text="{Binding CmdDeepSea}" Margin="0,4" VerticalAlignment="Center" />
 
                             <!-- Cargo -->
-                            <TextBlock Grid.Row="4" Text="{DynamicResource CargoShipCommand}" VerticalAlignment="Center" Foreground="White" />
-                            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
-                            <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding CmdCargo}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
+                            <TextBlock Grid.Row="4" Text="{DynamicResource CargoShipCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                            <ui:TextBox Grid.Row="4" Grid.Column="2" Text="{Binding CmdCargo}" Margin="0,4" VerticalAlignment="Center" />
 
                             <!-- Oil Rig -->
-                            <TextBlock Grid.Row="5" Text="{DynamicResource OilRigCommand}" VerticalAlignment="Center" Foreground="White" />
-                            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
-                            <TextBox Grid.Row="5" Grid.Column="2" Text="{Binding CmdOilRig}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
+                            <TextBlock Grid.Row="5" Text="{DynamicResource OilRigCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                            <ui:TextBox Grid.Row="5" Grid.Column="2" Text="{Binding CmdOilRig}" Margin="0,4" VerticalAlignment="Center" />
 
                             <!-- Heli -->
-                            <TextBlock Grid.Row="6" Text="{DynamicResource PatrolHeliCommand}" VerticalAlignment="Center" Foreground="White" />
-                            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
-                            <TextBox Grid.Row="6" Grid.Column="2" Text="{Binding CmdHeli}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
+                            <TextBlock Grid.Row="6" Text="{DynamicResource PatrolHeliCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                            <ui:TextBox Grid.Row="6" Grid.Column="2" Text="{Binding CmdHeli}" Margin="0,4" VerticalAlignment="Center" />
 
                             <!-- Vendor -->
-                            <TextBlock Grid.Row="7" Text="{DynamicResource TravellingVendorCommand}" VerticalAlignment="Center" Foreground="White" />
-                            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
-                            <TextBox Grid.Row="7" Grid.Column="2" Text="{Binding CmdVendor}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
+                            <TextBlock Grid.Row="7" Text="{DynamicResource TravellingVendorCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                            <ui:TextBox Grid.Row="7" Grid.Column="2" Text="{Binding CmdVendor}" Margin="0,4" VerticalAlignment="Center" />
 
                             <!-- Upkeep Detail -->
-                            <TextBlock Grid.Row="8" Text="{DynamicResource UpkeepDetails}" VerticalAlignment="Center" Foreground="White" />
-                            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
-                            <TextBox Grid.Row="8" Grid.Column="2" Text="{Binding CmdUpkeepDetail}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" />
+                            <TextBlock Grid.Row="8" Text="{DynamicResource UpkeepDetails}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                            <ui:TextBox Grid.Row="8" Grid.Column="2" Text="{Binding CmdUpkeepDetail}" Margin="0,4" VerticalAlignment="Center" />
 
                             <!-- Delay -->
-                            <TextBlock Grid.Row="9" Text="{DynamicResource CommandDelay}" VerticalAlignment="Center" Foreground="White" />
-                            <ComboBox Grid.Row="9" Grid.Column="2" SelectedValue="{Binding ChatCommandDelaySeconds}" SelectedValuePath="Content" Background="#2A2E35" Foreground="White" BorderThickness="0">
+                            <TextBlock Grid.Row="9" Text="{DynamicResource CommandDelay}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <ComboBox Grid.Row="9" Grid.Column="2" SelectedValue="{Binding ChatCommandDelaySeconds}" SelectedValuePath="Content" Margin="0,4" VerticalAlignment="Center">
                                 <ComboBoxItem Content="1" />
                                 <ComboBoxItem Content="2" />
                                 <ComboBoxItem Content="3" />
@@ -129,21 +129,21 @@
 
                     <!-- Smart Switches Section -->
                     <StackPanel Visibility="{Binding HasSmartSwitches, Converter={StaticResource Vis}}">
-                        <TextBlock Text="{DynamicResource SmartSwitches}" Foreground="#8090A0" Margin="0,10,0,5" FontWeight="SemiBold" />
+                        <TextBlock Text="{DynamicResource SmartSwitches}" Foreground="{DynamicResource Accent}" Margin="0,15,0,5" FontWeight="SemiBold" />
                         <ItemsControl ItemsSource="{Binding SwitchCommandMappings}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Margin="0,0,0,5">
+                                    <Grid Margin="0,4">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="100"/>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="100"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding Label, StringFormat='{}{0}:'}" VerticalAlignment="Center" Foreground="White" />
-                                        <TextBlock Grid.Column="1" Text="{Binding DataContext.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=StackPanel}}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
-                                        <TextBox Grid.Column="2" Text="{Binding Command, UpdateSourceTrigger=PropertyChanged}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" Margin="0,0,10,0" />
-                                        <ComboBox Grid.Column="3" ItemsSource="{Binding DataContext.SmartSwitches, RelativeSource={RelativeSource AncestorType=ItemsControl}}" SelectedValue="{Binding EntityId}" SelectedValuePath="EntityId" DisplayMemberPath="PureName" Style="{StaticResource DarkComboBox}" />
+                                        <TextBlock Text="{Binding Label, StringFormat='{}{0}:'}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                                        <TextBlock Grid.Column="1" Text="{Binding DataContext.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=StackPanel}}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                                        <ui:TextBox Grid.Column="2" Text="{Binding Command, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                        <ComboBox Grid.Column="3" ItemsSource="{Binding DataContext.SmartSwitches, RelativeSource={RelativeSource AncestorType=ItemsControl}}" SelectedValue="{Binding EntityId}" SelectedValuePath="EntityId" DisplayMemberPath="PureName" VerticalAlignment="Center" />
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -152,32 +152,32 @@
 
                     <!-- Upkeep TC Monitors Section -->
                     <StackPanel Margin="0,15,0,0">
-                        <TextBlock Text="{DynamicResource UpkeepTcMonitors}" Foreground="#8090A0" Margin="0,0,0,5" FontWeight="SemiBold" />
+                        <TextBlock Text="{DynamicResource UpkeepTcMonitors}" Foreground="{DynamicResource Accent}" Margin="0,0,0,5" FontWeight="SemiBold" />
                         <ItemsControl ItemsSource="{Binding UpkeepCommandMappings}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Margin="0,0,0,5">
+                                    <Grid Margin="0,4">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="100"/>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="100"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding Label, StringFormat='{}{0}:'}" VerticalAlignment="Center" Foreground="White" />
-                                        <TextBlock Grid.Column="1" Text="{Binding DataContext.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=StackPanel}}" VerticalAlignment="Center" Foreground="#8090A0" FontWeight="Bold" Margin="0,0,4,0" />
-                                        <TextBox Grid.Column="2" Text="{Binding Command, UpdateSourceTrigger=PropertyChanged}" Background="#2A2E35" Foreground="White" BorderThickness="0" Padding="5,2" Margin="0,0,10,0" />
-                                        <ComboBox Grid.Column="3" ItemsSource="{Binding DataContext.TcMonitors, RelativeSource={RelativeSource AncestorType=ItemsControl}}" SelectedValue="{Binding EntityId}" SelectedValuePath="EntityId" DisplayMemberPath="PureName" Style="{StaticResource DarkComboBox}" />
+                                        <TextBlock Text="{Binding Label, StringFormat='{}{0}:'}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                                        <TextBlock Grid.Column="1" Text="{Binding DataContext.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=StackPanel}}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                                        <ui:TextBox Grid.Column="2" Text="{Binding Command, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                        <ComboBox Grid.Column="3" ItemsSource="{Binding DataContext.TcMonitors, RelativeSource={RelativeSource AncestorType=ItemsControl}}" SelectedValue="{Binding EntityId}" SelectedValuePath="EntityId" DisplayMemberPath="PureName" VerticalAlignment="Center" />
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <TextBlock Text="{DynamicResource NoTcMonitorsFound}" Foreground="#607080" FontSize="11" FontStyle="Italic" Visibility="{Binding UpkeepCommandMappings.Count, Converter={StaticResource VisInv}, FallbackValue=Visible}" />
+                        <TextBlock Text="{DynamicResource NoTcMonitorsFound}" Foreground="{DynamicResource TextSubtle}" FontSize="11" FontStyle="Italic" Visibility="{Binding UpkeepCommandMappings.Count, Converter={StaticResource VisInv}, FallbackValue=Visible}" Margin="0,5,0,0" />
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>
 
             <!-- Footer -->
-            <Button Grid.Row="2" Content="{DynamicResource SaveAndClose}" Margin="0,15,0,0" Style="{StaticResource PrimaryButton}" Click="BtnClose_Click" HorizontalAlignment="Right" Width="120" />
+            <ui:Button Grid.Row="2" Content="{DynamicResource SaveAndClose}" Margin="0,15,0,0" Appearance="Primary" Click="BtnClose_Click" HorizontalAlignment="Right" Width="120" Height="32" />
         </Grid>
     </Border>
 </UserControl>

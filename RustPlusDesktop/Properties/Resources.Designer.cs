@@ -404,5 +404,8 @@ namespace RustPlusDesk.Properties {
         public static string HowPlayerTrackingWorks => GetString("HowPlayerTrackingWorks");
 
         public static string StreamerModeTitle => GetString("StreamerModeTitle");
+
+        public static string ChatMessagePlaceholder => GetString("ChatMessagePlaceholder");
+        public static string ChatErrorPlaceholder => GetString("ChatErrorPlaceholder");
     }
 }
