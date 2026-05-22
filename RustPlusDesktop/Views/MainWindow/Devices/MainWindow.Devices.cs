@@ -642,23 +642,43 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                 {
                     try
                     {
-                        var rStor = await ProbeWithRetryAsync(dev.EntityId, log);
-                        if (rStor.Exists)
+                        var snap = await real.GetStorageMonitorAsync(dev.EntityId);
+                        if (snap != null)
                         {
                             dev.IsMissing = false;
+                            Dispatcher.Invoke(() =>
+                            {
+                                var uiSnap = new StorageSnapshot
+                                {
+                                    UpkeepSeconds = snap.UpkeepSeconds,
+                                    IsToolCupboard = snap.IsToolCupboard,
+                                    SnapshotUtc = snap.SnapshotUtc
+                                };
+                                foreach (var it in snap.Items)
+                                    uiSnap.Items.Add(it);
+
+                                dev.Storage = uiSnap;
+                            });
                         }
                         else
                         {
-                            // Wenn der Probe fehlschlägt, wir aber bereits valide Daten haben, 
-                            // gehen wir von einem ratelimit aus und grauen NICHT aus.
-                            if (dev.Storage != null && dev.Storage.ItemsCount > 0)
+                            // Fallback to basic probe
+                            var rStor = await ProbeWithRetryAsync(dev.EntityId, log);
+                            if (rStor.Exists)
                             {
-                                if (log) AppendLog($"#{dev.EntityId}: probe failed, but keeping existing data (ratelimit?).");
+                                dev.IsMissing = false;
                             }
                             else
                             {
-                                dev.IsMissing = true;
-                                if (log) AppendLog($"#{dev.EntityId}: not reachable / demoted");
+                                if (dev.Storage != null && dev.Storage.ItemsCount > 0)
+                                {
+                                    if (log) AppendLog($"#{dev.EntityId}: probe failed, but keeping existing data (ratelimit?).");
+                                }
+                                else
+                                {
+                                    dev.IsMissing = true;
+                                    if (log) AppendLog($"#{dev.EntityId}: not reachable / demoted");
+                                }
                             }
                         }
                     }

@@ -143,6 +143,9 @@ public partial class MainWindow
                 real.ConnectionLost -= OnConnectionLost;
                 real.ConnectionLost += OnConnectionLost;
 
+                real.StorageSnapshotReceived -= OnStorageSnapshot;
+                real.StorageSnapshotReceived += OnStorageSnapshot;
+
                 var allIds = profile.Devices.Select(d => d.EntityId).Distinct().ToList();
                 if (allIds.Any())
                 {
