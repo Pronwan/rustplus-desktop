@@ -138,7 +138,7 @@ public class ServerProfile : INotifyPropertyChanged
         {
             var list = new System.Collections.Generic.List<SmartDevice>();
             list.Add(new SmartDevice { Name = "(None)", EntityId = 0 });
-            list.AddRange(System.Linq.Enumerable.Where(AllDevices, d => (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor") && d.Storage?.IsToolCupboard == true));
+            list.AddRange(System.Linq.Enumerable.Where(AllDevices, d => (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor") && (d.Storage == null || d.Storage.IsToolCupboard)));
             return list;
         }
     }
@@ -295,7 +295,7 @@ public class ServerProfile : INotifyPropertyChanged
         }
 
         // Sync Upkeep (Storage Monitors on TCs)
-        var tcs = AllDevices.Where(d => d.Kind == "StorageMonitor" && d.Storage?.IsToolCupboard == true).ToList();
+        var tcs = AllDevices.Where(d => (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor") && (d.Storage == null || d.Storage.IsToolCupboard)).ToList();
         while (UpkeepCommandMappings.Count < tcs.Count)
         {
             int next = UpkeepCommandMappings.Count + 1;
