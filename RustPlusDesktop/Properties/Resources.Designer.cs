@@ -353,5 +353,44 @@ namespace RustPlusDesk.Properties {
         public static string UpkeepTcMonitors => ResourceManager.GetString("UpkeepTcMonitors", resourceCulture);
         public static string NoTcMonitorsFound => ResourceManager.GetString("NoTcMonitorsFound", resourceCulture);
         public static string SaveAndClose => ResourceManager.GetString("SaveAndClose", resourceCulture);
+        public static string ToggleServerArea => ResourceManager.GetString("ToggleServerArea", resourceCulture);
+        public static string StreamerMode => ResourceManager.GetString("StreamerMode", resourceCulture);
+        public static string ScaleLabel => ResourceManager.GetString("ScaleLabel", resourceCulture);
+        public static string EnableStreamerMode => ResourceManager.GetString("EnableStreamerMode", resourceCulture);
+        public static string StreamerModeToolTip => ResourceManager.GetString("StreamerModeToolTip", resourceCulture);
+        public static string NoPositionAvailable => ResourceManager.GetString("NoPositionAvailable", resourceCulture);
+        public static string SaveGroup => ResourceManager.GetString("SaveGroup", resourceCulture);
+        public static string EnterGroupName => ResourceManager.GetString("EnterGroupName", resourceCulture);
+        public static string MessageNotSentError => ResourceManager.GetString("MessageNotSentError", resourceCulture);
+        public static string ErrorPrefix => ResourceManager.GetString("ErrorPrefix", resourceCulture);
+        public static string AssignGroup => ResourceManager.GetString("AssignGroup", resourceCulture);
+        public static string GroupSettingsTitle => ResourceManager.GetString("GroupSettingsTitle", resourceCulture);
+        public static string GroupName => ResourceManager.GetString("GroupName", resourceCulture);
+        public static string EnterGroupNamePlaceholder => ResourceManager.GetString("EnterGroupNamePlaceholder", resourceCulture);
+        public static string GroupColor => ResourceManager.GetString("GroupColor", resourceCulture);
+        public static string SaveChanges => ResourceManager.GetString("SaveChanges", resourceCulture);
+        public static string PlayerAnalyticsTitle => ResourceManager.GetString("PlayerAnalyticsTitle", resourceCulture);
+        public static string PlayersTitle => ResourceManager.GetString("PlayersTitle", resourceCulture);
+        public static string AddPlayersToStartTracking => ResourceManager.GetString("AddPlayersToStartTracking", resourceCulture);
+        public static string TrackingActiveStatus => ResourceManager.GetString("TrackingActiveStatus", resourceCulture);
+        public static string TrackingIdleStatus => ResourceManager.GetString("TrackingIdleStatus", resourceCulture);
+        public static string FilterPlayers => ResourceManager.GetString("FilterPlayers", resourceCulture);
+        public static string ConnectToLoadPlayers => ResourceManager.GetString("ConnectToLoadPlayers", resourceCulture);
+        public static string FetchingPlayersSteam => ResourceManager.GetString("FetchingPlayersSteam", resourceCulture);
+        public static string TrackID => ResourceManager.GetString("TrackID", resourceCulture);
+        public static string ManualTrackNamePlaceholder => ResourceManager.GetString("ManualTrackNamePlaceholder", resourceCulture);
+        public static string StreamerModeMiniMapOverhaul => ResourceManager.GetString("StreamerModeMiniMapOverhaul", resourceCulture);
+        public static string PlayerMarkerScalingTitle => ResourceManager.GetString("PlayerMarkerScalingTitle", resourceCulture);
+        public static string MiniMapPolishTitle => ResourceManager.GetString("MiniMapPolishTitle", resourceCulture);
+
+        public static string ActionRequiredTitle => ResourceManager.GetString("ActionRequiredTitle", resourceCulture);
+
+        public static string BattleMetricsRemovalTitle => ResourceManager.GetString("BattleMetricsRemovalTitle", resourceCulture);
+
+        public static string PlayerTrackingOverhaulTitle => ResourceManager.GetString("PlayerTrackingOverhaulTitle", resourceCulture);
+
+        public static string HowPlayerTrackingWorks => ResourceManager.GetString("HowPlayerTrackingWorks", resourceCulture);
+
+        public static string StreamerModeTitle => ResourceManager.GetString("StreamerModeTitle", resourceCulture);
     }
 }

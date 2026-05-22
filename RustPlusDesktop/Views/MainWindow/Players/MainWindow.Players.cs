@@ -109,7 +109,7 @@ public partial class MainWindow
                 {
                     if (TxtTrackingStatus != null)
                     {
-                        TxtTrackingStatus.Text = "Add players to tracker to start tracking";
+                        TxtTrackingStatus.Text = Properties.Resources.AddPlayersToStartTracking;
                         TxtTrackingStatus.Foreground = Brushes.Gray;
                         TxtTrackingStatus.FontStyle = FontStyles.Italic;
                     }
@@ -121,7 +121,7 @@ public partial class MainWindow
                         bool hasRealTracked = TrackingService.GetTrackedPlayers().Any(p => !p.IsBMOnly);
                         if (hasRealTracked)
                         {
-                            TxtTrackingStatus.Text = TrackingService.IsTracking ? "Tracking Active" : "Tracking Idle";
+                            TxtTrackingStatus.Text = TrackingService.IsTracking ? Properties.Resources.TrackingActiveStatus : Properties.Resources.TrackingIdleStatus;
                             TxtTrackingStatus.Foreground = TrackingService.IsTracking ? Brushes.White : Brushes.Gray;
                         }
                         else
@@ -173,7 +173,7 @@ public partial class MainWindow
                 {
                     TxtOnlineFilter.Visibility = Visibility.Visible;
                     if (string.IsNullOrEmpty(TxtOnlineFilter.Text) && !TxtOnlineFilter.IsFocused) {
-                        TxtOnlineFilter.Text = "Filter players...";
+                        TxtOnlineFilter.Text = Properties.Resources.FilterPlayers;
                         TxtOnlineFilter.Foreground = Brushes.Gray;
                     }
                 }
@@ -221,19 +221,19 @@ public partial class MainWindow
     }
 
     private void TxtOnlineFilter_GotFocus(object sender, RoutedEventArgs e) {
-        if (TxtOnlineFilter.Text == "Filter players...") {
+        if (TxtOnlineFilter.Text == Properties.Resources.FilterPlayers) {
             TxtOnlineFilter.Text = "";
             TxtOnlineFilter.Foreground = Brushes.White;
         }
     }
     private void TxtOnlineFilter_LostFocus(object sender, RoutedEventArgs e) {
         if (string.IsNullOrWhiteSpace(TxtOnlineFilter.Text)) {
-            TxtOnlineFilter.Text = "Filter players...";
+            TxtOnlineFilter.Text = Properties.Resources.FilterPlayers;
             TxtOnlineFilter.Foreground = Brushes.Gray;
         }
     }
     private void TxtOnlineFilter_TextChanged(object sender, TextChangedEventArgs e) {
-        if (TxtOnlineFilter.Text != "Filter players...") RefreshOnlinePlayersList();
+        if (TxtOnlineFilter.Text != Properties.Resources.FilterPlayers) RefreshOnlinePlayersList();
     }
 
     private async void BtnShowOnline_Click(object sender, RoutedEventArgs e)
@@ -245,14 +245,14 @@ public partial class MainWindow
 
         if (_vm.Selected == null || string.IsNullOrEmpty(_vm.Selected.Host))
         {
-            TxtOnlinePlayersStatus.Text = "Connect to a server to load players list";
+            TxtOnlinePlayersStatus.Text = Properties.Resources.ConnectToLoadPlayers;
             PnlOnlineStatus.Visibility = Visibility.Visible;
             PbOnlineLoading.Visibility = Visibility.Collapsed;
             ListOnlinePlayers.ItemsSource = null;
             return;
         }
 
-        TxtOnlinePlayersStatus.Text = "Fetching players via Steam Query...";
+        TxtOnlinePlayersStatus.Text = Properties.Resources.FetchingPlayersSteam;
         PnlOnlineStatus.Visibility = Visibility.Visible;
         PbOnlineLoading.Visibility = Visibility.Visible;
         if (PnlManualTrack != null) PnlManualTrack.Visibility = Visibility.Visible;
@@ -301,14 +301,14 @@ public partial class MainWindow
 
 
     private void TxtManualBMId_GotFocus(object sender, RoutedEventArgs e) {
-        if (TxtManualBMId.Text == "Manual Track Name...") {
+        if (TxtManualBMId.Text == Properties.Resources.ManualTrackNamePlaceholder) {
             TxtManualBMId.Text = "";
             TxtManualBMId.Foreground = Brushes.White;
         }
     }
     private void TxtManualBMId_LostFocus(object sender, RoutedEventArgs e) {
         if (string.IsNullOrWhiteSpace(TxtManualBMId.Text)) {
-            TxtManualBMId.Text = "Manual Track Name...";
+            TxtManualBMId.Text = Properties.Resources.ManualTrackNamePlaceholder;
             TxtManualBMId.Foreground = Brushes.Gray;
         }
     }
@@ -316,7 +316,7 @@ public partial class MainWindow
     private async void BtnAddManual_Click(object sender, RoutedEventArgs e)
     {
         var bmId = TxtManualBMId.Text?.Trim();
-        if (string.IsNullOrEmpty(bmId) || bmId == "Manual Track Name...") return;
+        if (string.IsNullOrEmpty(bmId) || bmId == Properties.Resources.ManualTrackNamePlaceholder) return;
 
         TxtManualBMId.IsEnabled = false;
         BtnAddManual.Content = "...";
@@ -329,10 +329,10 @@ public partial class MainWindow
 
         TrackingService.TrackPlayer(bmId, name, serverName, lastSession);
         
-        TxtManualBMId.Text = "Manual Track Name...";
+        TxtManualBMId.Text = Properties.Resources.ManualTrackNamePlaceholder;
         TxtManualBMId.Foreground = Brushes.Gray;
         TxtManualBMId.IsEnabled = true;
-        BtnAddManual.Content = "Track ID";
+        BtnAddManual.Content = Properties.Resources.TrackID;
         
         var sessionMsg = lastSession != null ? $" (found last session: {lastSession.ConnectTime.ToLocalTime():g})" : "";
         AppendLog($"[tracking] Manually added {name} ({bmId}) to tracking list on server: {serverName}{sessionMsg}");
@@ -691,7 +691,7 @@ public partial class MainWindow
     {
         var win = new Window
         {
-            Title = "Create / Manage Group",
+            Title = Properties.Resources.ManageGroups,
             Width = 450,
             Height = 600,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
@@ -773,7 +773,7 @@ public partial class MainWindow
             existingPanel.Children.Add(gBtn);
         }
 
-        var colorLabel = new TextBlock { Text = "Group Color", Margin = new Thickness(0, 16, 0, 8), Foreground = (Brush)FindResource("TextSubtle") };
+        var colorLabel = new TextBlock { Text = Properties.Resources.GroupColor, Margin = new Thickness(0, 16, 0, 8), Foreground = (Brush)FindResource("TextSubtle") };
         Grid.SetRow(colorLabel, 4);
         grid.Children.Add(colorLabel);
 
