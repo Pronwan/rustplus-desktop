@@ -1157,4 +1157,352 @@ Open Releases page?</value>
   <data name="SaveAndClose" xml:space="preserve">
     <value>Αποθήκευση &amp; Κλείσιμο</value>
   </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Μήνυμα...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Μήνυμα σφάλματος εδώ</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Περιπολία Heli</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Patrol Heli ενεργό - τρέχει για {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Συνδέθηκε στα μέσα του συμβάντος - χρόνος αναπαραγωγής άγνωστος</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Patrol Heli ενεργό (χρόνος αναπαραγωγής άγνωστος)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Patrol Heli καταρρίφθηκε {0} πριν από αυτή τη σύνοδο</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Patrol Heli έφυγε από το χάρτη {0} πριν από αυτή τη συνεδρία</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Αγκυροβόλησε στο {0} - αναχωρεί σε ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>λιμάνι</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Έχει ήδη προσδεθεί στη σύνδεση - ώρα αναχώρησης άγνωστη</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Αγκυροβολημένο στο {0} (η διάρκεια του αγκυροβολίου δεν έχει γίνει ακόμα γνωστή)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Υπολειπόμενος χρόνος στο χάρτη (από το spawn)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Συνδέθηκε στη μέση της διαδρομής - χρόνος άγνωστος</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Συνδέθηκε στα μέσα της διαδρομής - χρόνος άγνωστος (διαδρομή ~{0}m συνολικά)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Cargo Ship despawned {0}m {1}s ago this session</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Ταξιδεύοντας Προμηθευτής ενεργός - τρέχει για το {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Travelling Vendor ενεργός (χρόνος αναπαραγωγής άγνωστος)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor despawned {0} ago this session</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea active - τρέχει για το {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Deep Sea active (χρόνος αναπαραγωγής άγνωστος)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Το Deep Sea έληξε {0} πριν από αυτή τη σύνοδο</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} παίκτες που είναι σήμερα online.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Ουρά: {0} παίκτες.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Τρέχουσα ώρα στο παιχνίδι: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} προήχθη σε αρχηγό.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Το Deep Sea είναι ενεργό! Τρέχει για το {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Το Deep Sea είναι επί του παρόντος ενεργό (συνδεδεμένο στα μέσα του συμβάντος - άγνωστος χρόνος αναπαραγωγής).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Το Deep Sea τελείωσε {0} λεπτά πριν από αυτή τη συνεδρίαση.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Άγνωστη η κατάσταση του συμβάντος Deep Sea (δεν έχει εμφανιστεί σε αυτή τη σύνοδο).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Το φορτηγό πλοίο δεν είναι ενεργό.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Φορτηγό πλοίο ελλιμενίζεται στο {0}. Αναχωρεί σε περίπου {1} λεπτά.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Φορτηγό πλοίο ελλιμενίζεται στο {0} και ετοιμάζεται να αναχωρήσει.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Φορτηγό πλοίο ελλιμενίζεται στο {0} (ώρα αναχώρησης άγνωστη).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Φορτηγό πλοίο ενεργό. Αναχωρεί σε περίπου {0} λεπτά.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Το φορτηγό πλοίο είναι ενεργό και ετοιμάζεται να φύγει σύντομα.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Φορτηγό πλοίο ενεργό (η διάρκεια της διαδρομής δεν έχει ακόμη μάθει για αυτόν τον διακομιστή).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Φορτηγό πλοίο ενεργό (συνδεδεμένο μετά το spawn - άγνωστος ο χρόνος που απομένει).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Το φορτηγό πλοίο δεν είναι ενεργό. Έγινε Despawned {0} λεπτά πριν από αυτή τη συνεδρία.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: κλουβί σε {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: τελευταία κλήση {1}m ago</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: δεν έχει κληθεί σε αυτή τη σύνοδο</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Το Patrol Heli είναι ενεργό! Τρέχει για το {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Το Patrol Heli είναι επί του παρόντος ενεργό (συνδεδεμένο στα μέσα του συμβάντος - άγνωστος χρόνος γέννησης).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Το Patrol Heli δεν είναι ενεργό. Ήταν {0} {1} πριν από αυτή τη σύνοδο.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>καταρρίφθηκε</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>άφησε το χάρτη</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Patrol Heli άγνωστη κατάσταση συμβάντος (δεν είδαμε αυτή τη σύνοδο).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Το Travelling Vendor είναι ενεργό! Τρέχει για το {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Ο ταξιδιώτης πωλητής είναι επί του παρόντος ενεργός (συνδεδεμένος στα μέσα του συμβάντος - χρόνος γέννησης άγνωστος).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Ταξιδεύοντας Ο πωλητής δεν είναι ενεργός. Αποκαλύφθηκε {0} πριν από αυτή τη συνεδρία.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Travelling Vendor κατάσταση συμβάντος άγνωστη (δεν έχει δει αυτή τη σύνοδο).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Δεν αντιστοιχίζονται ντουλάπια εργαλείων για εντολές συντήρησης.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Διατήρηση στο {0} TC: Άδειο ή ληγμένο.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Ανάγκη/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Συντήρηση στο {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} ημέρες</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} ώρες</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} λεπτά</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Κενό/έληξε</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Συντήρηση: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Οι οθόνες του ντουλαπιού εργαλείων δεν βρέθηκαν ή δεν αντιστοιχίστηκαν.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Δεν βρέθηκε ή δεν αντιστοιχίστηκε η οθόνη του δεσμευμένου ντουλαπιού εργαλείων.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} γύρισε {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Δεν βρέθηκε ή δεν αντιστοιχίστηκε ο συνδεδεμένος έξυπνος διακόπτης.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Ξύλο</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Πέτρα</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Μέταλλο</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Μικρή εξέδρα πετρελαίου</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Μεγάλη πετρελαιοπηγή</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Κατάστημα</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Φορτηγό πλοίο</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Ταξιδεύοντας πωλητής</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Ελικόπτερο περιπολίας</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Κιβώτιο πετρελαιοπηγής</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Έκρηξη</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Κτίριο μπλοκαρισμένο</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Εκδήλωση</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] ενεργοποιήθηκε! Το κιβώτιο ξεκλειδώνει στο {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} ενεργοποιήθηκε!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Το κιβώτιο ξεκλειδώνει σε 10 λεπτά!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Το κιβώτιο ξεκλειδώνει σε 5 λεπτά!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Deep Sea είναι επάνω</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Νέο κατάστημα {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Ύποπτο κατάστημα {0} [{1}] ήταν σε απευθείας σύνδεση {2}s, που πωλούνται {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Φορτηγό πλοίο γεννήθηκε {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>μακριά στη θάλασσα (κοντά στο {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Φορτηγό πλοίο ελλιμενισμένο στο {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Το φορτηγό πλοίο αναμένεται να δέσει στο {0} ({1}) σε περίπου 5 λεπτά.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Φορτηγό πλοίο που αναχωρεί από το {0} σε 5 λεπτά ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Εντοπίστηκε συντριβή λόγω καθυστέρησης του διακομιστή - Το Heli είναι ακόμα στο χάρτη στο {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} γεννήθηκε στο {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Patrol Heli καταρρίφθηκε στο {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>unknown</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} τέθηκε σε λειτουργία @ {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} βγήκε εκτός σύνδεσης</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} πέθανε @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} αναγεννήθηκε @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Tracking] Το {0}{1} είναι τώρα ONLINE</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Tracking] {0}{1} είναι τώρα OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Tracking] {0}{1} μετονομάστηκε σε {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>πουλάει</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>αγοράζει</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Κατάστημα</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (απόθεμα {5}) για {6} {7}</value>
+  </data>
 </root>

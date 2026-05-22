@@ -1157,4 +1157,352 @@
   <data name="SaveAndClose" xml:space="preserve">
     <value>שמור וסגור</value>
   </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>הודעה...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>הודעת שגיאה כאן</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>מסוק סיור</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>מסוק סיור בפעולה – פועל עבור {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>התחבר במהלך האירוע – זמן ההופעה לא ידוע</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>מסוק סיור פעיל (זמן ההופעה לא ידוע)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>מסוק סיור הופל {0} לפני זמן קצר במהלך המפגש הזה</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>מסוק הסיור עזב את המפה {0} לפני זמן מה במהלך המפגש הזה</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>עוגנת ב- {0} – יוצאת בעוד כ-{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>נמל</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>כבר עוגן בנמל – שעת היציאה לא ידועה</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>עוגנת ב- {0} (משך העגינה עדיין לא ידוע)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>הזמן שנותר במפה (מהרגע שהופעת)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>התחבר באמצע הדרך – זמן לא ידוע</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>התחבר באמצע המסלול – זמן לא ידוע (אורך המסלול הכולל: כ-{0})</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>ספינת המטען נעלמה {0}דקות {1}שניות לפני כן, במהלך ההפעלה הנוכחית</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>מוכר נודד פעיל – מתמודד בבחירות ל- {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>רוכל נודד פעיל (זמן ההופעה לא ידוע)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>המוכר הנודד נעלם {0} לפני זמן מה במהלך ההפעלה הנוכחית</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea active – רצים למען {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>פעיל במעמקי הים (זמן ההטלה לא ידוע)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>"Deep Sea" הסתיים לפני {0} במהלך המפגש הזה</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}שעות {1:D2} דקות</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}מ</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} שחקנים מחוברים כרגע.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> תור: {0} שחקנים.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>הזמן הנוכחי במשחק: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} הועלה לדרגת מפקד.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea פעיל! מתמודד בבחירות ל- {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea פעיל כרגע (התחבר באמצע האירוע – זמן ההופעה לא ידוע).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea סיים את {0} לפני מספר דקות את ההפעלה הזו.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>סטטוס האירוע בים העמוק אינו ידוע (לא נצפה במושב זה).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>ספינת משא אינה פעילה.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>אוניית משא עגנה ב- {0}. יוצאת בעוד כ- {1} דקות.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>אוניית משא עגנה ב- {0} והיא מתכוננת לצאת לדרכה.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>אוניית משא עגנה ב- {0} (שעת היציאה לא ידועה).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>ספינת משא פעילה. יוצאת בעוד כ- {0} דקות.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>ספינת המטען פועלת ומתכוננת לצאת לדרך בקרוב.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>אוניית משא פעילה (משך המסלול עבור שרת זה טרם נלמד).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>ספינת משא פעילה (מחוברת לאחר ההופעה – משך הזמן הנותר אינו ידוע).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>ספינת משא אינה פעילה. נעלמה {0} לפני מספר דקות במהלך ההפעלה הנוכחית.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: crate ב- {1}, {2}</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: התקשר לאחרונה לפני {1}דקות</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: לא נקרא במושב זה</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>מסוק הסיור פועל! פועל עבור {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>מסוק הסיור פועל כרגע (התחבר באמצע האירוע – זמן ההופעה לא ידוע).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>מסוק הסיור אינו פעיל. הוא היה פעיל לפני {0} {1} במהלך ההפעלה הנוכחית.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>הופל</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>יצא מהמפה</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>סטטוס האירוע של מסוק הסיור אינו ידוע (לא נצפה במושב זה).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>"הרוכל הנודד" פעיל! מתמודד בבחירות ל- {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>הרוכל הנודד פעיל כרגע (התחבר באמצע האירוע – זמן ההופעה לא ידוע).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>המוכר הנודד אינו פעיל. נעלם מהמסך לפני {0} במהלך ההפעלה הנוכחית.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>סטטוס האירוע של "המוכר הנודד" אינו ידוע (לא נצפה במושב זה).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>לא הוקצו ארונות כלים לפקודות תחזוקה.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>תחזוקה ב- {0} TC: ריק או פג תוקף.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> צורך/24 שעות ביממה: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>תחזוקה ב- {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} ימים</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} שעות</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} דקות</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: ריק/פג תוקף</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>תחזוקה: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>לא נמצאו או לא הותאמו צגים של ארון הכלים Bound.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>לא נמצא או לא הותאם צג ארון הכלים של Bound.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} הפך ל- {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>כבוי</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>לא נמצא מתג חכם Bound או שהוא לא מזוהה.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>עץ</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>אבן</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>מתכת</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>אסדת נפט קטנה</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>אסדת נפט גדולה</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>חנות</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>אוניית משא</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>רוכל נודד</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>מסוק סיור</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>ארגז אסדת נפט</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>פיצוץ</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>הבנייה נחסמה</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>אירוע</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] הופעל! ארגז נפתח ב- {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>התראה: {0} הופעלה!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] התיבה תיפתח בעוד 10 דקות!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] התיבה תיפתח בעוד 5 דקות!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>"Deep Sea" עלה לאוויר</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>חנות חדשה {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>חנות חשודה {0} [{1}] הייתה מקוונת {2}, מכרה {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>ספינת משא הופיעה {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>במרחק רב בים (ליד {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>אוניית משא עגנה ב- {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>אוניית משא צפויה לעגון ב- {0} ({1}) בעוד כ-5 דקות.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>אוניית משא תצא מ- {0} בעוד 5 דקות ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>זוהתה תקלה עקב עיכוב בשרת — המסוק עדיין נמצא במפה בכתובת {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} נוצר בכתובת {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>מסוק סיור הופל ב- {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>לא ידוע</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} פורסם באתר {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} התנתק</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} נפטר ב- {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} פורסם מחדש ב- {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[מעקב] {0}{1} כעת באתר</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[מעקב] {0}{1} כעת לא זמין</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[מעקב] {0}{1} שמו שונה ל- {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>מוכר</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>קונה</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>חנות</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (מלאי {5}) עבור {6} {7}</value>
+  </data>
 </root>

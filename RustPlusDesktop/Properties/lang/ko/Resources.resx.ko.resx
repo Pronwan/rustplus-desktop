@@ -1157,4 +1157,352 @@
   <data name="SaveAndClose" xml:space="preserve">
     <value>저장 및 닫기</value>
   </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>메시지...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>여기 오류 메시지</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>순찰 헬기</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>패트롤 헬기 활동 중 - {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>이벤트 도중 연결 - 스폰 시간 알 수 없음</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>순찰 헬기 활성화(스폰 시간 미상)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>순찰 헬기 격추 {0} 이 세션 전에</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>순찰 헬기 이 세션 전에 {0} 지도를 떠났습니다.</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>{0} 에서 도킹 - 출발 ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>항구</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>연결 시 이미 도킹됨 - 출발 시간 미정</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>{0} (도킹 기간 아직 미확인)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>맵에 남은 시간(스폰부터)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>경로 중간에 연결됨 - 시간 미상</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>경로 중간에 연결됨 - 시간 미정(경로 ~{0}총 거리)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>화물선이 이 세션에 {0}m {1}초 전에 출현했습니다.</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>트래블링 벤더 활동 중 - {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>여행 상인 활성화(스폰 시간 미상)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>여행 상인이 이 세션 전에 {0} 전에 사라졌습니다.</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>심해 활성 - {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>심해 활성(스폰 시간 미상)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>딥씨 종료 {0} 이 세션 전에</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} 현재 온라인 상태인 플레이어 수입니다.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> 대기열: {0} 플레이어.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>현재 게임 내 시간: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} 가 리더로 승진했습니다.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>심해가 활성화되었습니다! {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>현재 심해가 활성화되어 있습니다(이벤트 도중 연결 - 스폰 시간 미정).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>이 세션은 {0} 몇 분 전에 종료되었습니다.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>심해 이벤트 상태를 알 수 없습니다(이 세션에서 볼 수 없음).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>화물선이 활성화되지 않았습니다.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>화물선 정박지 {0}. 약 {1} 분 후에 출발합니다.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>화물선이 {0} 에 정박하여 출항을 준비하고 있습니다.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>화물선은 {0} (출발 시간 미정)에 정박 중입니다.</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>화물선이 활성화되었습니다. 약 {0} 분 후에 출발합니다.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>화물선이 활성화되어 곧 출발할 준비를 하고 있습니다.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>화물선 활성화됨(이 서버에 대한 경로 기간이 아직 학습되지 않음).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>화물선 활성화(스폰 후 연결 - 남은 시간 알 수 없음).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>화물선이 활성화되지 않았습니다. 이 세션에서 {0} 몇 분 전에 디스어폰되었습니다.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: 크레이트 인 {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}마지막 전화 : {1}m 전</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}이 세션은 호출되지 않음</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>패트롤 헬기가 활동 중입니다! {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>순찰 헬기가 현재 활성화되어 있습니다(이벤트 도중 연결 - 스폰 시간 미정).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>순찰 헬기가 활성화되지 않았습니다. 이 세션 전에는 {0} {1} 이었습니다.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>격추</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>지도 밖으로 나가기</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>순찰 헬기 이벤트 상태를 알 수 없습니다(이 세션에서 볼 수 없음).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>트래블링 벤더가 활동 중입니다! {0} 에 출마 중입니다.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>여행 상인이 현재 활성화되어 있습니다(이벤트 도중 연결 - 스폰 시간 미정).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>여행 상인이 활성화되지 않았습니다. 이 세션 전에 {0} 디스어폰되었습니다.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>여행 중인 벤더 이벤트 상태를 알 수 없습니다(이 세션에서 볼 수 없음).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>유지 관리 명령에 매핑된 도구 찬장은 없습니다.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>유지 관리 {0} TC: 비어 있거나 만료되었습니다.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> 필요 24시간: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>유지 관리 {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} 일수</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} 시간</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} 분</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: 비어 있음/만료됨</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>유지 관리: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>바인딩된 도구 찬장 모니터를 찾을 수 없거나 페어링되지 않았습니다.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>바운드 도구 찬장 모니터를 찾을 수 없거나 페어링되지 않았습니다.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} 로 바뀌었습니다 {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>켜기</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>꺼짐</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>바인딩된 스마트 스위치를 찾을 수 없거나 페어링되지 않았습니다.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>목재</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>돌</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>금속</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>소형 석유 굴착 장치</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>대형 석유 굴착 장비</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>쇼핑</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>화물선</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>여행 공급업체</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>순찰 헬리콥터</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>오일리그 상자</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>폭발</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>건물 차단됨</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>이벤트</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] 트리거되었습니다! 상자가 {1} 에서 잠금 해제됩니다.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>경보: {0} 트리거되었습니다!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] 10분 후에 상자가 열립니다!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] 5분 안에 상자가 열립니다!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>심해가 시작되었습니다.</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>새 상점 {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>의심스러운 상점 {0} [{1}] 온라인 {2}s, 판매 {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>화물선 생성 {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>먼 바다( {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>화물선 정박지 {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>화물선은 약 5분 후 {0} ({1})에 정박할 예정입니다.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>{0} 에서 5분 후 출발하는 화물선 ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>서버 지연으로 인한 충돌 감지 - 헬기가 아직 지도에 표시되지 않음( {0} )</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} 에서 생성된 {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>순찰 헬기 격추 {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>알 수 없음</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} 오프라인으로 전환</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} 사망 @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} 부활 @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[추적] {0}{1} 이제 온라인 상태입니다.</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[추적] {0}{1} 이제 오프라인 상태입니다.</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[추적] {0}{1} 이름이 {2} 로 변경되었습니다!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>판매</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>구매</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>쇼핑</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (재고 {5}) for {6} {7}</value>
+  </data>
 </root>

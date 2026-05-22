@@ -1157,4 +1157,352 @@ jetzt herunterladen und installieren?</value>
   <data name="SaveAndClose" xml:space="preserve">
     <value>Speichern &amp; Schließen</value>
   </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Nachricht...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Fehlermeldung hier</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Patrouillen-Helikopter</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Patrol Heli aktiv - läuft für {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Mitten im Ereignis verbunden - Laichzeit unbekannt</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Patrouillen-Heli aktiv (Spawnzeit unbekannt)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Patrouillen-Heli abgeschossen {0} vor dieser Sitzung</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Patrol Heli hat die Karte {0} vor dieser Sitzung verlassen.</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Angedockt an {0} - Abreise in ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>hafen</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Bereits angedockt an connect - Abfahrtszeit unbekannt</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Angedockt an {0} (Andockdauer noch nicht bekannt)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Verbleibende Zeit auf der Karte (ab Spawn)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Mitten auf der Strecke verbunden - Zeit unbekannt</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Mitten auf der Strecke verbunden - Zeit unbekannt (Strecke ~{0}m insgesamt)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Frachtschiff despawned {0}m {1}s ago this session</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Travelling Vendor aktiv - Laufen für {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Reisender Verkäufer aktiv (Spawnzeit unbekannt)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor wurde vor dieser Sitzung despawned {0}</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Tiefsee aktiv - Laufen für {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Tiefsee aktiv (Laichzeit unbekannt)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea endete vor {0} dieser Sitzung</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} Spieler, die derzeit online sind.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Warteschlange: {0} Spieler.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Aktuelle Uhrzeit im Spiel: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} wurde zum Leiter befördert.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea ist aktiv! Laufen für {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea ist derzeit aktiv (verbunden in der Mitte des Ereignisses - Laichzeit unbekannt).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea endete vor {0} Minuten diese Sitzung.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Tiefsee-Ereignisstatus unbekannt (in dieser Sitzung nicht gesehen).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Frachtschiff nicht aktiv.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Frachtschiff angedockt an {0}. Abfahrt in ca. {1} Minuten.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Ein Frachtschiff hat an {0} angedockt und bereitet sich auf die Abfahrt vor.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Frachtschiff angedockt an {0} (Abfahrtszeit unbekannt).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Frachtschiff aktiv. Fährt in ca. {0} Minuten ab.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Frachtschiff aktiv und bereitet sich auf die baldige Abfahrt vor.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Frachtschiff aktiv (Routendauer für diesen Server noch nicht gelernt).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Frachtschiff aktiv (nach dem Spawnen verbunden - verbleibende Zeit unbekannt).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Frachtschiff nicht aktiv. Despawned {0} Minuten vor dieser Sitzung.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: Kiste in {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: zuletzt aufgerufen vor {1}m</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: in dieser Sitzung nicht aufgerufen</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Patrol Heli ist aktiv! Laufen für {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Patrouillen-Heli ist derzeit aktiv (mitten im Ereignis verbunden - Spawnzeit unbekannt).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Patrol Heli nicht aktiv. Es war {0} {1} vor dieser Sitzung.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>niedergeschossen</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>die Karte verlassen</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Patrol Heli Ereignisstatus unbekannt (in dieser Sitzung nicht gesehen).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Travelling Vendor ist aktiv! Laufen für {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Der reisende Verkäufer ist derzeit aktiv (mitten im Ereignis verbunden - Spawnzeit unbekannt).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Reisender Verkäufer nicht aktiv. Despawned {0} vor dieser Sitzung.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Ereignisstatus des reisenden Verkäufers unbekannt (in dieser Sitzung nicht gesehen).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Es werden keine Werkzeugschränke für Instandhaltungsbefehle abgebildet.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Unterhalt in {0} TC: Leer oder verfallen.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Bedarf/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Unterhalt in {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} Tage</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} Stunden</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} Minuten</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Leer/abgelaufen</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Unterhalt: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Gebundene Werkzeugschrankmonitore nicht gefunden oder nicht gepaart.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Gebundener Werkzeugschrank-Monitor nicht gefunden oder nicht gepaart.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} {1} gedreht.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>AUS</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Bound Smart Switch nicht gefunden oder nicht gepaart.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Holz</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Stein</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Metall</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Kleine Bohrinsel</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Große Bohrinsel</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Shop</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Frachtschiff</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Reisender Verkäufer</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Patrouillenhubschrauber</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Bohrinsel Kiste</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Explosion</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Gebäude blockiert</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Veranstaltung</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] ausgelöst! Die Kiste wird auf {1} freigeschaltet.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} ausgelöst!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Kiste wird in 10 Minuten freigeschaltet!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Kiste wird in 5 Minuten freigeschaltet!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Tiefsee ist oben</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Neues Geschäft {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Verdächtiger Shop {0} [{1}] war online {2}s, verkauft {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Das Frachtschiff hat gelaicht {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>weit draußen auf dem Meer (bei {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Frachtschiff angedockt an {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Das Frachtschiff wird in ca. 5 Minuten an {0} ({1}) andocken.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Das Frachtschiff fährt in 5 Minuten von {0} ab ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Absturz aufgrund von Server-Lag festgestellt - Heli ist immer noch auf der Karte unter {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} gelaicht unter {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Patrouillenhubschrauber abgeschossen auf {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>unbekannt</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} online gegangen @ {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} offline gegangen</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} gestorben @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} wieder aufgetaucht @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Tracking] {0}{1} ist jetzt ONLINE</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Tracking] {0}{1} ist jetzt OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Tracking] {0}{1} umbenannt in {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>Verkauft</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>kauft</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Shop</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (Bestand {5}) für {6} {7}</value>
+  </data>
 </root>

@@ -1157,4 +1157,352 @@
   <data name="SaveAndClose" xml:space="preserve">
     <value>Сачувај и затвори</value>
   </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Порука...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Овде порука о грешци</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Патролни хеликоптер</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Патролни хеликоптер активан – у покрету за {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Повезан током догађаја – време појављивања непознато</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Патролни хеликоптер активан (време појаве непознато)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Патролни хеликоптер је оборен пре {0} -а у овој сесији</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Патролни хели је напустио мапу пре {0} у овој сесији</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Укотвљено у {0} – полазак отприлике у{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>лука</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Већ је причвршћено при повезивању – време одласка непознато</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Укотвљено у {0} (трајање укотвљења још није познато)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Преостало време на мапи (од појаве)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Повезан на средини пута – време непознато</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Повезано на средњој рути – време непознато (рута ~{0}м укупно)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Теретни брод је нестао пре {0}м и {1}с у овој сесији</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Активни путујући продавач – траје за {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Путујући продавац активан (време појављивања непознато)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Путујући продавац је нестао пре {0} у овој сесији</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea актив – трчање за {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Дубоко море активно (време мрежења непознато)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea је завршио {0} пре</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}х {1:D2}м</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}х {1}м</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}м</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}м {1}с</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}с</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} играчи тренутно онлајн.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Ред: {0} играчи.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Тренутно време у игри: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} је унапређен у вођу.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea је активан! Трчи за " {0}".</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea је тренутно активан (повезан током догађаја – време појављивања непознато).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea је пре {0} минута завршио ову сесију.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Статус догађаја Deep Sea непознат (није виђен у овој сесији).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Теретни брод није активан.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Теретни брод је пристао у {0}. Полазак за око {1} минута.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Теретни брод је пристао у луци {0} и припрема се за одлазак.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Теретни брод пристао у луци {0} (време поласка непознато).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Теретни брод активан. Полазак за око {0} минута.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Теретни брод је активан и припрема се за ускоро отпловљење.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Теретни брод активан (трајање руте још није утврђено за овај сервер).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Теретни брод активан (повезан након појаве – преостали време непознат).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Теретни брод није активан. Деспаунован пре {0} минута у овој сесији.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: сандук у {1}м {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: последњи пут позвано пре {1}минута</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: није позвано у овој сесији</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Па트롤 Хели је активан! Трчи за " {0}".</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Па트롤 Хели је тренутно активан (повезан током догађаја – време појављивања непознато).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Патролни хели није активан. Био је активан пре {0} {1} у овој сесији.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>срушен</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>напустио мапу</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Статус догађаја Patrol Heli непознат (није виђен у овој сесији).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Travelling Vendor је активан! Трчи за {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Путујући продавац је тренутно активан (повезан током догађаја – време појављивања непознато).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Путујући продавац није активан. Деспаунтован пре {0} -а у овој сесији.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Статус догађаја Travelling Vendor је непознат (није виђен у овој сесији).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Ниједна ормарићка алата није додељена за команде одржавања.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Одрживост у {0} TC: Празно или истекло.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Потреба/24ч: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Одржавање у {0} TC: {1}</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} дани</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} сати</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} минута</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Празно/истекло</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0} {1}д, {2}х</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Одрживост: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Ормарић са алатима Bound Tool није пронађен или није упарен.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Монитор ормарића алата Bound Tool Cupboard није пронађен или није упарен.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} претворио се у {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>УКЛЮЧЕНО</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>Искључено</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Повезани паметни прекидач није пронађен или није упарен.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Дрво</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Камен</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Метал</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>ЕХК</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Мала нафтна платформа</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Велика нафтна платформа</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Продавница</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Теретни брод</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Путујући продавац</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Патролни хеликоптер</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Нафтна платформа</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Експлозија</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Грађевински блокови</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Догађај</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] је активиран! Кутија се откључава у {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>АЛАРМ: {0} активиран!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Крате се отвара за 10 минута!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Откључавање сандука за 5 минута!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Дип Си је горе</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Нова продавница {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Сумњичав продавница {0} [{1}] била је онлајн {2}-ова, продавала {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Појављен теретни брод {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>далеко на мору (близу {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Теретни брод је пристао у луци {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Теретни брод се очекује да пристане у {0} ({1}) за око 5 минута.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Теретни брод полази са {0} за 5 минута ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Удар детектован због кашњења сервера — хеликоптер је и даље на мапи на {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} рођен у {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Патролни хеликоптер оборен код {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>непознато</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} појавио се на мрежи @ {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} престао је да буде онлајн</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} умро је @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} поново се појавио @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Праћење] {0}{1} је сада ОНЛАЈН</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Праћење] {0}{1} је сада ван мреже</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Праћење] {0}{1} преименовано у {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>продаје</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>купује</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Продавница</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) за {6} {7}</value>
+  </data>
 </root>
