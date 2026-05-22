@@ -27,6 +27,16 @@ public class MainViewModel : INotifyPropertyChanged
         _clockTimer.Interval = TimeSpan.FromSeconds(1);
         _clockTimer.Tick += (s, e) => TickClock();
         _clockTimer.Start();
+
+        App.CultureChanged += () =>
+        {
+            OnPropertyChanged(nameof(BusyText));
+            OnPropertyChanged(nameof(FcmExpiryText));
+            if (_lastStatusGameTime.HasValue)
+            {
+                UpdateDisplayProperties(_lastStatusGameTime.Value);
+            }
+        };
     }
 
     private void TickClock()
@@ -193,10 +203,10 @@ public class MainViewModel : INotifyPropertyChanged
         set { _updateDownloadPercentage = value; OnPropertyChanged(); }
     }
 
-    private string _busyText = Properties.Resources.PleaseWait;
+    private string _busyText = "";
     public string BusyText
     {
-        get => _busyText;
+        get => string.IsNullOrEmpty(_busyText) ? Properties.Resources.PleaseWait : _busyText;
         set { _busyText = value; OnPropertyChanged(); }
     }
 

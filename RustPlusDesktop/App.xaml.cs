@@ -144,6 +144,20 @@ public partial class App : Application
         };
 
         _trayIcon.DoubleClick += (s, e) => ShowMainWindow();
+
+        CultureChanged += () =>
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (_trayIcon != null)
+                {
+                    var last = TrackingService.LastPullTime?.ToString("HH:mm:ss") ?? "--:--";
+                    _trayIcon.Text = TrackingService.IsTracking 
+                        ? string.Format(RustPlusDesk.Properties.Resources.TrayIconTracking, last)
+                        : RustPlusDesk.Properties.Resources.TrayIconDefault;
+                }
+            });
+        };
         
         // Also update tray tooltip periodically or on event
         TrackingService.OnOnlinePlayersUpdated += () => {
@@ -216,8 +230,30 @@ public partial class App : Application
 
             // Also set it for the generated Resources class
             RustPlusDesk.Properties.Resources.Culture = culture;
+
+            UpdateDynamicResources();
+            CultureChanged?.Invoke();
         }
         catch { }
+    }
+
+    public static event Action? CultureChanged;
+
+    private void UpdateDynamicResources()
+    {
+        var rm = RustPlusDesk.Properties.Resources.ResourceManager;
+        var culture = RustPlusDesk.Properties.Resources.Culture;
+        var resourceSet = rm.GetResourceSet(culture, true, true);
+        if (resourceSet != null)
+        {
+            foreach (System.Collections.DictionaryEntry entry in resourceSet)
+            {
+                if (entry.Value is string s)
+                {
+                    Resources[entry.Key] = s;
+                }
+            }
+        }
     }
 
     private async Task StartPipeServerAsync()
