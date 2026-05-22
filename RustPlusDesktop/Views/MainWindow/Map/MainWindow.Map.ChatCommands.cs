@@ -20,6 +20,11 @@ public partial class MainWindow
     {
         ChatCommandsOverlay.Visibility = System.Windows.Visibility.Collapsed;
         _vm.Save(); // Save the new configuration settings
+        if (_chatOpenedForCommandsOnly)
+        {
+            _chatOpenedForCommandsOnly = false;
+            ChatContentBorder.Visibility = System.Windows.Visibility.Collapsed;
+        }
     }
 
     private DateTime _lastChatCommandTime = DateTime.MinValue;

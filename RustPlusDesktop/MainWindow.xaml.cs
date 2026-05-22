@@ -59,6 +59,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 {
 
     private readonly MainViewModel _vm = new();
+    private bool _chatOpenedForCommandsOnly = false;
     private readonly UpdateService _updateService = new();
 
     private DateTime _lastPairingPingAt = DateTime.MinValue;
@@ -4428,12 +4429,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         else if (modal.RequestAction == "ChatCommands")
         {
-            // Open Chat if closed
             if (ChatContentBorder.Visibility != Visibility.Visible)
             {
-                BtnToggleChat_Click(null, null);
+                _chatOpenedForCommandsOnly = true;
+                ChatContentBorder.Visibility = Visibility.Visible;
+                ChatContentBorder.Opacity = 1.0;
             }
-            // Show commands
+            else
+            {
+                _chatOpenedForCommandsOnly = false;
+            }
             BtnOpenChatCommands_Click(null, null);
         }
     }
