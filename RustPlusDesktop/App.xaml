@@ -8,8 +8,7 @@
                 <!-- Wpf.Ui (WPF-UI lepo.co): WinUI 3 Fluent controls -->
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />
-                <!-- Inline app resources -->
-                <ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
     
         <!-- WinUI 3 Aligned Palette -->
         <SolidColorBrush x:Key="AppBg"         Color="#1A1D21"/>
@@ -744,7 +743,7 @@
         </Style>
 
         <!-- Log/TextBox Multiline -->
-        <Style TargetType="{x:Type ScrollViewer}">
+        <Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource {x:Type ScrollViewer}}">
             <Setter Property="Background" Value="Transparent"/>
         </Style>
 
@@ -836,8 +835,6 @@
             </Setter>
         </Style>
         
-                </ResourceDictionary>
-            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
