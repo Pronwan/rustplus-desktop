@@ -12,6 +12,72 @@
         ShowInTaskbar="False"
         Topmost="True">
     
+    <Window.Resources>
+        <!-- ========= Ultra-Slim Scrollbars ========= -->
+        <SolidColorBrush x:Key="ScrollbarTrackBrush" Color="#141820"/>
+        <SolidColorBrush x:Key="ScrollbarThumbBrush" Color="#2C3548"/>
+        <SolidColorBrush x:Key="ScrollbarThumbBrushHover" Color="#3A4663"/>
+        <SolidColorBrush x:Key="ScrollbarThumbBrushActive" Color="#4C5A7A"/>
+
+        <Style x:Key="SlimThumb" TargetType="{x:Type Thumb}">
+            <Setter Property="Background" Value="{StaticResource ScrollbarThumbBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border x:Name="B" Background="{TemplateBinding Background}" CornerRadius="2"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="B" Property="Background" Value="{StaticResource ScrollbarThumbBrushHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="True">
+                                <Setter TargetName="B" Property="Background" Value="{StaticResource ScrollbarThumbBrushActive}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type ScrollBar}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid SnapsToDevicePixels="True">
+                            <Border Background="{StaticResource ScrollbarTrackBrush}" CornerRadius="2"/>
+                            <Track x:Name="PART_Track"
+                                   Orientation="{TemplateBinding Orientation}"
+                                   IsDirectionReversed="True" Focusable="False">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Opacity="0" IsHitTestVisible="False"/>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Opacity="0" IsHitTestVisible="False"/>
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource SlimThumb}"/>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Vertical">
+                    <Setter Property="Width" Value="4"/>
+                    <Setter Property="Margin" Value="0,2,2,2"/>
+                </Trigger>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="Height" Value="4"/>
+                    <Setter Property="Margin" Value="2,0,2,2"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    
     <Border Background="{DynamicResource Surface}" 
             BorderBrush="{DynamicResource CardBorder}" 
             BorderThickness="1" 

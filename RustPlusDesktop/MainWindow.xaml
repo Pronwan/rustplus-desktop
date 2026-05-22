@@ -813,7 +813,7 @@
         </Style>
 
         <!--  Log/TextBox Multiline  -->
-        <Style TargetType="{x:Type ScrollViewer}">
+        <Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource {x:Type ScrollViewer}}">
             <Setter Property="Background" Value="Transparent" />
         </Style>
 
