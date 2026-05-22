@@ -1768,7 +1768,13 @@
                 VerticalAlignment="Stretch"
                 Style="{StaticResource PrettyTabControl}">
                 <!--  ===== DEVICES =====  -->
-                <TabItem Header="{DynamicResource DevicesTab}" Style="{StaticResource PrettyTabItem}">
+                <TabItem Style="{StaticResource PrettyTabItem}">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="🔌 " />
+                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource DevicesTab}" />
+                        </StackPanel>
+                    </TabItem.Header>
                     <DockPanel LastChildFill="True">
                         <!--  Footer  -->
                         <StackPanel
@@ -2512,8 +2518,13 @@
                         <!--  ===== TEAM =====  -->
                         <TabItem
                             x:Name="TabTeam"
-                            Header="{DynamicResource TeamTab}"
                             Style="{StaticResource PrettyTabItem}">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center" Text="👥 " />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource TeamTab}" />
+                                </StackPanel>
+                            </TabItem.Header>
                             <Grid>
                                 <Grid Background="#181A1E">
                                     <Grid.RowDefinitions>
@@ -2797,7 +2808,13 @@
                         </TabItem>
 
                         <!--  ===== CAMERAS =====  -->
-                        <TabItem Header="{DynamicResource CamerasTab}" Style="{StaticResource PrettyTabItem}">
+                        <TabItem Style="{StaticResource PrettyTabItem}">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center" Text="🎥 " />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource CamerasTab}" />
+                                </StackPanel>
+                            </TabItem.Header>
                             <DockPanel LastChildFill="True">
                                 <!--  Add Camera unten rechts  -->
                                 <StackPanel
@@ -2807,10 +2824,10 @@
                                     Orientation="Horizontal">
                                     <Button x:Name="BtnAddCam" Style="{StaticResource PrimaryButton}">
                                         <StackPanel Margin="6,1" Orientation="Horizontal">
-                                            <TextBlock Text="{DynamicResource AddCamera}" />
+                                            <TextBlock VerticalAlignment="Center" Text="📷 " />
+                                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource AddCamera}" />
                                         </StackPanel>
-                                    </Button>
-                                </StackPanel>
+                                    </Button>                                </StackPanel>
 
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <Grid>
@@ -2855,7 +2872,13 @@
                         </TabItem>
 
                         <!--  ===== PLAYERS =====  -->
-                        <TabItem Header="{DynamicResource PlayersTab}" Style="{StaticResource PrettyTabItem}">
+                        <TabItem Style="{StaticResource PrettyTabItem}">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center" Text="🌍 " />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource PlayersTab}" />
+                                </StackPanel>
+                            </TabItem.Header>
                             <TabControl
                                 Margin="0,10,0,0"
                                 HorizontalAlignment="Stretch"
@@ -3583,15 +3606,23 @@
                                 Width="80"
                                 Margin="8,0,0,0"
                                 Click="BtnResetMap_Click"
-                                Content="{DynamicResource ResetMap}"
                                 Style="{StaticResource GhostButton}"
-                                ToolTip="{DynamicResource ResetMapToolTip}" />
+                                ToolTip="{DynamicResource ResetMapToolTip}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center" Text="⟲ " />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource ResetMap}" />
+                                </StackPanel>
+                            </Button>
                             <Button
                                 x:Name="BtnMiniMap"
                                 Width="80"
                                 Click="BtnToggleMiniMap_Click"
-                                Content="{DynamicResource MiniMap}"
-                                Style="{StaticResource GhostButton}" />
+                                Style="{StaticResource GhostButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center" Text="🗺️ " />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource MiniMap}" />
+                                </StackPanel>
+                            </Button>
 
                             <Button
                                 x:Name="BtnCrosshair"
@@ -4250,15 +4281,19 @@
 
                                         <!--  Header / Drag / Close Area  -->
                                         <Grid Grid.Row="0" Background="#1E2126">
-                                            <TextBlock
-                                                Margin="12,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                FontSize="10"
-                                                FontWeight="Bold"
-                                                Foreground="#60FFFFFF"
-                                                Text="{DynamicResource ShopSearchTitle}" />
-
+                                            <StackPanel Margin="12,0,0,0" Orientation="Horizontal">
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    FontSize="10"
+                                                    Text="🛒 " />
+                                                <TextBlock
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="10"
+                                                    FontWeight="Bold"
+                                                    Foreground="#60FFFFFF"
+                                                    Text="{DynamicResource ShopSearchTitle}" />
+                                            </StackPanel>
                                             <Button
                                                 x:Name="BtnCloseShopSearch"
                                                 Width="26"
@@ -4405,15 +4440,19 @@
 
                                         <!--  Header / Drag / Close Area  -->
                                         <Grid Grid.Row="0" Background="#1E2126">
-                                            <TextBlock
-                                                Margin="12,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                FontSize="10"
-                                                FontWeight="Bold"
-                                                Foreground="#60FFFFFF"
-                                                Text="{DynamicResource TeamChatTitle}" />
-
+                                            <StackPanel Margin="12,0,0,0" Orientation="Horizontal">
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    FontSize="10"
+                                                    Text="💬 " />
+                                                <TextBlock
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="10"
+                                                    FontWeight="Bold"
+                                                    Foreground="#60FFFFFF"
+                                                    Text="{DynamicResource TeamChatTitle}" />
+                                            </StackPanel>
                                             <Button
                                                 x:Name="BtnCloseChatOverlay"
                                                 Width="26"

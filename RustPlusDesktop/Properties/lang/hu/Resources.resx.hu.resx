@@ -124,7 +124,7 @@
     <value>Sorban állás:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Eszközök</value>
+    <value>Eszközök</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Hotkeys</value>
@@ -262,13 +262,13 @@
     <value>Mini térkép lengyel</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>⚠️ Szükséges intézkedés:</value>
+    <value>Szükséges intézkedés:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>⚠️ BattleMetrics eltávolítása:</value>
+    <value>BattleMetrics eltávolítása:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>⚠️ Játékoskövető rendszer átalakítása</value>
+    <value>Játékoskövető rendszer átalakítása</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>Hogyan működik a játékosok nyomon követése</value>
@@ -447,7 +447,7 @@ Letöltés és telepítés most?</value>
     <value>Párosítson egy okos eszközt, kapcsolót vagy riasztót, hogy itt láthassa.</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Csapat</value>
+    <value>Csapat</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Központ a térképen</value>
@@ -471,10 +471,10 @@ Letöltés és telepítés most?</value>
     <value>Haláljelzők</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Kamerák</value>
+    <value>Kamerák</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Kamera hozzáadása</value>
+    <value>Kamera hozzáadása</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Nem találtak kamerákat</value>
@@ -483,7 +483,7 @@ Letöltés és telepítés most?</value>
     <value>Párosítson egy kamerát, hogy megnézze az előnézetét itt</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Játékosok</value>
+    <value>Játékosok</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Hogyan kell követni</value>
@@ -744,13 +744,13 @@ Letöltés és telepítés most?</value>
     <value>Jobb gombbal kattintva konfigurálhatja</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Térkép zoom és pozíció visszaállítása</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Keresztvonal be/ki (jobb klikk a beállításokhoz)</value>

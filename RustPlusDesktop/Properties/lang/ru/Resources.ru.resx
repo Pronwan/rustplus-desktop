@@ -124,7 +124,7 @@
     <value>Очередь:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Устройства</value>
+    <value>Устройства</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Горячие клавиши</value>
@@ -342,7 +342,7 @@ You will need to pair again on next start.</value>
     <value>Подключите смарт-устройство, переключите или будильника, чтобы увидеть его здесь</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Команда</value>
+    <value>Команда</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Центрировать на карте</value>
@@ -366,10 +366,10 @@ You will need to pair again on next start.</value>
     <value>Маркеры смерти</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>:movie_камера: Камеры</value>
+    <value>Камеры</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Добавить камеру</value>
+    <value>Добавить камеру</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Камеры не найдены</value>
@@ -378,7 +378,7 @@ You will need to pair again on next start.</value>
     <value>Приправьте камеру для просмотра здесь</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Игроки</value>
+    <value>Игроки</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Как отслеживать</value>
@@ -639,13 +639,13 @@ You will need to pair again on next start.</value>
     <value>Щелкните правой кнопкой мыши для настройки</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Сброс масштаба и положения карты</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Мини 🗺️</value>
+    <value>Мини</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Вкл/выкл (Right Click For Options)</value>

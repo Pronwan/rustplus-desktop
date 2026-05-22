@@ -124,7 +124,7 @@
     <value>Fila:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Dispositius</value>
+    <value>Dispositius</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Tecles d'accés ràpid</value>
@@ -262,13 +262,13 @@
     <value>Millora de la mini mapa</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>⚠️ Cal prendre mesures:</value>
+    <value>Cal prendre mesures:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>⚠️ Supressió de BattleMetrics:</value>
+    <value>Supressió de BattleMetrics:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>⚠️ Renovació del sistema de seguiment de jugadors</value>
+    <value>Renovació del sistema de seguiment de jugadors</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>Com funciona el seguiment de jugadors</value>
@@ -447,7 +447,7 @@ Hauràs d'emparellar de nou en el proper inici.</value>
     <value>Pareu un dispositiu intel·ligent, un interruptor o una alarma per veure'l aquí</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Equip</value>
+    <value>Equip</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Centre al mapa</value>
@@ -471,10 +471,10 @@ Hauràs d'emparellar de nou en el proper inici.</value>
     <value>Marcadors de la mort</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Càmeres</value>
+    <value>Càmeres</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Afegeix càmera</value>
+    <value>Afegeix càmera</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>No s'han trobat càmeres</value>
@@ -483,7 +483,7 @@ Hauràs d'emparellar de nou en el proper inici.</value>
     <value>Pareu una càmera per veure'n la previsualització aquí</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Jugadors</value>
+    <value>Jugadors</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Com fer un seguiment</value>
@@ -744,13 +744,13 @@ Hauràs d'emparellar de nou en el proper inici.</value>
     <value>Feu clic amb el botó dret per configurar</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Restablir ⟲</value>
+    <value>Restablir</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Restablir el zoom i la posició del mapa</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Mirilla encreuada: Activar/Desactivar (Fes clic amb el botó dret per a opcions)</value>

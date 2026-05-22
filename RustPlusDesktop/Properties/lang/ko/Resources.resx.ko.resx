@@ -124,7 +124,7 @@
     <value>대기열:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 디바이스</value>
+    <value>디바이스</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>단축키</value>
@@ -262,13 +262,13 @@
     <value>미니 지도 폴란드어</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>⚠️ 필요한 조치:</value>
+    <value>필요한 조치:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>⚠️ 배틀메트릭스 제거:</value>
+    <value>배틀메트릭스 제거:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>⚠️ 플레이어 추적 시스템 점검</value>
+    <value>플레이어 추적 시스템 점검</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>플레이어 추적 작동 방식</value>
@@ -447,7 +447,7 @@
     <value>스마트 장치, 스위치 또는 알람을 페어링하여 여기에서 확인하세요.</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 팀</value>
+    <value>팀</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>지도 중앙</value>
@@ -471,10 +471,10 @@
     <value>데스 마커</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 카메라</value>
+    <value>카메라</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 카메라 추가</value>
+    <value>카메라 추가</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>카메라를 찾을 수 없습니다.</value>
@@ -483,7 +483,7 @@
     <value>여기에서 카메라를 페어링하여 미리 보기를 확인하세요.</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 플레이어</value>
+    <value>플레이어</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>추적 방법</value>
@@ -744,13 +744,13 @@
     <value>마우스 오른쪽 버튼을 클릭하여 구성</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>초기화 ⟲</value>
+    <value>초기화</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>지도 확대/축소 및 위치 재설정</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>미니 🗺</value>
+    <value>미니</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>십자선 켜기/끄기(오른쪽 클릭 옵션)</value>

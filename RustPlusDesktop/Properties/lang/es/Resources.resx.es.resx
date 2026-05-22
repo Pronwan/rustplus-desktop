@@ -124,7 +124,7 @@
     <value>Cola:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Dispositivos</value>
+    <value>Dispositivos</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Teclas directas</value>
@@ -262,13 +262,13 @@
     <value>Mini mapa polaco</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>⚠️ Acción Requerida:</value>
+    <value>Acción Requerida:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>⚠️ BattleMetrics Removal:</value>
+    <value>BattleMetrics Removal:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>⚠️ Sistema de Seguimiento de Jugadores Overhaul</value>
+    <value>Sistema de Seguimiento de Jugadores Overhaul</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>Cómo funciona el seguimiento del jugador</value>
@@ -447,7 +447,7 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
     <value>Empareja un dispositivo inteligente, conmuta o alarma para verlo aquí</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Equipo</value>
+    <value>Equipo</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Centrar en el mapa</value>
@@ -471,10 +471,10 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
     <value>Marcadores de muerte</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>:mo-camera: cámaras</value>
+    <value>cámaras</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Añadir cámara</value>
+    <value>Añadir cámara</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>No hay cámaras</value>
@@ -483,7 +483,7 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
     <value>Emparejar una cámara para ver su vista previa aquí</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>:globe_showing_Europa-Portugal: Jugadores</value>
+    <value>Jugadores</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Cómo rastrear</value>
@@ -744,13 +744,13 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
     <value>Clic derecho para configurar</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Restablecer zoom y posición del mapa</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺️</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Silla encendida/apagada (Click derecho para opciones)</value>

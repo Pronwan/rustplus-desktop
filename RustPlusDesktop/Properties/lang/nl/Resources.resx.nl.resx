@@ -124,7 +124,7 @@
     <value>Wachtrij:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Apparaten</value>
+    <value>Apparaten</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Sneltoetsen</value>
@@ -262,13 +262,13 @@
     <value>Mini kaart Pools</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>⚠️ actie vereist:</value>
+    <value>actie vereist:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>⚠️ BattleMetrics Verwijdering:</value>
+    <value>BattleMetrics Verwijdering:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>⚠️ Player Tracking System Overhaul</value>
+    <value>Player Tracking System Overhaul</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>Hoe Player Tracking Works</value>
@@ -447,7 +447,7 @@ Download en installeer nu?</value>
     <value>Koppel een slim apparaat, schakel of alarm om het hier te zien</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Team</value>
+    <value>Team</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Centreer op kaart</value>
@@ -471,10 +471,10 @@ Download en installeer nu?</value>
     <value>Doodmarkers</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Camera's</value>
+    <value>Camera's</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Camera toevoegen</value>
+    <value>Camera toevoegen</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Geen camera's gevonden</value>
@@ -483,7 +483,7 @@ Download en installeer nu?</value>
     <value>Koppel een camera om zijn voorbeeld te zien</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>:globe_showing_Europa-Afrika: spelers</value>
+    <value>spelers</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Hoe te volgen</value>
@@ -744,13 +744,13 @@ Download en installeer nu?</value>
     <value>Rechtsklik om te configureren</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Reset kaart zoom en positie</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺️</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Richtkruis aan/uit (Rechtsklik voor Opties)</value>

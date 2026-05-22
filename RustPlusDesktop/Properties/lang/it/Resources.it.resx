@@ -124,7 +124,7 @@
     <value>Coda:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Dispositivi</value>
+    <value>Dispositivi</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Scorciatoie</value>
@@ -342,7 +342,7 @@ Scarica e installa ora?</value>
     <value>Accoppia un dispositivo intelligente, accendi o allarmi per vederlo qui</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Team</value>
+    <value>Team</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Centra sulla mappa</value>
@@ -366,10 +366,10 @@ Scarica e installa ora?</value>
     <value>Marcatori di morte</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Fotocamere</value>
+    <value>Fotocamere</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Aggiungi Fotocamera</value>
+    <value>Aggiungi Fotocamera</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Nessuna telecamera trovata</value>
@@ -378,7 +378,7 @@ Scarica e installa ora?</value>
     <value>Copiare una fotocamera per vedere la sua anteprima qui</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Giocatori</value>
+    <value>Giocatori</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Come tracciare</value>
@@ -639,13 +639,13 @@ Scarica e installa ora?</value>
     <value>Fare clic col tasto destro per configurare</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Reimposta zoom e posizione mappa</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺️</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Crosshair on/off (Click Destro Per Opzioni)</value>

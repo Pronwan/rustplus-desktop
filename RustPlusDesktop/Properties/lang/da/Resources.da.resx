@@ -124,7 +124,7 @@
     <value>Kø:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Enheder</value>
+    <value>Enheder</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Genvejstaster</value>
@@ -342,7 +342,7 @@ Download og installer nu?</value>
     <value>Parre en smart enhed, skifte eller alarm for at se den her</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Hold</value>
+    <value>Hold</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Centrér på kort</value>
@@ -366,10 +366,10 @@ Download og installer nu?</value>
     <value>Dødsmarkører</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>:movie_kamera: Kameraer</value>
+    <value>Kameraer</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Tilføj Kamera</value>
+    <value>Tilføj Kamera</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Ingen kameraer fundet</value>
@@ -378,7 +378,7 @@ Download og installer nu?</value>
     <value>Parre et kamera for at se dets forhåndsvisning her</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Spillere</value>
+    <value>Spillere</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Sådan spores</value>
@@ -639,13 +639,13 @@ Download og installer nu?</value>
     <value>Højreklik for at konfigurere</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Nulstil kortzoom og position</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺️</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Crosshair til/fra (Klik For indstillinger)</value>

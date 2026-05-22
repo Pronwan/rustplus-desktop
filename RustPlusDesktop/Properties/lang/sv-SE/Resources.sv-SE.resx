@@ -124,7 +124,7 @@
     <value>Kö:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Enheter</value>
+    <value>Enheter</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Snabbtangenter</value>
@@ -342,7 +342,7 @@ Ladda ner och installera nu?</value>
     <value>Koppla ihop en smart enhet, växla eller larm för att se den här</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>:busts_in_siluett: Team</value>
+    <value>Team</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Centrera på kartan</value>
@@ -366,10 +366,10 @@ Ladda ner och installera nu?</value>
     <value>Död markörer</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Kameror</value>
+    <value>Kameror</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Lägg till kamera</value>
+    <value>Lägg till kamera</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Inga kameror hittades</value>
@@ -378,7 +378,7 @@ Ladda ner och installera nu?</value>
     <value>Para ihop en kamera för att se dess förhandsgranskning här</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Spelare</value>
+    <value>Spelare</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Hur man spårar</value>
@@ -639,13 +639,13 @@ Ladda ner och installera nu?</value>
     <value>Högerklicka för att konfigurera</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Återställ kartzoom och position</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺️</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Crosshair på/av (Högerklicka för alternativ)</value>

@@ -124,7 +124,7 @@
     <value>Fila:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Dispositivos</value>
+    <value>Dispositivos</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Atalhos</value>
@@ -342,7 +342,7 @@ Baixar e instalar agora?</value>
     <value>Parear um dispositivo inteligente, mude ou alarme para vê-lo aqui</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Equipe</value>
+    <value>Equipe</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Centralizar no mapa</value>
@@ -366,10 +366,10 @@ Baixar e instalar agora?</value>
     <value>Marcadores de morte</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Câmeras</value>
+    <value>Câmeras</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Adicionar câmera</value>
+    <value>Adicionar câmera</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Nenhuma câmera encontrada</value>
@@ -378,7 +378,7 @@ Baixar e instalar agora?</value>
     <value>Parear uma câmera para ver sua pré-visualização aqui</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>:globe_showing_Europe-África: Jogadores</value>
+    <value>Jogadores</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Como monitorar</value>
@@ -639,13 +639,13 @@ Baixar e instalar agora?</value>
     <value>Clique direito para configurar</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Redefinir zoom e posição do mapa</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺️</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Mira ligada/desligada (Clique direito para opções)</value>

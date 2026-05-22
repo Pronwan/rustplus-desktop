@@ -124,7 +124,7 @@
     <value>Jono:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Laitteet</value>
+    <value>Laitteet</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Pikanäppäimet</value>
@@ -262,13 +262,13 @@
     <value>Mini Kartta Puola</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>⚠️ Toiminto Vaaditaan:</value>
+    <value>Toiminto Vaaditaan:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>⚠️ BattleMetrics Removal:</value>
+    <value>BattleMetrics Removal:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>⚠️ Pelaajan Seurantajärjestelmän Peruskorjaus</value>
+    <value>Pelaajan Seurantajärjestelmän Peruskorjaus</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>Kuinka Pelaajan Seuranta Toimii</value>
@@ -447,7 +447,7 @@ Lataa ja asenna nyt?</value>
     <value>Parita älylaite, kytkin tai hälytys nähdäksesi sen täällä</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Tiimi</value>
+    <value>Tiimi</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Keskitä kartalla</value>
@@ -471,10 +471,10 @@ Lataa ja asenna nyt?</value>
     <value>Kuoleman merkit</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Kamerat</value>
+    <value>Kamerat</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Lisää Kamera</value>
+    <value>Lisää Kamera</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Kameroita ei löytynyt</value>
@@ -483,7 +483,7 @@ Lataa ja asenna nyt?</value>
     <value>Parita kamera nähdäksesi sen esikatselun täällä</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>:globe_showing_Europe-Afrikka: Pelaajat</value>
+    <value>Pelaajat</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Miten seurata</value>
@@ -744,13 +744,13 @@ Lataa ja asenna nyt?</value>
     <value>Napsauta hiiren oikealla konfiguroidaksesi</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Nollaa kartan zoomaus ja sijainti</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺️</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Crosshair on/off (oikea klikkaa Valinnat)</value>

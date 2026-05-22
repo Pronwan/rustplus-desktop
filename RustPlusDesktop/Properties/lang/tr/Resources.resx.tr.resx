@@ -124,7 +124,7 @@
     <value>Sıraya girin:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Cihazlar</value>
+    <value>Cihazlar</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Kısayol Tuşları</value>
@@ -262,13 +262,13 @@
     <value>Mini Harita Cilası</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>⚠️ Gerekli Eylem:</value>
+    <value>Gerekli Eylem:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>⚠️ BattleMetrics Kaldırma:</value>
+    <value>BattleMetrics Kaldırma:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>⚠️ Oyuncu Takip Sistemi Revizyonu</value>
+    <value>Oyuncu Takip Sistemi Revizyonu</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>Oyuncu Takibi Nasıl Çalışır?</value>
@@ -447,7 +447,7 @@ Sürümler sayfasını aç?</value>
     <value>Burada görmek için bir akıllı cihazı, anahtarı veya alarmı eşleştirin</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Takım</value>
+    <value>Takım</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Harita üzerinde merkez</value>
@@ -471,10 +471,10 @@ Sürümler sayfasını aç?</value>
     <value>Ölüm işaretleri</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Kameralar</value>
+    <value>Kameralar</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Kamera Ekle</value>
+    <value>Kamera Ekle</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Kamera bulunamadı</value>
@@ -483,7 +483,7 @@ Sürümler sayfasını aç?</value>
     <value>Önizlemesini burada görmek için bir kamera eşleştirin</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Oyuncular</value>
+    <value>Oyuncular</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Nasıl Takip Edilir</value>
@@ -744,13 +744,13 @@ Sürümler sayfasını aç?</value>
     <value>Yapılandırmak için sağ tıklayın</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Sıfırla ⟲</value>
+    <value>Sıfırla</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Harita yakınlaştırma ve konumunu sıfırlama</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Artı işareti açık/kapalı (Seçenekler için Sağ Tıklama)</value>

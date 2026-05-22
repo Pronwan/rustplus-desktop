@@ -124,7 +124,7 @@
     <value>队列：</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 设备</value>
+    <value>设备</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>热键</value>
@@ -342,7 +342,7 @@ You will need to pair again on next start.</value>
     <value>配对智能设备，切换或闹钟来查看它</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>:busts_in_silhouette：团队</value>
+    <value>团队</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>在地图居中</value>
@@ -366,10 +366,10 @@ You will need to pair again on next start.</value>
     <value>死亡标记</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>:movie_cameras</value>
+    <value>相机</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 添加相机</value>
+    <value>添加相机</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>未找到相机</value>
@@ -378,7 +378,7 @@ You will need to pair again on next start.</value>
     <value>配对相机来查看其预览</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>:glube_showing_Europe-Africa：玩家</value>
+    <value>玩家</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>如何跟踪</value>
@@ -639,13 +639,13 @@ You will need to pair again on next start.</value>
     <value>点击右键配置</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>重置地图缩放和位置</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺️</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>十字光标开/关 (右击选项)</value>

@@ -124,7 +124,7 @@
     <value>Kolejka:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>🔌 Urządzenia</value>
+    <value>Urządzenia</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Klawisze skrótów</value>
@@ -262,13 +262,13 @@
     <value>Mini Mapa polska</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>⚠️ Wymagane działanie:</value>
+    <value>Wymagane działanie:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>⚠️ Usuwanie Bitewne:</value>
+    <value>Usuwanie Bitewne:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>⚠️ Przegląd systemu śledzenia graczy</value>
+    <value>Przegląd systemu śledzenia graczy</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>Jak działa śledzenie gracza</value>
@@ -447,7 +447,7 @@ Pobrać i zainstalować teraz?</value>
     <value>Sparuj inteligentne urządzenie, przełącznik lub alarm, aby zobaczyć je tutaj</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 Drużyna</value>
+    <value>Drużyna</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>Wyśrodkuj na mapie</value>
@@ -471,10 +471,10 @@ Pobrać i zainstalować teraz?</value>
     <value>Znaczniki śmierci</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 Kamery</value>
+    <value>Kamery</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 Dodaj kamerę</value>
+    <value>Dodaj kamerę</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Nie znaleziono kamer</value>
@@ -483,7 +483,7 @@ Pobrać i zainstalować teraz?</value>
     <value>Sparuj kamerę, aby zobaczyć jej podgląd</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>🌍 Gracze</value>
+    <value>Gracze</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Jak śledzić</value>
@@ -744,13 +744,13 @@ Pobrać i zainstalować teraz?</value>
     <value>Kliknij prawym przyciskiem myszy, aby skonfigurować</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>Zresetuj powiększenie i pozycję mapy</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini 🗺️</value>
+    <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>Krzyżyk wł/wył (Prawy przycisk dla opcji)</value>

@@ -124,7 +124,7 @@
     <value>الطاول:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>أجهزة 🔌</value>
+    <value>أجهزة</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>مفاتيح ساخنة</value>
@@ -342,7 +342,7 @@ You will need to pair again on next start.</value>
     <value>إقران جهاز ذكي أو تبديل أو تنبيه لرؤيته هنا</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>👥 فريق</value>
+    <value>فريق</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
     <value>مركز على الخريطة</value>
@@ -366,10 +366,10 @@ You will need to pair again on next start.</value>
     <value>علامات الموت</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>🎥 الكاميرات</value>
+    <value>الكاميرات</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>📷 إضافة كاميرا</value>
+    <value>إضافة كاميرا</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>لم يتم العثور على كاميرات</value>
@@ -378,7 +378,7 @@ You will need to pair again on next start.</value>
     <value>إقران الكاميرا لمشاهدة معاينتها هنا</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>اللاعبين 🌍</value>
+    <value>اللاعبين</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>كيفية التتبع</value>
@@ -639,13 +639,13 @@ You will need to pair again on next start.</value>
     <value>انقر بالزر الأيمن لتكوين</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Reset ⟲</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
     <value>إعادة تعيين تكبير الخريطة والموقع</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>مصغر 🗺️</value>
+    <value>مصغر</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
     <value>تفعيل / إيقاف الشعر (انقر بزر الماوس الأيمن للحصول على خيارات)</value>
