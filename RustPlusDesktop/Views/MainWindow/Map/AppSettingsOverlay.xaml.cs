@@ -1,12 +1,17 @@
-using System.Windows;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views
 {
-    public partial class SettingsModal : Window
+    public partial class AppSettingsOverlay : UserControl
     {
-        private bool _isInitialized = false;
+        public MainWindow? ParentWindow { get; set; }
+        private bool _isSettingsInitialized = false;
 
         public class LanguageOption
         {
@@ -14,17 +19,24 @@ namespace RustPlusDesk.Views
             public string Code { get; set; } = "";
         }
 
-        public SettingsModal()
+        public AppSettingsOverlay()
         {
             InitializeComponent();
+            Loaded += AppSettingsOverlay_Loaded;
+        }
+
+        private void AppSettingsOverlay_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (_isSettingsInitialized) return;
+            
             PopulateLanguages();
             LoadSettings();
-            _isInitialized = true;
+            _isSettingsInitialized = true;
         }
 
         private void PopulateLanguages()
         {
-            var langs = new System.Collections.Generic.List<LanguageOption>
+            var langs = new List<LanguageOption>
             {
                 new() { Name = "System Default", Code = "" },
                 new() { Name = "English", Code = "en" },
@@ -62,7 +74,7 @@ namespace RustPlusDesk.Views
             CmbLanguage.ItemsSource = langs.OrderBy(l => l.Name).ToList();
         }
 
-        private void LoadSettings()
+        public void LoadSettings()
         {
             CmbLanguage.SelectedValue = TrackingService.SelectedLanguage;
             
@@ -76,9 +88,9 @@ namespace RustPlusDesk.Views
             ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
         }
 
-        private void CmbLanguage_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void CmbLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!_isInitialized) return;
+            if (!_isSettingsInitialized) return;
             var code = CmbLanguage.SelectedValue as string;
             if (code != null)
             {
@@ -94,7 +106,7 @@ namespace RustPlusDesk.Views
 
         private void OnSettingChanged(object sender, RoutedEventArgs e)
         {
-            if (!_isInitialized) return;
+            if (!_isSettingsInitialized) return;
 
             TrackingService.AutoStartEnabled = ChkAutoStart.IsChecked == true;
             TrackingService.StartMinimizedEnabled = ChkStartMinimized.IsChecked == true;
@@ -106,29 +118,24 @@ namespace RustPlusDesk.Views
             TrackingService.MapAbbreviateNames = ChkStreamerMode.IsChecked == true;
         }
 
-        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        private void BtnCloseSettings_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            Visibility = Visibility.Collapsed;
+            ParentWindow?.ApplySettings();
         }
-
-        public string RequestAction { get; private set; }
 
         private void BtnModifyChatAlerts_Click(object sender, RoutedEventArgs e)
         {
-            RequestAction = "ModifyChatAlerts";
-            Close();
+            Visibility = Visibility.Collapsed;
+            ParentWindow?.ApplySettings();
+            ParentWindow?.OpenChatAlertsFromSettings();
         }
 
         private void BtnChatCommands_Click(object sender, RoutedEventArgs e)
         {
-            RequestAction = "ChatCommands";
-            Close();
-        }
-
-        protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
-        {
-            base.OnMouseLeftButtonDown(e);
-            DragMove();
+            Visibility = Visibility.Collapsed;
+            ParentWindow?.ApplySettings();
+            ParentWindow?.OpenChatCommandsFromSettings();
         }
     }
 }
