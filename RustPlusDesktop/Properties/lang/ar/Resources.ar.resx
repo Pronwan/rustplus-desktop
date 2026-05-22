@@ -195,6 +195,111 @@
   <data name="PleaseWait" xml:space="preserve">
     <value>Bitte warten …</value>
   </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>تبديل منطقة الخادم</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>وضع البث</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>المقياس:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>تمكين وضع البث (أسماء المختصرات)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>تختصر أسماء وتعريفات ستيم لحماية الخصوصية أثناء البث الإذاعي. إخفاء تلقائي لوحدة التحكم وقائمة الخادم.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>لا يوجد موقع متاح (دون اتصال أو غير متفرغ).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>حفظ المجموعة</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>الرجاء إدخال اسم المجموعة.</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>تعذر إرسال الرسالة. الرجاء المحاولة مرة أخرى. (تحقق إذا كنت في فريق!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>خطأ: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>تعيين مجموعة</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>إعدادات المجموعة: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>اسم المجموعة</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>أدخل اسم المجموعة...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>لون المجموعة</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>حفظ التغييرات</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>تحليلات وتنبؤات نشاط اللاعب</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>لاعبون</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>تغيير نمط البث والخريطة الصغيرة</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>وضع البث</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>قياس علامة اللاعب</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>البولندية الصغيرة</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>الإجراء المطلوب:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>إزالة مقاييس المعركة:</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>إصلاح نظام تتبع اللاعب</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>كيف يعمل تتبع اللاعب</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>إضافة لاعبين للمتعقب لبدء التتبع</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>تتبع نشط</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>تعقب الخمول</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>تصفية اللاعبين...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>الاتصال بالخادم لتحميل قائمة اللاعبين</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>جلب اللاعبين عن طريق استعلام الستير...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>معرف المسار</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>اسم المسار اليدوي ...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>لا توجد أجهزة.</value>
+  </data>
   <data name="NoTokenRegistered" xml:space="preserve">
     <value>لا يوجد رمز مسجل</value>
   </data>
@@ -202,7 +307,7 @@
     <value>انتهت صلاحية الرمز المميز!</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>Expires in {0} days</value>
+    <value>تنتهي صلاحيتها في {0} يوم</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
     <value>{0} حتى الليل</value>
@@ -242,8 +347,8 @@
     <value>Reset pairing</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>Delete existing pairing config?
-You will need to pair again on next start.</value>
+    <value>حذف تكوين الاقتران الحالي؟
+ستحتاج إلى الاقتران مرة أخرى عند البدء التالي.</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
     <value>Reset + Listen</value>

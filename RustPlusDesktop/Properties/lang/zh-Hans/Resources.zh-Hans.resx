@@ -58,1176 +58,1176 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppTitle" xml:space="preserve">
-    <value>RUST+ ESCRIVANIA</value>
+    <value>RUST + DESKTOP</value>
   </data>
   <data name="SteamAccount" xml:space="preserve">
-    <value>Compte de Steam</value>
+    <value>Steam账户</value>
   </data>
   <data name="NotLoggedIn" xml:space="preserve">
-    <value>No heu iniciat la sessió</value>
+    <value>未登录</value>
   </data>
   <data name="CheckForUpdates" xml:space="preserve">
-    <value>Comprovar actualitzacions</value>
+    <value>检查更新</value>
   </data>
   <data name="Downloading" xml:space="preserve">
-    <value>Descarregant...</value>
+    <value>正在下载...</value>
   </data>
   <data name="JoinDiscord" xml:space="preserve">
-    <value>Uneix-te a Discord</value>
+    <value>加入Discord</value>
   </data>
   <data name="PatchNotes" xml:space="preserve">
-    <value>Notes del pegat</value>
+    <value>补丁笔记</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Configuració</value>
+    <value>设置</value>
   </data>
   <data name="PairedServers" xml:space="preserve">
-    <value>Servidors emparellats</value>
+    <value>暂停服务</value>
   </data>
   <data name="NoServersPaired" xml:space="preserve">
-    <value>Encara no s'han emparellat cap servidor</value>
+    <value>尚未配对服务器</value>
   </data>
   <data name="PairingMaintenance" xml:space="preserve">
-    <value>MANTENIMENT I COMBINACIÓ</value>
+    <value>画面和笔记</value>
   </data>
   <data name="PairingIdle" xml:space="preserve">
-    <value>Parellament: oci</value>
+    <value>Pairing: idle</value>
   </data>
   <data name="RightClickOptions" xml:space="preserve">
-    <value>Feu clic amb el botó dret per a opcions</value>
+    <value>右键点击查看选项</value>
   </data>
   <data name="TrackingActive" xml:space="preserve">
-    <value>Seguiment actiu</value>
+    <value>跟踪已启用</value>
   </data>
   <data name="LastPull" xml:space="preserve">
-    <value>Darrera tirada: {0}</value>
+    <value>上次脉冲: {0}</value>
   </data>
   <data name="Donate" xml:space="preserve">
-    <value>Dona</value>
+    <value>捐助</value>
   </data>
   <data name="SupportDeveloper" xml:space="preserve">
-    <value>Dona suport al desenvolupador</value>
+    <value>支持开发者</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Restablir</value>
+    <value>Reset</value>
   </data>
   <data name="ResetWebSocket" xml:space="preserve">
-    <value>Restablir la connexió WebSocket</value>
+    <value>重置 WebSocket 连接</value>
   </data>
   <data name="Players" xml:space="preserve">
-    <value>Jugadors:</value>
+    <value>玩家：</value>
   </data>
   <data name="ShowOnlinePlayers" xml:space="preserve">
-    <value>Mostra la pestanya de jugadors en línia</value>
+    <value>显示在线玩家标签</value>
   </data>
   <data name="Queue" xml:space="preserve">
-    <value>Fila:</value>
+    <value>队列：</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>Dispositius</value>
+    <value>设备</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
-    <value>Tecles d'accés ràpid</value>
+    <value>热键</value>
   </data>
   <data name="ImportDevices" xml:space="preserve">
-    <value>Importar dispositius dels companys d'equip</value>
+    <value>从团队成员导入设备</value>
   </data>
   <data name="ExportDevices" xml:space="preserve">
-    <value>Exporta dispositius als companys d'equip</value>
+    <value>导出设备到队友中</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>Actualitzar</value>
+    <value>刷新</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Suprimeix</value>
+    <value>删除</value>
   </data>
   <data name="DeleteMissingOnly" xml:space="preserve">
-    <value>Només podeu suprimir dispositius que falten.</value>
+    <value>您只能删除缺失的设备</value>
   </data>
   <data name="RenameDevice" xml:space="preserve">
-    <value>Renombrar dispositiu</value>
+    <value>重命名设备</value>
   </data>
   <data name="Online" xml:space="preserve">
-    <value>En línia</value>
+    <value>在线用户</value>
   </data>
   <data name="Offline" xml:space="preserve">
-    <value>Fora de línia</value>
+    <value>关闭</value>
   </data>
   <data name="Connect" xml:space="preserve">
-    <value>Connectar</value>
+    <value>连接</value>
   </data>
   <data name="FullConnect" xml:space="preserve">
-    <value>Connectar completament</value>
+    <value>完全连接</value>
   </data>
   <data name="LoadMapTeam" xml:space="preserve">
-    <value>Càrrega del mapa i de l'equip</value>
+    <value>加载地图 &amp; 团队</value>
   </data>
   <data name="Disconnect" xml:space="preserve">
-    <value>Desconnectar</value>
+    <value>断开连接</value>
   </data>
   <data name="ServerDetails" xml:space="preserve">
-    <value>Detalls del servidor</value>
+    <value>服务器详细信息</value>
   </data>
   <data name="Listen" xml:space="preserve">
-    <value>Escolta</value>
+    <value>监听</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Atura't</value>
+    <value>停止</value>
   </data>
   <data name="TryPairingEdge" xml:space="preserve">
-    <value>Prova d'emparellar amb Edge</value>
+    <value>尝试与边缘配对</value>
   </data>
   <data name="ResetPairingConfig" xml:space="preserve">
-    <value>Restablir l'aparellament (esborrar la configuració)</value>
+    <value>Reset pairing (delete config)</value>
   </data>
   <data name="ResetListenPairing" xml:space="preserve">
-    <value>Restablir + Escoltar (reparar)</value>
+    <value>重置 + 监听(重配对)</value>
   </data>
   <data name="ResetListenEdge" xml:space="preserve">
-    <value>Restablir + Escoltar amb Edge</value>
+    <value>使用边缘重置 + 监听</value>
   </data>
   <data name="RelinkBattlemetrics" xml:space="preserve">
-    <value>Relink ID de Battlemetrics…</value>
+    <value>重新链接战斗计ID…</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>Suprimeix el servidor…</value>
+    <value>删除服务器…</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
-    <value>Si us plau, espereu...</value>
+    <value>Bitte warten …</value>
   </data>
   <data name="ToggleServerArea" xml:space="preserve">
-    <value>Canvia l'àrea del servidor</value>
+    <value>切换服务器区域</value>
   </data>
   <data name="StreamerMode" xml:space="preserve">
-    <value>Mode de transmissió en directe</value>
+    <value>主播模式</value>
   </data>
   <data name="ScaleLabel" xml:space="preserve">
-    <value>Escala:</value>
+    <value>缩放：</value>
   </data>
   <data name="EnableStreamerMode" xml:space="preserve">
-    <value>Activa el mode Streamer (abrevia els noms)</value>
+    <value>启用主播模式 (缩写名称)</value>
   </data>
   <data name="StreamerModeToolTip" xml:space="preserve">
-    <value>Abrevia els noms i ID de Steam per protegir la privadesa durant les retransmissions. Oculta automàticament la consola i la llista de servidors.</value>
+    <value>缩写Steam名称和ID以保护流中的隐私。自动隐藏控制台和服务器列表。</value>
   </data>
   <data name="NoPositionAvailable" xml:space="preserve">
-    <value>No hi ha cap posició disponible (fora de línia o no generada).</value>
+    <value>没有可用的位置(离线或未生成)。</value>
   </data>
   <data name="SaveGroup" xml:space="preserve">
-    <value>Desa grup</value>
+    <value>保存群组</value>
   </data>
   <data name="EnterGroupName" xml:space="preserve">
-    <value>Introdueix un nom de grup.</value>
+    <value>请输入组名称。</value>
   </data>
   <data name="MessageNotSentError" xml:space="preserve">
-    <value>El missatge no s'ha pogut enviar. Torna-ho a provar. (Comprova si formes part d'un equip!)</value>
+    <value>消息无法发送。请再试一次。(检查您是否在一个团队中!)</value>
   </data>
   <data name="ErrorPrefix" xml:space="preserve">
-    <value>Error: </value>
+    <value>错误： </value>
   </data>
   <data name="AssignGroup" xml:space="preserve">
-    <value>Assignar grup</value>
+    <value>分配组</value>
   </data>
   <data name="GroupSettingsTitle" xml:space="preserve">
-    <value>Configuració del grup: {0}</value>
+    <value>群组设置： {0}</value>
   </data>
   <data name="GroupName" xml:space="preserve">
-    <value>Nom del grup</value>
+    <value>群组名称</value>
   </data>
   <data name="EnterGroupNamePlaceholder" xml:space="preserve">
-    <value>Introdueix el nom del grup...</value>
+    <value>输入组名称...</value>
   </data>
   <data name="GroupColor" xml:space="preserve">
-    <value>Color del grup</value>
+    <value>组颜色</value>
   </data>
   <data name="SaveChanges" xml:space="preserve">
-    <value>Desa els canvis</value>
+    <value>保存更改</value>
   </data>
   <data name="PlayerAnalyticsTitle" xml:space="preserve">
-    <value>Anàlisi i previsions de l'activitat dels jugadors</value>
+    <value>玩家活动分析和预测</value>
   </data>
   <data name="PlayersTitle" xml:space="preserve">
-    <value>Jugadors</value>
+    <value>玩家</value>
   </data>
   <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
-    <value>Millora del mode streamer i del mapa miniatura</value>
+    <value>主播模式和迷你地图Overhaul</value>
   </data>
   <data name="StreamerModeTitle" xml:space="preserve">
-    <value>Mode de transmissió en directe</value>
+    <value>主播模式</value>
   </data>
   <data name="PlayerMarkerScalingTitle" xml:space="preserve">
-    <value>Escalament de marcadors de jugadors</value>
+    <value>玩家标记缩放</value>
   </data>
   <data name="MiniMapPolishTitle" xml:space="preserve">
-    <value>Millora de la mini mapa</value>
+    <value>迷你波兰地图</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>Cal prendre mesures:</value>
+    <value>需要动作：</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Supressió de BattleMetrics:</value>
+    <value>战斗计量移除:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>Renovació del sistema de seguiment de jugadors</value>
+    <value>玩家跟踪系统Overhaul</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
-    <value>Com funciona el seguiment de jugadors</value>
+    <value>玩家跟踪服务</value>
   </data>
   <data name="AddPlayersToStartTracking" xml:space="preserve">
-    <value>Afegeix jugadors al seguidor per començar a fer el seguiment</value>
+    <value>添加玩家到跟踪器开始跟踪</value>
   </data>
   <data name="TrackingActiveStatus" xml:space="preserve">
-    <value>Seguiment actiu</value>
+    <value>跟踪已启用</value>
   </data>
   <data name="TrackingIdleStatus" xml:space="preserve">
-    <value>Seguiment ociosa</value>
+    <value>跟踪闲置</value>
   </data>
   <data name="FilterPlayers" xml:space="preserve">
-    <value>Filtra jugadors...</value>
+    <value>筛选玩家...</value>
   </data>
   <data name="ConnectToLoadPlayers" xml:space="preserve">
-    <value>Connecta a un servidor per carregar la llista de jugadors</value>
+    <value>连接到服务器以加载玩家列表</value>
   </data>
   <data name="FetchingPlayersSteam" xml:space="preserve">
-    <value>Recuperant jugadors mitjançant la consulta de Steam...</value>
+    <value>正在通过 Steam 查询获取玩家...</value>
   </data>
   <data name="TrackID" xml:space="preserve">
-    <value>Identificador de pista</value>
+    <value>音轨 ID</value>
   </data>
   <data name="ManualTrackNamePlaceholder" xml:space="preserve">
-    <value>Nom de la pista manual...</value>
+    <value>手动曲目名称...</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>Sense dispositius.</value>
+    <value>没有设备。</value>
   </data>
   <data name="NoTokenRegistered" xml:space="preserve">
-    <value>Cap token registrat</value>
+    <value>未注册令牌</value>
   </data>
   <data name="TokenExpired" xml:space="preserve">
-    <value>Token caducat!</value>
+    <value>代币已过期！</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>Caduca d'aquí a {0} dies</value>
+    <value>在 {0} 天后过期</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
-    <value>{0} fins a la nit</value>
+    <value>{0} 到晚上</value>
   </data>
   <data name="UntilDay" xml:space="preserve">
-    <value>{0} fins al dia</value>
+    <value>{0} 直到天</value>
   </data>
   <data name="FollowMe" xml:space="preserve">
-    <value>Segueix-me</value>
+    <value>跟随我</value>
   </data>
   <data name="FollowPlayer" xml:space="preserve">
-    <value>Segueix {0}</value>
+    <value>跟随 {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>Parell: escolta…</value>
+    <value>配对：聆听…</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
-    <value>Parellament: aturat</value>
+    <value>配对：停止</value>
   </data>
   <data name="PairingFailed" xml:space="preserve">
-    <value>Parellament: fallit</value>
+    <value>配对：失败</value>
   </data>
   <data name="AlarmActivated" xml:space="preserve">
-    <value>Alerta activada!</value>
+    <value>闹钟已激活！</value>
   </data>
   <data name="Server" xml:space="preserve">
-    <value>Servei</value>
+    <value>服务器</value>
   </data>
   <data name="SmartAlarm" xml:space="preserve">
-    <value>Alarma intel·ligent</value>
+    <value>智能报警</value>
   </data>
   <data name="UnableToReadLink" xml:space="preserve">
-    <value>No es pot llegir RustPlus-Link: {0}
-Format: rustplus://IP:PORT</value>
+    <value>无法读取RustPlus-Link: {0}
+格式: rustplus://IP:PORT</value>
   </data>
   <data name="DeletePairingConfigHeader" xml:space="preserve">
-    <value>Restablir l'aparellament</value>
+    <value>Reset pairing</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>Eliminar la configuració d'emparellament existent?
-Hauràs d'emparellar de nou en el proper inici.</value>
+    <value>删除现有配对配置？
+下次启动时需要重新配对。</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
-    <value>Restablir + Escoltar</value>
+    <value>Reset + Listen</value>
   </data>
   <data name="ResetListenBody" xml:space="preserve">
-    <value>Suprimir la configuració d'emparellament i emparellar/escoltar immediatament?</value>
+    <value>删除配对配置并立即重新配对/监听？</value>
   </data>
   <data name="ResetListenEdgeHeader" xml:space="preserve">
-    <value>Restablir + Escoltar (Edge)</value>
+    <value>重置 + 监听(Edge)</value>
   </data>
   <data name="ResetListenEdgeBody" xml:space="preserve">
-    <value>Eliminar la configuració d'aparellament i aparellar/escoltar de nou immediatament amb l'Edge?</value>
+    <value>删除配对配置并立即重新配对/监听使用边缘？</value>
   </data>
   <data name="UpdateQueryFailed" xml:space="preserve">
-    <value>No s'ha pogut consultar l'última versió. Torneu-ho a provar o obriu la pàgina de versions.</value>
+    <value>无法查询最新版本。请重试或打开发布页面。</value>
   </data>
   <data name="UpdateUpToDate" xml:space="preserve">
-    <value>Estàs al dia.</value>
+    <value>您是最新的。</value>
   </data>
   <data name="UpdateAvailableHeader" xml:space="preserve">
-    <value>Actualització disponible</value>
+    <value>可用更新</value>
   </data>
   <data name="UpdateAvailableBody" xml:space="preserve">
-    <value>Nova versió disponible: {0}
-? Obre la pàgina de llançaments oberts?</value>
+    <value>有新版本可用： {0}
+打开发布页面？</value>
   </data>
   <data name="DownloadAndInstallBody" xml:space="preserve">
-    <value>Nova versió disponible: {0}
-. La descarregues i instal·les ara?</value>
+    <value>有新版本可用: {0}
+现在下载并安装？</value>
   </data>
   <data name="DownloadFailed" xml:space="preserve">
-    <value>La descàrrega ha fallat.</value>
+    <value>下载失败。</value>
   </data>
   <data name="UpdateCheckFailed" xml:space="preserve">
-    <value>Comprovació d'actualitzacions fallida.
+    <value>更新检查失败。
 {0}</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>Sense dispositius.</value>
+    <value>没有设备。</value>
   </data>
   <data name="ViewProfile" xml:space="preserve">
-    <value>Veure el perfil</value>
+    <value>查看个人资料</value>
   </data>
   <data name="ChangeGroup" xml:space="preserve">
-    <value>Canviar grup</value>
+    <value>更改组</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Canvia el nom</value>
+    <value>重命名：</value>
   </data>
   <data name="RemoveTracked" xml:space="preserve">
-    <value>Eliminar el seguiment</value>
+    <value>移除跟踪</value>
   </data>
   <data name="View" xml:space="preserve">
-    <value>Vista</value>
+    <value>查看</value>
   </data>
   <data name="MoreOptions" xml:space="preserve">
-    <value>Més opcions</value>
+    <value>更多选项</value>
   </data>
   <data name="RelinkBattlemetricsId" xml:space="preserve">
-    <value>Relink ID de Battlemetrics…</value>
+    <value>重新链接战斗计ID…</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>Suprimeix el servidor…</value>
+    <value>删除服务器…</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
-    <value>Feu clic amb el botó dret per canviar el nom</value>
+    <value>右键单击以重命名</value>
   </data>
   <data name="Toggle" xml:space="preserve">
-    <value>CANVIAR</value>
+    <value>切换边框</value>
   </data>
   <data name="PopupWindow" xml:space="preserve">
-    <value>Finestra emergent</value>
+    <value>弹出窗口</value>
   </data>
   <data name="InAppAlert" xml:space="preserve">
-    <value>Alerta dins de l'aplicació</value>
+    <value>应用内通知</value>
   </data>
   <data name="AudioAlert" xml:space="preserve">
-    <value>Alerta d'àudio</value>
+    <value>音频提醒</value>
   </data>
   <data name="CustomAudioFile" xml:space="preserve">
-    <value>Fitxer d'àudio personalitzat...</value>
+    <value>自定义音频文件...</value>
   </data>
   <data name="ResetToDefault" xml:space="preserve">
-    <value>Restablir als valors per defecte</value>
+    <value>重置为默认值</value>
   </data>
   <data name="Snapshot" xml:space="preserve">
-    <value>Imatge instantània: </value>
+    <value>Snapshot: </value>
   </data>
   <data name="ItemsUpkeep" xml:space="preserve">
-    <value> Objectes, manteniment=</value>
+    <value> 项目, Upkeep=</value>
   </data>
   <data name="NoDevicesFound" xml:space="preserve">
-    <value>No s'han trobat dispositius</value>
+    <value>未找到设备</value>
   </data>
   <data name="PairDeviceToSee" xml:space="preserve">
-    <value>Pareu un dispositiu intel·ligent, un interruptor o una alarma per veure'l aquí</value>
+    <value>配对智能设备，切换或闹钟来查看它</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>Equip</value>
+    <value>团队</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
-    <value>Centre al mapa</value>
+    <value>在地图居中</value>
   </data>
   <data name="FollowOnMap" xml:space="preserve">
-    <value>Segueix al mapa</value>
+    <value>在地图上关注</value>
   </data>
   <data name="OpenSteamProfile" xml:space="preserve">
-    <value>Obre el perfil de Steam</value>
+    <value>打开Steam配置文件</value>
   </data>
   <data name="PromoteToLeader" xml:space="preserve">
-    <value>Promocionar a líder</value>
+    <value>提升为组长</value>
   </data>
   <data name="KickFromTeam" xml:space="preserve">
-    <value>Cop de l'equip</value>
+    <value>从团队中踢出</value>
   </data>
   <data name="ProfileMarkers" xml:space="preserve">
-    <value>Marcadors de perfil</value>
+    <value>配置文件标记</value>
   </data>
   <data name="DeathMarkers" xml:space="preserve">
-    <value>Marcadors de la mort</value>
+    <value>死亡标记</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>Càmeres</value>
+    <value>相机</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>Afegeix càmera</value>
+    <value>添加相机</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
-    <value>No s'han trobat càmeres</value>
+    <value>未找到相机</value>
   </data>
   <data name="PairCameraToSee" xml:space="preserve">
-    <value>Pareu una càmera per veure'n la previsualització aquí</value>
+    <value>配对相机来查看其预览</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>Jugadors</value>
+    <value>玩家</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
-    <value>Com fer un seguiment</value>
+    <value>如何跟踪</value>
   </data>
   <data name="LearnHowTrackingWorks" xml:space="preserve">
-    <value>Aprèn com funciona el seguiment de jugadors</value>
+    <value>了解玩家跟踪是如何工作的</value>
   </data>
   <data name="OnlineTab" xml:space="preserve">
-    <value>En línia</value>
+    <value>在线</value>
   </data>
   <data name="OnlinePlayers" xml:space="preserve">
-    <value>Jugadors en línia</value>
+    <value>在线玩家</value>
   </data>
   <data name="SearchBM" xml:space="preserve">
-    <value>Cerca BM</value>
+    <value>搜索 BM</value>
   </data>
   <data name="SearchServerBM" xml:space="preserve">
-    <value>Cerca el servidor actual a BattleMetrics</value>
+    <value>在 BattleMetrics 上搜索当前服务器</value>
   </data>
   <data name="Popout" xml:space="preserve">
-    <value>Popout</value>
+    <value>弹出</value>
   </data>
   <data name="OpenPlayersSeparateWindow" xml:space="preserve">
-    <value>Obre els jugadors en una finestra separada</value>
+    <value>在单独窗口中打开玩家</value>
   </data>
   <data name="Track" xml:space="preserve">
-    <value>Pista</value>
+    <value>曲目</value>
   </data>
   <data name="ManualTrackPlaceholder" xml:space="preserve">
-    <value>Nom de pista manual o ID de Steam...</value>
+    <value>手动曲目名称或 Steam ID...</value>
   </data>
   <data name="FilterPlayersPlaceholder" xml:space="preserve">
-    <value>Filtra jugadors...</value>
+    <value>筛选玩家...</value>
   </data>
   <data name="LoadingPlayers" xml:space="preserve">
-    <value>Cargant jugadors...</value>
+    <value>正在加载玩家...</value>
   </data>
   <data name="TrackedTab" xml:space="preserve">
-    <value>Seguit</value>
+    <value>已跟踪</value>
   </data>
   <data name="TrackedPlayers" xml:space="preserve">
-    <value>Jugadors seguits</value>
+    <value>跟踪玩家</value>
   </data>
   <data name="ManageGroups" xml:space="preserve">
-    <value>Gestiona grups</value>
+    <value>管理组</value>
   </data>
   <data name="ViewFullAnalysisReport" xml:space="preserve">
-    <value>Veure l'informe d'anàlisi complet</value>
+    <value>查看完整分析报告</value>
   </data>
   <data name="ReadyToExploreMap" xml:space="preserve">
-    <value>Estàs a punt per explorar el mapa?</value>
+    <value>准备好探索地图？</value>
   </data>
   <data name="ConnectToLoadMap" xml:space="preserve">
-    <value>Connecta a un servidor seleccionat per carregar el mapa i l'equip de Rust en directe.</value>
+    <value>连接到选定的服务器以加载实时Rust地图和团队。</value>
   </data>
   <data name="ReadyToDominate" xml:space="preserve">
-    <value>Preparat per dominar Rust?</value>
+    <value>准备好主宰俄罗斯吗？</value>
   </data>
   <data name="PairAccountBenefits" xml:space="preserve">
-    <value>Enllaça el teu compte per començar a fer el seguiment dels jugadors, rebre alertes de raids bàsiques i controlar els teus dispositius intel·ligents a l'instant.</value>
+    <value>配对您的帐户来开始跟踪玩家，接收基本的突击警报，并立即控制您的智能设备。</value>
   </data>
   <data name="LoginPairAccount" xml:space="preserve">
-    <value>Inicia la sessió i vincula el compte</value>
+    <value>登录和配对帐户</value>
   </data>
   <data name="RequiresSteamLogin" xml:space="preserve">
-    <value>Requereix inici de sessió a Steam al navegador per defecte.</value>
+    <value>需要在您的默认浏览器中登录Steam。</value>
   </data>
   <data name="DeleteServerHeader" xml:space="preserve">
-    <value>Suprimir servidor?</value>
+    <value>删除服务器？</value>
   </data>
   <data name="DeleteServerConfirm" xml:space="preserve">
-    <value>Estàs segur que vols esborrar aquest servidor? Aquesta acció no es pot desfer.</value>
+    <value>您确定要删除此服务器吗？此操作无法撤消。</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel·la</value>
+    <value>取消</value>
   </data>
   <data name="DeleteAction" xml:space="preserve">
-    <value>Suprimeix</value>
+    <value>删除</value>
   </data>
   <data name="AutoHideAfter3s" xml:space="preserve">
-    <value>Amagar automàticament després de 3 s</value>
+    <value>3秒后自动隐藏</value>
   </data>
   <data name="MapFilters" xml:space="preserve">
-    <value>Filtres de mapa</value>
+    <value>MAP 文件</value>
   </data>
   <data name="Grid" xml:space="preserve">
-    <value>Griu</value>
+    <value>网格</value>
   </data>
   <data name="Monuments" xml:space="preserve">
-    <value>Monuments</value>
+    <value>纪念物</value>
   </data>
   <data name="Shops" xml:space="preserve">
-    <value>Botigues</value>
+    <value>商店：</value>
   </data>
   <data name="ChatAlerts" xml:space="preserve">
-    <value>ALERTES DE XAT</value>
+    <value>聊天提醒</value>
   </data>
   <data name="Alerts" xml:space="preserve">
-    <value>Alertes</value>
+    <value>提醒</value>
   </data>
   <data name="Configure" xml:space="preserve">
-    <value>Configurar</value>
+    <value>配置</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Selecciona-ho tot</value>
+    <value>选择所有</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>Deselecciona-ho tot</value>
+    <value>取消全选</value>
   </data>
   <data name="Events" xml:space="preserve">
-    <value>EVENTS</value>
+    <value>物品栏</value>
   </data>
   <data name="CargoShip" xml:space="preserve">
-    <value>Vaixell de càrrega</value>
+    <value>货运船</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
-    <value>Naixement</value>
+    <value>生成</value>
   </data>
   <data name="CargoDock" xml:space="preserve">
-    <value>Atracament al port</value>
+    <value>码头停靠中</value>
   </data>
   <data name="CargoEgress" xml:space="preserve">
-    <value>Sortida (avís de 5 minuts)</value>
+    <value>离开(5米警告)</value>
   </data>
   <data name="CargoArrival" xml:space="preserve">
-    <value>Avís d'arribada (5 m abans del moll)</value>
+    <value>抵达警告(停靠前5米)</value>
   </data>
   <data name="Heli" xml:space="preserve">
-    <value>Helikòpter de patrulla</value>
+    <value>巡查直升机</value>
   </data>
   <data name="Chinook" xml:space="preserve">
     <value>Chinook (CH47)</value>
   </data>
   <data name="Vendor" xml:space="preserve">
-    <value>Venedor itinerant</value>
+    <value>旅行供应商</value>
   </data>
   <data name="OilRig" xml:space="preserve">
-    <value>Activador de plataforma petroliera</value>
+    <value>燃油机触发器</value>
   </data>
   <data name="DeepSea" xml:space="preserve">
-    <value>Esdeveniment de l'oceà profund</value>
+    <value>深海事件</value>
   </data>
   <data name="SmartAlerts" xml:space="preserve">
-    <value>Alertes intel·ligents</value>
+    <value>智能提醒</value>
   </data>
   <data name="PlayerOnline" xml:space="preserve">
-    <value>Estat en línia</value>
+    <value>在线状态</value>
   </data>
   <data name="PlayerOffline" xml:space="preserve">
-    <value>Estat fora de línia</value>
+    <value>离线状态</value>
   </data>
   <data name="AnnounceTracking" xml:space="preserve">
-    <value>Seguiment de notificacions</value>
+    <value>跟踪通知</value>
   </data>
   <data name="PlayerDeathSelf" xml:space="preserve">
-    <value>Suïcidi</value>
+    <value>自己死亡数</value>
   </data>
   <data name="PlayerDeathTeam" xml:space="preserve">
-    <value>Equip de la Mort</value>
+    <value>团队死亡数</value>
   </data>
   <data name="PlayerRespawnSelf" xml:space="preserve">
-    <value>Ressuscitació automàtica</value>
+    <value>自重生</value>
   </data>
   <data name="PlayerRespawnTeam" xml:space="preserve">
-    <value>Equip Respawn</value>
+    <value>团队重生</value>
   </data>
   <data name="NewShops" xml:space="preserve">
-    <value>Botigues noves</value>
+    <value>新建商店</value>
   </data>
   <data name="SuspiciousShops" xml:space="preserve">
-    <value>Botigues sospitoses</value>
+    <value>可疑商店</value>
   </data>
   <data name="TradeAlerts" xml:space="preserve">
-    <value>Alertes comercials</value>
+    <value>交易提醒</value>
   </data>
   <data name="CrosshairStyle" xml:space="preserve">
-    <value>Estil de mira creuada</value>
+    <value>十字准线样式</value>
   </data>
   <data name="GreenDot" xml:space="preserve">
-    <value>Punt Verd</value>
+    <value>绿色点数</value>
   </data>
   <data name="MiniGreen" xml:space="preserve">
-    <value>Mini Verd</value>
+    <value>迷你绿灯</value>
   </data>
   <data name="OpenCrosshairRG" xml:space="preserve">
-    <value>Obre mira creuada (D/E)</value>
+    <value>打开 Crosshair (R/G)</value>
   </data>
   <data name="ThinRedCircle" xml:space="preserve">
-    <value>Cercle Vermell Fi</value>
+    <value>细红圆</value>
   </data>
   <data name="SquareDot" xml:space="preserve">
-    <value>Quadrat + Punt</value>
+    <value>方形 + 点数</value>
   </data>
   <data name="MagentaDot" xml:space="preserve">
-    <value>Punt magenta</value>
+    <value>品红色染料</value>
   </data>
   <data name="MagentaOpenCross" xml:space="preserve">
-    <value>Creu Oberta Magenta</value>
+    <value>品红色打开十字形</value>
   </data>
   <data name="RangeLineTicks" xml:space="preserve">
-    <value>Línia de rang (punts)</value>
+    <value>范围线 (ticks)</value>
   </data>
   <data name="DrawCrosshair" xml:space="preserve">
-    <value>Dibuixa el mirall...</value>
+    <value>绘制十字光标...</value>
   </data>
   <data name="ChooseMonitor" xml:space="preserve">
-    <value>Tria monitor</value>
+    <value>选择监视器</value>
   </data>
   <data name="DrawOverlay" xml:space="preserve">
-    <value>Dibuixa superposició</value>
+    <value>绘制叠加</value>
   </data>
   <data name="DrawToolTip" xml:space="preserve">
-    <value>Dibuixa (Dret del ratolí: Mida / Color)</value>
+    <value>绘制(右键点击：大小/颜色)</value>
   </data>
   <data name="PlaceTextToolTip" xml:space="preserve">
-    <value>Col·locar text (Dret del ratolí: Color / Mida)</value>
+    <value>位置文本(右键点击：颜色/大小)</value>
   </data>
   <data name="PlaceIconToolTip" xml:space="preserve">
-    <value>Col·locar icona (Dret del ratolí: Tria d'icona)</value>
+    <value>位置图标(右键点击：选择图标)</value>
   </data>
   <data name="EraserToolTip" xml:space="preserve">
-    <value>Erasor (toca i mantén o fes clic)</value>
+    <value>擦除 (按住或点击)</value>
   </data>
   <data name="DeleteOverlayToolTip" xml:space="preserve">
-    <value>Suprimeix la teva superposició</value>
+    <value>删除自己的叠加</value>
   </data>
   <data name="UploadOverlayToolTip" xml:space="preserve">
-    <value>Pujar el teu propi superposat / compartir</value>
+    <value>上传自己的叠加层</value>
   </data>
   <data name="ProfitTrades" xml:space="preserve">
-    <value>Comerços de benefici</value>
+    <value>Profit Trades</value>
   </data>
   <data name="ArbitrageOpportunities" xml:space="preserve">
-    <value>Oportunitats d'arbitratge directes | comprar barat → vendre car.</value>
+    <value>直接套装商业机会 | 购买较低的 → 卖得很高。</value>
   </data>
   <data name="BuyXForY" xml:space="preserve">
-    <value>Compra X per Y</value>
+    <value>购买 X 为 Y</value>
   </data>
   <data name="Analyze" xml:space="preserve">
-    <value>Analitzar</value>
+    <value>分析</value>
   </data>
   <data name="IWantToGet" xml:space="preserve">
-    <value>Vull obtenir</value>
+    <value>我想要获取</value>
   </data>
   <data name="ICanPayWith" xml:space="preserve">
-    <value>Puc pagar amb</value>
+    <value>我可以使用</value>
   </data>
   <data name="TeamChat" xml:space="preserve">
-    <value>Xat d'equip</value>
+    <value>团队聊天</value>
   </data>
   <data name="Send" xml:space="preserve">
-    <value>Envia</value>
+    <value>发送</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
-    <value>Credencials FCM</value>
+    <value>FCM 凭据</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
-    <value>Feu clic amb el botó dret per configurar</value>
+    <value>点击右键配置</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Restablir</value>
+    <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
-    <value>Restablir el zoom i la posició del mapa</value>
+    <value>重置地图缩放和位置</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
     <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
-    <value>Mirilla encreuada: Activar/Desactivar (Fes clic amb el botó dret per a opcions)</value>
+    <value>十字光标开/关 (右击选项)</value>
   </data>
   <data name="TrackPlayer" xml:space="preserve">
-    <value>Reproductor de pista</value>
+    <value>跟踪玩家</value>
   </data>
   <data name="CloseBMBrowser" xml:space="preserve">
-    <value>Tanca el navegador de BattleMetrics</value>
+    <value>关闭战斗计数浏览器</value>
   </data>
   <data name="ShopSearchTitle" xml:space="preserve">
-    <value>Cerca a la botiga</value>
+    <value>显示搜索</value>
   </data>
   <data name="CloseSearch" xml:space="preserve">
-    <value>Tanca la cerca</value>
+    <value>关闭搜索</value>
   </data>
   <data name="ActivateShopsFirst" xml:space="preserve">
-    <value>Si us plau, activeu primer les botigues.</value>
+    <value>请先激活商店。</value>
   </data>
   <data name="ActivateShopPolling" xml:space="preserve">
-    <value>Activa la votació de la botiga</value>
+    <value>激活商店投票</value>
   </data>
   <data name="TeamChatTitle" xml:space="preserve">
-    <value>XAT D'EQUIPS</value>
+    <value>团队聊天</value>
   </data>
   <data name="CloseChat" xml:space="preserve">
-    <value>Tanca el xat</value>
+    <value>关闭聊天</value>
   </data>
   <data name="ChatCommandsSettings" xml:space="preserve">
-    <value>Configuració de les ordres de xat</value>
+    <value>聊天命令设置</value>
   </data>
   <data name="ChatCommands" xml:space="preserve">
-    <value>Comandes de xat</value>
+    <value>聊天命令</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Enrere</value>
+    <value>后退</value>
   </data>
   <data name="Forward" xml:space="preserve">
-    <value>Davant</value>
+    <value>转发方式</value>
   </data>
   <data name="OpenInExternalBrowser" xml:space="preserve">
-    <value>Obre en un navegador extern</value>
+    <value>在外部浏览器打开</value>
   </data>
   <data name="SearchBMPlaceholder" xml:space="preserve">
-    <value>Cerca BM...</value>
+    <value>搜索 BM...</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Cerca</value>
+    <value>搜索</value>
   </data>
   <data name="SelectAServer" xml:space="preserve">
-    <value>Seleccioneu un servidor</value>
+    <value>选择服务器</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>DESCONNECTAT</value>
+    <value>断开连接</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>CONECTANT...</value>
+    <value>正在连接...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INICIALITZANT...</value>
+    <value>INITIALizing...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>Dispositius actius</value>
+    <value>设备激活</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>Totalment connectat</value>
+    <value>已连接</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
-    <value>DESCONEGUT</value>
+    <value>未知的</value>
   </data>
   <data name="MayTakeAMoment" xml:space="preserve">
-    <value>Això pot trigar un moment...</value>
+    <value>这可能需要一段时间...</value>
   </data>
   <data name="AppSettingsTitle" xml:space="preserve">
-    <value>Configuració de l'aplicació</value>
+    <value>应用程序设置</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>General</value>
+    <value>A. 概况</value>
   </data>
   <data name="LaunchWithWindows" xml:space="preserve">
-    <value>Inicia amb Windows (minimitzat)</value>
+    <value>使用 Windows 启动(最小化)</value>
   </data>
   <data name="StartMinimizedAlways" xml:space="preserve">
-    <value>Iniciar minimitzat (Sempre)</value>
+    <value>开始最小化(总是)</value>
   </data>
   <data name="AutoConnectLastServer" xml:space="preserve">
-    <value>Connectar-se automàticament al darrer servidor en iniciar-se</value>
+    <value>启动时自动连接到最后一个服务器</value>
   </data>
   <data name="AutoConnectToolTip" xml:space="preserve">
-    <value>Es reconnecta automàticament al darrer servidor i carrega el mapa.</value>
+    <value>自动重新连接到最后一个服务器并加载地图。</value>
   </data>
   <data name="Behavior" xml:space="preserve">
-    <value>Comportament</value>
+    <value>行为</value>
   </data>
   <data name="MinimizeToTray" xml:space="preserve">
-    <value>Minimitzar a la safata en lloc de tancar</value>
+    <value>最小化到托盘而不是关闭</value>
   </data>
   <data name="BackgroundTracking" xml:space="preserve">
-    <value>Activa el seguiment del reproductor en segon pla</value>
+    <value>启用背景播放器跟踪</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Manté el seguiment dels jugadors mitjançant BattleMetrics fins i tot quan està minimitzat.</value>
+    <value>即使在最小化时也通过战斗计跟踪玩家。</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
-    <value>Amaga la consola del sistema (Desfer-te del desordre)</value>
+    <value>隐藏系统控制台(去除)</value>
   </data>
   <data name="HideConsoleToolTip" xml:space="preserve">
-    <value>Amaga el panell inferior de registre/consola per estalviar espai al mapa.</value>
+    <value>隐藏底部日志/控制台面板以保存地图空间。</value>
   </data>
   <data name="MapSettings" xml:space="preserve">
-    <value>Configuració del mapa</value>
+    <value>地图设置</value>
   </data>
   <data name="AutoLoadShops" xml:space="preserve">
-    <value>Càrrega automàtica de botigues en connectar-se</value>
+    <value>连接时自动加载商店</value>
   </data>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
-    <value>Comença automàticament a consultar les botigues i a enviar alertes quan està connectat a un servidor.</value>
+    <value>连接到服务器时自动启动投票站和警报。</value>
   </data>
   <data name="Chat" xml:space="preserve">
-    <value>Xat</value>
+    <value>聊天</value>
   </data>
   <data name="ModifyChatAlerts" xml:space="preserve">
-    <value>Modificar les alertes de xat</value>
+    <value>修改聊天提醒</value>
   </data>
   <data name="ManageSteamAccountInfo" xml:space="preserve">
-    <value>Gestiona el teu compte de Steam vinculat a la finestra principal.</value>
+    <value>在主窗口管理您链接的 Steam 账户。</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Tanca</value>
+    <value>关闭</value>
   </data>
   <data name="IncomingAlarms" xml:space="preserve">
-    <value>ALARMES D'ENTRADA</value>
+    <value>INCOMING 闹钟</value>
   </data>
   <data name="Wipe" xml:space="preserve">
-    <value>Eixugar</value>
+    <value>擦除</value>
   </data>
   <data name="PlayersOnly" xml:space="preserve">
-    <value>Jugadors</value>
+    <value>玩家</value>
   </data>
   <data name="PlayersHeader" xml:space="preserve">
-    <value>Jugadors</value>
+    <value>玩家</value>
   </data>
   <data name="IWantToGetToolTip" xml:space="preserve">
-    <value>Vull obtenir (p. ex. petroli cru)</value>
+    <value>我想要GET(例如原油)</value>
   </data>
   <data name="ICanPayWithToolTip" xml:space="preserve">
-    <value>Vull PAGAR AMB (p. ex. Scrap)</value>
+    <value>我想要付费(例如废料)</value>
   </data>
   <data name="DeleteServerConfirmFormatted" xml:space="preserve">
-    <value>Estàs segur que vols eliminar el servidor "{0}"? Aquesta acció no es pot desfer.</value>
+    <value>您确定要删除服务器 "{0}吗？此操作无法撤消。</value>
   </data>
   <data name="PairingError" xml:space="preserve">
-    <value>Parellament: error</value>
+    <value>Pairing: error</value>
   </data>
   <data name="PairingStarting" xml:space="preserve">
-    <value>Parellant: s'inicia...</value>
+    <value>配对：开始...</value>
   </data>
   <data name="StartingPairingListener" xml:space="preserve">
-    <value>Iniciant la llista d'escoltadors de parell...</value>
+    <value>正在启动配对列表...</value>
   </data>
   <data name="LoggedIn" xml:space="preserve">
-    <value>Iniciat</value>
+    <value>已登录</value>
   </data>
   <data name="Stock" xml:space="preserve">
-    <value>Estoc</value>
+    <value>库存</value>
   </data>
   <data name="Price" xml:space="preserve">
-    <value>Preu</value>
+    <value>价格</value>
   </data>
   <data name="On" xml:space="preserve">
-    <value>ENCESA</value>
+    <value>开启</value>
   </data>
   <data name="Off" xml:space="preserve">
-    <value>Apagat</value>
+    <value>关闭</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>Actiu</value>
+    <value>激活</value>
   </data>
   <data name="Inactive" xml:space="preserve">
-    <value>Inactiu</value>
+    <value>未激活</value>
   </data>
   <data name="Group" xml:space="preserve">
-    <value>GRUP</value>
+    <value>群組</value>
   </data>
   <data name="ImportDevicesTitle" xml:space="preserve">
-    <value>Rust+ Escriptori – Dispositius d'importació</value>
+    <value>Rust+桌面——导入设备</value>
   </data>
   <data name="ImportDevicesHeader" xml:space="preserve">
-    <value>Importar dispositius</value>
+    <value>导入设备</value>
   </data>
   <data name="ImportDevicesSelectPrompt" xml:space="preserve">
-    <value>Seleccioneu quins dispositius voleu importar per a aquest servidor.</value>
+    <value>选择要导入此服务器的设备。</value>
   </data>
   <data name="CheckDeviceStatus" xml:space="preserve">
-    <value>Comproveu l'estat del dispositiu</value>
+    <value>检查设备状态</value>
   </data>
   <data name="ImportSelected" xml:space="preserve">
-    <value>Importació seleccionada</value>
+    <value>导入选中的</value>
   </data>
   <data name="BmShortcuts" xml:space="preserve">
-    <value>BM Atrevit</value>
+    <value>BM 快捷键</value>
   </data>
   <data name="PairingConfigDeleted" xml:space="preserve">
-    <value>Parell: configuració eliminada</value>
+    <value>配对：配置已删除</value>
   </data>
   <data name="TrayIconDefault" xml:space="preserve">
-    <value>Rastrejador d'escriptori Rust+</value>
+    <value>Rust+桌面跟踪器</value>
   </data>
   <data name="TrayIconTracking" xml:space="preserve">
-    <value>Rust+ Escriptori (Seguiment {0})</value>
+    <value>Rust+桌面(tracking {0})</value>
   </data>
   <data name="RenameGroup" xml:space="preserve">
-    <value>Canvia el nom del grup</value>
+    <value>重命名群组</value>
   </data>
   <data name="NewNameForGroup" xml:space="preserve">
-    <value>Nou nom per al grup:</value>
+    <value>组的新名称：</value>
   </data>
   <data name="NewNameForDevice" xml:space="preserve">
-    <value>Nou nom per a #{0}:</value>
+    <value>#{0}的新名称：</value>
   </data>
   <data name="EnterBattlemetricsIdFor" xml:space="preserve">
-    <value>Introduïu l'ID del servidor de Battlemetrics per a "{0}":</value>
+    <value>输入"{0}"的 Battlemetrics 服务器 ID：</value>
   </data>
   <data name="TrayTrackingStatus" xml:space="preserve">
-    <value>Seguiment: {0}</value>
+    <value>追踪: {0}</value>
   </data>
   <data name="TrayLastUpdate" xml:space="preserve">
-    <value>Darrera actualització: {0}</value>
+    <value>上次更新: {0}</value>
   </data>
   <data name="OpenRustPlusDesk" xml:space="preserve">
-    <value>Escriptori Open Rust+</value>
+    <value>打开 Rust+ 桌面</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>Sortida</value>
+    <value>退出</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Descripció</value>
+    <value>描述</value>
   </data>
   <data name="Camera" xml:space="preserve">
-    <value>Càmera</value>
+    <value>摄像头</value>
   </data>
   <data name="Alarms" xml:space="preserve">
-    <value>Alertes</value>
+    <value>闹钟</value>
   </data>
   <data name="Identifier" xml:space="preserve">
-    <value>Identificador:</value>
+    <value>Identifier:</value>
   </data>
   <data name="FPS" xml:space="preserve">
-    <value>FPS:</value>
+    <value>FPS：</value>
   </data>
   <data name="CameraFPSNote" xml:space="preserve">
-    <value>Nota: es recomana 2 fps, un FPS més alt probablement tallarà la vostra connexió amb el servidor.</value>
+    <value>注意：推荐使用2个fps。较高的 FPS 可能会关闭您与服务器的连接</value>
   </data>
   <data name="Pixel" xml:space="preserve">
-    <value>Píxel</value>
+    <value>像素</value>
   </data>
   <data name="Pen" xml:space="preserve">
-    <value>Retolador</value>
+    <value>彭文</value>
   </data>
   <data name="Line" xml:space="preserve">
-    <value>Línia</value>
+    <value>直线</value>
   </data>
   <data name="Square" xml:space="preserve">
-    <value>Quadrat</value>
+    <value>方形</value>
   </data>
   <data name="Circle" xml:space="preserve">
-    <value>Cercle</value>
+    <value>圆圈</value>
   </data>
   <data name="Thickness" xml:space="preserve">
-    <value>Gruix:</value>
+    <value>厚度：</value>
   </data>
   <data name="Opacity" xml:space="preserve">
-    <value>Opacitat:</value>
+    <value>不透明度：</value>
   </data>
   <data name="UploadPNG" xml:space="preserve">
-    <value>Pujar PNG</value>
+    <value>上传 PNG</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Clar</value>
+    <value>清空</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Desa</value>
+    <value>保存</value>
   </data>
   <data name="AssignGlobalHotkeys" xml:space="preserve">
-    <value>Assigna tecles de d'acció globals als Smart Switches. Diversos dispositius poden compartir una mateixa tecla de d'acció (s'alternaran seqüencialment).</value>
+    <value>将全局热键分配到智能开关。多个设备可以共享一个热键(将按顺序开关)。</value>
   </data>
   <data name="Device" xml:space="preserve">
-    <value>Dispositiu</value>
+    <value>设备</value>
   </data>
   <data name="EntityId" xml:space="preserve">
-    <value>Identificador d'entitat</value>
+    <value>EntityId</value>
   </data>
   <data name="Hotkey" xml:space="preserve">
-    <value>Tec de drecera</value>
+    <value>热键</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Establert</value>
+    <value>设置</value>
   </data>
   <data name="CloseDeactivate" xml:space="preserve">
-    <value>Tanca i desactiva</value>
+    <value>关闭并停用</value>
   </data>
   <data name="CloseActivate" xml:space="preserve">
-    <value>Tanca i activa</value>
+    <value>关闭并激活</value>
   </data>
   <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
-    <value>Actualització del manteniment, del minimapa i del seguiment</value>
+    <value>Upde, Minimap &amp; Track更新</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>Resum de característiques i ajustaments</value>
+    <value>功能摘要与调整</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
-    <value>No tornar a mostrar això</value>
+    <value>不再显示</value>
   </data>
   <data name="AwesomeLetsGo" xml:space="preserve">
-    <value>Genial, anem-hi!</value>
+    <value>太棒了，让我们开始吧！</value>
   </data>
   <data name="MiniMapSettings" xml:space="preserve">
-    <value>Configuració del mini mapa</value>
+    <value>小地图设置</value>
   </data>
   <data name="Shape" xml:space="preserve">
-    <value>Forma</value>
+    <value>形状</value>
   </data>
   <data name="Rectangle" xml:space="preserve">
-    <value>Rectangle</value>
+    <value>矩形</value>
   </data>
   <data name="OpacityLabel" xml:space="preserve">
-    <value>Opacitat: {0}%</value>
+    <value>透明度: {0}%</value>
   </data>
   <data name="SizeLabel" xml:space="preserve">
-    <value>Mida: {0}% (MAYUS+rueda del ratolí)</value>
+    <value>大小： {0}% (SHIFT+Mousewheel)</value>
   </data>
   <data name="ShowServerTime" xml:space="preserve">
-    <value>Mostra l'hora del servidor</value>
+    <value>显示服务器时间</value>
   </data>
   <data name="ServerInformation" xml:space="preserve">
-    <value>Informació del servidor</value>
+    <value>服务器信息</value>
   </data>
   <data name="NoDescriptionAvailable" xml:space="preserve">
-    <value>No hi ha cap descripció disponible.</value>
+    <value>无可用描述。</value>
   </data>
   <data name="CurrentVersion" xml:space="preserve">
-    <value>Versió actual: {0}</value>
+    <value>当前版本: {0}</value>
   </data>
   <data name="PatchNotesHeader" xml:space="preserve">
-    <value>Notes del pegat i historial de versions</value>
+    <value>补丁笔记和版本历史</value>
   </data>
   <data name="EnableChatCommands" xml:space="preserve">
-    <value>Activa les ordres de xat</value>
+    <value>启用聊天命令</value>
   </data>
   <data name="Prefix" xml:space="preserve">
-    <value>Prefix:</value>
+    <value>前缀：</value>
   </data>
   <data name="StandardCommands" xml:space="preserve">
-    <value>Comandes estàndard</value>
+    <value>标准命令</value>
   </data>
   <data name="Population" xml:space="preserve">
-    <value>Població:</value>
+    <value>人口：</value>
   </data>
   <data name="Time" xml:space="preserve">
-    <value>Hora:</value>
+    <value>时间：</value>
   </data>
   <data name="Promote" xml:space="preserve">
-    <value>Promoure:</value>
+    <value>促销：</value>
   </data>
   <data name="DeepSeaCommand" xml:space="preserve">
-    <value>Mar profunda:</value>
+    <value>深海：</value>
   </data>
   <data name="CargoShipCommand" xml:space="preserve">
-    <value>Vaixell de càrrega:</value>
+    <value>货运船：</value>
   </data>
   <data name="OilRigCommand" xml:space="preserve">
-    <value>Plataforma petroliera:</value>
+    <value>油雨量：</value>
   </data>
   <data name="PatrolHeliCommand" xml:space="preserve">
-    <value>Helikòpter de patrulla:</value>
+    <value>巡查直升机：</value>
   </data>
   <data name="TravellingVendorCommand" xml:space="preserve">
-    <value>Venedor itinerant:</value>
+    <value>旅行销售商：</value>
   </data>
   <data name="UpkeepDetails" xml:space="preserve">
-    <value>Detalls del manteniment:</value>
+    <value>更新详细信息：</value>
   </data>
   <data name="CommandDelay" xml:space="preserve">
-    <value>Retard del comandament:</value>
+    <value>命令延迟：</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>Llengua</value>
+    <value>语言</value>
   </data>
   <data name="SelectLanguage" xml:space="preserve">
-    <value>Selecciona l'idioma</value>
+    <value>选择语言</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>Canviar l'idioma requereix un reinici perquè tingui efecte complet.</value>
+    <value>更改语言需要重新启动才能完全生效。</value>
   </data>
   <data name="SmartSwitches" xml:space="preserve">
-    <value>Switches intel·ligents</value>
+    <value>智能开关</value>
   </data>
   <data name="UpkeepTcMonitors" xml:space="preserve">
-    <value>Manteniment (TC) Monitors</value>
+    <value>Upding (TC) Monitors</value>
   </data>
   <data name="NoTcMonitorsFound" xml:space="preserve">
-    <value>No s'han trobat monitors TC.</value>
+    <value>未找到TC 显示器。</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
-    <value>Desa i tanca</value>
+    <value>保存并关闭</value>
   </data>
   <data name="ChatMessagePlaceholder" xml:space="preserve">
-    <value>Missatge...</value>
+    <value>留言...</value>
   </data>
   <data name="ChatErrorPlaceholder" xml:space="preserve">
-    <value>Missatge d'error aquí</value>
+    <value>此处的错误信息</value>
   </data>
   <data name="HeliEventName" xml:space="preserve">
-    <value>Helikòpter de patrulla</value>
+    <value>巡逻直升机</value>
   </data>
   <data name="HeliActiveRunningFor" xml:space="preserve">
-    <value>Heli de patrulla actiu – en funcionament per a {0}</value>
+    <value>现役巡逻直升机 - 运行 {0}</value>
   </data>
   <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
-    <value>Connectat durant l'esdeveniment – hora d'aparició desconeguda</value>
+    <value>活动中期连接 - 生成时间未知</value>
   </data>
   <data name="HeliActiveSpawnUnknown" xml:space="preserve">
-    <value>Heli de patrulla actiu (hora d'aparició desconeguda)</value>
+    <value>巡逻直升机已启动（生成时间未知）</value>
   </data>
   <data name="HeliShotDownAgo" xml:space="preserve">
-    <value>L'helicòpter de patrulla va abatre l' {0} fa una sessió</value>
+    <value>巡逻直升机在本届会议 {0} 前被击落</value>
   </data>
   <data name="HeliLeftMapAgo" xml:space="preserve">
-    <value>L'helicòpter de patrulla va deixar el mapa fa {0} en aquesta sessió</value>
+    <value>Patrol Heli 于 {0} 前离开地图</value>
   </data>
   <data name="CargoDockedDepartsIn" xml:space="preserve">
-    <value>Amarrat a {0} – surt cap a les{1}</value>
+    <value>停靠 {0} - 出发时间 ~{1}</value>
   </data>
   <data name="HarborFallback" xml:space="preserve">
-    <value>port</value>
+    <value>港湾</value>
   </data>
   <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
-    <value>Ja atracat a Connect – hora de sortida desconeguda</value>
+    <value>已停靠在连接点上 - 出发时间未知</value>
   </data>
   <data name="CargoDockedDurationNotLearned" xml:space="preserve">
-    <value>Amarrat a {0} (durada de l'amarratge encara desconeguda)</value>
+    <value>停靠在 {0} （停靠时间尚未得知）</value>
   </data>
   <data name="CargoTimeRemainingOnMap" xml:space="preserve">
-    <value>Temps restant al mapa (des del renaixement)</value>
+    <value>地图上的剩余时间（从产卵开始）</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
-    <value>Connectat a mitja ruta – hora desconeguda</value>
+    <value>中途连接 - 时间未知</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
-    <value>Connectat a mitja ruta – hora desconeguda (ruta ~{0}m de desnivell total)</value>
+    <value>中途连接 - 时间不详（路线 ~{0}m 总计）</value>
   </data>
   <data name="CargoDespawnedAgo" xml:space="preserve">
-    <value>El vaixell de càrrega va desaparèixer fa {0}minuts i {1}segons en aquesta sessió</value>
+    <value>货船于本时段前 {0}m {1}s 绝迹</value>
   </data>
   <data name="VendorActiveRunningFor" xml:space="preserve">
-    <value>Venedor itinerant actiu – en funcionament per a {0}</value>
+    <value>活跃的旅行供应商 - 为 {0} 奔跑</value>
   </data>
   <data name="VendorActiveSpawnUnknown" xml:space="preserve">
-    <value>Vendedor itinerant actiu (hora d'aparició desconeguda)</value>
+    <value>活跃的旅行供应商（生成时间未知）</value>
   </data>
   <data name="VendorDespawnedAgo" xml:space="preserve">
-    <value>El venedor itinerant va desaparèixer fa {0} en aquesta sessió</value>
+    <value>旅行商贩已于 {0} 前失效</value>
   </data>
   <data name="DeepSeaActiveRunningFor" xml:space="preserve">
-    <value>Deep Sea actiu – participant en {0}</value>
+    <value>深海活跃分子 - 竞选 {0}</value>
   </data>
   <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
-    <value>Mar profunda activa (època de desova desconeguda)</value>
+    <value>深海活动（产卵时间未知）</value>
   </data>
   <data name="DeepSeaEndedAgo" xml:space="preserve">
-    <value>Deep Sea va acabar fa {0} en aquesta sessió</value>
+    <value>深海》于 {0} 前结束本届会议</value>
   </data>
   <data name="TimerHoursMinutes" xml:space="preserve">
     <value>{0}h {1:D2}m</value>
   </data>
   <data name="TimerMinutesSeconds" xml:space="preserve">
-    <value>{0}ms</value>
+    <value>{0}m {1:D2}s</value>
   </data>
   <data name="AgoHoursMinutes" xml:space="preserve">
     <value>{0}h {1}m</value>
@@ -1242,267 +1242,267 @@ Hauràs d'emparellar de nou en el proper inici.</value>
     <value>{0}s</value>
   </data>
   <data name="ChatCmdPopResponse" xml:space="preserve">
-    <value>{0} jugadors actualment en línia.{1}</value>
+    <value>{0} 目前在线的玩家{1}</value>
   </data>
   <data name="ChatCmdPopQueue" xml:space="preserve">
-    <value> Fila: {0} jugadors.</value>
+    <value> 队列： {0} 玩家。</value>
   </data>
   <data name="ChatCmdTimeResponse" xml:space="preserve">
-    <value>Hora actual del joc: {0}.</value>
+    <value>当前游戏时间： {0}。</value>
   </data>
   <data name="ChatCmdPromoteResponse" xml:space="preserve">
-    <value>{0} Va ser ascendit a líder.</value>
+    <value>{0} 晋升为领导。</value>
   </data>
   <data name="ChatCmdDeepSeaActive" xml:space="preserve">
-    <value>Deep Sea està actiu! Corren per a {0}.</value>
+    <value>Deep Sea 正在运行！竞选 {0}.</value>
   </data>
   <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
-    <value>Deep Sea està actualment actiu (connectat a mitja esdeveniment – hora d'aparició desconeguda).</value>
+    <value>深海目前处于活动状态（活动中期连接 - 产卵时间未知）。</value>
   </data>
   <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
-    <value>Deep Sea va acabar {0} minuts abans d'aquesta sessió.</value>
+    <value>深海 {0} 分钟前结束。</value>
   </data>
   <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
-    <value>Estat de l'esdeveniment Deep Sea desconegut (no s'ha vist aquesta sessió).</value>
+    <value>深海事件状态不明（本节没有看到）。</value>
   </data>
   <data name="ChatCmdCargoNotActive" xml:space="preserve">
-    <value>Vaixell de càrrega no actiu.</value>
+    <value>货船未启用。</value>
   </data>
   <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
-    <value>Vaixell de càrrega atracat a l' {0}. Salpa en uns {1} minuts.</value>
+    <value>货船停靠在 {0}。约 {1} 分钟后出发。</value>
   </data>
   <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
-    <value>Vaixell de càrrega atracat a l' {0} i preparant-se per a la sortida.</value>
+    <value>货船停靠在 {0} ，准备出发。</value>
   </data>
   <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
-    <value>Vaixell de càrrega atracat a l' {0} (hora de sortida desconeguda).</value>
+    <value>货船停靠在 {0} （出发时间不详）。</value>
   </data>
   <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
-    <value>Vaixell de càrrega actiu. Salpa en aproximadament {0} minuts.</value>
+    <value>货船已启动。约 {0} 分钟后出发。</value>
   </data>
   <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
-    <value>El vaixell de càrrega està actiu i es prepara per marxar aviat.</value>
+    <value>货船已启动，准备很快离开。</value>
   </data>
   <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
-    <value>Vaixell de càrrega actiu (la durada de la ruta encara no s'ha après per a aquest servidor).</value>
+    <value>货船处于活动状态（路由持续时间尚未学习到该服务器）。</value>
   </data>
   <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
-    <value>Vaixell de càrrega actiu (connectat després de la generació – temps restant desconegut).</value>
+    <value>货船激活（产卵后连接 - 剩余时间未知）。</value>
   </data>
   <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
-    <value>Vaixell de càrrega no actiu. Desaparegut fa {0} minuts en aquesta sessió.</value>
+    <value>货船未激活。 {0} 分钟前已解体。</value>
   </data>
   <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
-    <value>{0}: caixa a {1}m {2}s</value>
+    <value>{0}： {1}m {2}s 中的板条箱</value>
   </data>
   <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
-    <value>{0}: última crida {1}fa m anys</value>
+    <value>{0}：上次呼叫 {1}m 前</value>
   </data>
   <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
-    <value>{0}: no s'ha cridat en aquesta sessió</value>
+    <value>{0}：本届会议未调用</value>
   </data>
   <data name="ChatCmdHeliActive" xml:space="preserve">
-    <value>Patrol Heli està actiu! Corren per a {0}.</value>
+    <value>巡逻直升机正在运行！竞选 {0}.</value>
   </data>
   <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
-    <value>El Patrol Heli està actualment actiu (connectat a mitja esdeveniment – hora d'aparició desconeguda).</value>
+    <value>巡逻直升机目前处于活动状态（活动中期连接 - 生成时间未知）。</value>
   </data>
   <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
-    <value>Heli de patrulla no actiu. Fa {0} {1} en aquesta sessió.</value>
+    <value>巡逻直升机未激活。 {0} {1} 前。</value>
   </data>
   <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
-    <value>abatre</value>
+    <value>击落</value>
   </data>
   <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
-    <value>va deixar el mapa</value>
+    <value>离开地图</value>
   </data>
   <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
-    <value>Estat de l'esdeveniment de Patrol Heli desconegut (no vist en aquesta sessió).</value>
+    <value>巡逻直升机活动状态不明（本节未见）。</value>
   </data>
   <data name="ChatCmdVendorActive" xml:space="preserve">
-    <value>Travelling Vendor està actiu! Corren {0}.</value>
+    <value>Travelling Vendor 正在运行！竞选 {0}.</value>
   </data>
   <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
-    <value>El venedor itinerant està actualment actiu (connectat a mitja esdeveniment – hora d'aparició desconeguda).</value>
+    <value>旅行商贩当前处于活动状态（活动中期连接 - 生成时间未知）。</value>
   </data>
   <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
-    <value>Vendedor itinerant no actiu. Desaparegut fa {0} hores en aquesta sessió.</value>
+    <value>旅行供应商未激活。已于 {0} 前消亡。</value>
   </data>
   <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
-    <value>Estat de l'esdeveniment de venedor itinerant desconegut (no s'ha vist aquesta sessió).</value>
+    <value>旅行供应商事件状态未知（本环节未见）。</value>
   </data>
   <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
-    <value>No s'han assignat cap armari d'eines a les ordres de manteniment.</value>
+    <value>没有为维护命令映射工具箱。</value>
   </data>
   <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
-    <value>Manteniment a {0} TC: buit o caducat.</value>
+    <value>{0} TC 中的维护：空置或过期。</value>
   </data>
   <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
-    <value> Necessitat/24 h: {0}</value>
+    <value> 需求/24 小时： {0}.</value>
   </data>
   <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
-    <value>Manteniment a {0} TC: {1}</value>
+    <value>{0} TC 中的维护： {1}。</value>
   </data>
   <data name="ChatCmdUpkeepDays" xml:space="preserve">
-    <value>{0} dies</value>
+    <value>{0} 天数</value>
   </data>
   <data name="ChatCmdUpkeepHours" xml:space="preserve">
-    <value>{0} hores</value>
+    <value>{0} 时数</value>
   </data>
   <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
-    <value>{0} minuts</value>
+    <value>{0} 分钟</value>
   </data>
   <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
-    <value>{0}: Buid/caducat</value>
+    <value>{0}：空/已过期</value>
   </data>
   <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
-    <value>{0} {1}, {2}</value>
+    <value>{0}： {1}d, {2}h</value>
   </data>
   <data name="ChatCmdUpkeepHeader" xml:space="preserve">
-    <value>Manteniment: {0}</value>
+    <value>维护： {0}</value>
   </data>
   <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
-    <value>No s'han trobat o no s'han emparellat els monitors de l'armari d'eines Bound.</value>
+    <value>未找到绑定的工具柜显示器或未配对。</value>
   </data>
   <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
-    <value>Monitor de l'armari d'eines Bound no trobat o no emparellat.</value>
+    <value>未找到绑定的工具柜监视器或未配对。</value>
   </data>
   <data name="ChatCmdSwitchToggled" xml:space="preserve">
-    <value>{0} es va convertir en {1}</value>
+    <value>{0} {1}。</value>
   </data>
   <data name="ChatCmdSwitchStateOn" xml:space="preserve">
-    <value>ENCESA</value>
+    <value>关于</value>
   </data>
   <data name="ChatCmdSwitchStateOff" xml:space="preserve">
-    <value>Apagat</value>
+    <value>关闭</value>
   </data>
   <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
-    <value>Smart Switch vinculat no trobat o no emparellat.</value>
+    <value>未找到绑定的智能开关或未配对。</value>
   </data>
   <data name="MaterialWood" xml:space="preserve">
-    <value>Fusta</value>
+    <value>木材</value>
   </data>
   <data name="MaterialStone" xml:space="preserve">
-    <value>Pedra</value>
+    <value>石材</value>
   </data>
   <data name="MaterialMetal" xml:space="preserve">
-    <value>Metall</value>
+    <value>金属</value>
   </data>
   <data name="MaterialHQM" xml:space="preserve">
-    <value>HQM</value>
+    <value>总部</value>
   </data>
   <data name="SmallOilRig" xml:space="preserve">
-    <value>Petita plataforma petroliera</value>
+    <value>小型石油钻井平台</value>
   </data>
   <data name="LargeOilRig" xml:space="preserve">
-    <value>Gran plataforma petroliera</value>
+    <value>大型石油钻井平台</value>
   </data>
   <data name="ShopWord" xml:space="preserve">
-    <value>Botiga</value>
+    <value>商店</value>
   </data>
   <data name="EventCargoShip" xml:space="preserve">
-    <value>Vaixell de càrrega</value>
+    <value>货船</value>
   </data>
   <data name="EventTravellingVendor" xml:space="preserve">
-    <value>Venedor itinerant</value>
+    <value>旅行供应商</value>
   </data>
   <data name="EventCH47" xml:space="preserve">
     <value>CH47</value>
   </data>
   <data name="EventPatrolHelicopter" xml:space="preserve">
-    <value>Helikòpter de patrulla</value>
+    <value>巡逻直升机</value>
   </data>
   <data name="EventOilrigCrate" xml:space="preserve">
-    <value>Caixa de plataforma petroliera</value>
+    <value>石油钻井平台</value>
   </data>
   <data name="EventExplosion" xml:space="preserve">
-    <value>Explosió</value>
+    <value>爆炸</value>
   </data>
   <data name="EventBuildingBlocked" xml:space="preserve">
-    <value>Construint bloquejat</value>
+    <value>建筑受阻</value>
   </data>
   <data name="EventGeneric" xml:space="preserve">
-    <value>Esdeveniment</value>
+    <value>活动</value>
   </data>
   <data name="AlertOilRigTriggered" xml:space="preserve">
-    <value>[{0}] activat! La caixa s'obre a {1}.</value>
+    <value>[{0}] 已触发！箱子在 {1} 中解锁。</value>
   </data>
   <data name="AlertAlarmTriggered" xml:space="preserve">
-    <value>ALARMA: {0} activat!</value>
+    <value>警报： {0} 已触发！</value>
   </data>
   <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
-    <value>[{0}] La caixa s'obrirà en 10 minuts!</value>
+    <value>[{0}] 10 分钟后箱子解锁！</value>
   </data>
   <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
-    <value>[{0}] La caixa s'obrirà en 5 minuts!</value>
+    <value>[{0}] 5 分钟后箱子解锁！</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Deep Sea ja està disponible.</value>
+    <value>深海已启动</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
-    <value>Botiga nova {0} [{1}]: {2}</value>
+    <value>新店 {0} [{1}]: {2}</value>
   </data>
   <data name="AlertSuspiciousShop" xml:space="preserve">
-    <value>Botiga sospitosa {0} [{1}] estava en línia {2}s, venuda {3}</value>
+    <value>可疑商店 {0} [{1}] 在线 {2}s，出售 {3}</value>
   </data>
   <data name="AlertCargoSpawned" xml:space="preserve">
-    <value>S'ha generat un vaixell de càrrega. {0}</value>
+    <value>货船产生 {0}</value>
   </data>
   <data name="CargoFarOutAtSea" xml:space="preserve">
-    <value>lluny al mar (a prop de {0})</value>
+    <value>远洋 (近 {0})</value>
   </data>
   <data name="AlertCargoDocked" xml:space="preserve">
-    <value>Vaixell de càrrega atracat a {0} ({1})</value>
+    <value>货船停靠在 {0} ({1})</value>
   </data>
   <data name="AlertCargoExpectedDock" xml:space="preserve">
-    <value>El vaixell de càrrega s'espera que atraqui a l' {0} ({1}) en uns 5 minuts.</value>
+    <value>货船预计将在大约 5 分钟后停靠 {0} ({1})。</value>
   </data>
   <data name="AlertCargoDeparting" xml:space="preserve">
-    <value>Vaixell de càrrega sortint de {0} en 5 minuts ({1})</value>
+    <value>货船 5 分钟后从 {0} 出发 ({1})</value>
   </data>
   <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
-    <value>S'ha detectat un error per retard del servidor — l'helicòpter encara és al mapa a {0}</value>
+    <value>由于服务器延迟而检测到崩溃 - Heli 仍在地图上 {0}</value>
   </data>
   <data name="AlertEventSpawned" xml:space="preserve">
-    <value>{0} generat a {1}</value>
+    <value>{0} 在 {1}</value>
   </data>
   <data name="AlertHeliShotDown" xml:space="preserve">
-    <value>Un helicòpter de patrulla abatut a {0}</value>
+    <value>巡逻直升机在 {0} 被击落</value>
   </data>
   <data name="Unknown" xml:space="preserve">
-    <value>desconegut</value>
+    <value>未知</value>
   </data>
   <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
-    <value>{0} es va connectar a {1}</value>
+    <value>{0} 上线 @ {1}</value>
   </data>
   <data name="AlertPlayerOffline" xml:space="preserve">
-    <value>{0} es va desconnectar</value>
+    <value>{0} 下线</value>
   </data>
   <data name="AlertPlayerDied" xml:space="preserve">
-    <value>{0} va morir a {1}</value>
+    <value>{0} 死于 {1}</value>
   </data>
   <data name="AlertPlayerRespawned" xml:space="preserve">
-    <value>{0} ha reaparegut a {1}</value>
+    <value>{0} 重生 @ {1}</value>
   </data>
   <data name="AlertTrackingOnline" xml:space="preserve">
-    <value>[Seguiment] {0}{1} ara en línia</value>
+    <value>[Tracking] {0}{1} 已上线</value>
   </data>
   <data name="AlertTrackingOffline" xml:space="preserve">
-    <value>[Seguiment] {0}{1} ara està desconnectat</value>
+    <value>[Tracking] {0}{1} 现在处于脱机状态</value>
   </data>
   <data name="AlertTrackingRenamed" xml:space="preserve">
-    <value>[Seguiment] {0}{1} rebatejat com a {2}!</value>
+    <value>[跟踪] {0}{1} 更名为 {2}！</value>
   </data>
   <data name="AlertShopSells" xml:space="preserve">
-    <value>ven</value>
+    <value>销售</value>
   </data>
   <data name="AlertShopBuys" xml:space="preserve">
-    <value>compren</value>
+    <value>购买</value>
   </data>
   <data name="AlertShopLabelFallback" xml:space="preserve">
-    <value>Botiga</value>
+    <value>商店</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
-    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) per {6} {7}</value>
+    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) for {6} {7}</value>
   </data>
 </root>

@@ -195,6 +195,111 @@
   <data name="PleaseWait" xml:space="preserve">
     <value>Bitte warten …</value>
   </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>Skift Serverområde</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>Streamer Tilstand</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>Skalering:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>Aktiver Streamer Mode (Forkorter Navne)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>Forkorter Steam-navne og -id'er for at beskytte privatlivets fred under streams. Auto-skjuler konsol og serverliste.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>Ingen position tilgængelig (offline eller ikke spawnet).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>Gem Gruppe</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>Please enter a group name. (Automatic Copy)</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>Beskeden kunne ikke sendes. Prøv igen. (Tjek om du er i et team!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Fejl: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>Tildel Gruppe</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>Gruppeindstillinger: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Gruppens Navn</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>Indtast gruppenavn...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>Gruppe Farve</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Gem Ændringer</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>Spiller Aktivitetsanalyse &amp; Prognoser</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>Spillere</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>Streamer- Tilstand Og Mini Korteftersyn</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>Streamer Tilstand</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>Spiller Markør Skalering</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>Mini Kort Polsk</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>Handling Påkrævet:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics Fjernelse:</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>Overtrædelse Af Spillersporingssystemet</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>Hvordan Spiller Sporing Virker</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>Føj spillere til tracker for at starte sporing</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>Sporing Aktiv</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>Sporing Tomgang</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>Filtrer spillere...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>Opret forbindelse til en server for at indlæse listen over spillere</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Henter spillere via Steam-forespørgsel...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>Spor ID</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>Manuel Spor Navn...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Ingen enheder.</value>
+  </data>
   <data name="NoTokenRegistered" xml:space="preserve">
     <value>Intet token registreret</value>
   </data>
@@ -1051,5 +1156,353 @@ Download og installer nu?</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
     <value>Gem Og Luk</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Besked...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Fejlmeddelelse her</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Patruljehelikopter</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Patruljeheli aktiv - kører for {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Forbundet midt i begivenheden - spawn-tidspunkt ukendt</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Patrol Heli aktiv (spawn-tidspunkt ukendt)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Patruljeheli skudt ned {0} for denne session</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Patrol Heli forlod kortet {0} for denne session</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Lagt til kaj på {0} - afgår i ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>havn</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Allerede dokket på connect - afgangstidspunkt ukendt</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Dokket på {0} (dokningens varighed er endnu ikke kendt)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Resterende tid på kortet (fra spawn)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Forbundet midt på ruten - tidspunkt ukendt</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Forbundet midt på ruten - tid ukendt (rute ~{0}m i alt)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Cargo Ship despawned {0}m {1}s ago this session</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Rejsende sælger aktiv - løber for {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Rejsende sælger aktiv (spawn-tidspunkt ukendt)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor despawnede for {0} siden denne session</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea active - løber for {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Deep Sea active (gydetidspunkt ukendt)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea sluttede for {0} siden denne session</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} spillere, der er online i øjeblikket.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Kø: {0} spillere.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Aktuel tid i spillet: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} blev forfremmet til leder.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea er aktiv! Kører for {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea er i øjeblikket aktiv (forbundet midt i begivenheden - yngletidspunkt ukendt).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea sluttede for {0} minutter siden i denne session.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Status for Deep Sea-begivenhed ukendt (ikke set i denne session).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Fragtskib ikke aktivt.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Fragtskib lagt til kaj på {0}. Afgår om ca. {1} minutter.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Fragtskib lagt til kaj på {0} og gør klar til afgang.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Fragtskib lagt til kaj på {0} (afgangstidspunkt ukendt).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Fragtskib aktivt. Afgår om ca. {0} minutter.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Fragtskib aktivt og klar til at sejle snart.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Cargo Ship aktiv (rutens varighed er endnu ikke lært for denne server).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Cargo Ship aktiv (forbundet efter spawn - resterende tid ukendt).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Fragtskib ikke aktivt. Despawnede for {0} minutter siden i denne session.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: kasse i {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: sidst ringet {1}m siden</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: ikke kaldt i denne session</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Patrulje Heli er aktiv! Kører for {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Patrol Heli er i øjeblikket aktiv (tilsluttet midt i begivenheden - spawn-tidspunkt ukendt).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Patrol Heli er ikke aktiv. Det var {0} {1} for denne session.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>skudt ned</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>forlod kortet</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Status for Patrol Heli-event ukendt (ikke set i denne session).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Travelling Vendor er aktiv! Kører for {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Travelling Vendor er i øjeblikket aktiv (forbundet midt i begivenheden - spawn-tidspunkt ukendt).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Rejsende sælger er ikke aktiv. Despawnede for {0} siden i denne session.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Travelling Vendor event status ukendt (ikke set i denne session).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Der er ikke kortlagt nogen værktøjsskabe til vedligeholdelseskommandoer.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Upkeep i {0} TC: Tom eller udløbet.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Behov/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Vedligeholdelse i {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} dage</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} timer</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} minutter</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Tom/udløbet</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Vedligeholdelse: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Bound Tool Cupboard-skærme ikke fundet eller ikke parret.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Bound Tool Cupboard-skærm ikke fundet eller ikke parret.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} vendte {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Bound Smart Switch ikke fundet eller ikke parret.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Træ</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Sten</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Metal</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Lille olierig</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Stor olierig</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Butik</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Fragtskib</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Rejsende sælger</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Patruljehelikopter</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Oilrig-kasse</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Eksplosion</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Bygning blokeret</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Begivenhed</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] udløst! Kassen låses op i {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} udløst!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Kassen låses op om 10 minutter!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Kassen låses op om 5 minutter!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Deep Sea er oppe</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Ny butik {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Mistænkelig butik {0} [{1}] var online {2}s, solgte {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Fragtskib skabte {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>langt ude på havet (nær {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Fragtskib lagt til kaj på {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Fragtskibet forventes at lægge til på {0} ({1}) om ca. 5 minutter.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Fragtskib med afgang fra {0} om 5 minutter ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Crash opdaget på grund af serverforsinkelse - Heli er stadig på kortet på {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} spawnet ind på {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Patruljehelikopter skudt ned på {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>ukendt</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} kom online på {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} gik offline</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} døde på {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} genopstået på {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Tracking] {0}{1} er nu ONLINE</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Tracking] {0}{1} er nu OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Sporing] {0}{1} omdøbt til {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>sælger</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>køber</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Butik</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (Lager {5}) for {6} {7}</value>
   </data>
 </root>

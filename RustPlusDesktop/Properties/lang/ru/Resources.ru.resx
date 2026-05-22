@@ -195,6 +195,111 @@
   <data name="PleaseWait" xml:space="preserve">
     <value>Bitte warten …</value>
   </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>Переключить область сервера</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>Режим "Стример"</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>Масштаб:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>Включить режим "Стример" (Сокращения имена)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>Сокращает имена и ID Steam для защиты конфиденциальности во время потоков. Автоскрытие консоли и списка серверов.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>Нет доступной позиции (оффлайн или не создан).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>Сохранить Группу</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>Пожалуйста, введите название группы.</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>Сообщение не может быть отправлено. Пожалуйста, попробуйте еще раз. (Убедитесь, что вы в команде!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Ошибка: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>Назначить группу</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>Настройки группы: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Название группы</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>Введите название группы...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>Цвет группы</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Сохранить изменения</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>Аналитика активности игроков и прогнозы</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>Игроки</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>Режим стримера и мини-карта</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>Режим "Стример"</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>Масштабирование маркеров игрока</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>Мини-карта Польша</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>Требуется действие:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Удаление метрик битвы:</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>Система отслеживания Игроков Overhaul</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>Как работает отслеживание игроков</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>Добавить игроков в трекер, чтобы начать отслеживание</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>Отслеживание Активно</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>Отслеживание простоя</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>Фильтровать игроков...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>Подключиться к серверу для загрузки списка игроков</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Получение игроков через Steam Query...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>ID трека</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>Имя маршрута вручную...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Нет устройств.</value>
+  </data>
   <data name="NoTokenRegistered" xml:space="preserve">
     <value>Маркер не зарегистрирован</value>
   </data>
@@ -242,8 +347,8 @@
     <value>Reset pairing</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>Delete existing pairing config?
-You will need to pair again on next start.</value>
+    <value>Удалить существующую конфигурацию сопряжения?
+При следующем запуске вам нужно будет снова выполнить сопряжение.</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
     <value>Reset + Listen</value>
@@ -1051,5 +1156,353 @@ You will need to pair again on next start.</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
     <value>Сохранить и закрыть</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Сообщение...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Сообщение об ошибке здесь</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Патрульный вертолет</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Патрульный вертолет активен - работает на {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Подключен в середине события - время спавна неизвестно</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Патрульный вертолет активен (время спавна неизвестно)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Патрульный вертолет сбит {0} назад в этой сессии.</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Патрульный Хели покинул карту {0} назад в этой сессии.</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Причалили на {0} - отплытие в ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>гавань</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Уже пришвартован на коннекте - время отправления неизвестно</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Пришвартован на {0} (продолжительность стоянки пока не известна)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Время, оставшееся на карте (от спауна)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Подключился на середине маршрута - время неизвестно</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Подключился на середине маршрута - время неизвестно (маршрут ~{0}м всего)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Грузовое судно развоплотилось {0}m {1}s ago this session</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Путешествующий вендор активен - бежит на {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Странствующий вендор активен (время спавна неизвестно)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Странствующий торговец депаунировался {0} назад в этой сессии</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Глубоководная активность - бег на {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Глубоководный активный (время нереста неизвестно)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Глубокое море закончилось {0} назад на этом сеансе.</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} игроков, которые в настоящее время находятся онлайн.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Очередь: {0} игроков.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Текущее игровое время: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} был повышен до руководителя.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea активен! Бег на {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea в настоящее время активен (подключен в середине события - время спавна неизвестно).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea закончился {0} минут назад.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Статус события "Глубокое море" неизвестен (в этой сессии его не видели).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Грузовой корабль не активен.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Грузовое судно причаливает на {0}. Отправляется примерно через {1} минут.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Грузовое судно причалило к {0} и готовится к отплытию.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Грузовое судно причалило к {0} (время отправления неизвестно).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Грузовой корабль активен. Отправляется примерно через {0} минут.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Грузовой корабль активен и готовится к скорому отплытию.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Грузовой корабль активен (длительность маршрута еще не изучена для этого сервера).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Грузовой корабль активен (подключается после спавна - оставшееся время неизвестно).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Грузовой корабль не активен. Разрушен {0} минут назад в этой сессии.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: ящик в {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: последний звонок {1}м назад</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: не вызывается в эту сессию</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Патрульный Heli активен! Бег на {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Патрульный Хели в настоящее время активен (подключен в середине события - время спавна неизвестно).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Патрульный Heli не активен. Это было {0} {1} назад в этой сессии.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>сбитый</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>покинул карту</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Статус события Patrol Heli неизвестен (не был замечен в этой сессии).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Путешествующий вендор активен! Баллотируемся на {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Странствующий вендор в настоящее время активен (подключен в середине события - время спавна неизвестно).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Странствующий вендор не активен. Отключился {0} назад в этой сессии.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Статус события Travelling Vendor неизвестен (не был замечен в этой сессии).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Для команд обслуживания не отображаются шкафы с инструментами.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Содержание в {0} TC: пустой или просроченный.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Потребность/24 часа: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Поддержание в {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} дней</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} часы</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} минут</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Пустой/истекший</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Содержание: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Мониторы Bound Tool Cupboard не найдены или не сопряжены.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Монитор Bound Tool Cupboard не найден или не сопряжен.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} развернуть {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>НА</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Bound Smart Switch не найден или не сопряжен.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Дерево</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Камень</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Металл</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Малая нефтяная буровая установка</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Большая нефтяная вышка</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Магазин</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Грузовое судно</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Путешествующий продавец</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Патрульный вертолет</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Ящик Oilrig</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Взрыв</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Заблокированное здание</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Событие</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] Сработало! Ящик разблокируется в {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} сработал!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Крейт разблокируется за 10 минут!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Крейт разблокируется за 5 минут!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Глубоководный запуск</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Новый магазин {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Подозрительный магазин {0} [{1}] был онлайн {2}с, продавал {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Грузовой корабль породил {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>далеко в море (около {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Грузовой корабль причалил к {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Грузовое судно должно причалить к {0} ({1}) примерно через 5 минут.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Грузовое судно отправляется с {0} через 5 минут ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Обнаружен крах из-за задержки сервера - Хели все еще на карте {0}.</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} зашел на {1}.</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Патрульный вертолет сбит на {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>неизвестно</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} появился на сайте {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} ушла в оффлайн</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} умер {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} возрождается @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Слежение] {0}{1} теперь ONLINE</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Слежение] {0}{1} теперь OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Слежение] {0}{1} переименован в {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>продает</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>покупает</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Магазин</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (Запас {5}) для {6} {7}</value>
   </data>
 </root>

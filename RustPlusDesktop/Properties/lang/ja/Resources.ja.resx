@@ -190,10 +190,115 @@
     <value>Relink Battlemetrics ID…</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>Delete server…</value>
+    <value>サーバーの削除…</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
     <value>Bitte warten …</value>
+  </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>サーバーエリアの切り替え</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>配信モード</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>スケール:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>配信モードを有効にする (名前を短縮)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>ストリーム中のプライバシーを保護するためにSteam名とIDを省略します。コンソールとサーバーリストを自動的に非表示にします。</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>ポジションがありません（オフラインまたはスポーンされていません）。</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>グループを保存</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>グループ名を入力してください。</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>メッセージを送信できませんでした。もう一度やり直してください（チームにいるか確認してください）</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>エラー: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>グループを割り当てる</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>グループ設定: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>グループ名</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>グループ名を入力...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>グループの色</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>変更を保存</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>プレイヤーのアクティビティ分析と予測</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>プレイヤー</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>ストリーマーモードとミニマップのオーバーホール</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>配信モード</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>プレイヤーマーカーのスケール</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>ポーランドのミニマップ</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>アクションが必要:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics Removal:</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>プレイヤー追跡システムのオーバーホール</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>プレイヤー追跡の仕組み</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>トラッカーにプレイヤーを追加してトラッキングを開始</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>トラッキング有効</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>待機中</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>プレイヤーをフィルター...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>サーバーに接続してプレイヤーリストを読み込みます。</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Steamクエリでプレイヤーを取得しています...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>トラック ID</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>手動トラック名...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>デバイスがありません。</value>
   </data>
   <data name="NoTokenRegistered" xml:space="preserve">
     <value>トークンが登録されていません</value>
@@ -202,7 +307,7 @@
     <value>トークンの有効期限が切れました！</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>Expires in {0} days</value>
+    <value>有効期限： {0} 日</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
     <value>夜まで {0}</value>
@@ -217,7 +322,7 @@
     <value>{0}をフォロー</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>Pairing: listening…</value>
+    <value>ペアリング：リスニング…</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
     <value>ペアリング: 停止</value>
@@ -306,7 +411,7 @@
     <value>Relink Battlemetrics ID…</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>Delete server…</value>
+    <value>サーバーの削除…</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
     <value>右クリックして名前を変更</value>
@@ -1051,5 +1156,353 @@
   </data>
   <data name="SaveAndClose" xml:space="preserve">
     <value>保存して閉じる</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>メッセージ</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>エラーメッセージはこちら</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>パトロール・ヘリ</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>パトロールヘリが活躍 - {0} のために走る</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>イベント途中で接続 - スポーン時間不明</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>パトロールヘリ活動中（スポーン時間不明）</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>{0} このセッションの前に撃墜されたパトロール・ヘリ</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>パトロール・ヘリがマップを離れた {0} このセッションの前</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>{0} でドック入り - ～{1} で出発。</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>港</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>コネクトにドッキング済み - 出発時刻は不明</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>{0} にドッキング（ドック時間は未確認）</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>マップでの残り時間（スポーンから）</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>ルート途中で接続 - 時刻不明</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>ルート半ばで接続-時間は不明（ルート～合計{0}m）</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>カーゴシップがデスポーンした {0}m {1}s ago this session</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>トラベリング・ベンダー - {0} のために走る</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>トラベリングベンダー活動中（スポーン時間不明）</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>トラベリング・ヴェンダーがデスポーン {0} このセッションの前</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>ディープシー・アクティブ - {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>ディープシー・アクティブ（スポーン時間不明）</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>ディープ・シー {0} 今セッション終了</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} 現在オンライン中の選手{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> キュー： {0} 選手。</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>現在の試合時間： {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} がリーダーに昇格した。</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>深海はアクティブ！ {0}。</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>深海は現在アクティブである（イベント中盤に接続-スポーン時間は不明）。</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>深海はこのセッションで {0} 分前に終了した。</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>深海のイベント状況は不明（このセッションは未見）。</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>カーゴ・シップは活動していない。</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>貨物船は {0}に停泊。約 {1} 分後に出発。</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>{0} 、出港準備中の貨物船。</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>{0} （出港時間不明）にドック入りした貨物船。</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>貨物船活躍中。約 {0} 分後に出発。</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>貨物船は活動中で、間もなく出航する準備をしている。</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>貨物船がアクティブ（このサーバーのルート期間はまだ学習されていない）。</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>カーゴシップがアクティブになる（スポーン後に接続-残り時間は不明）。</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>カーゴシップはアクティブではありません。 {0} 分前にデスポーンした。</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: 木箱 {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}最後に電話したのは {1}m前</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}このセッションでは呼ばれなかった</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>パトロールヘリが活躍！ {0}。</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>パトロール・ヘリは現在活動中（イベント途中で接続、スポーン時間は不明）。</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>パトロールヘリはアクティブではない。このセッションは {0} {1}。</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>撃墜</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>地図を離れる</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>パトロールヘリのイベント状況は不明（このセッションは未確認）。</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>トラベリング・ベンダーが活動中！ {0}。</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Travelelling Vendorは現在活動中（イベント途中で接続、スポーン時間は不明）。</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>トラベリング・ベンダーはアクティブではない。 {0} このセッションでデスポーンした。</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>トラベリングベンダーのイベント状況は不明（このセッションは未見）。</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>アップキープコマンドのためのツール・カップボードはマッピングされていない。</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>{0} TCのアップキープ：空か期限切れ。</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Need/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>{0} TCでのアップキープ： {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} 日</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} 時間</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} 議事録</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}空／期限切れ</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>アップキープ： {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>バウンドツールカップボードのモニターが見つからないか、ペアリングされていない。</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>バウンドツールカップボードのモニターが見つからないか、ペアリングされていません。</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} {1} になった。</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>オン</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>オフ</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>スマートスイッチが見つからないか、ペアリングされていません。</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>木材</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>ストーン</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>メタル</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>量子力学</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>小型石油掘削装置</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>大型石油掘削装置</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>ショップ</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>貨物船</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>旅行業者</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>パトロール・ヘリコプター</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>オイルリグ・クレート</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>爆発</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>ビルディング・ブロック</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>イベント</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] がトリガーされた！クレートは {1} でアンロックされます。</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0}！</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] クレートは10分でアンロックされる！</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] クレートは5分でアンロックされる！</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>深海がアップ</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>新店舗 {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>怪しい店 {0} [{1}] オンラインだった {2}s, 販売 {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>カーゴシップのスポーン {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>はるか沖合 ( {0} 近く)</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>{0} に停泊する貨物船 ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>貨物船は {0} ({1}) に約5分で接岸する予定。</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>{0} から5分で出発する貨物船 ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>サーバーのラグによりクラッシュを検知 - ヘリはまだマップ上にいる {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>{0} で撃墜されたパトロール・ヘリ</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>不明</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} オフライン</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[トラッキング] {0}{1} がオンラインになった。</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[トラッキング] {0}{1} は現在オフラインです。</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[トラッキング] {0}{1} を {2} に改名！</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>販売</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>おみやげ</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>ショップ</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} ×{3} {4} （在庫 {5}） for {6} {7}</value>
   </data>
 </root>
