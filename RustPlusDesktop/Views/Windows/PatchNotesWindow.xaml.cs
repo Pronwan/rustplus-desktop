@@ -72,6 +72,7 @@ namespace RustPlusDesk.Views
                     string text = "";
                     if (element is TextBlock tb) text = tb.Text;
                     else if (element is Run run) text = run.Text;
+                    else if (element is GalleryItem item) text = item.Description;
 
                     if (string.IsNullOrWhiteSpace(text)) continue;
 
@@ -82,6 +83,11 @@ namespace RustPlusDesk.Views
                         {
                             if (element is TextBlock tbElem) tbElem.Text = translated;
                             else if (element is Run runElem) runElem.Text = translated;
+                            else if (element is GalleryItem itemElem)
+                            {
+                                itemElem.Description = translated;
+                                itemElem.ParentGallery?.UpdateGallery();
+                            }
                         });
                     }));
                 }
@@ -127,6 +133,18 @@ namespace RustPlusDesk.Views
         private void FindTextElements(DependencyObject obj, List<object> elements)
         {
             if (obj == null) return;
+
+            if (obj is ImageGallery gallery)
+            {
+                foreach (var item in gallery.Items)
+                {
+                    if (item != null)
+                    {
+                        elements.Add(item);
+                    }
+                }
+                return; // Do not search inside the gallery's visual tree
+            }
 
             if (obj is TextBlock tb)
             {

@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:views="clr-namespace:RustPlusDesk.Views"
         Title="{DynamicResource PatchNotes}"
         Width="720" Height="620"
         Background="{DynamicResource AppBg}"
@@ -69,9 +70,16 @@
                             </TextBlock>
                             
                             <TextBlock Text="&#x2022; Robust Storage Monitors &amp; TC Upkeep" FontWeight="Bold" Margin="0,0,0,4"/>
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,12">
                                 Fixed the issue where storage monitors and Tool Cupboards showed "0 items" or failed to refresh on startup and soft-connection. Upkeep snapshots are queried directly from the API and synced immediately in the UI.
                             </TextBlock>
+
+                            <!-- v5.3.0 Dynamic Image Gallery -->
+                            <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/beta-5.1_1.png" Description="Modern sidebar overlay integrating shop tools and Profit Trades."/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/beta-5.1_6.png" Description="Advanced TC Upkeep reports in a unified overview."/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/Notifications.png" Description="Sleek and highly customisable Chat Alerts and smart notification preferences."/>
+                            </views:ImageGallery>
                         </StackPanel>
                     </Border>
 
