@@ -58,942 +58,942 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppTitle" xml:space="preserve">
-    <value>format@@0 RUST+ DESKTOP</value>
+    <value>ПОСЛЕДНИЙ + РАБОТАНИЕ</value>
   </data>
   <data name="SteamAccount" xml:space="preserve">
-    <value>Conta Steam</value>
+    <value>Аккаунт Steam</value>
   </data>
   <data name="NotLoggedIn" xml:space="preserve">
-    <value>Não conectado</value>
+    <value>Вы не вошли</value>
   </data>
   <data name="CheckForUpdates" xml:space="preserve">
-    <value>Procurar por atualizações</value>
+    <value>Проверить обновления</value>
   </data>
   <data name="Downloading" xml:space="preserve">
-    <value>Baixando...</value>
+    <value>Загрузка...</value>
   </data>
   <data name="JoinDiscord" xml:space="preserve">
-    <value>Junte-se ao Discord</value>
+    <value>Присоединиться к Discord</value>
   </data>
   <data name="PatchNotes" xml:space="preserve">
-    <value>Notas de Atualização</value>
+    <value>Заметки</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Confirgurações</value>
+    <value>Настройки</value>
   </data>
   <data name="PairedServers" xml:space="preserve">
-    <value>SERVIDORES PAIXOS</value>
+    <value>ОПЛАТНЫЕ СЕРВЕРЫ</value>
   </data>
   <data name="NoServersPaired" xml:space="preserve">
-    <value>Nenhum servidor pareado ainda</value>
+    <value>Серверы еще не соединены</value>
   </data>
   <data name="PairingMaintenance" xml:space="preserve">
-    <value>PAIRANDO &amp; MAINTENÂNCIA</value>
+    <value>ОПЛАТА И ЗАРАБОТКА</value>
   </data>
   <data name="PairingIdle" xml:space="preserve">
     <value>Pairing: idle</value>
   </data>
   <data name="RightClickOptions" xml:space="preserve">
-    <value>Clique direito para opções</value>
+    <value>Щелкните правой кнопкой мыши для настроек</value>
   </data>
   <data name="TrackingActive" xml:space="preserve">
-    <value>Rastreamento ativo</value>
+    <value>Отслеживание Активно</value>
   </data>
   <data name="LastPull" xml:space="preserve">
-    <value>Último pull: {0}</value>
+    <value>Последний вытягивание: {0}</value>
   </data>
   <data name="Donate" xml:space="preserve">
-    <value>Doar</value>
+    <value>Пожертвовать</value>
   </data>
   <data name="SupportDeveloper" xml:space="preserve">
-    <value>Apoie o desenvolvedor</value>
+    <value>Поддержать разработчика</value>
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
   </data>
   <data name="ResetWebSocket" xml:space="preserve">
-    <value>Redefinir a conexão WebSocket</value>
+    <value>Сброс соединения WebSocket</value>
   </data>
   <data name="Players" xml:space="preserve">
-    <value>Jogadores:</value>
+    <value>Игроки:</value>
   </data>
   <data name="ShowOnlinePlayers" xml:space="preserve">
-    <value>Mostrar Aba de Jogadores Online</value>
+    <value>Показать вкладку онлайн игроков</value>
   </data>
   <data name="Queue" xml:space="preserve">
-    <value>Fila:</value>
+    <value>Очередь:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>Dispositivos</value>
+    <value>Устройства</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
-    <value>Atalhos</value>
+    <value>Горячие клавиши</value>
   </data>
   <data name="ImportDevices" xml:space="preserve">
-    <value>Importar dispositivos de colegas de equipe</value>
+    <value>Импортировать устройства из союзников</value>
   </data>
   <data name="ExportDevices" xml:space="preserve">
-    <value>Exportar dispositivos para colegas de equipe</value>
+    <value>Экспорт устройств командам</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>atualizar</value>
+    <value>Обновить</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>excluir</value>
+    <value>Удалить</value>
   </data>
   <data name="DeleteMissingOnly" xml:space="preserve">
-    <value>Você só pode excluir dispositivos faltantes</value>
+    <value>Вы можете удалить только недостающие устройства</value>
   </data>
   <data name="RenameDevice" xml:space="preserve">
-    <value>Renomear dispositivo</value>
+    <value>Переименовать устройство</value>
   </data>
   <data name="Online" xml:space="preserve">
-    <value>ONLINE</value>
+    <value>ОНЛАЙН</value>
   </data>
   <data name="Offline" xml:space="preserve">
-    <value>DESLIGAR</value>
+    <value>ОФЛАЙН</value>
   </data>
   <data name="Connect" xml:space="preserve">
-    <value>Conectar</value>
+    <value>Подключиться</value>
   </data>
   <data name="FullConnect" xml:space="preserve">
-    <value>Conexão completa</value>
+    <value>Полное подключение</value>
   </data>
   <data name="LoadMapTeam" xml:space="preserve">
-    <value>Carregar Mapa &amp; Equipe</value>
+    <value>Загрузить карту и команду</value>
   </data>
   <data name="Disconnect" xml:space="preserve">
-    <value>Desconectar</value>
+    <value>Отключиться</value>
   </data>
   <data name="ServerDetails" xml:space="preserve">
-    <value>Detalhes do Servidor</value>
+    <value>Детали сервера</value>
   </data>
   <data name="Listen" xml:space="preserve">
-    <value>Ouvir</value>
+    <value>Слушать</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Interromper</value>
+    <value>Остановить</value>
   </data>
   <data name="TryPairingEdge" xml:space="preserve">
-    <value>Tente emparelhar com a borda</value>
+    <value>Попробуйте связать с краем</value>
   </data>
   <data name="ResetPairingConfig" xml:space="preserve">
     <value>Reset pairing (delete config)</value>
   </data>
   <data name="ResetListenPairing" xml:space="preserve">
-    <value>Redefinir + Ouvir (reparar)</value>
+    <value>Сброс + Слушать (ремонт)</value>
   </data>
   <data name="ResetListenEdge" xml:space="preserve">
-    <value>Redefinir + Ouvir com a borda</value>
+    <value>Сбросить + Прослушать с Edge</value>
   </data>
   <data name="RelinkBattlemetrics" xml:space="preserve">
-    <value>Relink Battlemetrics ID…</value>
+    <value>Перекрыть боевые метрики…</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>Excluir servidor…</value>
+    <value>Удалить сервер…</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
     <value>Bitte warten …</value>
   </data>
   <data name="ToggleServerArea" xml:space="preserve">
-    <value>Alternar área do servidor</value>
+    <value>Переключить область сервера</value>
   </data>
   <data name="StreamerMode" xml:space="preserve">
-    <value>Modo streamer</value>
+    <value>Режим "Стример"</value>
   </data>
   <data name="ScaleLabel" xml:space="preserve">
-    <value>Escala:</value>
+    <value>Масштаб:</value>
   </data>
   <data name="EnableStreamerMode" xml:space="preserve">
-    <value>Ativar Modo Streamer (Abbreviates Names)</value>
+    <value>Включить режим "Стример" (Сокращения имена)</value>
   </data>
   <data name="StreamerModeToolTip" xml:space="preserve">
-    <value>Abrevia Nomes e IDs Steam para proteger sua privacidade durante streams. Esconder automaticamente os consoles e a lista de servidores.</value>
+    <value>Сокращает имена и ID Steam для защиты конфиденциальности во время потоков. Автоскрытие консоли и списка серверов.</value>
   </data>
   <data name="NoPositionAvailable" xml:space="preserve">
-    <value>Nenhuma posição disponível (offline ou não gerado).</value>
+    <value>Нет доступной позиции (оффлайн или не создан).</value>
   </data>
   <data name="SaveGroup" xml:space="preserve">
-    <value>Salvar Grupo</value>
+    <value>Сохранить Группу</value>
   </data>
   <data name="EnterGroupName" xml:space="preserve">
-    <value>Por favor, insira um nome de grupo.</value>
+    <value>Пожалуйста, введите название группы.</value>
   </data>
   <data name="MessageNotSentError" xml:space="preserve">
-    <value>A mensagem não pôde ser enviada. Por favor, tente novamente. (Verifique se está em uma equipe!)</value>
+    <value>Сообщение не может быть отправлено. Пожалуйста, попробуйте еще раз. (Убедитесь, что вы в команде!)</value>
   </data>
   <data name="ErrorPrefix" xml:space="preserve">
-    <value>Erro: </value>
+    <value>Ошибка: </value>
   </data>
   <data name="AssignGroup" xml:space="preserve">
-    <value>Designar Grupo</value>
+    <value>Назначить группу</value>
   </data>
   <data name="GroupSettingsTitle" xml:space="preserve">
-    <value>Configurações do grupo: {0}</value>
+    <value>Настройки группы: {0}</value>
   </data>
   <data name="GroupName" xml:space="preserve">
-    <value>Nome do Grupo</value>
+    <value>Название группы</value>
   </data>
   <data name="EnterGroupNamePlaceholder" xml:space="preserve">
-    <value>Informe o nome do grupo...</value>
+    <value>Введите название группы...</value>
   </data>
   <data name="GroupColor" xml:space="preserve">
-    <value>Cor do grupo</value>
+    <value>Цвет группы</value>
   </data>
   <data name="SaveChanges" xml:space="preserve">
-    <value>Salvar as alterações</value>
+    <value>Сохранить изменения</value>
   </data>
   <data name="PlayerAnalyticsTitle" xml:space="preserve">
-    <value>Análise de Atividade de Jogador e Previsões</value>
+    <value>Аналитика активности игроков и прогнозы</value>
   </data>
   <data name="PlayersTitle" xml:space="preserve">
-    <value>Jogadores</value>
+    <value>Игроки</value>
   </data>
   <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
-    <value>Modo streamer e Mini mapa revisar</value>
+    <value>Режим стримера и мини-карта</value>
   </data>
   <data name="StreamerModeTitle" xml:space="preserve">
-    <value>Modo streamer</value>
+    <value>Режим "Стример"</value>
   </data>
   <data name="PlayerMarkerScalingTitle" xml:space="preserve">
-    <value>Escala do Marcador</value>
+    <value>Масштабирование маркеров игрока</value>
   </data>
   <data name="MiniMapPolishTitle" xml:space="preserve">
-    <value>Mini mapa polonês</value>
+    <value>Мини-карта Польша</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>Ação Necessária:</value>
+    <value>Требуется действие:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Remoção de Métricas de Batalha:</value>
+    <value>Удаление метрик битвы:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>Sistema de rastreamento do sistema</value>
+    <value>Система отслеживания Игроков Overhaul</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
-    <value>Como o Rastreamento do Jogador funciona</value>
+    <value>Как работает отслеживание игроков</value>
   </data>
   <data name="AddPlayersToStartTracking" xml:space="preserve">
-    <value>Adicionar jogadores ao rastreador para começar a rastrear</value>
+    <value>Добавить игроков в трекер, чтобы начать отслеживание</value>
   </data>
   <data name="TrackingActiveStatus" xml:space="preserve">
-    <value>Rastreamento ativo</value>
+    <value>Отслеживание Активно</value>
   </data>
   <data name="TrackingIdleStatus" xml:space="preserve">
-    <value>Rastreamento ocioso</value>
+    <value>Отслеживание простоя</value>
   </data>
   <data name="FilterPlayers" xml:space="preserve">
-    <value>Filtrar jogadores...</value>
+    <value>Фильтровать игроков...</value>
   </data>
   <data name="ConnectToLoadPlayers" xml:space="preserve">
-    <value>Conecte-se a um servidor para carregar a lista de jogadores</value>
+    <value>Подключиться к серверу для загрузки списка игроков</value>
   </data>
   <data name="FetchingPlayersSteam" xml:space="preserve">
-    <value>Buscando jogadores através da Consulta Steam...</value>
+    <value>Получение игроков через Steam Query...</value>
   </data>
   <data name="TrackID" xml:space="preserve">
-    <value>ID da faixa</value>
+    <value>ID трека</value>
   </data>
   <data name="ManualTrackNamePlaceholder" xml:space="preserve">
-    <value>Nome da faixa Manual...</value>
+    <value>Имя маршрута вручную...</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>Sem dispositivos.</value>
+    <value>Нет устройств.</value>
   </data>
   <data name="NoTokenRegistered" xml:space="preserve">
-    <value>Nenhum token registrado</value>
+    <value>Маркер не зарегистрирован</value>
   </data>
   <data name="TokenExpired" xml:space="preserve">
-    <value>Token expirado!</value>
+    <value>Срок действия токена истек!</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>Expira em {0} dias</value>
+    <value>Истекает через {0} дней</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
-    <value>{0} até a noite</value>
+    <value>{0} до ночи</value>
   </data>
   <data name="UntilDay" xml:space="preserve">
-    <value>{0} até o dia</value>
+    <value>{0} до дня</value>
   </data>
   <data name="FollowMe" xml:space="preserve">
-    <value>Siga-me</value>
+    <value>Следить за мной</value>
   </data>
   <data name="FollowPlayer" xml:space="preserve">
-    <value>Seguir {0}</value>
+    <value>Следить за {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>Pareando: escutando…</value>
+    <value>Сопряжение: слушание…</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
-    <value>Pareamento: parado</value>
+    <value>Сопряжение: остановлено</value>
   </data>
   <data name="PairingFailed" xml:space="preserve">
-    <value>Pareamento: falhou</value>
+    <value>Сопряжение: не удалось</value>
   </data>
   <data name="AlarmActivated" xml:space="preserve">
-    <value>Alarme ativado!</value>
+    <value>Будильник активирован!</value>
   </data>
   <data name="Server" xml:space="preserve">
-    <value>Servidor</value>
+    <value>Сервер</value>
   </data>
   <data name="SmartAlarm" xml:space="preserve">
-    <value>Alarme Inteligente</value>
+    <value>Умный будильник</value>
   </data>
   <data name="UnableToReadLink" xml:space="preserve">
-    <value>Não foi possível ler RustPlus-Link: {0}
-Formato: rustplus://IP:PORT</value>
+    <value>Невозможно прочитать RustPlus-Link: {0}
+Формат: rustplus://IP:PORT</value>
   </data>
   <data name="DeletePairingConfigHeader" xml:space="preserve">
     <value>Reset pairing</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>Eliminar a configuração de emparelhamento existente?
-Terá de emparelhar novamente no arranque seguinte.</value>
+    <value>Удалить существующую конфигурацию сопряжения?
+При следующем запуске вам нужно будет снова выполнить сопряжение.</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
     <value>Reset + Listen</value>
   </data>
   <data name="ResetListenBody" xml:space="preserve">
-    <value>Excluir o emparelhamento de configuração e reparelhar/escutar?</value>
+    <value>Удалить конфигурацию привязки и сразу же восстановить/прослушать?</value>
   </data>
   <data name="ResetListenEdgeHeader" xml:space="preserve">
-    <value>Redefinir + Ouvir (Edge)</value>
+    <value>Сброс + Слушание (Эдер)</value>
   </data>
   <data name="ResetListenEdgeBody" xml:space="preserve">
-    <value>Excluir o emparelhamento de configuração e reparar e ouvir imediatamente usando o Edge?</value>
+    <value>Удалить конфигурацию сопряжения и сразу же восстановить/прослушать с помощью Edge?</value>
   </data>
   <data name="UpdateQueryFailed" xml:space="preserve">
-    <value>Não foi possível consultar a versão mais recente. Por favor, tente novamente ou abra a página de Versões.</value>
+    <value>Не удалось получить последнюю версию. Пожалуйста, попробуйте еще раз или откройте страницу Релизы.</value>
   </data>
   <data name="UpdateUpToDate" xml:space="preserve">
-    <value>Você está atualizado.</value>
+    <value>Вы обновляете.</value>
   </data>
   <data name="UpdateAvailableHeader" xml:space="preserve">
-    <value>Atualização disponível</value>
+    <value>Доступно обновление</value>
   </data>
   <data name="UpdateAvailableBody" xml:space="preserve">
-    <value>Nova versão disponível: {0}
-Abrir página de Versões?</value>
+    <value>Доступна новая версия: {0}
+страница открытия релиза?</value>
   </data>
   <data name="DownloadAndInstallBody" xml:space="preserve">
-    <value>Nova versão disponível: {0}
-Baixar e instalar agora?</value>
+    <value>Доступна новая версия: {0}
+Скачать и установить сейчас?</value>
   </data>
   <data name="DownloadFailed" xml:space="preserve">
-    <value>Download falhou</value>
+    <value>Загрузка не удалась.</value>
   </data>
   <data name="UpdateCheckFailed" xml:space="preserve">
-    <value>Verificação da atualização falhou.
+    <value>Ошибка проверки обновлений.
 {0}</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>Sem dispositivos.</value>
+    <value>Нет устройств.</value>
   </data>
   <data name="ViewProfile" xml:space="preserve">
-    <value>Ver Perfil</value>
+    <value>Просмотр профиля</value>
   </data>
   <data name="ChangeGroup" xml:space="preserve">
-    <value>Alterar grupo</value>
+    <value>Сменить группу</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Renomear</value>
+    <value>Переименовать</value>
   </data>
   <data name="RemoveTracked" xml:space="preserve">
-    <value>Remover Rastreado</value>
+    <value>Удалить трек</value>
   </data>
   <data name="View" xml:space="preserve">
-    <value>Visualizar</value>
+    <value>Вид</value>
   </data>
   <data name="MoreOptions" xml:space="preserve">
-    <value>Mais opções</value>
+    <value>Больше опций</value>
   </data>
   <data name="RelinkBattlemetricsId" xml:space="preserve">
-    <value>Relink Battlemetrics ID…</value>
+    <value>Перекрыть боевые метрики…</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>Excluir servidor…</value>
+    <value>Удалить сервер…</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
-    <value>Clique direito para renomear</value>
+    <value>Щелкните правой кнопкой мыши, чтобы переименовать</value>
   </data>
   <data name="Toggle" xml:space="preserve">
-    <value>ALTERNAR</value>
+    <value>ТОГГЕЛ</value>
   </data>
   <data name="PopupWindow" xml:space="preserve">
-    <value>Janela-pop-up</value>
+    <value>Всплывающее окно</value>
   </data>
   <data name="InAppAlert" xml:space="preserve">
-    <value>Alerta no Aplicativo</value>
+    <value>Оповещение в приложении</value>
   </data>
   <data name="AudioAlert" xml:space="preserve">
-    <value>Alerta de Áudio</value>
+    <value>Аудиооповещение</value>
   </data>
   <data name="CustomAudioFile" xml:space="preserve">
-    <value>Arquivo de áudio personalizado...</value>
+    <value>Пользовательский аудиофайл...</value>
   </data>
   <data name="ResetToDefault" xml:space="preserve">
-    <value>Restaurar ao Padrão</value>
+    <value>Сброс по умолчанию</value>
   </data>
   <data name="Snapshot" xml:space="preserve">
     <value>Snapshot: </value>
   </data>
   <data name="ItemsUpkeep" xml:space="preserve">
-    <value> Itens, Mantenedor=</value>
+    <value> Элементы, Upkeep=</value>
   </data>
   <data name="NoDevicesFound" xml:space="preserve">
-    <value>Nenhum dispositivo encontrado</value>
+    <value>Устройств не найдено</value>
   </data>
   <data name="PairDeviceToSee" xml:space="preserve">
-    <value>Parear um dispositivo inteligente, mude ou alarme para vê-lo aqui</value>
+    <value>Подключите смарт-устройство, переключите или будильника, чтобы увидеть его здесь</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>Equipe</value>
+    <value>Команда</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
-    <value>Centralizar no mapa</value>
+    <value>Центрировать на карте</value>
   </data>
   <data name="FollowOnMap" xml:space="preserve">
-    <value>Seguir no mapa</value>
+    <value>Перейти на карту</value>
   </data>
   <data name="OpenSteamProfile" xml:space="preserve">
-    <value>Abrir perfil Steam</value>
+    <value>Открыть профиль Steam</value>
   </data>
   <data name="PromoteToLeader" xml:space="preserve">
-    <value>Promover para Líder</value>
+    <value>Повысить до Лидера</value>
   </data>
   <data name="KickFromTeam" xml:space="preserve">
-    <value>Expulsar da Equipe</value>
+    <value>Выгнать из команды</value>
   </data>
   <data name="ProfileMarkers" xml:space="preserve">
-    <value>Marcadores de perfil</value>
+    <value>Маркеры профиля</value>
   </data>
   <data name="DeathMarkers" xml:space="preserve">
-    <value>Marcadores de morte</value>
+    <value>Маркеры смерти</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>Câmeras</value>
+    <value>Камеры</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>Adicionar câmera</value>
+    <value>Добавить камеру</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
-    <value>Nenhuma câmera encontrada</value>
+    <value>Камеры не найдены</value>
   </data>
   <data name="PairCameraToSee" xml:space="preserve">
-    <value>Parear uma câmera para ver sua pré-visualização aqui</value>
+    <value>Приправьте камеру для просмотра здесь</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>Jogadores</value>
+    <value>Игроки</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
-    <value>Como monitorar</value>
+    <value>Как отслеживать</value>
   </data>
   <data name="LearnHowTrackingWorks" xml:space="preserve">
-    <value>Aprenda como funciona o rastreamento do jogador</value>
+    <value>Узнайте, как работает отслеживание игроков</value>
   </data>
   <data name="OnlineTab" xml:space="preserve">
-    <value>Disponível</value>
+    <value>Онлайн</value>
   </data>
   <data name="OnlinePlayers" xml:space="preserve">
-    <value>Jogadores Online</value>
+    <value>Игроки онлайн</value>
   </data>
   <data name="SearchBM" xml:space="preserve">
-    <value>Buscar BM</value>
+    <value>Поиск БМ</value>
   </data>
   <data name="SearchServerBM" xml:space="preserve">
-    <value>Pesquisar no servidor atual na BattleMetrics</value>
+    <value>Поиск текущего сервера в BattleMetrics</value>
   </data>
   <data name="Popout" xml:space="preserve">
-    <value>Poço</value>
+    <value>Всплеск</value>
   </data>
   <data name="OpenPlayersSeparateWindow" xml:space="preserve">
-    <value>Abrir jogadores em uma janela separada</value>
+    <value>Открыть Игроков в отдельном окне</value>
   </data>
   <data name="Track" xml:space="preserve">
-    <value>Acompanhar</value>
+    <value>Трек</value>
   </data>
   <data name="ManualTrackPlaceholder" xml:space="preserve">
-    <value>Nome da faixa manual ou ID do Steam...</value>
+    <value>Имя трека или Steam ID...</value>
   </data>
   <data name="FilterPlayersPlaceholder" xml:space="preserve">
-    <value>Filtrar jogadores...</value>
+    <value>Фильтровать игроков...</value>
   </data>
   <data name="LoadingPlayers" xml:space="preserve">
-    <value>Carregando jogadores...</value>
+    <value>Загрузка игроков...</value>
   </data>
   <data name="TrackedTab" xml:space="preserve">
-    <value>Rastreado</value>
+    <value>Отслеживается</value>
   </data>
   <data name="TrackedPlayers" xml:space="preserve">
-    <value>Jogadores Rastreados</value>
+    <value>Отслеживаемые игроки</value>
   </data>
   <data name="ManageGroups" xml:space="preserve">
-    <value>Gerenciar grupos</value>
+    <value>Управление группами</value>
   </data>
   <data name="ViewFullAnalysisReport" xml:space="preserve">
-    <value>Visualizar relatório de análise completa</value>
+    <value>Посмотреть полный отчет по анализу</value>
   </data>
   <data name="ReadyToExploreMap" xml:space="preserve">
-    <value>Pronto para explorar o mapa?</value>
+    <value>Готовы исследовать карту?</value>
   </data>
   <data name="ConnectToLoadMap" xml:space="preserve">
-    <value>Conecte-se a um servidor selecionado para carregar o mapa e a equipe do Rust ao vivo.</value>
+    <value>Подключитесь к выбранному серверу, чтобы загрузить текущую карту Риска и команду.</value>
   </data>
   <data name="ReadyToDominate" xml:space="preserve">
-    <value>Pronto para dominar o Rust?</value>
+    <value>Готовы доминировать на Русе?</value>
   </data>
   <data name="PairAccountBenefits" xml:space="preserve">
-    <value>Parear sua conta para começar a rastrear jogadores, receber alertas básicos de Reide e controlar seus dispositivos inteligentes instantaneamente.</value>
+    <value>Соедините ваш аккаунт для отслеживания игроков, получения базовых предупреждений о рейдах и мгновенного контроля над смарт-устройствами.</value>
   </data>
   <data name="LoginPairAccount" xml:space="preserve">
-    <value>Login &amp; Conta em Pares</value>
+    <value>Войти и Пар аккаунт</value>
   </data>
   <data name="RequiresSteamLogin" xml:space="preserve">
-    <value>Requer login Steam no seu navegador padrão.</value>
+    <value>Требуется логин Steam в браузере по умолчанию.</value>
   </data>
   <data name="DeleteServerHeader" xml:space="preserve">
-    <value>Excluir Servidor?</value>
+    <value>Удалить сервер?</value>
   </data>
   <data name="DeleteServerConfirm" xml:space="preserve">
-    <value>Tem certeza que deseja excluir este servidor? Esta ação não pode ser desfeita.</value>
+    <value>Вы уверены, что хотите удалить этот сервер? Это действие нельзя отменить.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>cancelar</value>
+    <value>Отмена</value>
   </data>
   <data name="DeleteAction" xml:space="preserve">
-    <value>excluir</value>
+    <value>Удалить</value>
   </data>
   <data name="AutoHideAfter3s" xml:space="preserve">
-    <value>Auto-ocultar após 3s</value>
+    <value>Автоматически скрывать через 3</value>
   </data>
   <data name="MapFilters" xml:space="preserve">
-    <value>FILTROS DO MAP</value>
+    <value>КАРТЫ</value>
   </data>
   <data name="Grid" xml:space="preserve">
-    <value>Grade</value>
+    <value>Сетка</value>
   </data>
   <data name="Monuments" xml:space="preserve">
-    <value>Monumentos</value>
+    <value>Монументы</value>
   </data>
   <data name="Shops" xml:space="preserve">
-    <value>Lojas</value>
+    <value>Магазины</value>
   </data>
   <data name="ChatAlerts" xml:space="preserve">
-    <value>ALERTAS DE CHAT</value>
+    <value>АЛЬЕРОВ ЧАТА</value>
   </data>
   <data name="Alerts" xml:space="preserve">
-    <value>Atenção</value>
+    <value>Оповещения</value>
   </data>
   <data name="Configure" xml:space="preserve">
-    <value>Configurar</value>
+    <value>Настроить</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Selecionar Todos</value>
+    <value>Выделить все</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>Desmarcar Todos</value>
+    <value>Отменить выбор</value>
   </data>
   <data name="Events" xml:space="preserve">
-    <value>EVENTOS</value>
+    <value>СОБЫТИЯ</value>
   </data>
   <data name="CargoShip" xml:space="preserve">
-    <value>Navio de Carga</value>
+    <value>Грузовой корабль</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
-    <value>Invocar</value>
+    <value>Создать</value>
   </data>
   <data name="CargoDock" xml:space="preserve">
-    <value>Acoplamento do Porto</value>
+    <value>Стыковка порта</value>
   </data>
   <data name="CargoEgress" xml:space="preserve">
-    <value>Saída (5m Aviso)</value>
+    <value>Отправление (предупреждение 5 м)</value>
   </data>
   <data name="CargoArrival" xml:space="preserve">
-    <value>Aviso de Chegada (5m antes da Doca)</value>
+    <value>Предупреждение о прибытии (5 мин до дока)</value>
   </data>
   <data name="Heli" xml:space="preserve">
-    <value>Patrulhar Helicóptero</value>
+    <value>Патруль вертолет</value>
   </data>
   <data name="Chinook" xml:space="preserve">
     <value>Chinook (CH47)</value>
   </data>
   <data name="Vendor" xml:space="preserve">
-    <value>Vendedor Viajante</value>
+    <value>Путешествующий поставщик</value>
   </data>
   <data name="OilRig" xml:space="preserve">
-    <value>Gatilho de Plataforma</value>
+    <value>Триггер с маслом</value>
   </data>
   <data name="DeepSea" xml:space="preserve">
-    <value>Evento Mar Profundo</value>
+    <value>Глубокое Морское Событие</value>
   </data>
   <data name="SmartAlerts" xml:space="preserve">
-    <value>Alertas inteligentes</value>
+    <value>Умные оповещения</value>
   </data>
   <data name="PlayerOnline" xml:space="preserve">
-    <value>Estado online</value>
+    <value>Онлайн статус</value>
   </data>
   <data name="PlayerOffline" xml:space="preserve">
-    <value>Status Offline</value>
+    <value>Статус оффлайн</value>
   </data>
   <data name="AnnounceTracking" xml:space="preserve">
-    <value>Acompanhamento de Notificações</value>
+    <value>Отслеживание уведомлений</value>
   </data>
   <data name="PlayerDeathSelf" xml:space="preserve">
-    <value>Morte Pessoal</value>
+    <value>Самосмерть</value>
   </data>
   <data name="PlayerDeathTeam" xml:space="preserve">
-    <value>Time da Morte</value>
+    <value>Смерть Команды</value>
   </data>
   <data name="PlayerRespawnSelf" xml:space="preserve">
-    <value>Auto Renascimento</value>
+    <value>Самовозрождение</value>
   </data>
   <data name="PlayerRespawnTeam" xml:space="preserve">
-    <value>Renascimento da Equipe</value>
+    <value>Возрождение команды</value>
   </data>
   <data name="NewShops" xml:space="preserve">
-    <value>Novas lojas</value>
+    <value>Новые магазины</value>
   </data>
   <data name="SuspiciousShops" xml:space="preserve">
-    <value>Lojas suspeitas</value>
+    <value>Подозрительные магазины</value>
   </data>
   <data name="TradeAlerts" xml:space="preserve">
-    <value>Alertas de Troca</value>
+    <value>Уведомления о сделках</value>
   </data>
   <data name="CrosshairStyle" xml:space="preserve">
-    <value>Estilo da mira</value>
+    <value>Стиль прицела</value>
   </data>
   <data name="GreenDot" xml:space="preserve">
-    <value>Ponto Verde</value>
+    <value>Зелёная точка</value>
   </data>
   <data name="MiniGreen" xml:space="preserve">
-    <value>Mini Verde</value>
+    <value>Мини-зеленый</value>
   </data>
   <data name="OpenCrosshairRG" xml:space="preserve">
-    <value>Mira Aberta (R/G)</value>
+    <value>Открыть прицел (R/G)</value>
   </data>
   <data name="ThinRedCircle" xml:space="preserve">
-    <value>Círculo Vermelho Fino</value>
+    <value>Тонкий красный круг</value>
   </data>
   <data name="SquareDot" xml:space="preserve">
-    <value>Quadrado + Ponto</value>
+    <value>Квадрат + Точка</value>
   </data>
   <data name="MagentaDot" xml:space="preserve">
-    <value>Ponto Magenta</value>
+    <value>Пурпурная точка</value>
   </data>
   <data name="MagentaOpenCross" xml:space="preserve">
-    <value>Cruz Aberta Magenta</value>
+    <value>Пурпурный открытый Крест</value>
   </data>
   <data name="RangeLineTicks" xml:space="preserve">
-    <value>Linha de Alcance (ticks)</value>
+    <value>Диапазон линии (тики)</value>
   </data>
   <data name="DrawCrosshair" xml:space="preserve">
-    <value>Desenhar Crosshair...</value>
+    <value>Нарисовать прицел...</value>
   </data>
   <data name="ChooseMonitor" xml:space="preserve">
-    <value>Escolher monitor</value>
+    <value>Выбор монитора</value>
   </data>
   <data name="DrawOverlay" xml:space="preserve">
-    <value>Desenhar sobreposição</value>
+    <value>Нарисовать наложение</value>
   </data>
   <data name="DrawToolTip" xml:space="preserve">
-    <value>Desenho (clique direito: tamanho / cor)</value>
+    <value>Нарисовать (правый клик: размер / цвет)</value>
   </data>
   <data name="PlaceTextToolTip" xml:space="preserve">
-    <value>Colocar Texto (Botão Direito: Cor / Tamanho)</value>
+    <value>Разместить текст (правый клик: цвет / размер)</value>
   </data>
   <data name="PlaceIconToolTip" xml:space="preserve">
-    <value>Ícone do Lugar (Clique direito: Escolher Ícone)</value>
+    <value>Разместить иконку (щелкните мышью: выберите иконку)</value>
   </data>
   <data name="EraserToolTip" xml:space="preserve">
-    <value>Borracha (segure ou clique)</value>
+    <value>Ластик (удерживание или клик)</value>
   </data>
   <data name="DeleteOverlayToolTip" xml:space="preserve">
-    <value>Excluir a própria sobreposição</value>
+    <value>Удалить собственное наложение</value>
   </data>
   <data name="UploadOverlayToolTip" xml:space="preserve">
-    <value>Carregar a própria sobreposição / compartilhamento</value>
+    <value>Загрузить свои наслоения / поделиться</value>
   </data>
   <data name="ProfitTrades" xml:space="preserve">
     <value>Profit Trades</value>
   </data>
   <data name="ArbitrageOpportunities" xml:space="preserve">
-    <value>Oportunidades diretas de arbitragem − compre baixa → venda alta.</value>
+    <value>Прямые арбитражные возможности | купить низкие → продать высоко.</value>
   </data>
   <data name="BuyXForY" xml:space="preserve">
-    <value>Compre X por Y</value>
+    <value>Купить X за Y</value>
   </data>
   <data name="Analyze" xml:space="preserve">
-    <value>Analisar</value>
+    <value>Анализ</value>
   </data>
   <data name="IWantToGet" xml:space="preserve">
-    <value>Eu quero OBTER</value>
+    <value>Я хочу получить</value>
   </data>
   <data name="ICanPayWith" xml:space="preserve">
-    <value>Eu posso PAGAR COM</value>
+    <value>Я могу PAY С</value>
   </data>
   <data name="TeamChat" xml:space="preserve">
-    <value>Bate-Papo da Equipe</value>
+    <value>Групповой чат</value>
   </data>
   <data name="Send" xml:space="preserve">
-    <value>Mandar</value>
+    <value>Отправить</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
-    <value>Credenciais do FCM</value>
+    <value>Учетные данные FCM</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
-    <value>Clique direito para configurar</value>
+    <value>Щелкните правой кнопкой мыши для настройки</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
     <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
-    <value>Redefinir zoom e posição do mapa</value>
+    <value>Сброс масштаба и положения карты</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Mini</value>
+    <value>Мини</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
-    <value>Mira ligada/desligada (Clique direito para opções)</value>
+    <value>Вкл/выкл (Right Click For Options)</value>
   </data>
   <data name="TrackPlayer" xml:space="preserve">
-    <value>JOGADOR DE TRACK</value>
+    <value>ТОРГОВЫЙ ИГРОК</value>
   </data>
   <data name="CloseBMBrowser" xml:space="preserve">
-    <value>Fechar navegador de métricas</value>
+    <value>Закрыть браузер BattleMetrics</value>
   </data>
   <data name="ShopSearchTitle" xml:space="preserve">
-    <value>COMPRAR PESQUISA</value>
+    <value>ПОИСК ПОИСК</value>
   </data>
   <data name="CloseSearch" xml:space="preserve">
-    <value>Fechar Pesquisa</value>
+    <value>Закрыть Поиск</value>
   </data>
   <data name="ActivateShopsFirst" xml:space="preserve">
-    <value>Por favor ative as lojas primeiro</value>
+    <value>Пожалуйста, сначала активируйте Магазин</value>
   </data>
   <data name="ActivateShopPolling" xml:space="preserve">
-    <value>Ativar enquete de loja</value>
+    <value>Активировать опрос магазина</value>
   </data>
   <data name="TeamChatTitle" xml:space="preserve">
-    <value>CHAT DA EQUIPE</value>
+    <value>КОМАНДА ЧАТА</value>
   </data>
   <data name="CloseChat" xml:space="preserve">
-    <value>Fechar bate-papo</value>
+    <value>Закрыть чат</value>
   </data>
   <data name="ChatCommandsSettings" xml:space="preserve">
-    <value>Configurações de Comandos de Chat</value>
+    <value>Настройки команд чата</value>
   </data>
   <data name="ChatCommands" xml:space="preserve">
-    <value>Comandos de Chat</value>
+    <value>Команды чата</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Anterior</value>
+    <value>Назад</value>
   </data>
   <data name="Forward" xml:space="preserve">
-    <value>Encaminhar</value>
+    <value>Вперёд</value>
   </data>
   <data name="OpenInExternalBrowser" xml:space="preserve">
-    <value>Abrir no navegador externo</value>
+    <value>Открыть во внешнем браузере</value>
   </data>
   <data name="SearchBMPlaceholder" xml:space="preserve">
-    <value>Buscar IM...</value>
+    <value>Поиск BM...</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Pesquisa</value>
+    <value>Искать</value>
   </data>
   <data name="SelectAServer" xml:space="preserve">
-    <value>Selecione um servidor</value>
+    <value>Выберите сервер</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>DESCONECTADO</value>
+    <value>ОТКЛЮЧЕНО</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>CONECTANDO...</value>
+    <value>ПОДКЛЮЧЕНИЕ...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INICIALIZANDO...</value>
+    <value>ИНИТАЛИЗАЦИЯ...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>DISPOSITIVOS ATIVOS</value>
+    <value>УСТРОЙСТВА АКТИВНОГО</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>COMPLETO CONECTADO</value>
+    <value>ПОЛНОЕ ПОДКЛЮЧЕСТВО</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
-    <value>DESCONHECIDO</value>
+    <value>НЕИЗВЕСТНО</value>
   </data>
   <data name="MayTakeAMoment" xml:space="preserve">
-    <value>Isso pode demorar um pouco...</value>
+    <value>Это может занять некоторое время...</value>
   </data>
   <data name="AppSettingsTitle" xml:space="preserve">
-    <value>Configurações do aplicativo</value>
+    <value>Настройки приложения</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>Gerais</value>
+    <value>Общие положения</value>
   </data>
   <data name="LaunchWithWindows" xml:space="preserve">
-    <value>Iniciar com Windows (Minimizado)</value>
+    <value>Запуск через Windows (сворачивание)</value>
   </data>
   <data name="StartMinimizedAlways" xml:space="preserve">
-    <value>Iniciar minimizado (sempre)</value>
+    <value>Запуск свёрнутый (всегда)</value>
   </data>
   <data name="AutoConnectLastServer" xml:space="preserve">
-    <value>Conectar automaticamente ao último servidor ao iniciar</value>
+    <value>Автоподключение к последнему серверу при запуске</value>
   </data>
   <data name="AutoConnectToolTip" xml:space="preserve">
-    <value>Reconecta automaticamente ao último servidor e carrega o mapa.</value>
+    <value>Автоматически переподключается к последнему серверу и загружает карту.</value>
   </data>
   <data name="Behavior" xml:space="preserve">
-    <value>Comportamento</value>
+    <value>Поведение</value>
   </data>
   <data name="MinimizeToTray" xml:space="preserve">
-    <value>Minimizar para a bandeja em vez de fechar</value>
+    <value>Свернуть в трей вместо закрытия</value>
   </data>
   <data name="BackgroundTracking" xml:space="preserve">
-    <value>Habilitar Rastreamento do Jogador de Fundo</value>
+    <value>Включить отслеживание фонового плеера</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Mantém o monitoramento de jogadores através de métricas de batalha mesmo que minimizado.</value>
+    <value>Отслеживать игроков с помощью BattleMetrics даже при минимизации.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
-    <value>Ocultar Console do Sistema (Decriente)</value>
+    <value>Скрыть системную консоль (загрязнитель)</value>
   </data>
   <data name="HideConsoleToolTip" xml:space="preserve">
-    <value>Oculta o painel de log/console inferior para economizar espaço de mapa.</value>
+    <value>Скрывает нижнюю панель журнала и консоли для сохранения пространства на карте.</value>
   </data>
   <data name="MapSettings" xml:space="preserve">
-    <value>Configurações do Mapa</value>
+    <value>Настройки карты</value>
   </data>
   <data name="AutoLoadShops" xml:space="preserve">
-    <value>Auto carregar lojas ao conectar</value>
+    <value>Автозагрузка магазинов при подключении</value>
   </data>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
-    <value>Inicia automaticamente as lojas e alertas quando conectado a um servidor.</value>
+    <value>Автоматически запускает избирательные магазины и оповещения при подключении к серверу.</value>
   </data>
   <data name="Chat" xml:space="preserve">
-    <value>Bate-papo</value>
+    <value>Чат</value>
   </data>
   <data name="ModifyChatAlerts" xml:space="preserve">
-    <value>Modificar Alertas de Chat</value>
+    <value>Изменить оповещения чата</value>
   </data>
   <data name="ManageSteamAccountInfo" xml:space="preserve">
-    <value>Gerencie sua conta Steam vinculada na janela principal.</value>
+    <value>Управление привязанным аккаунтом Steam в главном окне.</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>FECHAR</value>
+    <value>Закрыть</value>
   </data>
   <data name="IncomingAlarms" xml:space="preserve">
-    <value>ALARMAS RENDIMENTES</value>
+    <value>ВХОДЯЩИЕ АЛЕАРМЫ</value>
   </data>
   <data name="Wipe" xml:space="preserve">
-    <value>Limpar</value>
+    <value>Очистка</value>
   </data>
   <data name="PlayersOnly" xml:space="preserve">
-    <value>Jogadores</value>
+    <value>Игроки</value>
   </data>
   <data name="PlayersHeader" xml:space="preserve">
-    <value>Jogadores</value>
+    <value>Игроки</value>
   </data>
   <data name="IWantToGetToolTip" xml:space="preserve">
-    <value>Eu quero GET (ex. Petróleo Bruto)</value>
+    <value>Я хочу получить (например, сырая нефть)</value>
   </data>
   <data name="ICanPayWithToolTip" xml:space="preserve">
-    <value>Quero PAGAR COM (por exemplo, Scrap)</value>
+    <value>Я хочу PAY С (напр. Scrap)</value>
   </data>
   <data name="DeleteServerConfirmFormatted" xml:space="preserve">
-    <value>Tem certeza que quer apagar o Servidor "{0}"? Essa ação não pode ser desfeita.</value>
+    <value>Вы уверены, что хотите удалить сервер "{0}"? Это действие не может быть отменено.</value>
   </data>
   <data name="PairingError" xml:space="preserve">
     <value>Pairing: error</value>
   </data>
   <data name="PairingStarting" xml:space="preserve">
-    <value>Pareando: iniciando...</value>
+    <value>Сопряжение: запускается...</value>
   </data>
   <data name="StartingPairingListener" xml:space="preserve">
-    <value>Iniciando Listador de Pareamento...</value>
+    <value>Запуск пары-листа...</value>
   </data>
   <data name="LoggedIn" xml:space="preserve">
-    <value>Sessão Iniciada</value>
+    <value>Вход выполнен</value>
   </data>
   <data name="Stock" xml:space="preserve">
-    <value>Inventário</value>
+    <value>Склад</value>
   </data>
   <data name="Price" xml:space="preserve">
-    <value>Quantidade</value>
+    <value>Цена</value>
   </data>
   <data name="On" xml:space="preserve">
-    <value>LIGADO</value>
+    <value>Вкл</value>
   </data>
   <data name="Off" xml:space="preserve">
-    <value>DESATIVADO</value>
+    <value>ВЫКЛ</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>ATIVO</value>
+    <value>АКТИВНЫЙ</value>
   </data>
   <data name="Inactive" xml:space="preserve">
-    <value>INATIVO</value>
+    <value>НЕАКТИВНЫЙ</value>
   </data>
   <data name="Group" xml:space="preserve">
-    <value>GRUPO</value>
+    <value>ГРУППА</value>
   </data>
   <data name="ImportDevicesTitle" xml:space="preserve">
-    <value>Rust+ Desk – Importar Dispositivos</value>
+    <value>Rust+ Desk – Импорт устройств</value>
   </data>
   <data name="ImportDevicesHeader" xml:space="preserve">
-    <value>Importar dispositivos</value>
+    <value>Импорт устройств</value>
   </data>
   <data name="ImportDevicesSelectPrompt" xml:space="preserve">
-    <value>Selecione quais dispositivos você deseja importar para este servidor.</value>
+    <value>Выберите, какие устройства вы хотите импортировать для этого сервера.</value>
   </data>
   <data name="CheckDeviceStatus" xml:space="preserve">
-    <value>Verificar status do dispositivo</value>
+    <value>Проверить состояние устройства</value>
   </data>
   <data name="ImportSelected" xml:space="preserve">
-    <value>Importar selecionados</value>
+    <value>Импортировать выбранные</value>
   </data>
   <data name="BmShortcuts" xml:space="preserve">
-    <value>Atalhos de BM</value>
+    <value>Ярлыки BM</value>
   </data>
   <data name="PairingConfigDeleted" xml:space="preserve">
-    <value>Pareando: configuração excluída</value>
+    <value>Соединение: конфигурация удалена</value>
   </data>
   <data name="TrayIconDefault" xml:space="preserve">
-    <value>Rust+ Rastreador de Desk</value>
+    <value>Rust+ Desk Tracker</value>
   </data>
   <data name="TrayIconTracking" xml:space="preserve">
-    <value>Rust+ mesk ( {0} de rastreamento)</value>
+    <value>Rust+ Desk (Отслеживание {0})</value>
   </data>
   <data name="RenameGroup" xml:space="preserve">
-    <value>Renomear Grupo</value>
+    <value>Переименовать группу</value>
   </data>
   <data name="NewNameForGroup" xml:space="preserve">
-    <value>Novo nome para o grupo:</value>
+    <value>Новое имя для группы:</value>
   </data>
   <data name="NewNameForDevice" xml:space="preserve">
-    <value>Novo nome para #{0}:</value>
+    <value>Новое имя для #{0}:</value>
   </data>
   <data name="EnterBattlemetricsIdFor" xml:space="preserve">
-    <value>Digite o ID do servidor de Battlemetrics para "{0}":</value>
+    <value>Введите ID сервера Battlemetrics для "{0}":</value>
   </data>
   <data name="TrayTrackingStatus" xml:space="preserve">
-    <value>Rastreando: {0}</value>
+    <value>Отслеживание: {0}</value>
   </data>
   <data name="TrayLastUpdate" xml:space="preserve">
-    <value>Última atualização: {0}</value>
+    <value>Последнее обновление: {0}</value>
   </data>
   <data name="OpenRustPlusDesk" xml:space="preserve">
-    <value>Abrir Rust+ mesa</value>
+    <value>Открыть Rust+ Desk</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>Sair</value>
+    <value>Выход</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Descrição:</value>
+    <value>Описание</value>
   </data>
   <data name="Camera" xml:space="preserve">
-    <value>Câmera</value>
+    <value>Камера</value>
   </data>
   <data name="Alarms" xml:space="preserve">
-    <value>Alarmes</value>
+    <value>Будильник</value>
   </data>
   <data name="Identifier" xml:space="preserve">
     <value>Identifier:</value>
@@ -1002,226 +1002,226 @@ Baixar e instalar agora?</value>
     <value>FPS:</value>
   </data>
   <data name="CameraFPSNote" xml:space="preserve">
-    <value>Nota: 2 fps são recomendados, mais alto FPS provavelmente fecha sua conexão com o servidor</value>
+    <value>Примечание: Рекомендуется 2 fps, более высокий FPS скорее всего закроет соединение с сервером</value>
   </data>
   <data name="Pixel" xml:space="preserve">
-    <value>Píxel</value>
+    <value>Пиксель</value>
   </data>
   <data name="Pen" xml:space="preserve">
-    <value>Caneta</value>
+    <value>Перо</value>
   </data>
   <data name="Line" xml:space="preserve">
-    <value>Linha</value>
+    <value>Линия</value>
   </data>
   <data name="Square" xml:space="preserve">
-    <value>Quadrado</value>
+    <value>Квадрат</value>
   </data>
   <data name="Circle" xml:space="preserve">
-    <value>Círculo</value>
+    <value>Круг</value>
   </data>
   <data name="Thickness" xml:space="preserve">
-    <value>Espessura:</value>
+    <value>Толщина:</value>
   </data>
   <data name="Opacity" xml:space="preserve">
-    <value>Opacidade:</value>
+    <value>Прозрачность:</value>
   </data>
   <data name="UploadPNG" xml:space="preserve">
-    <value>Enviar PNG</value>
+    <value>Загрузить PNG</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Limpar</value>
+    <value>Очистить</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Guardar</value>
+    <value>Сохранить</value>
   </data>
   <data name="AssignGlobalHotkeys" xml:space="preserve">
-    <value>Atribuir teclas de atalho globais para os Smart Switches. Vários dispositivos podem compartilhar uma tecla de atalho (irá mudar sequencialmente).</value>
+    <value>Назначить глобальные горячие клавиши для умных переключателей. Несколько устройств могут иметь одну горячую клавишу (включится).</value>
   </data>
   <data name="Device" xml:space="preserve">
-    <value>Dispositivo</value>
+    <value>Устройство</value>
   </data>
   <data name="EntityId" xml:space="preserve">
     <value>EntityId</value>
   </data>
   <data name="Hotkey" xml:space="preserve">
-    <value>Atalho</value>
+    <value>Горячая клавиша</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Definir</value>
+    <value>Задать</value>
   </data>
   <data name="CloseDeactivate" xml:space="preserve">
-    <value>Fechar e desativar</value>
+    <value>Закрыть и деактивировать</value>
   </data>
   <data name="CloseActivate" xml:space="preserve">
-    <value>Fechar e ativar</value>
+    <value>Закрыть и активировать</value>
   </data>
   <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
-    <value>Atualizar Manutenção, Minimapa e Rastreamento</value>
+    <value>Обновление Upkeep, Minimap &amp; Tracking Update</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>Resumo dos recursos e ajustes</value>
+    <value>Сводка возможностей &amp; Корректировки</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
-    <value>Não mostrar novamente</value>
+    <value>Больше не показывать это</value>
   </data>
   <data name="AwesomeLetsGo" xml:space="preserve">
-    <value>Fantástico, vamos lá!</value>
+    <value>Отлично, пойдем!</value>
   </data>
   <data name="MiniMapSettings" xml:space="preserve">
-    <value>Configurações de Mini-Mapa</value>
+    <value>Мини-карта настроек</value>
   </data>
   <data name="Shape" xml:space="preserve">
-    <value>Forma</value>
+    <value>Форма</value>
   </data>
   <data name="Rectangle" xml:space="preserve">
-    <value>Retângulo</value>
+    <value>Прямоугольник</value>
   </data>
   <data name="OpacityLabel" xml:space="preserve">
-    <value>Opacidade: {0}%</value>
+    <value>Прозрачность: {0}%</value>
   </data>
   <data name="SizeLabel" xml:space="preserve">
-    <value>Tamanho: {0}% (SHIFT+Mousewheel)</value>
+    <value>Размер: {0}% (SHIFT+Mousewheel)</value>
   </data>
   <data name="ShowServerTime" xml:space="preserve">
-    <value>Mostrar Hora do Servidor</value>
+    <value>Показать время сервера</value>
   </data>
   <data name="ServerInformation" xml:space="preserve">
-    <value>Informações do servidor</value>
+    <value>Информация о сервере</value>
   </data>
   <data name="NoDescriptionAvailable" xml:space="preserve">
-    <value>Nenhuma descrição disponível</value>
+    <value>Описание недоступно.</value>
   </data>
   <data name="CurrentVersion" xml:space="preserve">
-    <value>Versão atual: {0}</value>
+    <value>Текущая версия: {0}</value>
   </data>
   <data name="PatchNotesHeader" xml:space="preserve">
-    <value>Histórico de Atualizações &amp; Versão</value>
+    <value>История изменений и изменений</value>
   </data>
   <data name="EnableChatCommands" xml:space="preserve">
-    <value>Habilitar comandos de chat</value>
+    <value>Включить команды чата</value>
   </data>
   <data name="Prefix" xml:space="preserve">
-    <value>Prefixo:</value>
+    <value>Префикс:</value>
   </data>
   <data name="StandardCommands" xml:space="preserve">
-    <value>Comandos Padrão</value>
+    <value>Стандартные команды</value>
   </data>
   <data name="Population" xml:space="preserve">
-    <value>População:</value>
+    <value>Население:</value>
   </data>
   <data name="Time" xml:space="preserve">
-    <value>Hora:</value>
+    <value>Время:</value>
   </data>
   <data name="Promote" xml:space="preserve">
-    <value>Promover</value>
+    <value>Повышение:</value>
   </data>
   <data name="DeepSeaCommand" xml:space="preserve">
-    <value>Mar Profundo:</value>
+    <value>Глубокое море:</value>
   </data>
   <data name="CargoShipCommand" xml:space="preserve">
-    <value>Navio de carga:</value>
+    <value>Грузовой корабль:</value>
   </data>
   <data name="OilRigCommand" xml:space="preserve">
-    <value>Rigo de Óleo</value>
+    <value>Нефтяной Риж:</value>
   </data>
   <data name="PatrolHeliCommand" xml:space="preserve">
-    <value>Caldeira de Patrulha:</value>
+    <value>Патруль Гели:</value>
   </data>
   <data name="TravellingVendorCommand" xml:space="preserve">
-    <value>Fornecedor de Viagem:</value>
+    <value>Путешествующий поставщик:</value>
   </data>
   <data name="UpkeepDetails" xml:space="preserve">
-    <value>Detalhes de Manutenção:</value>
+    <value>Детали обеспечения:</value>
   </data>
   <data name="CommandDelay" xml:space="preserve">
-    <value>Atraso do comando:</value>
+    <value>Задержка команды:</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>IDIOMA</value>
+    <value>Язык</value>
   </data>
   <data name="SelectLanguage" xml:space="preserve">
-    <value>Selecione o idioma</value>
+    <value>Выберите язык</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>Alterar o idioma requer reinicialização para ter pleno efeito.</value>
+    <value>Для изменения языка требуется перезагрузка, чтобы иметь полный эффект.</value>
   </data>
   <data name="SmartSwitches" xml:space="preserve">
-    <value>Interruptores inteligentes</value>
+    <value>Умные переключатели</value>
   </data>
   <data name="UpkeepTcMonitors" xml:space="preserve">
-    <value>Manutenção (TC) Monitores</value>
+    <value>Расход (TC) мониторы</value>
   </data>
   <data name="NoTcMonitorsFound" xml:space="preserve">
-    <value>Nenhum monitor TC encontrado.</value>
+    <value>TC мониторы не найдены.</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
-    <value>Salvar e Fechar</value>
+    <value>Сохранить и закрыть</value>
   </data>
   <data name="ChatMessagePlaceholder" xml:space="preserve">
-    <value>Mensagem...</value>
+    <value>Сообщение...</value>
   </data>
   <data name="ChatErrorPlaceholder" xml:space="preserve">
-    <value>Mensagem de erro aqui</value>
+    <value>Сообщение об ошибке здесь</value>
   </data>
   <data name="HeliEventName" xml:space="preserve">
-    <value>Helicóptero de patrulha</value>
+    <value>Патрульный вертолет</value>
   </data>
   <data name="HeliActiveRunningFor" xml:space="preserve">
-    <value>Heli de patrulha ativo - a funcionar em {0}</value>
+    <value>Патрульный вертолет активен - работает на {0}</value>
   </data>
   <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
-    <value>Ligado a meio do evento - tempo de desova desconhecido</value>
+    <value>Подключен в середине события - время спавна неизвестно</value>
   </data>
   <data name="HeliActiveSpawnUnknown" xml:space="preserve">
-    <value>Heli de patrulha ativo (hora de aparecimento desconhecida)</value>
+    <value>Патрульный вертолет активен (время спавна неизвестно)</value>
   </data>
   <data name="HeliShotDownAgo" xml:space="preserve">
-    <value>Heli de patrulha abatido {0} ago this session</value>
+    <value>Патрульный вертолет сбит {0} назад в этой сессии.</value>
   </data>
   <data name="HeliLeftMapAgo" xml:space="preserve">
-    <value>Patrol Heli deixou o mapa {0} atrás nesta sessão</value>
+    <value>Патрульный Хели покинул карту {0} назад в этой сессии.</value>
   </data>
   <data name="CargoDockedDepartsIn" xml:space="preserve">
-    <value>Atracado em {0} - partida em ~{1}</value>
+    <value>Причалили на {0} - отплытие в ~{1}</value>
   </data>
   <data name="HarborFallback" xml:space="preserve">
-    <value>porto</value>
+    <value>гавань</value>
   </data>
   <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
-    <value>Já atracado no Connect - hora de partida desconhecida</value>
+    <value>Уже пришвартован на коннекте - время отправления неизвестно</value>
   </data>
   <data name="CargoDockedDurationNotLearned" xml:space="preserve">
-    <value>Atracado em {0} (duração da doca ainda não conhecida)</value>
+    <value>Пришвартован на {0} (продолжительность стоянки пока не известна)</value>
   </data>
   <data name="CargoTimeRemainingOnMap" xml:space="preserve">
-    <value>Tempo restante no mapa (desde a desova)</value>
+    <value>Время, оставшееся на карте (от спауна)</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
-    <value>Ligado a meio do percurso - tempo desconhecido</value>
+    <value>Подключился на середине маршрута - время неизвестно</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
-    <value>Ligado a meio do percurso - tempo desconhecido (percurso ~{0}m total)</value>
+    <value>Подключился на середине маршрута - время неизвестно (маршрут ~{0}м всего)</value>
   </data>
   <data name="CargoDespawnedAgo" xml:space="preserve">
-    <value>Cargo Ship despawned {0}m {1}s ago this session</value>
+    <value>Грузовое судно развоплотилось {0}m {1}s ago this session</value>
   </data>
   <data name="VendorActiveRunningFor" xml:space="preserve">
-    <value>Viajante Vendedor ativo - concorrer para {0}</value>
+    <value>Путешествующий вендор активен - бежит на {0}</value>
   </data>
   <data name="VendorActiveSpawnUnknown" xml:space="preserve">
-    <value>Vendedor Viajante ativo (tempo de aparecimento desconhecido)</value>
+    <value>Странствующий вендор активен (время спавна неизвестно)</value>
   </data>
   <data name="VendorDespawnedAgo" xml:space="preserve">
-    <value>Travelling Vendor despawned {0} ago this session</value>
+    <value>Странствующий торговец депаунировался {0} назад в этой сессии</value>
   </data>
   <data name="DeepSeaActiveRunningFor" xml:space="preserve">
-    <value>Deep Sea active - candidatura para {0}</value>
+    <value>Глубоководная активность - бег на {0}</value>
   </data>
   <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
-    <value>Mar profundo ativo (tempo de desova desconhecido)</value>
+    <value>Глубоководный активный (время нереста неизвестно)</value>
   </data>
   <data name="DeepSeaEndedAgo" xml:space="preserve">
-    <value>Deep Sea terminou {0} ago this session</value>
+    <value>Глубокое море закончилось {0} назад на этом сеансе.</value>
   </data>
   <data name="TimerHoursMinutes" xml:space="preserve">
     <value>{0}h {1:D2}m</value>
@@ -1242,267 +1242,267 @@ Baixar e instalar agora?</value>
     <value>{0}s</value>
   </data>
   <data name="ChatCmdPopResponse" xml:space="preserve">
-    <value>{0} jogadores atualmente online.{1}</value>
+    <value>{0} игроков, которые в настоящее время находятся онлайн.{1}</value>
   </data>
   <data name="ChatCmdPopQueue" xml:space="preserve">
-    <value> Fila de espera: {0} jogadores.</value>
+    <value> Очередь: {0} игроков.</value>
   </data>
   <data name="ChatCmdTimeResponse" xml:space="preserve">
-    <value>Hora atual do jogo: {0}.</value>
+    <value>Текущее игровое время: {0}.</value>
   </data>
   <data name="ChatCmdPromoteResponse" xml:space="preserve">
-    <value>{0} foi promovido a líder.</value>
+    <value>{0} был повышен до руководителя.</value>
   </data>
   <data name="ChatCmdDeepSeaActive" xml:space="preserve">
-    <value>O Deep Sea está ativo! A concorrer para {0}.</value>
+    <value>Deep Sea активен! Бег на {0}.</value>
   </data>
   <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
-    <value>O Mar Profundo está atualmente ativo (ligado a meio do evento - tempo de desova desconhecido).</value>
+    <value>Deep Sea в настоящее время активен (подключен в середине события - время спавна неизвестно).</value>
   </data>
   <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
-    <value>O Deep Sea terminou {0} minutos atrás nesta sessão.</value>
+    <value>Deep Sea закончился {0} минут назад.</value>
   </data>
   <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
-    <value>Estado do evento Deep Sea desconhecido (não visto nesta sessão).</value>
+    <value>Статус события "Глубокое море" неизвестен (в этой сессии его не видели).</value>
   </data>
   <data name="ChatCmdCargoNotActive" xml:space="preserve">
-    <value>Navio de carga não ativo.</value>
+    <value>Грузовой корабль не активен.</value>
   </data>
   <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
-    <value>Navio de carga atracado em {0}. Partida em cerca de {1} minutos.</value>
+    <value>Грузовое судно причаливает на {0}. Отправляется примерно через {1} минут.</value>
   </data>
   <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
-    <value>Navio de carga atracado em {0} e preparando-se para partir.</value>
+    <value>Грузовое судно причалило к {0} и готовится к отплытию.</value>
   </data>
   <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
-    <value>Navio de carga atracado em {0} (hora de partida desconhecida).</value>
+    <value>Грузовое судно причалило к {0} (время отправления неизвестно).</value>
   </data>
   <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
-    <value>Navio de carga ativo. Partida em cerca de {0} minutos.</value>
+    <value>Грузовой корабль активен. Отправляется примерно через {0} минут.</value>
   </data>
   <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
-    <value>Navio de carga ativo e a preparar-se para partir em breve.</value>
+    <value>Грузовой корабль активен и готовится к скорому отплытию.</value>
   </data>
   <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
-    <value>Navio de carga ativo (duração da rota ainda não aprendida para este servidor).</value>
+    <value>Грузовой корабль активен (длительность маршрута еще не изучена для этого сервера).</value>
   </data>
   <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
-    <value>Cargueiro ativo (ligado após a desova - tempo restante desconhecido).</value>
+    <value>Грузовой корабль активен (подключается после спавна - оставшееся время неизвестно).</value>
   </data>
   <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
-    <value>Cargueiro não está ativo. Despawned {0} minutos atrás nesta sessão.</value>
+    <value>Грузовой корабль не активен. Разрушен {0} минут назад в этой сессии.</value>
   </data>
   <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
-    <value>{0}: caixote em {1}m {2}s</value>
+    <value>{0}: ящик в {1}m {2}s</value>
   </data>
   <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
-    <value>{0}: última chamada {1}m atrás</value>
+    <value>{0}: последний звонок {1}м назад</value>
   </data>
   <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
-    <value>{0}: não chamado nesta sessão</value>
+    <value>{0}: не вызывается в эту сессию</value>
   </data>
   <data name="ChatCmdHeliActive" xml:space="preserve">
-    <value>A Patrulha Heli está ativa! A concorrer para {0}.</value>
+    <value>Патрульный Heli активен! Бег на {0}.</value>
   </data>
   <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
-    <value>O Heli de patrulha está atualmente ativo (ligado a meio do evento - hora de aparecimento desconhecida).</value>
+    <value>Патрульный Хели в настоящее время активен (подключен в середине события - время спавна неизвестно).</value>
   </data>
   <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
-    <value>Patrol Heli não está ativo. Foi {0} {1} há esta sessão.</value>
+    <value>Патрульный Heli не активен. Это было {0} {1} назад в этой сессии.</value>
   </data>
   <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
-    <value>abatido</value>
+    <value>сбитый</value>
   </data>
   <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
-    <value>deixou o mapa</value>
+    <value>покинул карту</value>
   </data>
   <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
-    <value>Estado do evento Patrol Heli desconhecido (não visto nesta sessão).</value>
+    <value>Статус события Patrol Heli неизвестен (не был замечен в этой сессии).</value>
   </data>
   <data name="ChatCmdVendorActive" xml:space="preserve">
-    <value>O Vendedor Viajante está ativo! A concorrer para {0}.</value>
+    <value>Путешествующий вендор активен! Баллотируемся на {0}.</value>
   </data>
   <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
-    <value>O Vendedor ambulante está atualmente ativo (ligado a meio do evento - hora de aparecimento desconhecida).</value>
+    <value>Странствующий вендор в настоящее время активен (подключен в середине события - время спавна неизвестно).</value>
   </data>
   <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
-    <value>Vendedor ambulante não ativo. Despawned {0} ago this session.</value>
+    <value>Странствующий вендор не активен. Отключился {0} назад в этой сессии.</value>
   </data>
   <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
-    <value>Situação do evento Travelling Vendor desconhecida (não visto nesta sessão).</value>
+    <value>Статус события Travelling Vendor неизвестен (не был замечен в этой сессии).</value>
   </data>
   <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
-    <value>Não são mapeados armários de ferramentas para comandos de manutenção.</value>
+    <value>Для команд обслуживания не отображаются шкафы с инструментами.</value>
   </data>
   <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
-    <value>Manutenção em {0} TC: Vazio ou expirado.</value>
+    <value>Содержание в {0} TC: пустой или просроченный.</value>
   </data>
   <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
-    <value> Necessidade/24h: {0}.</value>
+    <value> Потребность/24 часа: {0}.</value>
   </data>
   <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
-    <value>Manutenção em {0} TC: {1}.</value>
+    <value>Поддержание в {0} TC: {1}.</value>
   </data>
   <data name="ChatCmdUpkeepDays" xml:space="preserve">
-    <value>{0} dias</value>
+    <value>{0} дней</value>
   </data>
   <data name="ChatCmdUpkeepHours" xml:space="preserve">
-    <value>{0} horas</value>
+    <value>{0} часы</value>
   </data>
   <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
-    <value>{0} minutos</value>
+    <value>{0} минут</value>
   </data>
   <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
-    <value>{0}: Vazio/expirado</value>
+    <value>{0}: Пустой/истекший</value>
   </data>
   <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
     <value>{0}: {1}d, {2}h</value>
   </data>
   <data name="ChatCmdUpkeepHeader" xml:space="preserve">
-    <value>Manutenção: {0}</value>
+    <value>Содержание: {0}</value>
   </data>
   <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
-    <value>Os monitores do Bound Tool Cupboard não foram encontrados ou não estão emparelhados.</value>
+    <value>Мониторы Bound Tool Cupboard не найдены или не сопряжены.</value>
   </data>
   <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
-    <value>O monitor do armário de ferramentas vinculado não foi encontrado ou não está emparelhado.</value>
+    <value>Монитор Bound Tool Cupboard не найден или не сопряжен.</value>
   </data>
   <data name="ChatCmdSwitchToggled" xml:space="preserve">
-    <value>{0} {1}.</value>
+    <value>{0} развернуть {1}.</value>
   </data>
   <data name="ChatCmdSwitchStateOn" xml:space="preserve">
-    <value>ON</value>
+    <value>НА</value>
   </data>
   <data name="ChatCmdSwitchStateOff" xml:space="preserve">
-    <value>DESLIGADO</value>
+    <value>OFF</value>
   </data>
   <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
-    <value>Bound Smart Switch não encontrado ou não emparelhado.</value>
+    <value>Bound Smart Switch не найден или не сопряжен.</value>
   </data>
   <data name="MaterialWood" xml:space="preserve">
-    <value>Madeira</value>
+    <value>Дерево</value>
   </data>
   <data name="MaterialStone" xml:space="preserve">
-    <value>Pedra</value>
+    <value>Камень</value>
   </data>
   <data name="MaterialMetal" xml:space="preserve">
-    <value>Metal</value>
+    <value>Металл</value>
   </data>
   <data name="MaterialHQM" xml:space="preserve">
     <value>HQM</value>
   </data>
   <data name="SmallOilRig" xml:space="preserve">
-    <value>Pequena plataforma petrolífera</value>
+    <value>Малая нефтяная буровая установка</value>
   </data>
   <data name="LargeOilRig" xml:space="preserve">
-    <value>Grande plataforma petrolífera</value>
+    <value>Большая нефтяная вышка</value>
   </data>
   <data name="ShopWord" xml:space="preserve">
-    <value>Loja</value>
+    <value>Магазин</value>
   </data>
   <data name="EventCargoShip" xml:space="preserve">
-    <value>Navio de carga</value>
+    <value>Грузовое судно</value>
   </data>
   <data name="EventTravellingVendor" xml:space="preserve">
-    <value>Vendedor ambulante</value>
+    <value>Путешествующий продавец</value>
   </data>
   <data name="EventCH47" xml:space="preserve">
     <value>CH47</value>
   </data>
   <data name="EventPatrolHelicopter" xml:space="preserve">
-    <value>Helicóptero de patrulha</value>
+    <value>Патрульный вертолет</value>
   </data>
   <data name="EventOilrigCrate" xml:space="preserve">
-    <value>Caixa Oilrig</value>
+    <value>Ящик Oilrig</value>
   </data>
   <data name="EventExplosion" xml:space="preserve">
-    <value>Explosão</value>
+    <value>Взрыв</value>
   </data>
   <data name="EventBuildingBlocked" xml:space="preserve">
-    <value>Edifício bloqueado</value>
+    <value>Заблокированное здание</value>
   </data>
   <data name="EventGeneric" xml:space="preserve">
-    <value>Evento</value>
+    <value>Событие</value>
   </data>
   <data name="AlertOilRigTriggered" xml:space="preserve">
-    <value>[{0}] activada! A caixa é desbloqueada em {1}.</value>
+    <value>[{0}] Сработало! Ящик разблокируется в {1}.</value>
   </data>
   <data name="AlertAlarmTriggered" xml:space="preserve">
-    <value>ALARME: {0} acionado!</value>
+    <value>ALARM: {0} сработал!</value>
   </data>
   <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
-    <value>[{0}] A caixa é desbloqueada em 10 minutos!</value>
+    <value>[{0}] Крейт разблокируется за 10 минут!</value>
   </data>
   <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
-    <value>[{0}] A caixa é desbloqueada em 5 minutos!</value>
+    <value>[{0}] Крейт разблокируется за 5 минут!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Mar profundo está a funcionar</value>
+    <value>Глубоководный запуск</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
-    <value>Nova loja {0} [{1}]: {2}</value>
+    <value>Новый магазин {0} [{1}]: {2}</value>
   </data>
   <data name="AlertSuspiciousShop" xml:space="preserve">
-    <value>Loja suspeita {0} [{1}] estava em linha {2}s, vendeu {3}</value>
+    <value>Подозрительный магазин {0} [{1}] был онлайн {2}с, продавал {3}</value>
   </data>
   <data name="AlertCargoSpawned" xml:space="preserve">
-    <value>O cargueiro gerou {0}</value>
+    <value>Грузовой корабль породил {0}</value>
   </data>
   <data name="CargoFarOutAtSea" xml:space="preserve">
-    <value>muito longe no mar (perto de {0})</value>
+    <value>далеко в море (около {0})</value>
   </data>
   <data name="AlertCargoDocked" xml:space="preserve">
-    <value>Navio de carga atracado em {0} ({1})</value>
+    <value>Грузовой корабль причалил к {0} ({1})</value>
   </data>
   <data name="AlertCargoExpectedDock" xml:space="preserve">
-    <value>O cargueiro deve atracar em {0} ({1}) em cerca de 5 minutos.</value>
+    <value>Грузовое судно должно причалить к {0} ({1}) примерно через 5 минут.</value>
   </data>
   <data name="AlertCargoDeparting" xml:space="preserve">
-    <value>Navio de carga com partida de {0} em 5 minutos ({1})</value>
+    <value>Грузовое судно отправляется с {0} через 5 минут ({1})</value>
   </data>
   <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
-    <value>Crash detectado devido ao atraso do servidor - Heli ainda está no mapa em {0}</value>
+    <value>Обнаружен крах из-за задержки сервера - Хели все еще на карте {0}.</value>
   </data>
   <data name="AlertEventSpawned" xml:space="preserve">
-    <value>{0} desovado em {1}</value>
+    <value>{0} зашел на {1}.</value>
   </data>
   <data name="AlertHeliShotDown" xml:space="preserve">
-    <value>Helicóptero de patrulha abatido em {0}</value>
+    <value>Патрульный вертолет сбит на {0}</value>
   </data>
   <data name="Unknown" xml:space="preserve">
-    <value>desconhecido</value>
+    <value>неизвестно</value>
   </data>
   <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
-    <value>{0} ficou online em {1}</value>
+    <value>{0} появился на сайте {1}</value>
   </data>
   <data name="AlertPlayerOffline" xml:space="preserve">
-    <value>{0} ficou offline</value>
+    <value>{0} ушла в оффлайн</value>
   </data>
   <data name="AlertPlayerDied" xml:space="preserve">
-    <value>{0} morreu em {1}</value>
+    <value>{0} умер {1}</value>
   </data>
   <data name="AlertPlayerRespawned" xml:space="preserve">
-    <value>{0} reapareceu em {1}</value>
+    <value>{0} возрождается @ {1}</value>
   </data>
   <data name="AlertTrackingOnline" xml:space="preserve">
-    <value>[Tracking] {0}{1} está agora ONLINE</value>
+    <value>[Слежение] {0}{1} теперь ONLINE</value>
   </data>
   <data name="AlertTrackingOffline" xml:space="preserve">
-    <value>[Tracking] {0}{1} está agora OFFLINE</value>
+    <value>[Слежение] {0}{1} теперь OFFLINE</value>
   </data>
   <data name="AlertTrackingRenamed" xml:space="preserve">
-    <value>[Tracking] {0}{1} renomeado para {2}!</value>
+    <value>[Слежение] {0}{1} переименован в {2}!</value>
   </data>
   <data name="AlertShopSells" xml:space="preserve">
-    <value>vendas</value>
+    <value>продает</value>
   </data>
   <data name="AlertShopBuys" xml:space="preserve">
-    <value>compras</value>
+    <value>покупает</value>
   </data>
   <data name="AlertShopLabelFallback" xml:space="preserve">
-    <value>Loja</value>
+    <value>Магазин</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
-    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) para {6} {7}</value>
+    <value>{0} [{1}] {2} x{3} {4} (Запас {5}) для {6} {7}</value>
   </data>
 </root>

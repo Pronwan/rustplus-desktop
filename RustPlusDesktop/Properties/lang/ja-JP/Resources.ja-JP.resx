@@ -58,942 +58,942 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppTitle" xml:space="preserve">
-    <value>format@@0 RUST+ DESKTOP</value>
+    <value>RUST+ DESKTOP</value>
   </data>
   <data name="SteamAccount" xml:space="preserve">
-    <value>Conta Steam</value>
+    <value>Steamアカウント</value>
   </data>
   <data name="NotLoggedIn" xml:space="preserve">
-    <value>Não conectado</value>
+    <value>ログインしていません</value>
   </data>
   <data name="CheckForUpdates" xml:space="preserve">
-    <value>Procurar por atualizações</value>
+    <value>アップデートの確認</value>
   </data>
   <data name="Downloading" xml:space="preserve">
-    <value>Baixando...</value>
+    <value>ダウンロード中...</value>
   </data>
   <data name="JoinDiscord" xml:space="preserve">
-    <value>Junte-se ao Discord</value>
+    <value>Discord に参加</value>
   </data>
   <data name="PatchNotes" xml:space="preserve">
-    <value>Notas de Atualização</value>
+    <value>パッチノート</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Confirgurações</value>
+    <value>設定</value>
   </data>
   <data name="PairedServers" xml:space="preserve">
-    <value>SERVIDORES PAIXOS</value>
+    <value>ペアリングサーバー</value>
   </data>
   <data name="NoServersPaired" xml:space="preserve">
-    <value>Nenhum servidor pareado ainda</value>
+    <value>ペアリングされたサーバーがありません</value>
   </data>
   <data name="PairingMaintenance" xml:space="preserve">
-    <value>PAIRANDO &amp; MAINTENÂNCIA</value>
+    <value>ペイントとメンテナンス</value>
   </data>
   <data name="PairingIdle" xml:space="preserve">
     <value>Pairing: idle</value>
   </data>
   <data name="RightClickOptions" xml:space="preserve">
-    <value>Clique direito para opções</value>
+    <value>右クリックでオプション</value>
   </data>
   <data name="TrackingActive" xml:space="preserve">
-    <value>Rastreamento ativo</value>
+    <value>トラッキング有効</value>
   </data>
   <data name="LastPull" xml:space="preserve">
-    <value>Último pull: {0}</value>
+    <value>最後のプル: {0}</value>
   </data>
   <data name="Donate" xml:space="preserve">
-    <value>Doar</value>
+    <value>寄付</value>
   </data>
   <data name="SupportDeveloper" xml:space="preserve">
-    <value>Apoie o desenvolvedor</value>
+    <value>開発者を支援する</value>
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
   </data>
   <data name="ResetWebSocket" xml:space="preserve">
-    <value>Redefinir a conexão WebSocket</value>
+    <value>WebSocket 接続をリセット</value>
   </data>
   <data name="Players" xml:space="preserve">
-    <value>Jogadores:</value>
+    <value>プレイヤー:</value>
   </data>
   <data name="ShowOnlinePlayers" xml:space="preserve">
-    <value>Mostrar Aba de Jogadores Online</value>
+    <value>オンラインプレイヤータブを表示</value>
   </data>
   <data name="Queue" xml:space="preserve">
-    <value>Fila:</value>
+    <value>キュー:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>Dispositivos</value>
+    <value>デバイス</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
-    <value>Atalhos</value>
+    <value>ホットキー</value>
   </data>
   <data name="ImportDevices" xml:space="preserve">
-    <value>Importar dispositivos de colegas de equipe</value>
+    <value>チームメイトからデバイスをインポート</value>
   </data>
   <data name="ExportDevices" xml:space="preserve">
-    <value>Exportar dispositivos para colegas de equipe</value>
+    <value>デバイスをチームメイトにエクスポート</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>atualizar</value>
+    <value>更新</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>excluir</value>
+    <value>削除</value>
   </data>
   <data name="DeleteMissingOnly" xml:space="preserve">
-    <value>Você só pode excluir dispositivos faltantes</value>
+    <value>不足しているデバイスのみ削除できます</value>
   </data>
   <data name="RenameDevice" xml:space="preserve">
-    <value>Renomear dispositivo</value>
+    <value>デバイス名の変更</value>
   </data>
   <data name="Online" xml:space="preserve">
-    <value>ONLINE</value>
+    <value>オンライン</value>
   </data>
   <data name="Offline" xml:space="preserve">
-    <value>DESLIGAR</value>
+    <value>オフライン</value>
   </data>
   <data name="Connect" xml:space="preserve">
-    <value>Conectar</value>
+    <value>接続する</value>
   </data>
   <data name="FullConnect" xml:space="preserve">
-    <value>Conexão completa</value>
+    <value>フル接続</value>
   </data>
   <data name="LoadMapTeam" xml:space="preserve">
-    <value>Carregar Mapa &amp; Equipe</value>
+    <value>マップとチームを読み込む</value>
   </data>
   <data name="Disconnect" xml:space="preserve">
-    <value>Desconectar</value>
+    <value>接続を解除</value>
   </data>
   <data name="ServerDetails" xml:space="preserve">
-    <value>Detalhes do Servidor</value>
+    <value>サーバーの詳細</value>
   </data>
   <data name="Listen" xml:space="preserve">
-    <value>Ouvir</value>
+    <value>Listen</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Interromper</value>
+    <value>停止</value>
   </data>
   <data name="TryPairingEdge" xml:space="preserve">
-    <value>Tente emparelhar com a borda</value>
+    <value>エッジとペアリングしてみてください</value>
   </data>
   <data name="ResetPairingConfig" xml:space="preserve">
     <value>Reset pairing (delete config)</value>
   </data>
   <data name="ResetListenPairing" xml:space="preserve">
-    <value>Redefinir + Ouvir (reparar)</value>
+    <value>Reset + Listen (再ペア)</value>
   </data>
   <data name="ResetListenEdge" xml:space="preserve">
-    <value>Redefinir + Ouvir com a borda</value>
+    <value>Reset + Listen with Edge</value>
   </data>
   <data name="RelinkBattlemetrics" xml:space="preserve">
     <value>Relink Battlemetrics ID…</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>Excluir servidor…</value>
+    <value>サーバーの削除…</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
     <value>Bitte warten …</value>
   </data>
   <data name="ToggleServerArea" xml:space="preserve">
-    <value>Alternar área do servidor</value>
+    <value>サーバーエリアの切り替え</value>
   </data>
   <data name="StreamerMode" xml:space="preserve">
-    <value>Modo streamer</value>
+    <value>配信モード</value>
   </data>
   <data name="ScaleLabel" xml:space="preserve">
-    <value>Escala:</value>
+    <value>スケール:</value>
   </data>
   <data name="EnableStreamerMode" xml:space="preserve">
-    <value>Ativar Modo Streamer (Abbreviates Names)</value>
+    <value>配信モードを有効にする (名前を短縮)</value>
   </data>
   <data name="StreamerModeToolTip" xml:space="preserve">
-    <value>Abrevia Nomes e IDs Steam para proteger sua privacidade durante streams. Esconder automaticamente os consoles e a lista de servidores.</value>
+    <value>ストリーム中のプライバシーを保護するためにSteam名とIDを省略します。コンソールとサーバーリストを自動的に非表示にします。</value>
   </data>
   <data name="NoPositionAvailable" xml:space="preserve">
-    <value>Nenhuma posição disponível (offline ou não gerado).</value>
+    <value>ポジションがありません（オフラインまたはスポーンされていません）。</value>
   </data>
   <data name="SaveGroup" xml:space="preserve">
-    <value>Salvar Grupo</value>
+    <value>グループを保存</value>
   </data>
   <data name="EnterGroupName" xml:space="preserve">
-    <value>Por favor, insira um nome de grupo.</value>
+    <value>グループ名を入力してください。</value>
   </data>
   <data name="MessageNotSentError" xml:space="preserve">
-    <value>A mensagem não pôde ser enviada. Por favor, tente novamente. (Verifique se está em uma equipe!)</value>
+    <value>メッセージを送信できませんでした。もう一度やり直してください（チームにいるか確認してください）</value>
   </data>
   <data name="ErrorPrefix" xml:space="preserve">
-    <value>Erro: </value>
+    <value>エラー: </value>
   </data>
   <data name="AssignGroup" xml:space="preserve">
-    <value>Designar Grupo</value>
+    <value>グループを割り当てる</value>
   </data>
   <data name="GroupSettingsTitle" xml:space="preserve">
-    <value>Configurações do grupo: {0}</value>
+    <value>グループ設定: {0}</value>
   </data>
   <data name="GroupName" xml:space="preserve">
-    <value>Nome do Grupo</value>
+    <value>グループ名</value>
   </data>
   <data name="EnterGroupNamePlaceholder" xml:space="preserve">
-    <value>Informe o nome do grupo...</value>
+    <value>グループ名を入力...</value>
   </data>
   <data name="GroupColor" xml:space="preserve">
-    <value>Cor do grupo</value>
+    <value>グループの色</value>
   </data>
   <data name="SaveChanges" xml:space="preserve">
-    <value>Salvar as alterações</value>
+    <value>変更を保存</value>
   </data>
   <data name="PlayerAnalyticsTitle" xml:space="preserve">
-    <value>Análise de Atividade de Jogador e Previsões</value>
+    <value>プレイヤーのアクティビティ分析と予測</value>
   </data>
   <data name="PlayersTitle" xml:space="preserve">
-    <value>Jogadores</value>
+    <value>プレイヤー</value>
   </data>
   <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
-    <value>Modo streamer e Mini mapa revisar</value>
+    <value>ストリーマーモードとミニマップのオーバーホール</value>
   </data>
   <data name="StreamerModeTitle" xml:space="preserve">
-    <value>Modo streamer</value>
+    <value>配信モード</value>
   </data>
   <data name="PlayerMarkerScalingTitle" xml:space="preserve">
-    <value>Escala do Marcador</value>
+    <value>プレイヤーマーカーのスケール</value>
   </data>
   <data name="MiniMapPolishTitle" xml:space="preserve">
-    <value>Mini mapa polonês</value>
+    <value>ポーランドのミニマップ</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>Ação Necessária:</value>
+    <value>アクションが必要:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Remoção de Métricas de Batalha:</value>
+    <value>BattleMetrics Removal:</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>Sistema de rastreamento do sistema</value>
+    <value>プレイヤー追跡システムのオーバーホール</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
-    <value>Como o Rastreamento do Jogador funciona</value>
+    <value>プレイヤー追跡の仕組み</value>
   </data>
   <data name="AddPlayersToStartTracking" xml:space="preserve">
-    <value>Adicionar jogadores ao rastreador para começar a rastrear</value>
+    <value>トラッカーにプレイヤーを追加してトラッキングを開始</value>
   </data>
   <data name="TrackingActiveStatus" xml:space="preserve">
-    <value>Rastreamento ativo</value>
+    <value>トラッキング有効</value>
   </data>
   <data name="TrackingIdleStatus" xml:space="preserve">
-    <value>Rastreamento ocioso</value>
+    <value>待機中</value>
   </data>
   <data name="FilterPlayers" xml:space="preserve">
-    <value>Filtrar jogadores...</value>
+    <value>プレイヤーをフィルター...</value>
   </data>
   <data name="ConnectToLoadPlayers" xml:space="preserve">
-    <value>Conecte-se a um servidor para carregar a lista de jogadores</value>
+    <value>サーバーに接続してプレイヤーリストを読み込みます。</value>
   </data>
   <data name="FetchingPlayersSteam" xml:space="preserve">
-    <value>Buscando jogadores através da Consulta Steam...</value>
+    <value>Steamクエリでプレイヤーを取得しています...</value>
   </data>
   <data name="TrackID" xml:space="preserve">
-    <value>ID da faixa</value>
+    <value>トラック ID</value>
   </data>
   <data name="ManualTrackNamePlaceholder" xml:space="preserve">
-    <value>Nome da faixa Manual...</value>
+    <value>手動トラック名...</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>Sem dispositivos.</value>
+    <value>デバイスがありません。</value>
   </data>
   <data name="NoTokenRegistered" xml:space="preserve">
-    <value>Nenhum token registrado</value>
+    <value>トークンが登録されていません</value>
   </data>
   <data name="TokenExpired" xml:space="preserve">
-    <value>Token expirado!</value>
+    <value>トークンの有効期限が切れました！</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>Expira em {0} dias</value>
+    <value>有効期限： {0} 日</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
-    <value>{0} até a noite</value>
+    <value>夜まで {0}</value>
   </data>
   <data name="UntilDay" xml:space="preserve">
-    <value>{0} até o dia</value>
+    <value>日まで {0}</value>
   </data>
   <data name="FollowMe" xml:space="preserve">
-    <value>Siga-me</value>
+    <value>フォローしてください</value>
   </data>
   <data name="FollowPlayer" xml:space="preserve">
-    <value>Seguir {0}</value>
+    <value>{0}をフォロー</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>Pareando: escutando…</value>
+    <value>ペアリング：リスニング…</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
-    <value>Pareamento: parado</value>
+    <value>ペアリング: 停止</value>
   </data>
   <data name="PairingFailed" xml:space="preserve">
-    <value>Pareamento: falhou</value>
+    <value>ペアリングに失敗しました</value>
   </data>
   <data name="AlarmActivated" xml:space="preserve">
-    <value>Alarme ativado!</value>
+    <value>アラームが有効になりました！</value>
   </data>
   <data name="Server" xml:space="preserve">
-    <value>Servidor</value>
+    <value>サーバー</value>
   </data>
   <data name="SmartAlarm" xml:space="preserve">
-    <value>Alarme Inteligente</value>
+    <value>スマートアラーム</value>
   </data>
   <data name="UnableToReadLink" xml:space="preserve">
-    <value>Não foi possível ler RustPlus-Link: {0}
-Formato: rustplus://IP:PORT</value>
+    <value>RustPlus-Link: {0}
+フォーマット: rustplus://IP:PORT</value>
   </data>
   <data name="DeletePairingConfigHeader" xml:space="preserve">
     <value>Reset pairing</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>Eliminar a configuração de emparelhamento existente?
-Terá de emparelhar novamente no arranque seguinte.</value>
+    <value>既存のペアリング設定を削除しますか？
+次回の起動時に再度ペアリングする必要があります。</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
     <value>Reset + Listen</value>
   </data>
   <data name="ResetListenBody" xml:space="preserve">
-    <value>Excluir o emparelhamento de configuração e reparelhar/escutar?</value>
+    <value>ペアリング設定を削除して直ちにペアリング/リッスンしますか？</value>
   </data>
   <data name="ResetListenEdgeHeader" xml:space="preserve">
-    <value>Redefinir + Ouvir (Edge)</value>
+    <value>Reset + Listen (Edge)</value>
   </data>
   <data name="ResetListenEdgeBody" xml:space="preserve">
-    <value>Excluir o emparelhamento de configuração e reparar e ouvir imediatamente usando o Edge?</value>
+    <value>ペアリング設定を削除し、エッジを使用して直ちにペアリング/リッスンしますか？</value>
   </data>
   <data name="UpdateQueryFailed" xml:space="preserve">
-    <value>Não foi possível consultar a versão mais recente. Por favor, tente novamente ou abra a página de Versões.</value>
+    <value>最新のリリースを照会できませんでした。もう一度試すか、リリースページを開いてください。</value>
   </data>
   <data name="UpdateUpToDate" xml:space="preserve">
-    <value>Você está atualizado.</value>
+    <value>あなたは最新です。</value>
   </data>
   <data name="UpdateAvailableHeader" xml:space="preserve">
-    <value>Atualização disponível</value>
+    <value>アップデートがあります</value>
   </data>
   <data name="UpdateAvailableBody" xml:space="preserve">
-    <value>Nova versão disponível: {0}
-Abrir página de Versões?</value>
+    <value>{0}
+リリースページを開きますか？</value>
   </data>
   <data name="DownloadAndInstallBody" xml:space="preserve">
-    <value>Nova versão disponível: {0}
-Baixar e instalar agora?</value>
+    <value>{0}
+今すぐダウンロードしてインストールしますか？</value>
   </data>
   <data name="DownloadFailed" xml:space="preserve">
-    <value>Download falhou</value>
+    <value>ダウンロードに失敗しました。</value>
   </data>
   <data name="UpdateCheckFailed" xml:space="preserve">
-    <value>Verificação da atualização falhou.
+    <value>更新の確認に失敗しました。
 {0}</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>Sem dispositivos.</value>
+    <value>デバイスがありません。</value>
   </data>
   <data name="ViewProfile" xml:space="preserve">
-    <value>Ver Perfil</value>
+    <value>プロフィールを表示</value>
   </data>
   <data name="ChangeGroup" xml:space="preserve">
-    <value>Alterar grupo</value>
+    <value>グループの変更</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Renomear</value>
+    <value>名前の変更</value>
   </data>
   <data name="RemoveTracked" xml:space="preserve">
-    <value>Remover Rastreado</value>
+    <value>トラックを削除</value>
   </data>
   <data name="View" xml:space="preserve">
-    <value>Visualizar</value>
+    <value>表示</value>
   </data>
   <data name="MoreOptions" xml:space="preserve">
-    <value>Mais opções</value>
+    <value>その他のオプション</value>
   </data>
   <data name="RelinkBattlemetricsId" xml:space="preserve">
     <value>Relink Battlemetrics ID…</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>Excluir servidor…</value>
+    <value>サーバーの削除…</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
-    <value>Clique direito para renomear</value>
+    <value>右クリックして名前を変更</value>
   </data>
   <data name="Toggle" xml:space="preserve">
-    <value>ALTERNAR</value>
+    <value>切り替え</value>
   </data>
   <data name="PopupWindow" xml:space="preserve">
-    <value>Janela-pop-up</value>
+    <value>ポップアップ ウィンドウ</value>
   </data>
   <data name="InAppAlert" xml:space="preserve">
-    <value>Alerta no Aplicativo</value>
+    <value>アプリ内アラート</value>
   </data>
   <data name="AudioAlert" xml:space="preserve">
-    <value>Alerta de Áudio</value>
+    <value>音声アラート</value>
   </data>
   <data name="CustomAudioFile" xml:space="preserve">
-    <value>Arquivo de áudio personalizado...</value>
+    <value>カスタムオーディオファイル...</value>
   </data>
   <data name="ResetToDefault" xml:space="preserve">
-    <value>Restaurar ao Padrão</value>
+    <value>デフォルトにリセット</value>
   </data>
   <data name="Snapshot" xml:space="preserve">
     <value>Snapshot: </value>
   </data>
   <data name="ItemsUpkeep" xml:space="preserve">
-    <value> Itens, Mantenedor=</value>
+    <value> アイテム、Upkeep=</value>
   </data>
   <data name="NoDevicesFound" xml:space="preserve">
-    <value>Nenhum dispositivo encontrado</value>
+    <value>デバイスが見つかりません</value>
   </data>
   <data name="PairDeviceToSee" xml:space="preserve">
-    <value>Parear um dispositivo inteligente, mude ou alarme para vê-lo aqui</value>
+    <value>スマートデバイスをペアリングし、スイッチまたはアラームをここに表示する</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>Equipe</value>
+    <value>Team</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
-    <value>Centralizar no mapa</value>
+    <value>地図の中央揃え</value>
   </data>
   <data name="FollowOnMap" xml:space="preserve">
-    <value>Seguir no mapa</value>
+    <value>地図をフォローする</value>
   </data>
   <data name="OpenSteamProfile" xml:space="preserve">
-    <value>Abrir perfil Steam</value>
+    <value>Steamプロファイルを開く</value>
   </data>
   <data name="PromoteToLeader" xml:space="preserve">
-    <value>Promover para Líder</value>
+    <value>リーダーに昇格する</value>
   </data>
   <data name="KickFromTeam" xml:space="preserve">
-    <value>Expulsar da Equipe</value>
+    <value>チームから退出する</value>
   </data>
   <data name="ProfileMarkers" xml:space="preserve">
-    <value>Marcadores de perfil</value>
+    <value>プロファイルマーカー</value>
   </data>
   <data name="DeathMarkers" xml:space="preserve">
-    <value>Marcadores de morte</value>
+    <value>死亡マーカー</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>Câmeras</value>
+    <value>カメラ</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>Adicionar câmera</value>
+    <value>カメラを追加</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
-    <value>Nenhuma câmera encontrada</value>
+    <value>カメラが見つかりません</value>
   </data>
   <data name="PairCameraToSee" xml:space="preserve">
-    <value>Parear uma câmera para ver sua pré-visualização aqui</value>
+    <value>カメラをペアリングしてプレビューをここで確認する</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>Jogadores</value>
+    <value>プレイヤー</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
-    <value>Como monitorar</value>
+    <value>追跡する方法</value>
   </data>
   <data name="LearnHowTrackingWorks" xml:space="preserve">
-    <value>Aprenda como funciona o rastreamento do jogador</value>
+    <value>プレイヤー追跡の仕組みを学ぶ</value>
   </data>
   <data name="OnlineTab" xml:space="preserve">
-    <value>Disponível</value>
+    <value>オンライン</value>
   </data>
   <data name="OnlinePlayers" xml:space="preserve">
-    <value>Jogadores Online</value>
+    <value>オンラインプレイヤー</value>
   </data>
   <data name="SearchBM" xml:space="preserve">
-    <value>Buscar BM</value>
+    <value>BMを検索</value>
   </data>
   <data name="SearchServerBM" xml:space="preserve">
-    <value>Pesquisar no servidor atual na BattleMetrics</value>
+    <value>BattleMetricsで現在のサーバーを検索</value>
   </data>
   <data name="Popout" xml:space="preserve">
-    <value>Poço</value>
+    <value>ポップアウト</value>
   </data>
   <data name="OpenPlayersSeparateWindow" xml:space="preserve">
-    <value>Abrir jogadores em uma janela separada</value>
+    <value>別ウィンドウでプレイヤーを開く</value>
   </data>
   <data name="Track" xml:space="preserve">
-    <value>Acompanhar</value>
+    <value>トラック</value>
   </data>
   <data name="ManualTrackPlaceholder" xml:space="preserve">
-    <value>Nome da faixa manual ou ID do Steam...</value>
+    <value>手動トラック名またはスチームID...</value>
   </data>
   <data name="FilterPlayersPlaceholder" xml:space="preserve">
-    <value>Filtrar jogadores...</value>
+    <value>プレイヤーをフィルター...</value>
   </data>
   <data name="LoadingPlayers" xml:space="preserve">
-    <value>Carregando jogadores...</value>
+    <value>プレイヤーを読み込んでいます...</value>
   </data>
   <data name="TrackedTab" xml:space="preserve">
-    <value>Rastreado</value>
+    <value>追跡</value>
   </data>
   <data name="TrackedPlayers" xml:space="preserve">
-    <value>Jogadores Rastreados</value>
+    <value>追跡済みプレイヤー</value>
   </data>
   <data name="ManageGroups" xml:space="preserve">
-    <value>Gerenciar grupos</value>
+    <value>グループの管理</value>
   </data>
   <data name="ViewFullAnalysisReport" xml:space="preserve">
-    <value>Visualizar relatório de análise completa</value>
+    <value>完全な分析レポートを表示</value>
   </data>
   <data name="ReadyToExploreMap" xml:space="preserve">
-    <value>Pronto para explorar o mapa?</value>
+    <value>マップを探索する準備はできましたか？</value>
   </data>
   <data name="ConnectToLoadMap" xml:space="preserve">
-    <value>Conecte-se a um servidor selecionado para carregar o mapa e a equipe do Rust ao vivo.</value>
+    <value>ライブRustマップとチームをロードするために、選択したサーバーに接続します。</value>
   </data>
   <data name="ReadyToDominate" xml:space="preserve">
-    <value>Pronto para dominar o Rust?</value>
+    <value>Rustを制覇する準備はできましたか？</value>
   </data>
   <data name="PairAccountBenefits" xml:space="preserve">
-    <value>Parear sua conta para começar a rastrear jogadores, receber alertas básicos de Reide e controlar seus dispositivos inteligentes instantaneamente.</value>
+    <value>アカウントをペアにしてプレイヤーの追跡を開始し、基本レイドアラートを受信し、スマートデバイスを瞬時に制御します。</value>
   </data>
   <data name="LoginPairAccount" xml:space="preserve">
-    <value>Login &amp; Conta em Pares</value>
+    <value>ログイン＆ペア アカウント</value>
   </data>
   <data name="RequiresSteamLogin" xml:space="preserve">
-    <value>Requer login Steam no seu navegador padrão.</value>
+    <value>デフォルトのブラウザでSteamログインが必要です。</value>
   </data>
   <data name="DeleteServerHeader" xml:space="preserve">
-    <value>Excluir Servidor?</value>
+    <value>サーバーを削除しますか？</value>
   </data>
   <data name="DeleteServerConfirm" xml:space="preserve">
-    <value>Tem certeza que deseja excluir este servidor? Esta ação não pode ser desfeita.</value>
+    <value>このサーバーを削除してもよろしいですか？この操作は元に戻せません。</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>cancelar</value>
+    <value>キャンセル</value>
   </data>
   <data name="DeleteAction" xml:space="preserve">
-    <value>excluir</value>
+    <value>削除</value>
   </data>
   <data name="AutoHideAfter3s" xml:space="preserve">
-    <value>Auto-ocultar após 3s</value>
+    <value>3秒後に自動的に隠す</value>
   </data>
   <data name="MapFilters" xml:space="preserve">
-    <value>FILTROS DO MAP</value>
+    <value>地図フィルター</value>
   </data>
   <data name="Grid" xml:space="preserve">
-    <value>Grade</value>
+    <value>グリッド</value>
   </data>
   <data name="Monuments" xml:space="preserve">
-    <value>Monumentos</value>
+    <value>記念品</value>
   </data>
   <data name="Shops" xml:space="preserve">
-    <value>Lojas</value>
+    <value>ショップ</value>
   </data>
   <data name="ChatAlerts" xml:space="preserve">
-    <value>ALERTAS DE CHAT</value>
+    <value>チャットアラート</value>
   </data>
   <data name="Alerts" xml:space="preserve">
-    <value>Atenção</value>
+    <value>アラート</value>
   </data>
   <data name="Configure" xml:space="preserve">
-    <value>Configurar</value>
+    <value>設定</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Selecionar Todos</value>
+    <value>すべて選択</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>Desmarcar Todos</value>
+    <value>すべての選択を解除</value>
   </data>
   <data name="Events" xml:space="preserve">
-    <value>EVENTOS</value>
+    <value>イベント</value>
   </data>
   <data name="CargoShip" xml:space="preserve">
-    <value>Navio de Carga</value>
+    <value>貨物船</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
-    <value>Invocar</value>
+    <value>スポーン</value>
   </data>
   <data name="CargoDock" xml:space="preserve">
-    <value>Acoplamento do Porto</value>
+    <value>ハーバードッキング</value>
   </data>
   <data name="CargoEgress" xml:space="preserve">
-    <value>Saída (5m Aviso)</value>
+    <value>出発（5m警告）</value>
   </data>
   <data name="CargoArrival" xml:space="preserve">
-    <value>Aviso de Chegada (5m antes da Doca)</value>
+    <value>到着警告 (Dockの5分前)</value>
   </data>
   <data name="Heli" xml:space="preserve">
-    <value>Patrulhar Helicóptero</value>
+    <value>ヘリコプターをパトロールする</value>
   </data>
   <data name="Chinook" xml:space="preserve">
     <value>Chinook (CH47)</value>
   </data>
   <data name="Vendor" xml:space="preserve">
-    <value>Vendedor Viajante</value>
+    <value>Vendor, vendor</value>
   </data>
   <data name="OilRig" xml:space="preserve">
-    <value>Gatilho de Plataforma</value>
+    <value>オイルリグトリガー</value>
   </data>
   <data name="DeepSea" xml:space="preserve">
-    <value>Evento Mar Profundo</value>
+    <value>深海イベント</value>
   </data>
   <data name="SmartAlerts" xml:space="preserve">
-    <value>Alertas inteligentes</value>
+    <value>スマートアラート</value>
   </data>
   <data name="PlayerOnline" xml:space="preserve">
-    <value>Estado online</value>
+    <value>オンラインステータス</value>
   </data>
   <data name="PlayerOffline" xml:space="preserve">
-    <value>Status Offline</value>
+    <value>オフライン状態</value>
   </data>
   <data name="AnnounceTracking" xml:space="preserve">
-    <value>Acompanhamento de Notificações</value>
+    <value>トラッキング通知</value>
   </data>
   <data name="PlayerDeathSelf" xml:space="preserve">
-    <value>Morte Pessoal</value>
+    <value>自己死</value>
   </data>
   <data name="PlayerDeathTeam" xml:space="preserve">
-    <value>Time da Morte</value>
+    <value>チーム死</value>
   </data>
   <data name="PlayerRespawnSelf" xml:space="preserve">
-    <value>Auto Renascimento</value>
+    <value>自己リスポーン回数</value>
   </data>
   <data name="PlayerRespawnTeam" xml:space="preserve">
-    <value>Renascimento da Equipe</value>
+    <value>チームのリスポーン回数</value>
   </data>
   <data name="NewShops" xml:space="preserve">
-    <value>Novas lojas</value>
+    <value>新しいショップ</value>
   </data>
   <data name="SuspiciousShops" xml:space="preserve">
-    <value>Lojas suspeitas</value>
+    <value>不審なショップ</value>
   </data>
   <data name="TradeAlerts" xml:space="preserve">
-    <value>Alertas de Troca</value>
+    <value>取引アラート</value>
   </data>
   <data name="CrosshairStyle" xml:space="preserve">
-    <value>Estilo da mira</value>
+    <value>クロスヘアスタイル</value>
   </data>
   <data name="GreenDot" xml:space="preserve">
-    <value>Ponto Verde</value>
+    <value>緑のドット</value>
   </data>
   <data name="MiniGreen" xml:space="preserve">
-    <value>Mini Verde</value>
+    <value>ミニグリーン</value>
   </data>
   <data name="OpenCrosshairRG" xml:space="preserve">
-    <value>Mira Aberta (R/G)</value>
+    <value>Open Crossshair (R/G)</value>
   </data>
   <data name="ThinRedCircle" xml:space="preserve">
-    <value>Círculo Vermelho Fino</value>
+    <value>薄い赤い円</value>
   </data>
   <data name="SquareDot" xml:space="preserve">
-    <value>Quadrado + Ponto</value>
+    <value>正方形＋ドット</value>
   </data>
   <data name="MagentaDot" xml:space="preserve">
-    <value>Ponto Magenta</value>
+    <value>赤紫色のドット</value>
   </data>
   <data name="MagentaOpenCross" xml:space="preserve">
-    <value>Cruz Aberta Magenta</value>
+    <value>赤紫色のオープンクロス</value>
   </data>
   <data name="RangeLineTicks" xml:space="preserve">
-    <value>Linha de Alcance (ticks)</value>
+    <value>範囲線 (ティック)</value>
   </data>
   <data name="DrawCrosshair" xml:space="preserve">
-    <value>Desenhar Crosshair...</value>
+    <value>クロスヘアを描画...</value>
   </data>
   <data name="ChooseMonitor" xml:space="preserve">
-    <value>Escolher monitor</value>
+    <value>モニターを選択</value>
   </data>
   <data name="DrawOverlay" xml:space="preserve">
-    <value>Desenhar sobreposição</value>
+    <value>重ね合わせを描く</value>
   </data>
   <data name="DrawToolTip" xml:space="preserve">
-    <value>Desenho (clique direito: tamanho / cor)</value>
+    <value>描画（右クリック：サイズ/色）</value>
   </data>
   <data name="PlaceTextToolTip" xml:space="preserve">
-    <value>Colocar Texto (Botão Direito: Cor / Tamanho)</value>
+    <value>テキストを配置（右クリック：色/サイズ）</value>
   </data>
   <data name="PlaceIconToolTip" xml:space="preserve">
-    <value>Ícone do Lugar (Clique direito: Escolher Ícone)</value>
+    <value>プレースアイコン (右クリック: アイコンを選択)</value>
   </data>
   <data name="EraserToolTip" xml:space="preserve">
-    <value>Borracha (segure ou clique)</value>
+    <value>消しゴム（長押しまたはクリック）</value>
   </data>
   <data name="DeleteOverlayToolTip" xml:space="preserve">
-    <value>Excluir a própria sobreposição</value>
+    <value>自分のオーバーレイを削除</value>
   </data>
   <data name="UploadOverlayToolTip" xml:space="preserve">
-    <value>Carregar a própria sobreposição / compartilhamento</value>
+    <value>自分のオーバーレイ/共有をアップロード</value>
   </data>
   <data name="ProfitTrades" xml:space="preserve">
     <value>Profit Trades</value>
   </data>
   <data name="ArbitrageOpportunities" xml:space="preserve">
-    <value>Oportunidades diretas de arbitragem − compre baixa → venda alta.</value>
+    <value>直接裁定の機会 | 低く購入 → 高く販売</value>
   </data>
   <data name="BuyXForY" xml:space="preserve">
-    <value>Compre X por Y</value>
+    <value>XをYで購入</value>
   </data>
   <data name="Analyze" xml:space="preserve">
-    <value>Analisar</value>
+    <value>分析</value>
   </data>
   <data name="IWantToGet" xml:space="preserve">
-    <value>Eu quero OBTER</value>
+    <value>取得したい</value>
   </data>
   <data name="ICanPayWith" xml:space="preserve">
-    <value>Eu posso PAGAR COM</value>
+    <value>私は支払うことができます</value>
   </data>
   <data name="TeamChat" xml:space="preserve">
-    <value>Bate-Papo da Equipe</value>
+    <value>チームチャット</value>
   </data>
   <data name="Send" xml:space="preserve">
-    <value>Mandar</value>
+    <value>送信</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
-    <value>Credenciais do FCM</value>
+    <value>FCM 資格情報</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
-    <value>Clique direito para configurar</value>
+    <value>右クリックで設定</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
     <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
-    <value>Redefinir zoom e posição do mapa</value>
+    <value>マップのズームと位置をリセット</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
     <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
-    <value>Mira ligada/desligada (Clique direito para opções)</value>
+    <value>クロスエアオン/オフ (右クリックでオプション)</value>
   </data>
   <data name="TrackPlayer" xml:space="preserve">
-    <value>JOGADOR DE TRACK</value>
+    <value>トラックプレイヤー</value>
   </data>
   <data name="CloseBMBrowser" xml:space="preserve">
-    <value>Fechar navegador de métricas</value>
+    <value>バトルメトリックブラウザを閉じる</value>
   </data>
   <data name="ShopSearchTitle" xml:space="preserve">
-    <value>COMPRAR PESQUISA</value>
+    <value>ショップ検索</value>
   </data>
   <data name="CloseSearch" xml:space="preserve">
-    <value>Fechar Pesquisa</value>
+    <value>検索を閉じる</value>
   </data>
   <data name="ActivateShopsFirst" xml:space="preserve">
-    <value>Por favor ative as lojas primeiro</value>
+    <value>最初にショップを有効にしてください</value>
   </data>
   <data name="ActivateShopPolling" xml:space="preserve">
-    <value>Ativar enquete de loja</value>
+    <value>ショップのポーリングを有効にする</value>
   </data>
   <data name="TeamChatTitle" xml:space="preserve">
-    <value>CHAT DA EQUIPE</value>
+    <value>チームチャット</value>
   </data>
   <data name="CloseChat" xml:space="preserve">
-    <value>Fechar bate-papo</value>
+    <value>チャットを閉じる</value>
   </data>
   <data name="ChatCommandsSettings" xml:space="preserve">
-    <value>Configurações de Comandos de Chat</value>
+    <value>チャットコマンドの設定</value>
   </data>
   <data name="ChatCommands" xml:space="preserve">
-    <value>Comandos de Chat</value>
+    <value>チャットコマンド</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Anterior</value>
+    <value>戻る</value>
   </data>
   <data name="Forward" xml:space="preserve">
-    <value>Encaminhar</value>
+    <value>転送</value>
   </data>
   <data name="OpenInExternalBrowser" xml:space="preserve">
-    <value>Abrir no navegador externo</value>
+    <value>外部ブラウザで開く</value>
   </data>
   <data name="SearchBMPlaceholder" xml:space="preserve">
-    <value>Buscar IM...</value>
+    <value>BMを検索...</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Pesquisa</value>
+    <value>検索</value>
   </data>
   <data name="SelectAServer" xml:space="preserve">
-    <value>Selecione um servidor</value>
+    <value>サーバーを選択</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>DESCONECTADO</value>
+    <value>切断されました</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>CONECTANDO...</value>
+    <value>接続中...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INICIALIZANDO...</value>
+    <value>初期化中char@@0</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>DISPOSITIVOS ATIVOS</value>
+    <value>デバイスを有効にする</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>COMPLETO CONECTADO</value>
+    <value>完全に接続</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
-    <value>DESCONHECIDO</value>
+    <value>不明</value>
   </data>
   <data name="MayTakeAMoment" xml:space="preserve">
-    <value>Isso pode demorar um pouco...</value>
+    <value>これは少し時間がかかることがあります...</value>
   </data>
   <data name="AppSettingsTitle" xml:space="preserve">
-    <value>Configurações do aplicativo</value>
+    <value>アプリケーションの設定</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>Gerais</value>
+    <value>全般</value>
   </data>
   <data name="LaunchWithWindows" xml:space="preserve">
-    <value>Iniciar com Windows (Minimizado)</value>
+    <value>Windowsで起動（最小化）</value>
   </data>
   <data name="StartMinimizedAlways" xml:space="preserve">
-    <value>Iniciar minimizado (sempre)</value>
+    <value>最小化を開始（常時）</value>
   </data>
   <data name="AutoConnectLastServer" xml:space="preserve">
-    <value>Conectar automaticamente ao último servidor ao iniciar</value>
+    <value>起動時に最後のサーバーに自動接続</value>
   </data>
   <data name="AutoConnectToolTip" xml:space="preserve">
-    <value>Reconecta automaticamente ao último servidor e carrega o mapa.</value>
+    <value>自動的に最後のサーバーに再接続し、マップを読み込みます。</value>
   </data>
   <data name="Behavior" xml:space="preserve">
-    <value>Comportamento</value>
+    <value>動作</value>
   </data>
   <data name="MinimizeToTray" xml:space="preserve">
-    <value>Minimizar para a bandeja em vez de fechar</value>
+    <value>閉じる代わりにトレイに最小化する</value>
   </data>
   <data name="BackgroundTracking" xml:space="preserve">
-    <value>Habilitar Rastreamento do Jogador de Fundo</value>
+    <value>バックグラウンドプレイヤーの追跡を有効にする</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Mantém o monitoramento de jogadores através de métricas de batalha mesmo que minimizado.</value>
+    <value>最小化された場合でも、BattleMetrics経由でプレイヤーの追跡を維持します。</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
-    <value>Ocultar Console do Sistema (Decriente)</value>
+    <value>システムコンソールを隠す (Declutter)</value>
   </data>
   <data name="HideConsoleToolTip" xml:space="preserve">
-    <value>Oculta o painel de log/console inferior para economizar espaço de mapa.</value>
+    <value>下部のログ/コンソールパネルを非表示にして、マップ領域を節約します。</value>
   </data>
   <data name="MapSettings" xml:space="preserve">
-    <value>Configurações do Mapa</value>
+    <value>地図の設定</value>
   </data>
   <data name="AutoLoadShops" xml:space="preserve">
-    <value>Auto carregar lojas ao conectar</value>
+    <value>接続時にショップを自動的に読み込む</value>
   </data>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
-    <value>Inicia automaticamente as lojas e alertas quando conectado a um servidor.</value>
+    <value>サーバーに接続したときに自動的にポーリングショップとアラートを開始します。</value>
   </data>
   <data name="Chat" xml:space="preserve">
-    <value>Bate-papo</value>
+    <value>チャット</value>
   </data>
   <data name="ModifyChatAlerts" xml:space="preserve">
-    <value>Modificar Alertas de Chat</value>
+    <value>チャットアラートの変更</value>
   </data>
   <data name="ManageSteamAccountInfo" xml:space="preserve">
-    <value>Gerencie sua conta Steam vinculada na janela principal.</value>
+    <value>リンクされたSteamアカウントをメインウィンドウで管理します。</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>FECHAR</value>
+    <value>閉じる</value>
   </data>
   <data name="IncomingAlarms" xml:space="preserve">
-    <value>ALARMAS RENDIMENTES</value>
+    <value>アラームを受信する</value>
   </data>
   <data name="Wipe" xml:space="preserve">
-    <value>Limpar</value>
+    <value>消去</value>
   </data>
   <data name="PlayersOnly" xml:space="preserve">
-    <value>Jogadores</value>
+    <value>プレイヤー</value>
   </data>
   <data name="PlayersHeader" xml:space="preserve">
-    <value>Jogadores</value>
+    <value>プレイヤー</value>
   </data>
   <data name="IWantToGetToolTip" xml:space="preserve">
-    <value>Eu quero GET (ex. Petróleo Bruto)</value>
+    <value>GETしたい（例えばクルドオイル）</value>
   </data>
   <data name="ICanPayWithToolTip" xml:space="preserve">
-    <value>Quero PAGAR COM (por exemplo, Scrap)</value>
+    <value>支払いをしたい（例：スクラップ）</value>
   </data>
   <data name="DeleteServerConfirmFormatted" xml:space="preserve">
-    <value>Tem certeza que quer apagar o Servidor "{0}"? Essa ação não pode ser desfeita.</value>
+    <value>サーバー "{0}" を削除してもよろしいですか？この操作は元に戻せません。</value>
   </data>
   <data name="PairingError" xml:space="preserve">
     <value>Pairing: error</value>
   </data>
   <data name="PairingStarting" xml:space="preserve">
-    <value>Pareando: iniciando...</value>
+    <value>ペアリング: 開始中...</value>
   </data>
   <data name="StartingPairingListener" xml:space="preserve">
-    <value>Iniciando Listador de Pareamento...</value>
+    <value>ペアリングリスナーを開始しています...</value>
   </data>
   <data name="LoggedIn" xml:space="preserve">
-    <value>Sessão Iniciada</value>
+    <value>ログイン中</value>
   </data>
   <data name="Stock" xml:space="preserve">
-    <value>Inventário</value>
+    <value>在庫数</value>
   </data>
   <data name="Price" xml:space="preserve">
-    <value>Quantidade</value>
+    <value>価格</value>
   </data>
   <data name="On" xml:space="preserve">
-    <value>LIGADO</value>
+    <value>ON</value>
   </data>
   <data name="Off" xml:space="preserve">
-    <value>DESATIVADO</value>
+    <value>OFF</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>ATIVO</value>
+    <value>アクティブにする</value>
   </data>
   <data name="Inactive" xml:space="preserve">
-    <value>INATIVO</value>
+    <value>無効</value>
   </data>
   <data name="Group" xml:space="preserve">
-    <value>GRUPO</value>
+    <value>グループ</value>
   </data>
   <data name="ImportDevicesTitle" xml:space="preserve">
-    <value>Rust+ Desk – Importar Dispositivos</value>
+    <value>Rust+ デスク – インポートデバイス</value>
   </data>
   <data name="ImportDevicesHeader" xml:space="preserve">
-    <value>Importar dispositivos</value>
+    <value>デバイスをインポート</value>
   </data>
   <data name="ImportDevicesSelectPrompt" xml:space="preserve">
-    <value>Selecione quais dispositivos você deseja importar para este servidor.</value>
+    <value>このサーバーにインポートするデバイスを選択します。</value>
   </data>
   <data name="CheckDeviceStatus" xml:space="preserve">
-    <value>Verificar status do dispositivo</value>
+    <value>デバイスの状態を確認する</value>
   </data>
   <data name="ImportSelected" xml:space="preserve">
-    <value>Importar selecionados</value>
+    <value>選択したものをインポート</value>
   </data>
   <data name="BmShortcuts" xml:space="preserve">
-    <value>Atalhos de BM</value>
+    <value>BMショートカット</value>
   </data>
   <data name="PairingConfigDeleted" xml:space="preserve">
-    <value>Pareando: configuração excluída</value>
+    <value>ペアリング: 設定が削除されました</value>
   </data>
   <data name="TrayIconDefault" xml:space="preserve">
-    <value>Rust+ Rastreador de Desk</value>
+    <value>Rust+ デスク トラッカー</value>
   </data>
   <data name="TrayIconTracking" xml:space="preserve">
-    <value>Rust+ mesk ( {0} de rastreamento)</value>
+    <value>Rust+ デスク (追跡 {0})</value>
   </data>
   <data name="RenameGroup" xml:space="preserve">
-    <value>Renomear Grupo</value>
+    <value>グループ名の変更</value>
   </data>
   <data name="NewNameForGroup" xml:space="preserve">
-    <value>Novo nome para o grupo:</value>
+    <value>グループの新しい名前:</value>
   </data>
   <data name="NewNameForDevice" xml:space="preserve">
-    <value>Novo nome para #{0}:</value>
+    <value>#{0} の新しい名前:</value>
   </data>
   <data name="EnterBattlemetricsIdFor" xml:space="preserve">
-    <value>Digite o ID do servidor de Battlemetrics para "{0}":</value>
+    <value>「{0}」のバトルメトリックサーバーIDを入力してください：</value>
   </data>
   <data name="TrayTrackingStatus" xml:space="preserve">
-    <value>Rastreando: {0}</value>
+    <value>追跡中： {0}</value>
   </data>
   <data name="TrayLastUpdate" xml:space="preserve">
-    <value>Última atualização: {0}</value>
+    <value>最終更新: {0}</value>
   </data>
   <data name="OpenRustPlusDesk" xml:space="preserve">
-    <value>Abrir Rust+ mesa</value>
+    <value>Rust+ デスク</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>Sair</value>
+    <value>終了</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Descrição:</value>
+    <value>説明</value>
   </data>
   <data name="Camera" xml:space="preserve">
-    <value>Câmera</value>
+    <value>カメラ</value>
   </data>
   <data name="Alarms" xml:space="preserve">
-    <value>Alarmes</value>
+    <value>アラーム</value>
   </data>
   <data name="Identifier" xml:space="preserve">
     <value>Identifier:</value>
@@ -1002,226 +1002,226 @@ Baixar e instalar agora?</value>
     <value>FPS:</value>
   </data>
   <data name="CameraFPSNote" xml:space="preserve">
-    <value>Nota: 2 fps são recomendados, mais alto FPS provavelmente fecha sua conexão com o servidor</value>
+    <value>注: 2 fps を推奨します。サーバーへの接続を切断する可能性が高いです。</value>
   </data>
   <data name="Pixel" xml:space="preserve">
-    <value>Píxel</value>
+    <value>ピクセル</value>
   </data>
   <data name="Pen" xml:space="preserve">
-    <value>Caneta</value>
+    <value>ペン</value>
   </data>
   <data name="Line" xml:space="preserve">
-    <value>Linha</value>
+    <value>線</value>
   </data>
   <data name="Square" xml:space="preserve">
-    <value>Quadrado</value>
+    <value>正方形（正方形）</value>
   </data>
   <data name="Circle" xml:space="preserve">
-    <value>Círculo</value>
+    <value>円</value>
   </data>
   <data name="Thickness" xml:space="preserve">
-    <value>Espessura:</value>
+    <value>厚さ:</value>
   </data>
   <data name="Opacity" xml:space="preserve">
-    <value>Opacidade:</value>
+    <value>不透明度:</value>
   </data>
   <data name="UploadPNG" xml:space="preserve">
-    <value>Enviar PNG</value>
+    <value>PNGをアップロード</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Limpar</value>
+    <value>クリア</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Guardar</value>
+    <value>保存</value>
   </data>
   <data name="AssignGlobalHotkeys" xml:space="preserve">
-    <value>Atribuir teclas de atalho globais para os Smart Switches. Vários dispositivos podem compartilhar uma tecla de atalho (irá mudar sequencialmente).</value>
+    <value>スマートスイッチにグローバルホットキーを割り当てます。複数のデバイスが1つのホットキーを共有できます（連続的に切り替えられます）。</value>
   </data>
   <data name="Device" xml:space="preserve">
-    <value>Dispositivo</value>
+    <value>デバイス</value>
   </data>
   <data name="EntityId" xml:space="preserve">
     <value>EntityId</value>
   </data>
   <data name="Hotkey" xml:space="preserve">
-    <value>Atalho</value>
+    <value>Hotkey</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Definir</value>
+    <value>設定</value>
   </data>
   <data name="CloseDeactivate" xml:space="preserve">
-    <value>Fechar e desativar</value>
+    <value>閉じる &amp; 無効化</value>
   </data>
   <data name="CloseActivate" xml:space="preserve">
-    <value>Fechar e ativar</value>
+    <value>閉じて有効化</value>
   </data>
   <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
-    <value>Atualizar Manutenção, Minimapa e Rastreamento</value>
+    <value>アップキープ、ミニマップ、トラッキングアップデート</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>Resumo dos recursos e ajustes</value>
+    <value>機能概要と調整</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
-    <value>Não mostrar novamente</value>
+    <value>今後表示しない</value>
   </data>
   <data name="AwesomeLetsGo" xml:space="preserve">
-    <value>Fantástico, vamos lá!</value>
+    <value>素晴らしい、行きましょう！</value>
   </data>
   <data name="MiniMapSettings" xml:space="preserve">
-    <value>Configurações de Mini-Mapa</value>
+    <value>ミニマップ設定</value>
   </data>
   <data name="Shape" xml:space="preserve">
-    <value>Forma</value>
+    <value>形状</value>
   </data>
   <data name="Rectangle" xml:space="preserve">
-    <value>Retângulo</value>
+    <value>矩形</value>
   </data>
   <data name="OpacityLabel" xml:space="preserve">
-    <value>Opacidade: {0}%</value>
+    <value>不透明度: {0}%</value>
   </data>
   <data name="SizeLabel" xml:space="preserve">
-    <value>Tamanho: {0}% (SHIFT+Mousewheel)</value>
+    <value>サイズ: {0}% (SHIFT+Mousewheel)</value>
   </data>
   <data name="ShowServerTime" xml:space="preserve">
-    <value>Mostrar Hora do Servidor</value>
+    <value>サーバー時間を表示</value>
   </data>
   <data name="ServerInformation" xml:space="preserve">
-    <value>Informações do servidor</value>
+    <value>サーバー情報</value>
   </data>
   <data name="NoDescriptionAvailable" xml:space="preserve">
-    <value>Nenhuma descrição disponível</value>
+    <value>説明はありません。</value>
   </data>
   <data name="CurrentVersion" xml:space="preserve">
-    <value>Versão atual: {0}</value>
+    <value>現在のバージョン： {0}</value>
   </data>
   <data name="PatchNotesHeader" xml:space="preserve">
-    <value>Histórico de Atualizações &amp; Versão</value>
+    <value>パッチノートとバージョン履歴</value>
   </data>
   <data name="EnableChatCommands" xml:space="preserve">
-    <value>Habilitar comandos de chat</value>
+    <value>チャットコマンドを有効にする</value>
   </data>
   <data name="Prefix" xml:space="preserve">
-    <value>Prefixo:</value>
+    <value>プレフィックス:</value>
   </data>
   <data name="StandardCommands" xml:space="preserve">
-    <value>Comandos Padrão</value>
+    <value>標準コマンド</value>
   </data>
   <data name="Population" xml:space="preserve">
-    <value>População:</value>
+    <value>人口:</value>
   </data>
   <data name="Time" xml:space="preserve">
-    <value>Hora:</value>
+    <value>時間:</value>
   </data>
   <data name="Promote" xml:space="preserve">
-    <value>Promover</value>
+    <value>プロモーション:</value>
   </data>
   <data name="DeepSeaCommand" xml:space="preserve">
-    <value>Mar Profundo:</value>
+    <value>深海:</value>
   </data>
   <data name="CargoShipCommand" xml:space="preserve">
-    <value>Navio de carga:</value>
+    <value>物資輸送:</value>
   </data>
   <data name="OilRigCommand" xml:space="preserve">
-    <value>Rigo de Óleo</value>
+    <value>オイルリグ:</value>
   </data>
   <data name="PatrolHeliCommand" xml:space="preserve">
-    <value>Caldeira de Patrulha:</value>
+    <value>パトロールヘリ:</value>
   </data>
   <data name="TravellingVendorCommand" xml:space="preserve">
-    <value>Fornecedor de Viagem:</value>
+    <value>Vendor:</value>
   </data>
   <data name="UpkeepDetails" xml:space="preserve">
-    <value>Detalhes de Manutenção:</value>
+    <value>維持の詳細:</value>
   </data>
   <data name="CommandDelay" xml:space="preserve">
-    <value>Atraso do comando:</value>
+    <value>コマンドの遅延:</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>IDIOMA</value>
+    <value>言語</value>
   </data>
   <data name="SelectLanguage" xml:space="preserve">
-    <value>Selecione o idioma</value>
+    <value>言語の選択</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>Alterar o idioma requer reinicialização para ter pleno efeito.</value>
+    <value>言語を変更するには再起動が必要です。</value>
   </data>
   <data name="SmartSwitches" xml:space="preserve">
-    <value>Interruptores inteligentes</value>
+    <value>スマートスイッチ</value>
   </data>
   <data name="UpkeepTcMonitors" xml:space="preserve">
-    <value>Manutenção (TC) Monitores</value>
+    <value>アップキープ(TC) モニター</value>
   </data>
   <data name="NoTcMonitorsFound" xml:space="preserve">
-    <value>Nenhum monitor TC encontrado.</value>
+    <value>TCモニターが見つかりません。</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
-    <value>Salvar e Fechar</value>
+    <value>保存して閉じる</value>
   </data>
   <data name="ChatMessagePlaceholder" xml:space="preserve">
-    <value>Mensagem...</value>
+    <value>メッセージ</value>
   </data>
   <data name="ChatErrorPlaceholder" xml:space="preserve">
-    <value>Mensagem de erro aqui</value>
+    <value>エラーメッセージはこちら</value>
   </data>
   <data name="HeliEventName" xml:space="preserve">
-    <value>Helicóptero de patrulha</value>
+    <value>パトロール・ヘリ</value>
   </data>
   <data name="HeliActiveRunningFor" xml:space="preserve">
-    <value>Heli de patrulha ativo - a funcionar em {0}</value>
+    <value>パトロールヘリが活躍 - {0} のために走る</value>
   </data>
   <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
-    <value>Ligado a meio do evento - tempo de desova desconhecido</value>
+    <value>イベント途中で接続 - スポーン時間不明</value>
   </data>
   <data name="HeliActiveSpawnUnknown" xml:space="preserve">
-    <value>Heli de patrulha ativo (hora de aparecimento desconhecida)</value>
+    <value>パトロールヘリ活動中（スポーン時間不明）</value>
   </data>
   <data name="HeliShotDownAgo" xml:space="preserve">
-    <value>Heli de patrulha abatido {0} ago this session</value>
+    <value>{0} このセッションの前に撃墜されたパトロール・ヘリ</value>
   </data>
   <data name="HeliLeftMapAgo" xml:space="preserve">
-    <value>Patrol Heli deixou o mapa {0} atrás nesta sessão</value>
+    <value>パトロール・ヘリがマップを離れた {0} このセッションの前</value>
   </data>
   <data name="CargoDockedDepartsIn" xml:space="preserve">
-    <value>Atracado em {0} - partida em ~{1}</value>
+    <value>{0} でドック入り - ～{1} で出発。</value>
   </data>
   <data name="HarborFallback" xml:space="preserve">
-    <value>porto</value>
+    <value>港</value>
   </data>
   <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
-    <value>Já atracado no Connect - hora de partida desconhecida</value>
+    <value>コネクトにドッキング済み - 出発時刻は不明</value>
   </data>
   <data name="CargoDockedDurationNotLearned" xml:space="preserve">
-    <value>Atracado em {0} (duração da doca ainda não conhecida)</value>
+    <value>{0} にドッキング（ドック時間は未確認）</value>
   </data>
   <data name="CargoTimeRemainingOnMap" xml:space="preserve">
-    <value>Tempo restante no mapa (desde a desova)</value>
+    <value>マップでの残り時間（スポーンから）</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
-    <value>Ligado a meio do percurso - tempo desconhecido</value>
+    <value>ルート途中で接続 - 時刻不明</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
-    <value>Ligado a meio do percurso - tempo desconhecido (percurso ~{0}m total)</value>
+    <value>ルート半ばで接続-時間は不明（ルート～合計{0}m）</value>
   </data>
   <data name="CargoDespawnedAgo" xml:space="preserve">
-    <value>Cargo Ship despawned {0}m {1}s ago this session</value>
+    <value>カーゴシップがデスポーンした {0}m {1}s ago this session</value>
   </data>
   <data name="VendorActiveRunningFor" xml:space="preserve">
-    <value>Viajante Vendedor ativo - concorrer para {0}</value>
+    <value>トラベリング・ベンダー - {0} のために走る</value>
   </data>
   <data name="VendorActiveSpawnUnknown" xml:space="preserve">
-    <value>Vendedor Viajante ativo (tempo de aparecimento desconhecido)</value>
+    <value>トラベリングベンダー活動中（スポーン時間不明）</value>
   </data>
   <data name="VendorDespawnedAgo" xml:space="preserve">
-    <value>Travelling Vendor despawned {0} ago this session</value>
+    <value>トラベリング・ヴェンダーがデスポーン {0} このセッションの前</value>
   </data>
   <data name="DeepSeaActiveRunningFor" xml:space="preserve">
-    <value>Deep Sea active - candidatura para {0}</value>
+    <value>ディープシー・アクティブ - {0}</value>
   </data>
   <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
-    <value>Mar profundo ativo (tempo de desova desconhecido)</value>
+    <value>ディープシー・アクティブ（スポーン時間不明）</value>
   </data>
   <data name="DeepSeaEndedAgo" xml:space="preserve">
-    <value>Deep Sea terminou {0} ago this session</value>
+    <value>ディープ・シー {0} 今セッション終了</value>
   </data>
   <data name="TimerHoursMinutes" xml:space="preserve">
     <value>{0}h {1:D2}m</value>
@@ -1242,267 +1242,267 @@ Baixar e instalar agora?</value>
     <value>{0}s</value>
   </data>
   <data name="ChatCmdPopResponse" xml:space="preserve">
-    <value>{0} jogadores atualmente online.{1}</value>
+    <value>{0} 現在オンライン中の選手{1}</value>
   </data>
   <data name="ChatCmdPopQueue" xml:space="preserve">
-    <value> Fila de espera: {0} jogadores.</value>
+    <value> キュー： {0} 選手。</value>
   </data>
   <data name="ChatCmdTimeResponse" xml:space="preserve">
-    <value>Hora atual do jogo: {0}.</value>
+    <value>現在の試合時間： {0}.</value>
   </data>
   <data name="ChatCmdPromoteResponse" xml:space="preserve">
-    <value>{0} foi promovido a líder.</value>
+    <value>{0} がリーダーに昇格した。</value>
   </data>
   <data name="ChatCmdDeepSeaActive" xml:space="preserve">
-    <value>O Deep Sea está ativo! A concorrer para {0}.</value>
+    <value>深海はアクティブ！ {0}。</value>
   </data>
   <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
-    <value>O Mar Profundo está atualmente ativo (ligado a meio do evento - tempo de desova desconhecido).</value>
+    <value>深海は現在アクティブである（イベント中盤に接続-スポーン時間は不明）。</value>
   </data>
   <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
-    <value>O Deep Sea terminou {0} minutos atrás nesta sessão.</value>
+    <value>深海はこのセッションで {0} 分前に終了した。</value>
   </data>
   <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
-    <value>Estado do evento Deep Sea desconhecido (não visto nesta sessão).</value>
+    <value>深海のイベント状況は不明（このセッションは未見）。</value>
   </data>
   <data name="ChatCmdCargoNotActive" xml:space="preserve">
-    <value>Navio de carga não ativo.</value>
+    <value>カーゴ・シップは活動していない。</value>
   </data>
   <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
-    <value>Navio de carga atracado em {0}. Partida em cerca de {1} minutos.</value>
+    <value>貨物船は {0}に停泊。約 {1} 分後に出発。</value>
   </data>
   <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
-    <value>Navio de carga atracado em {0} e preparando-se para partir.</value>
+    <value>{0} 、出港準備中の貨物船。</value>
   </data>
   <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
-    <value>Navio de carga atracado em {0} (hora de partida desconhecida).</value>
+    <value>{0} （出港時間不明）にドック入りした貨物船。</value>
   </data>
   <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
-    <value>Navio de carga ativo. Partida em cerca de {0} minutos.</value>
+    <value>貨物船活躍中。約 {0} 分後に出発。</value>
   </data>
   <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
-    <value>Navio de carga ativo e a preparar-se para partir em breve.</value>
+    <value>貨物船は活動中で、間もなく出航する準備をしている。</value>
   </data>
   <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
-    <value>Navio de carga ativo (duração da rota ainda não aprendida para este servidor).</value>
+    <value>貨物船がアクティブ（このサーバーのルート期間はまだ学習されていない）。</value>
   </data>
   <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
-    <value>Cargueiro ativo (ligado após a desova - tempo restante desconhecido).</value>
+    <value>カーゴシップがアクティブになる（スポーン後に接続-残り時間は不明）。</value>
   </data>
   <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
-    <value>Cargueiro não está ativo. Despawned {0} minutos atrás nesta sessão.</value>
+    <value>カーゴシップはアクティブではありません。 {0} 分前にデスポーンした。</value>
   </data>
   <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
-    <value>{0}: caixote em {1}m {2}s</value>
+    <value>{0}: 木箱 {1}m {2}s</value>
   </data>
   <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
-    <value>{0}: última chamada {1}m atrás</value>
+    <value>{0}最後に電話したのは {1}m前</value>
   </data>
   <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
-    <value>{0}: não chamado nesta sessão</value>
+    <value>{0}このセッションでは呼ばれなかった</value>
   </data>
   <data name="ChatCmdHeliActive" xml:space="preserve">
-    <value>A Patrulha Heli está ativa! A concorrer para {0}.</value>
+    <value>パトロールヘリが活躍！ {0}。</value>
   </data>
   <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
-    <value>O Heli de patrulha está atualmente ativo (ligado a meio do evento - hora de aparecimento desconhecida).</value>
+    <value>パトロール・ヘリは現在活動中（イベント途中で接続、スポーン時間は不明）。</value>
   </data>
   <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
-    <value>Patrol Heli não está ativo. Foi {0} {1} há esta sessão.</value>
+    <value>パトロールヘリはアクティブではない。このセッションは {0} {1}。</value>
   </data>
   <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
-    <value>abatido</value>
+    <value>撃墜</value>
   </data>
   <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
-    <value>deixou o mapa</value>
+    <value>地図を離れる</value>
   </data>
   <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
-    <value>Estado do evento Patrol Heli desconhecido (não visto nesta sessão).</value>
+    <value>パトロールヘリのイベント状況は不明（このセッションは未確認）。</value>
   </data>
   <data name="ChatCmdVendorActive" xml:space="preserve">
-    <value>O Vendedor Viajante está ativo! A concorrer para {0}.</value>
+    <value>トラベリング・ベンダーが活動中！ {0}。</value>
   </data>
   <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
-    <value>O Vendedor ambulante está atualmente ativo (ligado a meio do evento - hora de aparecimento desconhecida).</value>
+    <value>Travelelling Vendorは現在活動中（イベント途中で接続、スポーン時間は不明）。</value>
   </data>
   <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
-    <value>Vendedor ambulante não ativo. Despawned {0} ago this session.</value>
+    <value>トラベリング・ベンダーはアクティブではない。 {0} このセッションでデスポーンした。</value>
   </data>
   <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
-    <value>Situação do evento Travelling Vendor desconhecida (não visto nesta sessão).</value>
+    <value>トラベリングベンダーのイベント状況は不明（このセッションは未見）。</value>
   </data>
   <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
-    <value>Não são mapeados armários de ferramentas para comandos de manutenção.</value>
+    <value>アップキープコマンドのためのツール・カップボードはマッピングされていない。</value>
   </data>
   <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
-    <value>Manutenção em {0} TC: Vazio ou expirado.</value>
+    <value>{0} TCのアップキープ：空か期限切れ。</value>
   </data>
   <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
-    <value> Necessidade/24h: {0}.</value>
+    <value> Need/24h: {0}.</value>
   </data>
   <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
-    <value>Manutenção em {0} TC: {1}.</value>
+    <value>{0} TCでのアップキープ： {1}.</value>
   </data>
   <data name="ChatCmdUpkeepDays" xml:space="preserve">
-    <value>{0} dias</value>
+    <value>{0} 日</value>
   </data>
   <data name="ChatCmdUpkeepHours" xml:space="preserve">
-    <value>{0} horas</value>
+    <value>{0} 時間</value>
   </data>
   <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
-    <value>{0} minutos</value>
+    <value>{0} 議事録</value>
   </data>
   <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
-    <value>{0}: Vazio/expirado</value>
+    <value>{0}空／期限切れ</value>
   </data>
   <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
     <value>{0}: {1}d, {2}h</value>
   </data>
   <data name="ChatCmdUpkeepHeader" xml:space="preserve">
-    <value>Manutenção: {0}</value>
+    <value>アップキープ： {0}</value>
   </data>
   <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
-    <value>Os monitores do Bound Tool Cupboard não foram encontrados ou não estão emparelhados.</value>
+    <value>バウンドツールカップボードのモニターが見つからないか、ペアリングされていない。</value>
   </data>
   <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
-    <value>O monitor do armário de ferramentas vinculado não foi encontrado ou não está emparelhado.</value>
+    <value>バウンドツールカップボードのモニターが見つからないか、ペアリングされていません。</value>
   </data>
   <data name="ChatCmdSwitchToggled" xml:space="preserve">
-    <value>{0} {1}.</value>
+    <value>{0} {1} になった。</value>
   </data>
   <data name="ChatCmdSwitchStateOn" xml:space="preserve">
-    <value>ON</value>
+    <value>オン</value>
   </data>
   <data name="ChatCmdSwitchStateOff" xml:space="preserve">
-    <value>DESLIGADO</value>
+    <value>オフ</value>
   </data>
   <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
-    <value>Bound Smart Switch não encontrado ou não emparelhado.</value>
+    <value>スマートスイッチが見つからないか、ペアリングされていません。</value>
   </data>
   <data name="MaterialWood" xml:space="preserve">
-    <value>Madeira</value>
+    <value>木材</value>
   </data>
   <data name="MaterialStone" xml:space="preserve">
-    <value>Pedra</value>
+    <value>ストーン</value>
   </data>
   <data name="MaterialMetal" xml:space="preserve">
-    <value>Metal</value>
+    <value>メタル</value>
   </data>
   <data name="MaterialHQM" xml:space="preserve">
-    <value>HQM</value>
+    <value>量子力学</value>
   </data>
   <data name="SmallOilRig" xml:space="preserve">
-    <value>Pequena plataforma petrolífera</value>
+    <value>小型石油掘削装置</value>
   </data>
   <data name="LargeOilRig" xml:space="preserve">
-    <value>Grande plataforma petrolífera</value>
+    <value>大型石油掘削装置</value>
   </data>
   <data name="ShopWord" xml:space="preserve">
-    <value>Loja</value>
+    <value>ショップ</value>
   </data>
   <data name="EventCargoShip" xml:space="preserve">
-    <value>Navio de carga</value>
+    <value>貨物船</value>
   </data>
   <data name="EventTravellingVendor" xml:space="preserve">
-    <value>Vendedor ambulante</value>
+    <value>旅行業者</value>
   </data>
   <data name="EventCH47" xml:space="preserve">
     <value>CH47</value>
   </data>
   <data name="EventPatrolHelicopter" xml:space="preserve">
-    <value>Helicóptero de patrulha</value>
+    <value>パトロール・ヘリコプター</value>
   </data>
   <data name="EventOilrigCrate" xml:space="preserve">
-    <value>Caixa Oilrig</value>
+    <value>オイルリグ・クレート</value>
   </data>
   <data name="EventExplosion" xml:space="preserve">
-    <value>Explosão</value>
+    <value>爆発</value>
   </data>
   <data name="EventBuildingBlocked" xml:space="preserve">
-    <value>Edifício bloqueado</value>
+    <value>ビルディング・ブロック</value>
   </data>
   <data name="EventGeneric" xml:space="preserve">
-    <value>Evento</value>
+    <value>イベント</value>
   </data>
   <data name="AlertOilRigTriggered" xml:space="preserve">
-    <value>[{0}] activada! A caixa é desbloqueada em {1}.</value>
+    <value>[{0}] がトリガーされた！クレートは {1} でアンロックされます。</value>
   </data>
   <data name="AlertAlarmTriggered" xml:space="preserve">
-    <value>ALARME: {0} acionado!</value>
+    <value>ALARM: {0}！</value>
   </data>
   <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
-    <value>[{0}] A caixa é desbloqueada em 10 minutos!</value>
+    <value>[{0}] クレートは10分でアンロックされる！</value>
   </data>
   <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
-    <value>[{0}] A caixa é desbloqueada em 5 minutos!</value>
+    <value>[{0}] クレートは5分でアンロックされる！</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Mar profundo está a funcionar</value>
+    <value>深海がアップ</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
-    <value>Nova loja {0} [{1}]: {2}</value>
+    <value>新店舗 {0} [{1}]: {2}</value>
   </data>
   <data name="AlertSuspiciousShop" xml:space="preserve">
-    <value>Loja suspeita {0} [{1}] estava em linha {2}s, vendeu {3}</value>
+    <value>怪しい店 {0} [{1}] オンラインだった {2}s, 販売 {3}</value>
   </data>
   <data name="AlertCargoSpawned" xml:space="preserve">
-    <value>O cargueiro gerou {0}</value>
+    <value>カーゴシップのスポーン {0}</value>
   </data>
   <data name="CargoFarOutAtSea" xml:space="preserve">
-    <value>muito longe no mar (perto de {0})</value>
+    <value>はるか沖合 ( {0} 近く)</value>
   </data>
   <data name="AlertCargoDocked" xml:space="preserve">
-    <value>Navio de carga atracado em {0} ({1})</value>
+    <value>{0} に停泊する貨物船 ({1})</value>
   </data>
   <data name="AlertCargoExpectedDock" xml:space="preserve">
-    <value>O cargueiro deve atracar em {0} ({1}) em cerca de 5 minutos.</value>
+    <value>貨物船は {0} ({1}) に約5分で接岸する予定。</value>
   </data>
   <data name="AlertCargoDeparting" xml:space="preserve">
-    <value>Navio de carga com partida de {0} em 5 minutos ({1})</value>
+    <value>{0} から5分で出発する貨物船 ({1})</value>
   </data>
   <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
-    <value>Crash detectado devido ao atraso do servidor - Heli ainda está no mapa em {0}</value>
+    <value>サーバーのラグによりクラッシュを検知 - ヘリはまだマップ上にいる {0}</value>
   </data>
   <data name="AlertEventSpawned" xml:space="preserve">
-    <value>{0} desovado em {1}</value>
+    <value>{0} {1}</value>
   </data>
   <data name="AlertHeliShotDown" xml:space="preserve">
-    <value>Helicóptero de patrulha abatido em {0}</value>
+    <value>{0} で撃墜されたパトロール・ヘリ</value>
   </data>
   <data name="Unknown" xml:space="preserve">
-    <value>desconhecido</value>
+    <value>不明</value>
   </data>
   <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
-    <value>{0} ficou online em {1}</value>
+    <value>{0} {1}</value>
   </data>
   <data name="AlertPlayerOffline" xml:space="preserve">
-    <value>{0} ficou offline</value>
+    <value>{0} オフライン</value>
   </data>
   <data name="AlertPlayerDied" xml:space="preserve">
-    <value>{0} morreu em {1}</value>
+    <value>{0} {1}</value>
   </data>
   <data name="AlertPlayerRespawned" xml:space="preserve">
-    <value>{0} reapareceu em {1}</value>
+    <value>{0} {1}</value>
   </data>
   <data name="AlertTrackingOnline" xml:space="preserve">
-    <value>[Tracking] {0}{1} está agora ONLINE</value>
+    <value>[トラッキング] {0}{1} がオンラインになった。</value>
   </data>
   <data name="AlertTrackingOffline" xml:space="preserve">
-    <value>[Tracking] {0}{1} está agora OFFLINE</value>
+    <value>[トラッキング] {0}{1} は現在オフラインです。</value>
   </data>
   <data name="AlertTrackingRenamed" xml:space="preserve">
-    <value>[Tracking] {0}{1} renomeado para {2}!</value>
+    <value>[トラッキング] {0}{1} を {2} に改名！</value>
   </data>
   <data name="AlertShopSells" xml:space="preserve">
-    <value>vendas</value>
+    <value>販売</value>
   </data>
   <data name="AlertShopBuys" xml:space="preserve">
-    <value>compras</value>
+    <value>おみやげ</value>
   </data>
   <data name="AlertShopLabelFallback" xml:space="preserve">
-    <value>Loja</value>
+    <value>ショップ</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
-    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) para {6} {7}</value>
+    <value>{0} [{1}] {2} ×{3} {4} （在庫 {5}） for {6} {7}</value>
   </data>
 </root>
