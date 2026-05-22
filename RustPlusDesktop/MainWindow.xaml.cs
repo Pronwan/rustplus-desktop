@@ -4418,11 +4418,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (modal.RequestAction == "ModifyChatAlerts")
         {
             Dispatcher.BeginInvoke(new Action(() => {
-                if (ChatAnnounce.ContextMenu != null)
+                if (ChatAlertsConfigureButton.Flyout is ContextMenu cm)
                 {
-                    ChatAnnounce.ContextMenu.PlacementTarget = ChatAnnounce;
-                    ChatAnnounce.ContextMenu.Placement = PlacementMode.Bottom;
-                    ChatAnnounce.ContextMenu.IsOpen = true;
+                    cm.PlacementTarget = ChatAlertsConfigureButton;
+                    cm.Placement = PlacementMode.Bottom;
+                    cm.IsOpen = true;
                 }
             }), System.Windows.Threading.DispatcherPriority.Input);
         }
