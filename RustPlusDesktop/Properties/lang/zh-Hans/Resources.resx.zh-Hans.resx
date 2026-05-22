@@ -1,0 +1,1160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>RUST + DESKTOP</value>
+  </data>
+  <data name="SteamAccount" xml:space="preserve">
+    <value>Steam账户</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+    <value>未登录</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>检查更新</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>正在下载...</value>
+  </data>
+  <data name="JoinDiscord" xml:space="preserve">
+    <value>加入Discord</value>
+  </data>
+  <data name="PatchNotes" xml:space="preserve">
+    <value>补丁笔记</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="PairedServers" xml:space="preserve">
+    <value>暂停服务</value>
+  </data>
+  <data name="NoServersPaired" xml:space="preserve">
+    <value>尚未配对服务器</value>
+  </data>
+  <data name="PairingMaintenance" xml:space="preserve">
+    <value>画面和笔记</value>
+  </data>
+  <data name="PairingIdle" xml:space="preserve">
+    <value>Pairing: idle</value>
+  </data>
+  <data name="RightClickOptions" xml:space="preserve">
+    <value>右键点击查看选项</value>
+  </data>
+  <data name="TrackingActive" xml:space="preserve">
+    <value>跟踪已启用</value>
+  </data>
+  <data name="LastPull" xml:space="preserve">
+    <value>上次脉冲: {0}</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>捐助</value>
+  </data>
+  <data name="SupportDeveloper" xml:space="preserve">
+    <value>支持开发者</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetWebSocket" xml:space="preserve">
+    <value>重置 WebSocket 连接</value>
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value>玩家：</value>
+  </data>
+  <data name="ShowOnlinePlayers" xml:space="preserve">
+    <value>显示在线玩家标签</value>
+  </data>
+  <data name="Queue" xml:space="preserve">
+    <value>队列：</value>
+  </data>
+  <data name="DevicesTab" xml:space="preserve">
+    <value>🔌 设备</value>
+  </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>热键</value>
+  </data>
+  <data name="ImportDevices" xml:space="preserve">
+    <value>从团队成员导入设备</value>
+  </data>
+  <data name="ExportDevices" xml:space="preserve">
+    <value>导出设备到队友中</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="DeleteMissingOnly" xml:space="preserve">
+    <value>您只能删除缺失的设备</value>
+  </data>
+  <data name="RenameDevice" xml:space="preserve">
+    <value>重命名设备</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>在线用户</value>
+  </data>
+  <data name="Offline" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>连接</value>
+  </data>
+  <data name="FullConnect" xml:space="preserve">
+    <value>完全连接</value>
+  </data>
+  <data name="LoadMapTeam" xml:space="preserve">
+    <value>加载地图 &amp; 团队</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>断开连接</value>
+  </data>
+  <data name="ServerDetails" xml:space="preserve">
+    <value>服务器详细信息</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>监听</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="TryPairingEdge" xml:space="preserve">
+    <value>尝试与边缘配对</value>
+  </data>
+  <data name="ResetPairingConfig" xml:space="preserve">
+    <value>Reset pairing (delete config)</value>
+  </data>
+  <data name="ResetListenPairing" xml:space="preserve">
+    <value>重置 + 监听(重配对)</value>
+  </data>
+  <data name="ResetListenEdge" xml:space="preserve">
+    <value>使用边缘重置 + 监听</value>
+  </data>
+  <data name="RelinkBattlemetrics" xml:space="preserve">
+    <value>重新链接战斗计ID…</value>
+  </data>
+  <data name="DeleteServer" xml:space="preserve">
+    <value>删除服务器…</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Bitte warten …</value>
+  </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>切换服务器区域</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>主播模式</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>缩放：</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>启用主播模式 (缩写名称)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>缩写Steam名称和ID以保护流中的隐私。自动隐藏控制台和服务器列表。</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>没有可用的位置(离线或未生成)。</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>保存群组</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>请输入组名称。</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>消息无法发送。请再试一次。(检查您是否在一个团队中!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>错误： </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>分配组</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>群组设置： {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>群组名称</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>输入组名称...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>组颜色</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>保存更改</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>玩家活动分析和预测</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>玩家</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>主播模式和迷你地图Overhaul</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>主播模式</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>玩家标记缩放</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>迷你波兰地图</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>:警告：需要动作：</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>⚠️ 战斗计量移除:</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>⚠️ 玩家跟踪系统Overhaul</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>玩家跟踪服务</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>添加玩家到跟踪器开始跟踪</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>跟踪已启用</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>跟踪闲置</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>筛选玩家...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>连接到服务器以加载玩家列表</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>正在通过 Steam 查询获取玩家...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>音轨 ID</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>手动曲目名称...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>没有设备。</value>
+  </data>
+  <data name="NoTokenRegistered" xml:space="preserve">
+    <value>未注册令牌</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>代币已过期！</value>
+  </data>
+  <data name="ExpiresInDays" xml:space="preserve">
+    <value>在 {0} 天后过期</value>
+  </data>
+  <data name="UntilNight" xml:space="preserve">
+    <value>{0} 到晚上</value>
+  </data>
+  <data name="UntilDay" xml:space="preserve">
+    <value>{0} 直到天</value>
+  </data>
+  <data name="FollowMe" xml:space="preserve">
+    <value>跟随我</value>
+  </data>
+  <data name="FollowPlayer" xml:space="preserve">
+    <value>跟随 {0}</value>
+  </data>
+  <data name="PairingListening" xml:space="preserve">
+    <value>Pairing: listening…</value>
+  </data>
+  <data name="PairingStopped" xml:space="preserve">
+    <value>配对：停止</value>
+  </data>
+  <data name="PairingFailed" xml:space="preserve">
+    <value>配对：失败</value>
+  </data>
+  <data name="AlarmActivated" xml:space="preserve">
+    <value>闹钟已激活！</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>服务器</value>
+  </data>
+  <data name="SmartAlarm" xml:space="preserve">
+    <value>智能报警</value>
+  </data>
+  <data name="UnableToReadLink" xml:space="preserve">
+    <value>无法读取RustPlus-Link: {0}
+格式: rustplus://IP:PORT</value>
+  </data>
+  <data name="DeletePairingConfigHeader" xml:space="preserve">
+    <value>Reset pairing</value>
+  </data>
+  <data name="DeletePairingConfigBody" xml:space="preserve">
+    <value>Delete existing pairing config?
+You will need to pair again on next start.</value>
+  </data>
+  <data name="ResetListenHeader" xml:space="preserve">
+    <value>Reset + Listen</value>
+  </data>
+  <data name="ResetListenBody" xml:space="preserve">
+    <value>删除配对配置并立即重新配对/监听？</value>
+  </data>
+  <data name="ResetListenEdgeHeader" xml:space="preserve">
+    <value>重置 + 监听(Edge)</value>
+  </data>
+  <data name="ResetListenEdgeBody" xml:space="preserve">
+    <value>删除配对配置并立即重新配对/监听使用边缘？</value>
+  </data>
+  <data name="UpdateQueryFailed" xml:space="preserve">
+    <value>无法查询最新版本。请重试或打开发布页面。</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>您是最新的。</value>
+  </data>
+  <data name="UpdateAvailableHeader" xml:space="preserve">
+    <value>可用更新</value>
+  </data>
+  <data name="UpdateAvailableBody" xml:space="preserve">
+    <value>有新版本可用： {0}
+打开发布页面？</value>
+  </data>
+  <data name="DownloadAndInstallBody" xml:space="preserve">
+    <value>有新版本可用: {0}
+现在下载并安装？</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>下载失败。</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Update check failed.
+{0}</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>没有设备。</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>查看个人资料</value>
+  </data>
+  <data name="ChangeGroup" xml:space="preserve">
+    <value>更改组</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>重命名：</value>
+  </data>
+  <data name="RemoveTracked" xml:space="preserve">
+    <value>移除跟踪</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>查看</value>
+  </data>
+  <data name="MoreOptions" xml:space="preserve">
+    <value>更多选项</value>
+  </data>
+  <data name="RelinkBattlemetricsId" xml:space="preserve">
+    <value>重新链接战斗计ID…</value>
+  </data>
+  <data name="DeleteServerEllipsis" xml:space="preserve">
+    <value>删除服务器…</value>
+  </data>
+  <data name="RightClickRename" xml:space="preserve">
+    <value>右键单击以重命名</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>切换边框</value>
+  </data>
+  <data name="PopupWindow" xml:space="preserve">
+    <value>弹出窗口</value>
+  </data>
+  <data name="InAppAlert" xml:space="preserve">
+    <value>应用内通知</value>
+  </data>
+  <data name="AudioAlert" xml:space="preserve">
+    <value>音频提醒</value>
+  </data>
+  <data name="CustomAudioFile" xml:space="preserve">
+    <value>自定义音频文件...</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>重置为默认值</value>
+  </data>
+  <data name="Snapshot" xml:space="preserve">
+    <value>Snapshot: </value>
+  </data>
+  <data name="ItemsUpkeep" xml:space="preserve">
+    <value> 项目, Upkeep=</value>
+  </data>
+  <data name="NoDevicesFound" xml:space="preserve">
+    <value>未找到设备</value>
+  </data>
+  <data name="PairDeviceToSee" xml:space="preserve">
+    <value>配对智能设备，切换或闹钟来查看它</value>
+  </data>
+  <data name="TeamTab" xml:space="preserve">
+    <value>:busts_in_silhouette：团队</value>
+  </data>
+  <data name="CenterOnMap" xml:space="preserve">
+    <value>在地图居中</value>
+  </data>
+  <data name="FollowOnMap" xml:space="preserve">
+    <value>在地图上关注</value>
+  </data>
+  <data name="OpenSteamProfile" xml:space="preserve">
+    <value>打开Steam配置文件</value>
+  </data>
+  <data name="PromoteToLeader" xml:space="preserve">
+    <value>提升为组长</value>
+  </data>
+  <data name="KickFromTeam" xml:space="preserve">
+    <value>从团队中踢出</value>
+  </data>
+  <data name="ProfileMarkers" xml:space="preserve">
+    <value>配置文件标记</value>
+  </data>
+  <data name="DeathMarkers" xml:space="preserve">
+    <value>死亡标记</value>
+  </data>
+  <data name="CamerasTab" xml:space="preserve">
+    <value>:movie_cameras</value>
+  </data>
+  <data name="AddCamera" xml:space="preserve">
+    <value>📷 添加相机</value>
+  </data>
+  <data name="NoCamerasFound" xml:space="preserve">
+    <value>未找到相机</value>
+  </data>
+  <data name="PairCameraToSee" xml:space="preserve">
+    <value>配对相机来查看其预览</value>
+  </data>
+  <data name="PlayersTab" xml:space="preserve">
+    <value>:glube_showing_Europe-Africa：玩家</value>
+  </data>
+  <data name="HowToTrack" xml:space="preserve">
+    <value>如何跟踪</value>
+  </data>
+  <data name="LearnHowTrackingWorks" xml:space="preserve">
+    <value>了解玩家跟踪是如何工作的</value>
+  </data>
+  <data name="OnlineTab" xml:space="preserve">
+    <value>在线</value>
+  </data>
+  <data name="OnlinePlayers" xml:space="preserve">
+    <value>在线玩家</value>
+  </data>
+  <data name="SearchBM" xml:space="preserve">
+    <value>搜索 BM</value>
+  </data>
+  <data name="SearchServerBM" xml:space="preserve">
+    <value>在 BattleMetrics 上搜索当前服务器</value>
+  </data>
+  <data name="Popout" xml:space="preserve">
+    <value>弹出</value>
+  </data>
+  <data name="OpenPlayersSeparateWindow" xml:space="preserve">
+    <value>在单独窗口中打开玩家</value>
+  </data>
+  <data name="Track" xml:space="preserve">
+    <value>曲目</value>
+  </data>
+  <data name="ManualTrackPlaceholder" xml:space="preserve">
+    <value>手动曲目名称或 Steam ID...</value>
+  </data>
+  <data name="FilterPlayersPlaceholder" xml:space="preserve">
+    <value>筛选玩家...</value>
+  </data>
+  <data name="LoadingPlayers" xml:space="preserve">
+    <value>正在加载玩家...</value>
+  </data>
+  <data name="TrackedTab" xml:space="preserve">
+    <value>已跟踪</value>
+  </data>
+  <data name="TrackedPlayers" xml:space="preserve">
+    <value>跟踪玩家</value>
+  </data>
+  <data name="ManageGroups" xml:space="preserve">
+    <value>管理组</value>
+  </data>
+  <data name="ViewFullAnalysisReport" xml:space="preserve">
+    <value>查看完整分析报告</value>
+  </data>
+  <data name="ReadyToExploreMap" xml:space="preserve">
+    <value>准备好探索地图？</value>
+  </data>
+  <data name="ConnectToLoadMap" xml:space="preserve">
+    <value>连接到选定的服务器以加载实时Rust地图和团队。</value>
+  </data>
+  <data name="ReadyToDominate" xml:space="preserve">
+    <value>准备好主宰俄罗斯吗？</value>
+  </data>
+  <data name="PairAccountBenefits" xml:space="preserve">
+    <value>配对您的帐户来开始跟踪玩家，接收基本的突击警报，并立即控制您的智能设备。</value>
+  </data>
+  <data name="LoginPairAccount" xml:space="preserve">
+    <value>登录和配对帐户</value>
+  </data>
+  <data name="RequiresSteamLogin" xml:space="preserve">
+    <value>需要在您的默认浏览器中登录Steam。</value>
+  </data>
+  <data name="DeleteServerHeader" xml:space="preserve">
+    <value>删除服务器？</value>
+  </data>
+  <data name="DeleteServerConfirm" xml:space="preserve">
+    <value>您确定要删除此服务器吗？此操作无法撤消。</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="DeleteAction" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="AutoHideAfter3s" xml:space="preserve">
+    <value>3秒后自动隐藏</value>
+  </data>
+  <data name="MapFilters" xml:space="preserve">
+    <value>MAP 文件</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>网格</value>
+  </data>
+  <data name="Monuments" xml:space="preserve">
+    <value>纪念物</value>
+  </data>
+  <data name="Shops" xml:space="preserve">
+    <value>商店：</value>
+  </data>
+  <data name="ChatAlerts" xml:space="preserve">
+    <value>聊天提醒</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>提醒</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>配置</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>选择所有</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>取消全选</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>物品栏</value>
+  </data>
+  <data name="CargoShip" xml:space="preserve">
+    <value>货运船</value>
+  </data>
+  <data name="CargoSpawn" xml:space="preserve">
+    <value>生成</value>
+  </data>
+  <data name="CargoDock" xml:space="preserve">
+    <value>码头停靠中</value>
+  </data>
+  <data name="CargoEgress" xml:space="preserve">
+    <value>离开(5米警告)</value>
+  </data>
+  <data name="CargoArrival" xml:space="preserve">
+    <value>抵达警告(停靠前5米)</value>
+  </data>
+  <data name="Heli" xml:space="preserve">
+    <value>巡查直升机</value>
+  </data>
+  <data name="Chinook" xml:space="preserve">
+    <value>Chinook (CH47)</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>旅行供应商</value>
+  </data>
+  <data name="OilRig" xml:space="preserve">
+    <value>燃油机触发器</value>
+  </data>
+  <data name="DeepSea" xml:space="preserve">
+    <value>深海事件</value>
+  </data>
+  <data name="SmartAlerts" xml:space="preserve">
+    <value>智能提醒</value>
+  </data>
+  <data name="PlayerOnline" xml:space="preserve">
+    <value>在线状态</value>
+  </data>
+  <data name="PlayerOffline" xml:space="preserve">
+    <value>离线状态</value>
+  </data>
+  <data name="AnnounceTracking" xml:space="preserve">
+    <value>跟踪通知</value>
+  </data>
+  <data name="PlayerDeathSelf" xml:space="preserve">
+    <value>自己死亡数</value>
+  </data>
+  <data name="PlayerDeathTeam" xml:space="preserve">
+    <value>团队死亡数</value>
+  </data>
+  <data name="PlayerRespawnSelf" xml:space="preserve">
+    <value>自重生</value>
+  </data>
+  <data name="PlayerRespawnTeam" xml:space="preserve">
+    <value>团队重生</value>
+  </data>
+  <data name="NewShops" xml:space="preserve">
+    <value>新建商店</value>
+  </data>
+  <data name="SuspiciousShops" xml:space="preserve">
+    <value>可疑商店</value>
+  </data>
+  <data name="TradeAlerts" xml:space="preserve">
+    <value>交易提醒</value>
+  </data>
+  <data name="CrosshairStyle" xml:space="preserve">
+    <value>十字准线样式</value>
+  </data>
+  <data name="GreenDot" xml:space="preserve">
+    <value>绿色点数</value>
+  </data>
+  <data name="MiniGreen" xml:space="preserve">
+    <value>迷你绿灯</value>
+  </data>
+  <data name="OpenCrosshairRG" xml:space="preserve">
+    <value>打开 Crosshair (R/G)</value>
+  </data>
+  <data name="ThinRedCircle" xml:space="preserve">
+    <value>细红圆</value>
+  </data>
+  <data name="SquareDot" xml:space="preserve">
+    <value>方形 + 点数</value>
+  </data>
+  <data name="MagentaDot" xml:space="preserve">
+    <value>品红色染料</value>
+  </data>
+  <data name="MagentaOpenCross" xml:space="preserve">
+    <value>品红色打开十字形</value>
+  </data>
+  <data name="RangeLineTicks" xml:space="preserve">
+    <value>范围线 (ticks)</value>
+  </data>
+  <data name="DrawCrosshair" xml:space="preserve">
+    <value>绘制十字光标...</value>
+  </data>
+  <data name="ChooseMonitor" xml:space="preserve">
+    <value>选择监视器</value>
+  </data>
+  <data name="DrawOverlay" xml:space="preserve">
+    <value>绘制叠加</value>
+  </data>
+  <data name="DrawToolTip" xml:space="preserve">
+    <value>绘制(右键点击：大小/颜色)</value>
+  </data>
+  <data name="PlaceTextToolTip" xml:space="preserve">
+    <value>位置文本(右键点击：颜色/大小)</value>
+  </data>
+  <data name="PlaceIconToolTip" xml:space="preserve">
+    <value>位置图标(右键点击：选择图标)</value>
+  </data>
+  <data name="EraserToolTip" xml:space="preserve">
+    <value>擦除 (按住或点击)</value>
+  </data>
+  <data name="DeleteOverlayToolTip" xml:space="preserve">
+    <value>删除自己的叠加</value>
+  </data>
+  <data name="UploadOverlayToolTip" xml:space="preserve">
+    <value>上传自己的叠加层</value>
+  </data>
+  <data name="ProfitTrades" xml:space="preserve">
+    <value>Profit Trades</value>
+  </data>
+  <data name="ArbitrageOpportunities" xml:space="preserve">
+    <value>直接套装商业机会 | 购买较低的 → 卖得很高。</value>
+  </data>
+  <data name="BuyXForY" xml:space="preserve">
+    <value>购买 X 为 Y</value>
+  </data>
+  <data name="Analyze" xml:space="preserve">
+    <value>分析</value>
+  </data>
+  <data name="IWantToGet" xml:space="preserve">
+    <value>我想要获取</value>
+  </data>
+  <data name="ICanPayWith" xml:space="preserve">
+    <value>我可以使用</value>
+  </data>
+  <data name="TeamChat" xml:space="preserve">
+    <value>团队聊天</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>发送</value>
+  </data>
+  <data name="FcmCredentials" xml:space="preserve">
+    <value>FCM 凭据</value>
+  </data>
+  <data name="RightClickConfigure" xml:space="preserve">
+    <value>点击右键配置</value>
+  </data>
+  <data name="ResetMap" xml:space="preserve">
+    <value>Reset ⟲</value>
+  </data>
+  <data name="ResetMapToolTip" xml:space="preserve">
+    <value>重置地图缩放和位置</value>
+  </data>
+  <data name="MiniMap" xml:space="preserve">
+    <value>Mini 🗺️</value>
+  </data>
+  <data name="CrosshairToolTip" xml:space="preserve">
+    <value>十字光标开/关 (右击选项)</value>
+  </data>
+  <data name="TrackPlayer" xml:space="preserve">
+    <value>跟踪玩家</value>
+  </data>
+  <data name="CloseBMBrowser" xml:space="preserve">
+    <value>关闭战斗计数浏览器</value>
+  </data>
+  <data name="ShopSearchTitle" xml:space="preserve">
+    <value>显示搜索</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>关闭搜索</value>
+  </data>
+  <data name="ActivateShopsFirst" xml:space="preserve">
+    <value>请先激活商店。</value>
+  </data>
+  <data name="ActivateShopPolling" xml:space="preserve">
+    <value>激活商店投票</value>
+  </data>
+  <data name="TeamChatTitle" xml:space="preserve">
+    <value>团队聊天</value>
+  </data>
+  <data name="CloseChat" xml:space="preserve">
+    <value>关闭聊天</value>
+  </data>
+  <data name="ChatCommandsSettings" xml:space="preserve">
+    <value>聊天命令设置</value>
+  </data>
+  <data name="ChatCommands" xml:space="preserve">
+    <value>聊天命令</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>后退</value>
+  </data>
+  <data name="Forward" xml:space="preserve">
+    <value>转发方式</value>
+  </data>
+  <data name="OpenInExternalBrowser" xml:space="preserve">
+    <value>在外部浏览器打开</value>
+  </data>
+  <data name="SearchBMPlaceholder" xml:space="preserve">
+    <value>搜索 BM...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="SelectAServer" xml:space="preserve">
+    <value>选择服务器</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>断开连接</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>正在连接...</value>
+  </data>
+  <data name="StatusInitializing" xml:space="preserve">
+    <value>INITIALizing...</value>
+  </data>
+  <data name="StatusDevicesActive" xml:space="preserve">
+    <value>设备激活</value>
+  </data>
+  <data name="StatusFullyConnected" xml:space="preserve">
+    <value>已连接</value>
+  </data>
+  <data name="StatusUnknown" xml:space="preserve">
+    <value>未知的</value>
+  </data>
+  <data name="MayTakeAMoment" xml:space="preserve">
+    <value>这可能需要一段时间...</value>
+  </data>
+  <data name="AppSettingsTitle" xml:space="preserve">
+    <value>应用程序设置</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>A. 概况</value>
+  </data>
+  <data name="LaunchWithWindows" xml:space="preserve">
+    <value>使用 Windows 启动(最小化)</value>
+  </data>
+  <data name="StartMinimizedAlways" xml:space="preserve">
+    <value>开始最小化(总是)</value>
+  </data>
+  <data name="AutoConnectLastServer" xml:space="preserve">
+    <value>启动时自动连接到最后一个服务器</value>
+  </data>
+  <data name="AutoConnectToolTip" xml:space="preserve">
+    <value>自动重新连接到最后一个服务器并加载地图。</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>行为</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>最小化到托盘而不是关闭</value>
+  </data>
+  <data name="BackgroundTracking" xml:space="preserve">
+    <value>启用背景播放器跟踪</value>
+  </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>即使在最小化时也通过战斗计跟踪玩家。</value>
+  </data>
+  <data name="HideSystemConsole" xml:space="preserve">
+    <value>隐藏系统控制台(去除)</value>
+  </data>
+  <data name="HideConsoleToolTip" xml:space="preserve">
+    <value>隐藏底部日志/控制台面板以保存地图空间。</value>
+  </data>
+  <data name="MapSettings" xml:space="preserve">
+    <value>地图设置</value>
+  </data>
+  <data name="AutoLoadShops" xml:space="preserve">
+    <value>连接时自动加载商店</value>
+  </data>
+  <data name="AutoLoadShopsToolTip" xml:space="preserve">
+    <value>连接到服务器时自动启动投票站和警报。</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>聊天</value>
+  </data>
+  <data name="ModifyChatAlerts" xml:space="preserve">
+    <value>修改聊天提醒</value>
+  </data>
+  <data name="ManageSteamAccountInfo" xml:space="preserve">
+    <value>在主窗口管理您链接的 Steam 账户。</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="IncomingAlarms" xml:space="preserve">
+    <value>INCOMING 闹钟</value>
+  </data>
+  <data name="Wipe" xml:space="preserve">
+    <value>擦除</value>
+  </data>
+  <data name="PlayersOnly" xml:space="preserve">
+    <value>玩家</value>
+  </data>
+  <data name="PlayersHeader" xml:space="preserve">
+    <value>玩家</value>
+  </data>
+  <data name="IWantToGetToolTip" xml:space="preserve">
+    <value>我想要GET(例如原油)</value>
+  </data>
+  <data name="ICanPayWithToolTip" xml:space="preserve">
+    <value>我想要付费(例如废料)</value>
+  </data>
+  <data name="DeleteServerConfirmFormatted" xml:space="preserve">
+    <value>您确定要删除服务器 "{0}吗？此操作无法撤消。</value>
+  </data>
+  <data name="PairingError" xml:space="preserve">
+    <value>Pairing: error</value>
+  </data>
+  <data name="PairingStarting" xml:space="preserve">
+    <value>配对：开始...</value>
+  </data>
+  <data name="StartingPairingListener" xml:space="preserve">
+    <value>正在启动配对列表...</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+    <value>已登录</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>库存</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>价格</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>开启</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>激活</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>未激活</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>群組</value>
+  </data>
+  <data name="ImportDevicesTitle" xml:space="preserve">
+    <value>Rust+桌面——导入设备</value>
+  </data>
+  <data name="ImportDevicesHeader" xml:space="preserve">
+    <value>导入设备</value>
+  </data>
+  <data name="ImportDevicesSelectPrompt" xml:space="preserve">
+    <value>选择要导入此服务器的设备。</value>
+  </data>
+  <data name="CheckDeviceStatus" xml:space="preserve">
+    <value>检查设备状态</value>
+  </data>
+  <data name="ImportSelected" xml:space="preserve">
+    <value>导入选中的</value>
+  </data>
+  <data name="BmShortcuts" xml:space="preserve">
+    <value>BM 快捷键</value>
+  </data>
+  <data name="PairingConfigDeleted" xml:space="preserve">
+    <value>配对：配置已删除</value>
+  </data>
+  <data name="TrayIconDefault" xml:space="preserve">
+    <value>Rust+桌面跟踪器</value>
+  </data>
+  <data name="TrayIconTracking" xml:space="preserve">
+    <value>Rust+桌面(tracking {0})</value>
+  </data>
+  <data name="RenameGroup" xml:space="preserve">
+    <value>重命名群组</value>
+  </data>
+  <data name="NewNameForGroup" xml:space="preserve">
+    <value>组的新名称：</value>
+  </data>
+  <data name="NewNameForDevice" xml:space="preserve">
+    <value>#{0}的新名称：</value>
+  </data>
+  <data name="EnterBattlemetricsIdFor" xml:space="preserve">
+    <value>输入"{0}"的 Battlemetrics 服务器 ID：</value>
+  </data>
+  <data name="TrayTrackingStatus" xml:space="preserve">
+    <value>追踪: {0}</value>
+  </data>
+  <data name="TrayLastUpdate" xml:space="preserve">
+    <value>上次更新: {0}</value>
+  </data>
+  <data name="OpenRustPlusDesk" xml:space="preserve">
+    <value>打开 Rust+ 桌面</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>摄像头</value>
+  </data>
+  <data name="Alarms" xml:space="preserve">
+    <value>闹钟</value>
+  </data>
+  <data name="Identifier" xml:space="preserve">
+    <value>Identifier:</value>
+  </data>
+  <data name="FPS" xml:space="preserve">
+    <value>FPS：</value>
+  </data>
+  <data name="CameraFPSNote" xml:space="preserve">
+    <value>注意：推荐使用2个fps。较高的 FPS 可能会关闭您与服务器的连接</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>像素</value>
+  </data>
+  <data name="Pen" xml:space="preserve">
+    <value>彭文</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>直线</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>方形</value>
+  </data>
+  <data name="Circle" xml:space="preserve">
+    <value>圆圈</value>
+  </data>
+  <data name="Thickness" xml:space="preserve">
+    <value>厚度：</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>不透明度：</value>
+  </data>
+  <data name="UploadPNG" xml:space="preserve">
+    <value>上传 PNG</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>清空</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="AssignGlobalHotkeys" xml:space="preserve">
+    <value>将全局热键分配到智能开关。多个设备可以共享一个热键(将按顺序开关)。</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>设备</value>
+  </data>
+  <data name="EntityId" xml:space="preserve">
+    <value>EntityId</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>热键</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="CloseDeactivate" xml:space="preserve">
+    <value>关闭并停用</value>
+  </data>
+  <data name="CloseActivate" xml:space="preserve">
+    <value>关闭并激活</value>
+  </data>
+  <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
+    <value>Upde, Minimap &amp; Track更新</value>
+  </data>
+  <data name="FeatureSummaryAdjustments" xml:space="preserve">
+    <value>功能摘要与调整</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>不再显示</value>
+  </data>
+  <data name="AwesomeLetsGo" xml:space="preserve">
+    <value>太棒了，让我们开始吧！</value>
+  </data>
+  <data name="MiniMapSettings" xml:space="preserve">
+    <value>小地图设置</value>
+  </data>
+  <data name="Shape" xml:space="preserve">
+    <value>形状</value>
+  </data>
+  <data name="Rectangle" xml:space="preserve">
+    <value>矩形</value>
+  </data>
+  <data name="OpacityLabel" xml:space="preserve">
+    <value>透明度: {0}%</value>
+  </data>
+  <data name="SizeLabel" xml:space="preserve">
+    <value>大小： {0}% (SHIFT+Mousewheel)</value>
+  </data>
+  <data name="ShowServerTime" xml:space="preserve">
+    <value>显示服务器时间</value>
+  </data>
+  <data name="ServerInformation" xml:space="preserve">
+    <value>服务器信息</value>
+  </data>
+  <data name="NoDescriptionAvailable" xml:space="preserve">
+    <value>无可用描述。</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>当前版本: {0}</value>
+  </data>
+  <data name="PatchNotesHeader" xml:space="preserve">
+    <value>补丁笔记和版本历史</value>
+  </data>
+  <data name="EnableChatCommands" xml:space="preserve">
+    <value>启用聊天命令</value>
+  </data>
+  <data name="Prefix" xml:space="preserve">
+    <value>前缀：</value>
+  </data>
+  <data name="StandardCommands" xml:space="preserve">
+    <value>标准命令</value>
+  </data>
+  <data name="Population" xml:space="preserve">
+    <value>人口：</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>时间：</value>
+  </data>
+  <data name="Promote" xml:space="preserve">
+    <value>促销：</value>
+  </data>
+  <data name="DeepSeaCommand" xml:space="preserve">
+    <value>深海：</value>
+  </data>
+  <data name="CargoShipCommand" xml:space="preserve">
+    <value>货运船：</value>
+  </data>
+  <data name="OilRigCommand" xml:space="preserve">
+    <value>油雨量：</value>
+  </data>
+  <data name="PatrolHeliCommand" xml:space="preserve">
+    <value>巡查直升机：</value>
+  </data>
+  <data name="TravellingVendorCommand" xml:space="preserve">
+    <value>旅行销售商：</value>
+  </data>
+  <data name="UpkeepDetails" xml:space="preserve">
+    <value>更新详细信息：</value>
+  </data>
+  <data name="CommandDelay" xml:space="preserve">
+    <value>命令延迟：</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>选择语言</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>更改语言需要重新启动才能完全生效。</value>
+  </data>
+  <data name="SmartSwitches" xml:space="preserve">
+    <value>智能开关</value>
+  </data>
+  <data name="UpkeepTcMonitors" xml:space="preserve">
+    <value>Upding (TC) Monitors</value>
+  </data>
+  <data name="NoTcMonitorsFound" xml:space="preserve">
+    <value>未找到TC 显示器。</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>保存并关闭</value>
+  </data>
+</root>
