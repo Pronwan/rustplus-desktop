@@ -542,6 +542,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         
         _monumentWatcher.OnDebug += (s, msg) => Dispatcher.BeginInvoke(new Action(() => AppendLog(msg)));
 
+        InitializeModifications();
     }
 
     private void OnTrackingNotification(string msg, string serverName)

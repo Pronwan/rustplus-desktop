@@ -359,7 +359,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
-
+  <ItemGroup>
+    <Compile Include="..\modification\**\*.cs" Link="modification\%(RecursiveDir)%(FileName)%(Extension)" />
+  </ItemGroup>
 	
 	<PropertyGroup>
 		<CopyRetryCount>60</CopyRetryCount>
