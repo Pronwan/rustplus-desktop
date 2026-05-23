@@ -881,37 +881,37 @@ Last ned og installer nå?</value>
     <value>Starter valgbare butikker og varsler automatisk når koblet til en server.</value>
   </data>
   <data name="UseMonumentNames" xml:space="preserve">
-    <value>Use monument text labels instead of icons</value>
+    <value>Bruk settets tekstetiketter i stedet for ikoner</value>
   </data>
   <data name="UseMonumentNamesToolTip" xml:space="preserve">
-    <value>When enabled, Rust map monument names are rendered as text using the Permanent Marker font instead of icons.</value>
+    <value>Når aktivert, gjengis Rust kart monumentnavn som skal brukes ved hjelp av Permanent Marker skrifttype i stedet for ikoner.</value>
   </data>
   <data name="MonumentStyle" xml:space="preserve">
     <value>Monument Style:</value>
   </data>
   <data name="MonumentScale" xml:space="preserve">
-    <value>Monument Scale:</value>
+    <value>Monument skala:</value>
   </data>
   <data name="MonumentOpacity" xml:space="preserve">
-    <value>Monument Opacity:</value>
+    <value>Monument Opasitet:</value>
   </data>
   <data name="MonumentStyleIcons" xml:space="preserve">
-    <value>Icons by rustmaps.com</value>
+    <value>Ikoner av rustmaps.com</value>
   </data>
   <data name="MonumentStyleText" xml:space="preserve">
-    <value>Original text monument names</value>
+    <value>Opprinnelige tekstmonumentnavn</value>
   </data>
   <data name="CreditsTitle" xml:space="preserve">
-    <value>Credits</value>
+    <value>Medvirkende</value>
   </data>
   <data name="CreditsIconsPrefix" xml:space="preserve">
-    <value>Map monument icons provided by </value>
+    <value>Kartmonumentikoner som vises av </value>
   </data>
   <data name="CreditsIconsSuffix" xml:space="preserve">
-    <value> — used with permission.</value>
+    <value> — brukes med tillatelse.</value>
   </data>
   <data name="CreditsIconsNote" xml:space="preserve">
-    <value>All monument icons and related artwork are the property of rustmaps.com. Thank you for supporting the Rust community!</value>
+    <value>Alle monumentikoner og relatert kunstverk er rustkartets egenskaper. Takk for at du støtter rust-samfunnet!</value>
   </data>
   <data name="Chat" xml:space="preserve">
     <value>Samtale</value>
@@ -1613,179 +1613,179 @@ Last ned og installer nå?</value>
     <value>Lukk dette vinduet når som helst - du kan åpne det igjen med ❓ Hvordan trykke på knappen.</value>
   </data>
   <data name="MaintenanceTitle" xml:space="preserve">
-    <value>Maintenance</value>
+    <value>Vedlikehold</value>
   </data>
   <data name="MaintenanceDesc" xml:space="preserve">
-    <value>Wipe, backup, or restore application settings, profiles, and custom drawings.</value>
+    <value>Vis, sikkerhetskopier, eller gjenoppretting av programinnstillinger, profiler og egendefinerte tegninger.</value>
   </data>
   <data name="ResetAppData" xml:space="preserve">
-    <value>Reset App Data...</value>
+    <value>Tilbakestill appdata...</value>
   </data>
   <data name="BackupData" xml:space="preserve">
-    <value>Backup Data...</value>
+    <value>Sikkerhetskopier data...</value>
   </data>
   <data name="RestoreData" xml:space="preserve">
-    <value>Restore Data...</value>
+    <value>Gjenopprett data...</value>
   </data>
   <data name="ResetDataTitle" xml:space="preserve">
-    <value>Reset Application Data</value>
+    <value>Tilbakestill programdata</value>
   </data>
   <data name="ResetDataDesc" xml:space="preserve">
-    <value>Select the components you want to wipe from this device. All selected options will be permanently deleted.</value>
+    <value>Velg komponentene du vil slette fra denne enheten. Alle valgte valg vil bli slettet permanent.</value>
   </data>
   <data name="ResetOptionConnection" xml:space="preserve">
-    <value>Active Server Connection (Disconnect)</value>
+    <value>Aktiv Server-tilkobling (Frakoblet)</value>
   </data>
   <data name="ResetOptionProfiles" xml:space="preserve">
-    <value>Saved Server Profiles (Delete paired server configurations)</value>
+    <value>Lagrede server-profiler (Slett tilkoblede serverkonfigurasjoner)</value>
   </data>
   <data name="ResetOptionSteam" xml:space="preserve">
-    <value>Steam Account Credentials (Log out)</value>
+    <value>Steam kontodetaljer (Logg ut)</value>
   </data>
   <data name="ResetOptionPairing" xml:space="preserve">
-    <value>Device Pairing Config (Reset registration tokens)</value>
+    <value>Enhets sammenkoblingskonfigurasjon (Nullstill registreringstokens)</value>
   </data>
   <data name="ResetOptionCrosshairs" xml:space="preserve">
-    <value>Custom Crosshairs (Wipe configurations)</value>
+    <value>Egendefinerte kryss-felter (rutekonfigurasjoner)</value>
   </data>
   <data name="ResetOptionCache" xml:space="preserve">
-    <value>Local Cache &amp; Drawings (Wipe saved maps/lines)</value>
+    <value>Lokal Cache &amp; Tegninger (slette lagrede kart/linjer)</value>
   </data>
   <data name="ResetDataWarning" xml:space="preserve">
-    <value>This action is permanent and cannot be undone.</value>
+    <value>Denne handlingen er permanent og kan ikke angres.</value>
   </data>
   <data name="ConfirmReset" xml:space="preserve">
-    <value>Confirm Reset</value>
+    <value>Bekreft tilbakestilling</value>
   </data>
   <data name="BackupPasswordTitle" xml:space="preserve">
-    <value>Backup Password</value>
+    <value>Sikkerhetskopier passord</value>
   </data>
   <data name="BackupProtectionTitle" xml:space="preserve">
-    <value>Backup Protection</value>
+    <value>Sikkerhetskopier beskyttelse</value>
   </data>
   <data name="BackupProtectionDesc" xml:space="preserve">
-    <value>Enter a password to encrypt this backup file. If you leave it empty, the backup will not be encrypted.</value>
+    <value>Skriv inn et passord for å kryptere denne sikkerhetskopifilen. Hvis du lar den være tom, vil ikke sikkerhetskopien krypteres.</value>
   </data>
   <data name="RestoreBackupTitle" xml:space="preserve">
-    <value>Restore Backup</value>
+    <value>Gjenopprett sikkerhetskopi</value>
   </data>
   <data name="RestoreBackupDesc" xml:space="preserve">
-    <value>This backup is password-protected. Enter the password to decrypt it:</value>
+    <value>Denne sikkerhetskopien er passordbeskyttet. Skriv inn passordet for å dekryptere den:</value>
   </data>
   <data name="Encrypt" xml:space="preserve">
-    <value>Encrypt</value>
+    <value>Krypter</value>
   </data>
   <data name="Decrypt" xml:space="preserve">
-    <value>Decrypt</value>
+    <value>Dekrypter</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>OK</value>
+    <value>Ok</value>
   </data>
   <data name="BackupApplicationDataTitle" xml:space="preserve">
-    <value>Backup Application Data</value>
+    <value>Sikkerhetskopier programdata</value>
   </data>
   <data name="BackupSuccessLog" xml:space="preserve">
-    <value>[SYSTEM] Backup created successfully at: {0}</value>
+    <value>[SYSTEM] sikkerhetskopi opprettet på: {0}</value>
   </data>
   <data name="BackupSuccessMessage" xml:space="preserve">
-    <value>Backup created successfully!</value>
+    <value>Sikkerhetskopiering opprettet!</value>
   </data>
   <data name="BackupSuccessTitle" xml:space="preserve">
-    <value>Backup Completed</value>
+    <value>Sikkerhetskopi fullført</value>
   </data>
   <data name="BackupErrorLog" xml:space="preserve">
-    <value>[SYSTEM] Backup error: {0}</value>
+    <value>[SYSTEM] Backup feil: {0}</value>
   </data>
   <data name="BackupErrorMessage" xml:space="preserve">
-    <value>Error creating backup: {0}</value>
+    <value>Feil ved oppretting av sikkerhetskopi: {0}</value>
   </data>
   <data name="BackupFailedTitle" xml:space="preserve">
-    <value>Backup Failed</value>
+    <value>Sikkerhetskopiering mislyktes</value>
   </data>
   <data name="RestoreConfirmMessage" xml:space="preserve">
-    <value>Restoring data will overwrite your current server profiles, custom crosshairs, drawing overlays, and minimap configurations.
+    <value>Gjenoppretting av data vil overskrive dine gjeldende serverprofiler, egendefinerte krys-delinger, tegning av overlegg og minimalt av konfigurasjoner.
 
-Are you sure you want to continue?</value>
+Er du sikker på at du vil fortsette?</value>
   </data>
   <data name="RestoreConfirmTitle" xml:space="preserve">
-    <value>Restore Backup Confirmation</value>
+    <value>Gjenopprett bekreftelsen</value>
   </data>
   <data name="RestoreApplicationDataTitle" xml:space="preserve">
-    <value>Restore Application Data</value>
+    <value>Gjenopprett programdata</value>
   </data>
   <data name="RestoreSuccessMessage" xml:space="preserve">
-    <value>Application data restored successfully!</value>
+    <value>Applikasjonsdata gjenopprettet vellykket!</value>
   </data>
   <data name="RestoreSuccessTitle" xml:space="preserve">
-    <value>Restore Completed</value>
+    <value>Gjenoppretting fullført</value>
   </data>
   <data name="RestorePasswordErrorLog" xml:space="preserve">
-    <value>[SYSTEM] Restore error: Invalid password provided.</value>
+    <value>[SYSTEM] Gjenopprette feil: Ugyldig passord oppgitt.</value>
   </data>
   <data name="RestorePasswordErrorMessage" xml:space="preserve">
-    <value>Decryption failed. Invalid password or corrupted backup file.</value>
+    <value>Dekryptering mislyktes. Ugyldig passord eller skadet sikkerhetskopifil.</value>
   </data>
   <data name="RestoreFailedTitle" xml:space="preserve">
-    <value>Restore Failed</value>
+    <value>Gjenoppretting feilet</value>
   </data>
   <data name="RestoreErrorLog" xml:space="preserve">
-    <value>[SYSTEM] Restore error: {0}</value>
+    <value>[SYSTEM] Gjenopprettingsfeil: {0}</value>
   </data>
   <data name="RestoreErrorMessage" xml:space="preserve">
-    <value>Error restoring backup: {0}</value>
+    <value>Feil ved gjenoppretting av sikkerhetskopi: {0}</value>
   </data>
   <data name="InvalidBackupFormat" xml:space="preserve">
-    <value>Invalid backup file format or missing signature.</value>
+    <value>Ugyldig format på sikkerhetskopien eller manglende signatur.</value>
   </data>
   <data name="WipeLogStart" xml:space="preserve">
-    <value>[WIPE] Starting selective reset operation...</value>
+    <value>[WIPE] Starter selektiv tilbakestillingsoperasjon...</value>
   </data>
   <data name="WipeLogConnStart" xml:space="preserve">
-    <value>[WIPE] Disconnecting active server connection...</value>
+    <value>[WIPE] Frakobler den aktive servertilkoblingen...</value>
   </data>
   <data name="WipeLogConnEnd" xml:space="preserve">
-    <value>[WIPE] Connection reset complete.</value>
+    <value>[WIPE] tilkoblingen er fullført.</value>
   </data>
   <data name="WipeLogProfilesStart" xml:space="preserve">
-    <value>[WIPE] Clearing saved server profiles...</value>
+    <value>[WIPE] Fjerner lagrede serverprofiler...</value>
   </data>
   <data name="WipeLogProfilesEnd" xml:space="preserve">
-    <value>[WIPE] Saved server profiles cleared.</value>
+    <value>[WIPE] lagrede serverprofiler er tømt.</value>
   </data>
   <data name="WipeLogSteamStart" xml:space="preserve">
-    <value>[WIPE] Removing Steam account credentials...</value>
+    <value>[WIPE] Fjerner data fra Steam kontoen...</value>
   </data>
   <data name="WipeLogSteamEnd" xml:space="preserve">
-    <value>[WIPE] Steam credentials cleared.</value>
+    <value>[WIPE] Steam legitimasjon er fjernet.</value>
   </data>
   <data name="WipeLogPairingStart" xml:space="preserve">
-    <value>[WIPE] Wiping device pairing configuration...</value>
+    <value>[WIPE] Tøm enheten sammenkoblingskonfigurasjon...</value>
   </data>
   <data name="WipeLogPairingEnd" xml:space="preserve">
-    <value>[WIPE] Device pairing configuration deleted.</value>
+    <value>[WIPE] enhetskartlegging slettet</value>
   </data>
   <data name="WipeLogCrosshairsStart" xml:space="preserve">
-    <value>[WIPE] Wiping custom crosshairs...</value>
+    <value>[WIPE] fyr ut egendefinerte kryss-delinger...</value>
   </data>
   <data name="WipeLogCrosshairsError" xml:space="preserve">
-    <value>[WIPE] Error clearing custom crosshairs: {0}</value>
+    <value>[WIPE] Feil ved rydding av egendefinerte kryss-shairer: {0}</value>
   </data>
   <data name="WipeLogCrosshairsEnd" xml:space="preserve">
-    <value>[WIPE] Custom crosshairs cleared.</value>
+    <value>[WIPE] egendefinerte krysseark fjernet.</value>
   </data>
   <data name="WipeLogCacheStart" xml:space="preserve">
-    <value>[WIPE] Clearing local cache files and overlay drawings...</value>
+    <value>[WIPE] Tømmer lokale mellomlagerfiler og overleggstegninger...</value>
   </data>
   <data name="WipeLogCacheError" xml:space="preserve">
-    <value>[WIPE] Error clearing cache folder: {0}</value>
+    <value>[WIPE] Feil ved tømming av mellomlagermappe: {0}</value>
   </data>
   <data name="WipeLogCacheEnd" xml:space="preserve">
-    <value>[WIPE] Cache folders cleared.</value>
+    <value>[WIPE] mellomlagermapper er tømt.</value>
   </data>
   <data name="WipeLogPairingRestart" xml:space="preserve">
-    <value>[WIPE] Re-registering listener and FCM credentials...</value>
+    <value>[WIPE] Re-registrerer lytter og FCM legitimasjonsbeskrivelser...</value>
   </data>
   <data name="WipeLogComplete" xml:space="preserve">
-    <value>[WIPE] Selective reset operation completed successfully.</value>
+    <value>[WIPE] Selektiv tilbakestilling utført.</value>
   </data>
 </root>
