@@ -176,13 +176,17 @@ public partial class MainWindow
                         TxtOnlineFilter.Text = Properties.Resources.FilterPlayers;
                         TxtOnlineFilter.Foreground = Brushes.Gray;
                     }
+                    else if (!TxtOnlineFilter.IsFocused && TxtOnlineFilter.Text != Properties.Resources.FilterPlayers && string.IsNullOrWhiteSpace(TxtOnlineFilter.Text)) {
+                        TxtOnlineFilter.Text = Properties.Resources.FilterPlayers;
+                        TxtOnlineFilter.Foreground = Brushes.Gray;
+                    }
                 }
             } else {
                 if (TxtOnlineFilter != null) TxtOnlineFilter.Visibility = Visibility.Collapsed;
             }
 
             var filterTxt = TxtOnlineFilter?.Text;
-            if (!string.IsNullOrEmpty(filterTxt) && filterTxt != "Filter players...")
+            if (!string.IsNullOrEmpty(filterTxt) && filterTxt != Properties.Resources.FilterPlayers)
             {
                 players = players.Where(p => p.Name.Contains(filterTxt, StringComparison.OrdinalIgnoreCase)).ToList();
             }
@@ -234,6 +238,7 @@ public partial class MainWindow
     }
     private void TxtOnlineFilter_TextChanged(object sender, TextChangedEventArgs e) {
         if (TxtOnlineFilter.Text != Properties.Resources.FilterPlayers) RefreshOnlinePlayersList();
+        else RefreshOnlinePlayersList(); // placeholder is set — show full unfiltered list
     }
 
     private async void BtnShowOnline_Click(object sender, RoutedEventArgs e)
@@ -346,7 +351,7 @@ public partial class MainWindow
             if (ListTrackedPlayers == null) return;
             ListTrackedPlayers.Children.Clear();
             var players = TrackingService.GetTrackedPlayers();
-            if (!string.IsNullOrEmpty(filter) && filter != "Filter players...")
+            if (!string.IsNullOrEmpty(filter) && filter != Properties.Resources.FilterPlayers)
             {
                 players = players.Where(p =>
                     (p.Name?.Contains(filter, StringComparison.OrdinalIgnoreCase) ?? false) ||
@@ -479,7 +484,7 @@ public partial class MainWindow
                     ListTrackedPlayers.Children.Add(expander);
                 }
             }
-            if (players.Count == 0 && !string.IsNullOrEmpty(filter) && filter != "Filter players...")
+            if (players.Count == 0 && !string.IsNullOrEmpty(filter) && filter != Properties.Resources.FilterPlayers)
             {
                 ListTrackedPlayers.Children.Add(new TextBlock { Text = "No results found matching filter.", Margin = new Thickness(0, 20, 0, 0), Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center });
             }
@@ -574,19 +579,20 @@ public partial class MainWindow
     }
 
     private void TxtTrackedFilter_GotFocus(object sender, RoutedEventArgs e) {
-        if (TxtTrackedFilter.Text == "Filter players...") {
+        if (TxtTrackedFilter.Text == Properties.Resources.FilterPlayers) {
             TxtTrackedFilter.Text = "";
             TxtTrackedFilter.Foreground = Brushes.White;
         }
     }
     private void TxtTrackedFilter_LostFocus(object sender, RoutedEventArgs e) {
         if (string.IsNullOrWhiteSpace(TxtTrackedFilter.Text)) {
-            TxtTrackedFilter.Text = "Filter players...";
+            TxtTrackedFilter.Text = Properties.Resources.FilterPlayers;
             TxtTrackedFilter.Foreground = Brushes.Gray;
         }
     }
     private void TxtTrackedFilter_TextChanged(object sender, TextChangedEventArgs e) {
-        if (TxtTrackedFilter.Text != "Filter players...") RefreshTrackedPlayersList(TxtTrackedFilter.Text);
+        var txt = TxtTrackedFilter.Text;
+        RefreshTrackedPlayersList(txt == Properties.Resources.FilterPlayers ? "" : txt);
     }
 
     private void BtnManageGroups_Click(object sender, RoutedEventArgs e) {
