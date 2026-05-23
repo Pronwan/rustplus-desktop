@@ -68,6 +68,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
                             <!-- Population -->
@@ -115,9 +116,14 @@
                             <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
                             <ui:TextBox Grid.Row="8" Grid.Column="2" Text="{Binding CmdUpkeepDetail}" Margin="0,4" VerticalAlignment="Center" />
 
+                            <!-- List Commands -->
+                            <TextBlock Grid.Row="9" Text="{DynamicResource ListCommandsCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                            <ui:TextBox Grid.Row="9" Grid.Column="2" Text="{Binding CmdList}" Margin="0,4" VerticalAlignment="Center" />
+
                             <!-- Delay -->
-                            <TextBlock Grid.Row="9" Text="{DynamicResource CommandDelay}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
-                            <ComboBox Grid.Row="9" Grid.Column="2" SelectedValue="{Binding ChatCommandDelaySeconds}" SelectedValuePath="Content" Margin="0,4" VerticalAlignment="Center">
+                            <TextBlock Grid.Row="10" Text="{DynamicResource CommandDelay}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <ComboBox Grid.Row="10" Grid.Column="2" SelectedValue="{Binding ChatCommandDelaySeconds}" SelectedValuePath="Content" Margin="0,4" VerticalAlignment="Center">
                                 <ComboBoxItem Content="1" />
                                 <ComboBoxItem Content="2" />
                                 <ComboBoxItem Content="3" />

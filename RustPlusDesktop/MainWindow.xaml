@@ -264,16 +264,11 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <!-- Checkbox Icon (Segoe MDL2) -->
-                    <TextBlock
-                        x:Name="CheckIcon"
+                    <ContentPresenter
                         Grid.Column="0"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        FontFamily="Segoe MDL2 Assets"
-                        FontSize="14"
-                        Foreground="{DynamicResource TextSubtle}"
-                        Text="&#xE739;" />
+                        ContentSource="Icon" />
 
                     <ContentPresenter
                         Grid.Column="1"
@@ -285,11 +280,6 @@
             </Border>
 
             <ControlTemplate.Triggers>
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter TargetName="CheckIcon" Property="Text" Value="&#xE73B;" />
-                    <Setter TargetName="CheckIcon" Property="Foreground" Value="{DynamicResource Accent}" />
-                    <Setter Property="Foreground" Value="{DynamicResource Accent}" />
-                </Trigger>
                 <Trigger Property="IsHighlighted" Value="True">
                     <Setter TargetName="Bd" Property="Background" Value="#1AFFFFFF" />
                 </Trigger>
@@ -310,6 +300,24 @@
                 <Trigger Property="HasItems" Value="True">
                     <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}" />
                 </Trigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsCheckable" Value="True" />
+                        <Condition Property="IsChecked" Value="True" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Icon">
+                        <Setter.Value>
+                            <Ellipse Width="8" Height="8" Fill="{DynamicResource Accent}"/>
+                        </Setter.Value>
+                    </Setter>
+                </MultiTrigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsCheckable" Value="True" />
+                        <Condition Property="IsChecked" Value="False" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Icon" Value="{x:Null}"/>
+                </MultiTrigger>
             </Style.Triggers>
         </Style>
 
@@ -5076,6 +5084,26 @@
                     <CheckBox x:Name="AlarmOverlayAutoHideChk" Grid.Row="4" Content="{DynamicResource AutoHideAfter3s}" FontSize="12" IsChecked="False" Checked="AlarmOverlayAutoHideChk_Changed" Unchecked="AlarmOverlayAutoHideChk_Changed"/>
                 </Grid>
             </Border>
+
+            <!-- Upload Consent Overlay -->
+            <Grid x:Name="UploadConsentOverlay" Visibility="Collapsed" Background="#C0000000" Grid.ColumnSpan="3" Panel.ZIndex="10000">
+                <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="20" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="450">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource UploadConsentTitle}" FontWeight="Bold" FontSize="18" Margin="0,0,0,12"/>
+                        <TextBlock Text="{DynamicResource UploadConsentText}" TextWrapping="Wrap" Margin="0,0,0,16" LineHeight="20"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="{DynamicResource Decline}" Margin="0,0,8,0" Padding="16,6" Click="BtnDeclineUploadConsent_Click" Background="#404040" Foreground="White" BorderThickness="0" Cursor="Hand">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="4"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                            <ui:Button Content="{DynamicResource Accept}" Appearance="Primary" Padding="24,6" Click="BtnAcceptUploadConsent_Click" Cursor="Hand" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
 
             <!--  Wpf.Ui: WinUI 3 Snackbar presenter (toast notifications)  -->
             <ui:SnackbarPresenter

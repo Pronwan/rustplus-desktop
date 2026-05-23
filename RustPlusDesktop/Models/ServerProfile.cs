@@ -161,6 +161,13 @@ public class ServerProfile : INotifyPropertyChanged
         set { _cmdPop = ValidateCommand(value, "pop"); OnProp(); }
     }
 
+    private string _cmdList = "commands";
+    public string CmdList
+    {
+        get => _cmdList;
+        set { _cmdList = ValidateCommand(value, "commands"); OnProp(); }
+    }
+
     private string _cmdTime = "time";
     public string CmdTime
     {

@@ -121,7 +121,7 @@
     <value>Online-Spieler-Tab anzeigen</value>
   </data>
   <data name="Queue" xml:space="preserve">
-    <value>Warteschlange:</value>
+    <value>Queue:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
     <value>Geräte</value>
@@ -136,13 +136,13 @@
     <value>Geräte zu Teammitgliedern exportieren</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>Aktualisieren</value>
+    <value>Refresh</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Löschen</value>
   </data>
   <data name="DeleteMissingOnly" xml:space="preserve">
-    <value>Sie können nur fehlende Geräte löschen</value>
+    <value>Du kannst nur fehlende Geräte löschen</value>
   </data>
   <data name="RenameDevice" xml:space="preserve">
     <value>Gerät umbenennen</value>
@@ -217,10 +217,10 @@
     <value>Gruppe speichern</value>
   </data>
   <data name="EnterGroupName" xml:space="preserve">
-    <value>Bitte geben Sie einen Gruppennamen ein.</value>
+    <value>Bitte gib einen Gruppennamen ein.</value>
   </data>
   <data name="MessageNotSentError" xml:space="preserve">
-    <value>Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es erneut. (Überprüfen Sie, ob Sie in einem Team sind!)</value>
+    <value>Nachricht konnte nicht gesendet werden. Bitte versuche es erneut. (Überprüfe, ob du in einem Team bist!)</value>
   </data>
   <data name="ErrorPrefix" xml:space="preserve">
     <value>Fehler: </value>
@@ -348,7 +348,7 @@ Format: rustplus://IP:PORT</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
     <value>Bestehende Paarungskonfiguration löschen?
-Sie müssen beim nächsten Start erneut paaren.</value>
+Du musst beim nächsten Start erneut paaren.</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
     <value>Reset + Listen</value>
@@ -363,10 +363,10 @@ Sie müssen beim nächsten Start erneut paaren.</value>
     <value>Paarungskonfiguration löschen und sofort mit Edge neu paaren/lauschen?</value>
   </data>
   <data name="UpdateQueryFailed" xml:space="preserve">
-    <value>Konnte die neueste Version nicht abfragen. Bitte versuchen Sie es erneut oder öffnen Sie die Release-Seite.</value>
+    <value>Konnte die neueste Version nicht abfragen. Bitte versuche es erneut oder öffne die Release-Seite.</value>
   </data>
   <data name="UpdateUpToDate" xml:space="preserve">
-    <value>Sie sind aktuell.</value>
+    <value>Du bist aktuell.</value>
   </data>
   <data name="UpdateAvailableHeader" xml:space="preserve">
     <value>Update verfügbar</value>
@@ -444,7 +444,7 @@ jetzt herunterladen und installieren?</value>
     <value>Keine Geräte gefunden</value>
   </data>
   <data name="PairDeviceToSee" xml:space="preserve">
-    <value>Koppeln Sie ein intelligentes Gerät, wechseln oder Alarm, um es hier zu sehen</value>
+    <value>Kopple ein Smart-Device, Schalter oder Alarm, um es hier zu sehen</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
     <value>Team</value>
@@ -465,7 +465,7 @@ jetzt herunterladen und installieren?</value>
     <value>Aus dem Team werfen</value>
   </data>
   <data name="ProfileMarkers" xml:space="preserve">
-    <value>Profilmarkierungen</value>
+    <value>Steam-Marker</value>
   </data>
   <data name="DeathMarkers" xml:space="preserve">
     <value>Todesmarker</value>
@@ -486,10 +486,10 @@ jetzt herunterladen und installieren?</value>
     <value>Spieler</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
-    <value>Wie man verfolgt</value>
+    <value>Wie man trackt</value>
   </data>
   <data name="LearnHowTrackingWorks" xml:space="preserve">
-    <value>Erfahren Sie, wie die Spielerverfolgung funktioniert</value>
+    <value>Erfahre, wie das Tracking funktioniert</value>
   </data>
   <data name="OnlineTab" xml:space="preserve">
     <value>Online</value>
@@ -510,7 +510,7 @@ jetzt herunterladen und installieren?</value>
     <value>Spieler in separatem Fenster öffnen</value>
   </data>
   <data name="Track" xml:space="preserve">
-    <value>Spur</value>
+    <value>Track</value>
   </data>
   <data name="ManualTrackPlaceholder" xml:space="preserve">
     <value>Manueller Trackname oder Steam-ID...</value>
@@ -537,13 +537,13 @@ jetzt herunterladen und installieren?</value>
     <value>Bereit für die Erkundung der Karte?</value>
   </data>
   <data name="ConnectToLoadMap" xml:space="preserve">
-    <value>Verbinden Sie sich mit einem ausgewählten Server, um die Live-Rust-Karte und das Team zu laden.</value>
+    <value>Verbinde dich mit einem ausgewählten Server, um die Live-Rust-Karte und das Team zu laden.</value>
   </data>
   <data name="ReadyToDominate" xml:space="preserve">
     <value>Bereit, Rost zu beherrschen?</value>
   </data>
   <data name="PairAccountBenefits" xml:space="preserve">
-    <value>Koppeln Sie Ihr Konto, um Spieler zu verfolgen, Base-Schlachtzüge zu erhalten und Ihre intelligenten Geräte sofort zu kontrollieren.</value>
+    <value>Kopple dein Konto, um Spieler zu verfolgen, Base-Schlachtzüge zu erhalten und deine intelligenten Geräte sofort zu kontrollieren.</value>
   </data>
   <data name="LoginPairAccount" xml:space="preserve">
     <value>Login &amp; Paarkonto</value>
@@ -555,7 +555,7 @@ jetzt herunterladen und installieren?</value>
     <value>Server löschen?</value>
   </data>
   <data name="DeleteServerConfirm" xml:space="preserve">
-    <value>Sind Sie sicher, dass Sie diesen Server löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.</value>
+    <value>Bist du sicher, dass du diesen Server löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Abbrechen</value>
@@ -573,16 +573,16 @@ jetzt herunterladen und installieren?</value>
     <value>Raster</value>
   </data>
   <data name="Monuments" xml:space="preserve">
-    <value>Denkmäler</value>
+    <value>Monumente</value>
   </data>
   <data name="Shops" xml:space="preserve">
-    <value>Läden</value>
+    <value>Verkaufsautomaten</value>
   </data>
   <data name="ChatAlerts" xml:space="preserve">
     <value>CHAT ALERTS</value>
   </data>
   <data name="Alerts" xml:space="preserve">
-    <value>Warnungen</value>
+    <value>Alerts</value>
   </data>
   <data name="Configure" xml:space="preserve">
     <value>Konfigurieren</value>
@@ -600,19 +600,19 @@ jetzt herunterladen und installieren?</value>
     <value>Frachtschiff</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
-    <value>Erschaffen</value>
+    <value>Spawnn</value>
   </data>
   <data name="CargoDock" xml:space="preserve">
-    <value>Hafendock</value>
+    <value>Angelegt am Dock</value>
   </data>
   <data name="CargoEgress" xml:space="preserve">
     <value>Abfahrt (5m Warnung)</value>
   </data>
   <data name="CargoArrival" xml:space="preserve">
-    <value>Ankunftswarnung (5m vor dem Dock)</value>
+    <value>Ankunft (5m vor dem Dock)</value>
   </data>
   <data name="Heli" xml:space="preserve">
-    <value>Hubschrauber patrouillieren</value>
+    <value>Patrouillen-Helikopter</value>
   </data>
   <data name="Chinook" xml:space="preserve">
     <value>Chinook (CH47)</value>
@@ -621,13 +621,13 @@ jetzt herunterladen und installieren?</value>
     <value>Reisender Lieferant</value>
   </data>
   <data name="OilRig" xml:space="preserve">
-    <value>Ölring-Trigger</value>
+    <value>Bohrinsel-Events</value>
   </data>
   <data name="DeepSea" xml:space="preserve">
-    <value>Tiefsee-Ereignis</value>
+    <value>Deep-Sea-Event</value>
   </data>
   <data name="SmartAlerts" xml:space="preserve">
-    <value>Intelligente Warnungen</value>
+    <value>Smart-Device ausgelöst</value>
   </data>
   <data name="PlayerOnline" xml:space="preserve">
     <value>Online-Status</value>
@@ -636,7 +636,7 @@ jetzt herunterladen und installieren?</value>
     <value>Offline-Status</value>
   </data>
   <data name="AnnounceTracking" xml:space="preserve">
-    <value>Tracking-Benachrichtigungen</value>
+    <value>Tracking-Meldungen</value>
   </data>
   <data name="PlayerDeathSelf" xml:space="preserve">
     <value>Selbsttod</value>
@@ -654,10 +654,10 @@ jetzt herunterladen und installieren?</value>
     <value>Neue Shops</value>
   </data>
   <data name="SuspiciousShops" xml:space="preserve">
-    <value>Verdächtige Geschäfte</value>
+    <value>Verdächtige Shops</value>
   </data>
   <data name="TradeAlerts" xml:space="preserve">
-    <value>Handelswarnungen</value>
+    <value>Angebot gefunden</value>
   </data>
   <data name="CrosshairStyle" xml:space="preserve">
     <value>Fadenkreuz Stil</value>
@@ -768,10 +768,10 @@ jetzt herunterladen und installieren?</value>
     <value>Suche schließen</value>
   </data>
   <data name="ActivateShopsFirst" xml:space="preserve">
-    <value>Bitte aktivieren Sie zuerst Shops</value>
+    <value>Bitte aktiviere zuerst die Shops</value>
   </data>
   <data name="ActivateShopPolling" xml:space="preserve">
-    <value>Shop-Umfragen aktivieren</value>
+    <value>Shop-Abfrage aktivieren</value>
   </data>
   <data name="TeamChatTitle" xml:space="preserve">
     <value>TEAM-CHAT</value>
@@ -876,7 +876,7 @@ jetzt herunterladen und installieren?</value>
     <value>Chat-Alarme ändern</value>
   </data>
   <data name="ManageSteamAccountInfo" xml:space="preserve">
-    <value>Verwalten Sie Ihr verknüpftes Steam Konto im Hauptfenster.</value>
+    <value>Verwalte dein verknüpftes Steam Konto im Hauptfenster.</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Schließen</value>
@@ -900,7 +900,7 @@ jetzt herunterladen und installieren?</value>
     <value>Ich möchte MIT ZAHL (z.B. Schrott)</value>
   </data>
   <data name="DeleteServerConfirmFormatted" xml:space="preserve">
-    <value>Sind Sie sicher, dass Sie Server "{0}" löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden.</value>
+    <value>Bist du sicher, dass du Server "{0}" löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.</value>
   </data>
   <data name="PairingError" xml:space="preserve">
     <value>Pairing: error</value>
@@ -942,7 +942,7 @@ jetzt herunterladen und installieren?</value>
     <value>Geräte importieren</value>
   </data>
   <data name="ImportDevicesSelectPrompt" xml:space="preserve">
-    <value>Wählen Sie aus, welche Geräte für diesen Server importiert werden sollen.</value>
+    <value>Wähle aus, welche Geräte für diesen Server importiert werden sollen.</value>
   </data>
   <data name="CheckDeviceStatus" xml:space="preserve">
     <value>Gerätestatus überprüfen</value>
@@ -972,7 +972,7 @@ jetzt herunterladen und installieren?</value>
     <value>Neuer Name für #{0}:</value>
   </data>
   <data name="EnterBattlemetricsIdFor" xml:space="preserve">
-    <value>Geben Sie die Battlemetrics Server ID für "{0}":</value>
+    <value>Gib die Battlemetrics Server ID für "{0}" ein:</value>
   </data>
   <data name="TrayTrackingStatus" xml:space="preserve">
     <value>Verfolgung: {0}</value>
@@ -1035,7 +1035,7 @@ jetzt herunterladen und installieren?</value>
     <value>Speichern</value>
   </data>
   <data name="AssignGlobalHotkeys" xml:space="preserve">
-    <value>Weisen Sie Smart Switches globale Hotkeys zu. Mehrere Geräte können einen Hotkey teilen (wechselt sequentiell um).</value>
+    <value>Weise Smart Switches globale Hotkeys zu. Mehrere Geräte können einen Hotkey teilen (wechselt sequentiell).</value>
   </data>
   <data name="Device" xml:space="preserve">
     <value>Gerät</value>
@@ -1176,10 +1176,10 @@ jetzt herunterladen und installieren?</value>
     <value>Patrouillen-Heli aktiv (Spawnzeit unbekannt)</value>
   </data>
   <data name="HeliShotDownAgo" xml:space="preserve">
-    <value>Patrouillen-Heli abgeschossen {0} vor dieser Sitzung</value>
+    <value>Patrouillen-Heli abgeschossen {0} vor dieser Session</value>
   </data>
   <data name="HeliLeftMapAgo" xml:space="preserve">
-    <value>Patrol Heli hat die Karte {0} vor dieser Sitzung verlassen.</value>
+    <value>Patrol Heli hat die Karte {0} vor dieser Session verlassen.</value>
   </data>
   <data name="CargoDockedDepartsIn" xml:space="preserve">
     <value>Angedockt an {0} - Abreise in ~{1}</value>
@@ -1206,22 +1206,22 @@ jetzt herunterladen und installieren?</value>
     <value>Frachtschiff despawned {0}m {1}s ago this session</value>
   </data>
   <data name="VendorActiveRunningFor" xml:space="preserve">
-    <value>Travelling Vendor aktiv - Laufen für {0}</value>
+    <value>Reisender Verkäufer aktiv - Laufen für {0}</value>
   </data>
   <data name="VendorActiveSpawnUnknown" xml:space="preserve">
     <value>Reisender Verkäufer aktiv (Spawnzeit unbekannt)</value>
   </data>
   <data name="VendorDespawnedAgo" xml:space="preserve">
-    <value>Travelling Vendor wurde vor dieser Sitzung despawned {0}</value>
+    <value>Reisender Verkäufer ist vor {0} in dieser Session despawned.</value>
   </data>
   <data name="DeepSeaActiveRunningFor" xml:space="preserve">
-    <value>Tiefsee aktiv - Laufen für {0}</value>
+    <value>Deep Sea aktiv - Laufen für {0}</value>
   </data>
   <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
-    <value>Tiefsee aktiv (Laichzeit unbekannt)</value>
+    <value>Deep Sea aktiv (Spawnzeit unbekannt)</value>
   </data>
   <data name="DeepSeaEndedAgo" xml:space="preserve">
-    <value>Deep Sea endete vor {0} dieser Sitzung</value>
+    <value>Deep Sea endete vor {0} in dieser Session</value>
   </data>
   <data name="TimerHoursMinutes" xml:space="preserve">
     <value>{0}h {1:D2}m</value>
@@ -1251,19 +1251,19 @@ jetzt herunterladen und installieren?</value>
     <value>Aktuelle Uhrzeit im Spiel: {0}.</value>
   </data>
   <data name="ChatCmdPromoteResponse" xml:space="preserve">
-    <value>{0} wurde zum Leiter befördert.</value>
+    <value>{0} wurde zum Leader befördert.</value>
   </data>
   <data name="ChatCmdDeepSeaActive" xml:space="preserve">
-    <value>Deep Sea ist aktiv! Laufen für {0}.</value>
+    <value>Deep Sea ist seit {0} aktiv.</value>
   </data>
   <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
     <value>Deep Sea ist derzeit aktiv (verbunden in der Mitte des Ereignisses - Laichzeit unbekannt).</value>
   </data>
   <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
-    <value>Deep Sea endete vor {0} Minuten diese Sitzung.</value>
+    <value>Deep Sea endete vor {0} Minuten diese Session.</value>
   </data>
   <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
-    <value>Tiefsee-Ereignisstatus unbekannt (in dieser Sitzung nicht gesehen).</value>
+    <value>Deep Sea Status unbekannt (in dieser Session nicht gesehen).</value>
   </data>
   <data name="ChatCmdCargoNotActive" xml:space="preserve">
     <value>Frachtschiff nicht aktiv.</value>
@@ -1290,7 +1290,7 @@ jetzt herunterladen und installieren?</value>
     <value>Frachtschiff aktiv (nach dem Spawnen verbunden - verbleibende Zeit unbekannt).</value>
   </data>
   <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
-    <value>Frachtschiff nicht aktiv. Despawned {0} Minuten vor dieser Sitzung.</value>
+    <value>Frachtschiff nicht aktiv. Verschwand vor {0} Minuten in dieser Session.</value>
   </data>
   <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
     <value>{0}: Kiste in {1}m {2}s</value>
@@ -1299,16 +1299,16 @@ jetzt herunterladen und installieren?</value>
     <value>{0}: zuletzt aufgerufen vor {1}m</value>
   </data>
   <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
-    <value>{0}: in dieser Sitzung nicht aufgerufen</value>
+    <value>{0}: in dieser Session nicht aktiviert</value>
   </data>
   <data name="ChatCmdHeliActive" xml:space="preserve">
-    <value>Patrol Heli ist aktiv! Laufen für {0}.</value>
+    <value>Patrol Heli ist seit {0} aktiv.</value>
   </data>
   <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
     <value>Patrouillen-Heli ist derzeit aktiv (mitten im Ereignis verbunden - Spawnzeit unbekannt).</value>
   </data>
   <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
-    <value>Patrol Heli nicht aktiv. Es war {0} {1} vor dieser Sitzung.</value>
+    <value>Patrol Heli nicht aktiv. {0} vor {1} in dieser Session.</value>
   </data>
   <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
     <value>niedergeschossen</value>
@@ -1317,19 +1317,19 @@ jetzt herunterladen und installieren?</value>
     <value>die Karte verlassen</value>
   </data>
   <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
-    <value>Patrol Heli Ereignisstatus unbekannt (in dieser Sitzung nicht gesehen).</value>
+    <value>Patrol Heli Ereignisstatus unbekannt (in dieser Session nicht gesehen).</value>
   </data>
   <data name="ChatCmdVendorActive" xml:space="preserve">
-    <value>Travelling Vendor ist aktiv! Laufen für {0}.</value>
+    <value>Travelling Vendor ist seit {0} aktiv.</value>
   </data>
   <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
     <value>Der reisende Verkäufer ist derzeit aktiv (mitten im Ereignis verbunden - Spawnzeit unbekannt).</value>
   </data>
   <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
-    <value>Reisender Verkäufer nicht aktiv. Despawned {0} vor dieser Sitzung.</value>
+    <value>Reisender Verkäufer nicht aktiv. Verschwand vor {0} Minuten in dieser Session.</value>
   </data>
   <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
-    <value>Ereignisstatus des reisenden Verkäufers unbekannt (in dieser Sitzung nicht gesehen).</value>
+    <value>Status des reisenden Verkäufers unbekannt (in dieser Session nicht gesehen).</value>
   </data>
   <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
     <value>Es werden keine Werkzeugschränke für Instandhaltungsbefehle abgebildet.</value>
@@ -1410,7 +1410,7 @@ jetzt herunterladen und installieren?</value>
     <value>CH47</value>
   </data>
   <data name="EventPatrolHelicopter" xml:space="preserve">
-    <value>Patrouillenhubschrauber</value>
+    <value>Patrouillen-Helikopter</value>
   </data>
   <data name="EventOilrigCrate" xml:space="preserve">
     <value>Bohrinsel Kiste</value>
@@ -1505,4 +1505,71 @@ jetzt herunterladen und installieren?</value>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (Bestand {5}) für {6} {7}</value>
   </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Befehle auflisten</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>BEFEHLE: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Lokalisierung, UI-Update &amp; Storage</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dynamische Sprachauswahl</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> — Über 30 Sprachen wählbar</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Chat-Befehle UI</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> — Bessere Ansicht für Team-Chat</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Einstellungs-Overlay</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> — Seitenleiste für Einstellungen</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics-Tracking entfernt</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Übersetzen via Google</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Einverständnis zur Übersetzung</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>Um die Patch Notes in die aktuell ausgewählte Sprache zu übersetzen, wird der Text über eine API an Google gesendet. Es werden keine persönlichen Informationen übertragen.</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Mehr über die verwendete API erfahren</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Annehmen</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Ablehnen</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Einverständnis zum Upload</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Durch Klicken auf 'Annehmen' werden die Smart-Geräte (und evtl. vorhandene Zeichnungen auf der Map) auf den Server des Entwicklers hochgeladen. Dies ermöglicht deinen Teammates den Download und die Synchronisation. Zur Identifizierung der Teammates wird ausschließlich die Steam-ID übertragen. Nur wer am Tool Cupboard autorisiert ist, kann die Geräte steuern.
+
+Hinweis: Diese Übertragungsart wird in Zukunft noch optimiert. Falls Teammates nicht downloaden können, lösche bitte die gezeichneten Map-Overlay-Daten und versuche den Upload erneut.</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve"><value>Deine Basis wird angegriffen!</value></data>
+  <data name="PleaseConnectFirst" xml:space="preserve"><value>Bitte verbinde dich zuerst mit einem Server.</value></data>
+  <data name="NotConnectedError" xml:space="preserve"><value>Du bist mit keinem Server verbunden.</value></data>
+  <data name="ChatNotAvailable" xml:space="preserve"><value>Der Chat ist derzeit nicht verfügbar.</value></data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve"><value>Bitte wähle zuerst einen Server aus.</value></data>
+  <data name="SnackbarTitleConnection" xml:space="preserve"><value>Verbindung</value></data>
+  <data name="SnackbarTitleChat" xml:space="preserve"><value>Chat</value></data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve"><value>Wie man Spieler trackt</value></data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve"><value>Natives UDP Tracking</value></data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve"><value>Die Tracking-Anleitung ist derzeit nur auf Englisch verfügbar, da sie sich in naher Zukunft ändern wird. Wir bitten um etwas Geduld.</value></data>
+  <data name="HowToTrackCloseHint" xml:space="preserve"><value>Schließe dieses Fenster jederzeit — du kannst es über den  ❓ Wie man trackt  Button wieder öffnen.</value></data>
 </root>

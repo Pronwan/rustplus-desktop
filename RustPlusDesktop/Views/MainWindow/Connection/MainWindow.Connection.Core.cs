@@ -233,7 +233,7 @@ public partial class MainWindow
 
         if (_vm.Selected is null)
         {
-            if (!silent) ShowInfoSnackbar("Connection", "Please select a server first.", WpfUi.ControlAppearance.Info);
+            if (!silent) ShowInfoSnackbar(Properties.Resources.SnackbarTitleConnection, Properties.Resources.PleaseSelectServerFirst, WpfUi.ControlAppearance.Info);
             return false;
         }
 
