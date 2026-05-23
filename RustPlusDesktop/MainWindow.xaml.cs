@@ -4554,15 +4554,25 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         else
         {
             ImgLanguageFlag.Visibility = Visibility.Visible;
-            string imageUri = $"pack://application:,,,/Assets/Flags/{code}.png";
-            try
+
+            // Try full code first (e.g. sv-SE.png), then fall back to two-letter prefix (e.g. sv.png)
+            // so that most flags (stored as neutral codes) still resolve correctly.
+            var candidates = new[] { code, code.Contains('-') ? code.Split('-')[0] : null };
+            bool loaded = false;
+            foreach (var candidate in candidates)
             {
-                ImgLanguageFlag.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(imageUri));
+                if (candidate == null) continue;
+                string imageUri = $"pack://application:,,,/Assets/Flags/{candidate}.png";
+                try
+                {
+                    ImgLanguageFlag.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(imageUri));
+                    loaded = true;
+                    break;
+                }
+                catch { }
             }
-            catch
-            {
+            if (!loaded)
                 ImgLanguageFlag.Visibility = Visibility.Collapsed;
-            }
         }
     }
 
