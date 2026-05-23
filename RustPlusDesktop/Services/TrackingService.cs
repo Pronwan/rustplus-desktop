@@ -67,6 +67,10 @@ public class TrackingSettings
     public bool MapShowDeathTags { get; set; } = false;
     public bool MapAbbreviateNames { get; set; } = false;
     public double MapPlayerIconScale { get; set; } = 1.0;
+    public bool MapUseMonumentText { get; set; } = false;
+    public int MapMonumentDisplayMode { get; set; } = 0;
+    public double MapMonumentScale { get; set; } = 1.0;
+    public double MapMonumentOpacity { get; set; } = 1.0;
     public bool BackgroundTrackingEnabled { get; set; } = true;
     public bool CloseToTrayEnabled { get; set; } = false;
     public bool StartMinimizedEnabled { get; set; } = false;
@@ -680,6 +684,26 @@ public static class TrackingService
     {
         get => _settings.MapPlayerIconScale;
         set { _settings.MapPlayerIconScale = value; SaveDB(); }
+    }
+    public static bool MapUseMonumentText
+    {
+        get => _settings.MapMonumentDisplayMode == 1;
+        set { _settings.MapMonumentDisplayMode = value ? 1 : 0; SaveDB(); }
+    }
+    public static int MapMonumentDisplayMode
+    {
+        get => _settings.MapMonumentDisplayMode;
+        set { _settings.MapMonumentDisplayMode = value; SaveDB(); }
+    }
+    public static double MapMonumentScale
+    {
+        get => _settings.MapMonumentScale;
+        set { _settings.MapMonumentScale = value; SaveDB(); }
+    }
+    public static double MapMonumentOpacity
+    {
+        get => _settings.MapMonumentOpacity;
+        set { _settings.MapMonumentOpacity = value; SaveDB(); }
     }
     public static string LastSeenVersion
     {

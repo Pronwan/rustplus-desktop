@@ -243,6 +243,21 @@ public partial class App : Application
     {
         var rm = RustPlusDesk.Properties.Resources.ResourceManager;
         var culture = RustPlusDesk.Properties.Resources.Culture;
+
+        // Step 1: load the base/neutral (invariant) resource set first so that keys
+        // which exist only in Resources.resx (and haven't been added to satellite files yet)
+        // are still registered as DynamicResources.
+        var neutralSet = rm.GetResourceSet(System.Globalization.CultureInfo.InvariantCulture, true, false);
+        if (neutralSet != null)
+        {
+            foreach (System.Collections.DictionaryEntry entry in neutralSet)
+            {
+                if (entry.Value is string s && !string.IsNullOrWhiteSpace(s))
+                    Resources[entry.Key] = s;
+            }
+        }
+
+        // Step 2: overlay culture-specific translations, falling back to neutral for blank values.
         var resourceSet = rm.GetResourceSet(culture, true, true);
         if (resourceSet != null)
         {
