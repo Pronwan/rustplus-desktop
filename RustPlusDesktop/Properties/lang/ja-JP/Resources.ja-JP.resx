@@ -276,7 +276,7 @@
     <value>アクションが必要:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics Removal:</value>
+    <value>バトルメトリクスのトラッキングが削除</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>プレイヤー追跡システムのオーバーホール</value>

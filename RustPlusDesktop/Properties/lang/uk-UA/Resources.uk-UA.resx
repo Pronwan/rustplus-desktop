@@ -276,7 +276,7 @@
     <value>Потрібна дія:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Нагадування Показників Боєздат:</value>
+    <value>Видалено відстеження BattleMetrics</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Перебудова системи відстежування</value>

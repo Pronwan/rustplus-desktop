@@ -276,7 +276,7 @@
     <value>Требуется действие:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Удаление метрик битвы:</value>
+    <value>Отслеживание BattleMetrics удалено</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Система отслеживания Игроков Overhaul</value>

@@ -276,7 +276,7 @@
     <value>الإجراء المطلوب:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>إزالة مقاييس المعركة:</value>
+    <value>تمت إزالة تتبع BattleMetrics</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>إصلاح نظام تتبع اللاعب</value>

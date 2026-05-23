@@ -276,7 +276,7 @@ Opmerking: Deze transmissiemethode wordt in de toekomst geoptimaliseerd. Als tea
     <value>actie vereist:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics Verwijdering:</value>
+    <value>BattleMetrics-tracering verwijderd</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Player Tracking System Overhaul</value>

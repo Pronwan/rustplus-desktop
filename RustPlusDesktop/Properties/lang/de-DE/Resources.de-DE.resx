@@ -276,7 +276,7 @@ Hinweis: Diese Übertragungsart wird in Zukunft noch optimiert. Falls Teammates 
     <value>Aktion erforderlich:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics entfernen:</value>
+    <value>BattleMetrics-Tracking entfernt</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Spielerverfolgungssystem überholt</value>
@@ -497,7 +497,7 @@ jetzt herunterladen und installieren?</value>
     <value>Spieler</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
-    <value>Wie man verfolgt</value>
+    <value>Wie man trackt</value>
   </data>
   <data name="LearnHowTrackingWorks" xml:space="preserve">
     <value>Erfahren Sie, wie die Spielerverfolgung funktioniert</value>

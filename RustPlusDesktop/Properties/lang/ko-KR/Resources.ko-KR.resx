@@ -276,7 +276,7 @@
     <value>필요한 조치:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>배틀메트릭스 제거:</value>
+    <value>배틀메트릭스 추적 제거</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>플레이어 추적 시스템 점검</value>

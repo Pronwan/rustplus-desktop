@@ -276,7 +276,7 @@ Nota: aquest mètode de transmissió s'optimitzarà en el futur. Si els companys
     <value>Cal prendre mesures:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Supressió de BattleMetrics:</value>
+    <value>Seguiment de BattleMetrics eliminat</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Renovació del sistema de seguiment de jugadors</value>

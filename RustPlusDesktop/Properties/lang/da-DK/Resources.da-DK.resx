@@ -276,7 +276,7 @@ Bemærk: Denne overførselsmetode vil blive optimeret i fremtiden. Hvis holdkamm
     <value>Handling Påkrævet:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics Fjernelse:</value>
+    <value>BattleMetrics-sporing fjernet</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Overtrædelse Af Spillersporingssystemet</value>

@@ -276,7 +276,7 @@
     <value>Απαιτείται Ενέργεια:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics Removal:</value>
+    <value>Απομακρύνεται η παρακολούθηση BattleMetrics</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Επιθεώρηση Συστήματος Παρακολούθησης Παίκτη</value>

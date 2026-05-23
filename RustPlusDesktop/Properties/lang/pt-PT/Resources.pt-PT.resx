@@ -276,7 +276,7 @@ Nota: Este método de transmissão será optimizado no futuro. Se os teus colega
     <value>Ação Necessária:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Remoção de Métricas de Batalha:</value>
+    <value>Removido o rastreamento do BattleMetrics</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Sistema de rastreamento do sistema</value>

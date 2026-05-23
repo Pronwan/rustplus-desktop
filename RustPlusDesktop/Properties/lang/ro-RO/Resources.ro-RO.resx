@@ -276,7 +276,7 @@ Notă: Această metodă de transmitere va fi optimizată în viitor. Dacă coech
     <value>Acțiune necesară:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics Eliminat:</value>
+    <value>Urmărirea BattleMetrics eliminată</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Revizuirea sistemului de urmărire a jucătorilor</value>

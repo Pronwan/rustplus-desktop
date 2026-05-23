@@ -276,7 +276,7 @@ Nota: questo metodo di trasmissione sarà ottimizzato in futuro. Se i compagni d
     <value>Azione Richiesta:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics Rimozione:</value>
+    <value>Tracciamento BattleMetrics rimosso</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Revisione Del Sistema Di Monitoraggio Giocatore</value>

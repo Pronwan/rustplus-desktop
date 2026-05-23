@@ -276,7 +276,7 @@ Obs: Denna överföringsmetod kommer att optimeras i framtiden. Om lagkamrater i
     <value>Åtgärd krävs:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics borttagning:</value>
+    <value>BattleMetrics Tracking borttagen</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Översyn av systemet för spårning av spelare</value>

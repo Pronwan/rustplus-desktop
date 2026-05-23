@@ -276,7 +276,7 @@ Megjegyzés: Ez az átviteli módszer a jövőben optimalizálásra kerül. Ha a
     <value>Szükséges intézkedés:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics eltávolítása:</value>
+    <value>BattleMetrics nyomkövetés eltávolítva</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Játékoskövető rendszer átalakítása</value>

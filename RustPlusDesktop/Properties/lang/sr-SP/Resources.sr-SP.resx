@@ -276,7 +276,7 @@
     <value>Потребно је предузети акцију:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Уклањање BattleMetrics:</value>
+    <value>Уклањање праћења BattleMetrics</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Преуређење система за праћење играча</value>

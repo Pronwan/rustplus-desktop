@@ -276,7 +276,7 @@ Lưu ý: Phương thức truyền tải này sẽ được tối ưu hóa trong 
     <value>Cần thực hiện:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Xóa BattleMetrics:</value>
+    <value>Đã gỡ bỏ tính năng theo dõi BattleMetrics</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Cải tổ hệ thống theo dõi cầu thủ</value>
