@@ -4199,6 +4199,42 @@
                                     </Button>
                                 </Grid>
                             </Border>
+
+                            <Border
+                                x:Name="MonumentsToggleOverlay"
+                                Margin="8,0,0,0"
+                                Padding="2"
+                                Background="#AA16181C"
+                                BorderBrush="#40FFFFFF"
+                                BorderThickness="1"
+                                CornerRadius="8">
+                                <Grid>
+                                    <Button
+                                        x:Name="BtnToggleMonumentsPanel"
+                                        Padding="4"
+                                        Background="Transparent"
+                                        BorderBrush="Transparent"
+                                        Click="BtnToggleMonumentsPanel_Click"
+                                        Style="{StaticResource GhostButton}"
+                                        ToolTip="Toggle Monument List">
+                                        <StackPanel Orientation="Horizontal" Margin="4,2">
+                                            <TextBlock
+                                                FontFamily="Segoe MDL2 Assets"
+                                                FontSize="14"
+                                                Foreground="#8D98A8"
+                                                Text="&#xE707;" 
+                                                VerticalAlignment="Center"/>
+                                            <TextBlock
+                                                Text="Monuments"
+                                                Margin="6,0,4,0"
+                                                FontSize="12"
+                                                FontWeight="Bold"
+                                                Foreground="White"
+                                                VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
                         </StackPanel>
 
 
@@ -4213,6 +4249,74 @@
 
                         <Canvas x:Name="GridLayer" IsHitTestVisible="False" />
                         <Canvas x:Name="Overlay" IsHitTestVisible="True" />
+
+                        <!-- Monument Navigation Panel -->
+                        <Border
+                            x:Name="MonumentNavPanel"
+                            Width="280"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Stretch"
+                            Margin="15,70,0,15"
+                            Panel.ZIndex="1050"
+                            Background="#E5101217"
+                            BorderBrush="#40FFFFFF"
+                            BorderThickness="1"
+                            CornerRadius="12"
+                            Visibility="Collapsed">
+                            <Border.Effect>
+                                <DropShadowEffect
+                                    BlurRadius="15"
+                                    Opacity="0.6"
+                                    ShadowDepth="0"
+                                    Color="Black" />
+                            </Border.Effect>
+                            <Grid Margin="12">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                
+                                <!-- Header -->
+                                <Grid Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock
+                                        Text="Monuments"
+                                        FontSize="16"
+                                        FontWeight="Bold"
+                                        Foreground="White"
+                                        VerticalAlignment="Center"/>
+                                    <Button
+                                        x:Name="BtnCloseMonumentNav"
+                                        Width="24"
+                                        Height="24"
+                                        HorizontalAlignment="Right"
+                                        Padding="0"
+                                        Background="Transparent"
+                                        BorderBrush="Transparent"
+                                        Style="{StaticResource GhostButton}"
+                                        Click="BtnToggleMonumentsPanel_Click"
+                                        Content="&#x2715;"
+                                        Foreground="#8D98A8"
+                                        FontSize="12"/>
+                                </Grid>
+                                
+                                <!-- Search Box -->
+                                <ui:TextBox
+                                    x:Name="TxtMonumentSearch"
+                                    Grid.Row="1"
+                                    PlaceholderText="Search monument..."
+                                    Margin="0,0,0,10"
+                                    TextChanged="TxtMonumentSearch_TextChanged" />
+                                    
+                                <!-- Monument List -->
+                                <ScrollViewer
+                                    Grid.Row="2"
+                                    VerticalScrollBarVisibility="Auto"
+                                    HorizontalScrollBarVisibility="Disabled">
+                                    <StackPanel x:Name="MonumentListContainer" />
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
 
                         <!--  Shop Details Panel (Clamped to Map Container)  -->
                         <Border

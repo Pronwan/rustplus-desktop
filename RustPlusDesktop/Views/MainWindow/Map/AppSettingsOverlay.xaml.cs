@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Navigation;
 using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views
@@ -92,8 +93,11 @@ namespace RustPlusDesk.Views
             ChkCloseToTray.IsChecked = TrackingService.CloseToTrayEnabled;
             ChkBackgroundTracking.IsChecked = TrackingService.IsBackgroundTrackingEnabled;
             ChkAutoLoadShops.IsChecked = TrackingService.AutoLoadShops;
+            CmbMonumentDisplayMode.SelectedIndex = Math.Clamp(TrackingService.MapMonumentDisplayMode, 0, 1);
             ChkHideConsole.IsChecked = TrackingService.HideConsole;
             ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
+            SliderMonumentScale.Value = TrackingService.MapMonumentScale;
+            SliderMonumentOpacity.Value = TrackingService.MapMonumentOpacity;
         }
 
         private void CmbLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -122,8 +126,16 @@ namespace RustPlusDesk.Views
             TrackingService.CloseToTrayEnabled = ChkCloseToTray.IsChecked == true;
             TrackingService.IsBackgroundTrackingEnabled = ChkBackgroundTracking.IsChecked == true;
             TrackingService.AutoLoadShops = ChkAutoLoadShops.IsChecked == true;
+            if (CmbMonumentDisplayMode != null && CmbMonumentDisplayMode.SelectedIndex >= 0)
+            {
+                TrackingService.MapMonumentDisplayMode = CmbMonumentDisplayMode.SelectedIndex;
+            }
             TrackingService.HideConsole = ChkHideConsole.IsChecked == true;
             TrackingService.MapAbbreviateNames = ChkStreamerMode.IsChecked == true;
+            TrackingService.MapMonumentScale = SliderMonumentScale.Value;
+            TrackingService.MapMonumentOpacity = SliderMonumentOpacity.Value;
+
+            ParentWindow?.ApplySettings();
         }
 
         private void BtnCloseSettings_Click(object sender, RoutedEventArgs e)
@@ -144,6 +156,20 @@ namespace RustPlusDesk.Views
             Visibility = Visibility.Collapsed;
             ParentWindow?.ApplySettings();
             ParentWindow?.OpenChatCommandsFromSettings();
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = e.Uri.AbsoluteUri,
+                    UseShellExecute = true
+                });
+            }
+            catch { }
+            e.Handled = true;
         }
     }
 }

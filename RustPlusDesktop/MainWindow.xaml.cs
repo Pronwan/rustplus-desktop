@@ -1461,6 +1461,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     { "small oil rig",           "pack://application:,,,/Assets/icons/oilrig.png" },
     { "underwater lab",          "pack://application:,,,/Assets/icons/underwater.png" },
     { "underwater lab b",          "pack://application:,,,/Assets/icons/underwater.png" },
+    { "underwater labs",          "pack://application:,,,/Assets/icons/underwater.png" },
     { "junkyard",                "pack://application:,,,/Assets/icons/junkyard.png" },
     { "bandit camp",             "pack://application:,,,/Assets/icons/banditcamp.png" },
     { "swamp",                   "pack://application:,,,/Assets/icons/swamp.png" },
@@ -1495,11 +1496,17 @@ public partial class MainWindow : WpfUi.FluentWindow
     private static string NormalizeMonName(string raw, out string variant)
     {
         variant = "";
-        // Variante A/B/C beim Tooltip behalten – vorher sichern:
         var low = raw?.ToLowerInvariant() ?? "";
-        if (System.Text.RegularExpressions.Regex.IsMatch(low, @"\s+a\s*$")) variant = "A";
-        else if (System.Text.RegularExpressions.Regex.IsMatch(low, @"\s+b\s*$")) variant = "B";
-        else if (System.Text.RegularExpressions.Regex.IsMatch(low, @"\s+c\s*$")) variant = "C";
+        if (low.Contains("underwater") || low.Contains("under water") || low.Contains("underwaterlab") || low.Contains("moonpool"))
+        {
+            // Do not extract variant for underwater labs to merge them under one name "Underwater Labs"
+        }
+        else
+        {
+            if (System.Text.RegularExpressions.Regex.IsMatch(low, @"\s+a\s*$")) variant = "A";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(low, @"\s+b\s*$")) variant = "B";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(low, @"\s+c\s*$")) variant = "C";
+        }
 
         return Canon(raw); // <- macht die eigentliche harte Arbeit
     }
@@ -1508,6 +1515,11 @@ public partial class MainWindow : WpfUi.FluentWindow
     {
         if (string.IsNullOrWhiteSpace(raw)) return "";
         var s = raw.ToLowerInvariant();
+
+        if (s.Contains("underwater") || s.Contains("under water") || s.Contains("underwaterlab") || s.Contains("moonpool"))
+        {
+            return "underwater labs";
+        }
 
         // unerwünschte Suffixe/Teile robust entfernen (auch mehrfach, egal wo)
         s = System.Text.RegularExpressions.Regex.Replace(
@@ -1555,17 +1567,60 @@ public partial class MainWindow : WpfUi.FluentWindow
     private FrameworkElement MakeMonIcon(string key, string tooltip, int size = 64)
     {
         key = Canon(key);
-        if (sMonIconByKey.TryGetValue(key, out var uri))
+
+        if (TrackingService.MapMonumentDisplayMode == 1) // Original text monument names
         {
-            try
+            if (key.Contains("train tunnel"))
             {
-                var img = MakeIcon(uri, size);
-                ToolTipService.SetToolTip(img, tooltip);
-                return img;
+                try
+                {
+                    var img = MakeIcon("pack://application:,,,/Assets/icons/assets_markers_train.png", size);
+                    ToolTipService.SetToolTip(img, tooltip);
+                    return img;
+                }
+                catch { /* falls back to text flow */ }
             }
-            catch { /* fällt auf Dot zurück */ }
+
+            var textBlock = new TextBlock
+            {
+                Text = tooltip,
+                FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./Assets/Fonts/#Permanent Marker"),
+                Foreground = Brushes.Black,
+                FontSize = 13,
+                FontWeight = FontWeights.Bold,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextAlignment = TextAlignment.Center
+            };
+
+            var textBorder = new Border
+            {
+                Child = textBlock,
+                Padding = new Thickness(2, 1, 2, 1),
+                Background = Brushes.Transparent,
+                BorderBrush = Brushes.Transparent,
+                BorderThickness = new Thickness(0)
+            };
+
+            ToolTipService.SetToolTip(textBorder, tooltip);
+            return textBorder;
         }
 
+        if (TrackingService.MapMonumentDisplayMode == 0) // Icons by rustmaps.com
+        {
+            if (sMonIconByKey.TryGetValue(key, out var uri))
+            {
+                try
+                {
+                    var img = MakeIcon(uri, size);
+                    ToolTipService.SetToolTip(img, tooltip);
+                    return img;
+                }
+                catch { /* fällt auf Dot zurück */ }
+            }
+        }
+
+        // Mode 2: Default icons (or fallback dot for Mode 0)
         var dot = new Ellipse
         {
             Width = Math.Max(1, size / 5),
@@ -3038,6 +3093,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (string.IsNullOrWhiteSpace(s)) return s;
 
         string lower = s.ToLowerInvariant();
+        if (lower.Contains("underwater") || lower.Contains("under water") || lower.Contains("underwaterlab") || lower.Contains("moonpool"))
+        {
+            return "Underwater Labs";
+        }
+
         if (lower.Contains("harbor_2") || lower.Contains("harbor 2")) return "Harbor";
         if (lower.Contains("harbor")) return "Harbor 2";
 
@@ -4360,6 +4420,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         _playerMarkerScale = TrackingService.MapPlayerIconScale;
         if (SliderPlayerIconSize != null) SliderPlayerIconSize.Value = _playerMarkerScale;
+
+        BuildMonumentOverlays();
     }
 
     private void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)

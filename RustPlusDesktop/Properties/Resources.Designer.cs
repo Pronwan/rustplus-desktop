@@ -272,6 +272,17 @@ namespace RustPlusDesk.Properties {
         public static string MapSettings => GetString("MapSettings");
         public static string AutoLoadShops => GetString("AutoLoadShops");
         public static string AutoLoadShopsToolTip => GetString("AutoLoadShopsToolTip");
+        public static string UseMonumentNames => GetString("UseMonumentNames");
+        public static string UseMonumentNamesToolTip => GetString("UseMonumentNamesToolTip");
+        public static string MonumentStyle => GetString("MonumentStyle");
+        public static string MonumentScale => GetString("MonumentScale");
+        public static string MonumentOpacity => GetString("MonumentOpacity");
+        public static string MonumentStyleIcons => GetString("MonumentStyleIcons");
+        public static string MonumentStyleText => GetString("MonumentStyleText");
+        public static string CreditsTitle => GetString("CreditsTitle");
+        public static string CreditsIconsPrefix => GetString("CreditsIconsPrefix");
+        public static string CreditsIconsSuffix => GetString("CreditsIconsSuffix");
+        public static string CreditsIconsNote => GetString("CreditsIconsNote");
         public static string Chat => GetString("Chat");
         public static string ModifyChatAlerts => GetString("ModifyChatAlerts");
         public static string ManageSteamAccountInfo => GetString("ManageSteamAccountInfo");
