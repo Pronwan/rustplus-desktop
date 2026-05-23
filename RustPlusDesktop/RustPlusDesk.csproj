@@ -231,6 +231,7 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
     <Resource Include="Assets\icons\airfield.png" />
+    <Resource Include="Assets\Fonts\PermanentMarker.ttf" />
     <Resource Include="Assets\icons\arcticresearch.png" />
     <Resource Include="Assets\icons\banditcamp.png" />
     <Resource Include="Assets\icons\barn.png" />
@@ -291,6 +292,7 @@
     <Resource Include="Assets\icons\swamp.png" />
     <Resource Include="Assets\icons\traintunnel.png" />
     <Resource Include="Assets\icons\traintunnel2.png" />
+    <Resource Include="Assets\icons\assets_markers_train.png" />
     <Resource Include="Assets\icons\trainyard.png" />
     <Resource Include="Assets\icons\underwater.png" />
     <Resource Include="Assets\icons\vending.png" />
