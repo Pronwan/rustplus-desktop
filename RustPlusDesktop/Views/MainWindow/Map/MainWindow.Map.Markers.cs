@@ -106,9 +106,9 @@ public partial class MainWindow
 
         foreach (var m in _monData)
         {
-            var p = WorldToImagePx(m.X, m.Y);
-
             var key = NormalizeMonName(m.Name, out var variant);
+
+            var p = WorldToImagePx(m.X, m.Y);
             var nice = Beautify(m.Name);
             var tt = string.IsNullOrEmpty(variant) ? nice : $"{nice} ({variant})";
 
@@ -116,14 +116,19 @@ public partial class MainWindow
             fe.Tag = m;
 
             Overlay.Children.Add(fe);
-            Panel.SetZIndex(fe, 800);
+            bool isTrain = key.Contains("train tunnel", StringComparison.OrdinalIgnoreCase);
+            Panel.SetZIndex(fe, isTrain ? 700 : 900);
             _monEls[key + "@" + p.X.ToString("0") + "," + p.Y.ToString("0")] = fe;
 
-            ApplyCurrentOverlayScale(fe);
-            Canvas.SetLeft(fe, p.X - 14);
-            Canvas.SetTop(fe, p.Y - 14);
+            ApplyMonumentScale(fe);
+            fe.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            double w = fe.DesiredSize.Width > 0 ? fe.DesiredSize.Width : 28;
+            double h = fe.DesiredSize.Height > 0 ? fe.DesiredSize.Height : 28;
+            Canvas.SetLeft(fe, p.X - w / 2);
+            Canvas.SetTop(fe, p.Y - h / 2);
             fe.Visibility = _showMonuments ? Visibility.Visible : Visibility.Collapsed;
         }
+        PopulateMonumentList();
     }
 
     private void RefreshMonumentOverlayPositions()
@@ -138,16 +143,27 @@ public partial class MainWindow
                 ApplyMonumentScale(fe);
                 Canvas.SetLeft(fe, p.X - fe.RenderSize.Width / 2);
                 Canvas.SetTop(fe, p.Y - fe.RenderSize.Height / 2);
-                Panel.SetZIndex(fe, 800);
+                
+                string key = NormalizeMonName(m.Item3, out var _);
+                bool isTrain = key.Contains("train tunnel", StringComparison.OrdinalIgnoreCase);
+                Panel.SetZIndex(fe, isTrain ? 700 : 900);
             }
             else if (fe.Tag != null)
             {
                 dynamic d = fe.Tag;
                 var p = WorldToImagePx((double)d.X, (double)d.Y);
-                ApplyCurrentOverlayScale(fe);
-                Canvas.SetLeft(fe, p.X - 14);
-                Canvas.SetTop(fe, p.Y - 14);
-                Panel.SetZIndex(fe, 800);
+                ApplyMonumentScale(fe);
+                fe.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                double w = fe.DesiredSize.Width > 0 ? fe.DesiredSize.Width : 28;
+                double h = fe.DesiredSize.Height > 0 ? fe.DesiredSize.Height : 28;
+                Canvas.SetLeft(fe, p.X - w / 2);
+                Canvas.SetTop(fe, p.Y - h / 2);
+                
+                string? name = null;
+                try { name = d.Name; } catch { }
+                string key = NormalizeMonName(name ?? "", out var _);
+                bool isTrain = key.Contains("train tunnel", StringComparison.OrdinalIgnoreCase);
+                Panel.SetZIndex(fe, isTrain ? 700 : 900);
             }
         }
     }
@@ -156,9 +172,24 @@ public partial class MainWindow
     {
         if (el == null) return;
         double eff = GetEffectiveZoom();
-        double scale = CalcOverlayScale(eff, MON_SIZE_EXP, MON_BASE_MULT);
+        double scale;
+
+        if (TrackingService.MapUseMonumentText)
+        {
+            // Inverse scaling to make text labels appear larger/compensation on zoom outs!
+            scale = CalcOverlayScale(eff, 0.45, 0.95) * TrackingService.MapMonumentScale;
+            el.Visibility = _showMonuments ? Visibility.Visible : Visibility.Collapsed;
+        }
+        else
+        {
+            // Standard icon mode: also respects custom scaling slider
+            scale = CalcOverlayScale(eff, MON_SIZE_EXP, MON_BASE_MULT) * TrackingService.MapMonumentScale;
+            el.Visibility = _showMonuments ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         el.RenderTransformOrigin = new Point(0.5, 0.5);
         el.RenderTransform = new ScaleTransform(scale, scale);
+        el.Opacity = TrackingService.MapMonumentOpacity;
     }
 
     private async Task LoadMapAsync()
@@ -196,8 +227,33 @@ public partial class MainWindow
 
             double wDip2 = map.Bitmap.PixelWidth * (96.0 / map.Bitmap.DpiX);
             double hDip2 = map.Bitmap.PixelHeight * (96.0 / map.Bitmap.DpiY);
+            var filteredMons = new List<(double X, double Y, string Name)>();
+            foreach (var m in map.Monuments)
+            {
+                var lower = m.Name?.ToLowerInvariant() ?? "";
+                bool isUnderwater = lower.Contains("underwater") || lower.Contains("under water") || lower.Contains("underwaterlab") || lower.Contains("moonpool");
+                if (isUnderwater)
+                {
+                    bool exists = filteredMons.Any(existing =>
+                    {
+                        var exLower = existing.Name?.ToLowerInvariant() ?? "";
+                        bool exIsUnderwater = exLower.Contains("underwater") || exLower.Contains("under water") || exLower.Contains("underwaterlab") || exLower.Contains("moonpool");
+                        if (exIsUnderwater)
+                        {
+                            double dx = existing.X - m.X;
+                            double dy = existing.Y - m.Y;
+                            double dist = Math.Sqrt(dx * dx + dy * dy);
+                            return dist < 150.0;
+                        }
+                        return false;
+                    });
+
+                    if (exists) continue;
+                }
+                filteredMons.Add(m);
+            }
             int s = map.WorldSize;
-            _monData = map.Monuments.ToList();
+            _monData = filteredMons;
             BuildMonumentOverlays();
             var worldRectPx = ComputeWorldRectFromWorldSize(wDip2, hDip2, s, padWorld: 2000);
             AppendLog($"worldRectDip(fromS)=[{(int)worldRectPx.X},{(int)worldRectPx.Y},{(int)worldRectPx.Width}x{(int)worldRectPx.Height}] dipSize={wDip2:F0}x{hDip2:F0} S={s}");

@@ -328,6 +328,17 @@ Download and install now?</value></data>
   <data name="MapSettings" xml:space="preserve"><value>Map Settings</value></data>
   <data name="AutoLoadShops" xml:space="preserve"><value>Auto load shops on connection</value></data>
   <data name="AutoLoadShopsToolTip" xml:space="preserve"><value>Automatically starts polling shops and alerts when connected to a server.</value></data>
+  <data name="UseMonumentNames" xml:space="preserve"><value>Use monument text labels instead of icons</value></data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve"><value>When enabled, Rust map monument names are rendered as text using the Permanent Marker font instead of icons.</value></data>
+  <data name="MonumentStyle" xml:space="preserve"><value>Monument Style:</value></data>
+  <data name="MonumentScale" xml:space="preserve"><value>Monument Scale:</value></data>
+  <data name="MonumentOpacity" xml:space="preserve"><value>Monument Opacity:</value></data>
+  <data name="MonumentStyleIcons" xml:space="preserve"><value>Icons by rustmaps.com</value></data>
+  <data name="MonumentStyleText" xml:space="preserve"><value>Original text monument names</value></data>
+  <data name="CreditsTitle" xml:space="preserve"><value>Credits</value></data>
+  <data name="CreditsIconsPrefix" xml:space="preserve"><value>Map monument icons provided by </value></data>
+  <data name="CreditsIconsSuffix" xml:space="preserve"><value> — used with permission.</value></data>
+  <data name="CreditsIconsNote" xml:space="preserve"><value>All monument icons and related artwork are the property of rustmaps.com. Thank you for supporting the Rust community!</value></data>
   <data name="Chat" xml:space="preserve"><value>Chat</value></data>
   <data name="ModifyChatAlerts" xml:space="preserve"><value>Modify Chat Alerts</value></data>
   <data name="ManageSteamAccountInfo" xml:space="preserve"><value>Manage your linked Steam account in the main window.</value></data>
