@@ -1612,4 +1612,180 @@
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Закройте это окно в любое время - вы можете снова открыть его с помощью кнопки ❓ Как отслеживать.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Техническое обслуживание</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Стирание, резервное копирование или восстановление настроек приложений, профилей и пользовательских рисунков.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Сброс данных приложения...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Резервное копирование данных...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Восстановление данных...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Сброс данных приложения</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Выберите компоненты, которые необходимо удалить с этого устройства. Все выбранные параметры будут удалены безвозвратно.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Подключение к активному серверу (отключение)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Сохраненные профили сервера (удаление парных конфигураций сервера)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Учетные данные учетной записи Steam (выход из системы)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Настройка сопряжения устройств (сброс регистрационных маркеров)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Пользовательское перекрестие (конфигурации стирания)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Локальный кэш и рисунки (стирание сохраненных карт/линий)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Это действие является постоянным и не может быть отменено.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Подтвердите сброс</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Резервный пароль</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Резервная защита</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Введите пароль для шифрования этого файла резервной копии. Если оставить это поле пустым, резервная копия не будет зашифрована.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Восстановление резервной копии</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Эта резервная копия защищена паролем. Введите пароль, чтобы расшифровать ее:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Зашифровать</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Расшифровать</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Резервное копирование данных приложения</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Резервная копия успешно создана на: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Резервная копия создана успешно!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Резервное копирование завершено</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Ошибка резервного копирования: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Ошибка при создании резервной копии: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Резервное копирование не удалось</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>При восстановлении данных будут перезаписаны текущие профили сервера, пользовательские перекрестия, наложения рисунков и конфигурации карты.
+
+Вы уверены, что хотите продолжить?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Подтверждение восстановления резервной копии</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Восстановление данных приложения</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Данные приложения успешно восстановлены!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Восстановление завершено</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Ошибка восстановления: Неверный пароль.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Расшифровка не удалась. Неверный пароль или поврежденный файл резервной копии.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Восстановление не удалось</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Ошибка восстановления: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Ошибка при восстановлении резервной копии: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Неверный формат файла резервной копии или отсутствие подписи.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Запуск операции выборочного сброса...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Разрыв активного соединения с сервером...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Сброс соединения завершен.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Очистка сохраненных профилей сервера...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Сохраненные профили сервера очищены.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Удаление учетных данных учетной записи Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Учетные данные Steam очищены.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Стирание конфигурации сопряжения устройств...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Конфигурация сопряжения устройств удалена.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Стирание пользовательских перекрестий...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Ошибка при очистке пользовательского перекрестия: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Пользовательское перекрестие очищено.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Очистка файлов локального кэша и чертежей оверлея...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Ошибка при очистке папки кэша: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Очищены папки кэша.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Перерегистрация учетных данных слушателя и FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Операция выборочного сброса успешно завершена.</value>
+  </data>
 </root>

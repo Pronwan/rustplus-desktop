@@ -591,5 +591,64 @@ namespace RustPlusDesk.Properties {
         ///   Looks up a localized string similar to Close this window at any time — you can reopen it with the  ❓ How to Track  button..
         /// </summary>
         public static string HowToTrackCloseHint => GetString("HowToTrackCloseHint");
+
+        public static string MaintenanceTitle => GetString("MaintenanceTitle");
+        public static string MaintenanceDesc => GetString("MaintenanceDesc");
+        public static string ResetAppData => GetString("ResetAppData");
+        public static string BackupData => GetString("BackupData");
+        public static string RestoreData => GetString("RestoreData");
+        public static string ResetDataTitle => GetString("ResetDataTitle");
+        public static string ResetDataDesc => GetString("ResetDataDesc");
+        public static string ResetOptionConnection => GetString("ResetOptionConnection");
+        public static string ResetOptionProfiles => GetString("ResetOptionProfiles");
+        public static string ResetOptionSteam => GetString("ResetOptionSteam");
+        public static string ResetOptionPairing => GetString("ResetOptionPairing");
+        public static string ResetOptionCrosshairs => GetString("ResetOptionCrosshairs");
+        public static string ResetOptionCache => GetString("ResetOptionCache");
+        public static string ResetDataWarning => GetString("ResetDataWarning");
+        public static string ConfirmReset => GetString("ConfirmReset");
+        public static string BackupPasswordTitle => GetString("BackupPasswordTitle");
+        public static string BackupProtectionTitle => GetString("BackupProtectionTitle");
+        public static string BackupProtectionDesc => GetString("BackupProtectionDesc");
+        public static string RestoreBackupTitle => GetString("RestoreBackupTitle");
+        public static string RestoreBackupDesc => GetString("RestoreBackupDesc");
+        public static string Encrypt => GetString("Encrypt");
+        public static string Decrypt => GetString("Decrypt");
+        public static string OK => GetString("OK");
+        public static string BackupApplicationDataTitle => GetString("BackupApplicationDataTitle");
+        public static string BackupSuccessLog => GetString("BackupSuccessLog");
+        public static string BackupSuccessMessage => GetString("BackupSuccessMessage");
+        public static string BackupSuccessTitle => GetString("BackupSuccessTitle");
+        public static string BackupErrorLog => GetString("BackupErrorLog");
+        public static string BackupErrorMessage => GetString("BackupErrorMessage");
+        public static string BackupFailedTitle => GetString("BackupFailedTitle");
+        public static string RestoreConfirmMessage => GetString("RestoreConfirmMessage");
+        public static string RestoreConfirmTitle => GetString("RestoreConfirmTitle");
+        public static string RestoreApplicationDataTitle => GetString("RestoreApplicationDataTitle");
+        public static string RestoreSuccessMessage => GetString("RestoreSuccessMessage");
+        public static string RestoreSuccessTitle => GetString("RestoreSuccessTitle");
+        public static string RestorePasswordErrorLog => GetString("RestorePasswordErrorLog");
+        public static string RestorePasswordErrorMessage => GetString("RestorePasswordErrorMessage");
+        public static string RestoreFailedTitle => GetString("RestoreFailedTitle");
+        public static string RestoreErrorLog => GetString("RestoreErrorLog");
+        public static string RestoreErrorMessage => GetString("RestoreErrorMessage");
+        public static string InvalidBackupFormat => GetString("InvalidBackupFormat");
+        public static string WipeLogStart => GetString("WipeLogStart");
+        public static string WipeLogConnStart => GetString("WipeLogConnStart");
+        public static string WipeLogConnEnd => GetString("WipeLogConnEnd");
+        public static string WipeLogProfilesStart => GetString("WipeLogProfilesStart");
+        public static string WipeLogProfilesEnd => GetString("WipeLogProfilesEnd");
+        public static string WipeLogSteamStart => GetString("WipeLogSteamStart");
+        public static string WipeLogSteamEnd => GetString("WipeLogSteamEnd");
+        public static string WipeLogPairingStart => GetString("WipeLogPairingStart");
+        public static string WipeLogPairingEnd => GetString("WipeLogPairingEnd");
+        public static string WipeLogCrosshairsStart => GetString("WipeLogCrosshairsStart");
+        public static string WipeLogCrosshairsError => GetString("WipeLogCrosshairsError");
+        public static string WipeLogCrosshairsEnd => GetString("WipeLogCrosshairsEnd");
+        public static string WipeLogCacheStart => GetString("WipeLogCacheStart");
+        public static string WipeLogCacheError => GetString("WipeLogCacheError");
+        public static string WipeLogCacheEnd => GetString("WipeLogCacheEnd");
+        public static string WipeLogPairingRestart => GetString("WipeLogPairingRestart");
+        public static string WipeLogComplete => GetString("WipeLogComplete");
     }
 }

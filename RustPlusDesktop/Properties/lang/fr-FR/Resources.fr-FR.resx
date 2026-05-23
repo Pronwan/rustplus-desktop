@@ -1612,4 +1612,180 @@ Télécharger et installer maintenant ?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Fermez cette fenêtre à tout moment - vous pouvez la rouvrir en cliquant sur le bouton ❓ Comment suivre.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Maintenance</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Effacer, sauvegarder ou restaurer les paramètres d'application, les profils et les dessins personnalisés.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Réinitialiser les données...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Sauvegarde des données...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Restaurer les données...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Réinitialisation des données d'application</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Sélectionnez les éléments que vous souhaitez effacer de cet appareil. Toutes les options sélectionnées seront définitivement supprimées.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Connexion Active Server (déconnexion)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Profils de serveur enregistrés (suppression des configurations de serveur appariées)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Informations d'identification du compte Steam (déconnexion)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Device Pairing Config (Réinitialiser les jetons d'enregistrement)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Réticule personnalisé (configurations d'effacement)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Cache local et dessins (effacer les cartes/lignes sauvegardées)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Cette action est permanente et ne peut être annulée.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Confirmer la réinitialisation</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Mot de passe de sauvegarde</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Protection de la sauvegarde</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Entrez un mot de passe pour crypter ce fichier de sauvegarde. Si vous laissez ce champ vide, la sauvegarde ne sera pas cryptée.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Restaurer la sauvegarde</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Cette sauvegarde est protégée par un mot de passe. Saisissez le mot de passe pour la décrypter :</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Crypter</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Décrypter</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Sauvegarde des données de l'application</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Sauvegarde créée avec succès à : {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Sauvegarde créée avec succès !</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Sauvegarde terminée</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTÈME] Erreur de sauvegarde : {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Erreur lors de la création de la sauvegarde : {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Échec de la sauvegarde</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>La restauration des données écrasera vos profils de serveur actuels, votre réticule personnalisé, vos superpositions de dessins et vos configurations de minimap.
+
+Êtes-vous sûr de vouloir continuer ?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Confirmation de la restauration de la sauvegarde</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Restaurer les données de l'application</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Les données de l'application ont été restaurées avec succès !</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Restauration terminée</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTÈME] Erreur de restauration : Le mot de passe fourni n'est pas valide.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Le décryptage a échoué. Mot de passe non valide ou fichier de sauvegarde corrompu.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Échec de la restauration</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTÈME] Erreur de restauration : {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Erreur de restauration de la sauvegarde : {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Format de fichier de sauvegarde non valide ou signature manquante.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Démarrage de l'opération de réinitialisation sélective...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Déconnexion de la connexion au serveur actif...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Réinitialisation de la connexion terminée.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Effacement des profils de serveur enregistrés...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Effacement des profils de serveur enregistrés.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Suppression des informations d'identification du compte Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Vérification des informations d'identification de Steam.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Effacement de la configuration de l'appariement des périphériques...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] La configuration de l'appariement des appareils est supprimée.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Essuyer le réticule personnalisé...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Erreur lors de l'effacement du réticule personnalisé : {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Le réticule personnalisé a été supprimé.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Nettoyage des fichiers de cache locaux et des dessins d'incrustation...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Erreur lors de l'effacement du dossier cache : {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Les dossiers du cache ont été effacés.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Réenregistrement des informations d'identification de l'auditeur et du FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] L'opération de réinitialisation sélective s'est déroulée avec succès.</value>
+  </data>
 </root>

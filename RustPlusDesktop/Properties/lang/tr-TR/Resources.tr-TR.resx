@@ -1612,4 +1612,180 @@ Sürümler sayfasını aç?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Bu pencereyi istediğiniz zaman kapatın - ❓ Nasıl Takip Edilir düğmesi ile yeniden açabilirsiniz.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Bakım</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Uygulama ayarlarını, profilleri ve özel çizimleri silin, yedekleyin veya geri yükleyin.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Uygulama Verilerini Sıfırla...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Yedekleme Verileri...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Verileri Geri Yükle...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Uygulama Verilerini Sıfırla</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Bu cihazdan silmek istediğiniz bileşenleri seçin. Seçilen tüm seçenekler kalıcı olarak silinecektir.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Aktif Sunucu Bağlantısı (Bağlantıyı Kes)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Kayıtlı Sunucu Profilleri (Eşleştirilmiş sunucu konfigürasyonlarını silme)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Steam Hesabı Kimlik Bilgileri (Oturumu Kapat)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Cihaz Eşleştirme Yapılandırması (Kayıt belirteçlerini sıfırlayın)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Özel Artı İşaretleri (Silme konfigürasyonları)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Yerel Önbellek ve Çizimler (Kayıtlı haritaları/çizgileri sil)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Bu işlem kalıcıdır ve geri alınamaz.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Sıfırlamayı Onayla</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Yedekleme Şifresi</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Yedekleme Koruması</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Bu yedekleme dosyasını şifrelemek için bir parola girin. Boş bırakırsanız, yedekleme şifrelenmeyecektir.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Yedeklemeyi Geri Yükle</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Bu yedekleme parola korumalıdır. Şifreyi çözmek için şifreyi girin:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Şifreleme</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Şifre çözme</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>TAMAM.</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Uygulama Verilerini Yedekleme</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] adresinde yedekleme başarıyla oluşturuldu: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Yedekleme başarıyla oluşturuldu!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Yedekleme Tamamlandı</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SİSTEM] Yedekleme hatası: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Yedekleme oluşturulurken hata oluştu: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Yedekleme Başarısız</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Verilerin geri yüklenmesi mevcut sunucu profillerinizin, özel artı işaretlerinin, çizim kaplamalarının ve mini harita yapılandırmalarının üzerine yazacaktır.
+
+Devam etmek istediğinizden emin misiniz?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Yedeklemeyi Geri Yükleme Onayı</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Uygulama Verilerini Geri Yükleme</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Uygulama verileri başarıyla geri yüklendi!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Geri Yükleme Tamamlandı</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[Geri yükleme hatası: Geçersiz parola sağlandı.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Şifre çözme başarısız oldu. Geçersiz parola veya bozuk yedekleme dosyası.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Geri Yükleme Başarısız</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SİSTEM] Geri yükleme hatası: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Yedekleme geri yüklenirken hata oluştu: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Geçersiz yedekleme dosyası biçimi veya eksik imza.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Seçici sıfırlama işlemi başlatılıyor...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[Aktif sunucu bağlantısı kesiliyor...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[Bağlantı sıfırlama tamamlandı.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Kayıtlı sunucu profilleri temizleniyor...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Kaydedilen sunucu profilleri temizlendi.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[Steam hesabı kimlik bilgileri kaldırılıyor...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Steam kimlik bilgileri temizlendi.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Cihaz eşleştirme yapılandırması siliniyor...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Cihaz eşleştirme yapılandırması silindi.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[Özel artı işaretleri siliniyor...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Özel artı işaretleri temizlenirken hata oluştu: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[Özel artı işaretleri temizlendi.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Yerel önbellek dosyaları ve kaplama çizimleri temizleniyor...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Önbellek klasörü temizlenirken hata oluştu: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Önbellek klasörleri temizlendi.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[Dinleyici ve FCM kimlik bilgileri yeniden kaydediliyor...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Seçici sıfırlama işlemi başarıyla tamamlandı.</value>
+  </data>
 </root>

@@ -1612,4 +1612,180 @@
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>このウィンドウはいつでも閉じることができます。</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>メンテナンス</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>アプリケーション設定、プロファイル、カスタム図面のワイプ、バックアップ、復元。</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>アプリデータをリセット...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>バックアップデータ...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>データの復元...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>アプリケーションデータのリセット</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>このデバイスからワイプしたいコンポーネントを選択します。選択したオプションはすべて永久に削除されます。</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>アクティブサーバー接続（切断）</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>保存されたサーバープロファイル（ペアリングされたサーバー設定の削除）</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Steamアカウントの認証情報（ログアウト）</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>デバイスペアリング設定（登録トークンのリセット）</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>カスタム十字キー（ワイプ設定）</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>ローカルキャッシュと描画（保存された地図/線を消去する）</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>この処置は永続的であり、取り消すことはできない。</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>リセットの確認</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>バックアップパスワード</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>バックアップ保護</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>このバックアップ・ファイルを暗号化するためのパスワードを入力します。空のままにすると、バックアップは暗号化されません。</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>バックアップの復元</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>このバックアップはパスワードで保護されています。パスワードを入力して暗号化を解除してください：</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>エンクリプト</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>デクリプト</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>アプリケーションデータのバックアップ</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] バックアップが正常に作成されました： {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>バックアップは正常に作成されました！</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>バックアップ完了</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] バックアップエラー: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>バックアップ作成エラー: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>バックアップ失敗</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>データを復元すると、現在のサーバープロファイル、カスタム十字線、描画オーバーレイ、ミニマップの設定が上書きされます。
+
+本当に続けますか？</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>バックアップの復元確認</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>アプリケーションデータの復元</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>アプリケーションデータは正常に復元されました！</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>リストア完了</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] 復元エラーです：無効なパスワードが入力されました。</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>復号化に失敗しました。パスワードが無効か、バックアップファイルが破損しています。</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>リストア失敗</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] リストアエラー: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>バックアップの復元エラー: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>無効なバックアップファイル形式、または署名がありません。</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] 選択リセット操作の開始...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] アクティブなサーバー接続を切断しています...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] 接続リセットが完了しました。</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] 保存されたサーバープロファイルをクリアする...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] 保存されたサーバープロファイルがクリアされました。</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Steamアカウントの認証情報を削除...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Steamクレデンシャルがクリアされました。</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] デバイスのペアリング設定を消去中...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] デバイスペアリング設定が削除されました。</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] カスタム十字キーの拭き取り...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] カスタム十字キーのクリアエラー: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] カスタム十字線をクリアしました。</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] ローカルキャッシュファイルとオーバーレイ図面をクリアする...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] キャッシュフォルダのクリアエラー: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] キャッシュフォルダがクリアされました。</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] リスナーとFCM認証情報の再登録...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] 選択リセット操作が正常に完了しました。</value>
+  </data>
 </root>

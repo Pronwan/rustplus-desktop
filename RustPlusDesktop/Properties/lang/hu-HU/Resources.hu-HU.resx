@@ -1612,4 +1612,180 @@ Letöltés és telepítés most?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Ezt az ablakot bármikor bezárhatja - újra megnyithatja a ❓ Hogyan kövessük nyomon gombra kattintva.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Karbantartás</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Alkalmazási beállítások, profilok és egyéni rajzok törlése, biztonsági mentése vagy visszaállítása.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Alkalmazásadatok visszaállítása...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Adatmentés...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Adatok visszaállítása...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Alkalmazási adatok visszaállítása</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Válassza ki az eszközről törölni kívánt komponenseket. Az összes kiválasztott opció véglegesen törlődik.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Aktív kiszolgálói kapcsolat (kapcsolat megszakítása)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Mentett kiszolgálóprofilok (párosított kiszolgáló konfigurációk törlése)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Steam fiók hitelesítő adatai (kijelentkezés)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Eszközpárosítás konfigurációja (regisztrációs tokenek visszaállítása)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Egyéni célkereszt (törlési konfigurációk)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Helyi gyorsítótár és rajzok (mentett térképek/vonalak törlése)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Ez a művelet végleges, és nem lehet visszacsinálni.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Visszaállítás megerősítése</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Biztonsági mentés jelszó</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Biztonsági mentés védelme</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Adjon meg egy jelszót a biztonsági mentési fájl titkosításához. Ha üresen hagyja, a biztonsági másolat nem lesz titkosítva.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Biztonsági mentés visszaállítása</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Ez a biztonsági mentés jelszóval védett. Adja meg a jelszót a visszafejtéshez:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Titkosítás</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Dekódolás</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Alkalmazási adatok biztonsági mentése</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Sikeresen létrehozott biztonsági mentés: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Sikeresen létrehozott biztonsági mentés!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Biztonsági mentés befejezve</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Biztonsági mentés hibája: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Hiba a biztonsági mentés létrehozásában: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Biztonsági mentés sikertelen</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Az adatok visszaállítása felülírja a jelenlegi kiszolgálóprofilokat, az egyéni célkereszteket, a rajzfelületeket és a minimap-konfigurációkat.
+
+Biztos, hogy folytatni szeretné?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Biztonsági mentés visszaállításának megerősítése</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Alkalmazási adatok visszaállítása</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Az alkalmazás adatai sikeresen helyreálltak!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Visszaállítás befejezve</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Visszaállítási hiba: Visszaállítás: Érvénytelen jelszó.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>A dekódolás sikertelen. Érvénytelen jelszó vagy sérült biztonsági mentési fájl.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Visszaállítás sikertelen</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Visszaállítási hiba: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Hiba a biztonsági mentés visszaállításában: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Érvénytelen mentési fájlformátum vagy hiányzó aláírás.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Szelektív alaphelyzetbe állítás megkezdése...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Aktív szerver kapcsolat megszakítása...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] A kapcsolat visszaállítása befejeződött.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Mentett szerverprofilok törlése...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] A mentett kiszolgálóprofilok törlődtek.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Steam fiók hitelesítő adatainak eltávolítása...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Steam hitelesítő adatok törölve.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] A készülék párosítási konfigurációjának törlése...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] A készülék párosítási konfigurációja törlődött.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Egyéni célkereszt törlése...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Hiba az egyéni célkeresztek törlésében: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Egyéni célkereszt kitisztítva.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Helyi cache fájlok és overlay rajzok törlése...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Hiba a cache mappa törlésében: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] A gyorsítótár mappák törlődtek.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Hallgató és FCM hitelesítő adatok újraregisztrálása...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] A szelektív visszaállítási művelet sikeresen befejeződött.</value>
+  </data>
 </root>

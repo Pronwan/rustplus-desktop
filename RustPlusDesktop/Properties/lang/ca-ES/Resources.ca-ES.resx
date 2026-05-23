@@ -1612,4 +1612,180 @@ Hauràs d'emparellar de nou en el proper inici.</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Tanca aquesta finestra en qualsevol moment — la pots tornar a obrir amb el botó ❓ Com fer el seguiment.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Manteniment</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Esborrar, fer còpia de seguretat o restaurar la configuració de l'aplicació, els perfils i els dibuixos personalitzats.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Restabliments de les dades de l'aplicació...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Dades de còpia de seguretat...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Restablix dades...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Restablir les dades de l'aplicació</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Seleccioneu els components que voleu esborrar d'aquest dispositiu. Totes les opcions seleccionades s'esborraran de manera permanent.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Coneixement de servidor actiu (Desconnectar)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Perfils de servidor guardats (Suprimir les configuracions de servidor emparellat)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Credencials del compte de Steam (Tanca la sessió)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Configuració d'emparellament de dispositius (Restabliment de tokens d'inscripció)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Mirades de punyent personalitzades (configuracions de supressió)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Cach local i dibuixos (Esborrar mapes/línies desades)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Aquesta acció és permanent i no es pot desfer.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Confirma el restabliment</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Contrassena de còpia de seguretat</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Protecció de còpia de seguretat</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Introdueix una contrasenya per xifrar aquest fitxer de còpia de seguretat. Si la deixes en blanc, la còpia de seguretat no es xifrarà.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Restablix la còpia de seguretat</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Aquesta còpia de seguretat està protegida per contrasenya. Introdueix la contrasenya per descifrar-la:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Xifra</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Desxifrar</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>D'acord</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Còpia de seguretat de les dades de l'aplicació</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Còpia de seguretat creada amb èxit a: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Còpia de seguretat creada amb èxit!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Còpia de seguretat completada</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Error de còpia de seguretat: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Error en crear la còpia de seguretat: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Copia de seguretat fallida</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>La restauració de dades sobreescriurà els perfils del servidor actuals, les mirades personalitzades, les superposicions de dibuix i les configuracions de minimapa.
+
+Estàs segur que vols continuar?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Restablix la confirmació de còpia de seguretat</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Restabliu les dades de l'aplicació</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Les dades de la sol·licitud s'han restaurat correctament!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Restauració completada</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Error de restauració: contrasenya incorrecta.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>La descodificació ha fallat. Contrasenya incorrecta o fitxer de còpia de seguretat corrupte.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Restauració fallida</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Error de restauració: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Error en restaurar la còpia de seguretat: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Format de fitxer de còpia de seguretat invàlid o signatura absent.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Començant l'operació de reinici selectiu...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Desconnectant la connexió de servidor activa...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Restabliment de la connexió completat.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Esborrant els perfils de servidor desats...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Perfils de servidor desats esborrats.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Eliminant les credencials del compte de Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Les credencials de Steam s'han esborrat.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[SUPRESSIÓ] Esborrant la configuració d'emparellament del dispositiu...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Configuració d'emparellament del dispositiu eliminada.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Esborrant els miradors personalitzats...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Error en esborrar els miradors personalitzats: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Apuntadors personalitzats esborrats.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Esborrant els fitxers de memòria cau locals i els dibuixos superposats...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Error en esborrar la carpeta de la memòria cau: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Carpetes de la memòria cau esborrades.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Tornant a registrar l'oient i les credencials de l'FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] L'operació de reinici selectiu s'ha completat correctament.</value>
+  </data>
 </root>

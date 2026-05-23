@@ -1612,4 +1612,180 @@ Lataa ja asenna nyt?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Sulje tämä ikkuna milloin tahansa - voit avata sen uudelleen ❓ How to Track -painikkeella.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Huolto</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Pyyhi, varmuuskopioi tai palauta sovellusasetukset, profiilit ja mukautetut piirustukset.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Nollaa sovelluksen tiedot...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Varmuuskopioi tiedot...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Palauta tiedot...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Sovellustietojen nollaus</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Valitse komponentit, jotka haluat pyyhkiä tästä laitteesta. Kaikki valitut vaihtoehdot poistetaan pysyvästi.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Aktiivinen palvelinyhteys (yhteyden katkaisu)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Tallennetut palvelinprofiilit (paritettujen palvelinkokoonpanojen poistaminen)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Steam-tilin tunnukset (Kirjaudu ulos)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Device Pairing Config (Rekisteröintitunnisteiden nollaus)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Mukautettu ristikko (pyyhkäisyasetukset)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Paikallinen välimuisti ja piirustukset (Pyyhi tallennetut kartat/viivat)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Tämä toimenpide on pysyvä, eikä sitä voi peruuttaa.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Vahvista nollaus</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Varmistussalasana</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Varmuuskopiointisuojaus</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Anna salasana tämän varmuuskopiotiedoston salaamiseksi. Jos jätät sen tyhjäksi, varmuuskopiota ei salata.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Palauta varmuuskopio</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Tämä varmuuskopio on suojattu salasanalla. Anna salasana purkaaksesi sen salauksen:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Salaa</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Salaus puretaan</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Sovelluksen tietojen varmuuskopiointi</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Varmuuskopio luotu onnistuneesti osoitteessa: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Varmuuskopio luotu onnistuneesti!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Varmuuskopiointi valmis</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Varmuuskopiointivirhe: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Virhe varmuuskopion luomisessa: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Varmuuskopiointi epäonnistui</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Tietojen palauttaminen korvaa nykyiset palvelinprofiilit, mukautetut ristikkäistarkennukset, piirtopäällysteet ja minikartan määritykset.
+
+Haluatko varmasti jatkaa?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Palauta varmuuskopioinnin vahvistus</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Sovelluksen tietojen palauttaminen</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Sovellustiedot palautettu onnistuneesti!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Palauta valmis</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Palautusvirhe: Restore: Invalid password provided.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Salaus epäonnistui. Virheellinen salasana tai vioittunut varmuuskopiotiedosto.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Palautus epäonnistui</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Palautusvirhe: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Virhe varmuuskopion palauttamisessa: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Virheellinen varmuuskopiotiedostomuoto tai puuttuva allekirjoitus.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Valikoivan nollaustoiminnon käynnistäminen...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Aktiivisen palvelinyhteyden katkaiseminen...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Yhteyden nollaus suoritettu.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Tallennettujen palvelinprofiilien tyhjentäminen...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Tallennetut palvelinprofiilit tyhjennetty.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Steam-tilin tunnusten poistaminen...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Steam-tunnukset tyhjennetty.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Pyyhitään laitteen pariliitoskonfiguraatio...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Laiteparin määritys poistettu.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Pyyhin mukautetun ristikon...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Virhe mukautetun ristikon tyhjentämisessä: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Mukautettu ristikko poistettu.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Paikallisten välimuistitiedostojen ja päällekkäispiirrosten tyhjentäminen...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Virhe välimuistikansion tyhjentämisessä: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Välimuistikansiot tyhjennetty.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Kuuntelijan ja FCM:n tunnistetietojen uudelleenrekisteröinti...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Valikoiva nollaus suoritettu onnistuneesti.</value>
+  </data>
 </root>

@@ -226,6 +226,52 @@
                     </StackPanel>
                 </Border>
 
+                <!-- Maintenance Section -->
+                <TextBlock Text="{DynamicResource MaintenanceTitle}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource MaintenanceDesc}" 
+                                   Foreground="{DynamicResource TextSubtle}" 
+                                   FontSize="11" 
+                                   Margin="0,0,0,12" 
+                                   TextWrapping="Wrap"/>
+                        
+                        <ui:Button x:Name="BtnShowResetDialog"
+                                   Content="{DynamicResource ResetAppData}" 
+                                   Appearance="Caution"
+                                   Icon="{ui:SymbolIcon Symbol=ArrowReset24}"
+                                   HorizontalAlignment="Stretch"
+                                   Height="36"
+                                   Margin="0,0,0,8"
+                                   Click="BtnShowResetDialog_Click"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <ui:Button x:Name="BtnBackupData"
+                                       Grid.Column="0"
+                                       Content="{DynamicResource BackupData}"
+                                       Appearance="Secondary"
+                                       Icon="{ui:SymbolIcon Symbol=ArrowUpload24}"
+                                       HorizontalAlignment="Stretch"
+                                       Height="36"
+                                       Margin="0,0,4,0"
+                                       Click="BtnBackupData_Click"/>
+                            <ui:Button x:Name="BtnRestoreData"
+                                       Grid.Column="1"
+                                       Content="{DynamicResource RestoreData}"
+                                       Appearance="Secondary"
+                                       Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"
+                                       HorizontalAlignment="Stretch"
+                                       Height="36"
+                                       Margin="4,0,0,0"
+                                       Click="BtnRestoreData_Click"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
                 <!-- Credits Section -->
                 <TextBlock Text="{DynamicResource CreditsTitle}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
                 <Border Style="{StaticResource Card}" Margin="0,0,0,8"

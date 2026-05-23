@@ -1612,4 +1612,180 @@ Open Releases page?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Κλείστε αυτό το παράθυρο ανά πάσα στιγμή - μπορείτε να το ανοίξετε ξανά με το κουμπί ❓ Πώς να παρακολουθείτε.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Συντήρηση</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Διαγραφή, δημιουργία αντιγράφων ασφαλείας ή επαναφορά ρυθμίσεων εφαρμογών, προφίλ και προσαρμοσμένων σχεδίων.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Επαναφορά δεδομένων εφαρμογής...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Δημιουργία αντιγράφων ασφαλείας δεδομένων...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Επαναφορά δεδομένων...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Επαναφορά δεδομένων εφαρμογής</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Επιλέξτε τα στοιχεία που θέλετε να διαγράψετε από αυτή τη συσκευή. Όλες οι επιλεγμένες επιλογές θα διαγραφούν οριστικά.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Σύνδεση ενεργού διακομιστή (αποσύνδεση)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Αποθηκευμένα προφίλ διακομιστή (Διαγραφή ζευγαρωμένων ρυθμίσεων διακομιστή)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Διαπιστευτήρια λογαριασμού Steam (αποσύνδεση)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Ρύθμιση ζεύξης συσκευών (Επαναφορά των μαρκών εγγραφής)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Προσαρμοσμένο σταυρόνημα (Διαμορφώσεις σκουπίσματος)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Τοπική προσωρινή μνήμη &amp; σχέδια (διαγραφή αποθηκευμένων χαρτών/γραμμών)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Αυτή η ενέργεια είναι μόνιμη και δεν μπορεί να ανακληθεί.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Επιβεβαίωση επαναφοράς</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Κωδικός ασφαλείας</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Προστασία αντιγράφων ασφαλείας</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Εισάγετε έναν κωδικό πρόσβασης για την κρυπτογράφηση αυτού του αρχείου αντιγράφων ασφαλείας. Αν το αφήσετε κενό, το αντίγραφο ασφαλείας δεν θα κρυπτογραφηθεί.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Επαναφορά αντιγράφων ασφαλείας</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Αυτό το αντίγραφο ασφαλείας προστατεύεται με κωδικό πρόσβασης. Εισάγετε τον κωδικό πρόσβασης για να το αποκρυπτογραφήσετε:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Κρυπτογράφηση</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Αποκρυπτογράφηση</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Δημιουργία αντιγράφων ασφαλείας δεδομένων εφαρμογής</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Δημιουργήθηκε με επιτυχία εφεδρικό αντίγραφο ασφαλείας στη διεύθυνση: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Δημιουργία αντιγράφου ασφαλείας με επιτυχία!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Ολοκλήρωση αντιγράφων ασφαλείας</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Σφάλμα δημιουργίας αντιγράφων ασφαλείας: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Σφάλμα δημιουργίας αντιγράφου ασφαλείας: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Αποτυχία δημιουργίας αντιγράφων ασφαλείας</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Η επαναφορά δεδομένων θα αντικαταστήσει τα τρέχοντα προφίλ διακομιστή, τα προσαρμοσμένα σταυρόνημα, τις επικαλύψεις σχεδίασης και τις ρυθμίσεις του ελάχιστου χάρτη.
+
+Είστε σίγουροι ότι θέλετε να συνεχίσετε;</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Επιβεβαίωση επαναφοράς αντιγράφων ασφαλείας</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Επαναφορά δεδομένων εφαρμογής</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Τα δεδομένα της εφαρμογής αποκαταστάθηκαν με επιτυχία!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Ολοκληρώθηκε η αποκατάσταση</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Σφάλμα επαναφοράς: Ο κωδικός πρόσβασης δεν είναι έγκυρος.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Η αποκρυπτογράφηση απέτυχε. Άκυρος κωδικός πρόσβασης ή κατεστραμμένο αρχείο αντιγράφων ασφαλείας.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Αποτυχία επαναφοράς</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Σφάλμα επαναφοράς: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Σφάλμα επαναφοράς αντιγράφου ασφαλείας: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Μη έγκυρη μορφή αρχείου αντιγράφου ασφαλείας ή ελλιπής υπογραφή.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Έναρξη λειτουργίας επιλεκτικής επαναφοράς...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Αποσύνδεση σύνδεσης ενεργού διακομιστή...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Η επαναφορά σύνδεσης ολοκληρώθηκε.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Εκκαθάριση αποθηκευμένων προφίλ διακομιστή...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Τα αποθηκευμένα προφίλ διακομιστή διαγράφηκαν.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Αφαίρεση διαπιστευτηρίων λογαριασμού Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Τα διαπιστευτήρια Steam εκκαθαρίστηκαν.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Διαγραφή της διαμόρφωσης ζεύξης συσκευής...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Διαγραφή των ρυθμίσεων σύζευξης συσκευής.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Σβήσιμο προσαρμοσμένου στόχου...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Σφάλμα εκκαθάρισης προσαρμοσμένου στόχου: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Το προσαρμοσμένο σταυρόνημα καθαρίστηκε.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Εκκαθάριση τοπικών αρχείων cache και σχεδίων επικάλυψης...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Σφάλμα εκκαθάρισης φακέλου cache: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Εκκαθάριση φακέλων προσωρινής μνήμης.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Επανεγγραφή διαπιστευτηρίων ακροατή και FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Η λειτουργία επιλεκτικής επαναφοράς ολοκληρώθηκε με επιτυχία.</value>
+  </data>
 </root>

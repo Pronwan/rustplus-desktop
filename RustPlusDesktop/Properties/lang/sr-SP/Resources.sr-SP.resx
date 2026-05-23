@@ -1612,4 +1612,180 @@
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Затворите овај прозор у било ком тренутку — можете га поново отворити помоћу дугмета ❓ Како пратити.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Одржавање</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Избришите, направите резервну копију или вратите подешавања апликације, профиле и прилагођене цртеже.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Ресетуј податке апликације...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Сигурна копија података...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Обнови податке...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Ресетовање података апликације</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Изаберите компоненте које желите да обришете са овог уређаја. Све изабране опције биће трајно обрисане.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Активна серверска веза (Прекини)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Сачувани серверски профили (Избришите упарене серверске конфигурације)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Подаци за пријаву на Steam налог (Одјавите се)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Конфигурација упаривања уређаја (Ресетовање токена регистрације)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Прилагођене нишане (конфигурације брисања)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Локална кеш меморија и цртежи (избришите сачуване мапе/линије)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Ова акција је трајна и не може се поништити.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Потврди ресетовање</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Лозинка за резервну копију</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Заштита резервних копија</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Унесите лозинку за шифровање ове резервне датотеке. Ако је оставите празни, резервна датотека неће бити шифрована.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Обнови резервну копију</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Ова резервна копија је заштићена лозинком. Унесите лозинку да бисте је дешифровали:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Шифруј</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Дешифруј</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>У реду</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Сигурносна копија података апликације</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[СИСТЕМ] Бекап је успешно креиран на: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Сигурна копија успешно креирана!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Резервна копија завршена</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[СИСТЕМ] Грешка при изради резервне копије: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Грешка при креирању резервне копије: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Резервно копирање није успело</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Опоравком података биће преписани ваши тренутни серверски профили, прилагођене нишане, прекривачи за цртање и конфигурације минимапе.
+
+Да ли сте сигурни да желите да наставите?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Поврати потврду резервне копије</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Обнови податке апликације</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Подаци апликације успешно обновљени!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Опоравак завршен</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[СИСТЕМ] Грешка при обнови: унета неважећа лозинка.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Дешифровање је неуспело. Неважећа лозинка или оштећена резервна копија.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Обнови неуспело</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[СИСТЕМ] Грешка при враћању: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Грешка при обнови резервне копије: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Неважећи формат резервне копије или недостајуће потписивање.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Почиње операција селективног ресетовања...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Прекида се активна веза са сервером...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Потврђено ресетовање везе.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Брише се сачувани серверски профили...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Сачувани серверски профили су избрисани.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Бришење акредитива за Steam налог...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Подаци о налогу за Steam су избрисани.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[БРИШЕЊЕ] Брише се конфигурација упаривања уређаја...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Конфигурација упаривања уређаја је избрисана.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[БРИШЕЊЕ] Бришење прилагођених нишана...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Грешка при брисању прилагођених нишана: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Прилагођене нишане су избрисане.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Чишћење локалних кеш фајлова и прекривних цртежа...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Грешка при брисању фасцикле кеша: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Кеш фасцикле су избрисане.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Поновно регистровање слушаоца и FCM акредитива...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Селективна операција ресетовања успешно завршена.</value>
+  </data>
 </root>

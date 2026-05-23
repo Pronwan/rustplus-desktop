@@ -1612,4 +1612,180 @@ Download en installeer nu?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Sluit dit venster op elk gewenst moment - u kunt het opnieuw openen met de ❓ Hoe te volgen knop.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Onderhoud</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Applicatie-instellingen, profielen en aangepaste tekeningen wissen, back-uppen of herstellen.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>App-gegevens resetten...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Back-up gegevens...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Gegevens herstellen...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Toepassingsgegevens resetten</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Selecteer de onderdelen die je van dit apparaat wilt wissen. Alle geselecteerde opties worden permanent verwijderd.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Actieve serververbinding (verbreken)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Opgeslagen serverprofielen (gekoppelde serverconfiguraties verwijderen)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Steam Accountgegevens (uitloggen)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Apparaat koppelen configureren (registratietokens resetten)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Aangepast dradenkruis (wisconfiguraties)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Lokale cache &amp; tekeningen (opgeslagen kaarten/lijnen wissen)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Deze actie is permanent en kan niet ongedaan worden gemaakt.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Bevestig reset</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Back-up wachtwoord</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Back-up bescherming</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Voer een wachtwoord in om dit back-upbestand te coderen. Als u dit leeg laat, wordt de back-up niet versleuteld.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Back-up herstellen</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Deze back-up is beveiligd met een wachtwoord. Voer het wachtwoord in om het te decoderen:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Versleutel</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Ontcijfer</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Back-up maken van applicatiegegevens</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Back-up succesvol gemaakt op: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Back-up succesvol gemaakt!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Back-up voltooid</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Back-up fout: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Fout bij het maken van back-up: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Back-up mislukt</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Als je gegevens herstelt, worden je huidige serverprofielen, aangepaste dradenkruizen, tekenoverlays en minimap-configuraties overschreven.
+
+Weet je zeker dat je wilt doorgaan?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Bevestiging van back-up herstellen</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Toepassingsgegevens herstellen</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Toepassingsgegevens succesvol hersteld!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Herstel voltooid</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Herstelfout: Ongeldig wachtwoord opgegeven.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Decryptie mislukt. Ongeldig wachtwoord of corrupt back-upbestand.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Herstel mislukt</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Herstelfout: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Fout bij het herstellen van de back-up: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Ongeldige bestandsindeling voor back-up of ontbrekende handtekening.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Selectieve reset starten...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[Verbinding met actieve server verbroken...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[Het resetten van de verbinding is voltooid.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Opgeslagen serverprofielen wissen...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Opgeslagen serverprofielen gewist.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Verwijderen van Steam accountgegevens...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[Steam toegangsgegevens gewist.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Koppelingsconfiguratie van apparaat wissen...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Configuratie voor apparaatkoppeling verwijderd.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[Aangepaste dradenkruizen wissen...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Fout bij het wissen van aangepaste dradenkruizen: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[Aangepast dradenkruis verwijderd.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Lokale cachebestanden en overlaytekeningen wissen...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Fout bij het wissen van de cache-map: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Cache-mappen gewist.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Opnieuw registreren van luisteraar en FCM referenties...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Selectieve resetoperatie succesvol voltooid.</value>
+  </data>
 </root>
