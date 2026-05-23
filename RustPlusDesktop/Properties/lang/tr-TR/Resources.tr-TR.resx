@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>Yenile</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Düşüş</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Onay Yükle</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>'Kabul Et' seçeneğine tıklandığında, bu sunucuya ait akıllı cihazlar (ve potansiyel olarak harita çizimleri) oluşturucunun sunucusuna yüklenecektir. Bu, takım arkadaşlarının bunları indirmesine ve senkronize etmesine olanak tanır. Takım arkadaşlarınızı tanımlamak için sadece Steam ID'niz iletilir. Yalnızca Alet Dolabında yetkilendirilmiş oyuncular cihazları kontrol edebilir.
+
+Not: Bu iletim yöntemi gelecekte optimize edilecektir. Eğer takım arkadaşlarınız verileri indiremiyorsa, lütfen harita çizimlerinizi temizlemeyi ve tekrar yüklemeyi deneyin.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Silme</value>
   </data>
@@ -1504,5 +1515,68 @@ Sürümler sayfasını aç?</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (Stok {5}) {6} {7} için</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Sohbet Komutlarını Listele</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>KOMUTLAR: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Yerelleştirme, UI Modernizasyonu ve Depolama</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dinamik Yerel Ayar Değiştirme</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - Seçilebilecek 30+ dil</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Sohbet Komutları Kullanıcı Arayüzü</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - Temiz görünüm için izole görünüm</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Yeni Ayarlar Yerleşimi</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - Tüm ayarlar için temiz kenar çubuğu</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics İzleme Kaldırıldı</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Üssünüz saldırı altında!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Lütfen önce bir sunucuya bağlanın.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Herhangi bir sunucuya bağlı değilsiniz.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Sohbet şu anda mevcut değil.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Lütfen önce bir sunucu seçin.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Bağlantı</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Sohbet</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Oyuncular Nasıl Takip Edilir</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Yerel UDP izleme</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>İzleme kılavuzu, yakın gelecekte değişikliklere uğrayacağından şu anda yalnızca İngilizce olarak mevcuttur. Sabırlı olmanızı rica ediyoruz.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Bu pencereyi istediğiniz zaman kapatın - ❓ Nasıl Takip Edilir düğmesi ile yeniden açabilirsiniz.</value>
   </data>
 </root>

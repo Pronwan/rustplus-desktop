@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>Actualitzar</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Declivi</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Càrrega del consentiment</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>En fer clic a 'Acceptar', els dispositius intel·ligents (i potencialment els dibuixos de mapa) d'aquest servidor s'enviaran al servidor del creador. Això permet als companys d'equip descarregar-los i sincronitzar-los. Només es transmet el vostre ID de Steam per identificar els companys d'equip. Només els jugadors autoritzats a la Caixa d'Eines poden controlar els dispositius.
+
+Nota: aquest mètode de transmissió s'optimitzarà en el futur. Si els companys d'equip no poden descarregar les dades, proveu d'esborrar els dibuixos de mapa i tornar-los a pujar.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Suprimeix</value>
   </data>
@@ -1504,5 +1515,68 @@ Hauràs d'emparellar de nou en el proper inici.</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (Stock {5}) per {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Llista les ordres de xat</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>COMANDAMENTS: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Localització, modernització de la IU i emmagatzematge</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Canvi dinàmic de local</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> — Més de 30 idiomes per triar</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Interfície d'usuari d'ordres de xat</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> — Vista aïllada per a un aspecte net</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Nova superposició de configuració</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> — Netejar la barra lateral per a tots els paràmetres</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Seguiment de BattleMetrics eliminat</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>La teva base està sota atac!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Si us plau, connecteu-vos primer a un servidor.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>No estàs connectat a cap servidor.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>El xat no està disponible ara mateix.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Si us plau, seleccioneu primer un servidor.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Coneixement</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Xat</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Com fer el seguiment dels jugadors</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Seguiment nadiu de UDP</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>La guia de seguiment està actualment disponible només en anglès, ja que s'hi introduiran canvis en un futur pròxim. Us demanem paciència.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Tanca aquesta finestra en qualsevol moment — la pots tornar a obrir amb el botó ❓ Com fer el seguiment.</value>
   </data>
 </root>

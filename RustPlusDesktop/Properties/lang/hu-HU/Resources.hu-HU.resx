@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>Frissítés</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Hanyatlás</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Hozzájárulás feltöltése</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Az "Elfogadom" gombra kattintva az adott szerverhez tartozó intelligens eszközök (és esetleges térképrajzok) feltöltődnek a készítő szerverére. Így a csapattársak letölthetik és szinkronizálhatják azokat. A csapattársak azonosításához csak a Steam azonosítóját továbbítja a rendszer. Az eszközöket csak az Eszközszekrénynél engedélyezett játékosok irányíthatják.
+
+Megjegyzés: Ez az átviteli módszer a jövőben optimalizálásra kerül. Ha a csapattársak nem tudják letölteni az adatokat, próbáld meg törölni a térképrajzokat és újra feltölteni.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Törölje a  címet.</value>
   </data>
@@ -1504,5 +1515,68 @@ Letöltés és telepítés most?</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (állomány {5}) a {6} {7} esetében.</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Chat parancsok listája</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>PARANCSOK: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Lokalizáció, UI modernizáció és tárolás</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dinamikus helyváltoztatás</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - 30+ nyelv választható</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Chat parancsok felhasználói felület</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - Elszigetelt nézet a tiszta megjelenésért</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Új beállítások Overlay</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - Tiszta oldalsáv minden beállításhoz</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics nyomkövetés eltávolítva</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>A bázisodat megtámadták!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Kérjük, először csatlakozzon egy kiszolgálóhoz.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Ön nem csatlakozik egyetlen kiszolgálóhoz sem.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>A csevegés jelenleg nem elérhető.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Kérjük, először válasszon ki egy kiszolgálót.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Kapcsolat</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Hogyan kövessük a játékosokat</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Natív UDP követés</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>A nyomkövetési útmutató jelenleg csak angol nyelven érhető el, mivel a közeljövőben változásokon fog átesni. Kérjük türelmét.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Ezt az ablakot bármikor bezárhatja - újra megnyithatja a ❓ Hogyan kövessük nyomon gombra kattintva.</value>
   </data>
 </root>

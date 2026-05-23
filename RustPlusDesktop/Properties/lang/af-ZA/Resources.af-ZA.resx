@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>Verfris</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Neergang</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Oplaai toestemming</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Deur op 'Aanvaar' te klik, sal die slimtoestelle (en moontlik kaarttekeninge) vir hierdie bediener na die skepper se bediener opgelaai word. Dit stel spanmaats in staat om dit af te laai en te sinchroniseer. Slegs jou Steam-ID word oorgedra om spanmaats te identifiseer. Slegs spelers wat by die Tool Cupboard gemagtig is, kan die toestelle beheer.
+
+Nota: Hierdie oordragmetode sal in die toekoms geoptimaliseer word. As spanmaats nie die data kan aflaai nie, probeer asseblief om jou kaarttekeninge uit te vee en weer op te laai.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Verwyder</value>
   </data>
@@ -1504,5 +1515,68 @@ Aflaai en installeer nou?</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (Stokk {5}) vir {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Lys kletsopdragte</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>OPDRACHTES: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Lokalisering, UI-modernisering en berging</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dinamiese omgewingskakeling</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> — Meer as 30 tale om van te kies</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Kletsopdragte UI</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> — Geïsoleerde uitsig vir 'n skoon voorkoms</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Nuwe instellings-oortreksel</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> — Skoonmaak die sybalk vir alle instellings</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics-opsporing verwyder</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Jou basis word aangeval!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Koppel asseblief eers aan 'n bediener.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Jy is nie aan enige bediener gekoppel nie.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Klets is tans nie beskikbaar nie.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Kies asseblief eers 'n bediener.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Verbinding</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Klets</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Hoe om spelers op te spoor</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Inheemse UDP-opsporing</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Die opsporinggids is tans slegs in Engels beskikbaar, aangesien dit binnekort veranderinge sal ondergaan. Ons vra u geduld.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Sluit hierdie venster te eniger tyd — jy kan dit weer oopmaak met die knoppie ❓ Hoe om op te spoor.</value>
   </data>
 </root>

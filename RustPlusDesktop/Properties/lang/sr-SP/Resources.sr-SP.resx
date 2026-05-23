@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>Освежи</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Опадање</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Подешавање сагласности</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Кликом на "Прихвати", паметни уређаји (и потенцијално цртежи мапа) за овај сервер биће отпремљени на сервер креатора. Ово омогућава саиграчима да их преузму и синхронизују. За идентификацију саиграча преноси се само ваш Steam ID. Само играчи овлашћени у Tool Cupboard могу да контролишу уређаје.
+
+Напомена: Овај метод преноса ће бити оптимизован у будућности. Ако саиграчи не могу да преузму податке, покушајте да обришете цртеже мапа и поново отпремите.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Избриши</value>
   </data>
@@ -1504,5 +1515,68 @@
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (Stock {5}) за {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Списак командa за разговор</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>КОМАНДЕ: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Локализација, модернизација корисничког интерфејса и складиштење</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Динамичко пребацивање локала</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> — преко 30 језика за избор</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Командни интерфејс за ћаскање</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> — Изолирани приказ за чист изглед</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Нови прекривач подешавања</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> — Очистите бочну траку за све поставке</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Уклањање праћења BattleMetrics</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Ваша база је под нападом!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Молимо вас да се прво повежете на сервер.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Нисте повезани ни са једним сервером.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Чет тренутно није доступан.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Молимо изаберите сервер прво.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Повезаност</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Чет</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Како пратити играче</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Урођено праћење UDP-а</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Водич за праћење је тренутно доступан само на енглеском језику, јер ће ускоро бити измењен. Молимо за ваше стрпљење.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Затворите овај прозор у било ком тренутку — можете га поново отворити помоћу дугмета ❓ Како пратити.</value>
   </data>
 </root>

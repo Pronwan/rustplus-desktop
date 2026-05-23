@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>Împrospătează</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Declin</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Încărcați consimțământul</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Făcând clic pe "Accept", dispozitivele inteligente (și eventual desenele hărților) pentru acest server vor fi încărcate pe serverul creatorului. Acest lucru permite coechipierilor să le descarce și să le sincronizeze. Doar ID-ul tău Steam este transmis pentru a identifica coechipierii. Doar jucătorii autorizați la Tool Cupboard pot controla dispozitivele.
+
+Notă: Această metodă de transmitere va fi optimizată în viitor. Dacă coechipierii nu pot descărca datele, vă rugăm să încercați să ștergeți desenele hărților și să le încărcați din nou.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Ștergere</value>
   </data>
@@ -1504,5 +1515,68 @@ Descărcați și instalați acum?</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (Stoc {5}) pentru {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Lista comenzi chat</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>COMANDAMENTE: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Localizare, modernizare UI și stocare</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Comutare dinamică a limbii locale</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - 30+ limbi pentru a alege</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Interfață comenzi chat</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - Vedere izolată pentru un aspect curat</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Noua suprapunere a setărilor</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - Bară laterală curată pentru toate setările</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Urmărirea BattleMetrics eliminată</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Baza ta este atacată!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Vă rugăm să vă conectați mai întâi la un server.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Nu sunteți conectat la niciun server.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Chat nu este disponibil acum.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Vă rugăm să selectați mai întâi un server.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Conexiune</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Cum să urmăriți jucătorii</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Urmărire nativă UDP</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Ghidul de urmărire este disponibil în prezent numai în limba engleză, deoarece va suferi modificări în viitorul apropiat. Vă rugăm să aveți răbdare.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Închideți această fereastră în orice moment - o puteți redeschide cu ajutorul butonului ❓ Cum să urmăriți.</value>
   </data>
 </root>

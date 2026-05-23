@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>Ανανέωση</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Πτώση</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Ανέβασμα συγκατάθεσης</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Κάνοντας κλικ στην επιλογή "Αποδοχή", οι έξυπνες συσκευές (και ενδεχομένως τα σχέδια χαρτών) για αυτόν τον διακομιστή θα μεταφορτωθούν στον διακομιστή του δημιουργού. Αυτό επιτρέπει στους συμπαίκτες να τα κατεβάσουν και να τα συγχρονίσουν. Μόνο το αναγνωριστικό Steam σας μεταδίδεται για την αναγνώριση των συμπαικτών σας. Μόνο οι παίκτες που είναι εξουσιοδοτημένοι στο Tool Cupboard μπορούν να ελέγχουν τις συσκευές.
+
+Σημείωση: Αυτή η μέθοδος μετάδοσης θα βελτιστοποιηθεί στο μέλλον. Αν οι συμπαίκτες δεν μπορούν να κατεβάσουν τα δεδομένα, δοκιμάστε να καθαρίσετε τα σχέδια του χάρτη σας και να τα ανεβάσετε ξανά.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Διαγραφή</value>
   </data>
@@ -1504,5 +1515,68 @@ Open Releases page?</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (απόθεμα {5}) για {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Λίστα εντολών συνομιλίας</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>COMMANDS: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Εντοπισμός, εκσυγχρονισμός UI &amp; αποθήκευση</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Δυναμική εναλλαγή τοπικής γλώσσας</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - 30+ γλώσσες προς επιλογή</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>UI εντολών συνομιλίας</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - Απομονωμένη προβολή για καθαρή εμφάνιση</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Νέα επικάλυψη ρυθμίσεων</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - Καθαρή πλευρική γραμμή για όλες τις ρυθμίσεις</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Απομακρύνεται η παρακολούθηση BattleMetrics</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Η βάση σας δέχεται επίθεση!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Συνδεθείτε πρώτα σε έναν διακομιστή.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Δεν είστε συνδεδεμένοι σε κανέναν διακομιστή.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Η συνομιλία δεν είναι διαθέσιμη αυτή τη στιγμή.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Παρακαλούμε επιλέξτε πρώτα έναν διακομιστή.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Σύνδεση</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Συνομιλία</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Πώς να παρακολουθείτε παίκτες</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Ενδογενής παρακολούθηση UDP</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Ο οδηγός παρακολούθησης είναι προς το παρόν διαθέσιμος μόνο στα αγγλικά, καθώς θα υποστεί αλλαγές στο εγγύς μέλλον. Ζητάμε την υπομονή σας.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Κλείστε αυτό το παράθυρο ανά πάσα στιγμή - μπορείτε να το ανοίξετε ξανά με το κουμπί ❓ Πώς να παρακολουθείτε.</value>
   </data>
 </root>

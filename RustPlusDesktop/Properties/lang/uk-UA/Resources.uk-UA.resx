@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>Оновити</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Занепад</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Завантажити Згоду</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Натиснувши кнопку "Прийняти", смарт-пристрої (і, можливо, креслення мапи) для цього сервера будуть завантажені на сервер творця. Це дозволить товаришам по команді завантажити їх і синхронізувати. Для ідентифікації товаришів по команді передається лише ваш Steam ID. Керувати пристроями можуть лише гравці, авторизовані в шафі з інструментами.
+
+Примітка: Цей спосіб передачі даних буде оптимізовано в майбутньому. Якщо товариші по команді не можуть завантажити дані, спробуйте очистити малюнки мапи і завантажити їх знову.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Видалити</value>
   </data>
@@ -1504,5 +1515,68 @@
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (Stock {5}) для {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Список команд чату</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>КОМАНДИ: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Локалізація, модернізація та зберігання інтерфейсу користувача</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Динамічне перемикання локалі</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - 30+ мов на вибір</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Інтерфейс команд чату</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - Ізольований вид для чистого вигляду</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Накладення нових налаштувань</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - Чиста бічна панель для всіх налаштувань</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Видалено відстеження BattleMetrics</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Вашу базу атакують!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Спочатку підключіться до сервера.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Ви не підключені до жодного сервера.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Чат зараз недоступний.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Будь ласка, спочатку виберіть сервер.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Підключення</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Чат</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Як відстежувати гравців</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Нативне відстеження UDP</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Наразі посібник з відстеження доступний лише англійською мовою, оскільки найближчим часом він зазнає змін. Просимо вас набратися терпіння.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Закрийте це вікно в будь-який час - ви можете знову відкрити його за допомогою кнопки ❓ Як відстежувати.</value>
   </data>
 </root>

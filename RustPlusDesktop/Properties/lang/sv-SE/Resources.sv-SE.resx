@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>Uppdatera</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Nedgång</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Ladda upp samtycke</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Genom att klicka på "Acceptera" kommer smarta enheter (och eventuellt kartritningar) för den här servern att laddas upp till skaparens server. Detta gör att lagkamrater kan ladda ner och synkronisera dem. Endast ditt Steam-ID överförs för att identifiera lagkamrater. Endast spelare som är auktoriserade på Tool Cupboard kan styra enheterna.
+
+Obs: Denna överföringsmetod kommer att optimeras i framtiden. Om lagkamrater inte kan ladda ner data, försök att rensa dina kartritningar och ladda upp igen.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Radera</value>
   </data>
@@ -1504,5 +1515,68 @@ Ladda ner och installera nu?</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (lager {5}) för {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Lista chattkommandon</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>COMMANDS: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Lokalisering, modernisering av användargränssnitt och lagring</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dynamiskt byte av språkdräkt</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - 30+ språk att välja mellan</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Chattkommandon UI</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - Isolerad vy för ett rent utseende</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Nya inställningar Overlay</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - Ren sidofält för alla inställningar</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics Tracking borttagen</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Din bas är under attack!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Anslut först till en server.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Du är inte ansluten till någon server.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Chat är inte tillgängligt just nu.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Vänligen välj en server först.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Anslutning</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Chatt</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Hur man spårar spelare</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Inbyggd UDP-spårning</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Spårningsguiden är för närvarande endast tillgänglig på engelska, eftersom den kommer att genomgå förändringar inom en snar framtid. Vi ber om ert tålamod.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Stäng det här fönstret när som helst - du kan öppna det igen med ❓ How to Track-knappen.</value>
   </data>
 </root>

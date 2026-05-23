@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>تحديث</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>الانخفاض</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>تحميل الموافقة</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>بالنقر فوق "قبول"، سيتم تحميل الأجهزة الذكية (وربما رسومات الخريطة) لهذا الخادم إلى خادم المنشئ. يسمح ذلك لزملاء الفريق بتنزيلها ومزامنتها. يتم إرسال معرف Steam الخاص بك فقط لتحديد زملائك في الفريق. يمكن فقط للاعبين المصرح لهم في خزانة الأدوات التحكم في الأجهزة.
+
+ملاحظة: سيتم تحسين طريقة الإرسال هذه في المستقبل. إذا لم يتمكن زملاء الفريق من تنزيل البيانات، يُرجى محاولة مسح رسومات الخريطة الخاصة بك وتحميلها مرة أخرى.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>حذف</value>
   </data>
@@ -1504,5 +1515,68 @@
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (مخزون {5}) مقابل {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>قائمة أوامر المحادثة</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>الأوامر: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>التوطين وتحديث واجهة المستخدم والتخزين</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>تبديل الإعدادات المحلية الديناميكي</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - أكثر من 30 لغة للاختيار من بينها</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>واجهة مستخدم أوامر المحادثة</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - منظر معزول لمظهر نظيف</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>تراكب إعدادات جديدة</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - شريط جانبي نظيف لجميع الإعدادات</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>تمت إزالة تتبع BattleMetrics</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>قاعدتك تتعرض للهجوم!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>يُرجى الاتصال بخادم أولاً.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>أنت غير متصل بأي خادم.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>الدردشة غير متاحة الآن.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>يُرجى تحديد الخادم أولاً.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>الاتصال</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>الدردشة</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>كيفية تتبع اللاعبين</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>تتبع UDP الأصلي</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>يتوفر دليل التتبع حاليًا باللغة الإنجليزية فقط، حيث سيخضع لتغييرات في المستقبل القريب. نطلب منكم التحلي بالصبر.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>أغلق هذه النافذة في أي وقت - يمكنك إعادة فتحها باستخدام زر ❓ كيفية التتبع.</value>
   </data>
 </root>

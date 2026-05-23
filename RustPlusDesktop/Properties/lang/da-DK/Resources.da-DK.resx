@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>Opdater</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Tilbagegang</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Upload samtykke</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Ved at klikke på "Accept" uploades smart-enhederne (og potentielt korttegninger) for denne server til skaberens server. Dette giver holdkammerater mulighed for at downloade og synkronisere dem. Kun dit Steam-ID overføres for at identificere holdkammerater. Kun spillere, der er autoriseret i Tool Cupboard, kan styre enhederne.
+
+Bemærk: Denne overførselsmetode vil blive optimeret i fremtiden. Hvis holdkammeraterne ikke kan downloade dataene, kan du prøve at rydde dine korttegninger og uploade dem igen.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Slet</value>
   </data>
@@ -1504,5 +1515,68 @@ Download og installer nu?</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (Lager {5}) for {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Liste over chat-kommandoer</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>KOMMANDOER: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Lokalisering, UI-modernisering og opbevaring</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dynamisk skift af lokalitet</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - 30+ sprog at vælge imellem</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Brugergrænseflade til chatkommandoer</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - Isoleret visning for et rent look</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Overlay med nye indstillinger</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - Ren sidebar til alle indstillinger</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics-sporing fjernet</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Din base er under angreb!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Opret venligst forbindelse til en server først.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Du har ikke forbindelse til nogen server.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Chat er ikke tilgængelig lige nu.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Vælg venligst en server først.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Forbindelse</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Sådan sporer du spillere</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Indbygget UDP-sporing</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Sporingsguiden er i øjeblikket kun tilgængelig på engelsk, da den vil undergå ændringer i den nærmeste fremtid. Vi beder om din tålmodighed.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Luk dette vindue når som helst - du kan åbne det igen med ❓ How to Track-knappen.</value>
   </data>
 </root>
