@@ -696,8 +696,8 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
     {
         host = _host ?? "";
         port = _port;
-        playerId = (_steamId != 0 ? _steamId.ToString() : "");
-        token = (_playerToken != 0 ? _playerToken.ToString() : "");
+        playerId = (_steamId != 0 ? _steamId.ToString(System.Globalization.CultureInfo.InvariantCulture) : "");
+        token = (_playerToken != 0 ? _playerToken.ToString(System.Globalization.CultureInfo.InvariantCulture) : "");
 
         // falls etwas fehlt, versuche vom _api zu lesen
         if (_api != null && (string.IsNullOrWhiteSpace(host) || port <= 0 ||

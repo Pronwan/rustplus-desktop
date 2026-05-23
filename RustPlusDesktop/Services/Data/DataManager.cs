@@ -73,13 +73,13 @@ namespace RustPlusDesk.Services.Data
 
         public static async Task UploadPayloadAsync(ulong steamId, string serverKey, string overlayB64)
         {
-            var ts = UnixNow().ToString();
-            var sigInput = steamId.ToString() + "|" + serverKey + "|" + ts + "|" + overlayB64;
+            var ts = UnixNow().ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var sigInput = steamId.ToString(System.Globalization.CultureInfo.InvariantCulture) + "|" + serverKey + "|" + ts + "|" + overlayB64;
             var sig = HmacSha256Hex(OVERLAY_SYNC_SECRET_HEX, sigInput);
 
             var payloadObj = new
             {
-                steamId = steamId.ToString(),
+                steamId = steamId.ToString(System.Globalization.CultureInfo.InvariantCulture),
                 serverKey = serverKey,
                 ts = ts,
                 overlayJsonB64 = overlayB64,
@@ -100,12 +100,12 @@ namespace RustPlusDesk.Services.Data
 
         public static async Task<string?> FetchPayloadAsync(ulong steamId, string serverKey)
         {
-            var ts = UnixNow().ToString();
-            var sigInput = steamId.ToString() + "|" + serverKey + "|" + ts;
+            var ts = UnixNow().ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var sigInput = steamId.ToString(System.Globalization.CultureInfo.InvariantCulture) + "|" + serverKey + "|" + ts;
             var sig = HmacSha256Hex(OVERLAY_SYNC_SECRET_HEX, sigInput);
 
             var url = $"{OVERLAY_SYNC_BASEURL}/fetch" +
-                      $"?steamId={Uri.EscapeDataString(steamId.ToString())}" +
+                      $"?steamId={Uri.EscapeDataString(steamId.ToString(System.Globalization.CultureInfo.InvariantCulture))}" +
                       $"&serverKey={Uri.EscapeDataString(serverKey)}" +
                       $"&ts={Uri.EscapeDataString(ts)}" +
                       $"&sig={Uri.EscapeDataString(sig)}";
