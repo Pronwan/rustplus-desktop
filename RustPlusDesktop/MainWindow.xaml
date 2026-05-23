@@ -4980,98 +4980,19 @@
                 </Border>
             </Grid>
 
-            <!--  Dedicated Login & Pairing Overlay  -->
-            <Grid
-                Panel.ZIndex="9998"
-                Background="#DD0F1115"
-                IsHitTestVisible="True"
-                Visibility="{Binding ShowLoginOverlay, Converter={StaticResource BoolToVisibility}}">
-
-                <Border
-                    Width="450"
-                    Padding="40"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Background="{DynamicResource Surface}"
-                    BorderBrush="{DynamicResource CardBorder}"
-                    BorderThickness="1"
-                    CornerRadius="20">
-                    <Border.Effect>
-                        <DropShadowEffect
-                            BlurRadius="50"
-                            Opacity="0.5"
-                            ShadowDepth="0"
-                            Color="Black" />
-                    </Border.Effect>
-
-                    <StackPanel>
-                        <!--  Icon / Brand  -->
-                        <Border
-                            Width="80"
-                            Height="80"
-                            Margin="0,0,0,24"
-                            Background="{DynamicResource AccentDark}"
-                            CornerRadius="40">
-                            <ui:SymbolIcon
-                                FontSize="40"
-                                Foreground="{DynamicResource Accent}"
-                                Symbol="ShieldLock24" />
-                        </Border>
-
-                        <TextBlock
-                            Margin="0,0,0,12"
-                            FontSize="28"
-                            FontWeight="Bold"
-                            Foreground="White"
-                            Text="{DynamicResource ReadyToDominate}"
-                            TextAlignment="Center" />
-
-                        <TextBlock
-                            Margin="0,0,0,32"
-                            FontSize="14"
-                            Foreground="{DynamicResource TextSubtle}"
-                            LineHeight="20"
-                            Text="{DynamicResource PairAccountBenefits}"
-                            TextAlignment="Center"
-                            TextWrapping="Wrap" />
-
-                        <ui:Button
-                            x:Name="BtnOverlayPair"
-                            Height="50"
-                            HorizontalAlignment="Stretch"
-                            Appearance="Primary"
-                            Click="BtnListenPairing_Click"
-                            FontSize="16"
-                            FontWeight="SemiBold"
-                            Icon="{ui:SymbolIcon Symbol=BluetoothConnected24}">
-                            <ui:Button.Content>
-                                <TextBlock Margin="8,0,0,0" Text="{DynamicResource LoginPairAccount}" />
-                            </ui:Button.Content>
-                        </ui:Button>
-
-                        <ui:Button
-                            x:Name="BtnOverlayRestore"
-                            Height="40"
-                            Margin="0,12,0,0"
-                            HorizontalAlignment="Stretch"
-                            Appearance="Secondary"
-                            Click="BtnOverlayRestore_Click"
-                            FontSize="14"
-                            Icon="{ui:SymbolIcon Symbol=ArrowDownload24}">
-                            <ui:Button.Content>
-                                <TextBlock Margin="8,0,0,0" Text="{DynamicResource RestoreData}" />
-                            </ui:Button.Content>
-                        </ui:Button>
-
-                        <TextBlock
-                            Margin="0,20,0,0"
-                            FontSize="11"
-                            Foreground="{DynamicResource TextCaption}"
-                            Text="{DynamicResource RequiresSteamLogin}"
-                            TextAlignment="Center" />
-                    </StackPanel>
-                </Border>
-            </Grid>
+        <Grid Background="#80000000"
+      Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}"
+      IsHitTestVisible="True"
+      Panel.ZIndex="9999">
+            <Border Background="{DynamicResource AccentDark}" CornerRadius="8" Padding="20"
+          Width="320" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel>
+                    <TextBlock Text="{Binding BusyText}" FontSize="16" FontWeight="SemiBold"
+                 TextAlignment="Center" Margin="0,0,0,10"/>
+                    <ProgressBar IsIndeterminate="True" Height="6"/>
+                </StackPanel>
+            </Border>
+        </Grid>
 
             <!--  Delete Confirmation Overlay  -->
             <Grid

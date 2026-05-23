@@ -56,6 +56,15 @@ namespace RustPlusDesk.Services.Data
                     File.Copy(DataManager.ProfilesPath, Path.Combine(tempDir, "profiles.json"), true);
                 }
 
+                // 2b. Copy rustplusjs-config.json
+                string fcmConfigPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "RustPlusDesk", "rustplusjs-config.json");
+                if (File.Exists(fcmConfigPath))
+                {
+                    File.Copy(fcmConfigPath, Path.Combine(tempDir, "rustplusjs-config.json"), true);
+                }
+
                 // 3. Copy custom_crosshairs.json
                 string crosshairPath = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -147,6 +156,21 @@ namespace RustPlusDesk.Services.Data
                 {
                     Directory.CreateDirectory(DataManager.AppDir);
                     File.Copy(stagingProfiles, DataManager.ProfilesPath, true);
+                }
+
+                // 4b. Restore rustplusjs-config.json
+                string stagingFcm = Path.Combine(tempDir, "rustplusjs-config.json");
+                if (File.Exists(stagingFcm))
+                {
+                    string targetFcm = Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                        "RustPlusDesk", "rustplusjs-config.json");
+                    string targetDir = Path.GetDirectoryName(targetFcm);
+                    if (targetDir != null)
+                    {
+                        Directory.CreateDirectory(targetDir);
+                    }
+                    File.Copy(stagingFcm, targetFcm, true);
                 }
 
                 // 5. Restore custom_crosshairs.json

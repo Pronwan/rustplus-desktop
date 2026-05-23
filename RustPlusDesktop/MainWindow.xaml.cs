@@ -2816,7 +2816,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsPairingBusy = false;
         }
     }
-
     public void AppendLog(string line)
     {
         Dispatcher.Invoke(() =>
@@ -5173,6 +5172,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _vm.Load();
         LoadCustomCrosshairs();
         HydrateSteamUiFromStorage();
+        
+        // Re-read FCM configuration from the restored rustplusjs-config.json
+        TrackingService.ReadFcmConfig();
+        
+        // Notify the login overlay to update its visibility state!
+        _vm.NotifyFcmChanged();
+        
         AppendLog("[SYSTEM] Application data reloaded successfully after restore.");
     }
 }

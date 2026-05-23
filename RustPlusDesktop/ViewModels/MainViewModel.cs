@@ -252,6 +252,10 @@ public class MainViewModel : INotifyPropertyChanged
             // Show overlay if no valid token exists
             bool hasToken = TrackingService.IsFcmConfigured() &&
                             (!TrackingService.FcmExpiresAt.HasValue || TrackingService.FcmExpiresAt.Value >= DateTime.Now);
+            
+            // If they have servers loaded, hide the login overlay so they can access their restored profiles!
+            if (Servers.Count > 0) return false;
+
             return !hasToken && !IsBusy && !IsInitializing;
         }
     }
