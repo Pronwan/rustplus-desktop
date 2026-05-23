@@ -289,21 +289,26 @@ public partial class MainWindow
 
     private async void BtnToggleChat_Click(object sender, RoutedEventArgs e)
     {
+        if (ChatContentBorder.Visibility == Visibility.Visible)
+        {
+            CloseChatOverlay();
+            return;
+        }
+
+        await OpenChatOverlayAsync();
+    }
+
+    public async Task OpenChatOverlayAsync()
+    {
         if (_rust is not RustPlusClientReal real)
         {
-            ShowInfoSnackbar("Connection", "You are not connected to any server.", WpfUi.ControlAppearance.Caution);
+            ShowInfoSnackbar(Properties.Resources.SnackbarTitleConnection, Properties.Resources.NotConnectedError, WpfUi.ControlAppearance.Caution);
             return;
         }
 
         if (!(_vm.Selected?.IsConnected ?? false))
         {
-            ShowInfoSnackbar("Chat", "Please connect to a server first.", WpfUi.ControlAppearance.Info);
-            return;
-        }
-
-        if (ChatContentBorder.Visibility == Visibility.Visible)
-        {
-            CloseChatOverlay();
+            ShowInfoSnackbar(Properties.Resources.SnackbarTitleChat, Properties.Resources.PleaseConnectFirst, WpfUi.ControlAppearance.Info);
             return;
         }
 
@@ -315,13 +320,13 @@ public partial class MainWindow
         }
         catch (InvalidOperationException)
         {
-            ShowInfoSnackbar("Chat", "Please connect to a server first.", WpfUi.ControlAppearance.Info);
+            ShowInfoSnackbar(Properties.Resources.SnackbarTitleChat, Properties.Resources.PleaseConnectFirst, WpfUi.ControlAppearance.Info);
             return;
         }
         catch (Exception ex)
         {
             AppendLog("PrimeChat failed: " + ex.Message);
-            ShowInfoSnackbar("Chat", "Chat is not available right now.", WpfUi.ControlAppearance.Danger);
+            ShowInfoSnackbar(Properties.Resources.SnackbarTitleChat, Properties.Resources.ChatNotAvailable, WpfUi.ControlAppearance.Danger);
             return;
         }
 

@@ -906,30 +906,33 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
 
 public List<ExportedDeviceDto> Devices { get; set; } = new();
 
-    private async void BtnDevicesExport_Click(object sender, RoutedEventArgs e)
+    private void BtnDevicesExport_Click(object sender, RoutedEventArgs e)
     {
-        if (_vm.Selected is null)
+        ShowUploadConsent(async () =>
         {
-            AppendLog("[dev/export] No server selected.");
-            return;
-        }
+            if (_vm.Selected is null)
+            {
+                AppendLog("[dev/export] No server selected.");
+                return;
+            }
 
-        if (!await EnsureConnectedAsync())
-            return;
+            if (!await EnsureConnectedAsync())
+                return;
 
-        try
-        {
-            var count = await UploadDevicesSnapshotForCurrentServerAsync();
-            AppendLog($"[dev/export] Exported {count} devices for server '{_vm.Selected.Name}'.");
-            MessageBox.Show($"Exported {count} devices to your team share.", "Device Export",
-                MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-        catch (Exception ex)
-        {
-            AppendLog("[dev/export] Error: " + ex.Message);
-            MessageBox.Show("Device export failed:\n" + ex.Message, "Device Export",
-                MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+            try
+            {
+                var count = await UploadDevicesSnapshotForCurrentServerAsync();
+                AppendLog($"[dev/export] Exported {count} devices for server '{_vm.Selected.Name}'.");
+                MessageBox.Show($"Exported {count} devices to your team share.", "Device Export",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                AppendLog("[dev/export] Error: " + ex.Message);
+                MessageBox.Show("Device export failed:\n" + ex.Message, "Device Export",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        });
     }
 
     private async Task<int> UploadDevicesSnapshotForCurrentServerAsync()

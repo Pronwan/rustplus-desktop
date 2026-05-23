@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
-        Title="Rust+ Desktop — v5.2.0 Update"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Rust+ Desktop — v5.3.0 Update"
         Width="490" Height="540"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
@@ -31,9 +32,9 @@
             <Border Grid.Row="0" Background="#161B22" CornerRadius="12,12,0,0" Padding="20,14">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Border Background="#E8611A" CornerRadius="5" Padding="6,3" Margin="0,0,10,0">
-                        <TextBlock Text="v5.2.0" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="v5.3.0" FontSize="11" FontWeight="Bold" Foreground="White"/>
                     </Border>
-                    <TextBlock Text="{DynamicResource StreamerModeMiniMapOverhaul}" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock Text="{DynamicResource Update530Title}" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
                 </StackPanel>
             </Border>
 
@@ -47,43 +48,33 @@
                 <Border Background="#161B22" BorderBrush="#2A3040" BorderThickness="1" CornerRadius="8" Padding="14,12" Margin="0,0,0,14">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                            <TextBlock Text="🎥" FontSize="14" Margin="0,0,8,0"/>
+                            <TextBlock Text="🌍" FontSize="14" Margin="0,0,8,0"/>
                             <TextBlock TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Foreground="White">{DynamicResource StreamerMode}</Run>
-                                <Run Foreground="#8090A0"> — Abbreviates names, hides server list and console</Run>
+                                <Run FontWeight="SemiBold" Foreground="White" Text="{DynamicResource FeatureLanguage}"/>
+                                <Run Foreground="#8090A0" Text="{DynamicResource FeatureLanguageDesc}"/>
                             </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                            <TextBlock Text="🔎" FontSize="14" Margin="0,0,8,0"/>
+                            <TextBlock Text="💬" FontSize="14" Margin="0,0,8,0"/>
                             <TextBlock TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Foreground="White">{DynamicResource PlayerMarkerScalingTitle}</Run>
-                                <Run Foreground="#8090A0"> — Adjust the size of player markers on your map</Run>
+                                <Run FontWeight="SemiBold" Foreground="White" Text="{DynamicResource FeatureChatCommands}"/>
+                                <Run Foreground="#8090A0" Text="{DynamicResource FeatureChatCommandsDesc}"/>
                             </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🎨" FontSize="14" Margin="0,0,8,0"/>
+                            <TextBlock Text="⚙️" FontSize="14" Margin="0,0,8,0"/>
                             <TextBlock TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Foreground="White">{DynamicResource MiniMapPolishTitle}</Run>
-                                <Run Foreground="#8090A0"> — Even better alignment and customizability</Run>
+                                <Run FontWeight="SemiBold" Foreground="White" Text="{DynamicResource FeatureSettings}"/>
+                                <Run Foreground="#8090A0" Text="{DynamicResource FeatureSettingsDesc}"/>
                             </TextBlock>
                         </StackPanel>
                     </StackPanel>
                 </Border>
 
-                <!-- Info box -->
-                <Border Background="#0D2137" BorderBrush="#1A4A7A" BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,10">
-                    <TextBlock TextWrapping="Wrap" Foreground="#90C8FF" FontSize="12" LineHeight="18">
-                        <Run FontWeight="Bold">⚠️ {DynamicResource ActionRequiredTitle}</Run>
-                        <Run> You can enable </Run>
-                        <Run FontWeight="Bold" Foreground="White">{DynamicResource StreamerMode}</Run>
-                        <Run> via Settings or the new toggle in the Team tab. For a detailed list of all changes, please open the Patch Notes at the top. Happy surviving!</Run>
-                    </TextBlock>
-                </Border>
-
                 <!-- Tracking warning box -->
                 <Border Background="#331414" BorderBrush="#8A2323" BorderThickness="1" CornerRadius="8" Padding="12,10">
                     <TextBlock TextWrapping="Wrap" Foreground="#FFCCCC" FontSize="12" LineHeight="18">
-                        <Run FontWeight="Bold" Foreground="#FF5555">⚠️ {DynamicResource BattleMetricsRemovalTitle}</Run>
+                        <Run FontWeight="Bold" Foreground="#FF5555" Text="{DynamicResource BattleMetricsRemovalTitle}"/>
                         <Run> We have completely removed the BattleMetrics integration from Rust+ Desk. BattleMetrics does not want us as a partner, and we want to protect the users of our app at all costs. Player tracking is now exclusively handled natively via direct UDP queries.</Run>
                     </TextBlock>
                 </Border>
@@ -95,22 +86,17 @@
                     <CheckBox x:Name="ChkDontShow" 
                               Content="{DynamicResource DontShowAgain}" 
                               VerticalAlignment="Center" 
+                              Style="{StaticResource DotCheckBox}"
                               Foreground="{DynamicResource TextSubtle}"/>
                     
-                    <Button Content="{DynamicResource AwesomeLetsGo}" 
-                            Padding="25,10" 
-                            Background="{DynamicResource Accent}" 
-                            Foreground="Black" 
-                            FontWeight="Bold" 
-                            BorderThickness="0"
+                    <ui:Button Content="{DynamicResource AwesomeLetsGo}" 
+                            Appearance="Primary"
+                            Padding="30,8" 
+                            FontSize="14"
+                            FontWeight="SemiBold" 
+                            Cursor="Hand"
                             HorizontalAlignment="Right"
-                            Click="BtnOk_Click">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="8"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
+                            Click="BtnOk_Click" />
                 </Grid>
             </Border>
         </Grid>

@@ -486,7 +486,7 @@ jetzt herunterladen und installieren?</value>
     <value>Spieler</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
-    <value>Wie man verfolgt</value>
+    <value>Wie man trackt</value>
   </data>
   <data name="LearnHowTrackingWorks" xml:space="preserve">
     <value>Erfahren Sie, wie die Spielerverfolgung funktioniert</value>
@@ -1505,4 +1505,65 @@ jetzt herunterladen und installieren?</value>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (Bestand {5}) für {6} {7}</value>
   </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Lokalisierung, UI-Update &amp; Storage</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dynamische Sprachauswahl</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> — Über 30 Sprachen wählbar</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Chat-Befehle UI</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> — Bessere Ansicht für Team-Chat</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Einstellungs-Overlay</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> — Seitenleiste für Einstellungen</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics-Tracking entfernt</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Übersetzen via Google</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Einverständnis zur Übersetzung</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>Um die Patch Notes in die aktuell ausgewählte Sprache zu übersetzen, wird der Text über eine API an Google gesendet. Es werden keine persönlichen Informationen übertragen.</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Mehr über die verwendete API erfahren</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Annehmen</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Ablehnen</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Einverständnis zum Upload</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Durch Klicken auf 'Annehmen' werden die Smart-Geräte (und evtl. vorhandene Zeichnungen auf der Map) auf den Server des Entwicklers hochgeladen. Dies ermöglicht deinen Teammates den Download und die Synchronisation. Zur Identifizierung der Teammates wird ausschließlich die Steam-ID übertragen. Nur wer am Tool Cupboard autorisiert ist, kann die Geräte steuern.
+
+Hinweis: Diese Übertragungsart wird in Zukunft noch optimiert. Falls Teammates nicht downloaden können, lösche bitte die gezeichneten Map-Overlay-Daten und versuche den Upload erneut.</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve"><value>Deine Basis wird angegriffen!</value></data>
+  <data name="PleaseConnectFirst" xml:space="preserve"><value>Bitte verbinde dich zuerst mit einem Server.</value></data>
+  <data name="NotConnectedError" xml:space="preserve"><value>Du bist mit keinem Server verbunden.</value></data>
+  <data name="ChatNotAvailable" xml:space="preserve"><value>Der Chat ist derzeit nicht verfügbar.</value></data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve"><value>Bitte wähle zuerst einen Server aus.</value></data>
+  <data name="SnackbarTitleConnection" xml:space="preserve"><value>Verbindung</value></data>
+  <data name="SnackbarTitleChat" xml:space="preserve"><value>Chat</value></data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve"><value>Wie man Spieler trackt</value></data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve"><value>Natives UDP Tracking</value></data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve"><value>Die Tracking-Anleitung ist derzeit nur auf Englisch verfügbar, da sie sich in naher Zukunft ändern wird. Wir bitten um etwas Geduld.</value></data>
+  <data name="HowToTrackCloseHint" xml:space="preserve"><value>Schließe dieses Fenster jederzeit — du kannst es über den  ❓ Wie man trackt  Button wieder öffnen.</value></data>
 </root>
