@@ -166,27 +166,14 @@ public partial class MainWindow
         try
         {
             var players = TrackingService.LastOnlinePlayers;
-            
-            // Dynamic Filter visibility
-            if (players.Count > 0) {
-                if (TxtOnlineFilter != null)
-                {
-                    TxtOnlineFilter.Visibility = Visibility.Visible;
-                    if (string.IsNullOrEmpty(TxtOnlineFilter.Text) && !TxtOnlineFilter.IsFocused) {
-                        TxtOnlineFilter.Text = Properties.Resources.FilterPlayers;
-                        TxtOnlineFilter.Foreground = Brushes.Gray;
-                    }
-                    else if (!TxtOnlineFilter.IsFocused && TxtOnlineFilter.Text != Properties.Resources.FilterPlayers && string.IsNullOrWhiteSpace(TxtOnlineFilter.Text)) {
-                        TxtOnlineFilter.Text = Properties.Resources.FilterPlayers;
-                        TxtOnlineFilter.Foreground = Brushes.Gray;
-                    }
-                }
-            } else {
-                if (TxtOnlineFilter != null) TxtOnlineFilter.Visibility = Visibility.Collapsed;
-            }
+
+            // Show filter box when there are players, hide it when empty
+            if (TxtOnlineFilter != null)
+                TxtOnlineFilter.Visibility = players.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+
 
             var filterTxt = TxtOnlineFilter?.Text;
-            if (!string.IsNullOrEmpty(filterTxt) && filterTxt != Properties.Resources.FilterPlayers)
+            if (!string.IsNullOrWhiteSpace(filterTxt))
             {
                 players = players.Where(p => p.Name.Contains(filterTxt, StringComparison.OrdinalIgnoreCase)).ToList();
             }
@@ -203,11 +190,15 @@ public partial class MainWindow
                 if (TxtOnlinePlayersStatus != null) TxtOnlinePlayersStatus.Text = TrackingService.StatusMessage;
                 if (PnlOnlineStatus != null) PnlOnlineStatus.Visibility = Visibility.Visible;
                 
-                bool isWorking = string.IsNullOrEmpty(TrackingService.StatusMessage) || 
-                                 TrackingService.StatusMessage.Contains("Fetching") || 
+                // Only show the spinner when actively polling a server.
+                // An empty StatusMessage with no server means "not connected" — don't spin forever.
+                bool hasServer = !string.IsNullOrEmpty(TrackingService.LastServer.host);
+                bool isWorking = hasServer && (
+                                 string.IsNullOrEmpty(TrackingService.StatusMessage) ||
+                                 TrackingService.StatusMessage.Contains("Fetching") ||
                                  TrackingService.StatusMessage.Contains("Looking") ||
-                                 TrackingService.StatusMessage.Contains("Auto-Discovering");
-                                 
+                                 TrackingService.StatusMessage.Contains("Auto-Discovering"));
+
                 if (PbOnlineLoading != null) PbOnlineLoading.Visibility = isWorking ? Visibility.Visible : Visibility.Collapsed;
                 
                 if (PnlManualTrack != null) PnlManualTrack.Visibility = Visibility.Visible;
@@ -224,21 +215,10 @@ public partial class MainWindow
         catch { }
     }
 
-    private void TxtOnlineFilter_GotFocus(object sender, RoutedEventArgs e) {
-        if (TxtOnlineFilter.Text == Properties.Resources.FilterPlayers) {
-            TxtOnlineFilter.Text = "";
-            TxtOnlineFilter.Foreground = Brushes.White;
-        }
-    }
-    private void TxtOnlineFilter_LostFocus(object sender, RoutedEventArgs e) {
-        if (string.IsNullOrWhiteSpace(TxtOnlineFilter.Text)) {
-            TxtOnlineFilter.Text = Properties.Resources.FilterPlayers;
-            TxtOnlineFilter.Foreground = Brushes.Gray;
-        }
-    }
+    private void TxtOnlineFilter_GotFocus(object sender, RoutedEventArgs e) { }
+    private void TxtOnlineFilter_LostFocus(object sender, RoutedEventArgs e) { }
     private void TxtOnlineFilter_TextChanged(object sender, TextChangedEventArgs e) {
-        if (TxtOnlineFilter.Text != Properties.Resources.FilterPlayers) RefreshOnlinePlayersList();
-        else RefreshOnlinePlayersList(); // placeholder is set — show full unfiltered list
+        RefreshOnlinePlayersList();
     }
 
     private async void BtnShowOnline_Click(object sender, RoutedEventArgs e)
@@ -351,7 +331,7 @@ public partial class MainWindow
             if (ListTrackedPlayers == null) return;
             ListTrackedPlayers.Children.Clear();
             var players = TrackingService.GetTrackedPlayers();
-            if (!string.IsNullOrEmpty(filter) && filter != Properties.Resources.FilterPlayers)
+            if (!string.IsNullOrEmpty(filter))
             {
                 players = players.Where(p =>
                     (p.Name?.Contains(filter, StringComparison.OrdinalIgnoreCase) ?? false) ||
@@ -484,7 +464,7 @@ public partial class MainWindow
                     ListTrackedPlayers.Children.Add(expander);
                 }
             }
-            if (players.Count == 0 && !string.IsNullOrEmpty(filter) && filter != Properties.Resources.FilterPlayers)
+            if (players.Count == 0 && !string.IsNullOrEmpty(filter))
             {
                 ListTrackedPlayers.Children.Add(new TextBlock { Text = "No results found matching filter.", Margin = new Thickness(0, 20, 0, 0), Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center });
             }
@@ -583,16 +563,10 @@ public partial class MainWindow
             TxtTrackedFilter.Text = "";
             TxtTrackedFilter.Foreground = Brushes.White;
         }
-    }
-    private void TxtTrackedFilter_LostFocus(object sender, RoutedEventArgs e) {
-        if (string.IsNullOrWhiteSpace(TxtTrackedFilter.Text)) {
-            TxtTrackedFilter.Text = Properties.Resources.FilterPlayers;
-            TxtTrackedFilter.Foreground = Brushes.Gray;
-        }
-    }
+    private void TxtTrackedFilter_GotFocus(object sender, RoutedEventArgs e) { }
+    private void TxtTrackedFilter_LostFocus(object sender, RoutedEventArgs e) { }
     private void TxtTrackedFilter_TextChanged(object sender, TextChangedEventArgs e) {
-        var txt = TxtTrackedFilter.Text;
-        RefreshTrackedPlayersList(txt == Properties.Resources.FilterPlayers ? "" : txt);
+        RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
     }
 
     private void BtnManageGroups_Click(object sender, RoutedEventArgs e) {

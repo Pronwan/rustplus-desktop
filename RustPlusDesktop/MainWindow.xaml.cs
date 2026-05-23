@@ -3163,6 +3163,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TrackingService.AnnouncePlayerDeathTeam = val;
         TrackingService.AnnouncePlayerRespawnSelf = val;
         TrackingService.AnnouncePlayerRespawnTeam = val;
+        TrackingService.AnnounceTracking = val;
         TrackingService.AnnounceNewShops = val;
         TrackingService.AnnounceSuspiciousShops = val;
         TrackingService.AnnounceSmartAlerts = val;
@@ -3178,6 +3179,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                !TrackingService.AnnouncePlayerOnline && !TrackingService.AnnouncePlayerOffline &&
                !TrackingService.AnnouncePlayerDeathSelf && !TrackingService.AnnouncePlayerDeathTeam &&
                !TrackingService.AnnouncePlayerRespawnSelf && !TrackingService.AnnouncePlayerRespawnTeam &&
+               !TrackingService.AnnounceTracking &&
                !TrackingService.AnnounceNewShops && !TrackingService.AnnounceSuspiciousShops &&
                !TrackingService.AnnounceSmartAlerts && !TrackingService.AnnounceTradeAlerts;
     }
