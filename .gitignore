@@ -35,6 +35,9 @@ Thumbs.db
 installer/Output/*
 !installer/Output/.gitkeep
 
+# Lokale Server-/Helper-Skripte
+**/Scripts/
+
 # Doku/Assets (rein informativ – wäre auch ohne diese Zeilen ok)
 !README.md
 !LICENSE
