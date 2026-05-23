@@ -3859,6 +3859,16 @@
                                 <Image Source="pack://application:,,,/Assets/icons/pencil.png" />
                             </Button>
 
+                            <Button
+                                x:Name="BtnLanguageSettings"
+                                Width="32"
+                                Height="32"
+                                Margin="4,0,0,0"
+                                Click="BtnLanguageSettings_Click"
+                                ToolTip="{DynamicResource SelectLanguage}">
+                                <Image x:Name="ImgLanguageFlag" Source="pack://application:,,,/Assets/rustplus-desktop-icon.ico" Stretch="UniformToFill" Margin="4"/>
+                            </Button>
+
                             <!--  StackPanel with Heli Demo removed  -->
                             <StackPanel Margin="12,0,0,0" Orientation="Horizontal" />
                             </StackPanel>

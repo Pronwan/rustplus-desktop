@@ -269,6 +269,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _vm.IsInitializing = true;
         InitializeComponent();
+        UpdateLanguageFlag();
         InitializeAppSettings();
         
         // ── WinUI 3: Apply OS-level Mica backdrop via DWM ────────────────────
@@ -4469,6 +4470,34 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             BuyXForYPanel.Visibility = Visibility.Collapsed;
             AppSettingsPanel.LoadSettings();
             AppSettingsPanel.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void BtnLanguageSettings_Click(object sender, RoutedEventArgs e)
+    {
+        BtnSettings_Click(sender, e);
+    }
+
+    public void UpdateLanguageFlag()
+    {
+        if (ImgLanguageFlag == null) return;
+        string code = TrackingService.SelectedLanguage;
+        if (string.IsNullOrEmpty(code))
+        {
+            ImgLanguageFlag.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            ImgLanguageFlag.Visibility = Visibility.Visible;
+            string imageUri = $"pack://application:,,,/Assets/Flags/{code}.png";
+            try
+            {
+                ImgLanguageFlag.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(imageUri));
+            }
+            catch
+            {
+                ImgLanguageFlag.Visibility = Visibility.Collapsed;
+            }
         }
     }
 
