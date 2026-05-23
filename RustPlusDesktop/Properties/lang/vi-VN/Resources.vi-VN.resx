@@ -880,6 +880,39 @@ Tải xuống và cài đặt ngay bây giờ?</value>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Tự động bắt đầu kiểm tra các cửa hàng và gửi thông báo khi kết nối với máy chủ.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Sử dụng nhãn văn bản thay vì biểu tượng</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Khi được bật, tên các địa danh trên bản đồ Rust sẽ được hiển thị dưới dạng văn bản sử dụng phông chữ Permanent Marker thay vì biểu tượng.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Phong cách kiến trúc:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Tỷ lệ mô hình:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Độ mờ của tượng đài:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Hình ảnh biểu tượng do rustmaps.com cung cấp</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Tên các di tích trong văn bản gốc</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Phần cảm ơn</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Các biểu tượng địa danh trên bản đồ do </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> — Được sử dụng với sự cho phép.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Tất cả các biểu tượng di tích và các tác phẩm nghệ thuật liên quan đều thuộc sở hữu của rustmaps.com. Cảm ơn bạn đã ủng hộ cộng đồng Rust!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Trò chuyện</value>
   </data>

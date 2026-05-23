@@ -880,6 +880,39 @@ Letöltés és telepítés most?</value>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Automatikusan elindítja az üzletek és riasztások lekérdezését, amikor csatlakozik egy kiszolgálóhoz.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Emlékmű szöveges címkék használata ikonok helyett</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Ha engedélyezve van, a rozsdatérkép emlékműveinek nevei ikonok helyett szövegként jelennek meg az Állandó jelölő betűtípus használatával.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Emlékmű stílus:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Emlékmű lépték:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Emlékmű átlátszatlanság:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Ikonok a rustmaps.com által</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Eredeti szöveg műemléknevek</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Hitelek</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>A térkép műemlék ikonjait a </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - engedéllyel használták.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Minden emlékmű ikon és a kapcsolódó grafika a rustmaps.com tulajdonát képezi. Köszönjük, hogy támogatja a Ruszt közösséget!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Chat</value>
   </data>

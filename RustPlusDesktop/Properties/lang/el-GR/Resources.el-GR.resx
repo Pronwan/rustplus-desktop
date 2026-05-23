@@ -880,6 +880,39 @@ Open Releases page?</value>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Αυτόματη εκκίνηση των εκλογικών καταστημάτων και των ειδοποιήσεων όταν συνδέονται σε ένα διακομιστή.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Χρήση ετικετών κειμένου μνημείου αντί για εικονίδια</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένη, τα ονόματα των μνημείων του χάρτη σκουριάς απεικονίζονται ως κείμενο με τη γραμματοσειρά Permanent Marker αντί για εικονίδια.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Στυλ μνημείου:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Κλίμακα μνημείου:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Μνημείο Αδιαφάνεια:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Εικονίδια από rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Αρχικό κείμενο ονόματα μνημείων</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Πιστώσεις</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Εικονίδια μνημείων χάρτη που παρέχονται από </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - χρησιμοποιείται με άδεια.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Όλα τα εικονίδια μνημείων και τα σχετικά έργα τέχνης αποτελούν ιδιοκτησία της rustmaps.com. Σας ευχαριστούμε για την υποστήριξη της κοινότητας Rust!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Συνομιλία</value>
   </data>

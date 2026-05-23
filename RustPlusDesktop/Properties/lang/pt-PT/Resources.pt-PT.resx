@@ -79,10 +79,10 @@
     <value>Notas de Atualização</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Confirgurações</value>
+    <value>Configurações</value>
   </data>
   <data name="PairedServers" xml:space="preserve">
-    <value>SERVIDORES PAIXOS</value>
+    <value>SERVIDORES PAREADOS</value>
   </data>
   <data name="NoServersPaired" xml:space="preserve">
     <value>Nenhum servidor pareado ainda</value>
@@ -879,6 +879,39 @@ Baixar e instalar agora?</value>
   </data>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Inicia automaticamente as lojas e alertas quando conectado a um servidor.</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Utilizar etiquetas de texto de monumento em vez de ícones</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Quando ativado, os nomes dos monumentos do Rust map são apresentados como texto utilizando o tipo de letra do Marcador Permanente em vez de ícones.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Estilo Monumento:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Escala do monumento:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Monumento Opacidade:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Ícones de rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Texto original nomes dos monumentos</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Créditos</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Ícones de monumentos cartográficos fornecidos por </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - utilizado com autorização.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Todos os ícones de monumentos e obras de arte relacionadas são propriedade de rustmaps.com. Obrigado por apoiar a comunidade Rust!</value>
   </data>
   <data name="Chat" xml:space="preserve">
     <value>Bate-papo</value>

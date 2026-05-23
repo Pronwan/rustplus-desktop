@@ -880,6 +880,39 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Comienza automáticamente las encuestas de tiendas y alertas cuando se conecta a un servidor.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Utilizar etiquetas de texto en lugar de iconos</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Cuando esta opción está activada, los nombres de los monumentos del mapa de Rust se muestran como texto utilizando la fuente Permanent Marker en lugar de iconos.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Estilo Monumento:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Escala del monumento:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Opacidad del monumento:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Iconos de rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Texto original nombres de monumentos</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Créditos</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Mapa de iconos de monumentos proporcionados por </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - utilizado con permiso.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Todos los iconos de los monumentos y las ilustraciones relacionadas son propiedad de rustmaps.com. Gracias por apoyar a la comunidad Rust.</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Chatear</value>
   </data>

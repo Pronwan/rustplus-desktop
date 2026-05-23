@@ -58,7 +58,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppTitle" xml:space="preserve">
-    <value>ПОСЛЕДНИЙ + РАБОТАНИЕ</value>
+    <value>RUST+ DESKTOP</value>
   </data>
   <data name="SteamAccount" xml:space="preserve">
     <value>Аккаунт Steam</value>
@@ -879,6 +879,39 @@
   </data>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Автоматически запускает избирательные магазины и оповещения при подключении к серверу.</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Используйте текстовые метки памятников вместо иконок</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Если эта функция включена, названия памятников на карте Руст отображаются в виде текста с использованием шрифта Permanent Marker вместо пиктограмм.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Стиль монумента:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Масштаб памятника:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Памятник Непрозрачность:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Иконки от rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Оригинальный текст Названия памятников</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Кредиты</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Значки памятников на карте предоставлены </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - использовано с разрешения.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Все значки памятников и связанные с ними произведения искусства являются собственностью rustmaps.com. Спасибо за поддержку сообщества Rust!</value>
   </data>
   <data name="Chat" xml:space="preserve">
     <value>Чат</value>

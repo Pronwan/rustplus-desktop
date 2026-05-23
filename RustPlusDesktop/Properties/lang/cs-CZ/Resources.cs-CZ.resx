@@ -880,6 +880,39 @@ Stáhnout a nainstalovat nyní?</value>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Automaticky spustí dotazovací obchody a upozornění při připojení k serveru.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Použití textových popisků památek místo ikon</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Pokud je tato funkce povolena, názvy památek na mapě Rust se místo ikon zobrazují jako text pomocí písma Permanent Marker.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Styl památníku:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Měřítko památky:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Neprůhlednost památky:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Ikony podle rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Původní text názvy památek</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Kredity</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Ikony památek na mapě poskytl </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - použito se svolením.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Všechny ikony památek a související umělecká díla jsou majetkem společnosti rustmaps.com. Děkujeme vám za podporu komunity Rust!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Chat</value>
   </data>

@@ -880,6 +880,39 @@ Download en installeer nu?</value>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Start automatisch winkels en meldingen wanneer verbonden met een server.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Gebruik monumententekstlabels in plaats van pictogrammen</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Als deze optie is ingeschakeld, worden de namen van Rust-kaartmonumenten weergegeven als tekst met het lettertype Permanent Marker in plaats van pictogrammen.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Monumentstijl:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Monument Schaal:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Monument Ondoorzichtigheid:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Pictogrammen door rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Oorspronkelijke tekst monumentnamen</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Credits</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Monumentpictogrammen op de kaart geleverd door </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - gebruikt met toestemming.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Alle monumentenpictogrammen en verwant artwork zijn eigendom van rustmaps.com. Bedankt voor uw steun aan de Rust-gemeenschap!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Chatten</value>
   </data>

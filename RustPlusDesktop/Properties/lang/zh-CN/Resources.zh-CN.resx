@@ -880,6 +880,39 @@
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>连接到服务器时自动启动投票站和警报。</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>使用纪念碑文本标签代替图标</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>启用后，Rust 地图纪念碑名称将使用永久标记字体显示为文本，而不是图标。</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>纪念碑风格：</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>纪念碑规模：</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>不透明纪念碑：</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>图标 by rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>原文纪念碑名称</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>荣誉</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>地图纪念碑图标由 </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - 经许可使用。</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>所有纪念碑图标和相关艺术品均属 rustmaps.com 所有。感谢您对 Rust 社区的支持！</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>聊天</value>
   </data>

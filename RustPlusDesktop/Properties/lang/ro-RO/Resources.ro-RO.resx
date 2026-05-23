@@ -880,6 +880,39 @@ Descărcați și instalați acum?</value>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Porniți automat sondajele de opinie și alertele când sunteți conectat la un server.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Utilizați etichete text monument în loc de pictograme</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Atunci când este activat, numele monumentelor de pe harta Rust sunt redate ca text utilizând fontul Permanent Marker în loc de pictograme.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Monument Stil:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Monument Scale:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Monument Opacitate:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Icoane de rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Textul original Numele monumentelor</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Credite</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Icoane ale monumentelor pe hartă furnizate de </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - utilizate cu permisiune.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Toate pictogramele monument și lucrările de artă aferente sunt proprietatea rustmaps.com. Vă mulțumim pentru susținerea comunității Rust!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Chat</value>
   </data>

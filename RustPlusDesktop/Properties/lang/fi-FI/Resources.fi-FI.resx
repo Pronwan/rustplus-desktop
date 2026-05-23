@@ -880,6 +880,39 @@ Lataa ja asenna nyt?</value>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Käynnistä automaattisesti kauppojen äänestysselitykset ja hälytykset, kun ne on yhdistetty palvelimeen.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Muistomerkkien tekstimerkintöjen käyttö kuvakkeiden sijasta</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Kun tämä on käytössä, Rust-kartan monumenttien nimet esitetään tekstinä käyttäen Permanent Marker -fonttia kuvakkeiden sijaan.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Muistomerkin tyyli:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Muistomerkin mittakaava:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Muistomerkin läpinäkymättömyys:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Kuvakkeet by rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Alkuperäinen teksti monumenttien nimet</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Krediitit</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Kartan muistomerkkikuvakkeet, toimittajana </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - käytetty luvalla.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Kaikki monumenttikuvakkeet ja niihin liittyvät taideteokset ovat rustmaps.comin omaisuutta. Kiitos, että tuet Rust-yhteisöä!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Keskustelu</value>
   </data>

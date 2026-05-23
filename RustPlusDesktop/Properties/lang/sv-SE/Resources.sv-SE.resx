@@ -880,6 +880,39 @@ Ladda ner och installera nu?</value>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Starta automatiskt frågelistor och varningar när de är anslutna till en server.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Använd textetiketter för monument istället för ikoner</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>När den är aktiverad återges monumentnamn på Rust Map som text med teckensnittet Permanent Marker i stället för ikoner.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Monument Stil:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Monumentskala:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Monument Opacitet:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Ikoner av rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Original text monument namn</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Krediter</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Ikoner för kartmonument tillhandahålls av </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - används med tillstånd.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Alla monumentikoner och relaterade konstverk tillhör rustmaps.com. Tack för att du stöder Rust-communityn!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Chatt</value>
   </data>
