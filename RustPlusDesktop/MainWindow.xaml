@@ -3167,7 +3167,6 @@
                                                 GotFocus="TxtTrackedFilter_GotFocus"
                                                 LostFocus="TxtTrackedFilter_LostFocus"
                                                 PlaceholderText="{DynamicResource FilterPlayersPlaceholder}"
-                                                Text="{DynamicResource FilterPlayersPlaceholder}"
                                                 TextChanged="TxtTrackedFilter_TextChanged" />
 
                                             <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
