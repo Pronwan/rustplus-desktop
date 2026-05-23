@@ -43,6 +43,18 @@
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <ui:SymbolIcon Symbol="Settings24" Width="20" Height="15" Margin="0,0,8,0" FontSize="14" Foreground="{DynamicResource TextSubtle}">
+                                                <ui:SymbolIcon.Style>
+                                                    <Style TargetType="ui:SymbolIcon">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding ImagePath}" Value="{x:Null}">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ui:SymbolIcon.Style>
+                                            </ui:SymbolIcon>
                                             <Image Source="{Binding ImagePath}" Width="20" Height="15" Margin="0,0,8,0" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality">
                                                 <Image.Style>
                                                     <Style TargetType="Image">

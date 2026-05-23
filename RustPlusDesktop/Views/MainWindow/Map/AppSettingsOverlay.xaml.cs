@@ -79,7 +79,7 @@ namespace RustPlusDesk.Views
                 new() { Name = "繁體中文 (Hant)", Code = "zh-Hant", ImagePath = "pack://application:,,,/Assets/Flags/zh-Hant.png" }
             };
 
-            CmbLanguage.ItemsSource = langs.OrderBy(l => l.Name).ToList();
+            CmbLanguage.ItemsSource = langs.OrderBy(l => l.Code == "" ? 1 : 0).ThenBy(l => l.Name).ToList();
         }
 
         public void LoadSettings()
