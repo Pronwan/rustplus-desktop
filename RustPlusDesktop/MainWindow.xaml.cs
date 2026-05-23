@@ -583,6 +583,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                 RebuildChatMessages();
                 RefreshEventDock();
                 SyncAlertMenuItems();
+                UpdateLanguageFlag();
             }));
         };
     }
