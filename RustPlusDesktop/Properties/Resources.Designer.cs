@@ -523,5 +523,62 @@ namespace RustPlusDesk.Properties {
         public static string AlertShopBuys => GetString("AlertShopBuys");
         public static string AlertShopLabelFallback => GetString("AlertShopLabelFallback");
         public static string AlertShopMatch => GetString("AlertShopMatch");
+        public static string ListCommandsCommand => GetString("ListCommandsCommand");
+        public static string ChatCmdListHeader => GetString("ChatCmdListHeader");
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your base is under attack!.
+        /// </summary>
+        public static string YourBaseIsUnderAttack => GetString("YourBaseIsUnderAttack");
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please connect to a server first..
+        /// </summary>
+        public static string PleaseConnectFirst => GetString("PleaseConnectFirst");
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are not connected to any server..
+        /// </summary>
+        public static string NotConnectedError => GetString("NotConnectedError");
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chat is not available right now..
+        /// </summary>
+        public static string ChatNotAvailable => GetString("ChatNotAvailable");
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a server first..
+        /// </summary>
+        public static string PleaseSelectServerFirst => GetString("PleaseSelectServerFirst");
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection.
+        /// </summary>
+        public static string SnackbarTitleConnection => GetString("SnackbarTitleConnection");
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chat.
+        /// </summary>
+        public static string SnackbarTitleChat => GetString("SnackbarTitleChat");
+        
+        /// <summary>
+        ///   Looks up a localized string similar to How to Track Players.
+        /// </summary>
+        public static string HowToTrackPlayersTitle => GetString("HowToTrackPlayersTitle");
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Native UDP tracking.
+        /// </summary>
+        public static string NativeUDPTrackingSubtitle => GetString("NativeUDPTrackingSubtitle");
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The tracking guide is currently only available in English, as it will undergo changes in the near future. We ask for your patience..
+        /// </summary>
+        public static string TrackingGuideEnglishOnlyNotice => GetString("TrackingGuideEnglishOnlyNotice");
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close this window at any time — you can reopen it with the  ❓ How to Track  button..
+        /// </summary>
+        public static string HowToTrackCloseHint => GetString("HowToTrackCloseHint");
     }
 }

@@ -110,6 +110,8 @@ public class TrackingSettings
     public DateTime? FcmExpiresAt { get; set; }
     public bool AnnounceTracking { get; set; } = false;
     public Dictionary<string, int> LearnedQueryPorts { get; set; } = new();
+    public bool TranslationConsentGiven { get; set; } = false;
+    public bool UploadConsentGiven { get; set; } = false;
 }
 
 
@@ -608,6 +610,18 @@ public static class TrackingService
     {
         get => _settings.AnnounceSpawnsMaster;
         set { _settings.AnnounceSpawnsMaster = value; SaveDB(); }
+    }
+
+    public static bool TranslationConsentGiven
+    {
+        get => _settings.TranslationConsentGiven;
+        set { _settings.TranslationConsentGiven = value; SaveDB(); }
+    }
+
+    public static bool UploadConsentGiven
+    {
+        get => _settings.UploadConsentGiven;
+        set { _settings.UploadConsentGiven = value; SaveDB(); }
     }
 
     public static bool AnnounceCargoDocking

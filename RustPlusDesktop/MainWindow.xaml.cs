@@ -234,6 +234,34 @@ public partial class MainWindow : WpfUi.FluentWindow
     private int _overlayAlarmIndex = -1;
     private DispatcherTimer? _overlayHideTimer;
 
+    private Action? _pendingUploadAction;
+
+    public void ShowUploadConsent(Action onAccept)
+    {
+        if (TrackingService.UploadConsentGiven)
+        {
+            onAccept?.Invoke();
+            return;
+        }
+
+        _pendingUploadAction = onAccept;
+        UploadConsentOverlay.Visibility = Visibility.Visible;
+    }
+
+    private void BtnAcceptUploadConsent_Click(object sender, RoutedEventArgs e)
+    {
+        TrackingService.UploadConsentGiven = true;
+        UploadConsentOverlay.Visibility = Visibility.Collapsed;
+        _pendingUploadAction?.Invoke();
+        _pendingUploadAction = null;
+    }
+
+    private void BtnDeclineUploadConsent_Click(object sender, RoutedEventArgs e)
+    {
+        UploadConsentOverlay.Visibility = Visibility.Collapsed;
+        _pendingUploadAction = null;
+    }
+
     public MainWindow()
     {
         // Nur freiwillig zum Diagnostizieren:
@@ -366,9 +394,9 @@ public partial class MainWindow : WpfUi.FluentWindow
         }
         else if (TrackingService.LastSeenVersion != AppVersion)
         {
-            if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "5.1.0"))
+            if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "5.2.0"))
             {
-                // Upgrade von 5.1.0 oder geringer: Popup zeigen
+                // Upgrade von 5.2.0 oder geringer: Popup zeigen
                 Dispatcher.InvokeAsync(() =>
                 {
                     var dlg = new Views.MigrationNoticeWindow { Owner = this };
@@ -553,6 +581,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             {
                 RebuildChatMessages();
                 RefreshEventDock();
+                SyncAlertMenuItems();
             }));
         };
     }
@@ -1799,6 +1828,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (_alarmHistoryDedup.Contains(dedupKey)) return;
         _alarmHistoryDedup.Add(dedupKey);
         if (_alarmHistoryDedup.Count > 100) _alarmHistoryDedup.RemoveAt(0);
+
+        if (n.Message == "Your base is under attack!")
+        {
+            n = n with { Message = Properties.Resources.YourBaseIsUnderAttack };
+        }
 
         var now = DateTime.UtcNow;
 
@@ -3280,11 +3314,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (_alertRules.Count == 0)
         {
-            TradeAlertsMenuItem.Header = "Trade Alerts (None)";
+            TradeAlertsMenuItem.Header = $"{Properties.Resources.TradeAlerts} (0)";
             return;
         }
 
-        TradeAlertsMenuItem.Header = "Trade Alerts";
+        TradeAlertsMenuItem.SetResourceReference(MenuItem.HeaderProperty, "TradeAlerts");
         foreach (var rule in _alertRules)
         {
             var mi = new MenuItem
@@ -4458,13 +4492,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }), System.Windows.Threading.DispatcherPriority.Input);
     }
 
-    public void OpenChatCommandsFromSettings()
+    public async void OpenChatCommandsFromSettings()
     {
         if (ChatContentBorder.Visibility != Visibility.Visible)
         {
             _chatOpenedForCommandsOnly = true;
-            ChatContentBorder.Visibility = Visibility.Visible;
-            ChatContentBorder.Opacity = 1.0;
+            await OpenChatOverlayAsync();
         }
         else
         {

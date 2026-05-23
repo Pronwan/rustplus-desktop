@@ -48,6 +48,12 @@ namespace RustPlusDesk.Views
         {
             if (BtnTranslate == null || TxtTranslate == null) return;
 
+            if (!Services.TrackingService.TranslationConsentGiven)
+            {
+                TranslationConsentOverlay.Visibility = Visibility.Visible;
+                return;
+            }
+
             BtnTranslate.IsEnabled = false;
             TxtTranslate.Text = "Translating...";
 
@@ -177,6 +183,18 @@ namespace RustPlusDesk.Views
                 if (inline is Run run) elements.Add(run);
                 else if (inline is Span innerSpan) FindTextElementsInSpan(innerSpan, elements);
             }
+        }
+
+        private void BtnAcceptConsent_Click(object sender, RoutedEventArgs e)
+        {
+            Services.TrackingService.TranslationConsentGiven = true;
+            TranslationConsentOverlay.Visibility = Visibility.Collapsed;
+            BtnTranslate_Click(sender, e);
+        }
+
+        private void BtnDeclineConsent_Click(object sender, RoutedEventArgs e)
+        {
+            TranslationConsentOverlay.Visibility = Visibility.Collapsed;
         }
     }
 }

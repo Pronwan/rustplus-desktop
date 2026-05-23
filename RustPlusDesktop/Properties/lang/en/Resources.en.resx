@@ -1505,4 +1505,71 @@ Download and install now?</value>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (Stock {5}) for {6} {7}</value>
   </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>List Chat Commands</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>COMMANDS: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Localization, UI Modernization &amp; Storage</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dynamic Locale Switching</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> — 30+ languages to pick</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Chat Commands UI</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> — Isolated view for clean look</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>New Settings Overlay</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> — Clean sidebar for all settings</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics Tracking Removed</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Translate via Google</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Translation Consent</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>To translate the patch notes into your selected language, the text will be sent to Google via their Cloud Translation API. No personal information is transmitted.</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Learn more about the API</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Accept</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Decline</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Upload Consent</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>By clicking 'Accept', the smart devices (and potentially map drawings) for this server will be uploaded to the creator's server. This allows teammates to download and sync them. Only your Steam ID is transmitted to identify teammates. Only players authorized at the Tool Cupboard can control the devices.
+
+Note: This transmission method will be optimized in the future. If teammates are unable to download the data, please try clearing your map drawings and uploading again.</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve"><value>Your base is under attack!</value></data>
+  <data name="PleaseConnectFirst" xml:space="preserve"><value>Please connect to a server first.</value></data>
+  <data name="NotConnectedError" xml:space="preserve"><value>You are not connected to any server.</value></data>
+  <data name="ChatNotAvailable" xml:space="preserve"><value>Chat is not available right now.</value></data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve"><value>Please select a server first.</value></data>
+  <data name="SnackbarTitleConnection" xml:space="preserve"><value>Connection</value></data>
+  <data name="SnackbarTitleChat" xml:space="preserve"><value>Chat</value></data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve"><value>How to Track Players</value></data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve"><value>Native UDP tracking</value></data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve"><value>The tracking guide is currently only available in English, as it will undergo changes in the near future. We ask for your patience.</value></data>
+  <data name="HowToTrackCloseHint" xml:space="preserve"><value>Close this window at any time — you can reopen it with the  ❓ How to Track  button.</value></data>
 </root>

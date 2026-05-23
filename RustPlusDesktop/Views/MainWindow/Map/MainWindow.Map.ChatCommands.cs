@@ -53,6 +53,57 @@ public partial class MainWindow
 
         if (_rust is not RustPlusClientReal real) return;
 
+        // Command: List Commands
+        if (cmd == profile.CmdList.ToLowerInvariant())
+        {
+            var standardCmds = new List<string>();
+            if (!string.IsNullOrWhiteSpace(profile.CmdPop)) standardCmds.Add(prefix + profile.CmdPop);
+            if (!string.IsNullOrWhiteSpace(profile.CmdTime)) standardCmds.Add(prefix + profile.CmdTime);
+            if (!string.IsNullOrWhiteSpace(profile.CmdPromote)) standardCmds.Add(prefix + profile.CmdPromote);
+            if (!string.IsNullOrWhiteSpace(profile.CmdDeepSea)) standardCmds.Add(prefix + profile.CmdDeepSea);
+            if (!string.IsNullOrWhiteSpace(profile.CmdCargo)) standardCmds.Add(prefix + profile.CmdCargo);
+            if (!string.IsNullOrWhiteSpace(profile.CmdOilRig)) standardCmds.Add(prefix + profile.CmdOilRig);
+            if (!string.IsNullOrWhiteSpace(profile.CmdHeli)) standardCmds.Add(prefix + profile.CmdHeli);
+            if (!string.IsNullOrWhiteSpace(profile.CmdVendor)) standardCmds.Add(prefix + profile.CmdVendor);
+            if (!string.IsNullOrWhiteSpace(profile.CmdUpkeepDetail)) standardCmds.Add(prefix + profile.CmdUpkeepDetail);
+
+            string standardMsg = string.Format(Properties.Resources.ChatCmdListHeader, string.Join(", ", standardCmds));
+            if (standardMsg.Length > 128) standardMsg = standardMsg.Substring(0, 125) + "...";
+            _ = SendTeamChatSafeAsync(standardMsg);
+
+            var deviceCmds = new List<string>();
+            foreach (var mapping in profile.SwitchCommandMappings)
+            {
+                if (!string.IsNullOrWhiteSpace(mapping.Command) && mapping.EntityId != 0)
+                {
+                    var dev = profile.AllDevices.FirstOrDefault(d => d.EntityId == mapping.EntityId && d.Kind == "SmartSwitch");
+                    if (dev != null) deviceCmds.Add($"[{dev.PureName}]: {prefix}{mapping.Command}");
+                }
+            }
+            foreach (var mapping in profile.UpkeepCommandMappings)
+            {
+                if (!string.IsNullOrWhiteSpace(mapping.Command) && mapping.EntityId != 0)
+                {
+                    var dev = profile.AllDevices.FirstOrDefault(d => d.EntityId == mapping.EntityId && (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor"));
+                    if (dev != null) deviceCmds.Add($"[{dev.PureName}]: {prefix}{mapping.Command}");
+                }
+            }
+
+            if (deviceCmds.Count > 0)
+            {
+                _ = Task.Run(async () =>
+                {
+                    await Task.Delay(3000);
+                    string devMsg = string.Join(" | ", deviceCmds);
+                    if (devMsg.Length > 128) devMsg = devMsg.Substring(0, 125) + "...";
+                    await SendTeamChatSafeAsync(devMsg);
+                });
+            }
+
+            AppendLog($"[ChatCommand] List executed by {m.Author}");
+            return;
+        }
+
         // Command: Pop
         if (cmd == profile.CmdPop.ToLowerInvariant())
         {
