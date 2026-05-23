@@ -58,7 +58,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppTitle" xml:space="preserve">
-    <value>RUST + DESKTOP</value>
+    <value>RUST+ 桌面</value>
   </data>
   <data name="SteamAccount" xml:space="preserve">
     <value>Steam账户</value>
@@ -76,22 +76,22 @@
     <value>加入Discord</value>
   </data>
   <data name="PatchNotes" xml:space="preserve">
-    <value>补丁笔记</value>
+    <value>补丁说明</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>设置</value>
   </data>
   <data name="PairedServers" xml:space="preserve">
-    <value>暂停服务</value>
+    <value>配对服务器</value>
   </data>
   <data name="NoServersPaired" xml:space="preserve">
     <value>尚未配对服务器</value>
   </data>
   <data name="PairingMaintenance" xml:space="preserve">
-    <value>画面和笔记</value>
+    <value>配对管理</value>
   </data>
   <data name="PairingIdle" xml:space="preserve">
-    <value>Pairing: idle</value>
+    <value>配对状态:空闲</value>
   </data>
   <data name="RightClickOptions" xml:space="preserve">
     <value>右键点击查看选项</value>
@@ -100,7 +100,7 @@
     <value>跟踪已启用</value>
   </data>
   <data name="LastPull" xml:space="preserve">
-    <value>上次脉冲: {0}</value>
+    <value>上次获取</value>
   </data>
   <data name="Donate" xml:space="preserve">
     <value>捐助</value>
@@ -109,7 +109,7 @@
     <value>支持开发者</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Reset</value>
+    <value>重置</value>
   </data>
   <data name="ResetWebSocket" xml:space="preserve">
     <value>重置 WebSocket 连接</value>
@@ -133,7 +133,7 @@
     <value>从团队成员导入设备</value>
   </data>
   <data name="ExportDevices" xml:space="preserve">
-    <value>导出设备到队友中</value>
+    <value>导出设备给队友</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>刷新</value>
@@ -142,7 +142,7 @@
     <value>下降</value>
   </data>
   <data name="UploadConsentTitle" xml:space="preserve">
-    <value>上传同意书</value>
+    <value>上传同意说明</value>
   </data>
   <data name="UploadConsentText" xml:space="preserve">
     <value>点击 "接受 "后，该服务器的智能设备（可能还有地图图纸）将上传到创建者的服务器。这样队友就可以下载并同步它们。只有您的 Steam ID 才会被传送以识别队友。只有获得工具柜授权的玩家才能控制这些设备。
@@ -186,31 +186,31 @@
     <value>停止</value>
   </data>
   <data name="TryPairingEdge" xml:space="preserve">
-    <value>尝试与边缘配对</value>
+    <value>尝试使用Edge浏览器配对</value>
   </data>
   <data name="ResetPairingConfig" xml:space="preserve">
-    <value>Reset pairing (delete config)</value>
+    <value>重置配对(删除配置)</value>
   </data>
   <data name="ResetListenPairing" xml:space="preserve">
-    <value>重置 + 监听(重配对)</value>
+    <value>重置 + 监听(重新配对)</value>
   </data>
   <data name="ResetListenEdge" xml:space="preserve">
-    <value>使用边缘重置 + 监听</value>
+    <value>使用Edge浏览器重置 + 监听</value>
   </data>
   <data name="RelinkBattlemetrics" xml:space="preserve">
-    <value>重新链接战斗计ID…</value>
+    <value>重新链接Battlemetrics ID…</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
     <value>删除服务器…</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
-    <value>Bitte warten …</value>
+    <value>请稍等……</value>
   </data>
   <data name="ToggleServerArea" xml:space="preserve">
     <value>切换服务器区域</value>
   </data>
   <data name="StreamerMode" xml:space="preserve">
-    <value>主播模式</value>
+    <value>直播模式</value>
   </data>
   <data name="ScaleLabel" xml:space="preserve">
     <value>缩放：</value>
@@ -246,7 +246,7 @@
     <value>群组名称</value>
   </data>
   <data name="EnterGroupNamePlaceholder" xml:space="preserve">
-    <value>输入组名称...</value>
+    <value>输入组名称“……”</value>
   </data>
   <data name="GroupColor" xml:space="preserve">
     <value>组颜色</value>
@@ -270,16 +270,16 @@
     <value>玩家标记缩放</value>
   </data>
   <data name="MiniMapPolishTitle" xml:space="preserve">
-    <value>迷你波兰地图</value>
+    <value>小地图</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
     <value>需要动作：</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>移除 BattleMetrics 跟踪</value>
+    <value>移除 BattleMetrics 跟踪“：”</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>玩家跟踪系统Overhaul</value>
+    <value>玩家跟踪系统修补</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>玩家跟踪服务</value>
@@ -291,22 +291,22 @@
     <value>跟踪已启用</value>
   </data>
   <data name="TrackingIdleStatus" xml:space="preserve">
-    <value>跟踪闲置</value>
+    <value>跟踪空闲</value>
   </data>
   <data name="FilterPlayers" xml:space="preserve">
-    <value>筛选玩家...</value>
+    <value>筛选玩家“……”……</value>
   </data>
   <data name="ConnectToLoadPlayers" xml:space="preserve">
     <value>连接到服务器以加载玩家列表</value>
   </data>
   <data name="FetchingPlayersSteam" xml:space="preserve">
-    <value>正在通过 Steam 查询获取玩家...</value>
+    <value>正在通过 Steam 查询获取玩家“……”</value>
   </data>
   <data name="TrackID" xml:space="preserve">
     <value>音轨 ID</value>
   </data>
   <data name="ManualTrackNamePlaceholder" xml:space="preserve">
-    <value>手动曲目名称...</value>
+    <value>手动曲目名称“……”</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
     <value>没有设备。</value>
@@ -315,7 +315,7 @@
     <value>未注册令牌</value>
   </data>
   <data name="TokenExpired" xml:space="preserve">
-    <value>代币已过期！</value>
+    <value>令牌到期</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
     <value>在 {0} 天后过期</value>
@@ -333,7 +333,7 @@
     <value>跟随 {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>配对：聆听…</value>
+    <value>配对：坚挺中“……”</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
     <value>配对：停止</value>
@@ -348,14 +348,14 @@
     <value>服务器</value>
   </data>
   <data name="SmartAlarm" xml:space="preserve">
-    <value>智能报警</value>
+    <value>智能报警器</value>
   </data>
   <data name="UnableToReadLink" xml:space="preserve">
     <value>无法读取RustPlus-Link: {0}
 格式: rustplus://IP:PORT</value>
   </data>
   <data name="DeletePairingConfigHeader" xml:space="preserve">
-    <value>Reset pairing</value>
+    <value>重置配对</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
     <value>删除现有配对配置？
@@ -1611,5 +1611,181 @@
   </data>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>您可以随时关闭该窗口，也可以使用 ❓ 如何跟踪按钮重新打开。</value>
+  </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>维护</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>擦除、备份或恢复应用程序设置、配置文件和自定义图纸。</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>重置应用程序数据...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>备份数据...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>恢复数据...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>重置应用数据</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>选择要从该设备上清除的组件。所有选中的选项都将被永久删除。</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>活动服务器连接（断开）</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>保存的服务器配置文件（删除配对的服务器配置）</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>蒸汽账户凭据（注销）</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>设备配对配置（重置注册令牌）</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>自定义十字准线（擦除配置）</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>本地缓存和绘图（擦除已保存的地图/线条）</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>该操作是永久性的，无法撤销。</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>确认重置</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>备份密码</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>备份保护</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>输入密码以加密该备份文件。如果留空，备份将不会加密。</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>恢复备份</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>该备份受密码保护。输入密码即可解密：</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>加密</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>解密</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>好的</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>备份应用程序数据</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[系统] 在以下位置成功创建备份： {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>备份创建成功！</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>备份已完成</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] 备份错误： {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>创建备份时出错： {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>备份失败</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>恢复数据将覆盖您当前的服务器配置文件、自定义十字准线、绘图覆盖和最小地图配置。
+
+您确定要继续吗？</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>恢复备份确认</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>恢复应用程序数据</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>应用程序数据已成功恢复！</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>恢复已完成</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[系统] 还原错误：提供的密码无效。</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>解密失败。密码无效或备份文件损坏。</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>恢复失败</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] 恢复错误： {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>恢复备份出错： {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>备份文件格式无效或缺少签名。</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] 开始选择性复位操作...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE]断开活动服务器连接...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] 连接重置完成。</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] 清除保存的服务器配置文件...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[清除] 已保存的服务器配置文件。</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE]删除 Steam 帐户凭证...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[清除] 蒸汽证书已清除。</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] 擦除设备配对配置...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] 设备配对配置已删除。</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[擦除] 擦除自定义十字准线...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] 清除自定义十字准线时出错： {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[清除] 自定义十字准线已清除。</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] 清除本地缓存文件和叠加绘图...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] 清理缓存文件夹出错： {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] 已清除缓存文件夹。</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] 重新注册监听器和 FCM 凭据...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] 选择性重置操作成功完成。</value>
   </data>
 </root>

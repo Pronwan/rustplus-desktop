@@ -1612,4 +1612,180 @@
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Закрийте це вікно в будь-який час - ви можете знову відкрити його за допомогою кнопки ❓ Як відстежувати.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Обслуговування</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Витирайте, створюйте резервні копії або відновлюйте налаштування програми, профілі та користувацькі малюнки.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Скинути дані програми...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Резервне копіювання даних...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Відновити дані...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Скинути дані програми</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Виберіть компоненти, які потрібно стерти з цього пристрою. Усі вибрані параметри буде безповоротно видалено.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Активне з'єднання з сервером (від'єднати)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Збережені профілі серверів (видалення парних конфігурацій серверів)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Облікові дані Steam-акаунта (Вийти)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Конфігурація сполучення пристроїв (скидання токенів реєстрації)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Користувацькі перехрестя (конфігурації з витиранням)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Локальний кеш і креслення (Видалення збережених мап/ліній)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Ця дія є остаточною і не може бути скасована.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Підтвердити скидання</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Резервний пароль</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Захист резервного копіювання</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Введіть пароль для шифрування цього файлу резервної копії. Якщо ви залишите це поле порожнім, резервна копія не буде зашифрована.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Відновити резервну копію</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Ця резервна копія захищена паролем. Введіть пароль, щоб розшифрувати її:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Зашифрувати</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Розшифрувати</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>ГАРАЗД.</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Резервне копіювання даних програми</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Резервну копію успішно створено за адресою: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Резервну копію успішно створено!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Резервне копіювання завершено</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[СИСТЕМА] Помилка резервного копіювання: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Помилка створення резервної копії: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Не вдалося виконати резервне копіювання</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Відновлення даних перезапише ваші поточні профілі серверів, користувацькі перехрестя, накладення малюнків і конфігурації мінімап.
+
+Ви впевнені, що хочете продовжити?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Відновити підтвердження резервного копіювання</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Відновлення даних програми</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Дані програми успішно відновлено!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Відновлення завершено</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[СИСТЕМА] Помилка відновлення: Введено невірний пароль.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Не вдалося розшифрувати. Неправильний пароль або пошкоджений файл резервної копії.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Відновити не вдалося</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[СИСТЕМА] Помилка відновлення: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Помилка відновлення резервної копії: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Неправильний формат файлу резервної копії або відсутній підпис.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Починаю операцію вибіркового скидання...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Вимкнення активного з'єднання з сервером.</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[Скидання з'єднання завершено.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Очищення збережених профілів сервера...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Очищено збережені профілі серверів.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[ВИДАЛИТИ] Видалення облікових даних до акаунта Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[Очищено облікові дані Steam.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Конфігурація сполучення пристроїв для витирання...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[Видалено конфігурацію сполучення пристроїв.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Витирання спеціального перехрестя...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[ВИПРАВЛЕННЯ] Виправлено помилки у користувацькому перехресті: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[Спеціальне перехрестя очищено.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Очищення файлів локального кешу та креслень накладення...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Теку для очищення кешу від помилок: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[Очищено теки кешу.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Перереєстрація слухачів та облікових даних FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Операцію вибіркового скидання успішно завершено.</value>
+  </data>
 </root>

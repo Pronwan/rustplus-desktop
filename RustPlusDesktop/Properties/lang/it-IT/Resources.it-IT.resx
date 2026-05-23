@@ -1612,4 +1612,180 @@ Scarica e installa ora?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Chiudere questa finestra in qualsiasi momento - è possibile riaprirla con il pulsante ❓ Come tracciare.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Manutenzione</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Ripulire, fare il backup o ripristinare le impostazioni delle applicazioni, i profili e i disegni personalizzati.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Ripristino dei dati dell'app...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Backup dei dati...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Ripristino dei dati...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Azzeramento dei dati dell'applicazione</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Selezionare i componenti che si desidera cancellare dal dispositivo. Tutte le opzioni selezionate saranno eliminate in modo permanente.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Connessione al server attivo (disconnessione)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Profili server salvati (eliminare le configurazioni server abbinate)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Credenziali dell'account Steam (Esci)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Configurazione dell'accoppiamento del dispositivo (azzeramento dei token di registrazione)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Mirino personalizzato (configurazioni di cancellazione)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Cache locale e disegni (cancella le mappe/linee salvate)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Questa azione è permanente e non può essere annullata.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Confermare il reset</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Password di backup</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Protezione di backup</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Inserire una password per crittografare questo file di backup. Se si lascia vuoto questo campo, il backup non verrà crittografato.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Ripristino del backup</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Questo backup è protetto da password. Immettere la password per decifrarlo:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Crittografare</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Decriptare</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Backup dei dati dell'applicazione</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Il backup è stato creato con successo a: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Il backup è stato creato con successo!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Backup completato</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Errore di backup: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Errore nella creazione del backup: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Backup fallito</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Il ripristino dei dati sovrascriverà i profili server correnti, i mirini personalizzati, le sovrapposizioni dei disegni e le configurazioni della minimappa.
+
+Siete sicuri di voler continuare?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Conferma del ripristino del backup</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Ripristino dei dati dell'applicazione</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>I dati dell'applicazione sono stati ripristinati con successo!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Ripristino completato</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[Errore di ripristino: Password non valida fornita.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Decodifica non riuscita. Password non valida o file di backup danneggiato.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Ripristino fallito</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Errore di ripristino: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Errore nel ripristino del backup: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Formato del file di backup non valido o firma mancante.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Avvio dell'operazione di reset selettivo...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Disconnessione della connessione al server attivo...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[Ripristino della connessione completato.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[Cancellazione dei profili server salvati...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] I profili server salvati sono stati cancellati.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Rimozione delle credenziali dell'account Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[Le credenziali di Steam sono state cancellate.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Cancellazione della configurazione di accoppiamento del dispositivo...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[La configurazione di accoppiamento del dispositivo è stata cancellata.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[Cancellazione del mirino personalizzato...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Errore nel cancellare i mirini personalizzati: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[Cancellato il mirino personalizzato.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Cancellazione dei file della cache locale e dei disegni in sovrimpressione...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Errore nella cancellazione della cartella cache: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Le cartelle della cache sono state cancellate.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Registrare nuovamente le credenziali dell'ascoltatore e dell'FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[L'operazione di reset selettivo è stata completata con successo.</value>
+  </data>
 </root>

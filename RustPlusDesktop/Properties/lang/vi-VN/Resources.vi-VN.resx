@@ -1612,4 +1612,180 @@ Tải xuống và cài đặt ngay bây giờ?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Bạn có thể đóng cửa sổ này bất cứ lúc nào — bạn có thể mở lại cửa sổ này bằng nút ❓ Cách theo dõi.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Bảo trì</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Xóa, sao lưu hoặc khôi phục cài đặt ứng dụng, hồ sơ và bản vẽ tùy chỉnh.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Xóa dữ liệu ứng dụng...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Sao lưu dữ liệu...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Khôi phục dữ liệu...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Đặt lại dữ liệu ứng dụng</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Chọn các thành phần mà bạn muốn xóa khỏi thiết bị này. Tất cả các tùy chọn đã chọn sẽ bị xóa vĩnh viễn.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Kết nối máy chủ đang hoạt động (Ngắt kết nối)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Hồ sơ máy chủ đã lưu (Xóa các cấu hình máy chủ đã ghép nối)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Thông tin đăng nhập tài khoản Steam (Đăng xuất)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Cài đặt ghép nối thiết bị (Đặt lại mã đăng ký)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Điểm ngắm tùy chỉnh (Cấu hình hiệu ứng chuyển cảnh)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Bộ nhớ đệm cục bộ &amp; Bản vẽ (Xóa bản đồ/đường đã lưu)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Thao tác này là vĩnh viễn và không thể hoàn tác.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Xác nhận khôi phục cài đặt gốc</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Mật khẩu dự phòng</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Bảo vệ dữ liệu sao lưu</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Nhập mật khẩu để mã hóa tệp sao lưu này. Nếu bạn để trống, tệp sao lưu sẽ không được mã hóa.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Khôi phục bản sao lưu</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Bản sao lưu này được bảo vệ bằng mật khẩu. Vui lòng nhập mật khẩu để giải mã:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Mã hóa</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Giải mã</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>Được rồi</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Sao lưu dữ liệu ứng dụng</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[HỆ THỐNG] Đã tạo bản sao lưu thành công tại: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Quá trình sao lưu đã hoàn tất thành công!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Quá trình sao lưu đã hoàn tất</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[HỆ THỐNG] Lỗi sao lưu: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Lỗi khi tạo bản sao lưu: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Sao lưu không thành công</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Việc khôi phục dữ liệu sẽ ghi đè lên các cấu hình máy chủ hiện tại, các kiểu ngắm tùy chỉnh, các lớp phủ vẽ và cài đặt bản đồ thu nhỏ của bạn.
+
+Bạn có chắc chắn muốn tiếp tục không?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Xác nhận khôi phục bản sao lưu</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Khôi phục dữ liệu ứng dụng</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Dữ liệu ứng dụng đã được khôi phục thành công!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Quá trình khôi phục đã hoàn tất</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[HỆ THỐNG] Lỗi khôi phục: Mật khẩu không hợp lệ.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Quá trình giải mã không thành công. Mật khẩu không hợp lệ hoặc tệp sao lưu bị hỏng.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Không khôi phục được</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[HỆ THỐNG] Lỗi khôi phục: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Lỗi khi khôi phục bản sao lưu: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Định dạng tệp sao lưu không hợp lệ hoặc thiếu chữ ký.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Đang bắt đầu quá trình khôi phục có chọn lọc...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Đang ngắt kết nối máy chủ đang hoạt động...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Đã hoàn tất thiết lập lại kết nối.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[XÓA] Đang xóa các cấu hình máy chủ đã lưu...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[XÓA] Các cấu hình máy chủ đã lưu đã bị xóa.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Đang xóa thông tin đăng nhập tài khoản Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[XÓA] Thông tin đăng nhập Steam đã bị xóa.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[XÓA] Đang xóa cấu hình ghép nối thiết bị...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[XÓA] Cấu hình ghép nối thiết bị đã bị xóa.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[XÓA] Đang xóa tâm ngắm tùy chỉnh...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Lỗi khi xóa dấu ngắm tùy chỉnh: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[XÓA] Đã xóa tâm ngắm tùy chỉnh.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[XÓA] Đang xóa các tệp bộ nhớ đệm cục bộ và các bản vẽ lớp phủ...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Lỗi khi xóa thư mục bộ nhớ đệm: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[XÓA] Các thư mục bộ nhớ đệm đã được xóa.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Đang đăng ký lại thông tin đăng nhập của người nghe và FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Quá trình khôi phục cài đặt gốc đã hoàn tất thành công.</value>
+  </data>
 </root>

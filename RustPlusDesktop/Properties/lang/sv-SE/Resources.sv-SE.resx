@@ -1612,4 +1612,180 @@ Ladda ner och installera nu?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Stäng det här fönstret när som helst - du kan öppna det igen med ❓ How to Track-knappen.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Underhåll</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Radera, säkerhetskopiera eller återställa programinställningar, profiler och anpassade ritningar.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Återställ appdata ...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Säkerhetskopiera data...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Återställ data...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Återställ applikationsdata</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Välj de komponenter som du vill radera från den här enheten. Alla valda alternativ kommer att raderas permanent.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Anslutning till Active Server (frånkoppling)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Saved Server Profiles (Ta bort parade serverkonfigurationer)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Uppgifter för Steam-konto (logga ut)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Device Pairing Config (Återställ registreringstoken)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Anpassat hårkors (Wipe-konfigurationer)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Lokal cache och ritningar (radera sparade kartor/linjer)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Denna åtgärd är permanent och kan inte ångras.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Bekräfta återställning</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Lösenord för säkerhetskopiering</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Skydd för säkerhetskopiering</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Ange ett lösenord för att kryptera den här säkerhetskopian. Om du lämnar fältet tomt kommer säkerhetskopian inte att krypteras.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Återställ säkerhetskopia</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Den här säkerhetskopian är lösenordsskyddad. Ange lösenordet för att dekryptera den:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Kryptera</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Dekryptera</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Säkerhetskopiera applikationsdata</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Backup skapades framgångsrikt vid: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Backup skapad framgångsrikt!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Säkerhetskopiering slutförd</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Fel vid säkerhetskopiering: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Fel vid skapande av säkerhetskopia: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Säkerhetskopieringen misslyckades</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Återställning av data kommer att skriva över dina nuvarande serverprofiler, anpassade hårkors, ritningsöverlägg och minimap-konfigurationer.
+
+Är du säker på att du vill fortsätta?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Bekräftelse av återställning av säkerhetskopia</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Återställ applikationsdata</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Programdata återställdes framgångsrikt!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Återställning slutförd</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Återställningsfel: Ogiltigt lösenord angavs.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Dekrypteringen misslyckades. Ogiltigt lösenord eller skadad backup-fil.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Återställningen misslyckades</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Återställningsfel: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Fel vid återställning av säkerhetskopia: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Ogiltigt filformat för säkerhetskopian eller saknad signatur.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Start av selektiv återställning...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Kopplar bort aktiv serveranslutning...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Återställning av anslutning slutförd.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Rensning av sparade serverprofiler...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Sparade serverprofiler rensas.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Ta bort inloggningsuppgifter för Steam-konto ...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Steam-legitimation rensad.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Raderar konfigurationen för enhetens parkoppling...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Konfigurationen för enhetens parkoppling raderad.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Torka anpassade hårkors ...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Fel vid rensning av anpassade hårkors: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Anpassat hårkors rensat.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Rensning av lokala cachefiler och överläggsritningar...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Fel vid rensning av cachemapp: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Cache-mappar rensade.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Omregistrering av lyssnar- och FCM-autentiseringsuppgifter ...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Den selektiva återställningen har slutförts framgångsrikt.</value>
+  </data>
 </root>

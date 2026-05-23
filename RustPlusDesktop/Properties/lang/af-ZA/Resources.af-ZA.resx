@@ -1612,4 +1612,180 @@ Aflaai en installeer nou?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Sluit hierdie venster te eniger tyd — jy kan dit weer oopmaak met die knoppie ❓ Hoe om op te spoor.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Onderhoud</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Veeg, maak 'n rugsteun van of herstel toepassingsinstellings, profiele en pasgemaakte tekeninge.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Stel app-data terug...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Backing up data...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Herstel data...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Herstel toepassingsdata</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Kies die komponente wat jy van hierdie toestel wil uitvee. Alle gekose opsies sal permanent verwyder word.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Aktiewe bedienerkoppeling (Ontkoppel)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Gespaarde bedienerprofiele (Verwyder gepaarde bedienerkonfigurasies)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Stoomrekeningbewyse (Teken uit)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Toestelpaar-instellingskonfigurasie (Herstel registrasietokens)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Pasgemaakte kruisvisiere (veërkonfigurasies)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Plaaslike kas en tekeninge (vee opgespaarde kaarte/lyne uit)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Hierdie aksie is permanent en kan nie ongedaan gemaak word nie.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Bevestig terugstel</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Rugsteunwagwoord</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Rugsteunbeskerming</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Voer 'n wagwoord in om hierdie rugsteunlêer te enkripteer. As jy dit leeg laat, sal die rugsteun nie enkripteer word nie.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Herstel rugsteun</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Hierdie rugsteun is met 'n wagwoord beskerm. Voer die wagwoord in om dit te ontsleutel:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Enkripteer</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Ontsluit</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Backing up toepassingsdata</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Rugsteun suksesvol geskep by: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Rugsteun suksesvol geskep!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Rugsteun voltooi</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Rugsteunfout: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Fout tydens die skep van 'n rugsteun: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Rugsteun misluk</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Die herstel van data sal jou huidige bedienerprofiele, pasgemaakte kruisvisiere, tekenoorleggings en minimap-konfigurasies oorskryf.
+
+Is jy seker jy wil voortgaan?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Herstel rugsteunbevestiging</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Herstel toepassingsdata</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Aansoekdata suksesvol herstel!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Herstel voltooi</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Herstel fout: Ongeldige wagwoord verskaf.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Ontsleuteling het misluk. Ongeldige wagwoord of beskadigde rugsteunlêer.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Herstel misluk</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Herstel fout: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Fout tydens herstel van rugsteun: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Ongeldige rugsteunlêerformaat of ontbrekende handtekening.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Begin selektiewe terugsteloperasie...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Ontkoppel die aktiewe bedienerverbinding...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Verbindingsherinstelling voltooi.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Skoonmaak van gestoor­de bedienerprofiele...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Geredde bedienerprofiele uitgevee.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIS] Verwyder Steam-rekeningbewyse...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Stoom-aanmeldbesonderhede uitgevee.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Wis toestelpaar-konfigurasie...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Toestelpaar-konfigurasie verwyder.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Wisk pasgemaakte kruishare uit...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Fout by die skoonmaak van pasgemaakte kruishare: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Pasgemaakte kruishare uitgevee.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Skoonmaak plaaslike kaslêers en oortrekskilderye...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Fout by die skoonmaak van die kas-lêergids: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Kasmappe skoongemaak.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Herregistrering van luisteraar en FCM-kredensiale...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Selektiewe terugsteloperasie suksesvol voltooi.</value>
+  </data>
 </root>

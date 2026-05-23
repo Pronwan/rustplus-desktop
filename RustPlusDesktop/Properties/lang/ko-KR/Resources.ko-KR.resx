@@ -1612,4 +1612,180 @@
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>이 창은 언제든지 닫을 수 있으며 ❓ 추적 방법 버튼으로 다시 열 수 있습니다.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>유지 관리</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>애플리케이션 설정, 프로필, 사용자 지정 도면을 지우거나 백업 또는 복원하세요.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>앱 데이터 재설정...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>백업 데이터...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>데이터 복원...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>애플리케이션 데이터 재설정</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>이 장치에서 지우려는 구성 요소를 선택합니다. 선택한 모든 옵션이 영구적으로 삭제됩니다.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>활성 서버 연결(연결 끊기)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>저장된 서버 프로필(페어링된 서버 구성 삭제)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Steam 계정 자격 증명(로그아웃)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>장치 페어링 구성(등록 토큰 재설정)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>사용자 지정 십자선(지우기 구성)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>로컬 캐시 및 도면(저장된 지도/선 지우기)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>이 작업은 영구적이며 되돌릴 수 없습니다.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>재설정 확인</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>백업 비밀번호</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>백업 보호</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>이 백업 파일을 암호화할 비밀번호를 입력합니다. 비워두면 백업이 암호화되지 않습니다.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>백업 복원</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>이 백업은 비밀번호로 보호되어 있습니다. 비밀번호를 입력하여 해독하세요:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>암호화</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>암호 해독</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>확인</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>애플리케이션 데이터 백업</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] 백업이 다음 위치에서 성공적으로 생성되었습니다: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>백업이 성공적으로 생성되었습니다!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>백업 완료</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[시스템] 백업 오류: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>백업 생성 오류: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>백업 실패</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>데이터를 복원하면 현재 서버 프로필, 사용자 지정 십자선, 그림 오버레이 및 미니맵 구성을 덮어쓰게 됩니다.
+
+계속 진행하시겠습니까?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>백업 복원 확인</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>애플리케이션 데이터 복원</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>애플리케이션 데이터가 성공적으로 복원되었습니다!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>복원 완료</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[시스템] 복원 오류: 제공한 비밀번호가 잘못되었습니다.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>암호 해독에 실패했습니다. 잘못된 비밀번호 또는 손상된 백업 파일입니다.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>복원 실패</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[시스템] 복원 오류: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>백업 복원 중 오류: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>백업 파일 형식이 잘못되었거나 서명이 누락되었습니다.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[지우기] 선택적 초기화 작업 시작 중...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] 활성 서버 연결 해제 중...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[지우기] 연결 재설정이 완료되었습니다.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[지우기] 저장된 서버 프로필 지우기...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[지우기] 저장된 서버 프로필이 지워졌습니다.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[삭제] Steam 계정 자격 증명 제거하기...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[지우기] Steam 자격 증명이 지워졌습니다.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[삭제] 장치 페어링 구성 삭제...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[지우기] 장치 페어링 구성이 삭제되었습니다.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[지우기] 사용자 지정 십자선 지우기...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[지우기] 사용자 지정 십자선 지우기 오류: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[지우기] 사용자 지정 십자선이 지워졌습니다.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[지우기] 로컬 캐시 파일 및 오버레이 도면 지우기...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[지우기] 캐시 폴더 지우기 오류: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[지우기] 캐시 폴더가 지워졌습니다.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[지우기] 리스너 및 FCM 자격 증명 다시 등록하기...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[지우기] 선택적 초기화 작업이 성공적으로 완료되었습니다.</value>
+  </data>
 </root>

@@ -1612,4 +1612,180 @@ Pobrać i zainstalować teraz?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Zamknij to okno w dowolnym momencie - możesz je ponownie otworzyć za pomocą przycisku ❓ Jak śledzić.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Konserwacja</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Czyszczenie, tworzenie kopii zapasowych lub przywracanie ustawień aplikacji, profili i niestandardowych rysunków.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Resetuj dane aplikacji...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Kopia zapasowa danych...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Przywracanie danych...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Resetowanie danych aplikacji</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Wybierz składniki, które chcesz wyczyścić z tego urządzenia. Wszystkie wybrane opcje zostaną trwale usunięte.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Aktywne połączenie z serwerem (Rozłącz)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Zapisane profile serwera (usuwanie sparowanych konfiguracji serwera)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Poświadczenia konta Steam (wyloguj się)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Konfiguracja parowania urządzeń (resetowanie tokenów rejestracyjnych)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Niestandardowy celownik (konfiguracje wymazywania)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Lokalna pamięć podręczna i rysunki (wyczyść zapisane mapy/linie)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Działanie to jest trwałe i nie można go cofnąć.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Potwierdź resetowanie</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Hasło kopii zapasowej</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Ochrona kopii zapasowych</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Wprowadź hasło, aby zaszyfrować ten plik kopii zapasowej. Jeśli pozostawisz to pole puste, kopia zapasowa nie zostanie zaszyfrowana.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Przywracanie kopii zapasowej</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Ta kopia zapasowa jest chroniona hasłem. Wprowadź hasło, aby ją odszyfrować:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Szyfrowanie</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Deszyfrowanie</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Kopia zapasowa danych aplikacji</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Kopia zapasowa utworzona pomyślnie w: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Kopia zapasowa utworzona pomyślnie!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Kopia zapasowa zakończona</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Błąd kopii zapasowej: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Błąd tworzenia kopii zapasowej: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Kopia zapasowa nie powiodła się</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Przywrócenie danych spowoduje nadpisanie bieżących profili serwera, niestandardowych krzyżyków, nakładek rysunkowych i konfiguracji minimapy.
+
+Czy na pewno chcesz kontynuować?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Potwierdzenie przywrócenia kopii zapasowej</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Przywracanie danych aplikacji</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Dane aplikacji zostały pomyślnie przywrócone!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Przywracanie zakończone</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>Błąd przywracania [SYSTEM]: Podano nieprawidłowe hasło.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Deszyfrowanie nie powiodło się. Nieprawidłowe hasło lub uszkodzony plik kopii zapasowej.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Przywracanie nie powiodło się</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Błąd przywracania: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Błąd przywracania kopii zapasowej: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Nieprawidłowy format pliku kopii zapasowej lub brak podpisu.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Rozpoczęcie operacji selektywnego resetowania...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Rozłączanie aktywnego połączenia z serwerem...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[Resetowanie połączenia zakończone.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Czyszczenie zapisanych profili serwera...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[Zapisane profile serwera zostały wyczyszczone.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Usuwanie poświadczeń konta Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[Poświadczenia Steam zostały wyczyszczone.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Konfiguracja parowania urządzeń...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[Konfiguracja parowania urządzeń została usunięta.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Czyszczenie niestandardowego celownika...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Błąd czyszczenia niestandardowego celownika: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[Wyczyszczono celownik niestandardowy.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Czyszczenie lokalnych plików pamięci podręcznej i rysunków nakładki...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Błąd czyszczenia folderu pamięci podręcznej: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[Wyczyszczono foldery pamięci podręcznej.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Ponowna rejestracja poświadczeń słuchacza i FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>Operacja resetu selektywnego [WIPE] została zakończona pomyślnie.</value>
+  </data>
 </root>
