@@ -341,6 +341,7 @@
     <Resource Include="Assets\Screenshots\beta-5.1_6.png" />
     <Resource Include="Assets\Screenshots\beta-5.1_7.png" />
     <Resource Include="Assets\Screenshots\Notifications.png" />
+    <Resource Include="Assets\Flags\*.png" />
     <Resource Include="Assets\TitleScreen-rust-plus-desktop.png" />
     <Resource Include="Assets\Data\rust_items.json" />
     <Resource Include="Assets\Data\ShopSearch.html" />

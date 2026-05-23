@@ -17,6 +17,7 @@ namespace RustPlusDesk.Views
         {
             public string Name { get; set; } = "";
             public string Code { get; set; } = "";
+            public string? ImagePath { get; set; }
         }
 
         public AppSettingsOverlay()
@@ -38,44 +39,44 @@ namespace RustPlusDesk.Views
         {
             var langs = new List<LanguageOption>
             {
-                new() { Name = "System Default", Code = "" },
-                new() { Name = "English", Code = "en" },
-                new() { Name = "Deutsch", Code = "de" },
-                new() { Name = "Français", Code = "fr" },
-                new() { Name = "Español", Code = "es-ES" },
-                new() { Name = "Italiano", Code = "it" },
-                new() { Name = "Polski", Code = "pl" },
-                new() { Name = "Русский", Code = "ru" },
-                new() { Name = "Türkçe", Code = "tr" },
-                new() { Name = "Português (BR)", Code = "pt-BR" },
-                new() { Name = "Português (PT)", Code = "pt-PT" },
-                new() { Name = "Nederlands", Code = "nl" },
-                new() { Name = "Dansk", Code = "da" },
-                new() { Name = "Norsk", Code = "no" },
-                new() { Name = "Svenska", Code = "sv-SE" },
-                new() { Name = "Suomi", Code = "fi" },
-                new() { Name = "Čeština", Code = "cs" },
-                new() { Name = "Magyar", Code = "hu" },
-                new() { Name = "Română", Code = "ro" },
-                new() { Name = "Srpski", Code = "sr" },
-                new() { Name = "Ελληνικά", Code = "el" },
-                new() { Name = "Українська", Code = "uk" },
-                new() { Name = "Tiếng Việt", Code = "vi" },
-                new() { Name = "العربية", Code = "ar" },
-                new() { Name = "עברית", Code = "he" },
-                new() { Name = "日本語", Code = "ja" },
-                new() { Name = "한국어", Code = "ko" },
-                new() { Name = "简体中文", Code = "zh-CN" },
-                new() { Name = "繁體中文", Code = "zh-TW" },
-                new() { Name = "Català", Code = "ca" },
-                new() { Name = "Afrikaans", Code = "af" },
+                new() { Name = "System Default", Code = "", ImagePath = null },
+                new() { Name = "English", Code = "en", ImagePath = "pack://application:,,,/Assets/Flags/en.png" },
+                new() { Name = "Deutsch", Code = "de", ImagePath = "pack://application:,,,/Assets/Flags/de.png" },
+                new() { Name = "Français", Code = "fr", ImagePath = "pack://application:,,,/Assets/Flags/fr.png" },
+                new() { Name = "Español", Code = "es-ES", ImagePath = "pack://application:,,,/Assets/Flags/es-ES.png" },
+                new() { Name = "Italiano", Code = "it", ImagePath = "pack://application:,,,/Assets/Flags/it.png" },
+                new() { Name = "Polski", Code = "pl", ImagePath = "pack://application:,,,/Assets/Flags/pl.png" },
+                new() { Name = "Русский", Code = "ru", ImagePath = "pack://application:,,,/Assets/Flags/ru.png" },
+                new() { Name = "Türkçe", Code = "tr", ImagePath = "pack://application:,,,/Assets/Flags/tr.png" },
+                new() { Name = "Português (BR)", Code = "pt-BR", ImagePath = "pack://application:,,,/Assets/Flags/pt-BR.png" },
+                new() { Name = "Português (PT)", Code = "pt-PT", ImagePath = "pack://application:,,,/Assets/Flags/pt-PT.png" },
+                new() { Name = "Nederlands", Code = "nl", ImagePath = "pack://application:,,,/Assets/Flags/nl.png" },
+                new() { Name = "Dansk", Code = "da", ImagePath = "pack://application:,,,/Assets/Flags/da.png" },
+                new() { Name = "Norsk", Code = "no", ImagePath = "pack://application:,,,/Assets/Flags/no.png" },
+                new() { Name = "Svenska", Code = "sv-SE", ImagePath = "pack://application:,,,/Assets/Flags/sv-SE.png" },
+                new() { Name = "Suomi", Code = "fi", ImagePath = "pack://application:,,,/Assets/Flags/fi.png" },
+                new() { Name = "Čeština", Code = "cs", ImagePath = "pack://application:,,,/Assets/Flags/cs.png" },
+                new() { Name = "Magyar", Code = "hu", ImagePath = "pack://application:,,,/Assets/Flags/hu.png" },
+                new() { Name = "Română", Code = "ro", ImagePath = "pack://application:,,,/Assets/Flags/ro.png" },
+                new() { Name = "Srpski", Code = "sr", ImagePath = "pack://application:,,,/Assets/Flags/sr.png" },
+                new() { Name = "Ελληνικά", Code = "el", ImagePath = "pack://application:,,,/Assets/Flags/el.png" },
+                new() { Name = "Українська", Code = "uk", ImagePath = "pack://application:,,,/Assets/Flags/uk.png" },
+                new() { Name = "Tiếng Việt", Code = "vi", ImagePath = "pack://application:,,,/Assets/Flags/vi.png" },
+                new() { Name = "العربية", Code = "ar", ImagePath = "pack://application:,,,/Assets/Flags/ar.png" },
+                new() { Name = "עברית", Code = "he", ImagePath = "pack://application:,,,/Assets/Flags/he.png" },
+                new() { Name = "日本語", Code = "ja", ImagePath = "pack://application:,,,/Assets/Flags/ja.png" },
+                new() { Name = "한국어", Code = "ko", ImagePath = "pack://application:,,,/Assets/Flags/ko.png" },
+                new() { Name = "简体中文", Code = "zh-CN", ImagePath = "pack://application:,,,/Assets/Flags/zh-CN.png" },
+                new() { Name = "繁體中文", Code = "zh-TW", ImagePath = "pack://application:,,,/Assets/Flags/zh-TW.png" },
+                new() { Name = "Català", Code = "ca", ImagePath = "pack://application:,,,/Assets/Flags/ca.png" },
+                new() { Name = "Afrikaans", Code = "af", ImagePath = "pack://application:,,,/Assets/Flags/af.png" },
                 // Alias / generic locale folders
-                new() { Name = "Español (es)", Code = "es" },
-                new() { Name = "Português (pt)", Code = "pt" },
-                new() { Name = "Português (BR) [pt_BR]", Code = "pt_BR" },
-                new() { Name = "Svenska (sv)", Code = "sv" },
-                new() { Name = "简体中文 (Hans)", Code = "zh-Hans" },
-                new() { Name = "繁體中文 (Hant)", Code = "zh-Hant" }
+                new() { Name = "Español (es)", Code = "es", ImagePath = "pack://application:,,,/Assets/Flags/es.png" },
+                new() { Name = "Português (pt)", Code = "pt", ImagePath = "pack://application:,,,/Assets/Flags/pt.png" },
+                new() { Name = "Português (BR) [pt_BR]", Code = "pt_BR", ImagePath = "pack://application:,,,/Assets/Flags/pt_BR.png" },
+                new() { Name = "Svenska (sv)", Code = "sv", ImagePath = "pack://application:,,,/Assets/Flags/sv.png" },
+                new() { Name = "简体中文 (Hans)", Code = "zh-Hans", ImagePath = "pack://application:,,,/Assets/Flags/zh-Hans.png" },
+                new() { Name = "繁體中文 (Hant)", Code = "zh-Hant", ImagePath = "pack://application:,,,/Assets/Flags/zh-Hant.png" }
             };
 
             CmbLanguage.ItemsSource = langs.OrderBy(l => l.Name).ToList();
