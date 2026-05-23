@@ -5049,6 +5049,20 @@
                             </ui:Button.Content>
                         </ui:Button>
 
+                        <ui:Button
+                            x:Name="BtnOverlayRestore"
+                            Height="40"
+                            Margin="0,12,0,0"
+                            HorizontalAlignment="Stretch"
+                            Appearance="Secondary"
+                            Click="BtnOverlayRestore_Click"
+                            FontSize="14"
+                            Icon="{ui:SymbolIcon Symbol=ArrowDownload24}">
+                            <ui:Button.Content>
+                                <TextBlock Margin="8,0,0,0" Text="{DynamicResource RestoreData}" />
+                            </ui:Button.Content>
+                        </ui:Button>
+
                         <TextBlock
                             Margin="0,20,0,0"
                             FontSize="11"

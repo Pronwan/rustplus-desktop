@@ -2745,6 +2745,60 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         await StartPairingListenerUiAsync();
     }
 
+    private void BtnOverlayRestore_Click(object sender, RoutedEventArgs e)
+    {
+        var ask = MessageBox.Show(
+            Properties.Resources.RestoreConfirmMessage,
+            Properties.Resources.RestoreConfirmTitle,
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (ask != MessageBoxResult.Yes) return;
+
+        var ofd = new Microsoft.Win32.OpenFileDialog
+        {
+            Filter = "ZIP Archives (*.zip)|*.zip",
+            Title = Properties.Resources.RestoreApplicationDataTitle
+        };
+
+        if (ofd.ShowDialog() == true)
+        {
+            string password = "";
+            if (RustPlusDesk.Services.Data.BackupDataModule.IsBackupEncrypted(ofd.FileName))
+            {
+                var dialog = new BackupPasswordDialog { Owner = this };
+                dialog.SetMode(true); // Decryption mode
+
+                if (dialog.ShowDialog() == true)
+                {
+                    password = dialog.Password;
+                }
+                else
+                {
+                    // User canceled decryption prompt, abort restore
+                    return;
+                }
+            }
+
+            try
+            {
+                RustPlusDesk.Services.Data.BackupDataModule.RestoreBackup(ofd.FileName, password);
+                ReloadApplicationData();
+                MessageBox.Show(Properties.Resources.RestoreSuccessMessage, Properties.Resources.RestoreSuccessTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (System.Security.Cryptography.CryptographicException)
+            {
+                AppendLog(Properties.Resources.RestorePasswordErrorLog);
+                MessageBox.Show(Properties.Resources.RestorePasswordErrorMessage, Properties.Resources.RestoreFailedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                AppendLog(string.Format(Properties.Resources.RestoreErrorLog, ex.Message));
+                MessageBox.Show(string.Format(Properties.Resources.RestoreErrorMessage, ex.Message), Properties.Resources.RestoreFailedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+    }
+
     private async void BtnStopPairing_Click(object sender, RoutedEventArgs e)
     {
         try
