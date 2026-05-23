@@ -22,8 +22,8 @@
 		<Version>5.3.0-beta</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>5.3.0</AssemblyVersion>
-		<FileVersion>5.3.0</FileVersion>
+		<AssemblyVersion>5.2.99</AssemblyVersion>
+		<FileVersion>5.2.99</FileVersion>
 		<InformationalVersion>5.3.0-beta</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		

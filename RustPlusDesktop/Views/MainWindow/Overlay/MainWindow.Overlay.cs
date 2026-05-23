@@ -1063,7 +1063,7 @@ private bool _overlayToolsVisible = false;
 
     private void ToolUploadButton_Click(object sender, RoutedEventArgs e)
     {
-        UploadOwnOverlayToTeam();
+        ShowUploadConsent(() => UploadOwnOverlayToTeam());
     }
 
     // private void SaveOwnOverlayToPng()
