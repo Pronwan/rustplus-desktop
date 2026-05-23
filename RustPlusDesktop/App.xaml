@@ -196,6 +196,15 @@
                         <ColumnDefinition Width="16"/>
                     </Grid.ColumnDefinitions>
 
+                    <ui:SymbolIcon
+                        x:Name="CheckIcon"
+                        Grid.Column="0"
+                        Symbol="Checkmark20"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="{DynamicResource Accent}"
+                        Visibility="Collapsed" />
+
                     <ContentPresenter Grid.Column="0"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"
@@ -210,6 +219,10 @@
             </Border>
 
             <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
+                    <Setter Property="Foreground" Value="{DynamicResource Accent}" />
+                </Trigger>
                 <Trigger Property="IsHighlighted" Value="True">
                     <Setter TargetName="Bd" Property="Background" Value="#141A22"/>
                 </Trigger>
@@ -235,24 +248,6 @@
                 <Trigger Property="Role" Value="SubmenuHeader">
                     <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}"/>
                 </Trigger>
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsCheckable" Value="True" />
-                        <Condition Property="IsChecked" Value="True" />
-                    </MultiTrigger.Conditions>
-                    <Setter Property="Icon">
-                        <Setter.Value>
-                            <Ellipse Width="8" Height="8" Fill="{DynamicResource Accent}"/>
-                        </Setter.Value>
-                    </Setter>
-                </MultiTrigger>
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsCheckable" Value="True" />
-                        <Condition Property="IsChecked" Value="False" />
-                    </MultiTrigger.Conditions>
-                    <Setter Property="Icon" Value="{x:Null}"/>
-                </MultiTrigger>
             </Style.Triggers>
         </Style>
 

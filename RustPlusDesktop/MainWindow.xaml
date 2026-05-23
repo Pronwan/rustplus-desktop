@@ -115,14 +115,13 @@
                         </Grid.ColumnDefinitions>
 
                         <!--  Dot indicator for checkable headers  -->
-                        <Ellipse
-                            x:Name="CheckedDot"
+                        <ui:SymbolIcon
+                            x:Name="CheckIcon"
                             Grid.Column="0"
-                            Width="8"
-                            Height="8"
+                            Symbol="Checkmark20"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Fill="{DynamicResource Accent}"
+                            Foreground="{DynamicResource Accent}"
                             Visibility="Collapsed" />
 
                         <ContentPresenter
@@ -176,14 +175,12 @@
 
             <ControlTemplate.Triggers>
                 <Trigger Property="IsChecked" Value="True">
-                    <Setter TargetName="CheckedDot" Property="Visibility" Value="Visible" />
+                    <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
                     <Setter Property="Foreground" Value="{DynamicResource Accent}" />
                 </Trigger>
                 <Trigger Property="Tag" Value="Partial">
-                    <Setter TargetName="CheckedDot" Property="Visibility" Value="Visible" />
-                    <Setter TargetName="CheckedDot" Property="Opacity" Value="0.6" />
-                    <Setter TargetName="CheckedDot" Property="Width" Value="5" />
-                    <Setter TargetName="CheckedDot" Property="Height" Value="5" />
+                    <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
+                    <Setter TargetName="CheckIcon" Property="Opacity" Value="0.6" />
                 </Trigger>
                 <Trigger Property="IsHighlighted" Value="True">
                     <Setter TargetName="Bd" Property="Background" Value="#141A22" />
@@ -264,6 +261,15 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
+                    <ui:SymbolIcon
+                        x:Name="CheckIcon"
+                        Grid.Column="0"
+                        Symbol="Checkmark20"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="{DynamicResource Accent}"
+                        Visibility="Collapsed" />
+
                     <ContentPresenter
                         Grid.Column="0"
                         HorizontalAlignment="Center"
@@ -280,6 +286,10 @@
             </Border>
 
             <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
+                    <Setter Property="Foreground" Value="{DynamicResource Accent}" />
+                </Trigger>
                 <Trigger Property="IsHighlighted" Value="True">
                     <Setter TargetName="Bd" Property="Background" Value="#1AFFFFFF" />
                 </Trigger>
@@ -300,24 +310,6 @@
                 <Trigger Property="HasItems" Value="True">
                     <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}" />
                 </Trigger>
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsCheckable" Value="True" />
-                        <Condition Property="IsChecked" Value="True" />
-                    </MultiTrigger.Conditions>
-                    <Setter Property="Icon">
-                        <Setter.Value>
-                            <Ellipse Width="8" Height="8" Fill="{DynamicResource Accent}"/>
-                        </Setter.Value>
-                    </Setter>
-                </MultiTrigger>
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsCheckable" Value="True" />
-                        <Condition Property="IsChecked" Value="False" />
-                    </MultiTrigger.Conditions>
-                    <Setter Property="Icon" Value="{x:Null}"/>
-                </MultiTrigger>
             </Style.Triggers>
         </Style>
 
@@ -1725,15 +1717,33 @@
                             Icon="{ui:SymbolIcon Symbol=Heart24}"
                             ToolTip="{DynamicResource SupportDeveloper}" />
 
-                        <!--  Reset Connection  -->
+                        <!--  Reset Connection & Language Settings -->
                         <Border Grid.Column="1" VerticalAlignment="Center">
-                            <ui:Button
-                                Margin="0,0,8,0"
-                                Appearance="Secondary"
-                                Click="BtnHardReset_Click"
-                                Content="{DynamicResource Reset}"
-                                Icon="{ui:SymbolIcon Symbol=ArrowReset24}"
-                                ToolTip="{DynamicResource ResetWebSocket}" />
+                            <StackPanel Orientation="Horizontal">
+                                <ui:Button
+                                    Margin="0,0,8,0"
+                                    Appearance="Secondary"
+                                    Click="BtnHardReset_Click"
+                                    Content="{DynamicResource Reset}"
+                                    Icon="{ui:SymbolIcon Symbol=ArrowReset24}"
+                                    ToolTip="{DynamicResource ResetWebSocket}" />
+
+                                <ui:Button
+                                    x:Name="BtnLanguageSettings"
+                                    Width="32"
+                                    Height="32"
+                                    Appearance="Secondary"
+                                    Click="BtnLanguageSettings_Click"
+                                    ToolTip="{DynamicResource SelectLanguage}">
+                                    <Image
+                                        x:Name="ImgLanguageFlag"
+                                        Width="20"
+                                        Height="15"
+                                        RenderOptions.BitmapScalingMode="HighQuality"
+                                        Source="pack://application:,,,/Assets/rustplus-desktop-icon.ico"
+                                        Stretch="UniformToFill" />
+                                </ui:Button>
+                            </StackPanel>
                         </Border>
 
                         <!--  Serverdaten (rechtsbündig, gleiche Zeile)  -->
@@ -3615,6 +3625,7 @@
                                         </ContextMenu>
                                     </ui:DropDownButton.Flyout>
                                 </ui:DropDownButton>
+
                             <Button
                                 Width="80"
                                 Margin="8,0,0,0"
@@ -3857,16 +3868,6 @@
                                 Click="BtnToggleOverlayTools_Click"
                                 ToolTip="{DynamicResource DrawOverlay}">
                                 <Image Source="pack://application:,,,/Assets/icons/pencil.png" />
-                            </Button>
-
-                            <Button
-                                x:Name="BtnLanguageSettings"
-                                Width="32"
-                                Height="32"
-                                Margin="4,0,0,0"
-                                Click="BtnLanguageSettings_Click"
-                                ToolTip="{DynamicResource SelectLanguage}">
-                                <Image x:Name="ImgLanguageFlag" Source="pack://application:,,,/Assets/rustplus-desktop-icon.ico" Stretch="UniformToFill" Margin="4"/>
                             </Button>
 
                             <!--  StackPanel with Heli Demo removed  -->
