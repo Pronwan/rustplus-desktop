@@ -880,6 +880,39 @@ Aflaai en installeer nou?</value>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Begin outomaties winkels te peil en stuur waarskuwings wanneer dit aan 'n bediener gekoppel is.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Gebruik monument-teksetikette in plaas van ikone.</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Wanneer dit geaktiveer is, word die name van Rust-kaartmonumente as teks in die Permanent Marker-lettertipe vertoon in plaas van ikone.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Monumentstyl:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Monumentskaal:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Monument deursigtigheid:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Ikone deur rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Oorspronklike teks van monumentname</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Krediete</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Kaart-gedenkteken-ikone verskaf deur </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> — met toestemming gebruik.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Alle gedenkteken-ikone en verwante kunswerke is die eiendom van rustmaps.com. Dankie dat u die Rust-gemeenskap ondersteun!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Klets</value>
   </data>

@@ -880,6 +880,39 @@ Download og installer nu?</value>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Start automatisk valg af butikker og advarsler, når de er tilsluttet en server.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Brug monument-tekstlabels i stedet for ikoner</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Når det er aktiveret, gengives Rust-kortets monumentnavne som tekst med skrifttypen Permanent Marker i stedet for ikoner.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Monumentets stil:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Monumentskala:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Monumentets opacitet:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Ikoner af rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Original tekst monumentnavne</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Kreditter</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Ikoner for kortmonumenter leveret af </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - brugt med tilladelse.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Alle monumentikoner og relaterede illustrationer tilhører rustmaps.com. Tak, fordi du støtter Rust-fællesskabet!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Chat</value>
   </data>

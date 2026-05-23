@@ -880,6 +880,39 @@
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>サーバーに接続したときに自動的にポーリングショップとアラートを開始します。</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>アイコンの代わりにモニュメント・テキスト・ラベルを使用</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>有効にすると、Rustマップのモニュメント名はアイコンではなく、Permanent Markerフォントを使用したテキストとして表示されます。</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>モニュメントのスタイル</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>モニュメントの規模：</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>モニュメントの不透明度</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>アイコン by rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>原文 モニュメント名</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>クレジット</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>地図モニュメントアイコン提供 </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - 許可を得て使用している。</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>すべてのモニュメントアイコンと関連アートワークはrustmaps.comの所有物です。Rustコミュニティをご支援いただきありがとうございます！</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>チャット</value>
   </data>

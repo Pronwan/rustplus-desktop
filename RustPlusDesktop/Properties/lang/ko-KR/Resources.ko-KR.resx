@@ -880,6 +880,39 @@
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>서버에 연결되면 자동으로 폴링 상점 및 알림을 시작합니다.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>아이콘 대신 모뉴먼트 텍스트 레이블 사용</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>활성화하면 Rust 맵 기념물 이름이 아이콘 대신 영구 마커 글꼴을 사용하여 텍스트로 렌더링됩니다.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>기념비 스타일:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>기념비 스케일:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>기념비 불투명도:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>rustmaps.com의 아이콘</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>원본 텍스트 기념비 이름</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>크레딧</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>지도 기념물 아이콘 제공처 </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - 허가를 받아 사용합니다.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>모든 기념비 아이콘과 관련 아트워크는 rustmaps.com의 자산입니다. Rust 커뮤니티를 지원해 주셔서 감사합니다!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>채팅</value>
   </data>

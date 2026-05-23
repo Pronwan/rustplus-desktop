@@ -880,6 +880,39 @@ Pobrać i zainstalować teraz?</value>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Automatycznie uruchamia odpytywanie sklepów i alertów po połączeniu z serwerem.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Używanie etykiet tekstowych monumentów zamiast ikon</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Po włączeniu tej opcji nazwy zabytków na mapie Rust są renderowane jako tekst przy użyciu czcionki Permanent Marker zamiast ikon.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Monument Style:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Monument Scale:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Monument Opacity:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Ikony autorstwa rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Oryginalny tekst nazwy pomnika</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Kredyty</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Ikony zabytków na mapie dostarczone przez </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - użyto za zgodą.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Wszystkie ikony pomników i powiązane grafiki są własnością rustmaps.com. Dziękujemy za wspieranie społeczności Rust!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Czat</value>
   </data>

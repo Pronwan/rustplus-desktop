@@ -880,6 +880,39 @@
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Автоматично запускає опитування магазинів та оповіщень при підключенні до сервера.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Використовуйте текстові етикетки пам'яток замість піктограм</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Якщо увімкнено, назви пам'яток на мапі Rust відображаються у вигляді тексту з використанням шрифту Permanent Marker замість піктограм.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Монументальний стиль:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Масштаб пам'ятника:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Непрозорість пам'ятника:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Іконки від rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Назви пам'яток в оригінальному тексті</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Кредити</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Піктограми пам'яток на карті надані </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - використано з дозволу.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Всі іконки пам'ятників та пов'язані з ними ілюстрації є власністю rustmaps.com. Дякуємо за підтримку спільноти Rust!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Чат</value>
   </data>

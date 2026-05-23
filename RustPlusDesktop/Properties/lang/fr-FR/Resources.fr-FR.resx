@@ -880,6 +880,39 @@ Télécharger et installer maintenant ?</value>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Démarre automatiquement le sondage des boutiques et les alertes lorsque vous êtes connecté à un serveur.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Utiliser des étiquettes de texte pour les monuments au lieu d'icônes</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Lorsque cette option est activée, les noms des monuments de la carte de la rouille sont affichés sous forme de texte en utilisant la police de caractères Permanent Marker au lieu d'être affichés sous forme d'icônes.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Style monumental :</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Échelle des monuments :</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Monument Opacité :</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Icônes de rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Texte original noms des monuments</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Crédits</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Les icônes des monuments de la carte sont fournies par </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - utilisé avec l'autorisation de l'auteur.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Toutes les icônes de monuments et les illustrations connexes sont la propriété de rustmaps.com. Merci de soutenir la communauté Rust !</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Discuter</value>
   </data>

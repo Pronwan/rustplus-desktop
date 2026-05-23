@@ -58,7 +58,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppTitle" xml:space="preserve">
-    <value>format@@0 RUST+ DESKTOP</value>
+    <value>RUST+ DESKTOP</value>
   </data>
   <data name="SteamAccount" xml:space="preserve">
     <value>Conta Steam</value>
@@ -270,7 +270,7 @@ Observação: esse método de transmissão será otimizado no futuro. Se os cole
     <value>Escala do Marcador</value>
   </data>
   <data name="MiniMapPolishTitle" xml:space="preserve">
-    <value>Mini mapa polonês</value>
+    <value>Mini Mapa (Atualizações)</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
     <value>Ação Necessária:</value>
@@ -358,8 +358,8 @@ Formato: rustplus://IP:PORT</value>
     <value>Reset pairing</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>Excluir a configuração de emparelhamento existente?
-Você precisará emparelhar novamente na próxima inicialização.</value>
+    <value>Excluir a configuração de pareamento existente?
+Você precisará parear novamente na próxima inicialização.</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
     <value>Reset + Listen</value>
@@ -879,6 +879,39 @@ Baixar e instalar agora?</value>
   </data>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Inicia automaticamente as lojas e alertas quando conectado a um servidor.</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Use rótulos de texto de monumento em vez de ícones</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Quando ativado, os nomes dos monumentos do Rust map são renderizados como texto usando a fonte Permanent Marker em vez de ícones.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Estilo Monumento:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Escala do monumento:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Monumento Opacidade:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Ícones de rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Texto original nomes de monumentos</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Créditos</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Ícones de monumentos do mapa fornecidos por </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - usado com permissão.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Todos os ícones de monumentos e obras de arte relacionadas são de propriedade do rustmaps.com. Obrigado por apoiar a comunidade Rust!</value>
   </data>
   <data name="Chat" xml:space="preserve">
     <value>Bate-papo</value>

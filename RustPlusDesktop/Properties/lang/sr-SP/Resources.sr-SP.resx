@@ -880,6 +880,39 @@
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Аутоматски почиње да проверава продавнице и слање обавештења када је повезан на сервер.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Користите ознаке текста за споменике уместо икона.</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Када је омогућено, имена споменика на Rust мапи приказују се као текст користећи фонт Permanent Marker уместо икона.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Стил споменика:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Мерка споменика:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Прозирност споменика:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Иконе са rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Оригинални текст назива споменика</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Заслуге</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Иконе споменика на мапи обезбедио </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> — коришћено уз дозволу.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Све иконе споменика и повезане уметничке радове су власништво rustmaps.com. Хвала вам што подржавате Rust заједницу!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Чет</value>
   </data>

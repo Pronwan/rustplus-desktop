@@ -880,6 +880,39 @@ Sürümler sayfasını aç?</value>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Bir sunucuya bağlandığında mağazaları ve uyarıları otomatik olarak yoklamaya başlar.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Simgeler yerine anıt metin etiketleri kullanın</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Etkinleştirildiğinde, Rust harita anıt adları simgeler yerine Kalıcı İşaretleyici yazı tipi kullanılarak metin olarak işlenir.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Anıt Stili:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Anıt Ölçeği:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Anıt Opaklığı:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Simgeler rustmaps.com tarafından</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Orijinal metin anıt isimleri</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Krediler</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Harita anıt simgeleri tarafından sağlanmıştır </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - izin alınarak kullanılmıştır.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Tüm anıt simgeleri ve ilgili sanat eserleri rustmaps.com'un mülkiyetindedir. Rust topluluğunu desteklediğiniz için teşekkür ederiz!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Sohbet</value>
   </data>

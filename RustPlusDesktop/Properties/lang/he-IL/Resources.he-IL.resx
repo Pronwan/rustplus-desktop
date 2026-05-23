@@ -880,6 +880,39 @@
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>מתחיל באופן אוטומטי לסרוק חנויות ולשלוח התראות ברגע שמתחבר לשרת.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>השתמש בתוויות טקסט במקום בסמלים</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>כאשר האפשרות מופעלת, שמות האנדרטאות במפת Rust מוצגים כטקסט בגופן Permanent Marker במקום כאייקונים.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>סגנון האנדרטה:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>קנה המידה של האנדרטה:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>אטימות האנדרטה:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>סמלים מאת rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>שמות האנדרטאות בטקסט המקורי</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>קרדיטים</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>סמלי האנדרטאות במפה באדיבות </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> — בשימוש באישור.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>כל סמלי האנדרטאות והגרפיקה הנלווית הם בבעלות rustmaps.com. תודה על תמיכתכם בקהילת Rust!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>צ'אט</value>
   </data>

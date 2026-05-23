@@ -880,6 +880,39 @@ jetzt herunterladen und installieren?</value>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
     <value>Automatisch startet das Abfragen von Shops und Warnungen bei Verbindung mit einem Server.</value>
   </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Verwendung von Monument-Textbeschriftungen anstelle von Symbolen</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Wenn diese Option aktiviert ist, werden die Namen der Monumente auf der Rust-Karte als Text mit der Schriftart Permanent Marker anstelle von Symbolen dargestellt.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Monumentaler Stil:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Monumentaler Maßstab:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Monument Opazität:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Icons von rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Originaltext Denkmalnamen</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Kredite</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Kartenmonument-Symbole bereitgestellt von </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - mit Genehmigung verwendet.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Alle Monumentsymbole und die dazugehörigen Grafiken sind Eigentum von rustmaps.com. Vielen Dank, dass Sie die Rust-Gemeinschaft unterstützen!</value>
+  </data>
   <data name="Chat" xml:space="preserve">
     <value>Chat</value>
   </data>
