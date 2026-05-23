@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>刷新</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>下降</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>上传同意书</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>点击 "接受 "后，该服务器的智能设备（可能还有地图图纸）将上传到创建者的服务器。这样队友就可以下载并同步它们。只有您的 Steam ID 才会被传送以识别队友。只有获得工具柜授权的玩家才能控制这些设备。
+
+注意：这种传输方式将在未来进行优化。如果队友无法下载数据，请尝试清除地图图纸并重新上传。</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>删除</value>
   </data>
@@ -1504,5 +1515,68 @@
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (Stock {5}) for {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>聊天命令列表</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>命令： {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>本地化、用户界面现代化和存储</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>动态地域切换</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - 30 多种语言供选择</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>聊天命令用户界面</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - 隔离视图，外观简洁</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>新设置叠加</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - 用于所有设置的整洁侧边栏</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>移除 BattleMetrics 跟踪</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>你的基地受到攻击！</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>请先连接服务器。</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>您没有连接到任何服务器。</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>聊天功能暂不可用。</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>请先选择服务器。</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>连接</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>聊天</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>如何追踪球员</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>本地 UDP 跟踪</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>追踪指南目前只有英文版，因为在不久的将来会有改动。请耐心等待。</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>您可以随时关闭该窗口，也可以使用 ❓ 如何跟踪按钮重新打开。</value>
   </data>
 </root>

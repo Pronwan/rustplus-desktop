@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>רענן</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>ירידה</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>הסכמה להעלאה</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>בלחיצה על 'קבל', המכשירים החכמים (ואולי גם ציורי המפה) של שרת זה יועלו לשרת של היוצר. כך יוכלו חברי הצוות להוריד אותם ולסנכרן אותם. רק מזהה ה-Steam שלך מועבר לצורך זיהוי חברי הצוות. רק שחקנים שהוסמכו ב-Tool Cupboard יכולים לשלוט במכשירים.
+
+הערה: שיטת העברה זו תעבור אופטימיזציה בעתיד. אם חברי הצוות אינם מצליחים להוריד את הנתונים, אנא נסה למחוק את ציורי המפה שלך ולהעלות אותם שוב.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>מחק</value>
   </data>
@@ -1504,5 +1515,68 @@
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (מלאי {5}) עבור {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>רשימת פקודות צ'אט</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>פקודות: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>לוקליזציה, מודרניזציה של ממשק המשתמש ואחסון</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>מעבר דינמי בין הגדרות אזוריות</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> — יותר מ-30 שפות לבחירה</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>ממשק המשתמש של פקודות הצ'אט</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> — תצוגה מבודדת למראה נקי</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>שכבת-על של הגדרות חדשות</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> — סרגל צד נקי לכל ההגדרות</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>מעקב BattleMetrics הוסר</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>הבסיס שלך נמצא תחת מתקפה!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>אנא התחבר תחילה לשרת.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>אינך מחובר לשום שרת.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>הצ'אט אינו זמין כרגע.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>אנא בחר תחילה שרת.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>חיבור</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>צ'אט</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>כיצד לעקוב אחר שחקנים</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>מעקב UDP מובנה</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>מדריך המעקב זמין כרגע באנגלית בלבד, שכן הוא עתיד לעבור שינויים בקרוב. אנו מבקשים את סבלנותכם.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>ניתן לסגור חלון זה בכל עת — ניתן לפתוח אותו מחדש באמצעות הכפתור  ❓ כיצד לעקוב.</value>
   </data>
 </root>

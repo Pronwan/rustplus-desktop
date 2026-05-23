@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>Rafraîchir</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Déclin</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Télécharger le consentement</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>En cliquant sur "Accepter", les appareils intelligents (et éventuellement les plans de carte) de ce serveur seront téléchargés sur le serveur du créateur. Cela permet aux coéquipiers de les télécharger et de les synchroniser. Seul votre identifiant Steam est transmis pour identifier les coéquipiers. Seuls les joueurs autorisés à l'Armoire à outils peuvent contrôler les appareils.
+
+Remarque : cette méthode de transmission sera optimisée à l'avenir. Si les coéquipiers ne parviennent pas à télécharger les données, essayez d'effacer vos dessins de carte et de les télécharger à nouveau.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Supprimez</value>
   </data>
@@ -1504,5 +1515,68 @@ Télécharger et installer maintenant ?</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (Stock {5}) pour {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Liste des commandes de chat</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>COMMANDES : {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Localisation, modernisation de l'interface utilisateur et stockage</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Changement dynamique de langue</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - Plus de 30 langues au choix</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Commandes de chat UI</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - Vue isolée pour un aspect propre</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Superposition de nouveaux paramètres</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - Barre latérale propre pour tous les paramètres</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Suppression du suivi de BattleMetrics</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Votre base est attaquée !</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Veuillez d'abord vous connecter à un serveur.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Vous n'êtes connecté à aucun serveur.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Chat n'est pas disponible pour le moment.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Veuillez d'abord sélectionner un serveur.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Connexion</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Comment suivre les joueurs</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Suivi UDP natif</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Le guide de suivi n'est actuellement disponible qu'en anglais, car il fera l'objet de modifications dans un avenir proche. Nous vous demandons d'être patient.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Fermez cette fenêtre à tout moment - vous pouvez la rouvrir en cliquant sur le bouton ❓ Comment suivre.</value>
   </data>
 </root>

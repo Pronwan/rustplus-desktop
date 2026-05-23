@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>Làm mới</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Sự suy giảm</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Đồng ý tải lên</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Khi nhấp vào 'Chấp nhận', các thiết bị thông minh (và có thể cả các bản vẽ bản đồ) của máy chủ này sẽ được tải lên máy chủ của người tạo. Điều này cho phép các thành viên trong đội tải xuống và đồng bộ hóa chúng. Chỉ ID Steam của bạn mới được truyền đi để xác định danh tính các thành viên trong đội. Chỉ những người chơi đã được ủy quyền tại Tool Cupboard mới có thể điều khiển các thiết bị này.
+
+Lưu ý: Phương thức truyền tải này sẽ được tối ưu hóa trong tương lai. Nếu các thành viên trong đội không thể tải xuống dữ liệu, vui lòng thử xóa các bản vẽ bản đồ của bạn và tải lên lại.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Xóa</value>
   </data>
@@ -1504,5 +1515,68 @@ Tải xuống và cài đặt ngay bây giờ?</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (Cổ phiếu {5}) cho {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Danh sách các lệnh trò chuyện</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>CÁC LỆNH: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Địa phương hóa, Hiện đại hóa giao diện người dùng &amp; Lưu trữ</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Chuyển đổi vùng ngôn ngữ động</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> — Hơn 30 ngôn ngữ để lựa chọn</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Giao diện người dùng các lệnh trò chuyện</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> — Giao diện đơn giản, gọn gàng</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Cửa sổ cài đặt mới</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> — Thanh bên gọn gàng cho tất cả các cài đặt</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Đã gỡ bỏ tính năng theo dõi BattleMetrics</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Căn cứ của bạn đang bị tấn công!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Vui lòng kết nối với máy chủ trước.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Bạn hiện không kết nối với bất kỳ máy chủ nào.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Hiện tại, tính năng trò chuyện không khả dụng.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Vui lòng chọn máy chủ trước.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Kết nối</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Trò chuyện</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Cách theo dõi người chơi</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Theo dõi UDP gốc</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Hiện tại, hướng dẫn theo dõi chỉ có sẵn bằng tiếng Anh, vì tài liệu này sẽ được cập nhật trong thời gian tới. Rất mong quý vị thông cảm.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Bạn có thể đóng cửa sổ này bất cứ lúc nào — bạn có thể mở lại cửa sổ này bằng nút ❓ Cách theo dõi.</value>
   </data>
 </root>

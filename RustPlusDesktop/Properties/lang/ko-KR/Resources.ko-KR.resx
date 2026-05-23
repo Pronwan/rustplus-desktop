@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>새로 고침</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>거절</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>업로드 동의</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>'수락'을 클릭하면 이 서버의 스마트 기기(및 지도 도면)가 제작자의 서버에 업로드됩니다. 그러면 팀원들이 다운로드하고 동기화할 수 있습니다. 팀원 식별을 위해 Steam ID만 전송됩니다. 도구 보관함에서 승인된 플레이어만 장치를 제어할 수 있습니다.
+
+참고: 이 전송 방법은 향후 최적화될 예정입니다. 팀원이 데이터를 다운로드할 수 없는 경우, 지도 도면을 지운 후 다시 업로드해 보세요.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>삭제</value>
   </data>
@@ -1504,5 +1515,68 @@
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (재고 {5}) for {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>채팅 명령 목록</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>커맨드: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>로컬라이제이션, UI 현대화 및 스토리지</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>동적 로캘 전환</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - 30개 이상의 언어 선택 가능</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>채팅 명령 UI</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - 깔끔한 보기를 위한 분리된 보기</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>새 설정 오버레이</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - 모든 설정에 대한 사이드바 정리</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>배틀메트릭스 추적 제거</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>기지가 공격받고 있습니다!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>먼저 서버에 연결하세요.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>어떤 서버에도 연결되어 있지 않습니다.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>지금은 채팅을 사용할 수 없습니다.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>먼저 서버를 선택하세요.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>연결</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>채팅</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>플레이어를 추적하는 방법</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>기본 UDP 추적</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>추적 가이드는 현재 영어로만 제공되며, 조만간 변경될 예정입니다. 양해해 주시기 바랍니다.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>이 창은 언제든지 닫을 수 있으며 ❓ 추적 방법 버튼으로 다시 열 수 있습니다.</value>
   </data>
 </root>

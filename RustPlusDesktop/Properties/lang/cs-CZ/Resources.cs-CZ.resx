@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>Aktualizovat</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Pokles</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Odeslání souhlasu</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Kliknutím na tlačítko "Přijmout" se chytrá zařízení (a případně i mapové výkresy) pro tento server nahrají na server tvůrce. To umožní spoluhráčům jejich stažení a synchronizaci. K identifikaci spoluhráčů se přenáší pouze vaše Steam ID. Zařízení mohou ovládat pouze hráči oprávnění ve skříni s nářadím.
+
+Poznámka: Tento způsob přenosu bude v budoucnu optimalizován. Pokud spoluhráči nemohou data stáhnout, zkuste vymazat výkresy map a nahrát je znovu.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Vymazat</value>
   </data>
@@ -1504,5 +1515,68 @@ Stáhnout a nainstalovat nyní?</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (zásoba {5}) pro {6} {7}.</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Seznam příkazů chatu</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>PŘÍKAZY: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Lokalizace, modernizace uživatelského rozhraní a úložiště</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dynamické přepínání lokalizace</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - Více než 30 jazyků k výběru</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Uživatelské rozhraní příkazů chatu</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - Izolovaný pohled pro čistý vzhled</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Nové překrytí nastavení</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - Čistý postranní panel pro všechna nastavení</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Odstranění sledování BattleMetrics</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Vaše základna je pod útokem!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Nejprve se připojte k serveru.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Nejste připojeni k žádnému serveru.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Chat není právě teď k dispozici.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Nejprve vyberte server.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Připojení</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Jak sledovat hráče</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Nativní sledování UDP</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Průvodce sledováním je v současné době k dispozici pouze v angličtině, protože v blízké budoucnosti projde změnami. Prosíme vás o trpělivost.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Toto okno můžete kdykoli zavřít - znovu jej otevřete tlačítkem ❓ Jak sledovat.</value>
   </data>
 </root>

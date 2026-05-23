@@ -138,6 +138,17 @@
   <data name="Refresh" xml:space="preserve">
     <value>更新</value>
   </data>
+  <data name="Decline" xml:space="preserve">
+    <value>減少</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>同意のアップロード</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Accept」をクリックすると、このサーバーのスマートデバイス（および潜在的にマップ図面）がクリエイターのサーバーにアップロードされます。これにより、チームメイトはそれらをダウンロードして同期することができます。チームメイトを識別するために送信されるのはSteam IDのみです。Tool Cupboardで承認されたプレイヤーだけがデバイスを操作できます。
+
+注意：この送信方法は将来的に最適化される予定です。チームメイトがデータをダウンロードできない場合は、マップの描画をクリアして再度アップロードしてみてください。</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>削除</value>
   </data>
@@ -1504,5 +1515,68 @@
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} ×{3} {4} （在庫 {5}） for {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>チャットコマンド一覧</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>COMMANDS: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>ローカライゼーション、UIモダナイゼーション、ストレージ</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>動的ロケール切り替え</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - 選べる30以上の言語</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>チャットコマンドUI</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - クリーンな外観のための分離されたビュー</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>新しい設定オーバーレイ</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - すべての設定が可能なクリーンなサイドバー</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>バトルメトリクスのトラッキングが削除</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>基地が攻撃を受けている！</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>まずサーバーに接続してください。</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>どのサーバーにも接続されていない。</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>チャットは現在ご利用いただけません。</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>最初にサーバーを選択してください。</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>接続</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>チャット</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>選手の追跡方法</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>ネイティブUDPトラッキング</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>トラッキングガイドは近日中に変更されるため、現在英語版のみとなっております。今しばらくお待ちください。</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>このウィンドウはいつでも閉じることができます。</value>
   </data>
 </root>
