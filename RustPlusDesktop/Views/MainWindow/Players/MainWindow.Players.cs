@@ -558,16 +558,12 @@ public partial class MainWindow
         _draggedTrackedGroup = null;
     }
 
-    private void TxtTrackedFilter_GotFocus(object sender, RoutedEventArgs e) {
-        if (TxtTrackedFilter.Text == Properties.Resources.FilterPlayers) {
-            TxtTrackedFilter.Text = "";
-            TxtTrackedFilter.Foreground = Brushes.White;
-        }
     private void TxtTrackedFilter_GotFocus(object sender, RoutedEventArgs e) { }
     private void TxtTrackedFilter_LostFocus(object sender, RoutedEventArgs e) { }
     private void TxtTrackedFilter_TextChanged(object sender, TextChangedEventArgs e) {
         RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
     }
+
 
     private void BtnManageGroups_Click(object sender, RoutedEventArgs e) {
         if (ShowBulkGroupEditorDialog() == true) {
