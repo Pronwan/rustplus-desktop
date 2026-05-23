@@ -1717,17 +1717,9 @@
                             Icon="{ui:SymbolIcon Symbol=Heart24}"
                             ToolTip="{DynamicResource SupportDeveloper}" />
 
-                        <!--  Reset Connection & Language Settings -->
+                        <!--  Language Settings -->
                         <Border Grid.Column="1" VerticalAlignment="Center">
                             <StackPanel Orientation="Horizontal">
-                                <ui:Button
-                                    Margin="0,0,8,0"
-                                    Appearance="Secondary"
-                                    Click="BtnHardReset_Click"
-                                    Content="{DynamicResource Reset}"
-                                    Icon="{ui:SymbolIcon Symbol=ArrowReset24}"
-                                    ToolTip="{DynamicResource ResetWebSocket}" />
-
                                 <ui:Button
                                     x:Name="BtnLanguageSettings"
                                     Width="32"

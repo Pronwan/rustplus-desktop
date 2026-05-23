@@ -9,7 +9,7 @@ DATA_DIR = Path("/var/lib/rustplus-overlays")   # Speicherort (muss existieren, 
 SHARED_SECRET = b"23c5a7dbf02b63543da043ca7d6de1fbf706a080c899e334a8cd599206e13fde" # Byte-Secret (setze hier ein langes random)
 MAX_UPLOAD_BYTES = 350 * 1024   # 350 KB
 MAX_UPLOADS_PER_MIN = 5         # 5 Uploads / Minute pro SteamID
-CLEANUP_DAYS = 35               # Dateien älter als X Tage werden gelöscht
+CLEANUP_DAYS = 35               # Dateien ï¿½lter als X Tage werden gelï¿½scht
 # ----------------
 
 app = Flask(__name__)

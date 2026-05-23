@@ -2763,7 +2763,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    private void AppendLog(string line)
+    public void AppendLog(string line)
     {
         Dispatcher.Invoke(() =>
         {
@@ -5114,8 +5114,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     // MAP DRAW OVERLAY
 
     // DTOs moved to Models/SharingModels.cs
-
-
+    public void ReloadApplicationData()
+    {
+        _vm.Load();
+        LoadCustomCrosshairs();
+        HydrateSteamUiFromStorage();
+        AppendLog("[SYSTEM] Application data reloaded successfully after restore.");
+    }
 }
 
 public class RenameDialog : Window

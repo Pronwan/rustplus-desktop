@@ -140,6 +140,112 @@ namespace RustPlusDesk.Views
             ParentWindow?.ApplySettings();
         }
 
+        private void BtnShowResetDialog_Click(object sender, RoutedEventArgs e)
+        {
+            if (ParentWindow == null) return;
+            var dialog = new ResetDataWindow { Owner = ParentWindow };
+            if (dialog.ShowDialog() == true)
+            {
+                _ = ParentWindow.PerformGranularResetAsync(
+                    dialog.ResetConnection,
+                    dialog.ResetProfiles,
+                    dialog.ResetSteam,
+                    dialog.ResetPairing,
+                    dialog.ResetCrosshairs,
+                    dialog.ResetCache
+                );
+            }
+        }
+
+        private void BtnBackupData_Click(object sender, RoutedEventArgs e)
+        {
+            if (ParentWindow == null) return;
+
+            var dialog = new BackupPasswordDialog { Owner = ParentWindow };
+            dialog.SetMode(false); // Encryption mode
+
+            if (dialog.ShowDialog() == true)
+            {
+                var sfd = new Microsoft.Win32.SaveFileDialog
+                {
+                    Filter = "ZIP Archives (*.zip)|*.zip",
+                    FileName = "RustPlusDesk_Backup_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".zip",
+                    Title = Properties.Resources.BackupApplicationDataTitle
+                };
+
+                if (sfd.ShowDialog() == true)
+                {
+                    try
+                    {
+                        RustPlusDesk.Services.Data.BackupDataModule.CreateBackup(sfd.FileName, dialog.Password);
+                        ParentWindow.AppendLog(string.Format(Properties.Resources.BackupSuccessLog, sfd.FileName));
+                        MessageBox.Show(Properties.Resources.BackupSuccessMessage, Properties.Resources.BackupSuccessTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        ParentWindow.AppendLog(string.Format(Properties.Resources.BackupErrorLog, ex.Message));
+                        MessageBox.Show(string.Format(Properties.Resources.BackupErrorMessage, ex.Message), Properties.Resources.BackupFailedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+        }
+
+        private void BtnRestoreData_Click(object sender, RoutedEventArgs e)
+        {
+            if (ParentWindow == null) return;
+
+            var ask = MessageBox.Show(
+                Properties.Resources.RestoreConfirmMessage,
+                Properties.Resources.RestoreConfirmTitle,
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (ask != MessageBoxResult.Yes) return;
+
+            var ofd = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "ZIP Archives (*.zip)|*.zip",
+                Title = Properties.Resources.RestoreApplicationDataTitle
+            };
+
+            if (ofd.ShowDialog() == true)
+            {
+                string password = "";
+                if (RustPlusDesk.Services.Data.BackupDataModule.IsBackupEncrypted(ofd.FileName))
+                {
+                    var dialog = new BackupPasswordDialog { Owner = ParentWindow };
+                    dialog.SetMode(true); // Decryption mode
+
+                    if (dialog.ShowDialog() == true)
+                    {
+                        password = dialog.Password;
+                    }
+                    else
+                    {
+                        // User canceled decryption prompt, abort restore
+                        return;
+                    }
+                }
+
+                try
+                {
+                    RustPlusDesk.Services.Data.BackupDataModule.RestoreBackup(ofd.FileName, password);
+                    ParentWindow.ReloadApplicationData();
+                    MessageBox.Show(Properties.Resources.RestoreSuccessMessage, Properties.Resources.RestoreSuccessTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (System.Security.Cryptography.CryptographicException)
+                {
+                    ParentWindow.AppendLog(Properties.Resources.RestorePasswordErrorLog);
+                    MessageBox.Show(Properties.Resources.RestorePasswordErrorMessage, Properties.Resources.RestoreFailedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch (Exception ex)
+                {
+                    ParentWindow.AppendLog(string.Format(Properties.Resources.RestoreErrorLog, ex.Message));
+                    MessageBox.Show(string.Format(Properties.Resources.RestoreErrorMessage, ex.Message), Properties.Resources.RestoreFailedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
         private void BtnModifyChatAlerts_Click(object sender, RoutedEventArgs e)
         {
             Visibility = Visibility.Collapsed;

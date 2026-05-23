@@ -103,47 +103,99 @@ public partial class MainWindow
         }
     }
 
-    private async void BtnHardReset_Click(object sender, RoutedEventArgs e)
+    public async Task PerformGranularResetAsync(
+        bool connection, 
+        bool profiles, 
+        bool steam, 
+        bool pairing, 
+        bool crosshairs, 
+        bool cache)
     {
-        var ask = MessageBox.Show(
-            "ARE YOU SURE YOU WANT TO RESET EVERYTHING (WIPE)?\n\n" +
-            "- All servers will be deleted\n" +
-            "- Your Steam Login will be removed\n" +
-            "- The pairing config will be deleted\n\n" +
-            "Continue?", "FULL WIPE DATA", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-        if (ask != MessageBoxResult.Yes) return;
-
-        await FullWipeResetAsync();
-    }
-
-    private async Task FullWipeResetAsync()
-    {
-        AppendLog("[WIPE] Starting full reset...");
+        AppendLog(Properties.Resources.WipeLogStart);
 
         // 1. Connection reset
-        await HardResetAsync(reconnect: false);
+        if (connection)
+        {
+            AppendLog(Properties.Resources.WipeLogConnStart);
+            await HardResetAsync(reconnect: false);
+            AppendLog(Properties.Resources.WipeLogConnEnd);
+        }
 
         // 2. Clear servers
-        _vm.Servers.Clear();
-        _vm.Save();
-        AppendLog("[WIPE] Servers cleared.");
+        if (profiles)
+        {
+            AppendLog(Properties.Resources.WipeLogProfilesStart);
+            _vm.Servers.Clear();
+            _vm.Save();
+            AppendLog(Properties.Resources.WipeLogProfilesEnd);
+        }
 
-        // 3. Clear SteamID
-        _vm.SteamId64 = "";
-        TrackingService.SteamId64 = "";
-        AppendLog("[WIPE] Steam credentials removed.");
+        // 3. Clear Steam Credentials
+        if (steam)
+        {
+            AppendLog(Properties.Resources.WipeLogSteamStart);
+            _vm.SteamId64 = "";
+            TrackingService.SteamId64 = "";
+            HydrateSteamUiFromStorage();
+            AppendLog(Properties.Resources.WipeLogSteamEnd);
+        }
 
         // 4. Wipe Pairing Config
-        await ResetPairingConfigAsync(stopListenerFirst: true);
-        AppendLog("[WIPE] Pairing configuration deleted.");
+        if (pairing)
+        {
+            AppendLog(Properties.Resources.WipeLogPairingStart);
+            await ResetPairingConfigAsync(stopListenerFirst: true);
+            AppendLog(Properties.Resources.WipeLogPairingEnd);
+        }
 
-        // 5. Update UI
-        HydrateSteamUiFromStorage();
-        AppendLog("[WIPE] Full wipe completed. Starting new pairing flow...");
+        // 5. Custom Crosshairs
+        if (crosshairs)
+        {
+            AppendLog(Properties.Resources.WipeLogCrosshairsStart);
+            try
+            {
+                RustPlusDesk.Services.Data.CrosshairDataModule.SaveCrosshairs(new System.Collections.Generic.List<CustomCrosshair>());
+            }
+            catch (Exception ex)
+            {
+                AppendLog(string.Format(Properties.Resources.WipeLogCrosshairsError, ex.Message));
+            }
+            AppendLog(Properties.Resources.WipeLogCrosshairsEnd);
+        }
 
-        // Trigger the pairing listener (which will trigger fcm-register because we wiped the config)
-        _ = StartPairingListenerUiAsync();
+        // 6. Local Cache & Drawings
+        if (cache)
+        {
+            AppendLog(Properties.Resources.WipeLogCacheStart);
+            try
+            {
+                if (System.IO.Directory.Exists(RustPlusDesk.Services.Data.DataManager.CacheDir))
+                {
+                    System.IO.Directory.Delete(RustPlusDesk.Services.Data.DataManager.CacheDir, true);
+                }
+                
+                var overlaysDir = System.IO.Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "Overlays");
+                if (System.IO.Directory.Exists(overlaysDir))
+                {
+                    System.IO.Directory.Delete(overlaysDir, true);
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog(string.Format(Properties.Resources.WipeLogCacheError, ex.Message));
+            }
+            AppendLog(Properties.Resources.WipeLogCacheEnd);
+        }
+
+        // If pairing config was wiped, restart the listener to re-register/hydrate UI cleanly
+        if (pairing)
+        {
+            HydrateSteamUiFromStorage();
+            AppendLog(Properties.Resources.WipeLogPairingRestart);
+            _ = StartPairingListenerUiAsync();
+        }
+
+        AppendLog(Properties.Resources.WipeLogComplete);
     }
 
     private async void BtnConnect_Click(object sender, RoutedEventArgs e)
