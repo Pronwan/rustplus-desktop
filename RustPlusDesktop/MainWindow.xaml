@@ -1732,6 +1732,7 @@
                                     x:Name="BtnLanguageSettings"
                                     Width="32"
                                     Height="32"
+                                    Padding="0"
                                     Appearance="Secondary"
                                     Click="BtnLanguageSettings_Click"
                                     ToolTip="{DynamicResource SelectLanguage}">
@@ -1739,6 +1740,8 @@
                                         x:Name="ImgLanguageFlag"
                                         Width="20"
                                         Height="15"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
                                         RenderOptions.BitmapScalingMode="HighQuality"
                                         Source="pack://application:,,,/Assets/rustplus-desktop-icon.ico"
                                         Stretch="UniformToFill" />
