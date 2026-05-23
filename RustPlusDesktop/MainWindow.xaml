@@ -3008,18 +3008,13 @@
                                                     DockPanel.Dock="Right" />
                                                 <ui:TextBox
                                                     x:Name="TxtManualBMId"
-                                                    GotFocus="TxtManualBMId_GotFocus"
-                                                    LostFocus="TxtManualBMId_LostFocus"
-                                                    PlaceholderText="{DynamicResource ManualTrackPlaceholder}"
-                                                    Text="{DynamicResource ManualTrackPlaceholder}" />
+                                                    PlaceholderText="{DynamicResource ManualTrackPlaceholder}" />
                                             </DockPanel>
 
                                             <ui:TextBox
                                                 x:Name="TxtOnlineFilter"
                                                 Grid.Row="2"
                                                 Margin="0,0,0,8"
-                                                GotFocus="TxtOnlineFilter_GotFocus"
-                                                LostFocus="TxtOnlineFilter_LostFocus"
                                                 PlaceholderText="{DynamicResource FilterPlayersPlaceholder}"
                                                 TextChanged="TxtOnlineFilter_TextChanged"
                                                 Visibility="Collapsed" />
@@ -3167,8 +3162,6 @@
                                                 x:Name="TxtTrackedFilter"
                                                 Grid.Row="1"
                                                 Margin="0,0,0,8"
-                                                GotFocus="TxtTrackedFilter_GotFocus"
-                                                LostFocus="TxtTrackedFilter_LostFocus"
                                                 PlaceholderText="{DynamicResource FilterPlayersPlaceholder}"
                                                 TextChanged="TxtTrackedFilter_TextChanged" />
 
