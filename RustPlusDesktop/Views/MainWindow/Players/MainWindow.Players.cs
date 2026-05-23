@@ -215,8 +215,6 @@ public partial class MainWindow
         catch { }
     }
 
-    private void TxtOnlineFilter_GotFocus(object sender, RoutedEventArgs e) { }
-    private void TxtOnlineFilter_LostFocus(object sender, RoutedEventArgs e) { }
     private void TxtOnlineFilter_TextChanged(object sender, TextChangedEventArgs e) {
         RefreshOnlinePlayersList();
     }
@@ -285,23 +283,10 @@ public partial class MainWindow
 
 
 
-    private void TxtManualBMId_GotFocus(object sender, RoutedEventArgs e) {
-        if (TxtManualBMId.Text == Properties.Resources.ManualTrackNamePlaceholder) {
-            TxtManualBMId.Text = "";
-            TxtManualBMId.Foreground = Brushes.White;
-        }
-    }
-    private void TxtManualBMId_LostFocus(object sender, RoutedEventArgs e) {
-        if (string.IsNullOrWhiteSpace(TxtManualBMId.Text)) {
-            TxtManualBMId.Text = Properties.Resources.ManualTrackNamePlaceholder;
-            TxtManualBMId.Foreground = Brushes.Gray;
-        }
-    }
-
     private async void BtnAddManual_Click(object sender, RoutedEventArgs e)
     {
         var bmId = TxtManualBMId.Text?.Trim();
-        if (string.IsNullOrEmpty(bmId) || bmId == Properties.Resources.ManualTrackNamePlaceholder) return;
+        if (string.IsNullOrEmpty(bmId)) return;
 
         TxtManualBMId.IsEnabled = false;
         BtnAddManual.Content = "...";
@@ -314,8 +299,7 @@ public partial class MainWindow
 
         TrackingService.TrackPlayer(bmId, name, serverName, lastSession);
         
-        TxtManualBMId.Text = Properties.Resources.ManualTrackNamePlaceholder;
-        TxtManualBMId.Foreground = Brushes.Gray;
+        TxtManualBMId.Text = "";
         TxtManualBMId.IsEnabled = true;
         BtnAddManual.Content = Properties.Resources.TrackID;
         
@@ -558,8 +542,6 @@ public partial class MainWindow
         _draggedTrackedGroup = null;
     }
 
-    private void TxtTrackedFilter_GotFocus(object sender, RoutedEventArgs e) { }
-    private void TxtTrackedFilter_LostFocus(object sender, RoutedEventArgs e) { }
     private void TxtTrackedFilter_TextChanged(object sender, TextChangedEventArgs e) {
         RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
     }
