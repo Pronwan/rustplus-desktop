@@ -1612,4 +1612,180 @@ Stáhnout a nainstalovat nyní?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Toto okno můžete kdykoli zavřít - znovu jej otevřete tlačítkem ❓ Jak sledovat.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Údržba</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Vymazání, zálohování nebo obnovení nastavení aplikací, profilů a vlastních kreseb.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Obnovení dat aplikace...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Zálohování dat...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Obnovení dat...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Obnovení dat aplikace</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Vyberte součásti, které chcete z tohoto zařízení vymazat. Všechny vybrané možnosti budou trvale odstraněny.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Aktivní připojení k serveru (odpojení)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Uložené profily serverů (odstranění spárovaných konfigurací serverů)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Pověření k účtu služby Steam (odhlášení)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Konfigurace párování zařízení (resetování registračních tokenů)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Vlastní zaměřovací kříž (konfigurace Wipe)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Místní mezipaměť a výkresy (vymazání uložených map/čar)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Tato akce je trvalá a nelze ji vrátit zpět.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Potvrzení resetování</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Záložní heslo</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Záložní ochrana</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Zadejte heslo pro zašifrování tohoto záložního souboru. Pokud jej necháte prázdné, záloha nebude zašifrována.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Obnovení zálohy</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Tato záloha je chráněna heslem. Zadáním hesla ji dešifrujete:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Šifrování</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Dešifrování</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Zálohování dat aplikace</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Záloha byla úspěšně vytvořena na adrese: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Záloha byla úspěšně vytvořena!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Zálohování dokončeno</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Chyba zálohování: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Chyba při vytváření zálohy: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Zálohování se nezdařilo</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Obnovení dat přepíše vaše aktuální profily serveru, vlastní zaměřovací kříž, překryvy kreslení a konfigurace minimapy.
+
+Jste si jisti, že chcete pokračovat?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Potvrzení obnovení zálohy</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Obnovení dat aplikace</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Data aplikace byla úspěšně obnovena!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Obnova dokončena</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Chyba při obnově: Chyba: Zadáno neplatné heslo.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Dešifrování se nezdařilo. Neplatné heslo nebo poškozený soubor zálohy.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Obnovení se nezdařilo</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Chyba obnovení: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Chyba při obnovení zálohy: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Nesprávný formát souboru zálohy nebo chybějící podpis.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Zahájení operace selektivního resetu...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Odpojení aktivního připojení k serveru...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Obnovení spojení dokončeno.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Vymazání uložených profilů serveru...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Uložené profily serveru byly vymazány.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Odstranění pověření k účtu služby Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Pověření služby Steam vymazána.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Konfigurace párování zařízení...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Konfigurace párování zařízení odstraněna.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Vymazání vlastního zaměřovacího kříže...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Chyba při vymazání vlastního zaměřovacího kříže: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Vymazání vlastního kříže.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Vymazání souborů místní mezipaměti a překryvných výkresů...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Chyba při vymazání složky mezipaměti: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Složky mezipaměti vymazány.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Opětovná registrace posluchače a pověření FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Operace selektivního resetu byla úspěšně dokončena.</value>
+  </data>
 </root>

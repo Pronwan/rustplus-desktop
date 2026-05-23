@@ -1612,4 +1612,180 @@ Baixar e instalar agora?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Feche essa janela a qualquer momento - você pode reabri-la com o botão ❓ How to Track (Como rastrear).</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Manutenção</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Limpe, faça backup ou restaure configurações de aplicativos, perfis e desenhos personalizados.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Redefinir dados do aplicativo...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Backup de dados...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Restaurar dados...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Redefinir dados do aplicativo</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Selecione os componentes que deseja apagar desse dispositivo. Todas as opções selecionadas serão excluídas permanentemente.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Conexão do servidor ativo (desconectar)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Perfis de servidor salvos (Excluir configurações de servidor emparelhadas)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Credenciais da conta Steam (Sair)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Device Pairing Config (Redefinir tokens de registro)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Mira personalizada (configurações de limpeza)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Local Cache &amp; Drawings (Limpar mapas/linhas salvos)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Essa ação é permanente e não pode ser desfeita.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Confirmar redefinição</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Senha de backup</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Proteção de backup</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Digite uma senha para criptografar esse arquivo de backup. Se você deixar esse campo vazio, o backup não será criptografado.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Restaurar backup</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Esse backup é protegido por senha. Digite a senha para descriptografá-lo:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Criptografar</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Descriptografar</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Backup dos dados do aplicativo</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Backup criado com sucesso em: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Backup criado com sucesso!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Backup concluído</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Erro de backup: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Erro ao criar o backup: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Falha no backup</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>A restauração de dados substituirá os perfis de servidor atuais, as miras personalizadas, as sobreposições de desenho e as configurações do minimapa.
+
+Tem certeza de que deseja continuar?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Confirmação de restauração de backup</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Restaurar dados do aplicativo</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Dados do aplicativo restaurados com sucesso!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Restauração concluída</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>Erro de restauração [SYSTEM]: Senha inválida fornecida.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Falha na descriptografia. Senha inválida ou arquivo de backup corrompido.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Falha na restauração</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Erro de restauração: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Erro ao restaurar o backup: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Formato de arquivo de backup inválido ou assinatura ausente.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[Iniciando a operação de reinicialização seletiva...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Desconectando a conexão do servidor ativo...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[Reinicialização da conexão concluída.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[Limpando perfis de servidor salvos...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Limpeza dos perfis de servidor salvos.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Removendo as credenciais da conta Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[Credenciais do Steam liberadas.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Limpando a configuração de emparelhamento de dispositivos...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Configuração de emparelhamento de dispositivos excluída.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Limpando a mira personalizada...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Erro ao limpar a mira personalizada: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Mira personalizada liberada.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Limpando arquivos de cache locais e desenhos de sobreposição...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Erro ao limpar a pasta de cache: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[Pastas de cache limpas.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Registrando novamente as credenciais do ouvinte e do FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Operação de reinicialização seletiva concluída com êxito.</value>
+  </data>
 </root>

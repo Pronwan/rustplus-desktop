@@ -1612,4 +1612,180 @@
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>أغلق هذه النافذة في أي وقت - يمكنك إعادة فتحها باستخدام زر ❓ كيفية التتبع.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>الصيانة</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>مسح إعدادات التطبيق، وملفات التعريف، والرسومات المخصصة، أو نسخها احتياطيًا أو استعادتها.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>إعادة تعيين بيانات التطبيق...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>بيانات النسخ الاحتياطي...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>استعادة البيانات...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>إعادة تعيين بيانات التطبيق</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>حدد المكونات التي تريد مسحها من هذا الجهاز. سيتم حذف جميع الخيارات المحددة نهائياً.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>اتصال الخادم النشط (قطع الاتصال)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>ملفات تعريف الخادم المحفوظة (حذف تكوينات الخادم المقترنة)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>بيانات اعتماد حساب Steam (تسجيل الخروج)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>تكوين إقران الجهاز (إعادة تعيين رموز التسجيل)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>الشعيرات المتقاطعة المخصصة (تكوينات المسح)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>ذاكرة التخزين المؤقت المحلية والرسومات (مسح الخرائط/الخطوط المحفوظة)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>هذا الإجراء دائم ولا يمكن التراجع عنه.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>تأكيد إعادة التعيين</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>كلمة المرور الاحتياطية</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>الحماية الاحتياطية</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>أدخل كلمة مرور لتشفير ملف النسخ الاحتياطي هذا. إذا تركتها فارغة، فلن يتم تشفير النسخة الاحتياطية.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>استعادة النسخ الاحتياطي</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>هذه النسخة الاحتياطية محمية بكلمة مرور. أدخل كلمة المرور لفك تشفيرها:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>التشفير</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>فك التشفير</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>حسناً</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>بيانات تطبيق النسخ الاحتياطي</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[النظام] تم إنشاء النسخة الاحتياطية بنجاح في: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>تم إنشاء النسخة الاحتياطية بنجاح!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>اكتمل النسخ الاحتياطي</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[النظام] خطأ في النسخ الاحتياطي: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>خطأ في إنشاء نسخة احتياطية: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>فشل النسخ الاحتياطي</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>ستؤدي استعادة البيانات إلى الكتابة فوق ملفات تعريف الخادم الحالية الخاصة بك، والشعيرات المتقاطعة المخصصة، وتراكبات الرسم، وتكوينات الخريطة المصغرة.
+
+هل أنت متأكد من رغبتك في المتابعة؟</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>تأكيد استعادة النسخة الاحتياطية</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>استعادة بيانات التطبيق</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>تمت استعادة بيانات التطبيق بنجاح!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>اكتملت عملية الاستعادة</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[النظام] خطأ في الاستعادة: تم توفير كلمة مرور غير صالحة.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>فشل فك التشفير. كلمة مرور غير صالحة أو ملف النسخ الاحتياطي تالف.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>فشل الاستعادة</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[النظام] خطأ في الاستعادة: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>خطأ في استعادة النسخة الاحتياطية: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>تنسيق ملف النسخ الاحتياطي غير صالح أو توقيع مفقود.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[مسح] بدء عملية إعادة الضبط الانتقائي...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] قطع اتصال الخادم النشط...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] اكتملت إعادة تعيين الاتصال.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] مسح ملفات تعريف الخادم المحفوظة ...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] تم مسح ملفات تعريف الخادم المحفوظة.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] إزالة بيانات اعتماد حساب Steam ...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[مسح] تم مسح بيانات اعتماد البخار.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] مسح تكوين اقتران جهاز المسح...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] تم حذف تكوين اقتران الجهاز.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[Wipe] مسح الشعيرات المتقاطعة المخصصة...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] خطأ في مسح الشعيرات المتقاطعة المخصصة: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[Wipe] تم مسح الشعيرات المتقاطعة المخصصة.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] مسح ملفات ذاكرة التخزين المؤقت المحلية ورسومات التراكب...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] خطأ في مسح مجلد ذاكرة التخزين المؤقت: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[مسح] تم مسح مجلدات ذاكرة التخزين المؤقت.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] إعادة تسجيل بيانات اعتماد المستمع و FCM ...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[Wipe] اكتملت عملية إعادة الضبط الانتقائي بنجاح.</value>
+  </data>
 </root>

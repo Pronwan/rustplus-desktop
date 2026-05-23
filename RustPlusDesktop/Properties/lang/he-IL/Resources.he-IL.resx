@@ -1612,4 +1612,180 @@
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>ניתן לסגור חלון זה בכל עת — ניתן לפתוח אותו מחדש באמצעות הכפתור  ❓ כיצד לעקוב.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>תחזוקה</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>למחוק, לגבות או לשחזר הגדרות יישומים, פרופילים ושרטוטים מותאמים אישית.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>אפס נתוני האפליקציה...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>גיבוי נתונים...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>שחזור נתונים...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>איפוס נתוני היישום</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>בחר את הרכיבים שברצונך למחוק מהמכשיר הזה. כל האפשרויות שנבחרו יימחקו לצמיתות.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>חיבור שרת פעיל (ניתוק)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>פרופילי שרת שמורים (מחיקת תצורות שרת משויכות)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>פרטי התחברות לחשבון Steam (התנתקות)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>הגדרות צימוד מכשירים (איפוס אסימוני רישום)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>כוונות מותאמות אישית (הגדרות מחיקה)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>מטמון מקומי ושרטוטים (מחיקת מפות/קווים שנשמרו)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>פעולה זו היא בלתי הפיכה.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>אשר איפוס</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>סיסמת גיבוי</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>הגנה באמצעות גיבוי</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>הזן סיסמה כדי להצפין את קובץ הגיבוי הזה. אם תשאיר את השדה ריק, הגיבוי לא יוצפן.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>שחזור גיבוי</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>גיבוי זה מוגן בסיסמה. הזן את הסיסמה כדי לפענח אותו:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>הצפן</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>לפענח</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>בסדר</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>גיבוי נתוני היישום</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[מערכת] הגיבוי נוצר בהצלחה בכתובת: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>הגיבוי נוצר בהצלחה!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>הגיבוי הושלם</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[מערכת] שגיאה בגיבוי: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>שגיאה ביצירת גיבוי: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>הגיבוי נכשל</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>שחזור הנתונים יגרום לדריסת פרופילי השרת הנוכחיים, הכוונות המותאמות אישית, שכבות הציור ותצורות המפה המינימלית.
+
+האם אתה בטוח שברצונך להמשיך?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>אישור שחזור גיבוי</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>שחזור נתוני היישום</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>נתוני היישום שוחזרו בהצלחה!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>השחזור הושלם</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[מערכת] שגיאה בשחזור: הסיסמה שהוזנה אינה חוקית.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>הפענוח נכשל. סיסמה לא חוקית או קובץ גיבוי פגום.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>השחזור נכשל</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[מערכת] שגיאה בשחזור: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>שגיאה בשחזור הגיבוי: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>פורמט קובץ הגיבוי אינו תקין או שהחתימה חסרה.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] מתחילים בפעולת איפוס סלקטיבי...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] ניתוק החיבור לשרת הפעיל...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] איפוס החיבור הושלם.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] מוחקים פרופילי שרת שמורים...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] פרופילי השרת שנשמרו נמחקו.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] מחיקת פרטי הכניסה לחשבון Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] פרטי הכניסה ל-Steam נמחקו.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[מחיקה] מחיקת תצורת צימוד המכשיר...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] תצורת צימוד המכשיר נמחקה.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] מוחק כוונות מותאמות אישית...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] שגיאה בניקוי הכוונת המותאמת אישית: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] כוונת מותאמת אישית נמחקה.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] מחיקת קבצי המטמון המקומיים ושרטוטי השכבה...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] שגיאה בניקוי תיקיית המטמון: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] תיקיות המטמון נוקו.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] רישום מחדש של פרטי הזיהוי של ה-Listener ו-FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] פעולת האיפוס הסלקטיבי הושלמה בהצלחה.</value>
+  </data>
 </root>

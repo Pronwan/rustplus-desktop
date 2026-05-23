@@ -1612,4 +1612,180 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Cierra esta ventana en cualquier momento: puedes volver a abrirla con el botón ❓ Seguimiento.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Mantenimiento</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Borra, haz copias de seguridad o restaura la configuración de aplicaciones, perfiles y dibujos personalizados.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Restablecer datos de la aplicación...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Copia de seguridad de datos...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Restaurar datos...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Restablecer datos de aplicación</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Seleccione los componentes que desea borrar de este dispositivo. Todas las opciones seleccionadas se eliminarán de forma permanente.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Active Server Connection (Desconectar)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Perfiles de servidor guardados (Eliminar configuraciones de servidor emparejadas)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Credenciales de la cuenta de Steam (Cerrar sesión)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Configuración de emparejamiento de dispositivos (restablecimiento de las fichas de registro)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Cruces personalizadas (configuraciones de borrado)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Caché local y dibujos (borrar mapas/líneas guardados)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Esta acción es permanente y no puede deshacerse.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Confirmar Reinicio</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Contraseña de seguridad</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Protección de copias de seguridad</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Introduzca una contraseña para cifrar este archivo de copia de seguridad. Si la deja vacía, la copia de seguridad no se cifrará.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Restaurar copia de seguridad</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Esta copia de seguridad está protegida por contraseña. Introduzca la contraseña para descifrarla:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Cifrar</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Descifrar</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Copia de seguridad de los datos de la aplicación</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Copia de seguridad creada con éxito en: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>¡Copia de seguridad creada con éxito!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Copia de seguridad finalizada</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[Error de copia de seguridad: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Error al crear la copia de seguridad: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Copia de seguridad fallida</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Al restaurar los datos, se sobrescribirán los perfiles de servidor actuales, las retículas personalizadas, las superposiciones de dibujo y las configuraciones del minimapa.
+
+¿Estás seguro de que quieres continuar?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Confirmación de restauración de la copia de seguridad</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Restaurar datos de aplicaciones</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Los datos de la aplicación se han restaurado correctamente.</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Restauración finalizada</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[Error de restauración: Contraseña no válida proporcionada.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Error de descifrado. Contraseña no válida o archivo de copia de seguridad dañado.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Restauración fallida</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Error de restauración: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Error al restaurar la copia de seguridad: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Formato de archivo de copia de seguridad no válido o falta la firma.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Iniciando operación de reinicio selectivo...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Desconectando conexión con servidor activo...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[Restablecimiento de conexión completado.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Borrando perfiles de servidor guardados...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Perfiles de servidor guardados borrados.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Eliminando las credenciales de la cuenta de Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Credenciales de Steam borradas.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Borrando configuración de emparejamiento de dispositivos...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Configuración de emparejamiento de dispositivos borrada.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Limpiando retículos personalizados...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Error al borrar las retículas personalizadas: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Crosshairs personalizados borrados.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Borrando archivos de caché local y dibujos de superposición...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[Error al borrar la carpeta de caché: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Carpetas de caché borradas.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Re-registro de credenciales de oyente y FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Operación de reinicio selectivo completada con éxito.</value>
+  </data>
 </root>

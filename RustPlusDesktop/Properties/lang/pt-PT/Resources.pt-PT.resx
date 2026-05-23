@@ -1612,4 +1612,180 @@ Baixar e instalar agora?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Feche esta janela em qualquer altura - pode reabri-la com o botão ❓ Como acompanhar.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Manutenção</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Limpar, fazer cópias de segurança ou restaurar definições de aplicações, perfis e desenhos personalizados.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Repor dados da aplicação...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Cópia de segurança de dados...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Restaurar dados...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Repor dados da aplicação</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Selecione os componentes que pretende apagar deste dispositivo. Todas as opções selecionadas serão eliminadas permanentemente.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Ligação do servidor ativo (Desligar)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Perfis de servidor guardados (Eliminar configurações de servidor emparelhadas)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Credenciais da conta Steam (Terminar sessão)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Configuração do emparelhamento de dispositivos (Repor os tokens de registo)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Mira personalizada (configurações de limpeza)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Cache local e desenhos (Limpar mapas/linhas guardados)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Esta ação é permanente e não pode ser anulada.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Confirmar a reposição</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Palavra-passe de cópia de segurança</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Proteção de segurança</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Introduza uma palavra-passe para encriptar este ficheiro de cópia de segurança. Se o deixar vazio, a cópia de segurança não será encriptada.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Restaurar cópia de segurança</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Esta cópia de segurança está protegida por palavra-passe. Introduza a palavra-passe para a desencriptar:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Encriptar</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Desencriptar</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Cópia de segurança dos dados da aplicação</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[Cópia de segurança criada com sucesso em: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Cópia de segurança criada com sucesso!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Cópia de segurança concluída</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SISTEMA] Erro de cópia de segurança: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Erro ao criar backup: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Falha na cópia de segurança</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>O restauro de dados irá substituir os perfis de servidor actuais, as miras personalizadas, as sobreposições de desenho e as configurações do minimapa.
+
+Tem a certeza de que pretende continuar?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Confirmação da cópia de segurança de restauro</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Restaurar dados da aplicação</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Dados da aplicação restaurados com sucesso!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Restauro concluído</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[Erro de restauro: Palavra-passe inválida fornecida.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>A desencriptação falhou. Palavra-passe inválida ou ficheiro de cópia de segurança corrompido.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Falha no restauro</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SISTEMA] Erro de restauro: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Erro ao restaurar a cópia de segurança: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Formato de ficheiro de cópia de segurança inválido ou assinatura em falta.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[Iniciar a operação de reinicialização selectiva...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] A desligar a ligação ao servidor ativo...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[Reinício da ligação concluído.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Limpar perfis de servidor guardados...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Limpar os perfis de servidor guardados.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] A remover as credenciais da conta Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[Credenciais do Steam limpas.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] A limpar a configuração de emparelhamento de dispositivos...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Configuração de emparelhamento de dispositivos eliminada.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] A limpar a mira personalizada...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Erro ao limpar a mira personalizada: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Mira personalizada desactivada.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Limpar ficheiros de cache locais e desenhos de sobreposição...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Erro ao limpar a pasta de cache: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[Pastas de cache limpas.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Voltar a registar as credenciais do ouvinte e do FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Operação de reposição selectiva concluída com êxito.</value>
+  </data>
 </root>

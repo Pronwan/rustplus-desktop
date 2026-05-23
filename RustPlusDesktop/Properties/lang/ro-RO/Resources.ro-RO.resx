@@ -1612,4 +1612,180 @@ Descărcați și instalați acum?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Închideți această fereastră în orice moment - o puteți redeschide cu ajutorul butonului ❓ Cum să urmăriți.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Întreținere</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Ștergeți, salvați sau restaurați setările, profilurile și desenele personalizate ale aplicațiilor.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Resetați datele aplicației...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Date de rezervă...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Restaurarea datelor...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Resetați datele aplicației</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Selectați componentele pe care doriți să le ștergeți de pe acest dispozitiv. Toate opțiunile selectate vor fi șterse definitiv.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Conexiune la serverul activ (Deconectare)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Saved Server Profiles (Ștergeți configurațiile de server împerecheate)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Credențiale cont Steam (Deconectare)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Configurare împerechere dispozitiv (resetare jetoane de înregistrare)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Traiectorii personalizate (configurații de ștergere)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Cache local și desene (Ștergeți hărțile/linile salvate)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Această acțiune este permanentă și nu poate fi anulată.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Confirmați resetarea</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Parolă de rezervă</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Protecție de rezervă</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Introduceți o parolă pentru a cripta acest fișier de rezervă. Dacă o lăsați goală, copia de rezervă nu va fi criptată.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Restaurare copie de rezervă</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Această copie de rezervă este protejată prin parolă. Introduceți parola pentru a o decripta:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Criptare</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Decriptare</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Datele aplicației de rezervă</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Backup creat cu succes la: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Backup creat cu succes!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Backup finalizat</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Eroare de backup: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Eroare la crearea backup-ului: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Backup eșuat</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Restaurarea datelor va suprascrie profilurile curente ale serverului, liniile de ochire personalizate, suprapunerile de desen și configurațiile minimapelor.
+
+Sunteți sigur că doriți să continuați?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Confirmare restaurare copie de rezervă</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Restaurarea datelor aplicației</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Datele aplicației restaurate cu succes!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Restaurare finalizată</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Eroare de restaurare: Parolă invalidă furnizată.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Decriptarea a eșuat. Parolă invalidă sau fișier de rezervă corupt.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Restaurare eșuată</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Eroare de restaurare: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Eroare la restaurarea backup-ului: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Format de fișier de rezervă invalid sau semnătură lipsă.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Pornirea operației de resetare selectivă...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Deconectarea conexiunii serverului activ...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Resetarea conexiunii finalizată.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Curățarea profilurilor de server salvate...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Profiluri server salvate șterse.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Eliminarea acreditărilor contului Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Autentificările Steam șterse.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Ștergerea configurației de împerechere a dispozitivului...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Configurația de împerechere a dispozitivului ștearsă.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Ștergerea liniilor de ochire personalizate...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Eroare la ștergerea ochilor încrucișați personalizați: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Traiectorii personalizate șterse.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Curățarea fișierelor cache locale și a desenelor de suprapunere...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Eroare la ștergerea folderului cache: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Folderele cache șterse.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Reînregistrarea acreditărilor ascultătorului și FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Operațiunea de resetare selectivă s-a încheiat cu succes.</value>
+  </data>
 </root>

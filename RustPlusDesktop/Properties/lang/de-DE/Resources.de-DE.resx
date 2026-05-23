@@ -1612,4 +1612,180 @@ jetzt herunterladen und installieren?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Schließe dieses Fenster jederzeit — du kannst es über den  ❓ Wie man trackt  Button wieder öffnen.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Wartung</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Löschen, Sichern oder Wiederherstellen von Anwendungseinstellungen, Profilen und benutzerdefinierten Zeichnungen.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>App-Daten zurücksetzen...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Daten sichern...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Daten wiederherstellen...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Anwendungsdaten zurücksetzen</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Wählen Sie die Komponenten aus, die Sie von diesem Gerät löschen möchten. Alle ausgewählten Optionen werden dauerhaft gelöscht.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Aktive Serververbindung (Trennen)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Gespeicherte Serverprofile (gepaarte Serverkonfigurationen löschen)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Steam-Konto-Anmeldeinformationen (Abmelden)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Geräte-Kopplungskonfiguration (Registrierungs-Token zurücksetzen)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Benutzerdefiniertes Fadenkreuz (Wischkonfigurationen)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Lokaler Cache &amp; Zeichnungen (gespeicherte Karten/Linien löschen)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Diese Maßnahme ist dauerhaft und kann nicht rückgängig gemacht werden.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Bestätigen Sie Reset</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Passwort sichern</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Backup-Schutz</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Geben Sie ein Passwort ein, um diese Sicherungsdatei zu verschlüsseln. Wenn Sie dieses Feld leer lassen, wird die Sicherung nicht verschlüsselt.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Backup wiederherstellen</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Diese Sicherung ist passwortgeschützt. Geben Sie das Passwort ein, um es zu entschlüsseln:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Verschlüsseln Sie</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Entschlüsseln</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Anwendungsdaten sichern</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Backup erfolgreich erstellt bei: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Sicherung erfolgreich erstellt!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Sicherung abgeschlossen</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Fehler bei der Sicherung: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Fehler beim Erstellen der Sicherung: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Sicherung fehlgeschlagen</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Beim Wiederherstellen der Daten werden Ihre aktuellen Serverprofile, benutzerdefinierten Fadenkreuze, Zeichen-Overlays und Minimap-Konfigurationen überschrieben.
+
+Sind Sie sicher, dass Sie fortfahren möchten?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Bestätigung der Wiederherstellung der Sicherung</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Anwendungsdaten wiederherstellen</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Anwendungsdaten erfolgreich wiederhergestellt!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Wiederherstellung abgeschlossen</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Wiederherstellungsfehler: Ungültiges Passwort angegeben.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Entschlüsselung fehlgeschlagen. Ungültiges Passwort oder beschädigte Sicherungsdatei.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Wiederherstellung fehlgeschlagen</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Wiederherstellungsfehler: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Fehler beim Wiederherstellen der Sicherung: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Ungültiges Format der Sicherungsdatei oder fehlende Signatur.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Start des selektiven Reset-Vorgangs...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Trennen der aktiven Serververbindung...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Zurücksetzen der Verbindung abgeschlossen.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Gespeicherte Serverprofile löschen...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Gespeicherte Serverprofile wurden gelöscht.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Entfernen der Steam-Konto-Anmeldedaten...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Steam-Anmeldeinformationen gelöscht.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Löschen der Gerätepaarungskonfiguration...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Gerätepaarungskonfiguration gelöscht.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Benutzerdefiniertes Fadenkreuz wischen...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Fehler beim Löschen des benutzerdefinierten Fadenkreuzes: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Benutzerdefiniertes Fadenkreuz gelöscht.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Löschen von lokalen Cache-Dateien und Overlay-Zeichnungen...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Fehler beim Löschen des Cache-Ordners: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Cache-Ordner geleert.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Neuregistrierung der Hörer- und FCM-Anmeldeinformationen...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Selektiver Rücksetzvorgang erfolgreich abgeschlossen.</value>
+  </data>
 </root>

@@ -1612,4 +1612,180 @@ Download og installer nu?</value>
   <data name="HowToTrackCloseHint" xml:space="preserve">
     <value>Luk dette vindue når som helst - du kan åbne det igen med ❓ How to Track-knappen.</value>
   </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Vedligeholdelse</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Slet, sikkerhedskopier eller gendan programindstillinger, profiler og brugerdefinerede tegninger.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Nulstil app-data ...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Backup af data...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Gendan data ...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Nulstil applikationsdata</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Vælg de komponenter, du vil slette fra denne enhed. Alle valgte indstillinger vil blive slettet permanent.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Aktiv serverforbindelse (afbryd)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Gemte serverprofiler (Slet parrede serverkonfigurationer)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Legitimationsoplysninger til Steam-konto (log ud)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Device Pairing Config (Nulstil registreringstokens)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Brugerdefineret trådkors (Wipe-konfigurationer)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Lokal cache og tegninger (slet gemte kort/linjer)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Denne handling er permanent og kan ikke fortrydes.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Bekræft nulstilling</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Backup-adgangskode</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Beskyttelse af backup</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Indtast en adgangskode for at kryptere denne backup-fil. Hvis du lader den stå tom, bliver sikkerhedskopien ikke krypteret.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Gendan sikkerhedskopi</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Denne sikkerhedskopi er beskyttet med en adgangskode. Indtast adgangskoden for at dekryptere den:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Krypter</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Dekrypter</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Sikkerhedskopiering af applikationsdata</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Backup oprettet med succes på: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Backup oprettet med succes!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Backup afsluttet</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Backup-fejl: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Fejl ved oprettelse af backup: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Backup mislykkedes</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Gendannelse af data vil overskrive dine nuværende serverprofiler, brugerdefinerede trådkors, tegneoverlejringer og minimap-konfigurationer.
+
+Er du sikker på, at du vil fortsætte?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Bekræftelse af gendannelse af sikkerhedskopi</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Gendan programdata</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Applikationsdata gendannet med succes!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Gendannelse afsluttet</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Gendannelsesfejl: Ugyldig adgangskode angivet.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Dekryptering mislykkedes. Ugyldig adgangskode eller beskadiget backup-fil.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Gendannelse mislykkedes</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Gendannelsesfejl: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Fejl ved gendannelse af backup: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Ugyldigt backup-filformat eller manglende signatur.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Starter selektiv nulstilling...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Afbryder aktiv serverforbindelse...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Nulstilling af forbindelse fuldført.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Rydder gemte serverprofiler...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Gemte serverprofiler slettes.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Fjernelse af legitimationsoplysninger til Steam-konto ...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Steam-legitimationsoplysninger ryddet.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Wiping device pairing configuration...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Konfiguration af enhedsparring slettet.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Tørring af brugerdefineret trådkors ...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Fejl ved rydning af brugerdefineret trådkors: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Brugerdefineret trådkors ryddet.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Rydning af lokale cache-filer og overlay-tegninger ...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Fejl ved rydning af cache-mappe: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Cache-mapper ryddet.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Genregistrering af lytter- og FCM-legitimationsoplysninger ...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Selektiv nulstilling gennemført med succes.</value>
+  </data>
 </root>
