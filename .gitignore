@@ -39,6 +39,7 @@ installer/Output/*
 !README.md
 !LICENSE
 !docs/
+docs/*
 !RustPlusDesktop/*.png
 !RustPlusDesktop/*.jpg
 RustPlusDesktop/RustPlusDesk_lbvqmzga_wpftmp.csproj
