@@ -160,8 +160,13 @@ public partial class MainWindow
             _statusCts?.Cancel();
             _statusCts = new CancellationTokenSource();
             _ = PollServerStatusLoopAsync(_statusCts.Token);
-            
+
+            // Start A2S player polling so the Players tab works on soft connect too
+            TrackingService.StartPolling(profile.Host ?? "", profile.Port, profile.Name ?? "", profile.BattleMetricsId);
+            _ = TrackingService.FetchOnlinePlayersNowAsync();
+
             AppendLog("Soft-connect complete.");
+
         }
         catch (Exception ex)
         {
