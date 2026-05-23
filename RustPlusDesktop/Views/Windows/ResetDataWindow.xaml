@@ -1,0 +1,88 @@
+<Window x:Class="RustPlusDesk.Views.ResetDataWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="{DynamicResource ResetDataTitle}" 
+        Width="480" Height="440"
+        WindowStartupLocation="CenterOwner"
+        AllowsTransparency="True" 
+        WindowStyle="None"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        Topmost="True">
+    
+    <Border Background="{DynamicResource SurfaceAlt}" 
+            BorderBrush="{DynamicResource CardBorder}" 
+            BorderThickness="2" 
+            CornerRadius="12">
+        <DockPanel Margin="20">
+            <!-- Header -->
+            <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+                <DockPanel>
+                    <TextBlock Text="{DynamicResource ResetDataTitle}" 
+                               FontSize="18" FontWeight="SemiBold" 
+                               Foreground="#EF5350"
+                               VerticalAlignment="Center"/>
+                    
+                    <Button Content="✕" 
+                            HorizontalAlignment="Right" 
+                            Click="BtnCancel_Click"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="{DynamicResource TextSubtle}"
+                            FontSize="16"
+                            Cursor="Hand"
+                            VerticalAlignment="Center"/>
+                </DockPanel>
+                <Separator Background="{DynamicResource CardBorder}" Margin="0,8,0,0"/>
+            </StackPanel>
+ 
+            <!-- Bottom Buttons -->
+            <Grid DockPanel.Dock="Bottom" Margin="0,15,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ui:Button x:Name="BtnConfirm" Grid.Column="1" Content="{DynamicResource ConfirmReset}" Appearance="Caution" Width="130" Height="32" Margin="0,0,8,0" Click="BtnConfirm_Click"/>
+                <ui:Button x:Name="BtnCancel" Grid.Column="2" Content="{DynamicResource Cancel}" Appearance="Secondary" Width="100" Height="32" Click="BtnCancel_Click"/>
+            </Grid>
+ 
+            <!-- Main Content -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource ResetDataDesc}" 
+                               Foreground="{DynamicResource TextSubtle}" 
+                               FontSize="12" 
+                               TextWrapping="Wrap" 
+                               Margin="0,0,0,15"/>
+ 
+                    <!-- Checkboxes Card -->
+                    <Border Style="{StaticResource Card}" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,15">
+                        <StackPanel>
+                            <CheckBox x:Name="ChkConnection" Content="{DynamicResource ResetOptionConnection}" IsChecked="True" Style="{StaticResource DotCheckBox}" Margin="0,0,0,10"/>
+                            <CheckBox x:Name="ChkProfiles" Content="{DynamicResource ResetOptionProfiles}" IsChecked="False" Style="{StaticResource DotCheckBox}" Margin="0,0,0,10"/>
+                            <CheckBox x:Name="ChkSteam" Content="{DynamicResource ResetOptionSteam}" IsChecked="False" Style="{StaticResource DotCheckBox}" Margin="0,0,0,10"/>
+                            <CheckBox x:Name="ChkPairing" Content="{DynamicResource ResetOptionPairing}" IsChecked="False" Style="{StaticResource DotCheckBox}" Margin="0,0,0,10"/>
+                            <CheckBox x:Name="ChkCrosshairs" Content="{DynamicResource ResetOptionCrosshairs}" IsChecked="False" Style="{StaticResource DotCheckBox}" Margin="0,0,0,10"/>
+                            <CheckBox x:Name="ChkCache" Content="{DynamicResource ResetOptionCache}" IsChecked="False" Style="{StaticResource DotCheckBox}"/>
+                        </StackPanel>
+                    </Border>
+ 
+                    <!-- Warning banner -->
+                    <Border Background="#26D32A2A" BorderBrush="#50D32A2A" BorderThickness="1" CornerRadius="6" Padding="10">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Warning24" Foreground="#FF6262" Margin="0,0,10,0" VerticalAlignment="Center" FontSize="18"/>
+                            <TextBlock Text="{DynamicResource ResetDataWarning}" 
+                                       Foreground="#FF6D6D" 
+                                       FontSize="11" 
+                                       FontWeight="SemiBold" 
+                                       VerticalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</Window>

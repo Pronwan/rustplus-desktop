@@ -588,4 +588,64 @@ Download and install now?</value></data>
   <data name="NativeUDPTrackingSubtitle" xml:space="preserve"><value>Native UDP tracking</value></data>
   <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve"><value>The tracking guide is currently only available in English, as it will undergo changes in the near future. We ask for your patience.</value></data>
   <data name="HowToTrackCloseHint" xml:space="preserve"><value>Close this window at any time — you can reopen it with the  ❓ How to Track  button.</value></data>
+  <data name="MaintenanceTitle" xml:space="preserve"><value>Maintenance</value></data>
+  <data name="MaintenanceDesc" xml:space="preserve"><value>Wipe, backup, or restore application settings, profiles, and custom drawings.</value></data>
+  <data name="ResetAppData" xml:space="preserve"><value>Reset App Data...</value></data>
+  <data name="BackupData" xml:space="preserve"><value>Backup Data...</value></data>
+  <data name="RestoreData" xml:space="preserve"><value>Restore Data...</value></data>
+  <data name="ResetDataTitle" xml:space="preserve"><value>Reset Application Data</value></data>
+  <data name="ResetDataDesc" xml:space="preserve"><value>Select the components you want to wipe from this device. All selected options will be permanently deleted.</value></data>
+  <data name="ResetOptionConnection" xml:space="preserve"><value>Active Server Connection (Disconnect)</value></data>
+  <data name="ResetOptionProfiles" xml:space="preserve"><value>Saved Server Profiles (Delete paired server configurations)</value></data>
+  <data name="ResetOptionSteam" xml:space="preserve"><value>Steam Account Credentials (Log out)</value></data>
+  <data name="ResetOptionPairing" xml:space="preserve"><value>Device Pairing Config (Reset registration tokens)</value></data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve"><value>Custom Crosshairs (Wipe configurations)</value></data>
+  <data name="ResetOptionCache" xml:space="preserve"><value>Local Cache &amp; Drawings (Wipe saved maps/lines)</value></data>
+  <data name="ResetDataWarning" xml:space="preserve"><value>This action is permanent and cannot be undone.</value></data>
+  <data name="ConfirmReset" xml:space="preserve"><value>Confirm Reset</value></data>
+  <data name="BackupPasswordTitle" xml:space="preserve"><value>Backup Password</value></data>
+  <data name="BackupProtectionTitle" xml:space="preserve"><value>Backup Protection</value></data>
+  <data name="BackupProtectionDesc" xml:space="preserve"><value>Enter a password to encrypt this backup file. If you leave it empty, the backup will not be encrypted.</value></data>
+  <data name="RestoreBackupTitle" xml:space="preserve"><value>Restore Backup</value></data>
+  <data name="RestoreBackupDesc" xml:space="preserve"><value>This backup is password-protected. Enter the password to decrypt it:</value></data>
+  <data name="Encrypt" xml:space="preserve"><value>Encrypt</value></data>
+  <data name="Decrypt" xml:space="preserve"><value>Decrypt</value></data>
+  <data name="OK" xml:space="preserve"><value>OK</value></data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve"><value>Backup Application Data</value></data>
+  <data name="BackupSuccessLog" xml:space="preserve"><value>[SYSTEM] Backup created successfully at: {0}</value></data>
+  <data name="BackupSuccessMessage" xml:space="preserve"><value>Backup created successfully!</value></data>
+  <data name="BackupSuccessTitle" xml:space="preserve"><value>Backup Completed</value></data>
+  <data name="BackupErrorLog" xml:space="preserve"><value>[SYSTEM] Backup error: {0}</value></data>
+  <data name="BackupErrorMessage" xml:space="preserve"><value>Error creating backup: {0}</value></data>
+  <data name="BackupFailedTitle" xml:space="preserve"><value>Backup Failed</value></data>
+  <data name="RestoreConfirmMessage" xml:space="preserve"><value>Restoring data will overwrite your current server profiles, custom crosshairs, drawing overlays, and minimap configurations.
+
+Are you sure you want to continue?</value></data>
+  <data name="RestoreConfirmTitle" xml:space="preserve"><value>Restore Backup Confirmation</value></data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve"><value>Restore Application Data</value></data>
+  <data name="RestoreSuccessMessage" xml:space="preserve"><value>Application data restored successfully!</value></data>
+  <data name="RestoreSuccessTitle" xml:space="preserve"><value>Restore Completed</value></data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve"><value>[SYSTEM] Restore error: Invalid password provided.</value></data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve"><value>Decryption failed. Invalid password or corrupted backup file.</value></data>
+  <data name="RestoreFailedTitle" xml:space="preserve"><value>Restore Failed</value></data>
+  <data name="RestoreErrorLog" xml:space="preserve"><value>[SYSTEM] Restore error: {0}</value></data>
+  <data name="RestoreErrorMessage" xml:space="preserve"><value>Error restoring backup: {0}</value></data>
+  <data name="InvalidBackupFormat" xml:space="preserve"><value>Invalid backup file format or missing signature.</value></data>
+  <data name="WipeLogStart" xml:space="preserve"><value>[WIPE] Starting selective reset operation...</value></data>
+  <data name="WipeLogConnStart" xml:space="preserve"><value>[WIPE] Disconnecting active server connection...</value></data>
+  <data name="WipeLogConnEnd" xml:space="preserve"><value>[WIPE] Connection reset complete.</value></data>
+  <data name="WipeLogProfilesStart" xml:space="preserve"><value>[WIPE] Clearing saved server profiles...</value></data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve"><value>[WIPE] Saved server profiles cleared.</value></data>
+  <data name="WipeLogSteamStart" xml:space="preserve"><value>[WIPE] Removing Steam account credentials...</value></data>
+  <data name="WipeLogSteamEnd" xml:space="preserve"><value>[WIPE] Steam credentials cleared.</value></data>
+  <data name="WipeLogPairingStart" xml:space="preserve"><value>[WIPE] Wiping device pairing configuration...</value></data>
+  <data name="WipeLogPairingEnd" xml:space="preserve"><value>[WIPE] Device pairing configuration deleted.</value></data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve"><value>[WIPE] Wiping custom crosshairs...</value></data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve"><value>[WIPE] Error clearing custom crosshairs: {0}</value></data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve"><value>[WIPE] Custom crosshairs cleared.</value></data>
+  <data name="WipeLogCacheStart" xml:space="preserve"><value>[WIPE] Clearing local cache files and overlay drawings...</value></data>
+  <data name="WipeLogCacheError" xml:space="preserve"><value>[WIPE] Error clearing cache folder: {0}</value></data>
+  <data name="WipeLogCacheEnd" xml:space="preserve"><value>[WIPE] Cache folders cleared.</value></data>
+  <data name="WipeLogPairingRestart" xml:space="preserve"><value>[WIPE] Re-registering listener and FCM credentials...</value></data>
+  <data name="WipeLogComplete" xml:space="preserve"><value>[WIPE] Selective reset operation completed successfully.</value></data>
 </root>
