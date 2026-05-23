@@ -276,7 +276,7 @@ Not: Bu iletim yöntemi gelecekte optimize edilecektir. Eğer takım arkadaşlar
     <value>Gerekli Eylem:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics Kaldırma:</value>
+    <value>BattleMetrics İzleme Kaldırıldı</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Oyuncu Takip Sistemi Revizyonu</value>

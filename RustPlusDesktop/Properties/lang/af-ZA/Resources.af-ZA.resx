@@ -276,7 +276,7 @@ Nota: Hierdie oordragmetode sal in die toekoms geoptimaliseer word. As spanmaats
     <value>Aksie vereis:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Verwydering van BattleMetrics:</value>
+    <value>BattleMetrics-opsporing verwyder</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Hersiening van die speleropsporingstelsel</value>

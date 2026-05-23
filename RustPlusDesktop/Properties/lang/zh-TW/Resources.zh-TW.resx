@@ -276,7 +276,7 @@
     <value>需要採取的行動：</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics 移除：</value>
+    <value>移除 BattleMetrics 追蹤</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>玩家追蹤系統全面更新</value>

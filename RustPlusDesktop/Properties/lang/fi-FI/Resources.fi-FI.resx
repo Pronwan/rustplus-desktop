@@ -276,7 +276,7 @@ Huomautus: Tätä siirtomenetelmää optimoidaan tulevaisuudessa. Jos joukkuetov
     <value>Toiminto Vaaditaan:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics Removal:</value>
+    <value>BattleMetrics-seuranta poistettu</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Pelaajan Seurantajärjestelmän Peruskorjaus</value>

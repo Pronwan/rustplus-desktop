@@ -276,7 +276,7 @@ Merk: Denne overføringsmetoden blir optimalisert i fremtiden. Hvis lagkamerater
     <value>Handling påkrevd:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics Fjerning:</value>
+    <value>BattleMetrics Sporing Fjernet</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Spillersporingssystem overhaling</value>

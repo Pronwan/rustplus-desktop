@@ -276,7 +276,7 @@ Uwaga: Ta metoda transmisji zostanie zoptymalizowana w przyszłości. Jeśli cz�
     <value>Wymagane działanie:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Usuwanie Bitewne:</value>
+    <value>Usunięto śledzenie BattleMetrics</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>Przegląd systemu śledzenia graczy</value>

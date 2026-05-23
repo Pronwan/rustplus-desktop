@@ -276,7 +276,7 @@
     <value>נדרשת פעולה:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>הסרת BattleMetrics:</value>
+    <value>מעקב BattleMetrics הוסר</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
     <value>שיפוץ מקיף של מערכת מעקב השחקנים</value>
