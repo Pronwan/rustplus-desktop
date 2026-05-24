@@ -5733,44 +5733,6 @@ rp.connect();
             }
         }
 
-        // b) Fallback: Manuelle Request-Konstruktion (Contracts) - Wichtig, falls GetEntityInfoAsync nicht gefunden wird
-        if (result is null)
-        {
-            try
-            {
-                var asm = typeof(RustPlus).Assembly;
-                var reqType = asm.GetTypes().FirstOrDefault(x => x.Name == "AppRequest");
-                var emptyType = asm.GetTypes().FirstOrDefault(x => x.Name == "AppEmpty");
-                if (reqType != null && emptyType != null)
-                {
-                    var req = Activator.CreateInstance(reqType)!;
-                    var empty = Activator.CreateInstance(emptyType)!;
-
-                    reqType.GetProperty("EntityId")?.SetValue(req, entityId);
-                    reqType.GetProperty("GetEntityInfo")?.SetValue(req, empty);
-
-                    var send = t.GetMethod("SendRequestAsync", new[] { reqType });
-                    if (send != null)
-                    {
-                        await AcquireTokenAsync(ct);
-                        var taskObj = send.Invoke(_api, new object[] { req });
-                        if (taskObj is Task task)
-                        {
-                            await task.WaitAsync(TimeSpan.FromSeconds(5), ct).ConfigureAwait(false);
-                            if (TryGetTaskResult(task, out result))
-                            {
-                                if (!IsResponseValid(result)) return null;
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _log?.Invoke($"[stor/pull] Manual fallback for #{entityId} failed: {ex.Message}");
-            }
-        }
-
         if (result is null)
         {
             _log?.Invoke($"[stor/pull] #{entityId} returned null (will rely on ResponseReceived)");
