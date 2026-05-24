@@ -2240,7 +2240,16 @@
                                                                     Margin="0,0,8,0"
                                                                     ToolTip="{DynamicResource InAppAlert}"
                                                                     IsChecked="{Binding OverlayEnabled, Mode=TwoWay}"
-                                                                    Style="{StaticResource DotCheckBox}">
+                                                                    PreviewMouseLeftButtonDown="OnInAppPopupCheckBoxClick">
+                                                                    <CheckBox.Style>
+                                                                        <Style TargetType="CheckBox" BasedOn="{StaticResource DotCheckBox}">
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding AudioLoopEnabled}" Value="True">
+                                                                                    <Setter Property="Opacity" Value="0.4" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </CheckBox.Style>
                                                                     <Image Source="pack://application:,,,/Assets/icons/PiP.png" Width="16" Height="16" Stretch="Uniform"/>
                                                                 </CheckBox>
 
@@ -2255,6 +2264,26 @@
                                                                                 Click="OnSelectAlarmAudioFileClick"
                                                                                 Header="{DynamicResource CustomAudioFile}"
                                                                                 Tag="{Binding}" />
+                                                                            <MenuItem
+                                                                                Click="OnAudioLoopClick"
+                                                                                IsCheckable="True"
+                                                                                IsChecked="{Binding AudioLoopEnabled, Mode=TwoWay}"
+                                                                                Tag="{Binding}">
+                                                                                <MenuItem.Header>
+                                                                                    <TextBlock Text="{DynamicResource LoopAudioTillPopupClose}">
+                                                                                        <TextBlock.Style>
+                                                                                            <Style TargetType="TextBlock">
+                                                                                                <Style.Triggers>
+                                                                                                    <DataTrigger Binding="{Binding AudioLoopEnabled}" Value="True">
+                                                                                                        <Setter Property="Foreground" Value="#4CAF50" />
+                                                                                                        <Setter Property="FontWeight" Value="Bold" />
+                                                                                                    </DataTrigger>
+                                                                                                </Style.Triggers>
+                                                                                            </Style>
+                                                                                        </TextBlock.Style>
+                                                                                    </TextBlock>
+                                                                                </MenuItem.Header>
+                                                                            </MenuItem>
                                                                             <MenuItem
                                                                                 Click="OnResetAlarmAudioFileClick"
                                                                                 Header="{DynamicResource ResetToDefault}"
@@ -5461,7 +5490,7 @@
                     <TextBlock x:Name="AlarmOverlayNameTxt" Grid.Row="2" Margin="0,0,0,2" FontSize="16" FontWeight="Bold" Text="Custom Alarm Name" TextWrapping="Wrap" />
                     <TextBlock x:Name="AlarmOverlayMsgTxt" Grid.Row="3" Margin="0,0,0,12" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{DynamicResource AlarmActivated}" TextWrapping="Wrap" />
 
-                    <CheckBox x:Name="AlarmOverlayAutoHideChk" Grid.Row="4" Content="{DynamicResource AutoHideAfter3s}" FontSize="12" IsChecked="False" Checked="AlarmOverlayAutoHideChk_Changed" Unchecked="AlarmOverlayAutoHideChk_Changed"/>
+                    <CheckBox x:Name="AlarmOverlayAutoHideChk" Grid.Row="4" Content="{DynamicResource AutoHideAfter3s}" FontSize="12" IsChecked="False" Checked="AlarmOverlayAutoHideChk_Changed" Unchecked="AlarmOverlayAutoHideChk_Changed" PreviewMouseLeftButtonDown="OnAutoHideCheckBoxClick"/>
                 </Grid>
             </Border>
 

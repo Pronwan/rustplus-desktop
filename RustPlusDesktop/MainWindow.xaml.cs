@@ -2151,6 +2151,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _overlayAlarms.Clear();
         _overlayAlarmIndex = -1;
         _overlayHideTimer?.Stop();
+        StopLoopPlayer();
+        StopAlarmPlayer();
     }
 
     private void AlarmOverlayAutoHideChk_Changed(object sender, RoutedEventArgs e)
@@ -2162,6 +2164,86 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         else
         {
             _overlayHideTimer?.Stop();
+        }
+    }
+
+    private void OnAudioLoopClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.MenuItem item && item.Tag is SmartDevice dev)
+        {
+            if (dev.AudioLoopEnabled)
+            {
+                if (!dev.OverlayEnabled) dev.OverlayEnabled = true;
+                if (AlarmOverlayAutoHideChk.IsChecked == true)
+                {
+                    AlarmOverlayAutoHideChk.IsChecked = false;
+                }
+            }
+            UpdateGlobalAutoHideUI();
+        }
+    }
+
+    private async void OnInAppPopupCheckBoxClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (sender is System.Windows.Controls.CheckBox chk && chk.DataContext is SmartDevice dev)
+        {
+            if (dev.AudioLoopEnabled)
+            {
+                e.Handled = true;
+                var msgBox = new Wpf.Ui.Controls.MessageBox
+                {
+                    Title = "Smart Alarm",
+                    Content = Properties.Resources.LoopAudioPrompt,
+                    PrimaryButtonText = Properties.Resources.TurnOffNow,
+                    CloseButtonText = Properties.Resources.KeepActive
+                };
+                var result = await msgBox.ShowDialogAsync();
+                if (result == Wpf.Ui.Controls.MessageBoxResult.Primary)
+                {
+                    dev.AudioLoopEnabled = false;
+                    dev.OverlayEnabled = false;
+                    UpdateGlobalAutoHideUI();
+                }
+            }
+        }
+    }
+
+    private async void OnAutoHideCheckBoxClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        bool anyLooping = _vm.CurrentDevices != null && System.Linq.Enumerable.Any(_vm.CurrentDevices, d => d.AudioLoopEnabled);
+        if (anyLooping && AlarmOverlayAutoHideChk.IsChecked == false)
+        {
+            e.Handled = true;
+            var msgBox = new Wpf.Ui.Controls.MessageBox
+            {
+                Title = "Smart Alarm",
+                Content = Properties.Resources.LoopAudioGlobalPrompt,
+                PrimaryButtonText = Properties.Resources.TurnOffNow,
+                CloseButtonText = Properties.Resources.KeepActive
+            };
+            var result = await msgBox.ShowDialogAsync();
+            if (result == Wpf.Ui.Controls.MessageBoxResult.Primary)
+            {
+                if (_vm.CurrentDevices != null)
+                {
+                    foreach (var d in System.Linq.Enumerable.Where(_vm.CurrentDevices, d => d.AudioLoopEnabled))
+                    {
+                        d.AudioLoopEnabled = false;
+                    }
+                }
+                AlarmOverlayAutoHideChk.IsChecked = true;
+                UpdateGlobalAutoHideUI();
+            }
+        }
+    }
+
+    private void UpdateGlobalAutoHideUI()
+    {
+        bool anyLooping = _vm.CurrentDevices != null && System.Linq.Enumerable.Any(_vm.CurrentDevices, d => d.AudioLoopEnabled);
+        AlarmOverlayAutoHideChk.Opacity = anyLooping ? 0.4 : 1.0;
+        if (anyLooping && AlarmOverlayAutoHideChk.IsChecked == true)
+        {
+            AlarmOverlayAutoHideChk.IsChecked = false;
         }
     }
 

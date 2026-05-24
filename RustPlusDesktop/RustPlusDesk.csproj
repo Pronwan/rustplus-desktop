@@ -19,12 +19,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>5.3.0-beta2</Version>
+		<Version>5.4.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>5.2.992</AssemblyVersion>
-		<FileVersion>5.2.992</FileVersion>
-		<InformationalVersion>5.3.0-beta2</InformationalVersion>
+		<AssemblyVersion>5.4.0</AssemblyVersion>
+		<FileVersion>5.4.0</FileVersion>
+		<InformationalVersion>5.4.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -138,6 +138,7 @@
 	  <None Remove="Assets\icons\waterwell.png" />
 	  <None Remove="Assets\Data\rust-item-list.json" />
 	  <None Remove="Assets\icons\discord.png" />
+	  <None Remove="Assets\Images\5.3.0\LoopAudio_StopLogic.png" />
 	  <None Remove="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
 	  <None Remove="Assets\rustplus-desktop-icon.ico" />
 	  <None Remove="Assets\Data\rust_items.json" />
@@ -305,6 +306,7 @@
     <Resource Include="Assets\icons\waterwell.png" />
     <Resource Include="Assets\Data\rust-item-list.json" />
     <Resource Include="Assets\icons\discord.png" />
+    <Resource Include="Assets\Images\5.3.0\LoopAudio_StopLogic.png" />
     <Resource Include="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
     <Resource Include="Assets\rustplus-desktop-icon.ico" />
     <Resource Include="Assets\Screenshots\3.0_1.png" />
@@ -363,7 +365,7 @@
   <ItemGroup>
     <!-- Map nested localized resources using Link to keep culture naming intact while avoiding manifest name collisions -->
     <EmbeddedResource Update="Properties/lang/**/*.resx">
-      <Link>Properties\%(Filename)%(Extension)</Link>
+      <TargetPath>Properties\%(Filename)%(Extension)</TargetPath>
     </EmbeddedResource>
   </ItemGroup>
 

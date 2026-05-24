@@ -368,6 +368,33 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
     }
 
     private System.Windows.Media.MediaPlayer? _alarmPlayer;
+    private System.Windows.Media.MediaPlayer? _loopPlayer;
+    private bool _isLooping;
+
+    public void StopLoopPlayer()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            if (_loopPlayer != null && _isLooping)
+            {
+                _isLooping = false;
+                _loopPlayer.Stop();
+                AppendLog($"[audio] Stopped looping audio.");
+            }
+        });
+    }
+
+    public void StopAlarmPlayer()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            if (_alarmPlayer != null)
+            {
+                _alarmPlayer.Stop();
+                AppendLog($"[audio] Stopped standard alarm audio.");
+            }
+        });
+    }
 
     private void PlayAlarmAudio(SmartDevice? dev)
     {
@@ -400,20 +427,46 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
                 var fullPath = System.IO.Path.GetFullPath(audioFile);
                 Dispatcher.Invoke(() =>
                 {
-                    if (_alarmPlayer == null)
-                    {
-                        _alarmPlayer = new System.Windows.Media.MediaPlayer();
-                        _alarmPlayer.MediaFailed += (s, e) => AppendLog($"[audio] Media Failed: {e.ErrorException?.Message}");
-                        // Optional: MediaOpened Handler für asynchrones Play, 
-                        // aber Play() direkt nach Open() funktioniert bei MediaPlayer meist auch.
-                    }
+                    bool useLoopPlayer = dev != null && dev.AudioLoopEnabled;
 
-                    _alarmPlayer.Stop(); // Stoppen, falls noch etwas läuft
-                    _alarmPlayer.Open(new Uri(fullPath, UriKind.Absolute));
-                    _alarmPlayer.Volume = 1.0;
-                    _alarmPlayer.Play(); // Starten
-                    
-                    AppendLog($"[audio] Playing: {fullPath}");
+                    if (useLoopPlayer)
+                    {
+                        if (_loopPlayer == null)
+                        {
+                            _loopPlayer = new System.Windows.Media.MediaPlayer();
+                            _loopPlayer.MediaFailed += (s, e) => AppendLog($"[audio] Loop Media Failed: {e.ErrorException?.Message}");
+                            _loopPlayer.MediaEnded += (s, e) => {
+                                if (_isLooping && _loopPlayer != null)
+                                {
+                                    _loopPlayer.Position = TimeSpan.Zero;
+                                    _loopPlayer.Play();
+                                }
+                            };
+                        }
+
+                        _loopPlayer.Stop(); // Stoppen, falls noch etwas läuft
+                        _loopPlayer.Open(new Uri(fullPath, UriKind.Absolute));
+                        _loopPlayer.Volume = 1.0;
+                        _isLooping = true;
+                        _loopPlayer.Play(); // Starten
+                        
+                        AppendLog($"[audio] Looping: {fullPath}");
+                    }
+                    else
+                    {
+                        if (_alarmPlayer == null)
+                        {
+                            _alarmPlayer = new System.Windows.Media.MediaPlayer();
+                            _alarmPlayer.MediaFailed += (s, e) => AppendLog($"[audio] Media Failed: {e.ErrorException?.Message}");
+                        }
+
+                        _alarmPlayer.Stop(); // Stoppen, falls noch etwas läuft
+                        _alarmPlayer.Open(new Uri(fullPath, UriKind.Absolute));
+                        _alarmPlayer.Volume = 1.0;
+                        _alarmPlayer.Play(); // Starten
+                        
+                        AppendLog($"[audio] Playing: {fullPath}");
+                    }
                 });
             }
             else

@@ -650,5 +650,10 @@ namespace RustPlusDesk.Properties {
         public static string WipeLogCacheEnd => GetString("WipeLogCacheEnd");
         public static string WipeLogPairingRestart => GetString("WipeLogPairingRestart");
         public static string WipeLogComplete => GetString("WipeLogComplete");
+        public static string LoopAudioTillPopupClose => GetString("LoopAudioTillPopupClose");
+        public static string LoopAudioPrompt => GetString("LoopAudioPrompt");
+        public static string LoopAudioGlobalPrompt => GetString("LoopAudioGlobalPrompt");
+        public static string TurnOffNow => GetString("TurnOffNow");
+        public static string KeepActive => GetString("KeepActive");
     }
 }

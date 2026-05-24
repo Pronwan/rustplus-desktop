@@ -49,11 +49,11 @@
                     </Border>
 
                     <!-- ============================================== -->
-                    <!-- NEW v5.3.0 PATCH NOTES -->
+                    <!-- NEW v5.4.0 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="v5.3.0-beta | Localization, UI Modernization &amp; Storage Upkeep Update" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="v5.4.0 | Localization, UI Modernization &amp; Storage Upkeep Update" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
                             
                             <TextBlock Text="&#x2022; Global Localization &amp; Multi-Language Overhaul" FontWeight="Bold" Margin="0,0,0,4" Foreground="{DynamicResource Accent}"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
@@ -75,13 +75,19 @@
                                 Fixed the issue where storage monitors and Tool Cupboards showed "0 items" or failed to refresh on startup and soft-connection. Upkeep snapshots are queried directly from the API and synced immediately in the UI.
                             </TextBlock>
 
-                            <!-- v5.3.0 Dynamic Image Gallery -->
+                            <TextBlock Text="&#x2022; Smart Alarm Audio Alert Looping" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,12">
+                                You can now configure your Smart Alarms to loop their notification audio continuously! If an audio alert is looping, In-App popups are mandatory and cannot be turned off. Closing an In-App alert will automatically serve as the stop trigger for all running audio alerts.
+                            </TextBlock>
+
+                            <!-- v5.4.0 Dynamic Image Gallery -->
                             <views:ImageGallery>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.3.0/NewSettingOverlayOnLeftPanel.png" Description="Premium sidebar overlay integrating the main application settings."/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.3.0/NewLanguageSelector.png" Description="On-the-fly multi-language selection supporting 30+ dynamic locales."/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.3.0/ChatCommandsUI-1.png" Description="Isolated Chat Commands view, keeping team chat logs clean and structured."/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.3.0/ChatCommandsUI-2.png" Description="Dynamic configure menu for custom in-game chat commands and smart alerts."/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.3.0/newTeamChatUI.png" Description="Polished, isolated Team Chat layout with real-time refresh snap controls."/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.3.0/LoopAudio_StopLogic.png" Description="Audio Alert Looping + Stop Button"/>
                             </views:ImageGallery>
                         </StackPanel>
                     </Border>
