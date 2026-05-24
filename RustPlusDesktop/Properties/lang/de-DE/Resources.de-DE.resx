@@ -88,7 +88,7 @@
     <value>Noch keine Server gekoppelt</value>
   </data>
   <data name="PairingMaintenance" xml:space="preserve">
-    <value>PAIRING &amp; MAINTENANZ</value>
+    <value>PAIRING &amp; WARTUNG</value>
   </data>
   <data name="PairingIdle" xml:space="preserve">
     <value>Pairing: idle</value>
@@ -189,10 +189,10 @@ Hinweis: Diese Übertragungsart wird in Zukunft noch optimiert. Falls Teammates 
     <value>Versuche mit Kante zu verbinden</value>
   </data>
   <data name="ResetPairingConfig" xml:space="preserve">
-    <value>Reset pairing (delete config)</value>
+    <value>Reset pairing (Config löschen)</value>
   </data>
   <data name="ResetListenPairing" xml:space="preserve">
-    <value>Zurücksetzen + Anhören (neupaaren)</value>
+    <value>Reset + Listen (neu koppeln)</value>
   </data>
   <data name="ResetListenEdge" xml:space="preserve">
     <value>Zurücksetzen + Hören mit Kante</value>
@@ -348,7 +348,7 @@ Hinweis: Diese Übertragungsart wird in Zukunft noch optimiert. Falls Teammates 
     <value>Server</value>
   </data>
   <data name="SmartAlarm" xml:space="preserve">
-    <value>Intelligenter Alarm</value>
+    <value>Smart Alarm</value>
   </data>
   <data name="UnableToReadLink" xml:space="preserve">
     <value>RustPlus-Link konnte nicht gelesen werden: {0}
@@ -413,7 +413,7 @@ jetzt herunterladen und installieren?</value>
     <value>Tracked entfernen</value>
   </data>
   <data name="View" xml:space="preserve">
-    <value>Ansicht</value>
+    <value>Anzeigen</value>
   </data>
   <data name="MoreOptions" xml:space="preserve">
     <value>Weitere Optionen</value>
@@ -524,7 +524,7 @@ jetzt herunterladen und installieren?</value>
     <value>Spur</value>
   </data>
   <data name="ManualTrackPlaceholder" xml:space="preserve">
-    <value>Manueller Trackname oder Steam-ID...</value>
+    <value>Manueller Name oder Steam-ID...</value>
   </data>
   <data name="FilterPlayersPlaceholder" xml:space="preserve">
     <value>Spieler filtern...</value>
@@ -533,7 +533,7 @@ jetzt herunterladen und installieren?</value>
     <value>Lade Spieler...</value>
   </data>
   <data name="TrackedTab" xml:space="preserve">
-    <value>Nachverfolgt</value>
+    <value>Tracked</value>
   </data>
   <data name="TrackedPlayers" xml:space="preserve">
     <value>Verfolgte Spieler</value>
@@ -554,10 +554,10 @@ jetzt herunterladen und installieren?</value>
     <value>Bereit, Rost zu beherrschen?</value>
   </data>
   <data name="PairAccountBenefits" xml:space="preserve">
-    <value>Koppeln Sie Ihr Konto, um Spieler zu verfolgen, Base-Schlachtzüge zu erhalten und Ihre intelligenten Geräte sofort zu kontrollieren.</value>
+    <value>Kopple dein Konto, um Spieler zu verfolgen, Raid-Alarme zu erhalten und deine Smart-Devices sofort zu steuern.</value>
   </data>
   <data name="LoginPairAccount" xml:space="preserve">
-    <value>Login &amp; Paarkonto</value>
+    <value>Login &amp; Konto koppeln</value>
   </data>
   <data name="RequiresSteamLogin" xml:space="preserve">
     <value>Erfordert Steam Login in deinem Standard-Browser.</value>
@@ -566,7 +566,7 @@ jetzt herunterladen und installieren?</value>
     <value>Server löschen?</value>
   </data>
   <data name="DeleteServerConfirm" xml:space="preserve">
-    <value>Sind Sie sicher, dass Sie diesen Server löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.</value>
+    <value>Bist du sicher, dass du diesen Server löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Abbrechen</value>
@@ -575,7 +575,7 @@ jetzt herunterladen und installieren?</value>
     <value>Löschen</value>
   </data>
   <data name="AutoHideAfter3s" xml:space="preserve">
-    <value>Auto-Verstecken nach 3s</value>
+    <value>Autom. ausblenden nach 3s</value>
   </data>
   <data name="MapFilters" xml:space="preserve">
     <value>MAP FILTER</value>
@@ -635,10 +635,10 @@ jetzt herunterladen und installieren?</value>
     <value>Ölring-Trigger</value>
   </data>
   <data name="DeepSea" xml:space="preserve">
-    <value>Tiefsee-Ereignis</value>
+    <value>Deep Sea-Ereignis</value>
   </data>
   <data name="SmartAlerts" xml:space="preserve">
-    <value>Intelligente Warnungen</value>
+    <value>Smart Alerts</value>
   </data>
   <data name="PlayerOnline" xml:space="preserve">
     <value>Online-Status</value>
@@ -659,7 +659,7 @@ jetzt herunterladen und installieren?</value>
     <value>Selbst-Respawn</value>
   </data>
   <data name="PlayerRespawnTeam" xml:space="preserve">
-    <value>Team Respawn</value>
+    <value>Team-Respawn</value>
   </data>
   <data name="NewShops" xml:space="preserve">
     <value>Neue Shops</value>
