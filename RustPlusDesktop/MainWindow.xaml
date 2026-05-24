@@ -4345,10 +4345,10 @@
                             <ui:Card
                                 x:Name="FollowOverlay"
                                 Margin="8,0,0,0"
-                                Padding="2"
+                                Padding="0"
                                 Background="#AA16181C"
                                 BorderBrush="#40FFFFFF"
-                                BorderThickness="0"
+                                BorderThickness="1"
                                 VerticalAlignment="Top">
                                 <Grid>
                                     <!--  Active Glow  -->
@@ -4378,6 +4378,7 @@
                                         Padding="4"
                                         Appearance="Transparent"
                                         Click="BtnFollowPlayer_Click"
+                                        IsEnabled="{Binding Selected.IsFullConnected, FallbackValue=False}"
                                         ToolTip="{DynamicResource FollowPlayer}">
                                         <StackPanel Orientation="Horizontal">
                                             <!--  Avatar or Default Icon  -->
@@ -4459,10 +4460,10 @@
                             <ui:Card
                                 x:Name="MonumentsToggleOverlay"
                                 Margin="8,0,0,0"
-                                Padding="2"
+                                Padding="0"
                                 Background="#AA16181C"
                                 BorderBrush="#40FFFFFF"
-                                BorderThickness="0"
+                                BorderThickness="1"
                                 VerticalAlignment="Top">
                                 <Grid>
                                     <ui:Button
@@ -4470,6 +4471,7 @@
                                         Padding="4"
                                         Appearance="Transparent"
                                         Click="BtnToggleMonumentsPanel_Click"
+                                        IsEnabled="{Binding Selected.IsFullConnected, FallbackValue=False}"
                                         ToolTip="Toggle Monument List">
                                         <StackPanel Orientation="Horizontal" Margin="4,2">
                                             <TextBlock
