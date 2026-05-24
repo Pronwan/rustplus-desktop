@@ -3958,123 +3958,194 @@
                             VerticalAlignment="Top"
                             Panel.ZIndex="1000"
                             Orientation="Horizontal">
-                            <!--  TIME OVERLAY  -->
-                            <Border
-                                x:Name="TimeOverlay"
-                                Padding="8,4"
-                                Background="#AA16181C"
-                                BorderBrush="#40FFFFFF"
-                                BorderThickness="1"
-                                CornerRadius="8">
-                                <StackPanel Orientation="Horizontal">
-                                    <!--  Unknown Time Icon (Clock)  -->
-                                    <TextBlock
-                                        Margin="0,0,6,0"
-                                        VerticalAlignment="Center"
-                                        FontFamily="Segoe MDL2 Assets"
-                                        FontSize="14"
-                                        Foreground="#8D98A8"
-                                        Text="&#xE916;">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ServerTime}" Value="-">
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding ServerTime}" Value="–">
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding ServerTime}" Value="">
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding ServerTime}" Value="{x:Null}">
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-
-                                    <!--  Day Icon  -->
-                                    <TextBlock
-                                        Margin="0,0,6,0"
-                                        VerticalAlignment="Center"
-                                        FontFamily="Segoe MDL2 Assets"
-                                        FontSize="14"
-                                        Foreground="#FFD166"
-                                        Text="&#xE706;">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsDay}" Value="True">
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </DataTrigger>
-                                                    <!--  Hide if unknown  -->
-                                                    <DataTrigger Binding="{Binding ServerTime}" Value="-">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding ServerTime}" Value="–">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-
-                                    <!--  Night Icon  -->
-                                    <TextBlock
-                                        Margin="0,0,6,0"
-                                        VerticalAlignment="Center"
-                                        FontFamily="Segoe MDL2 Assets"
-                                        FontSize="14"
-                                        Foreground="#A5B4FC"
-                                        Text="&#xE708;">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsDay}" Value="False">
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </DataTrigger>
-                                                    <!--  Hide if unknown  -->
-                                                    <DataTrigger Binding="{Binding ServerTime}" Value="-">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding ServerTime}" Value="–">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-
-                                    <StackPanel VerticalAlignment="Center">
+                            <StackPanel Orientation="Vertical">
+                                <!--  TIME OVERLAY  -->
+                                <Border
+                                    x:Name="TimeOverlay"
+                                    Padding="8,4"
+                                    Background="#AA16181C"
+                                    BorderBrush="#40FFFFFF"
+                                    BorderThickness="1"
+                                    CornerRadius="8">
+                                    <StackPanel Orientation="Horizontal">
+                                        <!--  Unknown Time Icon (Clock)  -->
                                         <TextBlock
-                                            FontSize="12"
-                                            FontWeight="Bold"
-                                            Foreground="White"
-                                            Text="{Binding ServerTime}" />
-                                        <TextBlock
-                                            Margin="0,-1,0,0"
-                                            FontSize="9"
+                                            Margin="0,0,6,0"
+                                            VerticalAlignment="Center"
+                                            FontFamily="Segoe MDL2 Assets"
+                                            FontSize="14"
                                             Foreground="#8D98A8"
-                                            Text="{Binding TimeUntilNextPhase}">
+                                            Text="&#xE916;">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
-                                                    <Setter Property="Visibility" Value="Visible" />
+                                                    <Setter Property="Visibility" Value="Collapsed" />
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding TimeUntilNextPhase}" Value="">
+                                                        <DataTrigger Binding="{Binding ServerTime}" Value="-">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ServerTime}" Value="–">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ServerTime}" Value="">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ServerTime}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+
+                                        <!--  Day Icon  -->
+                                        <TextBlock
+                                            Margin="0,0,6,0"
+                                            VerticalAlignment="Center"
+                                            FontFamily="Segoe MDL2 Assets"
+                                            FontSize="14"
+                                            Foreground="#FFD166"
+                                            Text="&#xE706;">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsDay}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                        <!--  Hide if unknown  -->
+                                                        <DataTrigger Binding="{Binding ServerTime}" Value="-">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ServerTime}" Value="–">
                                                             <Setter Property="Visibility" Value="Collapsed" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </TextBlock.Style>
                                         </TextBlock>
+
+                                        <!--  Night Icon  -->
+                                        <TextBlock
+                                            Margin="0,0,6,0"
+                                            VerticalAlignment="Center"
+                                            FontFamily="Segoe MDL2 Assets"
+                                            FontSize="14"
+                                            Foreground="#A5B4FC"
+                                            Text="&#xE708;">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsDay}" Value="False">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                        <!--  Hide if unknown  -->
+                                                        <DataTrigger Binding="{Binding ServerTime}" Value="-">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ServerTime}" Value="–">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock
+                                                FontSize="12"
+                                                FontWeight="Bold"
+                                                Foreground="White"
+                                                Text="{Binding ServerTime}" />
+                                            <TextBlock
+                                                Margin="0,-1,0,0"
+                                                FontSize="9"
+                                                Foreground="#8D98A8"
+                                                Text="{Binding TimeUntilNextPhase}">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding TimeUntilNextPhase}" Value="">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                            </Border>
+                                </Border>
+
+                                <!--  RUSTMAPS OVERLAY  -->
+                                <Border
+                                    x:Name="RustMapsOverlay"
+                                    Margin="0,6,0,0"
+                                    Padding="8,4"
+                                    Background="#AA16181C"
+                                    BorderBrush="#40FFFFFF"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    HorizontalAlignment="Left"
+                                    Visibility="Collapsed">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <!-- Map Icon -->
+                                            <TextBlock
+                                                FontFamily="Segoe MDL2 Assets"
+                                                FontSize="14"
+                                                Foreground="#FF8C00"
+                                                Text="&#xE909;"
+                                                VerticalAlignment="Center"
+                                                Margin="0,0,6,0" />
+
+                                            <!-- Open Map Button -->
+                                            <Button
+                                                x:Name="BtnOpenRustMaps"
+                                                Padding="0"
+                                                Background="Transparent"
+                                                BorderBrush="Transparent"
+                                                Style="{StaticResource GhostButton}"
+                                                Click="BtnOpenRustMaps_Click"
+                                                VerticalAlignment="Center">
+                                                <TextBlock
+                                                    x:Name="TxtRustMapsStatus"
+                                                    Text="Searching..."
+                                                    FontSize="11"
+                                                    FontWeight="SemiBold"
+                                                    Foreground="White" />
+                                            </Button>
+                                        </StackPanel>
+
+                                        <!-- Force Refetch Button -->
+                                        <Button
+                                            x:Name="BtnRefetchRustMaps"
+                                            Grid.Column="1"
+                                            Margin="6,0,0,0"
+                                            Padding="2"
+                                            Width="18"
+                                            Height="18"
+                                            Background="Transparent"
+                                            BorderBrush="Transparent"
+                                            Style="{StaticResource GhostButton}"
+                                            Click="BtnRefetchRustMaps_Click"
+                                            ToolTip="Force Refetch Map">
+                                            <TextBlock
+                                                FontFamily="Segoe MDL2 Assets"
+                                                FontSize="10"
+                                                Foreground="#8D98A8"
+                                                Text="&#xE72C;"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center" />
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
 
                             <Border
                                 x:Name="FollowOverlay"
@@ -4083,7 +4154,8 @@
                                 Background="#AA16181C"
                                 BorderBrush="#40FFFFFF"
                                 BorderThickness="1"
-                                CornerRadius="8">
+                                CornerRadius="8"
+                                VerticalAlignment="Top">
                                 <Grid>
                                     <!--  Active Glow  -->
                                     <Ellipse
@@ -4199,7 +4271,8 @@
                                 Background="#AA16181C"
                                 BorderBrush="#40FFFFFF"
                                 BorderThickness="1"
-                                CornerRadius="8">
+                                CornerRadius="8"
+                                VerticalAlignment="Top">
                                 <Grid>
                                     <Button
                                         x:Name="BtnToggleMonumentsPanel"

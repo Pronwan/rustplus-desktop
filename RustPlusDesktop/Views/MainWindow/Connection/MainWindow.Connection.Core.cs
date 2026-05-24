@@ -123,6 +123,7 @@ public partial class MainWindow
         HydrateSteamUiFromStorage();
         RegisterAllHotkeys();
         ActivateHotkeysForCurrentServer();
+        UpdateRustMapsUi();
     }
 
     private async Task PerformConnectDevicesOnlyAsync(ServerProfile profile)
@@ -161,6 +162,8 @@ public partial class MainWindow
             // Start A2S player polling so the Players tab works on soft connect too
             TrackingService.StartPolling(profile.Host ?? "", profile.Port, profile.Name ?? "", profile.BattleMetricsId);
             _ = TrackingService.FetchOnlinePlayersNowAsync();
+
+            _ = SearchRustMapsAsync(false);
 
             AppendLog("Soft-connect complete.");
 
@@ -317,6 +320,7 @@ public partial class MainWindow
             _vm.Selected.IsFullConnected = true;
 
             _vm.NotifyDevicesChanged();
+            _ = SearchRustMapsAsync(false);
             AppendLog($"Connection initialization complete. Server: {_vm.Selected.Name}");
 
             // Finally, refresh all device statuses to ensure the UI reflects the current server state

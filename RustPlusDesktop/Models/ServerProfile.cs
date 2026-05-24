@@ -323,6 +323,27 @@ public class ServerProfile : INotifyPropertyChanged
         OnProp(nameof(SwitchCommandMappings));
         OnProp(nameof(UpkeepCommandMappings));
     }
+
+    private string? _rustMapsMapId;
+    public string? RustMapsMapId
+    {
+        get => _rustMapsMapId;
+        set { _rustMapsMapId = value; OnProp(); }
+    }
+
+    private DateTime? _rustMapsFetchTime;
+    public DateTime? RustMapsFetchTime
+    {
+        get => _rustMapsFetchTime;
+        set { _rustMapsFetchTime = value; OnProp(); }
+    }
+
+    private DateTime? _rustMapsWipeTime;
+    public DateTime? RustMapsWipeTime
+    {
+        get => _rustMapsWipeTime;
+        set { _rustMapsWipeTime = value; OnProp(); }
+    }
 }
 
 public class ChatCommandMapping : INotifyPropertyChanged
