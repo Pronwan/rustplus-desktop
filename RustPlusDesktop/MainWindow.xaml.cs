@@ -4643,10 +4643,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (ChatAlertsConfigureButton.Flyout is ContextMenu cm)
             {
                 cm.PlacementTarget = ChatAlertsConfigureButton;
-                cm.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                cm.Placement = System.Windows.Controls.Primitives.PlacementMode.Custom;
                 cm.IsOpen = true;
             }
         }), System.Windows.Threading.DispatcherPriority.Input);
+    }
+
+    public System.Windows.Controls.Primitives.CustomPopupPlacement[] CenterMegaMenu_Callback(Size popupSize, Size targetSize, Point offset)
+    {
+        double x = (targetSize.Width - popupSize.Width) / 2;
+        double y = targetSize.Height + 4; // Fluent spacing gap
+        return new[] { new System.Windows.Controls.Primitives.CustomPopupPlacement(new Point(x, y), System.Windows.Controls.Primitives.PopupPrimaryAxis.Horizontal) };
     }
 
     public async void OpenChatCommandsFromSettings()
