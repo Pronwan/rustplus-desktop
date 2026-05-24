@@ -392,9 +392,27 @@ public partial class MainWindow : WpfUi.FluentWindow
         {
             // Erst-Installation: Version setzen, aber kein Popup zeigen
             TrackingService.LastSeenVersion = AppVersion;
+
+            if (TrackingService.SelectedLanguage == "en")
+            {
+                TrackingService.SelectedLanguage = "";
+                if (Application.Current is App app)
+                {
+                    app.SetLanguage();
+                }
+            }
         }
         else if (TrackingService.LastSeenVersion != AppVersion)
         {
+            if (TrackingService.SelectedLanguage == "en")
+            {
+                TrackingService.SelectedLanguage = "";
+                if (Application.Current is App app)
+                {
+                    app.SetLanguage();
+                }
+            }
+
             if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "5.2.0"))
             {
                 // Upgrade von 5.2.0 oder geringer: Popup zeigen
