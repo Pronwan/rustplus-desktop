@@ -667,7 +667,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     private void BtnCrosshair_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         e.Handled = true;
-        var btn = (Button)sender;
+        var btn = (FrameworkElement)sender;
         if (btn.ContextMenu != null)
         {
             btn.ContextMenu.PlacementTarget = btn;

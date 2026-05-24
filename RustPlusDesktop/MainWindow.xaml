@@ -3380,270 +3380,360 @@
                                     Opacity="0.8"
                                     Text="{DynamicResource ChatAlerts}" />
 
-                                <CheckBox
-                                    x:Name="ChatAnnounce"
-                                    Margin="0,0,8,0"
-                                    Click="ChatAnnounce_Toggle"
-                                    IsChecked="False"
-                                    Style="{StaticResource PillToggleButton}"
-                                    ToolTip="{DynamicResource RightClickConfigure}">
-                                    <CheckBox.ContextMenu>
-                                        <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                            <MenuItem
-                                                Click="SelectAllAlerts_Click"
-                                                Header="{DynamicResource SelectAll}"
-                                                Style="{StaticResource DarkMenuItem}">
-                                                <MenuItem.Icon>
-                                                    <ui:SymbolIcon Symbol="CheckmarkSquare24" />
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                            <MenuItem
-                                                Click="DeselectAllAlerts_Click"
-                                                Header="{DynamicResource DeselectAll}"
-                                                Style="{StaticResource DarkMenuItem}">
-                                                <MenuItem.Icon>
-                                                    <ui:SymbolIcon Symbol="DismissSquare24" />
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                        </ContextMenu>
-                                    </CheckBox.ContextMenu>
-                                    <CheckBox.Content>
-                                        <TextBlock
-                                            x:Name="ChatAnnounceLabel"
-                                            Text="{DynamicResource Alerts}" />
-                                    </CheckBox.Content>
-                                </CheckBox>
+                                 <Border
+                                     Background="#AA16181C"
+                                     BorderBrush="#30FFFFFF"
+                                     BorderThickness="1"
+                                     CornerRadius="12"
+                                     Padding="2"
+                                     Margin="0,0,8,0"
+                                     VerticalAlignment="Center">
+                                     <Grid>
+                                         <Grid.ColumnDefinitions>
+                                             <ColumnDefinition Width="Auto" />
+                                             <ColumnDefinition Width="Auto" />
+                                             <ColumnDefinition Width="Auto" />
+                                         </Grid.ColumnDefinitions>
 
-                                <!--  Chat Alerts Dropdown  -->
-                                <ui:DropDownButton
-                                    x:Name="ChatAlertsConfigureButton"
-                                    Padding="12,6"
-                                    VerticalAlignment="Center"
-                                    Appearance="Secondary"
-                                    Content="{DynamicResource Configure}"
-                                    FontSize="12"
-                                    FontWeight="SemiBold"
-                                    Icon="{ui:SymbolIcon Symbol=Settings24}">
-                                    <ui:DropDownButton.Flyout>
-                                        <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                            <MenuItem
-                                                Click="SelectAllAlerts_Click"
-                                                Header="{DynamicResource SelectAll}"
-                                                Style="{StaticResource DarkMenuItem}">
-                                                <MenuItem.Icon>
-                                                    <ui:SymbolIcon Symbol="CheckmarkSquare24" />
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                            <MenuItem
-                                                Click="DeselectAllAlerts_Click"
-                                                Header="{DynamicResource DeselectAll}"
-                                                Style="{StaticResource DarkMenuItem}">
-                                                <MenuItem.Icon>
-                                                    <ui:SymbolIcon Symbol="DismissSquare24" />
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                            
-                                            <Separator Margin="0,8" Style="{StaticResource DarkSeparator}" />
-                                            
-                                            <!--  Category: Events  -->
-                                            <MenuItem
-                                                Padding="0,6"
-                                                FontSize="11"
-                                                FontWeight="Bold"
-                                                Foreground="{DynamicResource TextSubtle}"
-                                                Header="{DynamicResource Events}"
-                                                IsHitTestVisible="False" />
-                                            <MenuItem
-                                                Header="{DynamicResource CargoShip}"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="Cargo">
-                                                <MenuItem
-                                                    Click="Alert_MenuItem_Click"
-                                                    Header="{DynamicResource CargoSpawn}"
-                                                    IsCheckable="True"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="CargoSpawn" />
-                                                <MenuItem
-                                                    Click="Alert_MenuItem_Click"
-                                                    Header="{DynamicResource CargoDock}"
-                                                    IsCheckable="True"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="CargoDock" />
-                                                <MenuItem
-                                                    Click="Alert_MenuItem_Click"
-                                                    Header="{DynamicResource CargoEgress}"
-                                                    IsCheckable="True"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="CargoEgress" />
-                                                <MenuItem
-                                                    x:Name="MenuCargoArrival"
-                                                    Click="Alert_MenuItem_Click"
-                                                    Header="{DynamicResource CargoArrival}"
-                                                    IsCheckable="True"
-                                                    StaysOpenOnClick="True"
-                                                    Style="{StaticResource DarkMenuItem}"
-                                                    Tag="CargoArrival" />
-                                            </MenuItem>
-                                            <MenuItem
-                                                Click="Alert_MenuItem_Click"
-                                                Header="{DynamicResource Heli}"
-                                                IsCheckable="True"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="Heli" />
-                                            <MenuItem
-                                                Click="Alert_MenuItem_Click"
-                                                Header="{DynamicResource Chinook}"
-                                                IsCheckable="True"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="Chinook" />
-                                            <MenuItem
-                                                Click="Alert_MenuItem_Click"
-                                                Header="{DynamicResource Vendor}"
-                                                IsCheckable="True"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="Vendor" />
-                                            <MenuItem
-                                                Click="Alert_MenuItem_Click"
-                                                Header="{DynamicResource OilRig}"
-                                                IsCheckable="True"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="OilRig" />
-                                            <MenuItem
-                                                Click="Alert_MenuItem_Click"
-                                                Header="{DynamicResource DeepSea}"
-                                                IsCheckable="True"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="DeepSea" />
-                                            <MenuItem
-                                                Click="Alert_MenuItem_Click"
-                                                Header="{DynamicResource SmartAlerts}"
-                                                IsCheckable="True"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="SmartAlerts" />
-                                            <Separator Style="{StaticResource DarkSeparator}" />
-                                            <MenuItem
-                                                FontWeight="Bold"
-                                                Foreground="{StaticResource TextBrushMuted}"
-                                                Header="{DynamicResource PlayersHeader}"
-                                                IsHitTestVisible="False" />
-                                            <MenuItem
-                                                Click="Alert_MenuItem_Click"
-                                                Header="{DynamicResource PlayerOnline}"
-                                                IsCheckable="True"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="PlayerOnline" />
-                                            <MenuItem
-                                                Click="Alert_MenuItem_Click"
-                                                Header="{DynamicResource PlayerOffline}"
-                                                IsCheckable="True"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="PlayerOffline" />
-                                            <MenuItem
-                                                Click="Alert_MenuItem_Click"
-                                                Header="{DynamicResource AnnounceTracking}"
-                                                IsCheckable="True"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="AnnounceTracking" />
-                                            <MenuItem
-                                                Click="Alert_MenuItem_Click"
-                                                Header="{DynamicResource PlayerDeathSelf}"
-                                                IsCheckable="True"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="PlayerDeathSelf" />
-                                            <MenuItem
-                                                Click="Alert_MenuItem_Click"
-                                                Header="{DynamicResource PlayerDeathTeam}"
-                                                IsCheckable="True"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="PlayerDeathTeam" />
-                                            <MenuItem
-                                                Click="Alert_MenuItem_Click"
-                                                Header="{DynamicResource PlayerRespawnSelf}"
-                                                IsCheckable="True"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="PlayerRespawnSelf" />
-                                            <MenuItem
-                                                Click="Alert_MenuItem_Click"
-                                                Header="{DynamicResource PlayerRespawnTeam}"
-                                                IsCheckable="True"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="PlayerRespawnTeam" />
-                                            <Separator Style="{StaticResource DarkSeparator}" />
-                                            <MenuItem
-                                                FontWeight="Bold"
-                                                Foreground="{DynamicResource TextBrushMuted}"
-                                                Header="{DynamicResource Shops}"
-                                                IsHitTestVisible="False" />
-                                            <MenuItem
-                                                Click="Alert_MenuItem_Click"
-                                                Header="{DynamicResource NewShops}"
-                                                IsCheckable="True"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="NewShops" />
-                                            <MenuItem
-                                                Click="Alert_MenuItem_Click"
-                                                Header="{DynamicResource SuspiciousShops}"
-                                                IsCheckable="True"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}"
-                                                Tag="SuspiciousShops" />
-                                            <MenuItem
-                                                x:Name="TradeAlertsMenuItem"
-                                                Header="{DynamicResource TradeAlerts}"
-                                                StaysOpenOnClick="True"
-                                                Style="{StaticResource DarkMenuItem}" />
-                                        </ContextMenu>
-                                    </ui:DropDownButton.Flyout>
-                                </ui:DropDownButton>
+                                         <!-- Alerts Toggle Button -->
+                                         <CheckBox
+                                             x:Name="ChatAnnounce"
+                                             Grid.Column="0"
+                                             Click="ChatAnnounce_Toggle"
+                                             IsChecked="False"
+                                             Margin="0"
+                                             Padding="10,6"
+                                             ToolTip="{DynamicResource RightClickConfigure}">
+                                             <CheckBox.Style>
+                                                 <Style TargetType="CheckBox">
+                                                     <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
+                                                     <Setter Property="Background" Value="Transparent" />
+                                                     <Setter Property="Cursor" Value="Hand" />
+                                                     <Setter Property="FontSize" Value="12" />
+                                                     <Setter Property="FontWeight" Value="SemiBold" />
+                                                     <Setter Property="Template">
+                                                         <Setter.Value>
+                                                             <ControlTemplate TargetType="CheckBox">
+                                                                 <Border
+                                                                     x:Name="Bd"
+                                                                     Background="{TemplateBinding Background}"
+                                                                     CornerRadius="10,0,0,10"
+                                                                     Padding="{TemplateBinding Padding}"
+                                                                     SnapsToDevicePixels="True">
+                                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                 </Border>
+                                                                 <ControlTemplate.Triggers>
+                                                                     <Trigger Property="IsChecked" Value="True">
+                                                                         <Setter TargetName="Bd" Property="Background" Value="#3D4B5C" />
+                                                                         <Setter Property="Foreground" Value="White" />
+                                                                         <Setter TargetName="Bd" Property="Effect">
+                                                                             <Setter.Value>
+                                                                                 <DropShadowEffect BlurRadius="8" Color="#60CDFF" Opacity="0.3" ShadowDepth="0" />
+                                                                             </Setter.Value>
+                                                                         </Setter>
+                                                                     </Trigger>
+                                                                     <Trigger Property="IsMouseOver" Value="True">
+                                                                         <Setter TargetName="Bd" Property="Background" Value="#1AFFFFFF" />
+                                                                     </Trigger>
+                                                                 </ControlTemplate.Triggers>
+                                                             </ControlTemplate>
+                                                         </Setter.Value>
+                                                     </Setter>
+                                                 </Style>
+                                             </CheckBox.Style>
+                                     <CheckBox.ContextMenu>
+                                         <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                             <MenuItem
+                                                 Click="SelectAllAlerts_Click"
+                                                 Header="{DynamicResource SelectAll}"
+                                                 Style="{StaticResource DarkMenuItem}">
+                                                 <MenuItem.Icon>
+                                                     <ui:SymbolIcon Symbol="CheckmarkSquare24" />
+                                                 </MenuItem.Icon>
+                                             </MenuItem>
+                                             <MenuItem
+                                                 Click="DeselectAllAlerts_Click"
+                                                 Header="{DynamicResource DeselectAll}"
+                                                 Style="{StaticResource DarkMenuItem}">
+                                                 <MenuItem.Icon>
+                                                     <ui:SymbolIcon Symbol="DismissSquare24" />
+                                                 </MenuItem.Icon>
+                                             </MenuItem>
+                                         </ContextMenu>
+                                     </CheckBox.ContextMenu>
+                                             <CheckBox.Content>
+                                                 <StackPanel Orientation="Horizontal">
+                                                     <ui:SymbolIcon Symbol="Alert20" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                                     <TextBlock
+                                                         x:Name="ChatAnnounceLabel"
+                                                         VerticalAlignment="Center"
+                                                         Text="{DynamicResource Alerts}" />
+                                                 </StackPanel>
+                                             </CheckBox.Content>
+                                         </CheckBox>
 
-                            <Button
-                                Width="80"
+                                         <!-- Vertical Separator -->
+                                         <Border
+                                             Grid.Column="1"
+                                             Width="1"
+                                             Background="#20FFFFFF"
+                                             Margin="0,4"
+                                             VerticalAlignment="Stretch" />
+
+                                         <!-- Chat Alerts Dropdown -->
+                                         <ui:DropDownButton
+                                             x:Name="ChatAlertsConfigureButton"
+                                             Grid.Column="2"
+                                             Margin="0"
+                                             Padding="8,6,10,6"
+                                             Height="30"
+                                             VerticalAlignment="Center"
+                                             ToolTip="{DynamicResource Configure}"
+                                             Icon="{ui:SymbolIcon Symbol=Settings20}">
+                                             <ui:DropDownButton.Style>
+                                                 <Style TargetType="ui:DropDownButton" BasedOn="{StaticResource {x:Type ui:DropDownButton}}">
+                                                     <Setter Property="Background" Value="Transparent" />
+                                                     <Setter Property="BorderBrush" Value="Transparent" />
+                                                     <Setter Property="BorderThickness" Value="0" />
+                                                     <Setter Property="CornerRadius" Value="0,10,10,0" />
+                                                     <Style.Triggers>
+                                                         <Trigger Property="IsMouseOver" Value="True">
+                                                             <Setter Property="Background" Value="#1AFFFFFF" />
+                                                             <Setter Property="BorderBrush" Value="Transparent" />
+                                                         </Trigger>
+                                                     </Style.Triggers>
+                                                 </Style>
+                                             </ui:DropDownButton.Style>
+                                     <ui:DropDownButton.Flyout>
+                                         <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                             <MenuItem
+                                                 Click="SelectAllAlerts_Click"
+                                                 Header="{DynamicResource SelectAll}"
+                                                 Style="{StaticResource DarkMenuItem}">
+                                                 <MenuItem.Icon>
+                                                     <ui:SymbolIcon Symbol="CheckmarkSquare24" />
+                                                 </MenuItem.Icon>
+                                             </MenuItem>
+                                             <MenuItem
+                                                 Click="DeselectAllAlerts_Click"
+                                                 Header="{DynamicResource DeselectAll}"
+                                                 Style="{StaticResource DarkMenuItem}">
+                                                 <MenuItem.Icon>
+                                                     <ui:SymbolIcon Symbol="DismissSquare24" />
+                                                 </MenuItem.Icon>
+                                             </MenuItem>
+                                             
+                                             <Separator Margin="0,8" Style="{StaticResource DarkSeparator}" />
+                                             
+                                             <!--  Category: Events  -->
+                                             <MenuItem
+                                                 Padding="0,6"
+                                                 FontSize="11"
+                                                 FontWeight="Bold"
+                                                 Foreground="{DynamicResource TextSubtle}"
+                                                 Header="{DynamicResource Events}"
+                                                 IsHitTestVisible="False" />
+                                             <MenuItem
+                                                 Header="{DynamicResource CargoShip}"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="Cargo">
+                                                 <MenuItem
+                                                     Click="Alert_MenuItem_Click"
+                                                     Header="{DynamicResource CargoSpawn}"
+                                                     IsCheckable="True"
+                                                     StaysOpenOnClick="True"
+                                                     Style="{StaticResource DarkMenuItem}"
+                                                     Tag="CargoSpawn" />
+                                                 <MenuItem
+                                                     Click="Alert_MenuItem_Click"
+                                                     Header="{DynamicResource CargoDock}"
+                                                     IsCheckable="True"
+                                                     StaysOpenOnClick="True"
+                                                     Style="{StaticResource DarkMenuItem}"
+                                                     Tag="CargoDock" />
+                                                 <MenuItem
+                                                     Click="Alert_MenuItem_Click"
+                                                     Header="{DynamicResource CargoEgress}"
+                                                     IsCheckable="True"
+                                                     StaysOpenOnClick="True"
+                                                     Style="{StaticResource DarkMenuItem}"
+                                                     Tag="CargoEgress" />
+                                                 <MenuItem
+                                                     x:Name="MenuCargoArrival"
+                                                     Click="Alert_MenuItem_Click"
+                                                     Header="{DynamicResource CargoArrival}"
+                                                     IsCheckable="True"
+                                                     StaysOpenOnClick="True"
+                                                     Style="{StaticResource DarkMenuItem}"
+                                                     Tag="CargoArrival" />
+                                             </MenuItem>
+                                             <MenuItem
+                                                 Click="Alert_MenuItem_Click"
+                                                 Header="{DynamicResource Heli}"
+                                                 IsCheckable="True"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="Heli" />
+                                             <MenuItem
+                                                 Click="Alert_MenuItem_Click"
+                                                 Header="{DynamicResource Chinook}"
+                                                 IsCheckable="True"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="Chinook" />
+                                             <MenuItem
+                                                 Click="Alert_MenuItem_Click"
+                                                 Header="{DynamicResource Vendor}"
+                                                 IsCheckable="True"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="Vendor" />
+                                             <MenuItem
+                                                 Click="Alert_MenuItem_Click"
+                                                 Header="{DynamicResource OilRig}"
+                                                 IsCheckable="True"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="OilRig" />
+                                             <MenuItem
+                                                 Click="Alert_MenuItem_Click"
+                                                 Header="{DynamicResource DeepSea}"
+                                                 IsCheckable="True"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="DeepSea" />
+                                             <MenuItem
+                                                 Click="Alert_MenuItem_Click"
+                                                 Header="{DynamicResource SmartAlerts}"
+                                                 IsCheckable="True"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="SmartAlerts" />
+                                             <Separator Style="{StaticResource DarkSeparator}" />
+                                             
+                                             <!--  Category: Players  -->
+                                             <MenuItem
+                                                 FontWeight="Bold"
+                                                 Foreground="{StaticResource TextBrushMuted}"
+                                                 Header="{DynamicResource PlayersHeader}"
+                                                 IsHitTestVisible="False" />
+                                             <MenuItem
+                                                 Click="Alert_MenuItem_Click"
+                                                 Header="{DynamicResource PlayerOnline}"
+                                                 IsCheckable="True"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="PlayerOnline" />
+                                             <MenuItem
+                                                 Click="Alert_MenuItem_Click"
+                                                 Header="{DynamicResource PlayerOffline}"
+                                                 IsCheckable="True"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="PlayerOffline" />
+                                             <MenuItem
+                                                 Click="Alert_MenuItem_Click"
+                                                 Header="{DynamicResource AnnounceTracking}"
+                                                 IsCheckable="True"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="AnnounceTracking" />
+                                             <MenuItem
+                                                 Click="Alert_MenuItem_Click"
+                                                 Header="{DynamicResource PlayerDeathSelf}"
+                                                 IsCheckable="True"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="PlayerDeathSelf" />
+                                             <MenuItem
+                                                 Click="Alert_MenuItem_Click"
+                                                 Header="{DynamicResource PlayerDeathTeam}"
+                                                 IsCheckable="True"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="PlayerDeathTeam" />
+                                             <MenuItem
+                                                 Click="Alert_MenuItem_Click"
+                                                 Header="{DynamicResource PlayerRespawnSelf}"
+                                                 IsCheckable="True"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="PlayerRespawnSelf" />
+                                             <MenuItem
+                                                 Click="Alert_MenuItem_Click"
+                                                 Header="{DynamicResource PlayerRespawnTeam}"
+                                                 IsCheckable="True"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="PlayerRespawnTeam" />
+                                             <Separator Style="{StaticResource DarkSeparator}" />
+                                             <MenuItem
+                                                 FontWeight="Bold"
+                                                 Foreground="{DynamicResource TextBrushMuted}"
+                                                 Header="{DynamicResource Shops}"
+                                                 IsHitTestVisible="False" />
+                                             <MenuItem
+                                                 Click="Alert_MenuItem_Click"
+                                                 Header="{DynamicResource NewShops}"
+                                                 IsCheckable="True"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="NewShops" />
+                                             <MenuItem
+                                                 Click="Alert_MenuItem_Click"
+                                                 Header="{DynamicResource SuspiciousShops}"
+                                                 IsCheckable="True"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}"
+                                                 Tag="SuspiciousShops" />
+                                             <MenuItem
+                                                 x:Name="TradeAlertsMenuItem"
+                                                 Header="{DynamicResource TradeAlerts}"
+                                                 StaysOpenOnClick="True"
+                                                 Style="{StaticResource DarkMenuItem}" />
+                                         </ContextMenu>
+                                     </ui:DropDownButton.Flyout>
+                                 </ui:DropDownButton>
+                             </Grid>
+                         </Border>
+                            </StackPanel>
+
+                            <!-- Right Group: Map Actions (Right-Oriented) -->
+                            <StackPanel
+                                Grid.Column="1"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center">
+                            <ui:Button
                                 Margin="8,0,0,0"
                                 Click="BtnResetMap_Click"
-                                Style="{StaticResource GhostButton}"
                                 ToolTip="{DynamicResource ResetMapToolTip}">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock VerticalAlignment="Center" Text="⟲ " />
+                                    <ui:SymbolIcon Symbol="ArrowCounterclockwise20" Margin="0,0,6,0" VerticalAlignment="Center"/>
                                     <TextBlock VerticalAlignment="Center" Text="{DynamicResource ResetMap}" />
                                 </StackPanel>
-                            </Button>
-                            <Button
+                            </ui:Button>
+                            <ui:Button
                                 x:Name="BtnMiniMap"
-                                Width="80"
-                                Click="BtnToggleMiniMap_Click"
-                                Style="{StaticResource GhostButton}">
+                                Margin="4,0,0,0"
+                                Click="BtnToggleMiniMap_Click">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock VerticalAlignment="Center" Text="🗺️ " />
+                                    <ui:SymbolIcon Symbol="Map20" Margin="0,0,6,0" VerticalAlignment="Center"/>
                                     <TextBlock VerticalAlignment="Center" Text="{DynamicResource MiniMap}" />
                                 </StackPanel>
-                            </Button>
+                            </ui:Button>
 
-                            <Button
+                            <ui:Button
                                 x:Name="BtnCrosshair"
                                 Margin="4,0,0,0"
                                 Click="BtnCrosshair_Click"
                                 PreviewMouseRightButtonDown="BtnCrosshair_PreviewMouseRightButtonDown"
-                                Style="{StaticResource IconButton}"
-                                ToolTip="{DynamicResource CrosshairToolTip}">
-                                <TextBlock FontSize="18" Text="&#x2316;" />
-                                <Button.ContextMenu>
+                                ToolTip="{DynamicResource CrosshairToolTip}"
+                                Padding="6"
+                                Width="32"
+                                Height="32">
+                                <ui:SymbolIcon Symbol="Target20" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <ui:Button.ContextMenu>
                                     <ContextMenu
                                         x:Name="CrosshairContextMenu"
                                         Opened="CrosshairContextMenu_Opened"
@@ -3844,18 +3934,19 @@
 
                                         <MenuItem x:Name="MonitorRoot" Header="{DynamicResource ChooseMonitor}" />
                                     </ContextMenu>
-                                </Button.ContextMenu>
-                            </Button>
+                                </ui:Button.ContextMenu>
+                            </ui:Button>
 
-                            <Button
+                            <ui:Button
                                 x:Name="BtnToggleOverlayTools"
                                 Width="32"
                                 Height="32"
                                 Margin="4,0,0,0"
+                                Padding="6"
                                 Click="BtnToggleOverlayTools_Click"
                                 ToolTip="{DynamicResource DrawOverlay}">
-                                <Image Source="pack://application:,,,/Assets/icons/pencil.png" />
-                            </Button>
+                                <ui:SymbolIcon Symbol="Edit24" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </ui:Button>
 
                             <!--  StackPanel with Heli Demo removed  -->
                             <StackPanel Margin="12,0,0,0" Orientation="Horizontal" />
@@ -3960,13 +4051,13 @@
                             Orientation="Horizontal">
                             <StackPanel Orientation="Vertical">
                                 <!--  TIME OVERLAY  -->
-                                <Border
+                                <ui:Card
                                     x:Name="TimeOverlay"
                                     Padding="8,4"
                                     Background="#AA16181C"
                                     BorderBrush="#40FFFFFF"
                                     BorderThickness="1"
-                                    CornerRadius="8">
+                                    VerticalAlignment="Top">
                                     <StackPanel Orientation="Horizontal">
                                         <!--  Unknown Time Icon (Clock)  -->
                                         <TextBlock
@@ -4075,17 +4166,16 @@
                                             </TextBlock>
                                         </StackPanel>
                                     </StackPanel>
-                                </Border>
+                                </ui:Card>
 
                                 <!--  RUSTMAPS OVERLAY  -->
-                                <Border
+                                <ui:Card
                                     x:Name="RustMapsOverlay"
                                     Margin="0,6,0,0"
-                                    Padding="8,4"
+                                    Padding="2"
                                     Background="#AA16181C"
                                     BorderBrush="#40FFFFFF"
                                     BorderThickness="1"
-                                    CornerRadius="8"
                                     HorizontalAlignment="Left"
                                     Visibility="Collapsed">
                                     <Grid>
@@ -4094,67 +4184,63 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <!-- Map Icon -->
-                                            <TextBlock
-                                                FontFamily="Segoe MDL2 Assets"
-                                                FontSize="14"
-                                                Foreground="#FF8C00"
-                                                Text="&#xE909;"
-                                                VerticalAlignment="Center"
-                                                Margin="0,0,6,0" />
-
-                                            <!-- Open Map Button -->
-                                            <Button
-                                                x:Name="BtnOpenRustMaps"
-                                                Padding="0"
-                                                Background="Transparent"
-                                                BorderBrush="Transparent"
-                                                Style="{StaticResource GhostButton}"
-                                                Click="BtnOpenRustMaps_Click"
-                                                VerticalAlignment="Center">
+                                        <!-- Open Map Button -->
+                                        <ui:Button
+                                            x:Name="BtnOpenRustMaps"
+                                            Grid.Column="0"
+                                            Padding="6,4"
+                                            Appearance="Transparent"
+                                            BorderThickness="0"
+                                            Click="BtnOpenRustMaps_Click"
+                                            ToolTip="Open Interactive 3D Map on RustMaps"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <!-- Map Icon -->
+                                                <Path
+                                                    Data="M54.7,26.62a27.1,27.1,0,0,0-54.2,0A26.67,26.67,0,0,0,.79,30.5h0v.1s0,.29.1.39c.1.29.1.68.19,1v.1C4.19,48,18.37,66.15,24.59,73.53A3.78,3.78,0,0,0,30,74c.19-.2.39-.29.48-.49C36.83,66.15,50.91,48,54,32.06V32a3,3,0,0,1,.19-1l.1-.39v-.1h0A25.51,25.51,0,0,0,54.7,26.62ZM22,46.24V40.7a15.43,15.43,0,0,1-2.24-1.07v5.83A23.22,23.22,0,0,1,15,42.74V33.51c.39.59.78,1.17,1.17,1.65a14.76,14.76,0,0,0,3.5,3.11,3.83,3.83,0,0,0,.87.49,10.09,10.09,0,0,0,1.46.68,14.4,14.4,0,0,0,4.46,1.07v6.41A17.67,17.67,0,0,1,22,46.24ZM24.46,28.07H15V26.91H26.43Zm2.34,18.85v-20H40.23V28H29.83V40.31a17.88,17.88,0,0,0,3.31-.87,14.89,14.89,0,0,0,7-5.93v9.13a22.51,22.51,0,0,1-4.66,2.72V39.54c-.78.38-1.46.77-2.24,1.06v5.54A14.25,14.25,0,0,1,28.77,46.92ZM42.46,40.6V26.91h1.07a1.19,1.19,0,0,0,1.17-1.17,1.12,1.12,0,0,0-1.17-1.16h-32a1.17,1.17,0,0,0-1.16,1.16,1.12,1.12,0,0,0,1.16,1.17h1.07V40.6a20.61,20.61,0,1,1,29.82,0Z"
+                                                    Fill="#FF8C00"
+                                                    Width="14"
+                                                    Height="14"
+                                                    Stretch="Uniform"
+                                                    VerticalAlignment="Center"
+                                                    Margin="0,0,6,0" />
                                                 <TextBlock
                                                     x:Name="TxtRustMapsStatus"
                                                     Text="Searching..."
                                                     FontSize="11"
                                                     FontWeight="SemiBold"
-                                                    Foreground="White" />
-                                            </Button>
-                                        </StackPanel>
+                                                    Foreground="White"
+                                                    VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </ui:Button>
 
                                         <!-- Force Refetch Button -->
-                                        <Button
+                                        <ui:Button
                                             x:Name="BtnRefetchRustMaps"
                                             Grid.Column="1"
-                                            Margin="6,0,0,0"
-                                            Padding="2"
-                                            Width="18"
-                                            Height="18"
-                                            Background="Transparent"
-                                            BorderBrush="Transparent"
-                                            Style="{StaticResource GhostButton}"
+                                            Margin="2,0,0,0"
+                                            Padding="4"
+                                            Width="24"
+                                            Height="24"
+                                            Appearance="Transparent"
+                                            BorderThickness="0"
                                             Click="BtnRefetchRustMaps_Click"
-                                            ToolTip="Force Refetch Map">
-                                            <TextBlock
-                                                FontFamily="Segoe MDL2 Assets"
-                                                FontSize="10"
-                                                Foreground="#8D98A8"
-                                                Text="&#xE72C;"
-                                                VerticalAlignment="Center"
-                                                HorizontalAlignment="Center" />
-                                        </Button>
+                                            ToolTip="Force Refetch Map"
+                                            VerticalAlignment="Center">
+                                            <ui:SymbolIcon Symbol="ArrowCounterclockwise20" FontSize="11" Foreground="#8D98A8" />
+                                        </ui:Button>
                                     </Grid>
-                                </Border>
+                                </ui:Card>
                             </StackPanel>
 
-                            <Border
+                            <ui:Card
                                 x:Name="FollowOverlay"
                                 Margin="8,0,0,0"
                                 Padding="2"
                                 Background="#AA16181C"
                                 BorderBrush="#40FFFFFF"
-                                BorderThickness="1"
-                                CornerRadius="8"
+                                BorderThickness="0"
                                 VerticalAlignment="Top">
                                 <Grid>
                                     <!--  Active Glow  -->
@@ -4179,13 +4265,11 @@
                                         </Ellipse.Style>
                                     </Ellipse>
 
-                                    <Button
+                                    <ui:Button
                                         x:Name="BtnFollowPlayer"
                                         Padding="4"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
+                                        Appearance="Transparent"
                                         Click="BtnFollowPlayer_Click"
-                                        Style="{StaticResource GhostButton}"
                                         ToolTip="{DynamicResource FollowPlayer}">
                                         <StackPanel Orientation="Horizontal">
                                             <!--  Avatar or Default Icon  -->
@@ -4255,32 +4339,29 @@
                                                 Foreground="#8D98A8"
                                                 Text="&#xE70D;" />
                                         </StackPanel>
-                                        <Button.ContextMenu>
-                                            <ContextMenu x:Name="MenuFollowPlayer" Style="{StaticResource DarkContextMenu}">
+                                        <ui:Button.ContextMenu>
+                                            <ContextMenu x:Name="MenuFollowPlayer">
                                                 <!--  Dynamically filled  -->
                                             </ContextMenu>
-                                        </Button.ContextMenu>
-                                    </Button>
+                                        </ui:Button.ContextMenu>
+                                    </ui:Button>
                                 </Grid>
-                            </Border>
+                            </ui:Card>
 
-                            <Border
+                            <ui:Card
                                 x:Name="MonumentsToggleOverlay"
                                 Margin="8,0,0,0"
                                 Padding="2"
                                 Background="#AA16181C"
                                 BorderBrush="#40FFFFFF"
-                                BorderThickness="1"
-                                CornerRadius="8"
+                                BorderThickness="0"
                                 VerticalAlignment="Top">
                                 <Grid>
-                                    <Button
+                                    <ui:Button
                                         x:Name="BtnToggleMonumentsPanel"
                                         Padding="4"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
+                                        Appearance="Transparent"
                                         Click="BtnToggleMonumentsPanel_Click"
-                                        Style="{StaticResource GhostButton}"
                                         ToolTip="Toggle Monument List">
                                         <StackPanel Orientation="Horizontal" Margin="4,2">
                                             <TextBlock
@@ -4297,9 +4378,9 @@
                                                 Foreground="White"
                                                 VerticalAlignment="Center"/>
                                         </StackPanel>
-                                    </Button>
+                                    </ui:Button>
                                 </Grid>
-                            </Border>
+                            </ui:Card>
                         </StackPanel>
 
 
@@ -4325,7 +4406,7 @@
                             Panel.ZIndex="1050"
                             Background="#E5101217"
                             BorderBrush="#40FFFFFF"
-                            BorderThickness="1"
+                            BorderThickness="0"
                             CornerRadius="12"
                             Visibility="Collapsed">
                             <Border.Effect>
