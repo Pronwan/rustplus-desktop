@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>RUST+ 데스크톱</value>
+  </data>
+  <data name="SteamAccount" xml:space="preserve">
+    <value>Steam 계정</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+    <value>로그인하지 않음</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>업데이트 확인</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>다운로드 중...</value>
+  </data>
+  <data name="JoinDiscord" xml:space="preserve">
+    <value>Discord 가입하기</value>
+  </data>
+  <data name="PatchNotes" xml:space="preserve">
+    <value>패치 노트</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>설정</value>
+  </data>
+  <data name="PairedServers" xml:space="preserve">
+    <value>페어링된 서버</value>
+  </data>
+  <data name="NoServersPaired" xml:space="preserve">
+    <value>아직 페어링된 서버가 없습니다.</value>
+  </data>
+  <data name="PairingMaintenance" xml:space="preserve">
+    <value>페어링 및 유지 관리</value>
+  </data>
+  <data name="PairingIdle" xml:space="preserve">
+    <value>페어링: 유휴</value>
+  </data>
+  <data name="RightClickOptions" xml:space="preserve">
+    <value>마우스 오른쪽 버튼을 클릭하여 옵션 보기</value>
+  </data>
+  <data name="TrackingActive" xml:space="preserve">
+    <value>추적 활성</value>
+  </data>
+  <data name="LastPull" xml:space="preserve">
+    <value>마지막 풀: {0}</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>기부하기</value>
+  </data>
+  <data name="SupportDeveloper" xml:space="preserve">
+    <value>개발자 지원</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>초기화</value>
+  </data>
+  <data name="ResetWebSocket" xml:space="preserve">
+    <value>웹소켓 연결 재설정</value>
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value>플레이어:</value>
+  </data>
+  <data name="ShowOnlinePlayers" xml:space="preserve">
+    <value>온라인 플레이어 표시 탭</value>
+  </data>
+  <data name="Queue" xml:space="preserve">
+    <value>대기열:</value>
+  </data>
+  <data name="DevicesTab" xml:space="preserve">
+    <value>디바이스</value>
+  </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>단축키</value>
+  </data>
+  <data name="ImportDevices" xml:space="preserve">
+    <value>팀원으로부터 장치 가져오기</value>
+  </data>
+  <data name="ExportDevices" xml:space="preserve">
+    <value>팀원에게 디바이스 내보내기</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>새로 고침</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>거절</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>업로드 동의</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>'수락'을 클릭하면 이 서버의 스마트 기기(및 지도 도면)가 제작자의 서버에 업로드됩니다. 그러면 팀원들이 다운로드하고 동기화할 수 있습니다. 팀원 식별을 위해 Steam ID만 전송됩니다. 도구 보관함에서 승인된 플레이어만 장치를 제어할 수 있습니다.
+
+참고: 이 전송 방법은 향후 최적화될 예정입니다. 팀원이 데이터를 다운로드할 수 없는 경우, 지도 도면을 지운 후 다시 업로드해 보세요.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>삭제</value>
+  </data>
+  <data name="DeleteMissingOnly" xml:space="preserve">
+    <value>누락된 장치만 삭제할 수 있습니다.</value>
+  </data>
+  <data name="RenameDevice" xml:space="preserve">
+    <value>장치 이름 바꾸기</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>온라인</value>
+  </data>
+  <data name="Offline" xml:space="preserve">
+    <value>오프라인</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>연결</value>
+  </data>
+  <data name="FullConnect" xml:space="preserve">
+    <value>전체 연결</value>
+  </data>
+  <data name="LoadMapTeam" xml:space="preserve">
+    <value>로드 맵 및 팀</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>연결 해제</value>
+  </data>
+  <data name="ServerDetails" xml:space="preserve">
+    <value>서버 세부 정보</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>듣기</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>중지</value>
+  </data>
+  <data name="TryPairingEdge" xml:space="preserve">
+    <value>Edge와 페어링 시도</value>
+  </data>
+  <data name="ResetPairingConfig" xml:space="preserve">
+    <value>페어링 재설정(구성 삭제)</value>
+  </data>
+  <data name="ResetListenPairing" xml:space="preserve">
+    <value>재설정 + 듣기(다시 페어링)</value>
+  </data>
+  <data name="ResetListenEdge" xml:space="preserve">
+    <value>Edge로 초기화 + 듣기</value>
+  </data>
+  <data name="RelinkBattlemetrics" xml:space="preserve">
+    <value>배틀메트릭스 ID…</value>
+  </data>
+  <data name="DeleteServer" xml:space="preserve">
+    <value>서버 삭제…</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>잠시만 기다려주세요...</value>
+  </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>서버 영역 토글</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>스트리머 모드</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>규모:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>스트리머 모드 활성화(이름 약어)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>방송 중 개인 정보를 보호하기 위해 Steam 이름과 ID를 축약합니다. 콘솔 및 서버 목록을 자동으로 숨깁니다.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>사용 가능한 포지션이 없습니다(오프라인 또는 스폰되지 않음).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>그룹 저장</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>그룹 이름을 입력하세요.</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>메시지를 보내지 못했습니다. 다시 시도해 주세요. (팀에 속해 있는지 확인하세요!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>오류: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>그룹 할당</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>그룹 설정: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>그룹 이름</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>그룹 이름 입력...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>그룹 색상</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>변경 사항 저장</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>플레이어 활동 분석 및 예측</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>플레이어</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>스트리머 모드 및 미니 맵 점검</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>스트리머 모드</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>플레이어 마커 스케일링</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>미니 지도 폴란드어</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>필요한 조치:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>배틀메트릭스 추적 제거</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>플레이어 추적 시스템 점검</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>플레이어 추적 작동 방식</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>트래커에 플레이어를 추가하여 추적 시작</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>추적 활성</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>유휴 상태 추적</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>플레이어 필터링...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>서버에 연결하여 플레이어 목록 불러오기</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Steam 쿼리를 통해 플레이어 불러오기...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>트랙 ID</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>수동 트랙 이름...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>장치가 없습니다.</value>
+  </data>
+  <data name="NoTokenRegistered" xml:space="preserve">
+    <value>등록된 토큰 없음</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>토큰이 만료되었습니다!</value>
+  </data>
+  <data name="ExpiresInDays" xml:space="preserve">
+    <value>{0} 일 후에 만료</value>
+  </data>
+  <data name="UntilNight" xml:space="preserve">
+    <value>{0} 밤까지</value>
+  </data>
+  <data name="UntilDay" xml:space="preserve">
+    <value>{0} 일까지</value>
+  </data>
+  <data name="FollowMe" xml:space="preserve">
+    <value>팔로우하기</value>
+  </data>
+  <data name="FollowPlayer" xml:space="preserve">
+    <value>팔로우 {0}</value>
+  </data>
+  <data name="PairingListening" xml:space="preserve">
+    <value>페어링: 듣기…</value>
+  </data>
+  <data name="PairingStopped" xml:space="preserve">
+    <value>페어링: 중지됨</value>
+  </data>
+  <data name="PairingFailed" xml:space="preserve">
+    <value>페어링: 실패</value>
+  </data>
+  <data name="AlarmActivated" xml:space="preserve">
+    <value>알람이 활성화되었습니다!</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>서버</value>
+  </data>
+  <data name="SmartAlarm" xml:space="preserve">
+    <value>스마트 알람</value>
+  </data>
+  <data name="UnableToReadLink" xml:space="preserve">
+    <value>RustPlus-Link를 읽을 수 없습니다: {0}
+형식: rustplus://IP:PORT</value>
+  </data>
+  <data name="DeletePairingConfigHeader" xml:space="preserve">
+    <value>페어링 초기화</value>
+  </data>
+  <data name="DeletePairingConfigBody" xml:space="preserve">
+    <value>기존 페어링 구성을 삭제하시겠습니까?
+다음에 시작할 때 다시 페어링해야 합니다.</value>
+  </data>
+  <data name="ResetListenHeader" xml:space="preserve">
+    <value>초기화 + 듣기</value>
+  </data>
+  <data name="ResetListenBody" xml:space="preserve">
+    <value>페어링 구성을 삭제하고 즉시 다시 페어링/듣기를 하시겠습니까?</value>
+  </data>
+  <data name="ResetListenEdgeHeader" xml:space="preserve">
+    <value>초기화 + 듣기(엣지)</value>
+  </data>
+  <data name="ResetListenEdgeBody" xml:space="preserve">
+    <value>페어링 구성을 삭제하고 Edge를 사용하여 즉시 다시 페어링/듣기를 하시겠습니까?</value>
+  </data>
+  <data name="UpdateQueryFailed" xml:space="preserve">
+    <value>최신 릴리스를 조회할 수 없습니다. 다시 시도하거나 릴리스 페이지를 열어주세요.</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>최신 정보를 확인했습니다.</value>
+  </data>
+  <data name="UpdateAvailableHeader" xml:space="preserve">
+    <value>업데이트 가능</value>
+  </data>
+  <data name="UpdateAvailableBody" xml:space="preserve">
+    <value>새 버전을 사용할 수 있습니다: {0}
+릴리스 페이지 열기?</value>
+  </data>
+  <data name="DownloadAndInstallBody" xml:space="preserve">
+    <value>새 버전을 사용할 수 있습니다: {0}
+지금 다운로드하여 설치하시겠습니까?</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>다운로드에 실패했습니다.</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>업데이트 확인에 실패했습니다.
+{0}</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>장치가 없습니다.</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>프로필 보기</value>
+  </data>
+  <data name="ChangeGroup" xml:space="preserve">
+    <value>그룹 변경</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>이름 바꾸기</value>
+  </data>
+  <data name="RemoveTracked" xml:space="preserve">
+    <value>추적된 항목 제거</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>보기</value>
+  </data>
+  <data name="MoreOptions" xml:space="preserve">
+    <value>추가 옵션</value>
+  </data>
+  <data name="RelinkBattlemetricsId" xml:space="preserve">
+    <value>배틀메트릭스 ID…</value>
+  </data>
+  <data name="DeleteServerEllipsis" xml:space="preserve">
+    <value>서버 삭제…</value>
+  </data>
+  <data name="RightClickRename" xml:space="preserve">
+    <value>마우스 오른쪽 버튼을 클릭하여 이름 바꾸기</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>토글</value>
+  </data>
+  <data name="PopupWindow" xml:space="preserve">
+    <value>팝업 창</value>
+  </data>
+  <data name="InAppAlert" xml:space="preserve">
+    <value>인앱 알림</value>
+  </data>
+  <data name="AudioAlert" xml:space="preserve">
+    <value>오디오 알림</value>
+  </data>
+  <data name="CustomAudioFile" xml:space="preserve">
+    <value>사용자 지정 오디오 파일...</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>기본값으로 재설정</value>
+  </data>
+  <data name="Snapshot" xml:space="preserve">
+    <value>스냅샷: </value>
+  </data>
+  <data name="ItemsUpkeep" xml:space="preserve">
+    <value> 아이템, 유지 관리=</value>
+  </data>
+  <data name="NoDevicesFound" xml:space="preserve">
+    <value>장치를 찾을 수 없습니다.</value>
+  </data>
+  <data name="PairDeviceToSee" xml:space="preserve">
+    <value>스마트 장치, 스위치 또는 알람을 페어링하여 여기에서 확인하세요.</value>
+  </data>
+  <data name="TeamTab" xml:space="preserve">
+    <value>팀</value>
+  </data>
+  <data name="CenterOnMap" xml:space="preserve">
+    <value>지도 중앙</value>
+  </data>
+  <data name="FollowOnMap" xml:space="preserve">
+    <value>지도에서 팔로우하기</value>
+  </data>
+  <data name="OpenSteamProfile" xml:space="preserve">
+    <value>Steam 프로필 열기</value>
+  </data>
+  <data name="PromoteToLeader" xml:space="preserve">
+    <value>리더로 승진</value>
+  </data>
+  <data name="KickFromTeam" xml:space="preserve">
+    <value>팀에서 킥</value>
+  </data>
+  <data name="ProfileMarkers" xml:space="preserve">
+    <value>프로필 마커</value>
+  </data>
+  <data name="DeathMarkers" xml:space="preserve">
+    <value>데스 마커</value>
+  </data>
+  <data name="CamerasTab" xml:space="preserve">
+    <value>카메라</value>
+  </data>
+  <data name="AddCamera" xml:space="preserve">
+    <value>카메라 추가</value>
+  </data>
+  <data name="NoCamerasFound" xml:space="preserve">
+    <value>카메라를 찾을 수 없습니다.</value>
+  </data>
+  <data name="PairCameraToSee" xml:space="preserve">
+    <value>여기에서 카메라를 페어링하여 미리 보기를 확인하세요.</value>
+  </data>
+  <data name="PlayersTab" xml:space="preserve">
+    <value>플레이어</value>
+  </data>
+  <data name="HowToTrack" xml:space="preserve">
+    <value>추적 방법</value>
+  </data>
+  <data name="LearnHowTrackingWorks" xml:space="preserve">
+    <value>플레이어 추적 작동 방식 알아보기</value>
+  </data>
+  <data name="OnlineTab" xml:space="preserve">
+    <value>온라인</value>
+  </data>
+  <data name="OnlinePlayers" xml:space="preserve">
+    <value>온라인 플레이어</value>
+  </data>
+  <data name="SearchBM" xml:space="preserve">
+    <value>BM 검색</value>
+  </data>
+  <data name="SearchServerBM" xml:space="preserve">
+    <value>배틀메트릭스에서 현재 서버 검색</value>
+  </data>
+  <data name="Popout" xml:space="preserve">
+    <value>팝아웃</value>
+  </data>
+  <data name="OpenPlayersSeparateWindow" xml:space="preserve">
+    <value>별도의 창에서 플레이어 열기</value>
+  </data>
+  <data name="Track" xml:space="preserve">
+    <value>트랙</value>
+  </data>
+  <data name="ManualTrackPlaceholder" xml:space="preserve">
+    <value>수동 트랙 이름 또는 Steam ID...</value>
+  </data>
+  <data name="FilterPlayersPlaceholder" xml:space="preserve">
+    <value>플레이어 필터링...</value>
+  </data>
+  <data name="LoadingPlayers" xml:space="preserve">
+    <value>플레이어 로드 중...</value>
+  </data>
+  <data name="TrackedTab" xml:space="preserve">
+    <value>추적</value>
+  </data>
+  <data name="TrackedPlayers" xml:space="preserve">
+    <value>추적된 플레이어</value>
+  </data>
+  <data name="ManageGroups" xml:space="preserve">
+    <value>그룹 관리</value>
+  </data>
+  <data name="ViewFullAnalysisReport" xml:space="preserve">
+    <value>전체 분석 보고서 보기</value>
+  </data>
+  <data name="ReadyToExploreMap" xml:space="preserve">
+    <value>지도를 살펴볼 준비가 되셨나요?</value>
+  </data>
+  <data name="ConnectToLoadMap" xml:space="preserve">
+    <value>선택한 서버에 연결하여 라이브 Rust 맵과 팀을 로드합니다.</value>
+  </data>
+  <data name="ReadyToDominate" xml:space="preserve">
+    <value>Rust를 지배할 준비가 되셨나요?</value>
+  </data>
+  <data name="PairAccountBenefits" xml:space="preserve">
+    <value>계정을 페어링하여 플레이어를 추적하고, 기지 공격대 알림을 받고, 스마트 기기를 즉시 제어하세요.</value>
+  </data>
+  <data name="LoginPairAccount" xml:space="preserve">
+    <value>로그인 및 계정 페어링</value>
+  </data>
+  <data name="RequiresSteamLogin" xml:space="preserve">
+    <value>기본 브라우저에서 Steam 로그인이 필요합니다.</value>
+  </data>
+  <data name="DeleteServerHeader" xml:space="preserve">
+    <value>서버 삭제?</value>
+  </data>
+  <data name="DeleteServerConfirm" xml:space="preserve">
+    <value>이 서버를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="DeleteAction" xml:space="preserve">
+    <value>삭제</value>
+  </data>
+  <data name="AutoHideAfter3s" xml:space="preserve">
+    <value>3초 후 자동 숨기기</value>
+  </data>
+  <data name="MapFilters" xml:space="preserve">
+    <value>지도 필터</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>그리드</value>
+  </data>
+  <data name="Monuments" xml:space="preserve">
+    <value>모뉴먼트</value>
+  </data>
+  <data name="Shops" xml:space="preserve">
+    <value>상점</value>
+  </data>
+  <data name="ChatAlerts" xml:space="preserve">
+    <value>채팅 알림</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>알림</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>구성</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>모두 선택</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>모두 선택 해제</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>이벤트</value>
+  </data>
+  <data name="CargoShip" xml:space="preserve">
+    <value>화물선</value>
+  </data>
+  <data name="CargoSpawn" xml:space="preserve">
+    <value>Spawn</value>
+  </data>
+  <data name="CargoDock" xml:space="preserve">
+    <value>항만 도킹</value>
+  </data>
+  <data name="CargoEgress" xml:space="preserve">
+    <value>출발(5m 경고)</value>
+  </data>
+  <data name="CargoArrival" xml:space="preserve">
+    <value>도착 경고(도크 5m 전)</value>
+  </data>
+  <data name="Heli" xml:space="preserve">
+    <value>순찰 헬리콥터</value>
+  </data>
+  <data name="Chinook" xml:space="preserve">
+    <value>치누크(CH47)</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>여행 공급업체</value>
+  </data>
+  <data name="OilRig" xml:space="preserve">
+    <value>석유 굴착 장치 트리거</value>
+  </data>
+  <data name="DeepSea" xml:space="preserve">
+    <value>심해 이벤트</value>
+  </data>
+  <data name="SmartAlerts" xml:space="preserve">
+    <value>스마트 알림</value>
+  </data>
+  <data name="PlayerOnline" xml:space="preserve">
+    <value>온라인 상태</value>
+  </data>
+  <data name="PlayerOffline" xml:space="preserve">
+    <value>오프라인 상태</value>
+  </data>
+  <data name="AnnounceTracking" xml:space="preserve">
+    <value>추적 알림</value>
+  </data>
+  <data name="PlayerDeathSelf" xml:space="preserve">
+    <value>자기 죽음</value>
+  </data>
+  <data name="PlayerDeathTeam" xml:space="preserve">
+    <value>팀 사망</value>
+  </data>
+  <data name="PlayerRespawnSelf" xml:space="preserve">
+    <value>자동 리스폰</value>
+  </data>
+  <data name="PlayerRespawnTeam" xml:space="preserve">
+    <value>팀 리스폰</value>
+  </data>
+  <data name="NewShops" xml:space="preserve">
+    <value>새로운 상점</value>
+  </data>
+  <data name="SuspiciousShops" xml:space="preserve">
+    <value>의심스러운 상점</value>
+  </data>
+  <data name="TradeAlerts" xml:space="preserve">
+    <value>거래 알림</value>
+  </data>
+  <data name="CrosshairStyle" xml:space="preserve">
+    <value>십자선 스타일</value>
+  </data>
+  <data name="GreenDot" xml:space="preserve">
+    <value>녹색 점</value>
+  </data>
+  <data name="MiniGreen" xml:space="preserve">
+    <value>미니 그린</value>
+  </data>
+  <data name="OpenCrosshairRG" xml:space="preserve">
+    <value>오픈 십자선(R/G)</value>
+  </data>
+  <data name="ThinRedCircle" xml:space="preserve">
+    <value>얇은 빨간색 원</value>
+  </data>
+  <data name="SquareDot" xml:space="preserve">
+    <value>정사각형 + 점</value>
+  </data>
+  <data name="MagentaDot" xml:space="preserve">
+    <value>마젠타 도트</value>
+  </data>
+  <data name="MagentaOpenCross" xml:space="preserve">
+    <value>마젠타 오픈 크로스</value>
+  </data>
+  <data name="RangeLineTicks" xml:space="preserve">
+    <value>범위 라인(틱)</value>
+  </data>
+  <data name="DrawCrosshair" xml:space="preserve">
+    <value>십자선 그리기...</value>
+  </data>
+  <data name="ChooseMonitor" xml:space="preserve">
+    <value>모니터 선택</value>
+  </data>
+  <data name="DrawOverlay" xml:space="preserve">
+    <value>오버레이 그리기</value>
+  </data>
+  <data name="DrawToolTip" xml:space="preserve">
+    <value>그리기(오른쪽 클릭: 크기/색상)</value>
+  </data>
+  <data name="PlaceTextToolTip" xml:space="preserve">
+    <value>텍스트 배치(오른쪽 클릭: 색상/크기)</value>
+  </data>
+  <data name="PlaceIconToolTip" xml:space="preserve">
+    <value>배치 아이콘(오른쪽 클릭: 선택 아이콘)</value>
+  </data>
+  <data name="EraserToolTip" xml:space="preserve">
+    <value>지우개(길게 누르기 또는 클릭)</value>
+  </data>
+  <data name="DeleteOverlayToolTip" xml:space="preserve">
+    <value>나만의 오버레이 삭제</value>
+  </data>
+  <data name="UploadOverlayToolTip" xml:space="preserve">
+    <value>나만의 오버레이 업로드/공유</value>
+  </data>
+  <data name="ProfitTrades" xml:space="preserve">
+    <value>수익 거래</value>
+  </data>
+  <data name="ArbitrageOpportunities" xml:space="preserve">
+    <value>직접 차익 거래 기회 | 저가 매수 → 고가 매도.</value>
+  </data>
+  <data name="BuyXForY" xml:space="preserve">
+    <value>X를 Y로 구매</value>
+  </data>
+  <data name="Analyze" xml:space="preserve">
+    <value>분석</value>
+  </data>
+  <data name="IWantToGet" xml:space="preserve">
+    <value>GET</value>
+  </data>
+  <data name="ICanPayWith" xml:space="preserve">
+    <value>결제 가능</value>
+  </data>
+  <data name="TeamChat" xml:space="preserve">
+    <value>팀 채팅</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>보내기</value>
+  </data>
+  <data name="FcmCredentials" xml:space="preserve">
+    <value>FCM 자격 증명</value>
+  </data>
+  <data name="RightClickConfigure" xml:space="preserve">
+    <value>마우스 오른쪽 버튼을 클릭하여 구성</value>
+  </data>
+  <data name="ResetMap" xml:space="preserve">
+    <value>초기화</value>
+  </data>
+  <data name="ResetMapToolTip" xml:space="preserve">
+    <value>지도 확대/축소 및 위치 재설정</value>
+  </data>
+  <data name="MiniMap" xml:space="preserve">
+    <value>미니</value>
+  </data>
+  <data name="CrosshairToolTip" xml:space="preserve">
+    <value>십자선 켜기/끄기(오른쪽 클릭 옵션)</value>
+  </data>
+  <data name="TrackPlayer" xml:space="preserve">
+    <value>트랙 플레이어</value>
+  </data>
+  <data name="CloseBMBrowser" xml:space="preserve">
+    <value>배틀메트릭스 브라우저 닫기</value>
+  </data>
+  <data name="ShopSearchTitle" xml:space="preserve">
+    <value>쇼핑 검색</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>검색 닫기</value>
+  </data>
+  <data name="ActivateShopsFirst" xml:space="preserve">
+    <value>먼저 상점을 활성화하세요.</value>
+  </data>
+  <data name="ActivateShopPolling" xml:space="preserve">
+    <value>상점 투표 활성화</value>
+  </data>
+  <data name="TeamChatTitle" xml:space="preserve">
+    <value>팀 채팅</value>
+  </data>
+  <data name="CloseChat" xml:space="preserve">
+    <value>채팅 닫기</value>
+  </data>
+  <data name="ChatCommandsSettings" xml:space="preserve">
+    <value>채팅 명령 설정</value>
+  </data>
+  <data name="ChatCommands" xml:space="preserve">
+    <value>채팅 명령</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>뒤로</value>
+  </data>
+  <data name="Forward" xml:space="preserve">
+    <value>앞으로</value>
+  </data>
+  <data name="OpenInExternalBrowser" xml:space="preserve">
+    <value>외부 브라우저에서 열기</value>
+  </data>
+  <data name="SearchBMPlaceholder" xml:space="preserve">
+    <value>BM 검색...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>검색</value>
+  </data>
+  <data name="SelectAServer" xml:space="preserve">
+    <value>서버 선택</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>연결 끊김</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>연결하기...</value>
+  </data>
+  <data name="StatusInitializing" xml:space="preserve">
+    <value>초기화 중...</value>
+  </data>
+  <data name="StatusDevicesActive" xml:space="preserve">
+    <value>활성 디바이스</value>
+  </data>
+  <data name="StatusFullyConnected" xml:space="preserve">
+    <value>완전히 연결됨</value>
+  </data>
+  <data name="StatusUnknown" xml:space="preserve">
+    <value>알 수 없음</value>
+  </data>
+  <data name="MayTakeAMoment" xml:space="preserve">
+    <value>잠시 시간이 걸릴 수 있습니다...</value>
+  </data>
+  <data name="AppSettingsTitle" xml:space="preserve">
+    <value>애플리케이션 설정</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>일반</value>
+  </data>
+  <data name="LaunchWithWindows" xml:space="preserve">
+    <value>Windows에서 실행(최소화됨)</value>
+  </data>
+  <data name="StartMinimizedAlways" xml:space="preserve">
+    <value>시작 최소화(항상)</value>
+  </data>
+  <data name="AutoConnectLastServer" xml:space="preserve">
+    <value>시작 시 마지막 서버에 자동 연결</value>
+  </data>
+  <data name="AutoConnectToolTip" xml:space="preserve">
+    <value>마지막 서버에 자동으로 다시 연결하여 지도를 로드합니다.</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>행동</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>닫는 대신 트레이로 최소화</value>
+  </data>
+  <data name="BackgroundTracking" xml:space="preserve">
+    <value>백그라운드 플레이어 추적 활성화</value>
+  </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>최소화한 상태에서도 배틀메트릭스를 통해 플레이어를 계속 추적합니다.</value>
+  </data>
+  <data name="HideSystemConsole" xml:space="preserve">
+    <value>시스템 콘솔 숨기기(깔끔하게 정리)</value>
+  </data>
+  <data name="HideConsoleToolTip" xml:space="preserve">
+    <value>맵 공간을 절약하기 위해 하단 로그/콘솔 패널을 숨깁니다.</value>
+  </data>
+  <data name="MapSettings" xml:space="preserve">
+    <value>지도 설정</value>
+  </data>
+  <data name="AutoLoadShops" xml:space="preserve">
+    <value>연결 시 상점 자동 로드</value>
+  </data>
+  <data name="AutoLoadShopsToolTip" xml:space="preserve">
+    <value>서버에 연결되면 자동으로 폴링 상점 및 알림을 시작합니다.</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>아이콘 대신 모뉴먼트 텍스트 레이블 사용</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>활성화하면 Rust 맵 기념물 이름이 아이콘 대신 영구 마커 글꼴을 사용하여 텍스트로 렌더링됩니다.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>기념비 스타일:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>기념비 스케일:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>기념비 불투명도:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>rustmaps.com의 아이콘</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>원본 텍스트 기념비 이름</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>크레딧</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>지도 기념물 아이콘 제공처 </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - 허가를 받아 사용합니다.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>모든 기념비 아이콘과 관련 아트워크는 rustmaps.com의 자산입니다. Rust 커뮤니티를 지원해 주셔서 감사합니다!</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>채팅</value>
+  </data>
+  <data name="ModifyChatAlerts" xml:space="preserve">
+    <value>채팅 알림 수정하기</value>
+  </data>
+  <data name="ManageSteamAccountInfo" xml:space="preserve">
+    <value>기본 창에서 연결된 Steam 계정을 관리합니다.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>닫기</value>
+  </data>
+  <data name="IncomingAlarms" xml:space="preserve">
+    <value>수신 알람</value>
+  </data>
+  <data name="Wipe" xml:space="preserve">
+    <value>닦기</value>
+  </data>
+  <data name="PlayersOnly" xml:space="preserve">
+    <value>플레이어</value>
+  </data>
+  <data name="PlayersHeader" xml:space="preserve">
+    <value>플레이어</value>
+  </data>
+  <data name="IWantToGetToolTip" xml:space="preserve">
+    <value>GET하고 싶습니다(예: 원유).</value>
+  </data>
+  <data name="ICanPayWithToolTip" xml:space="preserve">
+    <value>결제 수단(예: 스크랩)으로 결제하고 싶습니다.</value>
+  </data>
+  <data name="DeleteServerConfirmFormatted" xml:space="preserve">
+    <value>서버 "{0}"를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.</value>
+  </data>
+  <data name="PairingError" xml:space="preserve">
+    <value>페어링: 오류</value>
+  </data>
+  <data name="PairingStarting" xml:space="preserve">
+    <value>페어링: 시작...</value>
+  </data>
+  <data name="StartingPairingListener" xml:space="preserve">
+    <value>페어링 리스너 시작...</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+    <value>로그인</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>재고</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>가격</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>켜기</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>꺼짐</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>ACTIVE</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>비활성</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>그룹</value>
+  </data>
+  <data name="ImportDevicesTitle" xml:space="preserve">
+    <value>Rust+ 데스크 - 장치 가져오기</value>
+  </data>
+  <data name="ImportDevicesHeader" xml:space="preserve">
+    <value>장치 가져오기</value>
+  </data>
+  <data name="ImportDevicesSelectPrompt" xml:space="preserve">
+    <value>이 서버에 대해 가져올 장치를 선택합니다.</value>
+  </data>
+  <data name="CheckDeviceStatus" xml:space="preserve">
+    <value>디바이스 상태 확인</value>
+  </data>
+  <data name="ImportSelected" xml:space="preserve">
+    <value>선택한 가져오기</value>
+  </data>
+  <data name="BmShortcuts" xml:space="preserve">
+    <value>BM 바로 가기</value>
+  </data>
+  <data name="PairingConfigDeleted" xml:space="preserve">
+    <value>페어링: 구성 삭제됨</value>
+  </data>
+  <data name="TrayIconDefault" xml:space="preserve">
+    <value>Rust+ 데스크 트래커</value>
+  </data>
+  <data name="TrayIconTracking" xml:space="preserve">
+    <value>Rust+ 데스크 (추적 {0})</value>
+  </data>
+  <data name="RenameGroup" xml:space="preserve">
+    <value>그룹 이름 바꾸기</value>
+  </data>
+  <data name="NewNameForGroup" xml:space="preserve">
+    <value>그룹의 새 이름입니다:</value>
+  </data>
+  <data name="NewNameForDevice" xml:space="preserve">
+    <value>#{0} 의 새 이름입니다:</value>
+  </data>
+  <data name="EnterBattlemetricsIdFor" xml:space="preserve">
+    <value>"{0} "에 배틀메트릭스 서버 ID를 입력합니다:</value>
+  </data>
+  <data name="TrayTrackingStatus" xml:space="preserve">
+    <value>추적: {0}</value>
+  </data>
+  <data name="TrayLastUpdate" xml:space="preserve">
+    <value>마지막 업데이트: {0}</value>
+  </data>
+  <data name="OpenRustPlusDesk" xml:space="preserve">
+    <value>Rust+ 데스크 열기</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>종료</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>설명</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>카메라</value>
+  </data>
+  <data name="Alarms" xml:space="preserve">
+    <value>알람</value>
+  </data>
+  <data name="Identifier" xml:space="preserve">
+    <value>식별자:</value>
+  </data>
+  <data name="FPS" xml:space="preserve">
+    <value>FPS:</value>
+  </data>
+  <data name="CameraFPSNote" xml:space="preserve">
+    <value>참고: 2fps를 권장하며, 이보다 높으면 서버에 대한 연결이 끊어질 수 있습니다.</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>Pixel</value>
+  </data>
+  <data name="Pen" xml:space="preserve">
+    <value>펜</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>라인</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>스퀘어</value>
+  </data>
+  <data name="Circle" xml:space="preserve">
+    <value>서클</value>
+  </data>
+  <data name="Thickness" xml:space="preserve">
+    <value>두께:</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>불투명도:</value>
+  </data>
+  <data name="UploadPNG" xml:space="preserve">
+    <value>PNG 업로드</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>지우기</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>저장</value>
+  </data>
+  <data name="AssignGlobalHotkeys" xml:space="preserve">
+    <value>스마트 스위치에 전역 단축키를 할당합니다. 여러 디바이스에서 하나의 단축키를 공유할 수 있습니다(순차적으로 토글됨).</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>장치</value>
+  </data>
+  <data name="EntityId" xml:space="preserve">
+    <value>엔티티아이디</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>단축키</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>설정</value>
+  </data>
+  <data name="CloseDeactivate" xml:space="preserve">
+    <value>닫기 및 비활성화</value>
+  </data>
+  <data name="CloseActivate" xml:space="preserve">
+    <value>닫기 및 활성화</value>
+  </data>
+  <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
+    <value>유지 관리, 미니맵 및 추적 업데이트</value>
+  </data>
+  <data name="FeatureSummaryAdjustments" xml:space="preserve">
+    <value>기능 요약 및 조정</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>다시 보여주지 마세요</value>
+  </data>
+  <data name="AwesomeLetsGo" xml:space="preserve">
+    <value>멋지다, 가자!</value>
+  </data>
+  <data name="MiniMapSettings" xml:space="preserve">
+    <value>미니 맵 설정</value>
+  </data>
+  <data name="Shape" xml:space="preserve">
+    <value>모양</value>
+  </data>
+  <data name="Rectangle" xml:space="preserve">
+    <value>직사각형</value>
+  </data>
+  <data name="OpacityLabel" xml:space="preserve">
+    <value>불투명도: {0}%</value>
+  </data>
+  <data name="SizeLabel" xml:space="preserve">
+    <value>크기: {0}% (SHIFT+마우스휠)</value>
+  </data>
+  <data name="ShowServerTime" xml:space="preserve">
+    <value>서버 시간 표시</value>
+  </data>
+  <data name="ServerInformation" xml:space="preserve">
+    <value>서버 정보</value>
+  </data>
+  <data name="NoDescriptionAvailable" xml:space="preserve">
+    <value>설명이 없습니다.</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>현재 버전: {0}</value>
+  </data>
+  <data name="PatchNotesHeader" xml:space="preserve">
+    <value>패치 노트 및 버전 기록</value>
+  </data>
+  <data name="EnableChatCommands" xml:space="preserve">
+    <value>채팅 명령 사용 설정</value>
+  </data>
+  <data name="Prefix" xml:space="preserve">
+    <value>접두사:</value>
+  </data>
+  <data name="StandardCommands" xml:space="preserve">
+    <value>표준 명령</value>
+  </data>
+  <data name="Population" xml:space="preserve">
+    <value>인구:</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>시간:</value>
+  </data>
+  <data name="Promote" xml:space="preserve">
+    <value>홍보:</value>
+  </data>
+  <data name="DeepSeaCommand" xml:space="preserve">
+    <value>심해:</value>
+  </data>
+  <data name="CargoShipCommand" xml:space="preserve">
+    <value>화물선:</value>
+  </data>
+  <data name="OilRigCommand" xml:space="preserve">
+    <value>석유 굴착 장치:</value>
+  </data>
+  <data name="PatrolHeliCommand" xml:space="preserve">
+    <value>패트롤 헬기:</value>
+  </data>
+  <data name="TravellingVendorCommand" xml:space="preserve">
+    <value>여행 공급업체:</value>
+  </data>
+  <data name="UpkeepDetails" xml:space="preserve">
+    <value>유지 관리 세부 정보:</value>
+  </data>
+  <data name="CommandDelay" xml:space="preserve">
+    <value>명령 지연:</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>언어</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>언어 선택</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>언어를 변경하면 완전히 적용하려면 다시 시작해야 합니다.</value>
+  </data>
+  <data name="SmartSwitches" xml:space="preserve">
+    <value>스마트 스위치</value>
+  </data>
+  <data name="UpkeepTcMonitors" xml:space="preserve">
+    <value>유지보수(TC) 모니터</value>
+  </data>
+  <data name="NoTcMonitorsFound" xml:space="preserve">
+    <value>TC 모니터를 찾을 수 없습니다.</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>저장 및 닫기</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>메시지...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>여기 오류 메시지</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>순찰 헬기</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>패트롤 헬기 활동 중 - {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>이벤트 도중 연결 - 스폰 시간 알 수 없음</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>순찰 헬기 활성화(스폰 시간 미상)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>순찰 헬기 격추 {0} 이 세션 전에</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>순찰 헬기 이 세션 전에 {0} 지도를 떠났습니다.</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>{0} 에서 도킹 - 출발 ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>항구</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>연결 시 이미 도킹됨 - 출발 시간 미정</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>{0} (도킹 기간 아직 미확인)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>맵에 남은 시간(스폰부터)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>경로 중간에 연결됨 - 시간 미상</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>경로 중간에 연결됨 - 시간 미정(경로 ~{0}총 거리)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>화물선이 이 세션에 {0}m {1}초 전에 출현했습니다.</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>트래블링 벤더 활동 중 - {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>여행 상인 활성화(스폰 시간 미상)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>여행 상인이 이 세션 전에 {0} 전에 사라졌습니다.</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>심해 활성 - {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>심해 활성(스폰 시간 미상)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>딥씨 종료 {0} 이 세션 전에</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} 현재 온라인 상태인 플레이어 수입니다.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> 대기열: {0} 플레이어.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>현재 게임 내 시간: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} 가 리더로 승진했습니다.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>심해가 활성화되었습니다! {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>현재 심해가 활성화되어 있습니다(이벤트 도중 연결 - 스폰 시간 미정).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>이 세션은 {0} 몇 분 전에 종료되었습니다.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>심해 이벤트 상태를 알 수 없습니다(이 세션에서 볼 수 없음).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>화물선이 활성화되지 않았습니다.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>화물선 정박지 {0}. 약 {1} 분 후에 출발합니다.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>화물선이 {0} 에 정박하여 출항을 준비하고 있습니다.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>화물선은 {0} (출발 시간 미정)에 정박 중입니다.</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>화물선이 활성화되었습니다. 약 {0} 분 후에 출발합니다.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>화물선이 활성화되어 곧 출발할 준비를 하고 있습니다.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>화물선 활성화됨(이 서버에 대한 경로 기간이 아직 학습되지 않음).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>화물선 활성화(스폰 후 연결 - 남은 시간 알 수 없음).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>화물선이 활성화되지 않았습니다. 이 세션에서 {0} 몇 분 전에 디스어폰되었습니다.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: 크레이트 인 {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}마지막 전화 : {1}m 전</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}이 세션은 호출되지 않음</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>패트롤 헬기가 활동 중입니다! {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>순찰 헬기가 현재 활성화되어 있습니다(이벤트 도중 연결 - 스폰 시간 미정).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>순찰 헬기가 활성화되지 않았습니다. 이 세션 전에는 {0} {1} 이었습니다.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>격추</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>지도 밖으로 나가기</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>순찰 헬기 이벤트 상태를 알 수 없습니다(이 세션에서 볼 수 없음).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>트래블링 벤더가 활동 중입니다! {0} 에 출마 중입니다.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>여행 상인이 현재 활성화되어 있습니다(이벤트 도중 연결 - 스폰 시간 미정).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>여행 상인이 활성화되지 않았습니다. 이 세션 전에 {0} 디스어폰되었습니다.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>여행 중인 벤더 이벤트 상태를 알 수 없습니다(이 세션에서 볼 수 없음).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>유지 관리 명령에 매핑된 도구 찬장은 없습니다.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>유지 관리 {0} TC: 비어 있거나 만료되었습니다.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> 필요 24시간: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>유지 관리 {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} 일수</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} 시간</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} 분</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: 비어 있음/만료됨</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>유지 관리: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>바인딩된 도구 찬장 모니터를 찾을 수 없거나 페어링되지 않았습니다.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>바운드 도구 찬장 모니터를 찾을 수 없거나 페어링되지 않았습니다.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} 로 바뀌었습니다 {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>켜기</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>꺼짐</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>바인딩된 스마트 스위치를 찾을 수 없거나 페어링되지 않았습니다.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>목재</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>돌</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>금속</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>소형 석유 굴착 장치</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>대형 석유 굴착 장비</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>쇼핑</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>화물선</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>여행 공급업체</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>순찰 헬리콥터</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>오일리그 상자</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>폭발</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>건물 차단됨</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>이벤트</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] 트리거되었습니다! 상자가 {1} 에서 잠금 해제됩니다.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>경보: {0} 트리거되었습니다!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] 10분 후에 상자가 열립니다!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] 5분 안에 상자가 열립니다!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>심해가 시작되었습니다.</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>새 상점 {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>의심스러운 상점 {0} [{1}] 온라인 {2}s, 판매 {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>화물선 생성 {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>먼 바다( {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>화물선 정박지 {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>화물선은 약 5분 후 {0} ({1})에 정박할 예정입니다.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>{0} 에서 5분 후 출발하는 화물선 ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>서버 지연으로 인한 충돌 감지 - 헬기가 아직 지도에 표시되지 않음( {0} )</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} 에서 생성된 {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>순찰 헬기 격추 {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>알 수 없음</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} 오프라인으로 전환</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} 사망 @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} 부활 @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[추적] {0}{1} 이제 온라인 상태입니다.</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[추적] {0}{1} 이제 오프라인 상태입니다.</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[추적] {0}{1} 이름이 {2} 로 변경되었습니다!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>판매</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>구매</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>쇼핑</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (재고 {5}) for {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>채팅 명령 목록</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>커맨드: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>로컬라이제이션, UI 현대화 및 스토리지</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>동적 로캘 전환</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - 30개 이상의 언어 선택 가능</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>채팅 명령 UI</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - 깔끔한 보기를 위한 분리된 보기</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>새 설정 오버레이</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - 모든 설정에 대한 사이드바 정리</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>배틀메트릭스 추적 제거</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>기지가 공격받고 있습니다!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>먼저 서버에 연결하세요.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>어떤 서버에도 연결되어 있지 않습니다.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>지금은 채팅을 사용할 수 없습니다.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>먼저 서버를 선택하세요.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>연결</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>채팅</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>플레이어를 추적하는 방법</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>기본 UDP 추적</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>추적 가이드는 현재 영어로만 제공되며, 조만간 변경될 예정입니다. 양해해 주시기 바랍니다.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>이 창은 언제든지 닫을 수 있으며 ❓ 추적 방법 버튼으로 다시 열 수 있습니다.</value>
+  </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>유지 관리</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>애플리케이션 설정, 프로필, 사용자 지정 도면을 지우거나 백업 또는 복원하세요.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>앱 데이터 재설정...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>백업 데이터...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>데이터 복원...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>애플리케이션 데이터 재설정</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>이 장치에서 지우려는 구성 요소를 선택합니다. 선택한 모든 옵션이 영구적으로 삭제됩니다.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>활성 서버 연결(연결 끊기)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>저장된 서버 프로필(페어링된 서버 구성 삭제)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Steam 계정 자격 증명(로그아웃)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>장치 페어링 구성(등록 토큰 재설정)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>사용자 지정 십자선(지우기 구성)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>로컬 캐시 및 도면(저장된 지도/선 지우기)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>이 작업은 영구적이며 되돌릴 수 없습니다.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>재설정 확인</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>백업 비밀번호</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>백업 보호</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>이 백업 파일을 암호화할 비밀번호를 입력합니다. 비워두면 백업이 암호화되지 않습니다.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>백업 복원</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>이 백업은 비밀번호로 보호되어 있습니다. 비밀번호를 입력하여 해독하세요:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>암호화</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>암호 해독</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>확인</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>애플리케이션 데이터 백업</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] 백업이 다음 위치에서 성공적으로 생성되었습니다: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>백업이 성공적으로 생성되었습니다!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>백업 완료</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[시스템] 백업 오류: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>백업 생성 오류: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>백업 실패</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>데이터를 복원하면 현재 서버 프로필, 사용자 지정 십자선, 그림 오버레이 및 미니맵 구성을 덮어쓰게 됩니다.
+
+계속 진행하시겠습니까?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>백업 복원 확인</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>애플리케이션 데이터 복원</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>애플리케이션 데이터가 성공적으로 복원되었습니다!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>복원 완료</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[시스템] 복원 오류: 제공한 비밀번호가 잘못되었습니다.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>암호 해독에 실패했습니다. 잘못된 비밀번호 또는 손상된 백업 파일입니다.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>복원 실패</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[시스템] 복원 오류: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>백업 복원 중 오류: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>백업 파일 형식이 잘못되었거나 서명이 누락되었습니다.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[지우기] 선택적 초기화 작업 시작 중...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] 활성 서버 연결 해제 중...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[지우기] 연결 재설정이 완료되었습니다.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[지우기] 저장된 서버 프로필 지우기...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[지우기] 저장된 서버 프로필이 지워졌습니다.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[삭제] Steam 계정 자격 증명 제거하기...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[지우기] Steam 자격 증명이 지워졌습니다.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[삭제] 장치 페어링 구성 삭제...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[지우기] 장치 페어링 구성이 삭제되었습니다.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[지우기] 사용자 지정 십자선 지우기...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[지우기] 사용자 지정 십자선 지우기 오류: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[지우기] 사용자 지정 십자선이 지워졌습니다.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[지우기] 로컬 캐시 파일 및 오버레이 도면 지우기...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[지우기] 캐시 폴더 지우기 오류: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[지우기] 캐시 폴더가 지워졌습니다.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[지우기] 리스너 및 FCM 자격 증명 다시 등록하기...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[지우기] 선택적 초기화 작업이 성공적으로 완료되었습니다.</value>
+  </data>
+</root>

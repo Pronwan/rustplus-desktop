@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>ROES+ DESKTOP</value>
+  </data>
+  <data name="SteamAccount" xml:space="preserve">
+    <value>Stoomrekening</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+    <value>Nie aangemeld nie</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>Kontroleer vir opdaterings</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>Laai af...</value>
+  </data>
+  <data name="JoinDiscord" xml:space="preserve">
+    <value>Sluit aan by Discord</value>
+  </data>
+  <data name="PatchNotes" xml:space="preserve">
+    <value>Kragte-opdateringsnotas</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Instellings</value>
+  </data>
+  <data name="PairedServers" xml:space="preserve">
+    <value>GEPARDEERDE SERWERS</value>
+  </data>
+  <data name="NoServersPaired" xml:space="preserve">
+    <value>Geen bedieners nog gepaard nie</value>
+  </data>
+  <data name="PairingMaintenance" xml:space="preserve">
+    <value>Koppeling en instandhouding</value>
+  </data>
+  <data name="PairingIdle" xml:space="preserve">
+    <value>Koppeling: luies</value>
+  </data>
+  <data name="RightClickOptions" xml:space="preserve">
+    <value>Regskliek vir opsies</value>
+  </data>
+  <data name="TrackingActive" xml:space="preserve">
+    <value>Opsporing aktief</value>
+  </data>
+  <data name="LastPull" xml:space="preserve">
+    <value>Laaste trek: {0}</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>Skenk</value>
+  </data>
+  <data name="SupportDeveloper" xml:space="preserve">
+    <value>Ondersteun die ontwikkelaar</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Herstel</value>
+  </data>
+  <data name="ResetWebSocket" xml:space="preserve">
+    <value>Herstel WebSocket-verbinding</value>
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value>Spelers:</value>
+  </data>
+  <data name="ShowOnlinePlayers" xml:space="preserve">
+    <value>Wys aanlynspelers-oortjie</value>
+  </data>
+  <data name="Queue" xml:space="preserve">
+    <value>Rij:</value>
+  </data>
+  <data name="DevicesTab" xml:space="preserve">
+    <value>Toestelle</value>
+  </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>Kortpadtoetse</value>
+  </data>
+  <data name="ImportDevices" xml:space="preserve">
+    <value>Voer toestelle in vanaf spanmaats</value>
+  </data>
+  <data name="ExportDevices" xml:space="preserve">
+    <value>Stuur toestelle aan spanmaats</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Verfris</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Neergang</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Oplaai toestemming</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Deur op 'Aanvaar' te klik, sal die slimtoestelle (en moontlik kaarttekeninge) vir hierdie bediener na die skepper se bediener opgelaai word. Dit stel spanmaats in staat om dit af te laai en te sinchroniseer. Slegs jou Steam-ID word oorgedra om spanmaats te identifiseer. Slegs spelers wat by die Tool Cupboard gemagtig is, kan die toestelle beheer.
+
+Nota: Hierdie oordragmetode sal in die toekoms geoptimaliseer word. As spanmaats nie die data kan aflaai nie, probeer asseblief om jou kaarttekeninge uit te vee en weer op te laai.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Verwyder</value>
+  </data>
+  <data name="DeleteMissingOnly" xml:space="preserve">
+    <value>Jy kan slegs ontbrekende toestelle verwyder.</value>
+  </data>
+  <data name="RenameDevice" xml:space="preserve">
+    <value>Herbenoem toestel</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>Aanlyn</value>
+  </data>
+  <data name="Offline" xml:space="preserve">
+    <value>Nie aanlyn nie</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>Koppel</value>
+  </data>
+  <data name="FullConnect" xml:space="preserve">
+    <value>Volledige koppeling</value>
+  </data>
+  <data name="LoadMapTeam" xml:space="preserve">
+    <value>Laai Kaart en Span</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>Ontkoppel</value>
+  </data>
+  <data name="ServerDetails" xml:space="preserve">
+    <value>Bedienerbesonderhede</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>Luister</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Hou op</value>
+  </data>
+  <data name="TryPairingEdge" xml:space="preserve">
+    <value>Probeer koppel met Edge</value>
+  </data>
+  <data name="ResetPairingConfig" xml:space="preserve">
+    <value>Herstel koppeling (verwyder konfigurasie)</value>
+  </data>
+  <data name="ResetListenPairing" xml:space="preserve">
+    <value>Herset + Luister (herstel)</value>
+  </data>
+  <data name="ResetListenEdge" xml:space="preserve">
+    <value>Herset + Luister met Rand</value>
+  </data>
+  <data name="RelinkBattlemetrics" xml:space="preserve">
+    <value>Herlê Battlemetrics-ID…</value>
+  </data>
+  <data name="DeleteServer" xml:space="preserve">
+    <value>Verwyder bediener…</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Wag asseblief...</value>
+  </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>Skakel bedienerarea aan of af</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>Stroommodus</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>skaal:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>Aktiveer Streamermodus (Kort naamvorms)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>Kort Steam-name en -ID's in om privaatheid tydens uitsendings te beskerm. Verstop outomaties die konsole en bedienerlys.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>Geen posisie beskikbaar nie (aflyn of nie gegenereer nie).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>Bewaar groep</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>Voer asseblief 'n groepnaam in.</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>Boodskap kon nie gestuur word nie. Probeer asseblief weer. (Kyk of jy in 'n span is!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Fout: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>Wys aan groep</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>Groepinstellings: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Groepnaam</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>Voer groepnaam in...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>Groepkleur</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Bewaar veranderinge</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>Speleraktiwiteitsanalise en voorspellings</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>Spelers</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>Streamer-modus en mini-kaart-opknapping</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>Stroommodus</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>Spelermerk-skaaling</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>Mini-kaartversiering</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>Aksie vereis:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics-opsporing verwyder</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>Hersiening van die speleropsporingstelsel</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>Hoe speleropsporing werk</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>Voeg spelers by die opsporer om met opsporing te begin.</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>Opsporing aktief</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>Opsporing stilstand</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>Filtreer spelers...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>Koppel aan 'n bediener om die spelerslys te laai</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Haal spelers via Steam op...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>Spoor-ID</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>Handmatige snitnaam...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Geen toestelle.</value>
+  </data>
+  <data name="NoTokenRegistered" xml:space="preserve">
+    <value>Geen token geregistreer nie</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>Token verval!</value>
+  </data>
+  <data name="ExpiresInDays" xml:space="preserve">
+    <value>Verloop oor {0} dae</value>
+  </data>
+  <data name="UntilNight" xml:space="preserve">
+    <value>{0} tot die nag</value>
+  </data>
+  <data name="UntilDay" xml:space="preserve">
+    <value>{0} tot dag</value>
+  </data>
+  <data name="FollowMe" xml:space="preserve">
+    <value>Volg my</value>
+  </data>
+  <data name="FollowPlayer" xml:space="preserve">
+    <value>Volg {0}</value>
+  </data>
+  <data name="PairingListening" xml:space="preserve">
+    <value>Koppeling: luister…</value>
+  </data>
+  <data name="PairingStopped" xml:space="preserve">
+    <value>Koppeling: gestop</value>
+  </data>
+  <data name="PairingFailed" xml:space="preserve">
+    <value>Koppeling: misluk</value>
+  </data>
+  <data name="AlarmActivated" xml:space="preserve">
+    <value>Alarm geaktiveer!</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Bediener</value>
+  </data>
+  <data name="SmartAlarm" xml:space="preserve">
+    <value>Slim alarm</value>
+  </data>
+  <data name="UnableToReadLink" xml:space="preserve">
+    <value>Kan nie RustPlus-skakel lees nie: {0}
+Formaat: rustplus://IP:POORT</value>
+  </data>
+  <data name="DeletePairingConfigHeader" xml:space="preserve">
+    <value>Herset koppeling</value>
+  </data>
+  <data name="DeletePairingConfigBody" xml:space="preserve">
+    <value>Verwyder bestaande koppelingkonfigurasie?
+Jy sal by die volgende opstart weer moet koppel.</value>
+  </data>
+  <data name="ResetListenHeader" xml:space="preserve">
+    <value>Herset + Luister</value>
+  </data>
+  <data name="ResetListenBody" xml:space="preserve">
+    <value>Verwyder die koppelingkonfigurasie en koppel onmiddellik weer en luister?</value>
+  </data>
+  <data name="ResetListenEdgeHeader" xml:space="preserve">
+    <value>Herset + Luister (Rand)</value>
+  </data>
+  <data name="ResetListenEdgeBody" xml:space="preserve">
+    <value>Verwyder die koppelingkonfigurasie en koppel onmiddellik weer en luister met Edge?</value>
+  </data>
+  <data name="UpdateQueryFailed" xml:space="preserve">
+    <value>Konn nie die nuutste vrystelling navraag nie. Probeer asseblief weer of maak die vrystellingsbladsy oop.</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Jy is op datum.</value>
+  </data>
+  <data name="UpdateAvailableHeader" xml:space="preserve">
+    <value>Opdatering beskikbaar</value>
+  </data>
+  <data name="UpdateAvailableBody" xml:space="preserve">
+    <value>Nuwe weergawe beskikbaar: {0}
+. Open die vrystellingsbladsy?</value>
+  </data>
+  <data name="DownloadAndInstallBody" xml:space="preserve">
+    <value>Nuwe weergawe beskikbaar: {0}
+Aflaai en installeer nou?</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Aflaai het misluk.</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Opdateringskontrole het misluk.
+{0}</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Geen toestelle.</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>Beskik oor profiel</value>
+  </data>
+  <data name="ChangeGroup" xml:space="preserve">
+    <value>Groep verander</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Herbenoem</value>
+  </data>
+  <data name="RemoveTracked" xml:space="preserve">
+    <value>Verwyder opgespoor</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Kyk</value>
+  </data>
+  <data name="MoreOptions" xml:space="preserve">
+    <value>Meer opsies</value>
+  </data>
+  <data name="RelinkBattlemetricsId" xml:space="preserve">
+    <value>Herlink Battlemetrics-ID…</value>
+  </data>
+  <data name="DeleteServerEllipsis" xml:space="preserve">
+    <value>Verwyder bediener…</value>
+  </data>
+  <data name="RightClickRename" xml:space="preserve">
+    <value>Regskliek om te hernoem</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>SKAKEL</value>
+  </data>
+  <data name="PopupWindow" xml:space="preserve">
+    <value>Opspringvenster</value>
+  </data>
+  <data name="InAppAlert" xml:space="preserve">
+    <value>In-app-waarskuwing</value>
+  </data>
+  <data name="AudioAlert" xml:space="preserve">
+    <value>Geluidwaarskuwing</value>
+  </data>
+  <data name="CustomAudioFile" xml:space="preserve">
+    <value>Pasgemaakte klanklêer...</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>Stel terug na verstek</value>
+  </data>
+  <data name="Snapshot" xml:space="preserve">
+    <value>Oomblikskoot: </value>
+  </data>
+  <data name="ItemsUpkeep" xml:space="preserve">
+    <value> Items, Onderhoud=</value>
+  </data>
+  <data name="NoDevicesFound" xml:space="preserve">
+    <value>Geen toestelle gevind</value>
+  </data>
+  <data name="PairDeviceToSee" xml:space="preserve">
+    <value>Pareer 'n slim toestel, skakelaar of alarm om dit hier te sien.</value>
+  </data>
+  <data name="TeamTab" xml:space="preserve">
+    <value>Span</value>
+  </data>
+  <data name="CenterOnMap" xml:space="preserve">
+    <value>Sentrum op kaart</value>
+  </data>
+  <data name="FollowOnMap" xml:space="preserve">
+    <value>Volg op kaart</value>
+  </data>
+  <data name="OpenSteamProfile" xml:space="preserve">
+    <value>Open Steam-profiel</value>
+  </data>
+  <data name="PromoteToLeader" xml:space="preserve">
+    <value>Bevorder tot leier</value>
+  </data>
+  <data name="KickFromTeam" xml:space="preserve">
+    <value>Skop van die span</value>
+  </data>
+  <data name="ProfileMarkers" xml:space="preserve">
+    <value>Profielmerkers</value>
+  </data>
+  <data name="DeathMarkers" xml:space="preserve">
+    <value>Doodsmerkers</value>
+  </data>
+  <data name="CamerasTab" xml:space="preserve">
+    <value>Kamera's</value>
+  </data>
+  <data name="AddCamera" xml:space="preserve">
+    <value>Voeg kamera by</value>
+  </data>
+  <data name="NoCamerasFound" xml:space="preserve">
+    <value>Geen kameras gevind nie</value>
+  </data>
+  <data name="PairCameraToSee" xml:space="preserve">
+    <value>Pareer 'n kamera om hier sy voorskou te sien.</value>
+  </data>
+  <data name="PlayersTab" xml:space="preserve">
+    <value>Spelers</value>
+  </data>
+  <data name="HowToTrack" xml:space="preserve">
+    <value>Hoe om op te spoor</value>
+  </data>
+  <data name="LearnHowTrackingWorks" xml:space="preserve">
+    <value>Leer hoe speleropsporing werk</value>
+  </data>
+  <data name="OnlineTab" xml:space="preserve">
+    <value>Aanlyn</value>
+  </data>
+  <data name="OnlinePlayers" xml:space="preserve">
+    <value>Aanlynspelers</value>
+  </data>
+  <data name="SearchBM" xml:space="preserve">
+    <value>Soek BM</value>
+  </data>
+  <data name="SearchServerBM" xml:space="preserve">
+    <value>Soek die huidige bediener op BattleMetrics</value>
+  </data>
+  <data name="Popout" xml:space="preserve">
+    <value>Uitklap</value>
+  </data>
+  <data name="OpenPlayersSeparateWindow" xml:space="preserve">
+    <value>Open spelers in 'n aparte venster</value>
+  </data>
+  <data name="Track" xml:space="preserve">
+    <value>Spoor</value>
+  </data>
+  <data name="ManualTrackPlaceholder" xml:space="preserve">
+    <value>Handmatige spoornaam of Steam-ID...</value>
+  </data>
+  <data name="FilterPlayersPlaceholder" xml:space="preserve">
+    <value>Filtreer spelers...</value>
+  </data>
+  <data name="LoadingPlayers" xml:space="preserve">
+    <value>Laai spelers...</value>
+  </data>
+  <data name="TrackedTab" xml:space="preserve">
+    <value>Opgespoor</value>
+  </data>
+  <data name="TrackedPlayers" xml:space="preserve">
+    <value>Opgespoorde spelers</value>
+  </data>
+  <data name="ManageGroups" xml:space="preserve">
+    <value>Bestuur groepe</value>
+  </data>
+  <data name="ViewFullAnalysisReport" xml:space="preserve">
+    <value>Beskou volledige ontledingsverslag</value>
+  </data>
+  <data name="ReadyToExploreMap" xml:space="preserve">
+    <value>Gereed om die kaart te verken?</value>
+  </data>
+  <data name="ConnectToLoadMap" xml:space="preserve">
+    <value>Koppel aan 'n gekose bediener om die lewendige Rust-kaart en span te laai.</value>
+  </data>
+  <data name="ReadyToDominate" xml:space="preserve">
+    <value>Gereed om Rust te domineer?</value>
+  </data>
+  <data name="PairAccountBenefits" xml:space="preserve">
+    <value>Koppel jou rekening om spelers te begin opspoor, basisaanvalwaarskuwings te ontvang en jou slimtoestelle onmiddellik te beheer.</value>
+  </data>
+  <data name="LoginPairAccount" xml:space="preserve">
+    <value>Aanmelding &amp; Paar rekening</value>
+  </data>
+  <data name="RequiresSteamLogin" xml:space="preserve">
+    <value>Benodig 'n Steam-aanmelding in jou verstekblaaier.</value>
+  </data>
+  <data name="DeleteServerHeader" xml:space="preserve">
+    <value>Verwyder bediener?</value>
+  </data>
+  <data name="DeleteServerConfirm" xml:space="preserve">
+    <value>Is jy seker jy wil hierdie bediener verwyder? Hierdie aksie kan nie ongedaan gemaak word nie.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Kanselleer</value>
+  </data>
+  <data name="DeleteAction" xml:space="preserve">
+    <value>Verwyder</value>
+  </data>
+  <data name="AutoHideAfter3s" xml:space="preserve">
+    <value>Outomaties wegsteek na 3 sekondes</value>
+  </data>
+  <data name="MapFilters" xml:space="preserve">
+    <value>KAARTFILTERS</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>Rooster</value>
+  </data>
+  <data name="Monuments" xml:space="preserve">
+    <value>Monumente</value>
+  </data>
+  <data name="Shops" xml:space="preserve">
+    <value>Winkels</value>
+  </data>
+  <data name="ChatAlerts" xml:space="preserve">
+    <value>Kletswaarskuwings</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Waarskuwings</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>Konfigureer</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Kies alles</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Ontkies almal</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>GELEENTHEDE</value>
+  </data>
+  <data name="CargoShip" xml:space="preserve">
+    <value>Ladingskip</value>
+  </data>
+  <data name="CargoSpawn" xml:space="preserve">
+    <value>Geboorte</value>
+  </data>
+  <data name="CargoDock" xml:space="preserve">
+    <value>Haven aanleg</value>
+  </data>
+  <data name="CargoEgress" xml:space="preserve">
+    <value>Aftekening (5 minute waarskuwing)</value>
+  </data>
+  <data name="CargoArrival" xml:space="preserve">
+    <value>Aankomwaarskuwing (5 m voor die dok)</value>
+  </data>
+  <data name="Heli" xml:space="preserve">
+    <value>Patrouillehelikopter</value>
+  </data>
+  <data name="Chinook" xml:space="preserve">
+    <value>Chinook (CH47)</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>Reisende verkoper</value>
+  </data>
+  <data name="OilRig" xml:space="preserve">
+    <value>Olieboorplatform-trekker</value>
+  </data>
+  <data name="DeepSea" xml:space="preserve">
+    <value>Diepsee-gebeurtenis</value>
+  </data>
+  <data name="SmartAlerts" xml:space="preserve">
+    <value>Slim waarskuwings</value>
+  </data>
+  <data name="PlayerOnline" xml:space="preserve">
+    <value>Aanlynstatus</value>
+  </data>
+  <data name="PlayerOffline" xml:space="preserve">
+    <value>Oflinestatus</value>
+  </data>
+  <data name="AnnounceTracking" xml:space="preserve">
+    <value>Opsporingskennisgewings</value>
+  </data>
+  <data name="PlayerDeathSelf" xml:space="preserve">
+    <value>Selfdood</value>
+  </data>
+  <data name="PlayerDeathTeam" xml:space="preserve">
+    <value>Span-dood</value>
+  </data>
+  <data name="PlayerRespawnSelf" xml:space="preserve">
+    <value>Self herlewing</value>
+  </data>
+  <data name="PlayerRespawnTeam" xml:space="preserve">
+    <value>Span Herlewing</value>
+  </data>
+  <data name="NewShops" xml:space="preserve">
+    <value>Nuwe Winkels</value>
+  </data>
+  <data name="SuspiciousShops" xml:space="preserve">
+    <value>Verdagte winkels</value>
+  </data>
+  <data name="TradeAlerts" xml:space="preserve">
+    <value>Handelswaarskuwings</value>
+  </data>
+  <data name="CrosshairStyle" xml:space="preserve">
+    <value>Kruisvisier-styl</value>
+  </data>
+  <data name="GreenDot" xml:space="preserve">
+    <value>Groen Punt</value>
+  </data>
+  <data name="MiniGreen" xml:space="preserve">
+    <value>Mini Groen</value>
+  </data>
+  <data name="OpenCrosshairRG" xml:space="preserve">
+    <value>Oop kruisvisier (R/G)</value>
+  </data>
+  <data name="ThinRedCircle" xml:space="preserve">
+    <value>Dun Rooi Sirkel</value>
+  </data>
+  <data name="SquareDot" xml:space="preserve">
+    <value>Vierkant + Punt</value>
+  </data>
+  <data name="MagentaDot" xml:space="preserve">
+    <value>Magenta-stippel</value>
+  </data>
+  <data name="MagentaOpenCross" xml:space="preserve">
+    <value>Magenta oop kruis</value>
+  </data>
+  <data name="RangeLineTicks" xml:space="preserve">
+    <value>Bereiklyn (tikkies)</value>
+  </data>
+  <data name="DrawCrosshair" xml:space="preserve">
+    <value>Teken kruisvisier...</value>
+  </data>
+  <data name="ChooseMonitor" xml:space="preserve">
+    <value>Kies monitor</value>
+  </data>
+  <data name="DrawOverlay" xml:space="preserve">
+    <value>Teken oorleg</value>
+  </data>
+  <data name="DrawToolTip" xml:space="preserve">
+    <value>Teken (Regskliek: Grootte / Kleur)</value>
+  </data>
+  <data name="PlaceTextToolTip" xml:space="preserve">
+    <value>Plaas teks (Regskliek: Kleur / Grootte)</value>
+  </data>
+  <data name="PlaceIconToolTip" xml:space="preserve">
+    <value>Plaas ikoon (Regskliek: Kies ikoon)</value>
+  </data>
+  <data name="EraserToolTip" xml:space="preserve">
+    <value>Gom (hou of klik)</value>
+  </data>
+  <data name="DeleteOverlayToolTip" xml:space="preserve">
+    <value>Verwyder eie oorleg</value>
+  </data>
+  <data name="UploadOverlayToolTip" xml:space="preserve">
+    <value>Laai jou eie overlay op / deel</value>
+  </data>
+  <data name="ProfitTrades" xml:space="preserve">
+    <value>Winshandelings</value>
+  </data>
+  <data name="ArbitrageOpportunities" xml:space="preserve">
+    <value>Direkte arbitrasiegeleenthede | koop laag → verkoop hoog.</value>
+  </data>
+  <data name="BuyXForY" xml:space="preserve">
+    <value>Koop X vir Y</value>
+  </data>
+  <data name="Analyze" xml:space="preserve">
+    <value>Analyseer</value>
+  </data>
+  <data name="IWantToGet" xml:space="preserve">
+    <value>Ek wil kry</value>
+  </data>
+  <data name="ICanPayWith" xml:space="preserve">
+    <value>Ek kan betaal met</value>
+  </data>
+  <data name="TeamChat" xml:space="preserve">
+    <value>Span-klets</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Stuur</value>
+  </data>
+  <data name="FcmCredentials" xml:space="preserve">
+    <value>FCM-kwalifikasies</value>
+  </data>
+  <data name="RightClickConfigure" xml:space="preserve">
+    <value>Regskliek om te konfigureer</value>
+  </data>
+  <data name="ResetMap" xml:space="preserve">
+    <value>Herstel</value>
+  </data>
+  <data name="ResetMapToolTip" xml:space="preserve">
+    <value>Herstel kaartzoom en posisie</value>
+  </data>
+  <data name="MiniMap" xml:space="preserve">
+    <value>Mini</value>
+  </data>
+  <data name="CrosshairToolTip" xml:space="preserve">
+    <value>Kruisvisier aan/af (Regskliek vir opsies)</value>
+  </data>
+  <data name="TrackPlayer" xml:space="preserve">
+    <value>SNITSPELER</value>
+  </data>
+  <data name="CloseBMBrowser" xml:space="preserve">
+    <value>Sluit BattleMetrics-blaaier</value>
+  </data>
+  <data name="ShopSearchTitle" xml:space="preserve">
+    <value>Winkelsoektog</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>Sluit soektog</value>
+  </data>
+  <data name="ActivateShopsFirst" xml:space="preserve">
+    <value>Aktiveer asseblief eers die winkels.</value>
+  </data>
+  <data name="ActivateShopPolling" xml:space="preserve">
+    <value>Aktiveer winkelpeiling</value>
+  </data>
+  <data name="TeamChatTitle" xml:space="preserve">
+    <value>SPANKlets</value>
+  </data>
+  <data name="CloseChat" xml:space="preserve">
+    <value>Sluit klets</value>
+  </data>
+  <data name="ChatCommandsSettings" xml:space="preserve">
+    <value>Kletsopdragte Instellings</value>
+  </data>
+  <data name="ChatCommands" xml:space="preserve">
+    <value>Kletsopdragte</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Terug</value>
+  </data>
+  <data name="Forward" xml:space="preserve">
+    <value>Voorwaarts</value>
+  </data>
+  <data name="OpenInExternalBrowser" xml:space="preserve">
+    <value>Open in eksterne blaaier</value>
+  </data>
+  <data name="SearchBMPlaceholder" xml:space="preserve">
+    <value>Soek BM...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Soek</value>
+  </data>
+  <data name="SelectAServer" xml:space="preserve">
+    <value>Kies 'n bediener</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>Onverbonde</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>Koppel...</value>
+  </data>
+  <data name="StatusInitializing" xml:space="preserve">
+    <value>INISIALISEER...</value>
+  </data>
+  <data name="StatusDevicesActive" xml:space="preserve">
+    <value>TOestelle aktief</value>
+  </data>
+  <data name="StatusFullyConnected" xml:space="preserve">
+    <value>Volledig gekoppel</value>
+  </data>
+  <data name="StatusUnknown" xml:space="preserve">
+    <value>ONBEKEND</value>
+  </data>
+  <data name="MayTakeAMoment" xml:space="preserve">
+    <value>Dit kan 'n oomblik neem...</value>
+  </data>
+  <data name="AppSettingsTitle" xml:space="preserve">
+    <value>Toepassingsinstellings</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Algemeen</value>
+  </data>
+  <data name="LaunchWithWindows" xml:space="preserve">
+    <value>Begin met Windows (verminder)</value>
+  </data>
+  <data name="StartMinimizedAlways" xml:space="preserve">
+    <value>Begin geminimaliseer (altyd)</value>
+  </data>
+  <data name="AutoConnectLastServer" xml:space="preserve">
+    <value>Outomaties koppel by opstart aan die laaste bediener</value>
+  </data>
+  <data name="AutoConnectToolTip" xml:space="preserve">
+    <value>Koppel outomaties weer aan by die laaste bediener en laai die kaart.</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Gedrag</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>Minimaliseer na sysbalk in plaas van sluit</value>
+  </data>
+  <data name="BackgroundTracking" xml:space="preserve">
+    <value>Aktiveer agtergrondspeleropsporing</value>
+  </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>Hou aan om spelers via BattleMetrics op te spoor, selfs wanneer dit verklein is.</value>
+  </data>
+  <data name="HideSystemConsole" xml:space="preserve">
+    <value>Verberg stelselkonsole (ontklonter)</value>
+  </data>
+  <data name="HideConsoleToolTip" xml:space="preserve">
+    <value>Verberg die onderste log-/konsolepaneel om kaartruimte te bespaar.</value>
+  </data>
+  <data name="MapSettings" xml:space="preserve">
+    <value>Kaartinstellings</value>
+  </data>
+  <data name="AutoLoadShops" xml:space="preserve">
+    <value>Laai outomaties winkels in by verbinding</value>
+  </data>
+  <data name="AutoLoadShopsToolTip" xml:space="preserve">
+    <value>Begin outomaties winkels te peil en stuur waarskuwings wanneer dit aan 'n bediener gekoppel is.</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Gebruik monument-teksetikette in plaas van ikone.</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Wanneer dit geaktiveer is, word die name van Rust-kaartmonumente as teks in die Permanent Marker-lettertipe vertoon in plaas van ikone.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Monumentstyl:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Monumentskaal:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Monument deursigtigheid:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Ikone deur rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Oorspronklike teks van monumentname</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Krediete</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Kaart-gedenkteken-ikone verskaf deur </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> — met toestemming gebruik.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Alle gedenkteken-ikone en verwante kunswerke is die eiendom van rustmaps.com. Dankie dat u die Rust-gemeenskap ondersteun!</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Klets</value>
+  </data>
+  <data name="ModifyChatAlerts" xml:space="preserve">
+    <value>Bewerk kletswaarskuwings</value>
+  </data>
+  <data name="ManageSteamAccountInfo" xml:space="preserve">
+    <value>Bestuur jou gekoppelde Steam-rekening in die hoofvenster.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Sluit</value>
+  </data>
+  <data name="IncomingAlarms" xml:space="preserve">
+    <value>INKOMENDE ALARMS</value>
+  </data>
+  <data name="Wipe" xml:space="preserve">
+    <value>vee uit</value>
+  </data>
+  <data name="PlayersOnly" xml:space="preserve">
+    <value>Spelers</value>
+  </data>
+  <data name="PlayersHeader" xml:space="preserve">
+    <value>Spelers</value>
+  </data>
+  <data name="IWantToGetToolTip" xml:space="preserve">
+    <value>Ek wil kry (bv. ru-olie)</value>
+  </data>
+  <data name="ICanPayWithToolTip" xml:space="preserve">
+    <value>Ek wil betaal met (bv. Scrap)</value>
+  </data>
+  <data name="DeleteServerConfirmFormatted" xml:space="preserve">
+    <value>Is jy seker dat jy die bediener "{0}" wil uitvee? Hierdie aksie kan nie ongedaan gemaak word nie.</value>
+  </data>
+  <data name="PairingError" xml:space="preserve">
+    <value>Koppeling: fout</value>
+  </data>
+  <data name="PairingStarting" xml:space="preserve">
+    <value>Koppeling: begin...</value>
+  </data>
+  <data name="StartingPairingListener" xml:space="preserve">
+    <value>Begin koppeling-luisteraar...</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+    <value>Aangemeld</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>Voorraad</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Prys</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>Aan</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>UIT</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>AKTIEF</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>ONAKTIEF</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>GROEP</value>
+  </data>
+  <data name="ImportDevicesTitle" xml:space="preserve">
+    <value>Rust+ Lessenaar – Invoertoestelle</value>
+  </data>
+  <data name="ImportDevicesHeader" xml:space="preserve">
+    <value>Invoer toestelle</value>
+  </data>
+  <data name="ImportDevicesSelectPrompt" xml:space="preserve">
+    <value>Kies watter toestelle jy vir hierdie bediener wil invoer.</value>
+  </data>
+  <data name="CheckDeviceStatus" xml:space="preserve">
+    <value>Kontroleer toestelstatus</value>
+  </data>
+  <data name="ImportSelected" xml:space="preserve">
+    <value>Gekozen ingevoer</value>
+  </data>
+  <data name="BmShortcuts" xml:space="preserve">
+    <value>BM-afkortings</value>
+  </data>
+  <data name="PairingConfigDeleted" xml:space="preserve">
+    <value>Koppeling: konfig verwyder</value>
+  </data>
+  <data name="TrayIconDefault" xml:space="preserve">
+    <value>Rust+ lessenaaropsporer</value>
+  </data>
+  <data name="TrayIconTracking" xml:space="preserve">
+    <value>Rust+ lessenaar (opsporing {0})</value>
+  </data>
+  <data name="RenameGroup" xml:space="preserve">
+    <value>Herbenoem groep</value>
+  </data>
+  <data name="NewNameForGroup" xml:space="preserve">
+    <value>Nuwe naam vir groep:</value>
+  </data>
+  <data name="NewNameForDevice" xml:space="preserve">
+    <value>Nuwe naam vir #{0}:</value>
+  </data>
+  <data name="EnterBattlemetricsIdFor" xml:space="preserve">
+    <value>Voer die Battlemetrics-bediener-ID in vir "{0}":</value>
+  </data>
+  <data name="TrayTrackingStatus" xml:space="preserve">
+    <value>Opsporing: {0}</value>
+  </data>
+  <data name="TrayLastUpdate" xml:space="preserve">
+    <value>Laaste opdatering: {0}</value>
+  </data>
+  <data name="OpenRustPlusDesk" xml:space="preserve">
+    <value>Open Rust+ lessenaar</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Uitstek</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Beskrywing</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>Kamera</value>
+  </data>
+  <data name="Alarms" xml:space="preserve">
+    <value>Alarms</value>
+  </data>
+  <data name="Identifier" xml:space="preserve">
+    <value>Identifiseerder:</value>
+  </data>
+  <data name="FPS" xml:space="preserve">
+    <value>FPS:</value>
+  </data>
+  <data name="CameraFPSNote" xml:space="preserve">
+    <value>Nota: 2 fps word aanbeveel, hoër FPS sal waarskynlik jou verbinding met die bediener afsny.</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>Piksel</value>
+  </data>
+  <data name="Pen" xml:space="preserve">
+    <value>Prys</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>lyn</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>Vierkant</value>
+  </data>
+  <data name="Circle" xml:space="preserve">
+    <value>Sirkel</value>
+  </data>
+  <data name="Thickness" xml:space="preserve">
+    <value>Dikte:</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Ondoorzichtigheid:</value>
+  </data>
+  <data name="UploadPNG" xml:space="preserve">
+    <value>Laai PNG op</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Klaar</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Bewaar</value>
+  </data>
+  <data name="AssignGlobalHotkeys" xml:space="preserve">
+    <value>Ken wêreldwye snelsleutels aan Slimskakelaars toe. Verskeie toestelle kan dieselfde snelsleutel deel (sal agtereenvolgens wissel).</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Toestel</value>
+  </data>
+  <data name="EntityId" xml:space="preserve">
+    <value>Entiteits-ID</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>Kortpadtoets</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Gestel</value>
+  </data>
+  <data name="CloseDeactivate" xml:space="preserve">
+    <value>Sluit en deaktiveer</value>
+  </data>
+  <data name="CloseActivate" xml:space="preserve">
+    <value>Sluit en aktiveer</value>
+  </data>
+  <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
+    <value>Onderhoud, minimap en opsporing-opdatering</value>
+  </data>
+  <data name="FeatureSummaryAdjustments" xml:space="preserve">
+    <value>Kenmerksamenvatting en aanpassings</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>Moenie dit weer wys nie</value>
+  </data>
+  <data name="AwesomeLetsGo" xml:space="preserve">
+    <value>Fantasties, kom ons gaan!</value>
+  </data>
+  <data name="MiniMapSettings" xml:space="preserve">
+    <value>Mini-kaartinstellings</value>
+  </data>
+  <data name="Shape" xml:space="preserve">
+    <value>Vorm</value>
+  </data>
+  <data name="Rectangle" xml:space="preserve">
+    <value>Rektangel</value>
+  </data>
+  <data name="OpacityLabel" xml:space="preserve">
+    <value>Deurlaatbaarheid: {0}%</value>
+  </data>
+  <data name="SizeLabel" xml:space="preserve">
+    <value>Grootte: {0}% (SKIFT+muiswiel)</value>
+  </data>
+  <data name="ShowServerTime" xml:space="preserve">
+    <value>Wys bediener tyd</value>
+  </data>
+  <data name="ServerInformation" xml:space="preserve">
+    <value>Bedienerinligting</value>
+  </data>
+  <data name="NoDescriptionAvailable" xml:space="preserve">
+    <value>Geen beskrywing beskikbaar nie.</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Huidige weergawe: {0}</value>
+  </data>
+  <data name="PatchNotesHeader" xml:space="preserve">
+    <value>Kragte-aantekeninge en weergeskiedenis</value>
+  </data>
+  <data name="EnableChatCommands" xml:space="preserve">
+    <value>Aktiveer kletsopdragte</value>
+  </data>
+  <data name="Prefix" xml:space="preserve">
+    <value>Voorsetsel:</value>
+  </data>
+  <data name="StandardCommands" xml:space="preserve">
+    <value>Standaardopdragte</value>
+  </data>
+  <data name="Population" xml:space="preserve">
+    <value>Bevolking:</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Tyd:</value>
+  </data>
+  <data name="Promote" xml:space="preserve">
+    <value>Bevorder:</value>
+  </data>
+  <data name="DeepSeaCommand" xml:space="preserve">
+    <value>Diepsee:</value>
+  </data>
+  <data name="CargoShipCommand" xml:space="preserve">
+    <value>Ladingskip:</value>
+  </data>
+  <data name="OilRigCommand" xml:space="preserve">
+    <value>Olieboorplatform:</value>
+  </data>
+  <data name="PatrolHeliCommand" xml:space="preserve">
+    <value>Patrolliehelikopter:</value>
+  </data>
+  <data name="TravellingVendorCommand" xml:space="preserve">
+    <value>Reisende verkoper:</value>
+  </data>
+  <data name="UpkeepDetails" xml:space="preserve">
+    <value>Onderhoudsbesonderhede:</value>
+  </data>
+  <data name="CommandDelay" xml:space="preserve">
+    <value>Bevelvertraging:</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Taal</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Kies taal</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>Om die taal te verander, is 'n herbegin nodig om die volle effek in werking te stel.</value>
+  </data>
+  <data name="SmartSwitches" xml:space="preserve">
+    <value>Slim skakelaars</value>
+  </data>
+  <data name="UpkeepTcMonitors" xml:space="preserve">
+    <value>Onderhoud (TC) Monitors</value>
+  </data>
+  <data name="NoTcMonitorsFound" xml:space="preserve">
+    <value>Geen TC-monitors gevind nie.</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Bewaar en Sluit</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Boodskap...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Foutboodskap hier</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Patrouillehelikopter</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Patrolliehelikopter aktief – hardloop vir {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Gekoppel in die middel van die gebeurtenis – verskynstyd onbekend</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Patrolliehelikopter aktief (verskynstyd onbekend)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Patrolliehelikopter het {0} gelanseer en neergeskiet tydens hierdie sessie</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Patrol Heli het die kaart verlaat {0} gelede in hierdie sessie</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Aangemeer by {0} – vertrek omstreeks{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>hawe</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Alreeds aan boord by aanmelding – vertrektyd onbekend</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Aangemeer by {0} (aangemeerduur nog nie bekend nie)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Tyd wat oor is op die kaart (sedert spawn)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Middelpad gekoppel – tyd onbekend</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Gekoppel halverwege die roete – tyd onbekend (roete ~{0}m totaal)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Ladingskip het {0}m {1}s gelede in hierdie sessie uitgedaan</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Reisende verkoper aktief – aan die gang vir {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Reisende verkoper aktief (verskynstyd onbekend)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Reisende verkoper het {0} gelede in hierdie sessie verdwyn</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea aktief – hardloop vir {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Diepsee aktief (broeityd onbekend)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea het {0} gelede hierdie sessie geëindig.</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0} {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0} {1}se</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} Spelers tans aanlyn.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Ranglys: {0} -spelers.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Huidige in-spel tyd: {0}</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} is bevorder tot leier.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea is aktief! Hardloop vir {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea is tans aktief (aangesluit in die middel van die gebeurtenis – broeityd onbekend).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea het hierdie sessie {0} minute gelede beëindig.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Die status van die Deep Sea-gebeurtenis is onbekend (nie in hierdie sessie gesien nie).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Vrachtskip nie aktief nie.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Vrachtskip aangemeer by {0}. Vertrek oor ongeveer {1} minute.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Ladingskip is aangemeer by {0} en maak gereed om te vertrek.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Ladingskip aangemeer by {0} (vertrektyd onbekend).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Ladingskip aktief. Vertrek oor ongeveer {0} minute.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Ladingskip aktief en maak gereed om binnekort te vertrek.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Ladingskip aktief (roeteduur nog nie vir hierdie bediener geleer nie).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Ladingskip aktief (aangesluit ná spawn – oorblywende tyd onbekend).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Ladingskip nie aktief nie. Ontspaai {0} minute gelede in hierdie sessie.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: krat in {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: laaste keer genoem {1}m gelede</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: nie in hierdie sessie opgeroep nie</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Patrol Heli is aktief! Hardloop vir {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Patrol Heli is tans aktief (aangesluit in die middel van die gebeurtenis – verskynstyd onbekend).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Patrolliehelikopter nie aktief nie. Dit was {0} {1} gelede in hierdie sessie.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>afgeskiet</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>het die kaart verlaat</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Patrolliehelikopter-gebeurtenisstatus onbekend (nie in hierdie sessie gesien nie).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Travelling Vendor is aktief! Hardloop vir {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Travelling Vendor is tans aktief (aangesluit in die middel van die geleentheid – verskynstyd onbekend).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Reisende Verkoper is nie aktief nie. Uitgespook {0} gelede in hierdie sessie.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Reisende verkoper-gebeurtenisstatus onbekend (nie hierdie sessie gesien nie).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Geen gereedskapskaste is vir instandhoudingsopdragte gekarteer nie.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Onderhoud in {0} TC: Leeg of vervalle.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Behoefte/24h: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Onderhoud in {0} TC: {1}</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} dae</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} ure</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} minute</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Leeg/vervalle</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0} {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Onderhoud: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Gebonde gereedskapskasmonitors is nie gevind of nie gepaard nie.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Bound Tool Cupboard-monitor nie gevind of nie gepaard nie.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} het omgedraai {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>Aan</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>UIT</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Gebonde Smart Switch nie gevind of nie gepaard nie.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Hout</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Steen</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Metaal</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>Hoofkwartiermedewerker</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Klein olieboorplatform</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Groot olieboorplatform</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Winkel</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Ladingskip</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Reisende verkoper</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Patrouillehelikopter</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Olieboorplatformkist</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Ontploffing</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Bou geblokkeer</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Geleentheid</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] is geaktiveer! Kist ontsluit in {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} -trigger geaktiveer!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Kist ontsluit oor 10 minute!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Kist ontsluit oor 5 minute!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Deep Sea is op</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Nuwe winkel {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Verdagte winkel {0} [{1}] was aanlyn {2}'s, verkoop {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Ladingskip verskyn het {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>ver uit op see (naby {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Vrachtskip aangemeer by {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Vrachtskip word verwag om oor ongeveer 5 minute by {0} ({1}) aan te dok.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Ladingskip vertrek oor 5 minute vanaf {0} ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>botsing opgespoor weens bedieneragterstand — Heli is nog steeds op die kaart by {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} in verskyn het by {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Patrolliehelikopter neergeskiet by {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>onbekend</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} het aanlyn gekom @ {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} Het vanlyn gegaan</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} oorlede by {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} herverskyn by @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>{0}{1} is nou aanlyn</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>{0}{1} is nou OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Opsporing] {0}{1} is hernoem na {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>verkoop</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>koop</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Winkel</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (Stokk {5}) vir {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Lys kletsopdragte</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>OPDRACHTES: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Lokalisering, UI-modernisering en berging</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dinamiese omgewingskakeling</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> — Meer as 30 tale om van te kies</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Kletsopdragte UI</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> — Geïsoleerde uitsig vir 'n skoon voorkoms</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Nuwe instellings-oortreksel</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> — Skoonmaak die sybalk vir alle instellings</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics-opsporing verwyder</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Jou basis word aangeval!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Koppel asseblief eers aan 'n bediener.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Jy is nie aan enige bediener gekoppel nie.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Klets is tans nie beskikbaar nie.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Kies asseblief eers 'n bediener.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Verbinding</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Klets</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Hoe om spelers op te spoor</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Inheemse UDP-opsporing</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Die opsporinggids is tans slegs in Engels beskikbaar, aangesien dit binnekort veranderinge sal ondergaan. Ons vra u geduld.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Sluit hierdie venster te eniger tyd — jy kan dit weer oopmaak met die knoppie ❓ Hoe om op te spoor.</value>
+  </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Onderhoud</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Veeg, maak 'n rugsteun van of herstel toepassingsinstellings, profiele en pasgemaakte tekeninge.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Stel app-data terug...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Backing up data...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Herstel data...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Herstel toepassingsdata</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Kies die komponente wat jy van hierdie toestel wil uitvee. Alle gekose opsies sal permanent verwyder word.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Aktiewe bedienerkoppeling (Ontkoppel)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Gespaarde bedienerprofiele (Verwyder gepaarde bedienerkonfigurasies)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Stoomrekeningbewyse (Teken uit)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Toestelpaar-instellingskonfigurasie (Herstel registrasietokens)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Pasgemaakte kruisvisiere (veërkonfigurasies)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Plaaslike kas en tekeninge (vee opgespaarde kaarte/lyne uit)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Hierdie aksie is permanent en kan nie ongedaan gemaak word nie.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Bevestig terugstel</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Rugsteunwagwoord</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Rugsteunbeskerming</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Voer 'n wagwoord in om hierdie rugsteunlêer te enkripteer. As jy dit leeg laat, sal die rugsteun nie enkripteer word nie.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Herstel rugsteun</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Hierdie rugsteun is met 'n wagwoord beskerm. Voer die wagwoord in om dit te ontsleutel:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Enkripteer</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Ontsluit</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Backing up toepassingsdata</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Rugsteun suksesvol geskep by: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Rugsteun suksesvol geskep!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Rugsteun voltooi</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Rugsteunfout: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Fout tydens die skep van 'n rugsteun: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Rugsteun misluk</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Die herstel van data sal jou huidige bedienerprofiele, pasgemaakte kruisvisiere, tekenoorleggings en minimap-konfigurasies oorskryf.
+
+Is jy seker jy wil voortgaan?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Herstel rugsteunbevestiging</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Herstel toepassingsdata</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Aansoekdata suksesvol herstel!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Herstel voltooi</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Herstel fout: Ongeldige wagwoord verskaf.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Ontsleuteling het misluk. Ongeldige wagwoord of beskadigde rugsteunlêer.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Herstel misluk</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Herstel fout: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Fout tydens herstel van rugsteun: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Ongeldige rugsteunlêerformaat of ontbrekende handtekening.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Begin selektiewe terugsteloperasie...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Ontkoppel die aktiewe bedienerverbinding...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Verbindingsherinstelling voltooi.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Skoonmaak van gestoor­de bedienerprofiele...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Geredde bedienerprofiele uitgevee.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIS] Verwyder Steam-rekeningbewyse...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Stoom-aanmeldbesonderhede uitgevee.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Wis toestelpaar-konfigurasie...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Toestelpaar-konfigurasie verwyder.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Wisk pasgemaakte kruishare uit...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Fout by die skoonmaak van pasgemaakte kruishare: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Pasgemaakte kruishare uitgevee.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Skoonmaak plaaslike kaslêers en oortrekskilderye...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Fout by die skoonmaak van die kas-lêergids: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Kasmappe skoongemaak.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Herregistrering van luisteraar en FCM-kredensiale...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Selektiewe terugsteloperasie suksesvol voltooi.</value>
+  </data>
+</root>

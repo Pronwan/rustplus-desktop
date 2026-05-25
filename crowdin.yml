@@ -1,0 +1,3 @@
+files:
+  - source: /RustPlusDesktop/Properties/Resources.resx
+    translation: /RustPlusDesktop/Properties/lang/%locale%/Resources.%locale%.resx

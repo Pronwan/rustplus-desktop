@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>RUST+ DESKTOP</value>
+  </data>
+  <data name="SteamAccount" xml:space="preserve">
+    <value>Λογαριασμός Steam</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+    <value>Δεν Είναι Συνδεδεμένος</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>Έλεγχος για ενημερώσεις</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>Λήψη...</value>
+  </data>
+  <data name="JoinDiscord" xml:space="preserve">
+    <value>Συμμετοχή Στο Discord</value>
+  </data>
+  <data name="PatchNotes" xml:space="preserve">
+    <value>Σημειώσεις Ενημερώσεων</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Ρυθμίσεις</value>
+  </data>
+  <data name="PairedServers" xml:space="preserve">
+    <value>ΠΛΗΡΩΜΕΣ ΥΠΗΡΕΣΙΕΣ</value>
+  </data>
+  <data name="NoServersPaired" xml:space="preserve">
+    <value>Δεν υπάρχουν διακομιστές συζευγμένοι ακόμα</value>
+  </data>
+  <data name="PairingMaintenance" xml:space="preserve">
+    <value>ΠΛΗΡΩΜΗ ΚΑΙ ΣΥΝΤΗΡΗΣΗ</value>
+  </data>
+  <data name="PairingIdle" xml:space="preserve">
+    <value>Pairing: idle</value>
+  </data>
+  <data name="RightClickOptions" xml:space="preserve">
+    <value>Δεξί κλικ για επιλογές</value>
+  </data>
+  <data name="TrackingActive" xml:space="preserve">
+    <value>Παρακολούθηση Ενεργή</value>
+  </data>
+  <data name="LastPull" xml:space="preserve">
+    <value>Τελευταία έλξη: {0}</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>Δωρεά</value>
+  </data>
+  <data name="SupportDeveloper" xml:space="preserve">
+    <value>Υποστηρίξτε τον προγραμματιστή</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetWebSocket" xml:space="preserve">
+    <value>Επαναφορά σύνδεσης WebSocket</value>
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value>Παίκτες:</value>
+  </data>
+  <data name="ShowOnlinePlayers" xml:space="preserve">
+    <value>Εμφάνιση Καρτέλας Online Παικτών</value>
+  </data>
+  <data name="Queue" xml:space="preserve">
+    <value>Ουρά:</value>
+  </data>
+  <data name="DevicesTab" xml:space="preserve">
+    <value>Συσκευές</value>
+  </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>Πλήκτρα συντόμευσης</value>
+  </data>
+  <data name="ImportDevices" xml:space="preserve">
+    <value>Εισαγωγή συσκευών από συμπαίκτες</value>
+  </data>
+  <data name="ExportDevices" xml:space="preserve">
+    <value>Εξαγωγή συσκευών σε συμπαίκτες</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Ανανέωση</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Πτώση</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Ανέβασμα συγκατάθεσης</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Κάνοντας κλικ στην επιλογή "Αποδοχή", οι έξυπνες συσκευές (και ενδεχομένως τα σχέδια χαρτών) για αυτόν τον διακομιστή θα μεταφορτωθούν στον διακομιστή του δημιουργού. Αυτό επιτρέπει στους συμπαίκτες να τα κατεβάσουν και να τα συγχρονίσουν. Μόνο το αναγνωριστικό Steam σας μεταδίδεται για την αναγνώριση των συμπαικτών σας. Μόνο οι παίκτες που είναι εξουσιοδοτημένοι στο Tool Cupboard μπορούν να ελέγχουν τις συσκευές.
+
+Σημείωση: Αυτή η μέθοδος μετάδοσης θα βελτιστοποιηθεί στο μέλλον. Αν οι συμπαίκτες δεν μπορούν να κατεβάσουν τα δεδομένα, δοκιμάστε να καθαρίσετε τα σχέδια του χάρτη σας και να τα ανεβάσετε ξανά.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Διαγραφή</value>
+  </data>
+  <data name="DeleteMissingOnly" xml:space="preserve">
+    <value>Μπορείτε να διαγράψετε μόνο τις συσκευές που λείπουν</value>
+  </data>
+  <data name="RenameDevice" xml:space="preserve">
+    <value>Μετονομασία συσκευής</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>ONLINE</value>
+  </data>
+  <data name="Offline" xml:space="preserve">
+    <value>OFFLINE</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>Σύνδεση</value>
+  </data>
+  <data name="FullConnect" xml:space="preserve">
+    <value>Πλήρης Σύνδεση</value>
+  </data>
+  <data name="LoadMapTeam" xml:space="preserve">
+    <value>Φόρτωση Χάρτη &amp; Ομάδας</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>Αποσύνδεση</value>
+  </data>
+  <data name="ServerDetails" xml:space="preserve">
+    <value>Λεπτομέρειες Διακομιστή</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>Ακρόαση</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Διακοπή</value>
+  </data>
+  <data name="TryPairingEdge" xml:space="preserve">
+    <value>Δοκιμάστε να σύρετε με την άκρη</value>
+  </data>
+  <data name="ResetPairingConfig" xml:space="preserve">
+    <value>Reset pairing (delete config)</value>
+  </data>
+  <data name="ResetListenPairing" xml:space="preserve">
+    <value>Επαναφορά + Ακούστε (Επανασύνδεση)</value>
+  </data>
+  <data name="ResetListenEdge" xml:space="preserve">
+    <value>Επαναφορά + Ακούστε με την άκρη</value>
+  </data>
+  <data name="RelinkBattlemetrics" xml:space="preserve">
+    <value>Relink Battlemetrics ID…</value>
+  </data>
+  <data name="DeleteServer" xml:space="preserve">
+    <value>Διαγραφή διακομιστή…</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Bitte warten …</value>
+  </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>Εναλλαγή Περιοχής Διακομιστή</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>Λειτουργία Streamer</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>Κλίμακα:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>Ενεργοποίηση Λειτουργίας Ροής (Ονόματα Συντομογραφίας)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>Συντόμευση ονομάτων και αναγνωριστικών του Steam για την προστασία της ιδιωτικής ζωής κατά τη διάρκεια των ροών. Αυτόματη απόκρυψη λίστας κονσόλας και διακομιστών.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>Δεν υπάρχει διαθέσιμη θέση (offline ή δεν εμφανίστηκε).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>Αποθήκευση Ομάδας</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>Παρακαλώ εισάγετε ένα όνομα ομάδας.</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>Δεν ήταν δυνατή η αποστολή του μηνύματος. Παρακαλώ δοκιμάστε ξανά. (Ελέγξτε αν είστε σε ομάδα!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Σφάλμα: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>Ανάθεση Ομάδας</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>Ρυθμίσεις Ομάδας: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Όνομα Ομάδας</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>Εισάγετε όνομα ομάδας...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>Χρώμα Ομάδας</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Αποθήκευση Αλλαγών</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>Αναλύσεις Δραστηριότητας Παικτών &amp; Προβλέψεις</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>Παίκτες</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>Λειτουργία Ροής &amp; Επισκόπηση Μίνι Χάρτη</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>Λειτουργία Streamer</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>Κλιμάκωση Του Παίκτη</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>Μίνι Χάρτης Πολωνικά</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>Απαιτείται Ενέργεια:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Απομακρύνεται η παρακολούθηση BattleMetrics</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>Επιθεώρηση Συστήματος Παρακολούθησης Παίκτη</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>Πώς Λειτουργεί Η Παρακολούθηση Του Παίκτη</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>Προσθήκη παικτών στο tracker για να ξεκινήσει η παρακολούθηση</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>Παρακολούθηση Ενεργή</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>Παρακολούθηση Αδρανής</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>Φιλτράρισμα παικτών...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>Συνδεθείτε σε ένα διακομιστή για να φορτώσετε τη λίστα παικτών</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Λήψη παικτών μέσω του ερωτήματος Steam...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>Id Κομματιού</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>Όνομα Χειροκίνητου Κομματιού...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Δεν υπάρχουν συσκευές.</value>
+  </data>
+  <data name="NoTokenRegistered" xml:space="preserve">
+    <value>Δεν έχει καταχωρηθεί διακριτικό</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>Το διακριτικό έληξε!</value>
+  </data>
+  <data name="ExpiresInDays" xml:space="preserve">
+    <value>Λήγει σε {0} ημέρες</value>
+  </data>
+  <data name="UntilNight" xml:space="preserve">
+    <value>{0} μέχρι τη νύχτα</value>
+  </data>
+  <data name="UntilDay" xml:space="preserve">
+    <value>{0} μέχρι την ημέρα</value>
+  </data>
+  <data name="FollowMe" xml:space="preserve">
+    <value>Ακολουθήστε Με</value>
+  </data>
+  <data name="FollowPlayer" xml:space="preserve">
+    <value>Ακολουθήστε Το {0}</value>
+  </data>
+  <data name="PairingListening" xml:space="preserve">
+    <value>Σύζευξη: ακρόαση…</value>
+  </data>
+  <data name="PairingStopped" xml:space="preserve">
+    <value>Σύζευξη: σταμάτησε</value>
+  </data>
+  <data name="PairingFailed" xml:space="preserve">
+    <value>Σύζευξη: απέτυχε</value>
+  </data>
+  <data name="AlarmActivated" xml:space="preserve">
+    <value>Ο συναγερμός ενεργοποιήθηκε!</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Διακομιστής</value>
+  </data>
+  <data name="SmartAlarm" xml:space="preserve">
+    <value>Έξυπνο Ξυπνητήρι</value>
+  </data>
+  <data name="UnableToReadLink" xml:space="preserve">
+    <value>Αδυναμία ανάγνωσης RustPlus-Link: {0}
+Μορφή: rustplus://IP:PORT</value>
+  </data>
+  <data name="DeletePairingConfigHeader" xml:space="preserve">
+    <value>Reset pairing</value>
+  </data>
+  <data name="DeletePairingConfigBody" xml:space="preserve">
+    <value>Διαγραφή της υπάρχουσας διαμόρφωσης ζεύξης;
+Θα χρειαστεί να πραγματοποιήσετε εκ νέου ζεύξη κατά την επόμενη εκκίνηση.</value>
+  </data>
+  <data name="ResetListenHeader" xml:space="preserve">
+    <value>Reset + Listen</value>
+  </data>
+  <data name="ResetListenBody" xml:space="preserve">
+    <value>Διαγραφή ρυθμίσεων σύζευξης και άμεση επανασύζευξη/ακρόαση?</value>
+  </data>
+  <data name="ResetListenEdgeHeader" xml:space="preserve">
+    <value>Επαναφορά + Ακρόαση (Edge)</value>
+  </data>
+  <data name="ResetListenEdgeBody" xml:space="preserve">
+    <value>Διαγραφή ρυθμίσεων σύζευξης και άμεση επανασύζευξη/ακρόαση χρησιμοποιώντας Edge?</value>
+  </data>
+  <data name="UpdateQueryFailed" xml:space="preserve">
+    <value>Δεν ήταν δυνατή η αναζήτηση της τελευταίας έκδοσης. Παρακαλώ δοκιμάστε ξανά ή ανοίξτε τη σελίδα Εκδόσεων.</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Είστε ενημερωμένοι.</value>
+  </data>
+  <data name="UpdateAvailableHeader" xml:space="preserve">
+    <value>Διαθέσιμη ενημέρωση</value>
+  </data>
+  <data name="UpdateAvailableBody" xml:space="preserve">
+    <value>Νέα έκδοση διαθέσιμη: {0}
+Open Releases page?</value>
+  </data>
+  <data name="DownloadAndInstallBody" xml:space="preserve">
+    <value>Νέα έκδοση διαθέσιμη: {0}
+Κατεβάστε και εγκαταστήστε τώρα?</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Η λήψη απέτυχε.</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Ο έλεγχος ενημερώσεων απέτυχε.
+{0}</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Δεν υπάρχουν συσκευές.</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>Προβολή Προφίλ</value>
+  </data>
+  <data name="ChangeGroup" xml:space="preserve">
+    <value>Αλλαγή Ομάδας</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Μετονομασία</value>
+  </data>
+  <data name="RemoveTracked" xml:space="preserve">
+    <value>Αφαίρεση Εντοπισμού</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Προβολή</value>
+  </data>
+  <data name="MoreOptions" xml:space="preserve">
+    <value>Περισσότερες Επιλογές</value>
+  </data>
+  <data name="RelinkBattlemetricsId" xml:space="preserve">
+    <value>Relink Battlemetrics ID…</value>
+  </data>
+  <data name="DeleteServerEllipsis" xml:space="preserve">
+    <value>Διαγραφή διακομιστή…</value>
+  </data>
+  <data name="RightClickRename" xml:space="preserve">
+    <value>Δεξί κλικ για μετονομασία</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>ΤΟΓΑΛΙΑ</value>
+  </data>
+  <data name="PopupWindow" xml:space="preserve">
+    <value>Αναδυόμενο Παράθυρο</value>
+  </data>
+  <data name="InAppAlert" xml:space="preserve">
+    <value>Ειδοποίηση Εντός Εφαρμογής</value>
+  </data>
+  <data name="AudioAlert" xml:space="preserve">
+    <value>Ειδοποίηση Ήχου</value>
+  </data>
+  <data name="CustomAudioFile" xml:space="preserve">
+    <value>Προσαρμοσμένο Αρχείο Ήχου...</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>Επαναφορά προεπιλογών</value>
+  </data>
+  <data name="Snapshot" xml:space="preserve">
+    <value>Snapshot: </value>
+  </data>
+  <data name="ItemsUpkeep" xml:space="preserve">
+    <value> Αντικείμενα, Συντήρηση =</value>
+  </data>
+  <data name="NoDevicesFound" xml:space="preserve">
+    <value>Δεν βρέθηκαν συσκευές</value>
+  </data>
+  <data name="PairDeviceToSee" xml:space="preserve">
+    <value>Σύζευξη μιας έξυπνης συσκευής, διακόπτη ή συναγερμού για να την δείτε εδώ</value>
+  </data>
+  <data name="TeamTab" xml:space="preserve">
+    <value>Ομάδα</value>
+  </data>
+  <data name="CenterOnMap" xml:space="preserve">
+    <value>Κεντράρισμα στο χάρτη</value>
+  </data>
+  <data name="FollowOnMap" xml:space="preserve">
+    <value>Ακολουθήστε στο χάρτη</value>
+  </data>
+  <data name="OpenSteamProfile" xml:space="preserve">
+    <value>Άνοιγμα προφίλ Steam</value>
+  </data>
+  <data name="PromoteToLeader" xml:space="preserve">
+    <value>Προώθηση στον Αρχηγό</value>
+  </data>
+  <data name="KickFromTeam" xml:space="preserve">
+    <value>Εκδίωξη από την ομάδα</value>
+  </data>
+  <data name="ProfileMarkers" xml:space="preserve">
+    <value>Δείκτες προφίλ</value>
+  </data>
+  <data name="DeathMarkers" xml:space="preserve">
+    <value>Δείκτες θανάτου</value>
+  </data>
+  <data name="CamerasTab" xml:space="preserve">
+    <value>Κάμερες</value>
+  </data>
+  <data name="AddCamera" xml:space="preserve">
+    <value>Προσθήκη Κάμερας</value>
+  </data>
+  <data name="NoCamerasFound" xml:space="preserve">
+    <value>Δεν βρέθηκαν κάμερες</value>
+  </data>
+  <data name="PairCameraToSee" xml:space="preserve">
+    <value>Σύζευξη μιας κάμερας για να δείτε την προεπισκόπηση εδώ</value>
+  </data>
+  <data name="PlayersTab" xml:space="preserve">
+    <value>Παίκτες</value>
+  </data>
+  <data name="HowToTrack" xml:space="preserve">
+    <value>Πώς να παρακολουθείτε</value>
+  </data>
+  <data name="LearnHowTrackingWorks" xml:space="preserve">
+    <value>Μάθετε πώς λειτουργεί η παρακολούθηση του παίκτη</value>
+  </data>
+  <data name="OnlineTab" xml:space="preserve">
+    <value>Συνδεδεμένος</value>
+  </data>
+  <data name="OnlinePlayers" xml:space="preserve">
+    <value>Συνδεδεμένοι Παίκτες</value>
+  </data>
+  <data name="SearchBM" xml:space="preserve">
+    <value>Αναζήτηση BM</value>
+  </data>
+  <data name="SearchServerBM" xml:space="preserve">
+    <value>Αναζήτηση τρέχοντος διακομιστή στο BattleMetrics</value>
+  </data>
+  <data name="Popout" xml:space="preserve">
+    <value>Popout</value>
+  </data>
+  <data name="OpenPlayersSeparateWindow" xml:space="preserve">
+    <value>Άνοιγμα παικτών σε ξεχωριστό παράθυρο</value>
+  </data>
+  <data name="Track" xml:space="preserve">
+    <value>Κομμάτι</value>
+  </data>
+  <data name="ManualTrackPlaceholder" xml:space="preserve">
+    <value>Χειροκίνητο Track Όνομα ή Steam ID...</value>
+  </data>
+  <data name="FilterPlayersPlaceholder" xml:space="preserve">
+    <value>Φιλτράρισμα παικτών...</value>
+  </data>
+  <data name="LoadingPlayers" xml:space="preserve">
+    <value>Φόρτωση παικτών...</value>
+  </data>
+  <data name="TrackedTab" xml:space="preserve">
+    <value>Ανίχνευση</value>
+  </data>
+  <data name="TrackedPlayers" xml:space="preserve">
+    <value>Παρακολουθούμενοι Παίκτες</value>
+  </data>
+  <data name="ManageGroups" xml:space="preserve">
+    <value>Διαχείριση Ομάδων</value>
+  </data>
+  <data name="ViewFullAnalysisReport" xml:space="preserve">
+    <value>Προβολή Αναφοράς Πλήρους Ανάλυσης</value>
+  </data>
+  <data name="ReadyToExploreMap" xml:space="preserve">
+    <value>Έτοιμο για εξερεύνηση του χάρτη?</value>
+  </data>
+  <data name="ConnectToLoadMap" xml:space="preserve">
+    <value>Συνδεθείτε σε έναν επιλεγμένο διακομιστή για να φορτώσετε το ζωντανό χάρτη και την ομάδα Rust.</value>
+  </data>
+  <data name="ReadyToDominate" xml:space="preserve">
+    <value>Έτοιμο να κυριαρχήσει Rust?</value>
+  </data>
+  <data name="PairAccountBenefits" xml:space="preserve">
+    <value>Συνδέστε το λογαριασμό σας για να ξεκινήσετε να παρακολουθείτε τους παίκτες, να λαμβάνετε βασικές ειδοποιήσεις επιδρομής, και να ελέγχετε τις έξυπνες συσκευές σας αμέσως.</value>
+  </data>
+  <data name="LoginPairAccount" xml:space="preserve">
+    <value>Σύνδεση &amp; Ζεύγος Λογαριασμού</value>
+  </data>
+  <data name="RequiresSteamLogin" xml:space="preserve">
+    <value>Απαιτεί σύνδεση με το Steam στον προεπιλεγμένο σας περιηγητή.</value>
+  </data>
+  <data name="DeleteServerHeader" xml:space="preserve">
+    <value>Διαγραφή Διακομιστή?</value>
+  </data>
+  <data name="DeleteServerConfirm" xml:space="preserve">
+    <value>Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτόν το διακομιστή? Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Ακύρωση</value>
+  </data>
+  <data name="DeleteAction" xml:space="preserve">
+    <value>Διαγραφή</value>
+  </data>
+  <data name="AutoHideAfter3s" xml:space="preserve">
+    <value>Αυτόματη απόκρυψη μετά από 3s</value>
+  </data>
+  <data name="MapFilters" xml:space="preserve">
+    <value>ΧΑΡΤΗΣ ΦΙΛΤΕΣ</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>Πλέγμα</value>
+  </data>
+  <data name="Monuments" xml:space="preserve">
+    <value>Μνημεία</value>
+  </data>
+  <data name="Shops" xml:space="preserve">
+    <value>Καταστήματα</value>
+  </data>
+  <data name="ChatAlerts" xml:space="preserve">
+    <value>ΚΑΤΑΧΩΡΙΣΕΙΣ ΚΑΤΑΧΩΡΙΣΗΣ</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Ειδοποιήσεις</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>Ρύθμιση</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Επιλογή Όλων</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Αποεπιλογή Όλων</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>ΕΚΔΗΛΩΣΕΙΣ</value>
+  </data>
+  <data name="CargoShip" xml:space="preserve">
+    <value>Φορτηγό Πλοίο</value>
+  </data>
+  <data name="CargoSpawn" xml:space="preserve">
+    <value>Γένεση</value>
+  </data>
+  <data name="CargoDock" xml:space="preserve">
+    <value>Προσάρτηση Harbor</value>
+  </data>
+  <data name="CargoEgress" xml:space="preserve">
+    <value>Αναχώρηση (5m Προειδοποίηση)</value>
+  </data>
+  <data name="CargoArrival" xml:space="preserve">
+    <value>Προειδοποίηση άφιξης (5m πριν από το Dock)</value>
+  </data>
+  <data name="Heli" xml:space="preserve">
+    <value>Ελικόπτερο Περιπολίας</value>
+  </data>
+  <data name="Chinook" xml:space="preserve">
+    <value>Chinook (CH47)</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>Ταξιδιωτικός Προμηθευτής</value>
+  </data>
+  <data name="OilRig" xml:space="preserve">
+    <value>Πυροβολητής Πετρελαίου</value>
+  </data>
+  <data name="DeepSea" xml:space="preserve">
+    <value>Γεγονός Βαθιάς Θάλασσας</value>
+  </data>
+  <data name="SmartAlerts" xml:space="preserve">
+    <value>Έξυπνες Ειδοποιήσεις</value>
+  </data>
+  <data name="PlayerOnline" xml:space="preserve">
+    <value>Κατάσταση Online</value>
+  </data>
+  <data name="PlayerOffline" xml:space="preserve">
+    <value>Κατάσταση Χωρίς Σύνδεση</value>
+  </data>
+  <data name="AnnounceTracking" xml:space="preserve">
+    <value>Ειδοποιήσεις Εντοπισμού</value>
+  </data>
+  <data name="PlayerDeathSelf" xml:space="preserve">
+    <value>Αυτο Θάνατος</value>
+  </data>
+  <data name="PlayerDeathTeam" xml:space="preserve">
+    <value>Θάνατος Ομάδας</value>
+  </data>
+  <data name="PlayerRespawnSelf" xml:space="preserve">
+    <value>Αυτο Respawn</value>
+  </data>
+  <data name="PlayerRespawnTeam" xml:space="preserve">
+    <value>Ομάδα Respawn</value>
+  </data>
+  <data name="NewShops" xml:space="preserve">
+    <value>Νέα Καταστήματα</value>
+  </data>
+  <data name="SuspiciousShops" xml:space="preserve">
+    <value>Ύποπτα Καταστήματα</value>
+  </data>
+  <data name="TradeAlerts" xml:space="preserve">
+    <value>Συναλλαγές</value>
+  </data>
+  <data name="CrosshairStyle" xml:space="preserve">
+    <value>Στυλ Crosshair</value>
+  </data>
+  <data name="GreenDot" xml:space="preserve">
+    <value>Πράσινη Δομή</value>
+  </data>
+  <data name="MiniGreen" xml:space="preserve">
+    <value>Μίνι Πράσινο</value>
+  </data>
+  <data name="OpenCrosshairRG" xml:space="preserve">
+    <value>Ανοιχτό Crosshair (R/G)</value>
+  </data>
+  <data name="ThinRedCircle" xml:space="preserve">
+    <value>Λεπτός Κόκκινος Κύκλος</value>
+  </data>
+  <data name="SquareDot" xml:space="preserve">
+    <value>Τετράγωνο + Τελεία</value>
+  </data>
+  <data name="MagentaDot" xml:space="preserve">
+    <value>Ματζέντα Dot</value>
+  </data>
+  <data name="MagentaOpenCross" xml:space="preserve">
+    <value>Ματζέντα Ανοιχτός Σταυρός</value>
+  </data>
+  <data name="RangeLineTicks" xml:space="preserve">
+    <value>Γραμμή Σειράς (ticks)</value>
+  </data>
+  <data name="DrawCrosshair" xml:space="preserve">
+    <value>Σχεδίαση Crosshair...</value>
+  </data>
+  <data name="ChooseMonitor" xml:space="preserve">
+    <value>Επιλογή οθόνης</value>
+  </data>
+  <data name="DrawOverlay" xml:space="preserve">
+    <value>Σχεδίαση Επικάλυψης</value>
+  </data>
+  <data name="DrawToolTip" xml:space="preserve">
+    <value>Ισοπαλία (Οκτώ Κλιγκ: Μέγεθος / Χρώμα)</value>
+  </data>
+  <data name="PlaceTextToolTip" xml:space="preserve">
+    <value>Θέση Κειμένου (Οκτώ Κλικ Χρώμα / Μέγεθος)</value>
+  </data>
+  <data name="PlaceIconToolTip" xml:space="preserve">
+    <value>Εικονίδιο Τοποθέτησης (Οκτώ Κλικ Επιλέξτε Εικονίδιο)</value>
+  </data>
+  <data name="EraserToolTip" xml:space="preserve">
+    <value>Σβηστήρας (κρατήστε πατημένο ή κάντε κλικ)</value>
+  </data>
+  <data name="DeleteOverlayToolTip" xml:space="preserve">
+    <value>Διαγραφή δικής σας επικάλυψης</value>
+  </data>
+  <data name="UploadOverlayToolTip" xml:space="preserve">
+    <value>Ανεβάστε το δικό σας Overlay / share</value>
+  </data>
+  <data name="ProfitTrades" xml:space="preserve">
+    <value>Profit Trades</value>
+  </data>
+  <data name="ArbitrageOpportunities" xml:space="preserve">
+    <value>Άμεσες ευκαιρίες αρμπιμπιζέλι αγοράζουν χαμηλά → πωλούν υψηλά.</value>
+  </data>
+  <data name="BuyXForY" xml:space="preserve">
+    <value>Αγοράστε X για Y</value>
+  </data>
+  <data name="Analyze" xml:space="preserve">
+    <value>Ανάλυση</value>
+  </data>
+  <data name="IWantToGet" xml:space="preserve">
+    <value>Θέλω να GET</value>
+  </data>
+  <data name="ICanPayWith" xml:space="preserve">
+    <value>Μπορώ να πληρώσω ΜΕ</value>
+  </data>
+  <data name="TeamChat" xml:space="preserve">
+    <value>Συνομιλία Ομάδας</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Αποστολή</value>
+  </data>
+  <data name="FcmCredentials" xml:space="preserve">
+    <value>Πιστοποιητικά FCM</value>
+  </data>
+  <data name="RightClickConfigure" xml:space="preserve">
+    <value>Δεξί κλικ για ρύθμιση</value>
+  </data>
+  <data name="ResetMap" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetMapToolTip" xml:space="preserve">
+    <value>Επαναφορά μεγέθυνσης και θέσης χάρτη</value>
+  </data>
+  <data name="MiniMap" xml:space="preserve">
+    <value>Μίνι</value>
+  </data>
+  <data name="CrosshairToolTip" xml:space="preserve">
+    <value>Crosshair on/off (Κάντε κλικ για Επιλογές)</value>
+  </data>
+  <data name="TrackPlayer" xml:space="preserve">
+    <value>ΣΥΓΧΡΟΝΙΣΜΟΣ ΠΑΙΧΝΙΔΙΟΥ</value>
+  </data>
+  <data name="CloseBMBrowser" xml:space="preserve">
+    <value>Κλείσιμο Περιηγητή BattleMetrics</value>
+  </data>
+  <data name="ShopSearchTitle" xml:space="preserve">
+    <value>ΕΜΦΑΝΙΣΗ ΑΝΑΖΗΤΗΣΗΣ</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>Κλείσιμο Αναζήτησης</value>
+  </data>
+  <data name="ActivateShopsFirst" xml:space="preserve">
+    <value>Παρακαλώ ενεργοποιήστε πρώτα τα Καταστήματα</value>
+  </data>
+  <data name="ActivateShopPolling" xml:space="preserve">
+    <value>Ενεργοποίηση δημοσκόπησης καταστημάτων</value>
+  </data>
+  <data name="TeamChatTitle" xml:space="preserve">
+    <value>CHAT TEAM</value>
+  </data>
+  <data name="CloseChat" xml:space="preserve">
+    <value>Κλείσιμο Συνομιλίας</value>
+  </data>
+  <data name="ChatCommandsSettings" xml:space="preserve">
+    <value>Ρυθμίσεις Εντολών Συνομιλίας</value>
+  </data>
+  <data name="ChatCommands" xml:space="preserve">
+    <value>Εντολές Συνομιλίας</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Πίσω</value>
+  </data>
+  <data name="Forward" xml:space="preserve">
+    <value>Μπροστά</value>
+  </data>
+  <data name="OpenInExternalBrowser" xml:space="preserve">
+    <value>Άνοιγμα σε εξωτερικό πρόγραμμα περιήγησης</value>
+  </data>
+  <data name="SearchBMPlaceholder" xml:space="preserve">
+    <value>Αναζήτηση BM...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Αναζήτηση</value>
+  </data>
+  <data name="SelectAServer" xml:space="preserve">
+    <value>Επιλογή διακομιστή</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>ΑΠΟΣΥΝΔΕΣΗ</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>ΣΥΝΔΕΣΗ...</value>
+  </data>
+  <data name="StatusInitializing" xml:space="preserve">
+    <value>ΕΓΚΑΤΑΣΤΑΣΗ...</value>
+  </data>
+  <data name="StatusDevicesActive" xml:space="preserve">
+    <value>ΔΡΑΣΤΙΚΕΣ ΣΥΣΚΕΥΕΣ</value>
+  </data>
+  <data name="StatusFullyConnected" xml:space="preserve">
+    <value>ΠΛΗΡΗ ΣΥΝΔΕΔΕΜΕΝΗ</value>
+  </data>
+  <data name="StatusUnknown" xml:space="preserve">
+    <value>ΑΓΝΩΣΤΟ</value>
+  </data>
+  <data name="MayTakeAMoment" xml:space="preserve">
+    <value>Αυτό μπορεί να διαρκέσει λίγο...</value>
+  </data>
+  <data name="AppSettingsTitle" xml:space="preserve">
+    <value>Ρυθμίσεις Εφαρμογής</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Γενικά</value>
+  </data>
+  <data name="LaunchWithWindows" xml:space="preserve">
+    <value>Εκκίνηση με Windows (Ελαχιστοποιημένο)</value>
+  </data>
+  <data name="StartMinimizedAlways" xml:space="preserve">
+    <value>Ελαχιστοποίηση Εκκίνησης (Πάντα)</value>
+  </data>
+  <data name="AutoConnectLastServer" xml:space="preserve">
+    <value>Αυτόματη σύνδεση με τον τελευταίο διακομιστή κατά την εκκίνηση</value>
+  </data>
+  <data name="AutoConnectToolTip" xml:space="preserve">
+    <value>Αυτόματη επανασύνδεση με τον τελευταίο διακομιστή και φόρτωση του χάρτη.</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Συμπεριφορά</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>Ελαχιστοποίηση στο δίσκο αντί για κλείσιμο</value>
+  </data>
+  <data name="BackgroundTracking" xml:space="preserve">
+    <value>Ενεργοποίηση Παρακολούθησης Παρασκηνίου Παίκτη</value>
+  </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>Διατηρεί τους παίκτες παρακολούθησης μέσω BattleMetrics ακόμη και όταν ελαχιστοποιείται.</value>
+  </data>
+  <data name="HideSystemConsole" xml:space="preserve">
+    <value>Απόκρυψη Κονσόλας Συστήματος (Declutter)</value>
+  </data>
+  <data name="HideConsoleToolTip" xml:space="preserve">
+    <value>Κρύβει τον κάτω πίνακα καταγραφής/κονσόλας για να σώσει το χώρο του χάρτη.</value>
+  </data>
+  <data name="MapSettings" xml:space="preserve">
+    <value>Ρυθμίσεις Χάρτη</value>
+  </data>
+  <data name="AutoLoadShops" xml:space="preserve">
+    <value>Αυτόματο φορτίο καταστημάτων κατά τη σύνδεση</value>
+  </data>
+  <data name="AutoLoadShopsToolTip" xml:space="preserve">
+    <value>Αυτόματη εκκίνηση των εκλογικών καταστημάτων και των ειδοποιήσεων όταν συνδέονται σε ένα διακομιστή.</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Χρήση ετικετών κειμένου μνημείου αντί για εικονίδια</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένη, τα ονόματα των μνημείων του χάρτη σκουριάς απεικονίζονται ως κείμενο με τη γραμματοσειρά Permanent Marker αντί για εικονίδια.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Στυλ μνημείου:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Κλίμακα μνημείου:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Μνημείο Αδιαφάνεια:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Εικονίδια από rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Αρχικό κείμενο ονόματα μνημείων</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Πιστώσεις</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Εικονίδια μνημείων χάρτη που παρέχονται από </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - χρησιμοποιείται με άδεια.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Όλα τα εικονίδια μνημείων και τα σχετικά έργα τέχνης αποτελούν ιδιοκτησία της rustmaps.com. Σας ευχαριστούμε για την υποστήριξη της κοινότητας Rust!</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Συνομιλία</value>
+  </data>
+  <data name="ModifyChatAlerts" xml:space="preserve">
+    <value>Τροποποίηση Ειδοποιήσεων Συνομιλίας</value>
+  </data>
+  <data name="ManageSteamAccountInfo" xml:space="preserve">
+    <value>Διαχείριση του συνδεδεμένου λογαριασμού Steam στο κύριο παράθυρο.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Κλείσιμο</value>
+  </data>
+  <data name="IncomingAlarms" xml:space="preserve">
+    <value>ΠΡΟΣΑΡΜΟΓΕΣ ΣΤΟΙΧΕΙΩΝ</value>
+  </data>
+  <data name="Wipe" xml:space="preserve">
+    <value>Εκκαθάριση</value>
+  </data>
+  <data name="PlayersOnly" xml:space="preserve">
+    <value>Παίκτες</value>
+  </data>
+  <data name="PlayersHeader" xml:space="preserve">
+    <value>Παίκτες</value>
+  </data>
+  <data name="IWantToGetToolTip" xml:space="preserve">
+    <value>Θέλω να GET (π.χ. αργό πετρέλαιο)</value>
+  </data>
+  <data name="ICanPayWithToolTip" xml:space="preserve">
+    <value>Θέλω να πληρώσω ΜΕ (π.χ. Scrap)</value>
+  </data>
+  <data name="DeleteServerConfirmFormatted" xml:space="preserve">
+    <value>Είστε βέβαιοι ότι θέλετε να διαγράψετε το διακομιστή "{0}"? Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.</value>
+  </data>
+  <data name="PairingError" xml:space="preserve">
+    <value>Pairing: error</value>
+  </data>
+  <data name="PairingStarting" xml:space="preserve">
+    <value>Σύζευξη: εκκίνηση...</value>
+  </data>
+  <data name="StartingPairingListener" xml:space="preserve">
+    <value>Έναρξη Σύζευξης-Ακρόασης...</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+    <value>Συνδεδεμένος/η</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>Απόθεμα</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Τιμή</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>ΕΝΕΡΓΟ</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>ΑΝΕΝΕΡΓΟ</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>ΕΝΕΡΓΟ</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>ΑΝΕΝΕΡΓΟ</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>ΟΜΑΔΑ</value>
+  </data>
+  <data name="ImportDevicesTitle" xml:space="preserve">
+    <value>Rust+ Desk – Εισαγωγή Συσκευών</value>
+  </data>
+  <data name="ImportDevicesHeader" xml:space="preserve">
+    <value>Εισαγωγή συσκευών</value>
+  </data>
+  <data name="ImportDevicesSelectPrompt" xml:space="preserve">
+    <value>Επιλέξτε ποιες συσκευές θέλετε να εισάγετε για αυτόν το διακομιστή.</value>
+  </data>
+  <data name="CheckDeviceStatus" xml:space="preserve">
+    <value>Έλεγχος κατάστασης συσκευής</value>
+  </data>
+  <data name="ImportSelected" xml:space="preserve">
+    <value>Εισαγωγή επιλεγμένων</value>
+  </data>
+  <data name="BmShortcuts" xml:space="preserve">
+    <value>Συντομεύσεις Bm</value>
+  </data>
+  <data name="PairingConfigDeleted" xml:space="preserve">
+    <value>Σύζευξη: η ρύθμιση διαγράφηκε</value>
+  </data>
+  <data name="TrayIconDefault" xml:space="preserve">
+    <value>Rust+ Desk Tracker</value>
+  </data>
+  <data name="TrayIconTracking" xml:space="preserve">
+    <value>Rust+ Γραφείο (Παρακολούθηση {0})</value>
+  </data>
+  <data name="RenameGroup" xml:space="preserve">
+    <value>Μετονομασία Ομάδας</value>
+  </data>
+  <data name="NewNameForGroup" xml:space="preserve">
+    <value>Νέο όνομα για την ομάδα:</value>
+  </data>
+  <data name="NewNameForDevice" xml:space="preserve">
+    <value>Νέο όνομα για το #{0}:</value>
+  </data>
+  <data name="EnterBattlemetricsIdFor" xml:space="preserve">
+    <value>Εισάγετε το αναγνωριστικό διακομιστή Battlemetrics για το "{0}":</value>
+  </data>
+  <data name="TrayTrackingStatus" xml:space="preserve">
+    <value>Παρακολούθηση: {0}</value>
+  </data>
+  <data name="TrayLastUpdate" xml:space="preserve">
+    <value>Τελευταία ενημέρωση: {0}</value>
+  </data>
+  <data name="OpenRustPlusDesk" xml:space="preserve">
+    <value>Άνοιγμα Rust+ Γραφείου</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Έξοδος</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Περιγραφή</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>Κάμερα</value>
+  </data>
+  <data name="Alarms" xml:space="preserve">
+    <value>Ξυπνητήρια</value>
+  </data>
+  <data name="Identifier" xml:space="preserve">
+    <value>Identifier:</value>
+  </data>
+  <data name="FPS" xml:space="preserve">
+    <value>FPS:</value>
+  </data>
+  <data name="CameraFPSNote" xml:space="preserve">
+    <value>Σημείωση: 2 fps συνιστάται, υψηλότερο FPS πιθανό να κλείσετε τη σύνδεσή σας στο διακομιστή</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>Εικονοστοιχείο</value>
+  </data>
+  <data name="Pen" xml:space="preserve">
+    <value>Πένα</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>Γραμμή</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>Τετράγωνο</value>
+  </data>
+  <data name="Circle" xml:space="preserve">
+    <value>Κύκλος</value>
+  </data>
+  <data name="Thickness" xml:space="preserve">
+    <value>Πάχος:</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Αδιαφάνεια:</value>
+  </data>
+  <data name="UploadPNG" xml:space="preserve">
+    <value>Μεταφόρτωση PNG</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Εκκαθάριση</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Αποθήκευση</value>
+  </data>
+  <data name="AssignGlobalHotkeys" xml:space="preserve">
+    <value>Ορισμός καθολικών συντομεύσεων σε Έξυπνες εναλλαγές. Πολλαπλές συσκευές μπορούν να μοιραστούν μία συντόμευση (θα εναλλάσσεται).</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Συσκευή</value>
+  </data>
+  <data name="EntityId" xml:space="preserve">
+    <value>EntityId</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>Πλήκτρο Συντόμευσης</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Ορισμός</value>
+  </data>
+  <data name="CloseDeactivate" xml:space="preserve">
+    <value>Κλείσιμο &amp; Απενεργοποίηση</value>
+  </data>
+  <data name="CloseActivate" xml:space="preserve">
+    <value>Κλείσιμο &amp; Ενεργοποίηση</value>
+  </data>
+  <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
+    <value>Ενημέρωση, Ελάχιστη &amp; Παρακολούθηση Ενημέρωση</value>
+  </data>
+  <data name="FeatureSummaryAdjustments" xml:space="preserve">
+    <value>Περίληψη Χαρακτηριστικών &amp; Προσαρμογές</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>Να μην εμφανιστεί ξανά</value>
+  </data>
+  <data name="AwesomeLetsGo" xml:space="preserve">
+    <value>Φοβερό, ας πάμε!</value>
+  </data>
+  <data name="MiniMapSettings" xml:space="preserve">
+    <value>Ρυθμίσεις Mini-Map</value>
+  </data>
+  <data name="Shape" xml:space="preserve">
+    <value>Σχήμα</value>
+  </data>
+  <data name="Rectangle" xml:space="preserve">
+    <value>Ορθογώνιο</value>
+  </data>
+  <data name="OpacityLabel" xml:space="preserve">
+    <value>Αδιαφάνεια: {0}%</value>
+  </data>
+  <data name="SizeLabel" xml:space="preserve">
+    <value>Μέγεθος: {0}% (SHIFT+Mousewheel)</value>
+  </data>
+  <data name="ShowServerTime" xml:space="preserve">
+    <value>Εμφάνιση Ώρας Διακομιστή</value>
+  </data>
+  <data name="ServerInformation" xml:space="preserve">
+    <value>Πληροφορίες Διακομιστή</value>
+  </data>
+  <data name="NoDescriptionAvailable" xml:space="preserve">
+    <value>Δεν υπάρχει διαθέσιμη περιγραφή.</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Τρέχουσα Έκδοση: {0}</value>
+  </data>
+  <data name="PatchNotesHeader" xml:space="preserve">
+    <value>Ιστορικό Σημειώσεων &amp; Εκδόσεων</value>
+  </data>
+  <data name="EnableChatCommands" xml:space="preserve">
+    <value>Ενεργοποίηση Εντολών Συνομιλίας</value>
+  </data>
+  <data name="Prefix" xml:space="preserve">
+    <value>Πρόθεμα:</value>
+  </data>
+  <data name="StandardCommands" xml:space="preserve">
+    <value>Τυπικές Εντολές</value>
+  </data>
+  <data name="Population" xml:space="preserve">
+    <value>Πληθυσμός:</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Ώρα:</value>
+  </data>
+  <data name="Promote" xml:space="preserve">
+    <value>Προώθηση:</value>
+  </data>
+  <data name="DeepSeaCommand" xml:space="preserve">
+    <value>Βαθιά Θάλασσα:</value>
+  </data>
+  <data name="CargoShipCommand" xml:space="preserve">
+    <value>Πλοίο Φορτίου:</value>
+  </data>
+  <data name="OilRigCommand" xml:space="preserve">
+    <value>Πετρέλαιο Rig:</value>
+  </data>
+  <data name="PatrolHeliCommand" xml:space="preserve">
+    <value>Περιπολία Heli:</value>
+  </data>
+  <data name="TravellingVendorCommand" xml:space="preserve">
+    <value>Ταξιδιωτικός Προμηθευτής:</value>
+  </data>
+  <data name="UpkeepDetails" xml:space="preserve">
+    <value>Λεπτομέρειες Συντήρησης:</value>
+  </data>
+  <data name="CommandDelay" xml:space="preserve">
+    <value>Καθυστέρηση Εντολής:</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Γλώσσα</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Επιλογή Γλώσσας</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>Η αλλαγή γλώσσας απαιτεί επανεκκίνηση για να τεθεί σε πλήρη ισχύ.</value>
+  </data>
+  <data name="SmartSwitches" xml:space="preserve">
+    <value>Έξυπνοι Διακόπτες</value>
+  </data>
+  <data name="UpkeepTcMonitors" xml:space="preserve">
+    <value>Οθόνες Συντήρησης (TC)</value>
+  </data>
+  <data name="NoTcMonitorsFound" xml:space="preserve">
+    <value>Δεν βρέθηκαν οθόνες TC.</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Αποθήκευση &amp; Κλείσιμο</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Μήνυμα...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Μήνυμα σφάλματος εδώ</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Περιπολία Heli</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Patrol Heli ενεργό - τρέχει για {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Συνδέθηκε στα μέσα του συμβάντος - χρόνος αναπαραγωγής άγνωστος</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Patrol Heli ενεργό (χρόνος αναπαραγωγής άγνωστος)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Patrol Heli καταρρίφθηκε {0} πριν από αυτή τη σύνοδο</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Patrol Heli έφυγε από το χάρτη {0} πριν από αυτή τη συνεδρία</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Αγκυροβόλησε στο {0} - αναχωρεί σε ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>λιμάνι</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Έχει ήδη προσδεθεί στη σύνδεση - ώρα αναχώρησης άγνωστη</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Αγκυροβολημένο στο {0} (η διάρκεια του αγκυροβολίου δεν έχει γίνει ακόμα γνωστή)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Υπολειπόμενος χρόνος στο χάρτη (από το spawn)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Συνδέθηκε στη μέση της διαδρομής - χρόνος άγνωστος</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Συνδέθηκε στα μέσα της διαδρομής - χρόνος άγνωστος (διαδρομή ~{0}m συνολικά)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Cargo Ship despawned {0}m {1}s ago this session</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Ταξιδεύοντας Προμηθευτής ενεργός - τρέχει για το {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Travelling Vendor ενεργός (χρόνος αναπαραγωγής άγνωστος)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor despawned {0} ago this session</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea active - τρέχει για το {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Deep Sea active (χρόνος αναπαραγωγής άγνωστος)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Το Deep Sea έληξε {0} πριν από αυτή τη σύνοδο</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} παίκτες που είναι σήμερα online.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Ουρά: {0} παίκτες.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Τρέχουσα ώρα στο παιχνίδι: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} προήχθη σε αρχηγό.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Το Deep Sea είναι ενεργό! Τρέχει για το {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Το Deep Sea είναι επί του παρόντος ενεργό (συνδεδεμένο στα μέσα του συμβάντος - άγνωστος χρόνος αναπαραγωγής).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Το Deep Sea τελείωσε {0} λεπτά πριν από αυτή τη συνεδρίαση.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Άγνωστη η κατάσταση του συμβάντος Deep Sea (δεν έχει εμφανιστεί σε αυτή τη σύνοδο).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Το φορτηγό πλοίο δεν είναι ενεργό.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Φορτηγό πλοίο ελλιμενίζεται στο {0}. Αναχωρεί σε περίπου {1} λεπτά.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Φορτηγό πλοίο ελλιμενίζεται στο {0} και ετοιμάζεται να αναχωρήσει.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Φορτηγό πλοίο ελλιμενίζεται στο {0} (ώρα αναχώρησης άγνωστη).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Φορτηγό πλοίο ενεργό. Αναχωρεί σε περίπου {0} λεπτά.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Το φορτηγό πλοίο είναι ενεργό και ετοιμάζεται να φύγει σύντομα.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Φορτηγό πλοίο ενεργό (η διάρκεια της διαδρομής δεν έχει ακόμη μάθει για αυτόν τον διακομιστή).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Φορτηγό πλοίο ενεργό (συνδεδεμένο μετά το spawn - άγνωστος ο χρόνος που απομένει).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Το φορτηγό πλοίο δεν είναι ενεργό. Έγινε Despawned {0} λεπτά πριν από αυτή τη συνεδρία.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: κλουβί σε {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: τελευταία κλήση {1}m ago</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: δεν έχει κληθεί σε αυτή τη σύνοδο</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Το Patrol Heli είναι ενεργό! Τρέχει για το {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Το Patrol Heli είναι επί του παρόντος ενεργό (συνδεδεμένο στα μέσα του συμβάντος - άγνωστος χρόνος γέννησης).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Το Patrol Heli δεν είναι ενεργό. Ήταν {0} {1} πριν από αυτή τη σύνοδο.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>καταρρίφθηκε</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>άφησε το χάρτη</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Patrol Heli άγνωστη κατάσταση συμβάντος (δεν είδαμε αυτή τη σύνοδο).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Το Travelling Vendor είναι ενεργό! Τρέχει για το {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Ο ταξιδιώτης πωλητής είναι επί του παρόντος ενεργός (συνδεδεμένος στα μέσα του συμβάντος - χρόνος γέννησης άγνωστος).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Ταξιδεύοντας Ο πωλητής δεν είναι ενεργός. Αποκαλύφθηκε {0} πριν από αυτή τη συνεδρία.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Travelling Vendor κατάσταση συμβάντος άγνωστη (δεν έχει δει αυτή τη σύνοδο).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Δεν αντιστοιχίζονται ντουλάπια εργαλείων για εντολές συντήρησης.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Διατήρηση στο {0} TC: Άδειο ή ληγμένο.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Ανάγκη/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Συντήρηση στο {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} ημέρες</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} ώρες</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} λεπτά</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Κενό/έληξε</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Συντήρηση: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Οι οθόνες του ντουλαπιού εργαλείων δεν βρέθηκαν ή δεν αντιστοιχίστηκαν.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Δεν βρέθηκε ή δεν αντιστοιχίστηκε η οθόνη του δεσμευμένου ντουλαπιού εργαλείων.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} γύρισε {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Δεν βρέθηκε ή δεν αντιστοιχίστηκε ο συνδεδεμένος έξυπνος διακόπτης.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Ξύλο</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Πέτρα</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Μέταλλο</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Μικρή εξέδρα πετρελαίου</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Μεγάλη πετρελαιοπηγή</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Κατάστημα</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Φορτηγό πλοίο</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Ταξιδεύοντας πωλητής</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Ελικόπτερο περιπολίας</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Κιβώτιο πετρελαιοπηγής</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Έκρηξη</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Κτίριο μπλοκαρισμένο</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Εκδήλωση</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] ενεργοποιήθηκε! Το κιβώτιο ξεκλειδώνει στο {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} ενεργοποιήθηκε!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Το κιβώτιο ξεκλειδώνει σε 10 λεπτά!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Το κιβώτιο ξεκλειδώνει σε 5 λεπτά!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Deep Sea είναι επάνω</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Νέο κατάστημα {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Ύποπτο κατάστημα {0} [{1}] ήταν σε απευθείας σύνδεση {2}s, που πωλούνται {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Φορτηγό πλοίο γεννήθηκε {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>μακριά στη θάλασσα (κοντά στο {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Φορτηγό πλοίο ελλιμενισμένο στο {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Το φορτηγό πλοίο αναμένεται να δέσει στο {0} ({1}) σε περίπου 5 λεπτά.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Φορτηγό πλοίο που αναχωρεί από το {0} σε 5 λεπτά ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Εντοπίστηκε συντριβή λόγω καθυστέρησης του διακομιστή - Το Heli είναι ακόμα στο χάρτη στο {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} γεννήθηκε στο {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Patrol Heli καταρρίφθηκε στο {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>unknown</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} τέθηκε σε λειτουργία @ {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} βγήκε εκτός σύνδεσης</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} πέθανε @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} αναγεννήθηκε @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Tracking] Το {0}{1} είναι τώρα ONLINE</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Tracking] {0}{1} είναι τώρα OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Tracking] {0}{1} μετονομάστηκε σε {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>πουλάει</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>αγοράζει</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Κατάστημα</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (απόθεμα {5}) για {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Λίστα εντολών συνομιλίας</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>COMMANDS: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Εντοπισμός, εκσυγχρονισμός UI &amp; αποθήκευση</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Δυναμική εναλλαγή τοπικής γλώσσας</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - 30+ γλώσσες προς επιλογή</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>UI εντολών συνομιλίας</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - Απομονωμένη προβολή για καθαρή εμφάνιση</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Νέα επικάλυψη ρυθμίσεων</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - Καθαρή πλευρική γραμμή για όλες τις ρυθμίσεις</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Απομακρύνεται η παρακολούθηση BattleMetrics</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Η βάση σας δέχεται επίθεση!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Συνδεθείτε πρώτα σε έναν διακομιστή.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Δεν είστε συνδεδεμένοι σε κανέναν διακομιστή.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Η συνομιλία δεν είναι διαθέσιμη αυτή τη στιγμή.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Παρακαλούμε επιλέξτε πρώτα έναν διακομιστή.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Σύνδεση</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Συνομιλία</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Πώς να παρακολουθείτε παίκτες</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Ενδογενής παρακολούθηση UDP</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Ο οδηγός παρακολούθησης είναι προς το παρόν διαθέσιμος μόνο στα αγγλικά, καθώς θα υποστεί αλλαγές στο εγγύς μέλλον. Ζητάμε την υπομονή σας.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Κλείστε αυτό το παράθυρο ανά πάσα στιγμή - μπορείτε να το ανοίξετε ξανά με το κουμπί ❓ Πώς να παρακολουθείτε.</value>
+  </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Συντήρηση</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Διαγραφή, δημιουργία αντιγράφων ασφαλείας ή επαναφορά ρυθμίσεων εφαρμογών, προφίλ και προσαρμοσμένων σχεδίων.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Επαναφορά δεδομένων εφαρμογής...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Δημιουργία αντιγράφων ασφαλείας δεδομένων...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Επαναφορά δεδομένων...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Επαναφορά δεδομένων εφαρμογής</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Επιλέξτε τα στοιχεία που θέλετε να διαγράψετε από αυτή τη συσκευή. Όλες οι επιλεγμένες επιλογές θα διαγραφούν οριστικά.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Σύνδεση ενεργού διακομιστή (αποσύνδεση)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Αποθηκευμένα προφίλ διακομιστή (Διαγραφή ζευγαρωμένων ρυθμίσεων διακομιστή)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Διαπιστευτήρια λογαριασμού Steam (αποσύνδεση)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Ρύθμιση ζεύξης συσκευών (Επαναφορά των μαρκών εγγραφής)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Προσαρμοσμένο σταυρόνημα (Διαμορφώσεις σκουπίσματος)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Τοπική προσωρινή μνήμη &amp; σχέδια (διαγραφή αποθηκευμένων χαρτών/γραμμών)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Αυτή η ενέργεια είναι μόνιμη και δεν μπορεί να ανακληθεί.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Επιβεβαίωση επαναφοράς</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Κωδικός ασφαλείας</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Προστασία αντιγράφων ασφαλείας</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Εισάγετε έναν κωδικό πρόσβασης για την κρυπτογράφηση αυτού του αρχείου αντιγράφων ασφαλείας. Αν το αφήσετε κενό, το αντίγραφο ασφαλείας δεν θα κρυπτογραφηθεί.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Επαναφορά αντιγράφων ασφαλείας</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Αυτό το αντίγραφο ασφαλείας προστατεύεται με κωδικό πρόσβασης. Εισάγετε τον κωδικό πρόσβασης για να το αποκρυπτογραφήσετε:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Κρυπτογράφηση</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Αποκρυπτογράφηση</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Δημιουργία αντιγράφων ασφαλείας δεδομένων εφαρμογής</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Δημιουργήθηκε με επιτυχία εφεδρικό αντίγραφο ασφαλείας στη διεύθυνση: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Δημιουργία αντιγράφου ασφαλείας με επιτυχία!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Ολοκλήρωση αντιγράφων ασφαλείας</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Σφάλμα δημιουργίας αντιγράφων ασφαλείας: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Σφάλμα δημιουργίας αντιγράφου ασφαλείας: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Αποτυχία δημιουργίας αντιγράφων ασφαλείας</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Η επαναφορά δεδομένων θα αντικαταστήσει τα τρέχοντα προφίλ διακομιστή, τα προσαρμοσμένα σταυρόνημα, τις επικαλύψεις σχεδίασης και τις ρυθμίσεις του ελάχιστου χάρτη.
+
+Είστε σίγουροι ότι θέλετε να συνεχίσετε;</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Επιβεβαίωση επαναφοράς αντιγράφων ασφαλείας</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Επαναφορά δεδομένων εφαρμογής</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Τα δεδομένα της εφαρμογής αποκαταστάθηκαν με επιτυχία!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Ολοκληρώθηκε η αποκατάσταση</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Σφάλμα επαναφοράς: Ο κωδικός πρόσβασης δεν είναι έγκυρος.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Η αποκρυπτογράφηση απέτυχε. Άκυρος κωδικός πρόσβασης ή κατεστραμμένο αρχείο αντιγράφων ασφαλείας.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Αποτυχία επαναφοράς</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Σφάλμα επαναφοράς: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Σφάλμα επαναφοράς αντιγράφου ασφαλείας: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Μη έγκυρη μορφή αρχείου αντιγράφου ασφαλείας ή ελλιπής υπογραφή.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Έναρξη λειτουργίας επιλεκτικής επαναφοράς...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Αποσύνδεση σύνδεσης ενεργού διακομιστή...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Η επαναφορά σύνδεσης ολοκληρώθηκε.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Εκκαθάριση αποθηκευμένων προφίλ διακομιστή...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Τα αποθηκευμένα προφίλ διακομιστή διαγράφηκαν.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Αφαίρεση διαπιστευτηρίων λογαριασμού Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Τα διαπιστευτήρια Steam εκκαθαρίστηκαν.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Διαγραφή της διαμόρφωσης ζεύξης συσκευής...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Διαγραφή των ρυθμίσεων σύζευξης συσκευής.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Σβήσιμο προσαρμοσμένου στόχου...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Σφάλμα εκκαθάρισης προσαρμοσμένου στόχου: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Το προσαρμοσμένο σταυρόνημα καθαρίστηκε.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Εκκαθάριση τοπικών αρχείων cache και σχεδίων επικάλυψης...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Σφάλμα εκκαθάρισης φακέλου cache: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Εκκαθάριση φακέλων προσωρινής μνήμης.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Επανεγγραφή διαπιστευτηρίων ακροατή και FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Η λειτουργία επιλεκτικής επαναφοράς ολοκληρώθηκε με επιτυχία.</value>
+  </data>
+</root>

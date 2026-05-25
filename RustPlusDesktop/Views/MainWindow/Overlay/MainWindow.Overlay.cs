@@ -1,4 +1,5 @@
 using RustPlusDesk.Models;
+using RustPlusDesk.Services.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -251,119 +252,37 @@ private bool _overlayToolsVisible = false;
     {
         try
         {
-            var serverKey = GetServerKey();
-            var ts = UnixNow().ToString();
-
-            var msg = $"{steamId}|{serverKey}|{ts}";
-            var sig = HmacSha256Hex(OVERLAY_SYNC_SECRET_HEX, msg);
-
-            using (var http = new HttpClient())
+            var remoteData = await OverlayDataModule.FetchOverlayFromServerAsync(GetServerKey(), steamId);
+            if (remoteData == null)
             {
-                http.Timeout = TimeSpan.FromSeconds(5);
+                AppendLog($"[overlay/net] {steamId}: no remote overlay available");
+                return false;
+            }
 
-                var url = OVERLAY_SYNC_BASEURL
-                    + "/fetch"
-                    + "?steamId=" + WebUtility.UrlEncode(steamId.ToString())
-                    + "&serverKey=" + WebUtility.UrlEncode(serverKey)
-                    + "&ts=" + WebUtility.UrlEncode(ts)
-                    + "&sig=" + WebUtility.UrlEncode(sig);
-
-               // AppendLog($"[overlay/net] GET {url}");
-
-                var resp = await http.GetAsync(url);
-
-                if (resp.StatusCode == HttpStatusCode.NotFound)
-                {
-                    AppendLog($"[overlay/net] {steamId}: 404 (no remote overlay available)");
-                    return false;
-                }
-                if (!resp.IsSuccessStatusCode)
-                {
-                    AppendLog($"[overlay/net][warn] {steamId}: fetch failed HTTP {(int)resp.StatusCode}");
-                    return false;
-                }
-
-                var bodyJson = await resp.Content.ReadAsStringAsync();
-                var doc = System.Text.Json.JsonDocument.Parse(bodyJson);
-
-                if (!doc.RootElement.TryGetProperty("overlayJsonB64", out var b64El))
-                {
-                    AppendLog($"[overlay/net][warn] {steamId}: server response missing overlayJsonB64");
-                    return false;
-                }
-
-                var b64 = b64El.GetString();
-                if (string.IsNullOrEmpty(b64))
-                {
-                    AppendLog($"[overlay/net][warn] {steamId}: overlayJsonB64 empty");
-                    return false;
-                }
-
-                var raw = Convert.FromBase64String(b64);
-                var remoteJson = Encoding.UTF8.GetString(raw);
-
-                // remote parsed
-                OverlaySaveData? remoteData = null;
-                try
-                {
-                    remoteData = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(remoteJson);
-                }
-                catch
-                {
-                    remoteData = null;
-                }
-
-                if (remoteData == null)
-                {
-                    AppendLog($"[overlay/net][warn] {steamId}: remote json invalid");
-                    return false;
-                }
-
+            if (steamId == _mySteamId)
+            {
+                var localData = OverlayDataModule.LoadLocalOverlay(GetServerKey(), steamId);
+                long localTs = localData?.LastUpdatedUnix ?? 0;
                 long remoteTs = remoteData.LastUpdatedUnix;
-                var path = GetOverlayJsonPathForPlayerServer(steamId);
 
-                long localTs = 0;
-                OverlaySaveData? localData = null;
+                AppendLog($"[overlay/net] self {steamId}: remoteTs={remoteTs}, localTs={localTs}");
 
-                if (File.Exists(path))
+                if (remoteTs > localTs)
                 {
-                    try
-                    {
-                        var localJson = File.ReadAllText(path);
-                        localData = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(localJson);
-                    }
-                    catch { /* ignore */ }
-
-                    if (localData != null)
-                        localTs = localData.LastUpdatedUnix;
-                }
-
-                if (steamId == _mySteamId)
-                {
-                    // eigenes Overlay -> nur überschreiben, wenn remote neuer ist
-                    AppendLog($"[overlay/net] self {steamId}: remoteTs={remoteTs}, localTs={localTs}");
-
-                    if (remoteTs > localTs)
-                    {
-                        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
-                        File.WriteAllText(path, remoteJson);
-                        AppendLog($"[overlay/net] self {steamId}: wrote NEWER remote overlay to {path} (remote newer)");
-                        return true; // lokal geupdatet
-                    }
-                    else
-                    {
-                        AppendLog($"[overlay/net] self {steamId}: kept LOCAL overlay (local newer or same)");
-                        return false;
-                    }
+                    OverlayDataModule.SaveLocalOverlay(GetServerKey(), steamId, remoteData);
+                    AppendLog($"[overlay/net] self {steamId}: wrote NEWER remote overlay (remote newer)");
+                    return true;
                 }
                 else
                 {
-                    // fremdes Overlay -> immer remote Wahrheit
-                    Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
-                    File.WriteAllText(path, remoteJson);
-                    AppendLog($"[overlay/net] teammate {steamId}: wrote remote overlay to {path} (always trust remote)");
-                    return true;
+                    AppendLog($"[overlay/net] self {steamId}: kept LOCAL overlay (local newer or same)");
+                    return false;
                 }
+            }
+            else
+            {
+                AppendLog($"[overlay/net] teammate {steamId}: wrote remote overlay (always trust remote)");
+                return true;
             }
         }
         catch (Exception ex)
@@ -1063,7 +982,7 @@ private bool _overlayToolsVisible = false;
 
     private void ToolUploadButton_Click(object sender, RoutedEventArgs e)
     {
-        UploadOwnOverlayToTeam();
+        ShowUploadConsent(() => UploadOwnOverlayToTeam());
     }
 
     // private void SaveOwnOverlayToPng()
@@ -1277,21 +1196,7 @@ private bool _overlayToolsVisible = false;
             catch { /* nicht kritisch */ }
 
             // 0) vorhandene JSON (für Devices) einlesen
-            OverlaySaveData? existing = null;
-            var localPath = GetOverlayJsonPathForPlayerServer(_mySteamId);
-
-            if (File.Exists(localPath))
-            {
-                try
-                {
-                    var oldJson = File.ReadAllText(localPath);
-                    existing = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(oldJson);
-                }
-                catch (Exception ex)
-                {
-                    AppendLog("[overlay] Couldn't read existing overlay for merge: " + ex.Message);
-                }
-            }
+            var existing = OverlayDataModule.LoadLocalOverlay(GetServerKey(), _mySteamId);
 
             // 1) aktuelles Overlay aus dem Canvas bauen
             var data = BuildCurrentOverlaySaveDataForMe();
@@ -1304,53 +1209,8 @@ private bool _overlayToolsVisible = false;
                     data.Devices.Add(dev);
             }
 
-            data.LastUpdatedUnix = UnixNow();
-
-            // 3) JSON bauen
-            var json = System.Text.Json.JsonSerializer.Serialize(
-                data,
-                new System.Text.Json.JsonSerializerOptions { WriteIndented = false });
-
-            var rawBytes = Encoding.UTF8.GetBytes(json);
-            if (rawBytes.Length > OVERLAY_MAX_BYTES)
-            {
-                AppendLog("[overlay] Upload too big (>350KB).");
-                return;
-            }
-
-            var overlayB64 = Convert.ToBase64String(rawBytes);
-
-            var serverKey = GetServerKey();
-            var ts = UnixNow().ToString();
-            var sigInput = _mySteamId.ToString() + "|" + serverKey + "|" + ts + "|" + overlayB64;
-            var sig = HmacSha256Hex(OVERLAY_SYNC_SECRET_HEX, sigInput);
-
-            var payloadObj = new
-            {
-                steamId = _mySteamId.ToString(),
-                serverKey = serverKey,
-                ts = ts,
-                overlayJsonB64 = overlayB64,
-                sig = sig
-            };
-
-            var payloadJson = System.Text.Json.JsonSerializer.Serialize(payloadObj);
-            var content = new StringContent(payloadJson, Encoding.UTF8, "application/json");
-
-            using (var http = new HttpClient())
-            {
-                var url = OVERLAY_SYNC_BASEURL + "/upload";
-                var resp = await http.PostAsync(url, content);
-                if (!resp.IsSuccessStatusCode)
-                {
-                    AppendLog("[overlay] Upload failed: HTTP " + (int)resp.StatusCode);
-                    return;
-                }
-            }
-
-            // 4) gleiche JSON auch lokal speichern (damit Import sofort drauf zugreift)
-            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(localPath)!);
-            File.WriteAllText(localPath, json);
+            // 3) modularer Upload
+            await OverlayDataModule.UploadOverlayAsync(GetServerKey(), _mySteamId, data);
 
             AppendLog($"[overlay] Overlay uploaded (devices preserved: {data.Devices.Count}).");
         }
@@ -1360,77 +1220,7 @@ private bool _overlayToolsVisible = false;
         }
     }
 
-    private async Task<bool> TryFetchOverlayFromServerAsync(ulong steamId)
-    {
-        try
-        {
-            var serverKey = GetServerKey();
-            var ts = UnixNow().ToString();
 
-            // Wir signieren dieselbe Formel wie der Server in /fetch prüft:
-            // msg = "<steamId>|<serverKey>|<ts>|<overlayB64>"
-            // ABER: Wir kennen overlayB64 ja noch nicht vorm Request 🤔
-            //
-            // Lösung: Wir machen es wie folgt:
-            // - Server-Code oben hat overlay_b64 mit in die Signatur genommen.
-            //   Das bedeutet: Client muss erst overlay_b64 kennen. Das geht so natürlich nicht.
-            //
-            // Also müssen wir eine kleine Änderung machen:
-            // Variante A (einfach): wir ändern /fetch auf dem Server so, dass er
-            // NUR steamId|serverKey|ts signed, OHNE overlayB64.
-            //
-            // Mach das bitte gleich am Server (fetch-Teil ersetzen):
-
-            // (Wir nehmen jetzt an, du hast den Server so geändert wie unten beschrieben.)
-            // Dann bauen wir hier:
-            var msg = $"{steamId}|{serverKey}|{ts}";
-            var sig = HmacSha256Hex(OVERLAY_SYNC_SECRET_HEX, msg);
-
-            using (var http = new HttpClient())
-            {
-                http.Timeout = TimeSpan.FromSeconds(5);
-
-                var url = OVERLAY_SYNC_BASEURL
-                    + "/fetch"
-                    + "?steamId=" + WebUtility.UrlEncode(steamId.ToString())
-                    + "&serverKey=" + WebUtility.UrlEncode(serverKey)
-                    + "&ts=" + WebUtility.UrlEncode(ts)
-                    + "&sig=" + WebUtility.UrlEncode(sig);
-
-                var resp = await http.GetAsync(url);
-                if (!resp.IsSuccessStatusCode)
-                {
-                    AppendLog("[overlay] fetch failed HTTP " + (int)resp.StatusCode);
-                    return false;
-                }
-
-                var bodyJson = await resp.Content.ReadAsStringAsync();
-                // Erwartet: { "overlayJsonB64": "...." }
-                var doc = System.Text.Json.JsonDocument.Parse(bodyJson);
-                if (!doc.RootElement.TryGetProperty("overlayJsonB64", out var b64El))
-                    return false;
-
-                var b64 = b64El.GetString();
-                if (string.IsNullOrEmpty(b64))
-                    return false;
-
-                var raw = Convert.FromBase64String(b64);
-                var jsonOverlay = Encoding.UTF8.GetString(raw);
-
-                // Schreib's lokal so wie SaveOwnOverlayToJson das erwartet:
-                var path = GetOverlayJsonPathForPlayerServer(steamId);
-                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
-                File.WriteAllText(path, jsonOverlay);
-
-                return true;
-            }
-        }
-        catch (Exception ex)
-        {
-            AppendLog("[overlay] fetch error: " + ex.Message);
-            return false;
-        }
-    }
 
     private string? PromptText(string message, string title = "Enter Text", string defaultValue = "")
     {
@@ -1618,21 +1408,7 @@ private void SaveOwnOverlayToJson()
         try
         {
             // 0) vorhandene Datei einlesen (falls vorhanden), um Devices zu retten
-            OverlaySaveData? existing = null;
-            var path = GetOverlayJsonPathForPlayerServer(_mySteamId);
-
-            if (File.Exists(path))
-            {
-                try
-                {
-                    var oldJson = File.ReadAllText(path);
-                    existing = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(oldJson);
-                }
-                catch (Exception ex)
-                {
-                    AppendLog("[overlay] Couldn't read existing overlay for merge (Save): " + ex.Message);
-                }
-            }
+            var existing = OverlayDataModule.LoadLocalOverlay(GetServerKey(), _mySteamId);
 
             // 1) aktuelles Overlay aus dem Canvas bauen (ohne Devices)
             var data = BuildCurrentOverlaySaveDataForMe();
@@ -1645,17 +1421,8 @@ private void SaveOwnOverlayToJson()
                     data.Devices.Add(dev);
             }
 
-            // 3) (optional) Timestamp aktualisieren – kannst du auch weglassen,
-            //    weil BuildCurrentOverlaySaveDataForMe() ihn schon setzt.
-            data.LastUpdatedUnix = UnixNow();
-
-            // 4) JSON schreiben
-            var json = System.Text.Json.JsonSerializer.Serialize(
-                data,
-                new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
-
-            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
-            File.WriteAllText(path, json);
+            // 3) modularer Save
+            OverlayDataModule.SaveLocalOverlay(GetServerKey(), _mySteamId, data);
         }
         catch (Exception ex)
         {
@@ -1675,14 +1442,7 @@ private void SaveOwnOverlayToJson()
 
     private string GetOverlayJsonPathForPlayerServer(ulong steamId)
     {
-        var baseDir = System.IO.Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "RustPlusDesk",
-            "Overlays",
-            GetServerKey()
-        );
-        Directory.CreateDirectory(baseDir);
-        return System.IO.Path.Combine(baseDir, $"{steamId}.json");
+        return DataManager.GetOverlayJsonPath(GetServerKey(), steamId);
     }
 
 
@@ -1715,64 +1475,11 @@ private void SaveOwnOverlayToJson()
         public double? BaseSize;   // nur für Icons, wird NICHT gespeichert
     }
 
-    // --- Overlay Sync Config ---
-    private const string OVERLAY_SYNC_SECRET_HEX =
-    "23c5a7dbf02b63543da043ca7d6de1fbf706a080c899e334a8cd599206e13fde";
-
-    // dein Server (IP oder DNS + Port). Kein "/" am Ende.
-    private const string OVERLAY_SYNC_BASEURL = "http://85.214.193.250:5000";
-
-    // Hard-Limits müssen mit dem Python-Server matchen
-    private const int OVERLAY_MAX_BYTES = 350_000; // ~350 KB Limit roh
-
-    // ---- HMAC / Network Helpers ------------------------------------------
-
-
-
-    private static byte[] HexToBytes(string hex)
-    {
-        if (hex.Length % 2 != 0)
-            throw new ArgumentException("invalid hex length");
-
-        var bytes = new byte[hex.Length / 2];
-        for (int i = 0; i < hex.Length; i += 2)
-        {
-            bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-        }
-        return bytes;
-    }
-
-    private static string HmacSha256Hex(string hexKey, string dataUtf8)
-    {
-        // 1) Secret aus Hex in echte Bytes
-        var keyBytes = HexToBytes(hexKey);
-
-        // 2) Daten als UTF8-Bytes
-        var payloadBytes = Encoding.UTF8.GetBytes(dataUtf8);
-
-        // 3) HMAC-SHA256
-        using (var hmac = new System.Security.Cryptography.HMACSHA256(keyBytes))
-        {
-            var hash = hmac.ComputeHash(payloadBytes);
-
-            // 4) hex-lowercase string bauen wie Python .hexdigest()
-            var sb = new StringBuilder(hash.Length * 2);
-            foreach (var b in hash)
-                sb.Append(b.ToString("x2"));
-            return sb.ToString();
-        }
-    }
-
-    private static long UnixNow()
-    {
-        return DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-    }
-
     // Liest lokales Overlay (mich) als OverlaySaveData
     private OverlaySaveData BuildCurrentOverlaySaveDataForMe()
     {
         var data = new OverlaySaveData();
-        data.LastUpdatedUnix = UnixNow(); // NEU: stamp jetzt
+        data.LastUpdatedUnix = DataManager.UnixNow(); // NEU: stamp jetzt
 
         foreach (var child in Overlay.Children)
         {
@@ -1959,80 +1666,19 @@ private void SaveOwnOverlayToJson()
         }
     }
 
-    // holt OverlaySaveData aus JSON-Text
-    private static OverlaySaveData? ParseOverlayJson(string json)
-    {
-        try
-        {
-            return System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(json);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
     private async Task<bool> TryFetchOverlayForPlayerFromServerAsync(ulong steamId)
     {
         try
         {
-            var serverKey = GetServerKey();
-            var ts = UnixNow().ToString();
-            // Signatur beim GET: steamId|serverKey|ts
-            var sigInput = steamId.ToString() + "|" + serverKey + "|" + ts;
-            var sig = HmacSha256Hex(OVERLAY_SYNC_SECRET_HEX, sigInput);
+            var data = await OverlayDataModule.FetchOverlayFromServerAsync(GetServerKey(), steamId);
+            if (data == null) return false;
 
-            var url = $"{OVERLAY_SYNC_BASEURL}/fetch" +
-                      $"?steamId={Uri.EscapeDataString(steamId.ToString())}" +
-                      $"&serverKey={Uri.EscapeDataString(serverKey)}" +
-                      $"&ts={Uri.EscapeDataString(ts)}" +
-                      $"&sig={Uri.EscapeDataString(sig)}";
+            // Canvas-Objekte bauen / ersetzen
+            bool editable = (steamId == _mySteamId);
+            MaterializeOverlayForPlayer(steamId, data, editable);
 
-            using (var http = new HttpClient())
-            {
-                var resp = await http.GetAsync(url);
-                if (!resp.IsSuccessStatusCode)
-                {
-                    // 404 ist einfach "hat nix hochgeladen" -> kein Fehler ins Log spammen
-                    if ((int)resp.StatusCode != 404)
-                        AppendLog("[overlay] Fetch HTTP " + (int)resp.StatusCode);
-                    return false;
-                }
-
-                var body = await resp.Content.ReadAsStringAsync();
-                // body hat {"overlayJsonB64": "..."}
-                using var doc = System.Text.Json.JsonDocument.Parse(body);
-                if (!doc.RootElement.TryGetProperty("overlayJsonB64", out var b64El))
-                    return false;
-
-                var b64 = b64El.GetString();
-                if (string.IsNullOrEmpty(b64)) return false;
-
-                byte[] decoded = Convert.FromBase64String(b64);
-                if (decoded.Length > OVERLAY_MAX_BYTES)
-                {
-                    AppendLog("[overlay] Remote Overlay too big.");
-                    return false;
-                }
-
-                var jsonOverlay = Encoding.UTF8.GetString(decoded);
-                var data = ParseOverlayJson(jsonOverlay);
-                if (data == null)
-                {
-                    AppendLog("[overlay] Remote Overlay broken.");
-                    return false;
-                }
-
-                // lokal speichern für diesen Spieler
-                WriteOverlaySaveDataLocal(steamId, data);
-
-                // Canvas-Objekte bauen / ersetzen
-                bool editable = (steamId == _mySteamId);
-                MaterializeOverlayForPlayer(steamId, data, editable);
-
-                AppendLog("[overlay] Overlay loaded from " + steamId + ".");
-                return true;
-            }
+            AppendLog("[overlay] Overlay loaded from " + steamId + ".");
+            return true;
         }
         catch (Exception ex)
         {
@@ -2043,21 +1689,12 @@ private void SaveOwnOverlayToJson()
 
     private void LoadOverlayFromDiskForPlayer(ulong steamId)
     {
-        var path = GetOverlayJsonPathForPlayerServer(steamId);
-        if (!File.Exists(path))
-        {
-            // registriere leere Liste (damit wir nicht endlos neu versuchen)
-            if (!_playerOverlayElements.ContainsKey(steamId))
-                _playerOverlayElements[steamId] = new List<FrameworkElement>();
-            return;
-        }
-
         try
         {
-            var json = File.ReadAllText(path);
-            var data = ParseOverlayJson(json);
+            var data = OverlayDataModule.LoadLocalOverlay(GetServerKey(), steamId);
             if (data == null)
             {
+                // registriere leere Liste (damit wir nicht endlos neu versuchen)
                 if (!_playerOverlayElements.ContainsKey(steamId))
                     _playerOverlayElements[steamId] = new List<FrameworkElement>();
                 return;
@@ -2071,7 +1708,5 @@ private void SaveOwnOverlayToJson()
             if (!_playerOverlayElements.ContainsKey(steamId))
                 _playerOverlayElements[steamId] = new List<FrameworkElement>();
         }
-
-
     }
 }

@@ -8,8 +8,7 @@
                 <!-- Wpf.Ui (WPF-UI lepo.co): WinUI 3 Fluent controls -->
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />
-                <!-- Inline app resources -->
-                <ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
     
         <!-- WinUI 3 Aligned Palette -->
         <SolidColorBrush x:Key="AppBg"         Color="#1A1D21"/>
@@ -197,6 +196,15 @@
                         <ColumnDefinition Width="16"/>
                     </Grid.ColumnDefinitions>
 
+                    <ui:SymbolIcon
+                        x:Name="CheckIcon"
+                        Grid.Column="0"
+                        Symbol="Checkmark20"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="{DynamicResource Accent}"
+                        Visibility="Collapsed" />
+
                     <ContentPresenter Grid.Column="0"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"
@@ -211,6 +219,10 @@
             </Border>
 
             <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
+                    <Setter Property="Foreground" Value="{DynamicResource Accent}" />
+                </Trigger>
                 <Trigger Property="IsHighlighted" Value="True">
                     <Setter TargetName="Bd" Property="Background" Value="#141A22"/>
                 </Trigger>
@@ -235,16 +247,6 @@
                 </Trigger>
                 <Trigger Property="Role" Value="SubmenuHeader">
                     <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}"/>
-                </Trigger>
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter Property="Icon">
-                        <Setter.Value>
-                            <Ellipse Width="8" Height="8" Fill="{DynamicResource Accent}"/>
-                        </Setter.Value>
-                    </Setter>
-                </Trigger>
-                <Trigger Property="IsChecked" Value="False">
-                    <Setter Property="Icon" Value="{x:Null}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -744,7 +746,7 @@
         </Style>
 
         <!-- Log/TextBox Multiline -->
-        <Style TargetType="{x:Type ScrollViewer}">
+        <Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource {x:Type ScrollViewer}}">
             <Setter Property="Background" Value="Transparent"/>
         </Style>
 
@@ -836,8 +838,6 @@
             </Setter>
         </Style>
         
-                </ResourceDictionary>
-            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

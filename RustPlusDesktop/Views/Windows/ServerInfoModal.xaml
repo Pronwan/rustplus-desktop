@@ -1,7 +1,8 @@
 <Window x:Class="RustPlusDesk.Views.ServerInfoModal"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Server Information" 
+        xmlns:p="clr-namespace:RustPlusDesk.Properties"
+        Title="{DynamicResource ServerInformation}" 
         Width="450" Height="350"
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True" 
@@ -17,39 +18,45 @@
         <DockPanel Margin="20">
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,15">
                 <DockPanel>
-                    <TextBlock Text="Server Information" 
-                               Foreground="White" 
-                               FontSize="20" 
-                               FontWeight="Bold" 
-                               VerticalAlignment="Center"/>
+                    <TextBlock Text="{DynamicResource ServerInformation}" 
+                               FontSize="18" FontWeight="SemiBold" 
+                               Foreground="{DynamicResource Accent}"/>
+                    
                     <Button Content="✕" 
                             HorizontalAlignment="Right" 
-                            Width="30" Height="30"
-                            Style="{StaticResource GhostButton}"
                             Click="BtnClose_Click"
-                            Cursor="Hand"
-                            FontSize="18"
-                            Foreground="{DynamicResource TextSubtle}"/>
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="{DynamicResource TextSubtle}"
+                            FontSize="16"
+                            Cursor="Hand"/>
                 </DockPanel>
                 <Separator Background="{DynamicResource CardBorder}" Margin="0,10,0,0"/>
             </StackPanel>
 
-            <Button DockPanel.Dock="Bottom" 
-                    Content="Close" 
-                    Width="100" 
-                    Height="35"
-                    HorizontalAlignment="Right"
-                    Style="{StaticResource PrimaryButton}"
-                    Click="BtnClose_Click"
-                    Margin="0,15,0,0"/>
-
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <TextBlock x:Name="TxtDescription" 
-                           TextWrapping="Wrap" 
-                           Foreground="White" 
-                           FontSize="14" 
-                           LineHeight="20"
-                           Text="No description available."/>
+                <StackPanel>
+                    <TextBlock x:Name="TxtName" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimary}"/>
+                    <TextBlock x:Name="TxtAddress" FontSize="12" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,15"/>
+
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{DynamicResource PlayersOnly}" FontSize="12" Foreground="{DynamicResource TextSubtle}"/>
+                            <TextBlock x:Name="TxtPlayers" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="{DynamicResource Queue}" FontSize="12" Foreground="{DynamicResource TextSubtle}"/>
+                            <TextBlock x:Name="TxtQueue" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock Text="{DynamicResource Description}" FontSize="12" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4"/>
+                    <TextBlock x:Name="TxtDescription" FontSize="13" TextWrapping="Wrap" Opacity="0.8" Foreground="{DynamicResource TextPrimary}"/>
+                </StackPanel>
             </ScrollViewer>
         </DockPanel>
     </Border>

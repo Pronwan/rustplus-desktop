@@ -27,6 +27,16 @@ public class MainViewModel : INotifyPropertyChanged
         _clockTimer.Interval = TimeSpan.FromSeconds(1);
         _clockTimer.Tick += (s, e) => TickClock();
         _clockTimer.Start();
+
+        App.CultureChanged += () =>
+        {
+            OnPropertyChanged(nameof(BusyText));
+            OnPropertyChanged(nameof(FcmExpiryText));
+            if (_lastStatusGameTime.HasValue)
+            {
+                UpdateDisplayProperties(_lastStatusGameTime.Value);
+            }
+        };
     }
 
     private void TickClock()
@@ -73,7 +83,7 @@ public class MainViewModel : INotifyPropertyChanged
             IsDay = true;
             double remainingGameHours = 20 - hours;
             double remainingRealMins = remainingGameHours / _observedDaySpeed;
-            TimeUntilNextPhase = FormatDuration(remainingRealMins / 60.0) + " until night";
+            TimeUntilNextPhase = string.Format(Properties.Resources.UntilNight, FormatDuration(remainingRealMins / 60.0));
         }
         else
         {
@@ -83,7 +93,7 @@ public class MainViewModel : INotifyPropertyChanged
             else remainingGameHours = 8 - hours;
             
             double remainingRealMins = remainingGameHours / _observedNightSpeed;
-            TimeUntilNextPhase = FormatDuration(remainingRealMins / 60.0) + " until day";
+            TimeUntilNextPhase = string.Format(Properties.Resources.UntilDay, FormatDuration(remainingRealMins / 60.0));
         }
     }
     private int _iconsTotal;
@@ -193,10 +203,10 @@ public class MainViewModel : INotifyPropertyChanged
         set { _updateDownloadPercentage = value; OnPropertyChanged(); }
     }
 
-    private string _busyText = "Bitte warten …";
+    private string _busyText = "";
     public string BusyText
     {
-        get => _busyText;
+        get => string.IsNullOrEmpty(_busyText) ? Properties.Resources.PleaseWait : _busyText;
         set { _busyText = value; OnPropertyChanged(); }
     }
 
@@ -211,10 +221,10 @@ public class MainViewModel : INotifyPropertyChanged
     {
         get
         {
-            if (TrackingService.FcmExpiresAt == null) return "No token registered";
+            if (TrackingService.FcmExpiresAt == null) return Properties.Resources.NoTokenRegistered;
             var remaining = TrackingService.FcmExpiresAt.Value - DateTime.Now;
-            if (remaining.TotalDays < 0) return "Token expired!";
-            return $"Expires in {(int)remaining.TotalDays} days";
+            if (remaining.TotalDays < 0) return Properties.Resources.TokenExpired;
+            return string.Format(Properties.Resources.ExpiresInDays, (int)remaining.TotalDays);
         }
     }
 
@@ -242,6 +252,10 @@ public class MainViewModel : INotifyPropertyChanged
             // Show overlay if no valid token exists
             bool hasToken = TrackingService.IsFcmConfigured() &&
                             (!TrackingService.FcmExpiresAt.HasValue || TrackingService.FcmExpiresAt.Value >= DateTime.Now);
+            
+            // If they have servers loaded, hide the login overlay so they can access their restored profiles!
+            if (Servers.Count > 0) return false;
+
             return !hasToken && !IsBusy && !IsInitializing;
         }
     }
@@ -421,8 +435,8 @@ public class MainViewModel : INotifyPropertyChanged
         int s = (int)Math.Round((totalMins - m) * 60);
         if (s == 60) { m++; s = 0; }
         
-        if (m > 0) return $"{m}m {s}s";
-        return $"{s}s";
+        if (m > 0) return string.Format(Properties.Resources.DurationMinutesSeconds, m, s);
+        return string.Format(Properties.Resources.DurationSeconds, s);
     }
 
     private string _serverWipe = "-";

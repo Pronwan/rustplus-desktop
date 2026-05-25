@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>RUST+ DESKTOP</value>
+  </data>
+  <data name="SteamAccount" xml:space="preserve">
+    <value>Steam konto</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+    <value>Ikke logget inn</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>Se etter oppdateringer</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>Laster ned...</value>
+  </data>
+  <data name="JoinDiscord" xml:space="preserve">
+    <value>Bli med i Discord</value>
+  </data>
+  <data name="PatchNotes" xml:space="preserve">
+    <value>Oppdatere merknader</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Innstillinger</value>
+  </data>
+  <data name="PairedServers" xml:space="preserve">
+    <value>SAMMENE SERVERTER</value>
+  </data>
+  <data name="NoServersPaired" xml:space="preserve">
+    <value>Ingen servere sammenkoblet ennå</value>
+  </data>
+  <data name="PairingMaintenance" xml:space="preserve">
+    <value>SAMMENTAR OG SAMMENDRAG</value>
+  </data>
+  <data name="PairingIdle" xml:space="preserve">
+    <value>Pairing: idle</value>
+  </data>
+  <data name="RightClickOptions" xml:space="preserve">
+    <value>Høyreklikk for alternativer</value>
+  </data>
+  <data name="TrackingActive" xml:space="preserve">
+    <value>Sporing Aktiv</value>
+  </data>
+  <data name="LastPull" xml:space="preserve">
+    <value>Siste trekk: {0}</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>Doner</value>
+  </data>
+  <data name="SupportDeveloper" xml:space="preserve">
+    <value>Støtt utvikleren</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetWebSocket" xml:space="preserve">
+    <value>Tilbakestill WebSocket tilkobling</value>
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value>Spillere:</value>
+  </data>
+  <data name="ShowOnlinePlayers" xml:space="preserve">
+    <value>Vis online spillere fane</value>
+  </data>
+  <data name="Queue" xml:space="preserve">
+    <value>Kø:</value>
+  </data>
+  <data name="DevicesTab" xml:space="preserve">
+    <value>Enheter</value>
+  </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>Hurtigtaster</value>
+  </data>
+  <data name="ImportDevices" xml:space="preserve">
+    <value>Importer enheter fra lagkamerater</value>
+  </data>
+  <data name="ExportDevices" xml:space="preserve">
+    <value>Eksporter enheter til lagkamerater</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Oppdater</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Avslå</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Last opp samtykke</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Ved å klikke på 'Godta', vil de smarte enhetene (og potensielt karttegninger) for denne serveren bli lastet opp på skaperens server. Dette tillater lagkamerater å laste ned og synkronisere dem. Bare Steam-IDen din overføres til å identifisere lagkamerater. Bare spillere med autorisert verktøy kan kontrollere enheten.
+
+Merk: Denne overføringsmetoden blir optimalisert i fremtiden. Hvis lagkamerater ikke kan laste ned dataene, vennligst tøm kartet tegningene og last opp på nytt.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Slett</value>
+  </data>
+  <data name="DeleteMissingOnly" xml:space="preserve">
+    <value>Du kan bare slette manglende enheter</value>
+  </data>
+  <data name="RenameDevice" xml:space="preserve">
+    <value>Endre enhetsnavn</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>AKTIV</value>
+  </data>
+  <data name="Offline" xml:space="preserve">
+    <value>FRAKOBLET</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>Nettverk</value>
+  </data>
+  <data name="FullConnect" xml:space="preserve">
+    <value>Full tilkobling</value>
+  </data>
+  <data name="LoadMapTeam" xml:space="preserve">
+    <value>Last kart &amp; team</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>Frakoblet</value>
+  </data>
+  <data name="ServerDetails" xml:space="preserve">
+    <value>Server detaljer</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>Hør</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Stopp</value>
+  </data>
+  <data name="TryPairingEdge" xml:space="preserve">
+    <value>Prøv å sammenkoble med kant</value>
+  </data>
+  <data name="ResetPairingConfig" xml:space="preserve">
+    <value>Reset pairing (delete config)</value>
+  </data>
+  <data name="ResetListenPairing" xml:space="preserve">
+    <value>Nullstill + lytt (re-par)</value>
+  </data>
+  <data name="ResetListenEdge" xml:space="preserve">
+    <value>Tilbakestill og lytt med kant</value>
+  </data>
+  <data name="RelinkBattlemetrics" xml:space="preserve">
+    <value>Relink Battlemetrics ID…</value>
+  </data>
+  <data name="DeleteServer" xml:space="preserve">
+    <value>Slett server…</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Bitte warten …</value>
+  </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>Veksle serverområde</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>Strømningsmodus</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>Skala:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>Aktiver strømningsmodus (forkortelser)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>Forkort Steam-navn og -ID-er for å beskytte privatlivet under strømmen. Auto-skjuler konsoll og serverlisten.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>Ingen posisjon tilgjengelig (offline eller ikke fremkalt).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>Lagre gruppe</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>Vennligst skriv inn et gruppenavn.</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>Melding kan ikke sendes. Vennligst prøv igjen (Sjekk om du er i et team!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Feil: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>Tildel gruppe</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>Gruppe innstillinger: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Gruppens navn</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>Angi gruppenavn...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>Gruppe Farge</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Lagre endringer</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>Spillernes aktivitetsanalyser og prognoser</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>Spillere</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>Strømningsmodus og mini kart overhaling</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>Strømningsmodus</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>Spillermarkøroper</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>Mini kart polsk</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>Handling påkrevd:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics Sporing Fjernet</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>Spillersporingssystem overhaling</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>Hvordan Spilleren sporer arbeider</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>Legg til spillere i tracker for å starte sporing</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>Sporing Aktiv</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>Sporer inaktiv</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>Filtrer spillere...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>Koble til en server for å laste inn spillernes liste</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Henter spillere via Steam Query...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>Spor ID</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>Manuelt spornavnet...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Ingen enheter.</value>
+  </data>
+  <data name="NoTokenRegistered" xml:space="preserve">
+    <value>Ingen token registrert</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>Token utløpt!</value>
+  </data>
+  <data name="ExpiresInDays" xml:space="preserve">
+    <value>Utløper i {0} dager</value>
+  </data>
+  <data name="UntilNight" xml:space="preserve">
+    <value>{0} til natt</value>
+  </data>
+  <data name="UntilDay" xml:space="preserve">
+    <value>{0} til dag</value>
+  </data>
+  <data name="FollowMe" xml:space="preserve">
+    <value>Følg Meg</value>
+  </data>
+  <data name="FollowPlayer" xml:space="preserve">
+    <value>Følg {0}</value>
+  </data>
+  <data name="PairingListening" xml:space="preserve">
+    <value>Paring: lytter…</value>
+  </data>
+  <data name="PairingStopped" xml:space="preserve">
+    <value>Paring: stanset</value>
+  </data>
+  <data name="PairingFailed" xml:space="preserve">
+    <value>Paring: mislyktes</value>
+  </data>
+  <data name="AlarmActivated" xml:space="preserve">
+    <value>Alarm aktivert!</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Tjener</value>
+  </data>
+  <data name="SmartAlarm" xml:space="preserve">
+    <value>Smart alarm</value>
+  </data>
+  <data name="UnableToReadLink" xml:space="preserve">
+    <value>Kan ikke lese RustPlus-lenke: {0}
+Format: rustplus://IP:PORT</value>
+  </data>
+  <data name="DeletePairingConfigHeader" xml:space="preserve">
+    <value>Reset pairing</value>
+  </data>
+  <data name="DeletePairingConfigBody" xml:space="preserve">
+    <value>Slett eksisterende sammenkoblingskonfigurasjon?
+Du må parre seg igjen ved neste start.</value>
+  </data>
+  <data name="ResetListenHeader" xml:space="preserve">
+    <value>Reset + Listen</value>
+  </data>
+  <data name="ResetListenBody" xml:space="preserve">
+    <value>Slette paringskonfigurasjon og umiddelbart re-par/listen?</value>
+  </data>
+  <data name="ResetListenEdgeHeader" xml:space="preserve">
+    <value>Tilbakestill og lytt (ge)</value>
+  </data>
+  <data name="ResetListenEdgeBody" xml:space="preserve">
+    <value>Slette paringskonfigurasjon og umiddelbart koble til på nytt/lytt ved hjelp av Edge?</value>
+  </data>
+  <data name="UpdateQueryFailed" xml:space="preserve">
+    <value>Kunne ikke spørre om nyeste utgivelse. Vennligst prøv igjen eller åpne utgivelsessiden.</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Du er oppdatert.</value>
+  </data>
+  <data name="UpdateAvailableHeader" xml:space="preserve">
+    <value>Oppdatering tilgjengelig</value>
+  </data>
+  <data name="UpdateAvailableBody" xml:space="preserve">
+    <value>Ny versjon tilgjengelig: {0}
+åpen utgivelsesside?</value>
+  </data>
+  <data name="DownloadAndInstallBody" xml:space="preserve">
+    <value>Ny versjon tilgjengelig: {0}
+Last ned og installer nå?</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Nedlastning mislyktes.</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Oppdatering sjekk mislyktes.
+{0}</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Ingen enheter.</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>Vis profil</value>
+  </data>
+  <data name="ChangeGroup" xml:space="preserve">
+    <value>Endre gruppe</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Omdøp</value>
+  </data>
+  <data name="RemoveTracked" xml:space="preserve">
+    <value>Fjern lagret</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Vis</value>
+  </data>
+  <data name="MoreOptions" xml:space="preserve">
+    <value>Flere alternativer</value>
+  </data>
+  <data name="RelinkBattlemetricsId" xml:space="preserve">
+    <value>Relink Battlemetrics ID…</value>
+  </data>
+  <data name="DeleteServerEllipsis" xml:space="preserve">
+    <value>Slett server…</value>
+  </data>
+  <data name="RightClickRename" xml:space="preserve">
+    <value>Høyreklikk for å endre navn</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>SLÅ</value>
+  </data>
+  <data name="PopupWindow" xml:space="preserve">
+    <value>Popup-vindu</value>
+  </data>
+  <data name="InAppAlert" xml:space="preserve">
+    <value>I-App Varsel</value>
+  </data>
+  <data name="AudioAlert" xml:space="preserve">
+    <value>Lyd Alarm</value>
+  </data>
+  <data name="CustomAudioFile" xml:space="preserve">
+    <value>Egendefinert lydfil...</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>Tilbakestill til standard</value>
+  </data>
+  <data name="Snapshot" xml:space="preserve">
+    <value>Snapshot: </value>
+  </data>
+  <data name="ItemsUpkeep" xml:space="preserve">
+    <value> Gjenstander, Vedlikehold=</value>
+  </data>
+  <data name="NoDevicesFound" xml:space="preserve">
+    <value>Ingen enheter funnet</value>
+  </data>
+  <data name="PairDeviceToSee" xml:space="preserve">
+    <value>Koble til en smartenhet, bryter eller alarm for å se den her</value>
+  </data>
+  <data name="TeamTab" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="CenterOnMap" xml:space="preserve">
+    <value>Midtstill på kart</value>
+  </data>
+  <data name="FollowOnMap" xml:space="preserve">
+    <value>Følg på kart</value>
+  </data>
+  <data name="OpenSteamProfile" xml:space="preserve">
+    <value>Åpne Steam profil</value>
+  </data>
+  <data name="PromoteToLeader" xml:space="preserve">
+    <value>Forfrem til leder</value>
+  </data>
+  <data name="KickFromTeam" xml:space="preserve">
+    <value>Spark fra Team</value>
+  </data>
+  <data name="ProfileMarkers" xml:space="preserve">
+    <value>Profil markører</value>
+  </data>
+  <data name="DeathMarkers" xml:space="preserve">
+    <value>Dødsmarkører</value>
+  </data>
+  <data name="CamerasTab" xml:space="preserve">
+    <value>Kameraer</value>
+  </data>
+  <data name="AddCamera" xml:space="preserve">
+    <value>Legg til kamera</value>
+  </data>
+  <data name="NoCamerasFound" xml:space="preserve">
+    <value>Ingen kameraer funnet</value>
+  </data>
+  <data name="PairCameraToSee" xml:space="preserve">
+    <value>Koble til et kamera for å se forhåndsvisningen her</value>
+  </data>
+  <data name="PlayersTab" xml:space="preserve">
+    <value>Spillere</value>
+  </data>
+  <data name="HowToTrack" xml:space="preserve">
+    <value>Hvordan følge opp</value>
+  </data>
+  <data name="LearnHowTrackingWorks" xml:space="preserve">
+    <value>Lær hvordan spillers sporing fungerer</value>
+  </data>
+  <data name="OnlineTab" xml:space="preserve">
+    <value>Pålogget</value>
+  </data>
+  <data name="OnlinePlayers" xml:space="preserve">
+    <value>Spillere på nett</value>
+  </data>
+  <data name="SearchBM" xml:space="preserve">
+    <value>Søk i BM</value>
+  </data>
+  <data name="SearchServerBM" xml:space="preserve">
+    <value>Søk gjeldende server på BattleMetrics</value>
+  </data>
+  <data name="Popout" xml:space="preserve">
+    <value>Sprett</value>
+  </data>
+  <data name="OpenPlayersSeparateWindow" xml:space="preserve">
+    <value>Åpne spillere i separat vindu</value>
+  </data>
+  <data name="Track" xml:space="preserve">
+    <value>Spor</value>
+  </data>
+  <data name="ManualTrackPlaceholder" xml:space="preserve">
+    <value>Manuelt spornavn eller Steam ID...</value>
+  </data>
+  <data name="FilterPlayersPlaceholder" xml:space="preserve">
+    <value>Filtrer spillere...</value>
+  </data>
+  <data name="LoadingPlayers" xml:space="preserve">
+    <value>Laster spillere...</value>
+  </data>
+  <data name="TrackedTab" xml:space="preserve">
+    <value>Sporet</value>
+  </data>
+  <data name="TrackedPlayers" xml:space="preserve">
+    <value>Sporede spillere</value>
+  </data>
+  <data name="ManageGroups" xml:space="preserve">
+    <value>Administrer grupper</value>
+  </data>
+  <data name="ViewFullAnalysisReport" xml:space="preserve">
+    <value>Se fullstendig analyserapport</value>
+  </data>
+  <data name="ReadyToExploreMap" xml:space="preserve">
+    <value>Klar til å utforske kartet?</value>
+  </data>
+  <data name="ConnectToLoadMap" xml:space="preserve">
+    <value>Koble til en valgt server for å laste live Rust kartet og teamet.</value>
+  </data>
+  <data name="ReadyToDominate" xml:space="preserve">
+    <value>Klar til å dominere Rust?</value>
+  </data>
+  <data name="PairAccountBenefits" xml:space="preserve">
+    <value>Koble kontoen din for å starte å spore spillere, motta en base raid varsling og kontrollere smartenhetene dine umiddelbart.</value>
+  </data>
+  <data name="LoginPairAccount" xml:space="preserve">
+    <value>Logg inn &amp; koble kontoen</value>
+  </data>
+  <data name="RequiresSteamLogin" xml:space="preserve">
+    <value>Krever Steam pålogging i din standard nettleser.</value>
+  </data>
+  <data name="DeleteServerHeader" xml:space="preserve">
+    <value>Slett server?</value>
+  </data>
+  <data name="DeleteServerConfirm" xml:space="preserve">
+    <value>Er du sikker på at du vil slette denne serveren? Denne handlingen kan ikke angres.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Avbryt</value>
+  </data>
+  <data name="DeleteAction" xml:space="preserve">
+    <value>Slett</value>
+  </data>
+  <data name="AutoHideAfter3s" xml:space="preserve">
+    <value>Auto-skjul etter 3</value>
+  </data>
+  <data name="MapFilters" xml:space="preserve">
+    <value>MAP FILTRE</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>Rutenett</value>
+  </data>
+  <data name="Monuments" xml:space="preserve">
+    <value>Monumenter</value>
+  </data>
+  <data name="Shops" xml:space="preserve">
+    <value>Butikker</value>
+  </data>
+  <data name="ChatAlerts" xml:space="preserve">
+    <value>CHAT VARSLER</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Varsler</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>Konfigurer</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Velg alle</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Opphev merking</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>HENDER</value>
+  </data>
+  <data name="CargoShip" xml:space="preserve">
+    <value>Last skip</value>
+  </data>
+  <data name="CargoSpawn" xml:space="preserve">
+    <value>Fremkall</value>
+  </data>
+  <data name="CargoDock" xml:space="preserve">
+    <value>Harbor dokking</value>
+  </data>
+  <data name="CargoEgress" xml:space="preserve">
+    <value>Avgang (5m Warning)</value>
+  </data>
+  <data name="CargoArrival" xml:space="preserve">
+    <value>Advarsel om ankomst (5 m før dock)</value>
+  </data>
+  <data name="Heli" xml:space="preserve">
+    <value>Patrol Helikopter</value>
+  </data>
+  <data name="Chinook" xml:space="preserve">
+    <value>Chinook (CH47)</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>Reising Selger</value>
+  </data>
+  <data name="OilRig" xml:space="preserve">
+    <value>Olje Rig Trigger</value>
+  </data>
+  <data name="DeepSea" xml:space="preserve">
+    <value>Dypt sjøhendelse</value>
+  </data>
+  <data name="SmartAlerts" xml:space="preserve">
+    <value>Smarte varsler</value>
+  </data>
+  <data name="PlayerOnline" xml:space="preserve">
+    <value>Pålogget status</value>
+  </data>
+  <data name="PlayerOffline" xml:space="preserve">
+    <value>Frakoblet Status</value>
+  </data>
+  <data name="AnnounceTracking" xml:space="preserve">
+    <value>Sporende varsler</value>
+  </data>
+  <data name="PlayerDeathSelf" xml:space="preserve">
+    <value>Selv Død</value>
+  </data>
+  <data name="PlayerDeathTeam" xml:space="preserve">
+    <value>Team Dødsfall</value>
+  </data>
+  <data name="PlayerRespawnSelf" xml:space="preserve">
+    <value>Selvgjenoppstandelse</value>
+  </data>
+  <data name="PlayerRespawnTeam" xml:space="preserve">
+    <value>Lag Respawn</value>
+  </data>
+  <data name="NewShops" xml:space="preserve">
+    <value>Nye butikker</value>
+  </data>
+  <data name="SuspiciousShops" xml:space="preserve">
+    <value>Mistenkelige butikker</value>
+  </data>
+  <data name="TradeAlerts" xml:space="preserve">
+    <value>Varsel om handel</value>
+  </data>
+  <data name="CrosshairStyle" xml:space="preserve">
+    <value>Trådkors stil</value>
+  </data>
+  <data name="GreenDot" xml:space="preserve">
+    <value>Grønn dot</value>
+  </data>
+  <data name="MiniGreen" xml:space="preserve">
+    <value>Mini grønn</value>
+  </data>
+  <data name="OpenCrosshairRG" xml:space="preserve">
+    <value>Åpne crossshair (R/G)</value>
+  </data>
+  <data name="ThinRedCircle" xml:space="preserve">
+    <value>Tynn rød sirkel</value>
+  </data>
+  <data name="SquareDot" xml:space="preserve">
+    <value>Kvadrat + dot</value>
+  </data>
+  <data name="MagentaDot" xml:space="preserve">
+    <value>Magentarød prikk</value>
+  </data>
+  <data name="MagentaOpenCross" xml:space="preserve">
+    <value>Magentarød åpen kryss</value>
+  </data>
+  <data name="RangeLineTicks" xml:space="preserve">
+    <value>Rekkeviddelinje (ticks)</value>
+  </data>
+  <data name="DrawCrosshair" xml:space="preserve">
+    <value>Tegn sirkel...</value>
+  </data>
+  <data name="ChooseMonitor" xml:space="preserve">
+    <value>Velg skjerm</value>
+  </data>
+  <data name="DrawOverlay" xml:space="preserve">
+    <value>Tegn overlegg</value>
+  </data>
+  <data name="DrawToolTip" xml:space="preserve">
+    <value>Tegn (Høyre klikk: størrelse / farge)</value>
+  </data>
+  <data name="PlaceTextToolTip" xml:space="preserve">
+    <value>Plasser tekst (høyre klikk: farge / størrelse)</value>
+  </data>
+  <data name="PlaceIconToolTip" xml:space="preserve">
+    <value>Plasser ikon (høyre klikk: velg ikon)</value>
+  </data>
+  <data name="EraserToolTip" xml:space="preserve">
+    <value>Viskelær (hold eller klikk)</value>
+  </data>
+  <data name="DeleteOverlayToolTip" xml:space="preserve">
+    <value>Slett eget overlegg</value>
+  </data>
+  <data name="UploadOverlayToolTip" xml:space="preserve">
+    <value>Last opp eget overlegg / del</value>
+  </data>
+  <data name="ProfitTrades" xml:space="preserve">
+    <value>Profit Trades</value>
+  </data>
+  <data name="ArbitrageOpportunities" xml:space="preserve">
+    <value>Muligheter for direkte voldgiftsmenn, kjøp lav → selg høyt.</value>
+  </data>
+  <data name="BuyXForY" xml:space="preserve">
+    <value>Kjøp X for Y</value>
+  </data>
+  <data name="Analyze" xml:space="preserve">
+    <value>Analyser</value>
+  </data>
+  <data name="IWantToGet" xml:space="preserve">
+    <value>Jeg ønsker å SKYET</value>
+  </data>
+  <data name="ICanPayWith" xml:space="preserve">
+    <value>Jeg kan BETALE MED</value>
+  </data>
+  <data name="TeamChat" xml:space="preserve">
+    <value>Lag prat</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Sende</value>
+  </data>
+  <data name="FcmCredentials" xml:space="preserve">
+    <value>FCM påloggingsinformasjon</value>
+  </data>
+  <data name="RightClickConfigure" xml:space="preserve">
+    <value>Høyreklikk for å konfigurere</value>
+  </data>
+  <data name="ResetMap" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetMapToolTip" xml:space="preserve">
+    <value>Nullstill kart-zoom og -posisjon</value>
+  </data>
+  <data name="MiniMap" xml:space="preserve">
+    <value>Mini</value>
+  </data>
+  <data name="CrosshairToolTip" xml:space="preserve">
+    <value>Trådkors på/av (Trykk for alternativer)</value>
+  </data>
+  <data name="TrackPlayer" xml:space="preserve">
+    <value>SPILLER</value>
+  </data>
+  <data name="CloseBMBrowser" xml:space="preserve">
+    <value>Lukk BattleMetrics Browser</value>
+  </data>
+  <data name="ShopSearchTitle" xml:space="preserve">
+    <value>VISKE SØKER</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>Lukk Søk</value>
+  </data>
+  <data name="ActivateShopsFirst" xml:space="preserve">
+    <value>Vennligst aktiver Butikker først</value>
+  </data>
+  <data name="ActivateShopPolling" xml:space="preserve">
+    <value>Aktiver butikkmåling</value>
+  </data>
+  <data name="TeamChatTitle" xml:space="preserve">
+    <value>LAG CHAT</value>
+  </data>
+  <data name="CloseChat" xml:space="preserve">
+    <value>Lukk Chat</value>
+  </data>
+  <data name="ChatCommandsSettings" xml:space="preserve">
+    <value>Chat Kommandoer innstillinger</value>
+  </data>
+  <data name="ChatCommands" xml:space="preserve">
+    <value>Chat Kommandoer</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Tilbake</value>
+  </data>
+  <data name="Forward" xml:space="preserve">
+    <value>Videresend</value>
+  </data>
+  <data name="OpenInExternalBrowser" xml:space="preserve">
+    <value>Åpne i ekstern nettleser</value>
+  </data>
+  <data name="SearchBMPlaceholder" xml:space="preserve">
+    <value>Søk i BM...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Søk</value>
+  </data>
+  <data name="SelectAServer" xml:space="preserve">
+    <value>Velg en server</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>Frakoblet</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>KOMMEN...</value>
+  </data>
+  <data name="StatusInitializing" xml:space="preserve">
+    <value>INNSTILLING...</value>
+  </data>
+  <data name="StatusDevicesActive" xml:space="preserve">
+    <value>AKTIV ENDELSER</value>
+  </data>
+  <data name="StatusFullyConnected" xml:space="preserve">
+    <value>FULLY TILKOBLING</value>
+  </data>
+  <data name="StatusUnknown" xml:space="preserve">
+    <value>UKJENT</value>
+  </data>
+  <data name="MayTakeAMoment" xml:space="preserve">
+    <value>Dette kan ta et øyeblikk...</value>
+  </data>
+  <data name="AppSettingsTitle" xml:space="preserve">
+    <value>Applikasjons innstillinger</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Generelt</value>
+  </data>
+  <data name="LaunchWithWindows" xml:space="preserve">
+    <value>Start med Windows (minimert)</value>
+  </data>
+  <data name="StartMinimizedAlways" xml:space="preserve">
+    <value>Start minimert (alltid)</value>
+  </data>
+  <data name="AutoConnectLastServer" xml:space="preserve">
+    <value>Koble automatisk til siste server ved oppstart</value>
+  </data>
+  <data name="AutoConnectToolTip" xml:space="preserve">
+    <value>Koble automatisk til den siste serveren og laster kartet på nytt.</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Oppførsel</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>Minimer til verktøykassen i stedet for å lukke</value>
+  </data>
+  <data name="BackgroundTracking" xml:space="preserve">
+    <value>Aktiver sporing av bakgrunnsspiller</value>
+  </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>Holder deg spore spillere via BattleMetrics selv når de minimeres.</value>
+  </data>
+  <data name="HideSystemConsole" xml:space="preserve">
+    <value>Skjul systemkonsollen (Deslutter)</value>
+  </data>
+  <data name="HideConsoleToolTip" xml:space="preserve">
+    <value>Skjuler det nederste logg/konsoll-panelet for å lagre kartplass.</value>
+  </data>
+  <data name="MapSettings" xml:space="preserve">
+    <value>Kart innstillinger</value>
+  </data>
+  <data name="AutoLoadShops" xml:space="preserve">
+    <value>Last butikker automatisk inn ved tilkobling</value>
+  </data>
+  <data name="AutoLoadShopsToolTip" xml:space="preserve">
+    <value>Starter valgbare butikker og varsler automatisk når koblet til en server.</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Bruk settets tekstetiketter i stedet for ikoner</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Når aktivert, gjengis Rust kart monumentnavn som skal brukes ved hjelp av Permanent Marker skrifttype i stedet for ikoner.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Monument Style:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Monument skala:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Monument Opasitet:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Ikoner av rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Opprinnelige tekstmonumentnavn</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Medvirkende</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Kartmonumentikoner som vises av </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> — brukes med tillatelse.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Alle monumentikoner og relatert kunstverk er rustkartets egenskaper. Takk for at du støtter rust-samfunnet!</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Samtale</value>
+  </data>
+  <data name="ModifyChatAlerts" xml:space="preserve">
+    <value>Endre Chat varsler</value>
+  </data>
+  <data name="ManageSteamAccountInfo" xml:space="preserve">
+    <value>Administrer din tilkoblede Steam-konto i hovedvinduet.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Lukk</value>
+  </data>
+  <data name="IncomingAlarms" xml:space="preserve">
+    <value>INNKOMMENDE ALARMER</value>
+  </data>
+  <data name="Wipe" xml:space="preserve">
+    <value>Slett</value>
+  </data>
+  <data name="PlayersOnly" xml:space="preserve">
+    <value>Spillere</value>
+  </data>
+  <data name="PlayersHeader" xml:space="preserve">
+    <value>Spillere</value>
+  </data>
+  <data name="IWantToGetToolTip" xml:space="preserve">
+    <value>Jeg ønsker å ET (f.eks. Crude Oil)</value>
+  </data>
+  <data name="ICanPayWithToolTip" xml:space="preserve">
+    <value>Jeg ønsker å BETALE MED (f.eks. Scrap)</value>
+  </data>
+  <data name="DeleteServerConfirmFormatted" xml:space="preserve">
+    <value>Er du sikker på at du vil slette server "{0}"? Handlingen kan ikke angres.</value>
+  </data>
+  <data name="PairingError" xml:space="preserve">
+    <value>Pairing: error</value>
+  </data>
+  <data name="PairingStarting" xml:space="preserve">
+    <value>Paring: starter...</value>
+  </data>
+  <data name="StartingPairingListener" xml:space="preserve">
+    <value>Starter Pairing-Listener...</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+    <value>Logget inn</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>Lager</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Pris</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>PÅ</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>AV</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>AKTIV</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>INAKTIV</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>GRUPPE</value>
+  </data>
+  <data name="ImportDevicesTitle" xml:space="preserve">
+    <value>Rust+ Desk – Importer Enheter</value>
+  </data>
+  <data name="ImportDevicesHeader" xml:space="preserve">
+    <value>Importer enheter</value>
+  </data>
+  <data name="ImportDevicesSelectPrompt" xml:space="preserve">
+    <value>Velg hvilke enheter du vil importere på denne serveren.</value>
+  </data>
+  <data name="CheckDeviceStatus" xml:space="preserve">
+    <value>Kontroller enhetsstatus</value>
+  </data>
+  <data name="ImportSelected" xml:space="preserve">
+    <value>Importer valgte</value>
+  </data>
+  <data name="BmShortcuts" xml:space="preserve">
+    <value>BM snarveier</value>
+  </data>
+  <data name="PairingConfigDeleted" xml:space="preserve">
+    <value>Paring: config slettet</value>
+  </data>
+  <data name="TrayIconDefault" xml:space="preserve">
+    <value>Rust+ Skrivebord Tracker</value>
+  </data>
+  <data name="TrayIconTracking" xml:space="preserve">
+    <value>Rust+ Desk (Sporing {0})</value>
+  </data>
+  <data name="RenameGroup" xml:space="preserve">
+    <value>Endre gruppenavn</value>
+  </data>
+  <data name="NewNameForGroup" xml:space="preserve">
+    <value>Nytt navn til gruppen:</value>
+  </data>
+  <data name="NewNameForDevice" xml:space="preserve">
+    <value>Nytt navn for #{0}:</value>
+  </data>
+  <data name="EnterBattlemetricsIdFor" xml:space="preserve">
+    <value>Skriv inn angrepstokrics Server ID for "{0}":</value>
+  </data>
+  <data name="TrayTrackingStatus" xml:space="preserve">
+    <value>Sporer: {0}</value>
+  </data>
+  <data name="TrayLastUpdate" xml:space="preserve">
+    <value>Siste oppdatering: {0}</value>
+  </data>
+  <data name="OpenRustPlusDesk" xml:space="preserve">
+    <value>Åpne Rust+ Skrivebord</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Avslutt</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Beskrivelse</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>Kamera</value>
+  </data>
+  <data name="Alarms" xml:space="preserve">
+    <value>Alarmer</value>
+  </data>
+  <data name="Identifier" xml:space="preserve">
+    <value>Identifier:</value>
+  </data>
+  <data name="FPS" xml:space="preserve">
+    <value>FPS:</value>
+  </data>
+  <data name="CameraFPSNote" xml:space="preserve">
+    <value>Merk: 2 fps anbefales, høyere FPS lukker sannsynligvis tilkoblingen til serveren</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>Piksel</value>
+  </data>
+  <data name="Pen" xml:space="preserve">
+    <value>Penn</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>Linje</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>Firkant</value>
+  </data>
+  <data name="Circle" xml:space="preserve">
+    <value>Sirkel</value>
+  </data>
+  <data name="Thickness" xml:space="preserve">
+    <value>Tykkelse:</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Ugjennomsiktighet:</value>
+  </data>
+  <data name="UploadPNG" xml:space="preserve">
+    <value>Last opp PNG</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Tøm</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Lagre</value>
+  </data>
+  <data name="AssignGlobalHotkeys" xml:space="preserve">
+    <value>Tilordne globale hurtigtaster for smarte brytere. Flere enheter kan dele én hurtigtast (vil veksle mellom sekvensiell).</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Enhet</value>
+  </data>
+  <data name="EntityId" xml:space="preserve">
+    <value>EntityId</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>Hurtigtast</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Angi</value>
+  </data>
+  <data name="CloseDeactivate" xml:space="preserve">
+    <value>Lukk &amp; deaktiver</value>
+  </data>
+  <data name="CloseActivate" xml:space="preserve">
+    <value>Lukk &amp; aktiver</value>
+  </data>
+  <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
+    <value>Oppdatering, minikart og sporingsoppdatering</value>
+  </data>
+  <data name="FeatureSummaryAdjustments" xml:space="preserve">
+    <value>Funksjonsmelding og justering</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>Ikke vis dette igjen</value>
+  </data>
+  <data name="AwesomeLetsGo" xml:space="preserve">
+    <value>Fantastisk, la oss gå!</value>
+  </data>
+  <data name="MiniMapSettings" xml:space="preserve">
+    <value>Innstillinger for minikart</value>
+  </data>
+  <data name="Shape" xml:space="preserve">
+    <value>Form</value>
+  </data>
+  <data name="Rectangle" xml:space="preserve">
+    <value>Rektangel</value>
+  </data>
+  <data name="OpacityLabel" xml:space="preserve">
+    <value>Ugjennomsiktighet: {0}%</value>
+  </data>
+  <data name="SizeLabel" xml:space="preserve">
+    <value>Størrelse: {0}% (SHIFT+Mousewheel)</value>
+  </data>
+  <data name="ShowServerTime" xml:space="preserve">
+    <value>Vis servertid</value>
+  </data>
+  <data name="ServerInformation" xml:space="preserve">
+    <value>Server Informasjon</value>
+  </data>
+  <data name="NoDescriptionAvailable" xml:space="preserve">
+    <value>Ingen beskrivelse tilgjengelig.</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Nåværende versjon: {0}</value>
+  </data>
+  <data name="PatchNotesHeader" xml:space="preserve">
+    <value>Oppdateringsmerknader og versjonshistorikk</value>
+  </data>
+  <data name="EnableChatCommands" xml:space="preserve">
+    <value>Aktiver Chat Kommandoer</value>
+  </data>
+  <data name="Prefix" xml:space="preserve">
+    <value>Prefiks:</value>
+  </data>
+  <data name="StandardCommands" xml:space="preserve">
+    <value>Standard Kommandoer</value>
+  </data>
+  <data name="Population" xml:space="preserve">
+    <value>Befolkning:</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Tid:</value>
+  </data>
+  <data name="Promote" xml:space="preserve">
+    <value>Promot:</value>
+  </data>
+  <data name="DeepSeaCommand" xml:space="preserve">
+    <value>Dyp hav:</value>
+  </data>
+  <data name="CargoShipCommand" xml:space="preserve">
+    <value>Last skip:</value>
+  </data>
+  <data name="OilRigCommand" xml:space="preserve">
+    <value>Olje Rig:</value>
+  </data>
+  <data name="PatrolHeliCommand" xml:space="preserve">
+    <value>Patrol Heli:</value>
+  </data>
+  <data name="TravellingVendorCommand" xml:space="preserve">
+    <value>Reising salg:</value>
+  </data>
+  <data name="UpkeepDetails" xml:space="preserve">
+    <value>Behold detaljer:</value>
+  </data>
+  <data name="CommandDelay" xml:space="preserve">
+    <value>Kommando Forsinkelse:</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Språk</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Velg språk</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>Endring av språk krever en omstart for å tre i kraft</value>
+  </data>
+  <data name="SmartSwitches" xml:space="preserve">
+    <value>Smarte brytere</value>
+  </data>
+  <data name="UpkeepTcMonitors" xml:space="preserve">
+    <value>Vedlikehold (TC) Monitorer</value>
+  </data>
+  <data name="NoTcMonitorsFound" xml:space="preserve">
+    <value>Ingen TC-skjermer funnet.</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Lagre og lukk</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Melding...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Feilmelding her</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Patrol Heli</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Patrol Heli aktiv – kjører for {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Tilkoblet midtveis hendelse – ukjent tid</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Patrol Heli aktiv (ukjent tid)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Patrol Heli skutt ned {0} siden denne økten</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Patrol Heli forlot kartet {0} siden denne økten</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Docked at {0} - deler om ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>finne</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Allerede forankret ved tilkobling - fraværende ukjent</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Docked ved {0} (aktivitet varighet ennå ikke lært)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Gjenstående tid på kart (fra spawne)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Tilkoblet midtveis – tid ukjent</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Koblet til midtveis – tid ukjent (rute ~{0}m totalt)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Lasteskip despawnet {0}m {1}s siden denne økten</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Reisevirksomhet aktiv – kjører for {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Forflytning Selor aktiv (spawn tid ukjent)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Selger despawnet {0} siden denne økten</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Dyptsjø er aktivt i gang for {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Dypt sjø aktiv (gyte tid ukjent)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Dypthavet ble avsluttet for {0} siden denne økten</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} spillere er for øyeblikket tilkoblet.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Kø: {0} spillere.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>NÃ¥vÃ¦rende i spilltid: {0}</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} ble forfremmet til leder.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Dypthavet er aktivt! Løping etter {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Djuphavet er i dag aktivt (koblet til midtarrangementet – gytetid ukjent).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea ended {0} minutes ago this session.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Dypt Sjøhendelsesstatus ukjent (ikke sett denne økten).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Lasteskip ikke aktivt.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Lasteskipet forankret ved {0}. Avdeler om ca. {1} minutter.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Lasteskipet forankret i {0} og forbereder deg på å avta.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Lasteskipet forankret ved {0} (ukjent dato for avgang).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Lasteskip aktiv. Blader om lag {0} minutter.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Lastebil aktiv og forbereder seg snart på skip.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Lasteskip aktiv (rute varighet ennå ikke lært for denne serveren).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Lasteskipet er aktivt (koblet etter gyte – gjenværende tid er ukjent).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Lasteskip ikke aktiv. Despawnet {0} minutter siden denne økten.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: crate in {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: sist kalt {1}m siden</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: ikke kalt denne økten</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Patrol Heli er aktiv! Kjører på {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Patrol Heli er for øyeblikket aktiv (koblet til midtarrangementet – ukjent tid ved oppstart).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Patrol Heli er ikke aktiv. Den var for {0} {1} siden denne økten.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>skutt ned</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>forlot kartet</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Patrol Heli hendelsesstatus ukjent (ikke sett denne økten).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Reisende selger er aktiv! Kjører for {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Travelling Vendor er for øyeblikket aktiv (koblet til midtarrangementet – ukjent tid gyte tid).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor ikke aktiv. Despawnet {0} siden denne økten.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Reisende leverandør-hendelsesstatus ukjent (ikke sett denne økten).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Ingen verktøytavler er tilordnet for å holde kommandoer.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Vedlikehold om {0} TC: Tom eller utgått.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Behov/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Vedlikehold om {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} dager</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} hours</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} minutter</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Tom/utløpt</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d {2}t</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Vedlikehold: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Bundet Verktøy Cupboard monitorer ble ikke funnet eller ikke sammenkoblet.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Bundverktøy Cupboard monitor er ikke funnet eller ikke paret.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} slo {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>PÅ</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>AV</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Bundet smartbryter ble ikke funnet eller ikke satt på pause.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Tre</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Stein</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Metall</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Liten Ojegris</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Stor Oljerigg</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Butikk</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Last skip</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Reising Selger</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Patrol Helikopter</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Oilrig Karat</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Eksplosjon</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Bygging blokkert</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Hendelse</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] utløst! Vurder opplåsing i {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} utløst!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Klokker opp om 10 minutter!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Kasse låser opp om 5 minutter!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Dypt Sjø er på vei opp</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Ny butikk {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Mistenkelig butikk {0} [{1}] var online {2}s, solgt {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Lasteskipet spawnet {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>langt ut i havet (nær {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Lastskipets forankring ved {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Lastskip forventet til dock ved {0} ({1}) på ca. 5 minutter.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Lastskip som forlater {0} på 5 minutter ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Krasj oppdaget på grunn av serverforsinkelser – Heli er fortsatt på kartet ved {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} spawned in at {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Patrol Heli skutt ned på {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>ukjent</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} kom på nett @ {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} gikk frakoblet</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} døde @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} respawned @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Tracking] {0}{1} er nå PÅLOINN</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Tracking] {0}{1} er nå OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Tracking] {0}{1} endret navn til {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>selger</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>Kjøper</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Butikk</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) for {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Liste chat kommandoer</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>KOMMANDER: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Lokalisering, modernisering og lagring av UI</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dynamisk lokal bytting</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> – 30+ språk å velge</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Chat Kommandoer brukergrensesnitt</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> — Isolert visning for et rent utseende</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Nytt innstillingsoverlegg</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> – Rens sidepanelet for alle innstillinger</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics Sporing Fjernet</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Din base er under angrep!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Vennligst koble til en server først.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Du er ikke koblet til noen server.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Chatten er ikke tilgjengelig for øyeblikket.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Vennligst velg en server først.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Tilkobling</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Samtale</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Slik sporer du spillere</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Innebygd UDP-sporing</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Sporingsveiledningen er foreløpig bare tilgjengelig på engelsk, da det vil skje endringer i nær fremtid. Vi ber om din tålmodighet.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Lukk dette vinduet når som helst - du kan åpne det igjen med ❓ Hvordan trykke på knappen.</value>
+  </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Vedlikehold</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Vis, sikkerhetskopier, eller gjenoppretting av programinnstillinger, profiler og egendefinerte tegninger.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Tilbakestill appdata...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Sikkerhetskopier data...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Gjenopprett data...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Tilbakestill programdata</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Velg komponentene du vil slette fra denne enheten. Alle valgte valg vil bli slettet permanent.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Aktiv Server-tilkobling (Frakoblet)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Lagrede server-profiler (Slett tilkoblede serverkonfigurasjoner)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Steam kontodetaljer (Logg ut)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Enhets sammenkoblingskonfigurasjon (Nullstill registreringstokens)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Egendefinerte kryss-felter (rutekonfigurasjoner)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Lokal Cache &amp; Tegninger (slette lagrede kart/linjer)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Denne handlingen er permanent og kan ikke angres.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Bekreft tilbakestilling</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Sikkerhetskopier passord</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Sikkerhetskopier beskyttelse</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Skriv inn et passord for å kryptere denne sikkerhetskopifilen. Hvis du lar den være tom, vil ikke sikkerhetskopien krypteres.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Gjenopprett sikkerhetskopi</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Denne sikkerhetskopien er passordbeskyttet. Skriv inn passordet for å dekryptere den:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Krypter</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Dekrypter</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Sikkerhetskopier programdata</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] sikkerhetskopi opprettet på: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Sikkerhetskopiering opprettet!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Sikkerhetskopi fullført</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Backup feil: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Feil ved oppretting av sikkerhetskopi: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Sikkerhetskopiering mislyktes</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Gjenoppretting av data vil overskrive dine gjeldende serverprofiler, egendefinerte krys-delinger, tegning av overlegg og minimalt av konfigurasjoner.
+
+Er du sikker på at du vil fortsette?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Gjenopprett bekreftelsen</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Gjenopprett programdata</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Applikasjonsdata gjenopprettet vellykket!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Gjenoppretting fullført</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Gjenopprette feil: Ugyldig passord oppgitt.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Dekryptering mislyktes. Ugyldig passord eller skadet sikkerhetskopifil.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Gjenoppretting feilet</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Gjenopprettingsfeil: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Feil ved gjenoppretting av sikkerhetskopi: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Ugyldig format på sikkerhetskopien eller manglende signatur.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Starter selektiv tilbakestillingsoperasjon...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Frakobler den aktive servertilkoblingen...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] tilkoblingen er fullført.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Fjerner lagrede serverprofiler...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] lagrede serverprofiler er tømt.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Fjerner data fra Steam kontoen...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Steam legitimasjon er fjernet.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Tøm enheten sammenkoblingskonfigurasjon...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] enhetskartlegging slettet</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] fyr ut egendefinerte kryss-delinger...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Feil ved rydding av egendefinerte kryss-shairer: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] egendefinerte krysseark fjernet.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Tømmer lokale mellomlagerfiler og overleggstegninger...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Feil ved tømming av mellomlagermappe: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] mellomlagermapper er tømt.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Re-registrerer lytter og FCM legitimasjonsbeskrivelser...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Selektiv tilbakestilling utført.</value>
+  </data>
+</root>

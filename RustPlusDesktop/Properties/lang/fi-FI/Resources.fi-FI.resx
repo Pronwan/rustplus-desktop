@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>RUST+ DESKTOP</value>
+  </data>
+  <data name="SteamAccount" xml:space="preserve">
+    <value>Steamin Tili</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+    <value>Ei Kirjautunut Sisään</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>Tarkista päivitykset</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>Ladataan...</value>
+  </data>
+  <data name="JoinDiscord" xml:space="preserve">
+    <value>Liity Discordiin</value>
+  </data>
+  <data name="PatchNotes" xml:space="preserve">
+    <value>Patch Huomautukset</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Asetukset</value>
+  </data>
+  <data name="PairedServers" xml:space="preserve">
+    <value>PAIRED SERVERS</value>
+  </data>
+  <data name="NoServersPaired" xml:space="preserve">
+    <value>Palvelimia ei ole vielä liitetty</value>
+  </data>
+  <data name="PairingMaintenance" xml:space="preserve">
+    <value>MAKSUT JA HUOLTO</value>
+  </data>
+  <data name="PairingIdle" xml:space="preserve">
+    <value>Pairing: idle</value>
+  </data>
+  <data name="RightClickOptions" xml:space="preserve">
+    <value>Valinnat hiiren kakkospainikkeella</value>
+  </data>
+  <data name="TrackingActive" xml:space="preserve">
+    <value>Seuranta Aktiivisena</value>
+  </data>
+  <data name="LastPull" xml:space="preserve">
+    <value>Viimeinen veto: {0}</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>Lahjoita</value>
+  </data>
+  <data name="SupportDeveloper" xml:space="preserve">
+    <value>Tue kehittäjää</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetWebSocket" xml:space="preserve">
+    <value>Nollaa WebSocketin yhteys</value>
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value>Pelaajat:</value>
+  </data>
+  <data name="ShowOnlinePlayers" xml:space="preserve">
+    <value>Näytä Pelaajien Online-Välilehti</value>
+  </data>
+  <data name="Queue" xml:space="preserve">
+    <value>Jono:</value>
+  </data>
+  <data name="DevicesTab" xml:space="preserve">
+    <value>Laitteet</value>
+  </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>Pikanäppäimet</value>
+  </data>
+  <data name="ImportDevices" xml:space="preserve">
+    <value>Tuo laitteita joukkuetovereilta</value>
+  </data>
+  <data name="ExportDevices" xml:space="preserve">
+    <value>Vie laitteet tiimikavereille</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Päivitä</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Lasku</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Lataa suostumus</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Kun napsautat Hyväksy, tämän palvelimen älylaitteet (ja mahdollisesti karttapiirustukset) ladataan luojan palvelimelle. Näin joukkuetoverit voivat ladata ja synkronoida ne. Vain Steam-tunnuksesi välitetään joukkuetovereiden tunnistamiseksi. Vain Tool Cupboardissa valtuutetut pelaajat voivat hallita laitteita.
+
+Huomautus: Tätä siirtomenetelmää optimoidaan tulevaisuudessa. Jos joukkuetoverit eivät pysty lataamaan tietoja, yritä tyhjentää karttapiirroksesi ja ladata ne uudelleen.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Poista</value>
+  </data>
+  <data name="DeleteMissingOnly" xml:space="preserve">
+    <value>Voit poistaa vain puuttuvat laitteet</value>
+  </data>
+  <data name="RenameDevice" xml:space="preserve">
+    <value>Nimeä laite uudelleen</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>ONLINE</value>
+  </data>
+  <data name="Offline" xml:space="preserve">
+    <value>OFFLINE-TILA</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>Yhdistä</value>
+  </data>
+  <data name="FullConnect" xml:space="preserve">
+    <value>Täysi Yhdistä</value>
+  </data>
+  <data name="LoadMapTeam" xml:space="preserve">
+    <value>Lataa Kartta Ja Tiimi</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>Katkaise</value>
+  </data>
+  <data name="ServerDetails" xml:space="preserve">
+    <value>Palvelimen Tiedot</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>Kuuntele</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Pysäytä</value>
+  </data>
+  <data name="TryPairingEdge" xml:space="preserve">
+    <value>Kokeile reunan pariutumista</value>
+  </data>
+  <data name="ResetPairingConfig" xml:space="preserve">
+    <value>Reset pairing (delete config)</value>
+  </data>
+  <data name="ResetListenPairing" xml:space="preserve">
+    <value>Nollaa + Kuuntele (Uudelleenpari)</value>
+  </data>
+  <data name="ResetListenEdge" xml:space="preserve">
+    <value>Nollaa + Kuuntele reunalla</value>
+  </data>
+  <data name="RelinkBattlemetrics" xml:space="preserve">
+    <value>Relink Battlemetrics ID…</value>
+  </data>
+  <data name="DeleteServer" xml:space="preserve">
+    <value>Poista palvelin…</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Bitte warten …</value>
+  </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>Vaihda Palvelimen Alue</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>Lähetystila</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>Mittakaava:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>Ota Lähetystila Käyttöön (Lyhentäjien Nimet)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>Lyhentää Steam-nimet ja tunnukset suojataksesi yksityisyyden lähetysten aikana. Tallenna automaattisesti konsoli ja palvelinlista.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>Ei sijaintia saatavilla (offline-tilassa tai ei ole luotu).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>Tallenna Ryhmä</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>Anna ryhmän nimi.</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>Viestiä ei voitu lähettää. Yritä uudelleen. (Tarkista, oletko joukkueessa!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Virhe: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>Määritä Ryhmä</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>Ryhmän Asetukset: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Ryhmän Nimi</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>Syötä ryhmän nimi...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>Ryhmän Väri</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Tallenna Muutokset</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>Soittimen Aktiivisuuden Analytiikka Ja Ennusteet</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>Pelaajat</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>Streamer-Mode &amp; Mini Map -peruskorjaus</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>Lähetystila</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>Pelaajan Merkin Skaalaus</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>Mini Kartta Puola</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>Toiminto Vaaditaan:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics-seuranta poistettu</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>Pelaajan Seurantajärjestelmän Peruskorjaus</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>Kuinka Pelaajan Seuranta Toimii</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>Lisää pelaajia seurantaan aloittaaksesi seurannan</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>Seuranta Aktiivisena</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>Käyttämättömän Seuranta</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>Suodata pelaajia...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>Yhdistä palvelimeen ladataksesi soittolistan</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Haetaan pelaajia Steam Queryin kautta...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>Kappaleen Tunnus</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>Manuaalinen Kappaleen Nimi...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Ei laitteita.</value>
+  </data>
+  <data name="NoTokenRegistered" xml:space="preserve">
+    <value>Ei rekisteröitynyttä tunnusta</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>Tunnus vanhentunut!</value>
+  </data>
+  <data name="ExpiresInDays" xml:space="preserve">
+    <value>Vanhentuu {0} päivän kuluttua</value>
+  </data>
+  <data name="UntilNight" xml:space="preserve">
+    <value>{0} yöhön asti</value>
+  </data>
+  <data name="UntilDay" xml:space="preserve">
+    <value>{0} päivään asti</value>
+  </data>
+  <data name="FollowMe" xml:space="preserve">
+    <value>Seuraa Minua</value>
+  </data>
+  <data name="FollowPlayer" xml:space="preserve">
+    <value>Seuraa {0}</value>
+  </data>
+  <data name="PairingListening" xml:space="preserve">
+    <value>Paritus: kuuntelu…</value>
+  </data>
+  <data name="PairingStopped" xml:space="preserve">
+    <value>Paritus: pysäytetty</value>
+  </data>
+  <data name="PairingFailed" xml:space="preserve">
+    <value>Parittaus: epäonnistui</value>
+  </data>
+  <data name="AlarmActivated" xml:space="preserve">
+    <value>Hälytys aktivoitu!</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Palvelin</value>
+  </data>
+  <data name="SmartAlarm" xml:space="preserve">
+    <value>Älykäs Hälytys</value>
+  </data>
+  <data name="UnableToReadLink" xml:space="preserve">
+    <value>Ei voitu lukea RustPlus-linkkiä: {0}
+Formaatti: rustplus://IP:PORT</value>
+  </data>
+  <data name="DeletePairingConfigHeader" xml:space="preserve">
+    <value>Reset pairing</value>
+  </data>
+  <data name="DeletePairingConfigBody" xml:space="preserve">
+    <value>Poista olemassa oleva pariliitos asetus?
+Sinun täytyy muodostaa pari uudelleen seuraavan käynnistyksen yhteydessä.</value>
+  </data>
+  <data name="ResetListenHeader" xml:space="preserve">
+    <value>Reset + Listen</value>
+  </data>
+  <data name="ResetListenBody" xml:space="preserve">
+    <value>Poistetaanko parimuodostus ja välittömästi pari/kuuntele?</value>
+  </data>
+  <data name="ResetListenEdgeHeader" xml:space="preserve">
+    <value>Nollaa + Kuuntele (Edge)</value>
+  </data>
+  <data name="ResetListenEdgeBody" xml:space="preserve">
+    <value>Poistetaanko pariliitinasetus ja aloitetaan välittömästi uudelleen parittaminen/kuunteleminen käyttäen Edgeä?</value>
+  </data>
+  <data name="UpdateQueryFailed" xml:space="preserve">
+    <value>Uutta julkaisua ei voitu tiedustella. Yritä uudelleen tai avaa julkaisut sivu.</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Olet ajan tasalla.</value>
+  </data>
+  <data name="UpdateAvailableHeader" xml:space="preserve">
+    <value>Päivitys saatavilla</value>
+  </data>
+  <data name="UpdateAvailableBody" xml:space="preserve">
+    <value>Uusi versio saatavilla: {0}
+Avoimet julkaisut sivu?</value>
+  </data>
+  <data name="DownloadAndInstallBody" xml:space="preserve">
+    <value>Uusi versio saatavilla: {0}
+Lataa ja asenna nyt?</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Lataus epäonnistui.</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Päivityksen tarkistus epäonnistui.
+{0}</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Ei laitteita.</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>Näytä Profiili</value>
+  </data>
+  <data name="ChangeGroup" xml:space="preserve">
+    <value>Vaihda Ryhmä</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Uudelleennimeä</value>
+  </data>
+  <data name="RemoveTracked" xml:space="preserve">
+    <value>Poista Seuratut</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Näytä</value>
+  </data>
+  <data name="MoreOptions" xml:space="preserve">
+    <value>Lisää Valintoja</value>
+  </data>
+  <data name="RelinkBattlemetricsId" xml:space="preserve">
+    <value>Relink Battlemetrics ID…</value>
+  </data>
+  <data name="DeleteServerEllipsis" xml:space="preserve">
+    <value>Poista palvelin…</value>
+  </data>
+  <data name="RightClickRename" xml:space="preserve">
+    <value>Nimeä uudelleen hiiren oikealla painikkeella</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>KÄYTÄ</value>
+  </data>
+  <data name="PopupWindow" xml:space="preserve">
+    <value>Ponnahdusikkuna</value>
+  </data>
+  <data name="InAppAlert" xml:space="preserve">
+    <value>Sovelluksen Sisäinen Hälytys</value>
+  </data>
+  <data name="AudioAlert" xml:space="preserve">
+    <value>Äänen Hälytys</value>
+  </data>
+  <data name="CustomAudioFile" xml:space="preserve">
+    <value>Mukautettu Äänitiedosto...</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>Palauta oletukset</value>
+  </data>
+  <data name="Snapshot" xml:space="preserve">
+    <value>Snapshot: </value>
+  </data>
+  <data name="ItemsUpkeep" xml:space="preserve">
+    <value> Tuotteet, Ylläpito =</value>
+  </data>
+  <data name="NoDevicesFound" xml:space="preserve">
+    <value>Laitteita ei löytynyt</value>
+  </data>
+  <data name="PairDeviceToSee" xml:space="preserve">
+    <value>Parita älylaite, kytkin tai hälytys nähdäksesi sen täällä</value>
+  </data>
+  <data name="TeamTab" xml:space="preserve">
+    <value>Tiimi</value>
+  </data>
+  <data name="CenterOnMap" xml:space="preserve">
+    <value>Keskitä kartalla</value>
+  </data>
+  <data name="FollowOnMap" xml:space="preserve">
+    <value>Seuraa kartalla</value>
+  </data>
+  <data name="OpenSteamProfile" xml:space="preserve">
+    <value>Avaa Steam-profiili</value>
+  </data>
+  <data name="PromoteToLeader" xml:space="preserve">
+    <value>Edistä Leaderille</value>
+  </data>
+  <data name="KickFromTeam" xml:space="preserve">
+    <value>Potki tiimistä</value>
+  </data>
+  <data name="ProfileMarkers" xml:space="preserve">
+    <value>Profiilin merkinnät</value>
+  </data>
+  <data name="DeathMarkers" xml:space="preserve">
+    <value>Kuoleman merkit</value>
+  </data>
+  <data name="CamerasTab" xml:space="preserve">
+    <value>Kamerat</value>
+  </data>
+  <data name="AddCamera" xml:space="preserve">
+    <value>Lisää Kamera</value>
+  </data>
+  <data name="NoCamerasFound" xml:space="preserve">
+    <value>Kameroita ei löytynyt</value>
+  </data>
+  <data name="PairCameraToSee" xml:space="preserve">
+    <value>Parita kamera nähdäksesi sen esikatselun täällä</value>
+  </data>
+  <data name="PlayersTab" xml:space="preserve">
+    <value>Pelaajat</value>
+  </data>
+  <data name="HowToTrack" xml:space="preserve">
+    <value>Miten seurata</value>
+  </data>
+  <data name="LearnHowTrackingWorks" xml:space="preserve">
+    <value>Opi kuinka pelaajan seuranta toimii</value>
+  </data>
+  <data name="OnlineTab" xml:space="preserve">
+    <value>Paikalla</value>
+  </data>
+  <data name="OnlinePlayers" xml:space="preserve">
+    <value>Verkossa Olevat Pelaajat</value>
+  </data>
+  <data name="SearchBM" xml:space="preserve">
+    <value>Hae BM</value>
+  </data>
+  <data name="SearchServerBM" xml:space="preserve">
+    <value>Etsi nykyinen palvelin taistelumetricsistä</value>
+  </data>
+  <data name="Popout" xml:space="preserve">
+    <value>Popout</value>
+  </data>
+  <data name="OpenPlayersSeparateWindow" xml:space="preserve">
+    <value>Avaa pelaajat erillisessä ikkunassa</value>
+  </data>
+  <data name="Track" xml:space="preserve">
+    <value>Kappale</value>
+  </data>
+  <data name="ManualTrackPlaceholder" xml:space="preserve">
+    <value>Manuaalinen kappaleen nimi tai Steam-tunnus...</value>
+  </data>
+  <data name="FilterPlayersPlaceholder" xml:space="preserve">
+    <value>Suodata pelaajia...</value>
+  </data>
+  <data name="LoadingPlayers" xml:space="preserve">
+    <value>Ladataan pelaajia...</value>
+  </data>
+  <data name="TrackedTab" xml:space="preserve">
+    <value>Jäljitetty</value>
+  </data>
+  <data name="TrackedPlayers" xml:space="preserve">
+    <value>Seuratut Pelaajat</value>
+  </data>
+  <data name="ManageGroups" xml:space="preserve">
+    <value>Hallitse Ryhmiä</value>
+  </data>
+  <data name="ViewFullAnalysisReport" xml:space="preserve">
+    <value>Näytä Koko Analyysiraportti</value>
+  </data>
+  <data name="ReadyToExploreMap" xml:space="preserve">
+    <value>Oletko valmis tutkimaan karttaa?</value>
+  </data>
+  <data name="ConnectToLoadMap" xml:space="preserve">
+    <value>Yhdistä valittuun palvelimeen ladataksesi suoran ruosteen ja tiimin.</value>
+  </data>
+  <data name="ReadyToDominate" xml:space="preserve">
+    <value>Valmis hallitsemaan Rust?</value>
+  </data>
+  <data name="PairAccountBenefits" xml:space="preserve">
+    <value>Parita tiliäsi aloittaaksesi pelaajien seurannan, vastaanottaaksesi perusraid-hälytyksiä ja ohjataksesi älykkäitä laitteita välittömästi.</value>
+  </data>
+  <data name="LoginPairAccount" xml:space="preserve">
+    <value>Kirjaudu &amp; Pari Tili</value>
+  </data>
+  <data name="RequiresSteamLogin" xml:space="preserve">
+    <value>Vaatii Steam-kirjautumisen oletusselaimessasi.</value>
+  </data>
+  <data name="DeleteServerHeader" xml:space="preserve">
+    <value>Poista Palvelin?</value>
+  </data>
+  <data name="DeleteServerConfirm" xml:space="preserve">
+    <value>Oletko varma, että haluat poistaa tämän palvelimen? Tätä toimintoa ei voi perua.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Peruuta</value>
+  </data>
+  <data name="DeleteAction" xml:space="preserve">
+    <value>Poista</value>
+  </data>
+  <data name="AutoHideAfter3s" xml:space="preserve">
+    <value>Piilota automaattisesti 3S:n jälkeen</value>
+  </data>
+  <data name="MapFilters" xml:space="preserve">
+    <value>KASVU TIEDOT</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>Ruudukko</value>
+  </data>
+  <data name="Monuments" xml:space="preserve">
+    <value>Monumentit</value>
+  </data>
+  <data name="Shops" xml:space="preserve">
+    <value>Kaupat</value>
+  </data>
+  <data name="ChatAlerts" xml:space="preserve">
+    <value>CHAT ALERTIT</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Ilmoitukset</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>Määritä</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Valitse Kaikki</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Poista Kaikki Valinnat</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>TIEDOT</value>
+  </data>
+  <data name="CargoShip" xml:space="preserve">
+    <value>Rahdin Alus</value>
+  </data>
+  <data name="CargoSpawn" xml:space="preserve">
+    <value>Luo</value>
+  </data>
+  <data name="CargoDock" xml:space="preserve">
+    <value>Satama Telakka</value>
+  </data>
+  <data name="CargoEgress" xml:space="preserve">
+    <value>Lähtö (5m Varoitus)</value>
+  </data>
+  <data name="CargoArrival" xml:space="preserve">
+    <value>Saapumisvaroitus (5 m ennen telakkaa)</value>
+  </data>
+  <data name="Heli" xml:space="preserve">
+    <value>Patroli Helikopteri</value>
+  </data>
+  <data name="Chinook" xml:space="preserve">
+    <value>Chinook (CH47)</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>Matkustava Toimittaja</value>
+  </data>
+  <data name="OilRig" xml:space="preserve">
+    <value>Öljynporauslautta Käynnistää</value>
+  </data>
+  <data name="DeepSea" xml:space="preserve">
+    <value>Syvän Meren Tapahtuma</value>
+  </data>
+  <data name="SmartAlerts" xml:space="preserve">
+    <value>Älykkäät Ilmoitukset</value>
+  </data>
+  <data name="PlayerOnline" xml:space="preserve">
+    <value>Online Tila</value>
+  </data>
+  <data name="PlayerOffline" xml:space="preserve">
+    <value>Offline-Tila</value>
+  </data>
+  <data name="AnnounceTracking" xml:space="preserve">
+    <value>Ilmoitusten Seuranta</value>
+  </data>
+  <data name="PlayerDeathSelf" xml:space="preserve">
+    <value>Itsekuolema</value>
+  </data>
+  <data name="PlayerDeathTeam" xml:space="preserve">
+    <value>Joukkueen Kuolema</value>
+  </data>
+  <data name="PlayerRespawnSelf" xml:space="preserve">
+    <value>Self Respawn</value>
+  </data>
+  <data name="PlayerRespawnTeam" xml:space="preserve">
+    <value>Joukkueen Respawn</value>
+  </data>
+  <data name="NewShops" xml:space="preserve">
+    <value>Uudet Kaupat</value>
+  </data>
+  <data name="SuspiciousShops" xml:space="preserve">
+    <value>Epäilyttävät Kaupat</value>
+  </data>
+  <data name="TradeAlerts" xml:space="preserve">
+    <value>Kauppaan Liittyvät Hälytykset</value>
+  </data>
+  <data name="CrosshairStyle" xml:space="preserve">
+    <value>Crosshair Tyyli</value>
+  </data>
+  <data name="GreenDot" xml:space="preserve">
+    <value>Vihreä Piste</value>
+  </data>
+  <data name="MiniGreen" xml:space="preserve">
+    <value>Mini Vihreä</value>
+  </data>
+  <data name="OpenCrosshairRG" xml:space="preserve">
+    <value>Avaa Ristikko (R/G)</value>
+  </data>
+  <data name="ThinRedCircle" xml:space="preserve">
+    <value>Ohut Punainen Ympyrä</value>
+  </data>
+  <data name="SquareDot" xml:space="preserve">
+    <value>Neliö + Piste</value>
+  </data>
+  <data name="MagentaDot" xml:space="preserve">
+    <value>Aniliininpunainen Piste</value>
+  </data>
+  <data name="MagentaOpenCross" xml:space="preserve">
+    <value>Aniliininpunainen Avoin Risti</value>
+  </data>
+  <data name="RangeLineTicks" xml:space="preserve">
+    <value>Alueen Viiva (punkit)</value>
+  </data>
+  <data name="DrawCrosshair" xml:space="preserve">
+    <value>Piirrä Crosshair...</value>
+  </data>
+  <data name="ChooseMonitor" xml:space="preserve">
+    <value>Valitse monitori</value>
+  </data>
+  <data name="DrawOverlay" xml:space="preserve">
+    <value>Piirrä Peittokuva</value>
+  </data>
+  <data name="DrawToolTip" xml:space="preserve">
+    <value>Piirrä (Oikea Napsautus: Koko / Väri)</value>
+  </data>
+  <data name="PlaceTextToolTip" xml:space="preserve">
+    <value>Paikka Teksti (Oikea Klikkaus: Väri / Koko)</value>
+  </data>
+  <data name="PlaceIconToolTip" xml:space="preserve">
+    <value>Aseta Kuvake (Oikea Klikkaus: Valitse Kuvake)</value>
+  </data>
+  <data name="EraserToolTip" xml:space="preserve">
+    <value>Pyyhin (pidä tai klikkaa pohjassa)</value>
+  </data>
+  <data name="DeleteOverlayToolTip" xml:space="preserve">
+    <value>Poista oma peittokuva</value>
+  </data>
+  <data name="UploadOverlayToolTip" xml:space="preserve">
+    <value>Lataa oma peite / jaa</value>
+  </data>
+  <data name="ProfitTrades" xml:space="preserve">
+    <value>Profit Trades</value>
+  </data>
+  <data name="ArbitrageOpportunities" xml:space="preserve">
+    <value>Suora arbitraasi mahdollisuudet • ostaa alhainen → myydä korkea.</value>
+  </data>
+  <data name="BuyXForY" xml:space="preserve">
+    <value>Osta X varten Y</value>
+  </data>
+  <data name="Analyze" xml:space="preserve">
+    <value>Analysoi</value>
+  </data>
+  <data name="IWantToGet" xml:space="preserve">
+    <value>Haluan GET</value>
+  </data>
+  <data name="ICanPayWith" xml:space="preserve">
+    <value>Voin MAKSUA KANSSA</value>
+  </data>
+  <data name="TeamChat" xml:space="preserve">
+    <value>Tiimin Keskustelu</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Lähetä</value>
+  </data>
+  <data name="FcmCredentials" xml:space="preserve">
+    <value>Fcm Tunnustiedot</value>
+  </data>
+  <data name="RightClickConfigure" xml:space="preserve">
+    <value>Napsauta hiiren oikealla konfiguroidaksesi</value>
+  </data>
+  <data name="ResetMap" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetMapToolTip" xml:space="preserve">
+    <value>Nollaa kartan zoomaus ja sijainti</value>
+  </data>
+  <data name="MiniMap" xml:space="preserve">
+    <value>Mini</value>
+  </data>
+  <data name="CrosshairToolTip" xml:space="preserve">
+    <value>Crosshair on/off (oikea klikkaa Valinnat)</value>
+  </data>
+  <data name="TrackPlayer" xml:space="preserve">
+    <value>TOISTETTU PELAAJA</value>
+  </data>
+  <data name="CloseBMBrowser" xml:space="preserve">
+    <value>Sulje BattleMetrics Selain</value>
+  </data>
+  <data name="ShopSearchTitle" xml:space="preserve">
+    <value>NÄYTÄ ETSI</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>Sulje Haku</value>
+  </data>
+  <data name="ActivateShopsFirst" xml:space="preserve">
+    <value>Ole hyvä ja aktivoi kaupat ensin</value>
+  </data>
+  <data name="ActivateShopPolling" xml:space="preserve">
+    <value>Aktivoi ostosten äänestysselitykset</value>
+  </data>
+  <data name="TeamChatTitle" xml:space="preserve">
+    <value>TEAM CHAT</value>
+  </data>
+  <data name="CloseChat" xml:space="preserve">
+    <value>Sulje Keskustelu</value>
+  </data>
+  <data name="ChatCommandsSettings" xml:space="preserve">
+    <value>Chatin Komennot Asetukset</value>
+  </data>
+  <data name="ChatCommands" xml:space="preserve">
+    <value>Chatin Komennot</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Takaisin</value>
+  </data>
+  <data name="Forward" xml:space="preserve">
+    <value>Eteenpäin</value>
+  </data>
+  <data name="OpenInExternalBrowser" xml:space="preserve">
+    <value>Avaa ulkoisessa selaimessa</value>
+  </data>
+  <data name="SearchBMPlaceholder" xml:space="preserve">
+    <value>Etsi BM...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Etsi</value>
+  </data>
+  <data name="SelectAServer" xml:space="preserve">
+    <value>Valitse palvelin</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>HYVÄKSYTTY</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>YHDISTETÄÄN...</value>
+  </data>
+  <data name="StatusInitializing" xml:space="preserve">
+    <value>ALOITTAMINEN...</value>
+  </data>
+  <data name="StatusDevicesActive" xml:space="preserve">
+    <value>AKTIIVISET LAITTEET</value>
+  </data>
+  <data name="StatusFullyConnected" xml:space="preserve">
+    <value>TÄYDELLINEN YHDISTETTY</value>
+  </data>
+  <data name="StatusUnknown" xml:space="preserve">
+    <value>TUNTEMATON</value>
+  </data>
+  <data name="MayTakeAMoment" xml:space="preserve">
+    <value>Tämä voi kestää hetken...</value>
+  </data>
+  <data name="AppSettingsTitle" xml:space="preserve">
+    <value>Sovelluksen Asetukset</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Yleiset</value>
+  </data>
+  <data name="LaunchWithWindows" xml:space="preserve">
+    <value>Käynnistä Windowsilla (pienennetty)</value>
+  </data>
+  <data name="StartMinimizedAlways" xml:space="preserve">
+    <value>Aloita Pienennettynä (aina)</value>
+  </data>
+  <data name="AutoConnectLastServer" xml:space="preserve">
+    <value>Liitä automaattisesti viimeiseen palvelimeen käynnistettäessä</value>
+  </data>
+  <data name="AutoConnectToolTip" xml:space="preserve">
+    <value>Luo automaattisesti uudelleen yhteys viimeiseen palvelimeen ja lataa kartta.</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Käyttäytyminen</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>Pienennä ilmoitusalueelle sulkemisen sijaan</value>
+  </data>
+  <data name="BackgroundTracking" xml:space="preserve">
+    <value>Ota Taustasoittimen Seuranta Käyttöön</value>
+  </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>Pitää seurata pelaajia BattleMetricsin kautta myös minimoitaessa.</value>
+  </data>
+  <data name="HideSystemConsole" xml:space="preserve">
+    <value>Piilota Järjestelmäkonsoli (Declutter)</value>
+  </data>
+  <data name="HideConsoleToolTip" xml:space="preserve">
+    <value>Piilottaa alareunan / konsolipaneelin tallentaaksesi karttatilaa.</value>
+  </data>
+  <data name="MapSettings" xml:space="preserve">
+    <value>Kartan Asetukset</value>
+  </data>
+  <data name="AutoLoadShops" xml:space="preserve">
+    <value>Lataa automaattisesti kaupat yhteydestä</value>
+  </data>
+  <data name="AutoLoadShopsToolTip" xml:space="preserve">
+    <value>Käynnistä automaattisesti kauppojen äänestysselitykset ja hälytykset, kun ne on yhdistetty palvelimeen.</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Muistomerkkien tekstimerkintöjen käyttö kuvakkeiden sijasta</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Kun tämä on käytössä, Rust-kartan monumenttien nimet esitetään tekstinä käyttäen Permanent Marker -fonttia kuvakkeiden sijaan.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Muistomerkin tyyli:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Muistomerkin mittakaava:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Muistomerkin läpinäkymättömyys:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Kuvakkeet by rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Alkuperäinen teksti monumenttien nimet</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Krediitit</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Kartan muistomerkkikuvakkeet, toimittajana </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - käytetty luvalla.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Kaikki monumenttikuvakkeet ja niihin liittyvät taideteokset ovat rustmaps.comin omaisuutta. Kiitos, että tuet Rust-yhteisöä!</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Keskustelu</value>
+  </data>
+  <data name="ModifyChatAlerts" xml:space="preserve">
+    <value>Muokkaa Keskusteluhälytyksiä</value>
+  </data>
+  <data name="ManageSteamAccountInfo" xml:space="preserve">
+    <value>Hallitse linkitettyä Steam-tiliä pääikkunassa. @ info: whatsthis</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Sulje</value>
+  </data>
+  <data name="IncomingAlarms" xml:space="preserve">
+    <value>TULEVAT HANKINNAT</value>
+  </data>
+  <data name="Wipe" xml:space="preserve">
+    <value>Tyhjennä</value>
+  </data>
+  <data name="PlayersOnly" xml:space="preserve">
+    <value>Pelaajat</value>
+  </data>
+  <data name="PlayersHeader" xml:space="preserve">
+    <value>Pelaajat</value>
+  </data>
+  <data name="IWantToGetToolTip" xml:space="preserve">
+    <value>Haluan GET (esim. raakaöljy)</value>
+  </data>
+  <data name="ICanPayWithToolTip" xml:space="preserve">
+    <value>Haluan MAKSUA KANSSA (esim. Scrap)</value>
+  </data>
+  <data name="DeleteServerConfirmFormatted" xml:space="preserve">
+    <value>Oletko varma, että haluat poistaa palvelimen "{0}"? Tätä toimintoa ei voi perua.</value>
+  </data>
+  <data name="PairingError" xml:space="preserve">
+    <value>Pairing: error</value>
+  </data>
+  <data name="PairingStarting" xml:space="preserve">
+    <value>Laitetaan: alkaa...</value>
+  </data>
+  <data name="StartingPairingListener" xml:space="preserve">
+    <value>Aloitetaan Parametrikuuntelua...</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+    <value>Kirjautunut Sisään</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>Varasto</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Hinta</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>PÄÄLLÄ</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>POIS</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>AKTIIVI</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>OHJELMA</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>RYHMÄ</value>
+  </data>
+  <data name="ImportDevicesTitle" xml:space="preserve">
+    <value>Rust+ Työpöytä – Tuontilaitteet</value>
+  </data>
+  <data name="ImportDevicesHeader" xml:space="preserve">
+    <value>Tuo laitteet</value>
+  </data>
+  <data name="ImportDevicesSelectPrompt" xml:space="preserve">
+    <value>Valitse mitkä laitteet haluat tuoda tälle palvelimelle.</value>
+  </data>
+  <data name="CheckDeviceStatus" xml:space="preserve">
+    <value>Tarkista laitteen tila</value>
+  </data>
+  <data name="ImportSelected" xml:space="preserve">
+    <value>Tuo valitut</value>
+  </data>
+  <data name="BmShortcuts" xml:space="preserve">
+    <value>Bm Pikanäppäimet</value>
+  </data>
+  <data name="PairingConfigDeleted" xml:space="preserve">
+    <value>Paritus: config poistettu</value>
+  </data>
+  <data name="TrayIconDefault" xml:space="preserve">
+    <value>Rust+ Työpöydän Seuranta</value>
+  </data>
+  <data name="TrayIconTracking" xml:space="preserve">
+    <value>Rust+ Työpöytä (Tracking {0})</value>
+  </data>
+  <data name="RenameGroup" xml:space="preserve">
+    <value>Nimeä Ryhmä Uudelleen</value>
+  </data>
+  <data name="NewNameForGroup" xml:space="preserve">
+    <value>Ryhmän uusi nimi:</value>
+  </data>
+  <data name="NewNameForDevice" xml:space="preserve">
+    <value>Uusi nimi #{0}:</value>
+  </data>
+  <data name="EnterBattlemetricsIdFor" xml:space="preserve">
+    <value>Anna taistelu palvelimen tunnus "{0}":</value>
+  </data>
+  <data name="TrayTrackingStatus" xml:space="preserve">
+    <value>Jäljitys: {0}</value>
+  </data>
+  <data name="TrayLastUpdate" xml:space="preserve">
+    <value>Viimeisin päivitys: {0}</value>
+  </data>
+  <data name="OpenRustPlusDesk" xml:space="preserve">
+    <value>Avaa Rust+ Työpöytä</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Poistu</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Kuvaus</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>Kamera</value>
+  </data>
+  <data name="Alarms" xml:space="preserve">
+    <value>Hälytykset</value>
+  </data>
+  <data name="Identifier" xml:space="preserve">
+    <value>Identifier:</value>
+  </data>
+  <data name="FPS" xml:space="preserve">
+    <value>FPS:</value>
+  </data>
+  <data name="CameraFPSNote" xml:space="preserve">
+    <value>Huomautus: 2 fps on suositeltavaa, korkeammat FPS todennäköisesti sulkevat yhteytesi palvelimeen</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>Pikseli</value>
+  </data>
+  <data name="Pen" xml:space="preserve">
+    <value>Kynä</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>Viiva</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>Neliö</value>
+  </data>
+  <data name="Circle" xml:space="preserve">
+    <value>Ympyrä</value>
+  </data>
+  <data name="Thickness" xml:space="preserve">
+    <value>Paksuus:</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Läpinäkyvyys:</value>
+  </data>
+  <data name="UploadPNG" xml:space="preserve">
+    <value>Lataa Png</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Tyhjennä</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Tallenna</value>
+  </data>
+  <data name="AssignGlobalHotkeys" xml:space="preserve">
+    <value>Määritä globaalit pikanäppäimet älykkäisiin kytkimiin. Useat laitteet voivat jakaa yhden pikanäppäimen (vaihdetaan vaiheittaisesti).</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Laite</value>
+  </data>
+  <data name="EntityId" xml:space="preserve">
+    <value>EntityId</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>Pikanäppäin</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Aseta</value>
+  </data>
+  <data name="CloseDeactivate" xml:space="preserve">
+    <value>Sulje &amp; Deaktivoi</value>
+  </data>
+  <data name="CloseActivate" xml:space="preserve">
+    <value>Sulje &amp; Aktivoi</value>
+  </data>
+  <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
+    <value>Ylläpito, Minimap &amp; Seurantapäivitys</value>
+  </data>
+  <data name="FeatureSummaryAdjustments" xml:space="preserve">
+    <value>Ominaisuuden Yhteenveto Ja Säätöt</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>Älä näytä tätä uudelleen</value>
+  </data>
+  <data name="AwesomeLetsGo" xml:space="preserve">
+    <value>Mahtavaa, menkää!</value>
+  </data>
+  <data name="MiniMapSettings" xml:space="preserve">
+    <value>Mini-Kartan Asetukset</value>
+  </data>
+  <data name="Shape" xml:space="preserve">
+    <value>Muoto</value>
+  </data>
+  <data name="Rectangle" xml:space="preserve">
+    <value>Suorakulmio</value>
+  </data>
+  <data name="OpacityLabel" xml:space="preserve">
+    <value>Läpinäkyvyys: {0}%</value>
+  </data>
+  <data name="SizeLabel" xml:space="preserve">
+    <value>Koko: {0}% (SHIFT+Hiiripyörä)</value>
+  </data>
+  <data name="ShowServerTime" xml:space="preserve">
+    <value>Näytä Palvelimen Aika</value>
+  </data>
+  <data name="ServerInformation" xml:space="preserve">
+    <value>Palvelimen Tiedot</value>
+  </data>
+  <data name="NoDescriptionAvailable" xml:space="preserve">
+    <value>Kuvausta ei ole saatavilla.</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Nykyinen Versio: {0}</value>
+  </data>
+  <data name="PatchNotesHeader" xml:space="preserve">
+    <value>Patch Notes &amp; Version History</value>
+  </data>
+  <data name="EnableChatCommands" xml:space="preserve">
+    <value>Ota Chat-Komennot Käyttöön</value>
+  </data>
+  <data name="Prefix" xml:space="preserve">
+    <value>Etuliite:</value>
+  </data>
+  <data name="StandardCommands" xml:space="preserve">
+    <value>Vakio Komennot</value>
+  </data>
+  <data name="Population" xml:space="preserve">
+    <value>Väestö:</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Aika:</value>
+  </data>
+  <data name="Promote" xml:space="preserve">
+    <value>Promote:</value>
+  </data>
+  <data name="DeepSeaCommand" xml:space="preserve">
+    <value>Syvä Meri:</value>
+  </data>
+  <data name="CargoShipCommand" xml:space="preserve">
+    <value>Rahdin Alus:</value>
+  </data>
+  <data name="OilRigCommand" xml:space="preserve">
+    <value>Öljyn Riisi:</value>
+  </data>
+  <data name="PatrolHeliCommand" xml:space="preserve">
+    <value>Patrol Heli:</value>
+  </data>
+  <data name="TravellingVendorCommand" xml:space="preserve">
+    <value>Matkustaminen Vendor:</value>
+  </data>
+  <data name="UpkeepDetails" xml:space="preserve">
+    <value>Ylläpidon Yksityiskohdat:</value>
+  </data>
+  <data name="CommandDelay" xml:space="preserve">
+    <value>Komennon Viive:</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Kieli</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Valitse Kieli</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>Kielen muuttaminen vaatii uudelleenkäynnistyksen, jotta se tulee täyteen tehoon.</value>
+  </data>
+  <data name="SmartSwitches" xml:space="preserve">
+    <value>Älykkäät Vaihteet</value>
+  </data>
+  <data name="UpkeepTcMonitors" xml:space="preserve">
+    <value>Ylläpito- (TC) Monitorit</value>
+  </data>
+  <data name="NoTcMonitorsFound" xml:space="preserve">
+    <value>TC-monitoreita ei löytynyt.</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Tallenna &amp; Sulje</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Viesti...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Virheilmoitus täällä</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Partio Heli</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Patrol Heli aktiivinen - käynnissä {0}.</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Yhdistetty kesken tapahtuman - kutuaika tuntematon</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Patrol Heli aktiivinen (kutuaika tuntematon)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Patrol Heli ammuttiin alas {0} sitten tässä istunnossa.</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Patrol Heli poistui kartalta {0} tämän istunnon aikana.</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Telakoituna osoitteessa {0} - lähtee ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>satama</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>On jo telakoitunut connectiin - lähtöaika tuntematon.</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Telakoituna osoitteessa {0} (telakoinnin kestoa ei ole vielä tiedossa).</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Kartalla jäljellä oleva aika (spawnista)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Kytkeytyi kesken matkan - aika tuntematon</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Yhteys katkesi kesken matkan - aika tuntematon (reitti ~{0}m yhteensä).</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Cargo Ship despawned {0}m {1}s ago this session</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Matkustava myyjä aktiivinen - juoksee {0} varten.</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Travelling Vendor aktiivinen (kutuaika tuntematon)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor despawned {0} ago this session</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea active - käynnissä {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Deep Sea active (kutuaika tuntematon)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea päättyi {0} tämän istunnon aikana</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} pelaajia tällä hetkellä verkossa.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Jono: {0} pelaajat.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Nykyinen peliaika: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} ylennettiin johtajaksi.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea on aktiivinen! Running for {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea on tällä hetkellä aktiivinen (kytketty tapahtuman puolivälissä - kutuaika tuntematon).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea päättyi {0} minuuttia sitten tässä istunnossa.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Deep Sea -tapahtuman tila tuntematon (ei nähty tässä istunnossa).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Rahtialus ei ole aktiivinen.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Rahtialus telakoitui osoitteessa {0}. Lähtee noin {1} minuutin kuluttua.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Rahtialus telakoitui osoitteeseen {0} ja valmistautuu lähtöön.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Rahtialus telakoitui osoitteessa {0} (lähtöaika tuntematon).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Rahtialus aktiivinen. Lähtee noin {0} minuutin kuluttua.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Rahtialus aktiivinen ja valmistautuu lähtemään pian.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Rahtialus aktiivinen (reitin kestoa ei ole vielä opittu tälle palvelimelle).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Rahtialus aktiivinen (yhdistetty spawnin jälkeen - jäljellä oleva aika tuntematon).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Rahtialus ei ole aktiivinen. Despawnattu {0} minuuttia sitten tässä istunnossa.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: laatikko osoitteessa {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: viimeksi soitettu {1}m sitten</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: ei kutsuttu tällä istuntokaudella</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Partio Heli on aktiivinen! Ehdolla {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Patrol Heli on tällä hetkellä aktiivinen (yhdistetty tapahtuman puolivälissä - spawn-aika tuntematon).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Patrol Heli ei ole aktiivinen. Se oli {0} {1} sitten tämän istunnon.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>ammuttiin alas</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>lähti kartalta</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Patrol Heli -tapahtuman tila tuntematon (ei nähty tässä istunnossa).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Travelling Vendor on aktiivinen! Ehdolla {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Matkustava myyjä on tällä hetkellä aktiivinen (kytketty tapahtuman puolivälissä - spawn-aika tuntematon).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Matkustava myyjä ei ole aktiivinen. Despawnattu {0} sitten tässä istunnossa.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Travelling Vendor -tapahtuman tila tuntematon (ei nähty tässä istunnossa).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Ylläpitokomentoja varten ei ole kartoitettu työkalukaappeja.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Ylläpito osoitteessa {0} TC: Tyhjä tai vanhentunut.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Tarve/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Ylläpito osoitteessa {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} päivät</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} tuntia</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} minuuttia</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Tyhjä / vanhentunut</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Ylläpito: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Bound Tool Cupboard -näyttöjä ei löydy tai niitä ei ole yhdistetty.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Sidottu työkalukaapin näyttöä ei löydy tai sitä ei ole yhdistetty.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} kääntyi {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Bound Smart Switchiä ei löydy tai sitä ei ole yhdistetty.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Puu</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Kivi</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Metalli</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Pieni öljynporauslautta</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Suuri öljynporauslautta</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Kauppa</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Rahtialus</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Matkustava myyjä</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Partiohelikopteri</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Öljynporauslaatikko</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Räjähdys</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Rakennus tukossa</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Tapahtuma</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] laukaistu! Laatikko avautuu osoitteessa {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>HÄLYTYS: {0} laukaistu!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Laatikko avautuu 10 minuutissa!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Laatikko avautuu 5 minuutissa!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Deep Sea on ylhäällä</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Uusi myymälä {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Epäilyttävä kauppa {0} [{1}] oli verkossa {2}s, myi {3}.</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Rahtialus kuti {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>kaukana merellä (lähellä {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Rahtialus telakoituna osoitteessa {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Rahtialuksen odotetaan telakoituvan osoitteeseen {0} ({1}) noin 5 minuutin kuluttua.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Rahtialus lähtee osoitteesta {0} 5 minuutin kuluttua ({1}).</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Kaatuminen havaittu palvelimen viiveen vuoksi - Heli on edelleen kartalla osoitteessa {0}.</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} kuti sisään osoitteessa {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Patrol Heli ammuttiin alas osoitteessa {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>tuntematon</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} tuli verkossa @ {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} meni offline-tilaan</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} kuoli @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} respawned @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Seuranta] {0}{1} on nyt ONLINE</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Seuranta] {0}{1} on nyt OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Seuranta] {0}{1} nimeksi {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>myy</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>ostaa</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Kauppa</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (kanta {5}) {6} {7} varten.</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Luettelo chat-komennoista</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>KOMENNOT: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Lokalisointi, käyttöliittymän modernisointi ja varastointi</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dynaaminen paikannimien vaihtaminen</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - 30+ kieltä valittavana</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Chat-komentojen käyttöliittymä</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - Eristetty näkymä siistiä ulkoasua varten</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Uudet asetukset Overlay</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - Siisti sivupalkki kaikille asetuksille</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics-seuranta poistettu</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Tukikohtaasi hyökätään!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Muodosta ensin yhteys palvelimeen.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Et ole yhteydessä mihinkään palvelimeen.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Chat ei ole juuri nyt käytettävissä.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Valitse ensin palvelin.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Yhteys</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Kuinka seurata pelaajia</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Oma UDP-seuranta</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Seurantaopas on tällä hetkellä saatavilla vain englanniksi, sillä siihen tehdään muutoksia lähitulevaisuudessa. Pyydämme kärsivällisyyttä.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Sulje tämä ikkuna milloin tahansa - voit avata sen uudelleen ❓ How to Track -painikkeella.</value>
+  </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Huolto</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Pyyhi, varmuuskopioi tai palauta sovellusasetukset, profiilit ja mukautetut piirustukset.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Nollaa sovelluksen tiedot...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Varmuuskopioi tiedot...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Palauta tiedot...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Sovellustietojen nollaus</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Valitse komponentit, jotka haluat pyyhkiä tästä laitteesta. Kaikki valitut vaihtoehdot poistetaan pysyvästi.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Aktiivinen palvelinyhteys (yhteyden katkaisu)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Tallennetut palvelinprofiilit (paritettujen palvelinkokoonpanojen poistaminen)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Steam-tilin tunnukset (Kirjaudu ulos)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Device Pairing Config (Rekisteröintitunnisteiden nollaus)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Mukautettu ristikko (pyyhkäisyasetukset)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Paikallinen välimuisti ja piirustukset (Pyyhi tallennetut kartat/viivat)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Tämä toimenpide on pysyvä, eikä sitä voi peruuttaa.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Vahvista nollaus</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Varmistussalasana</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Varmuuskopiointisuojaus</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Anna salasana tämän varmuuskopiotiedoston salaamiseksi. Jos jätät sen tyhjäksi, varmuuskopiota ei salata.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Palauta varmuuskopio</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Tämä varmuuskopio on suojattu salasanalla. Anna salasana purkaaksesi sen salauksen:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Salaa</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Salaus puretaan</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Sovelluksen tietojen varmuuskopiointi</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Varmuuskopio luotu onnistuneesti osoitteessa: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Varmuuskopio luotu onnistuneesti!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Varmuuskopiointi valmis</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Varmuuskopiointivirhe: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Virhe varmuuskopion luomisessa: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Varmuuskopiointi epäonnistui</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Tietojen palauttaminen korvaa nykyiset palvelinprofiilit, mukautetut ristikkäistarkennukset, piirtopäällysteet ja minikartan määritykset.
+
+Haluatko varmasti jatkaa?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Palauta varmuuskopioinnin vahvistus</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Sovelluksen tietojen palauttaminen</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Sovellustiedot palautettu onnistuneesti!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Palauta valmis</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Palautusvirhe: Restore: Invalid password provided.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Salaus epäonnistui. Virheellinen salasana tai vioittunut varmuuskopiotiedosto.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Palautus epäonnistui</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Palautusvirhe: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Virhe varmuuskopion palauttamisessa: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Virheellinen varmuuskopiotiedostomuoto tai puuttuva allekirjoitus.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Valikoivan nollaustoiminnon käynnistäminen...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Aktiivisen palvelinyhteyden katkaiseminen...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Yhteyden nollaus suoritettu.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Tallennettujen palvelinprofiilien tyhjentäminen...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Tallennetut palvelinprofiilit tyhjennetty.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Steam-tilin tunnusten poistaminen...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Steam-tunnukset tyhjennetty.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Pyyhitään laitteen pariliitoskonfiguraatio...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Laiteparin määritys poistettu.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Pyyhin mukautetun ristikon...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Virhe mukautetun ristikon tyhjentämisessä: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Mukautettu ristikko poistettu.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Paikallisten välimuistitiedostojen ja päällekkäispiirrosten tyhjentäminen...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Virhe välimuistikansion tyhjentämisessä: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Välimuistikansiot tyhjennetty.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Kuuntelijan ja FCM:n tunnistetietojen uudelleenrekisteröinti...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Valikoiva nollaus suoritettu onnistuneesti.</value>
+  </data>
+</root>

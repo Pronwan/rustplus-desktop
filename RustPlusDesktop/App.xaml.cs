@@ -29,6 +29,7 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
+        SetLanguage();
         base.OnStartup(e);
 
         EnsureUrlProtocolRegistered();
@@ -93,7 +94,7 @@ public partial class App : Application
     {
         _trayIcon = new System.Windows.Forms.NotifyIcon();
         _trayIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Diagnostics.Process.GetCurrentProcess().MainModule!.FileName!);
-        _trayIcon.Text = "Rust+ Desk Tracker";
+        _trayIcon.Text = RustPlusDesk.Properties.Resources.TrayIconDefault;
         _trayIcon.Visible = true;
 
         var menu = new System.Windows.Forms.ContextMenuStrip();
@@ -105,19 +106,19 @@ public partial class App : Application
             var status = TrackingService.IsTracking ? "Active" : "Idle";
             var last = TrackingService.LastPullTime?.ToString("HH:mm:ss") ?? "--:--:--";
             
-            var statusItem = new System.Windows.Forms.ToolStripMenuItem($"Tracking: {status}");
+            var statusItem = new System.Windows.Forms.ToolStripMenuItem(string.Format(RustPlusDesk.Properties.Resources.TrayTrackingStatus, status));
             statusItem.Enabled = false;
             menu.Items.Add(statusItem);
             
-            var lastItem = new System.Windows.Forms.ToolStripMenuItem($"Last update: {last}");
+            var lastItem = new System.Windows.Forms.ToolStripMenuItem(string.Format(RustPlusDesk.Properties.Resources.TrayLastUpdate, last));
             lastItem.Enabled = false;
             menu.Items.Add(lastItem);
             
             menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            menu.Items.Add("Open Rust+ Desk", null, (s, ex) => ShowMainWindow());
+            menu.Items.Add(RustPlusDesk.Properties.Resources.OpenRustPlusDesk, null, (s, ex) => ShowMainWindow());
             menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            menu.Items.Add("Exit", null, (s, ex) => {
-                _trayIcon.Visible = false;
+            menu.Items.Add(RustPlusDesk.Properties.Resources.Exit, null, (s, ex) => {
+                if (_trayIcon != null) _trayIcon.Visible = false;
                 Current.Shutdown();
             });
         };
@@ -143,6 +144,20 @@ public partial class App : Application
         };
 
         _trayIcon.DoubleClick += (s, e) => ShowMainWindow();
+
+        CultureChanged += () =>
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (_trayIcon != null)
+                {
+                    var last = TrackingService.LastPullTime?.ToString("HH:mm:ss") ?? "--:--";
+                    _trayIcon.Text = TrackingService.IsTracking 
+                        ? string.Format(RustPlusDesk.Properties.Resources.TrayIconTracking, last)
+                        : RustPlusDesk.Properties.Resources.TrayIconDefault;
+                }
+            });
+        };
         
         // Also update tray tooltip periodically or on event
         TrackingService.OnOnlinePlayersUpdated += () => {
@@ -150,7 +165,7 @@ public partial class App : Application
             Dispatcher.Invoke(() => {
                 try {
                     if (_trayIcon != null)
-                        _trayIcon.Text = $"Rust+ Desk (Tracking {last})";
+                        _trayIcon.Text = string.Format(RustPlusDesk.Properties.Resources.TrayIconTracking, last);
                 } catch { }
             });
         };
@@ -191,6 +206,80 @@ public partial class App : Application
     }
 
     private static async Task SendLinkToRunningInstanceAsync(string link) => await SendCommandToRunningInstanceAsync(link);
+
+    public void SetLanguage()
+    {
+        try
+        {
+            string lang = TrackingService.SelectedLanguage;
+            System.Globalization.CultureInfo culture;
+
+            if (string.IsNullOrEmpty(lang))
+            {
+                culture = System.Globalization.CultureInfo.InstalledUICulture;
+            }
+            else
+            {
+                culture = new System.Globalization.CultureInfo(lang);
+            }
+
+            System.Globalization.CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+            System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+            System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+
+            // Also set it for the generated Resources class
+            RustPlusDesk.Properties.Resources.Culture = culture;
+
+            UpdateDynamicResources();
+            CultureChanged?.Invoke();
+        }
+        catch { }
+    }
+
+    public static event Action? CultureChanged;
+
+    private void UpdateDynamicResources()
+    {
+        var rm = RustPlusDesk.Properties.Resources.ResourceManager;
+        var culture = RustPlusDesk.Properties.Resources.Culture;
+
+        // Step 1: load the base/neutral (invariant) resource set first so that keys
+        // which exist only in Resources.resx (and haven't been added to satellite files yet)
+        // are still registered as DynamicResources.
+        var neutralSet = rm.GetResourceSet(System.Globalization.CultureInfo.InvariantCulture, true, false);
+        if (neutralSet != null)
+        {
+            foreach (System.Collections.DictionaryEntry entry in neutralSet)
+            {
+                if (entry.Value is string s && !string.IsNullOrWhiteSpace(s))
+                    Resources[entry.Key] = s;
+            }
+        }
+
+        // Step 2: overlay culture-specific translations, falling back to neutral for blank values.
+        var resourceSet = rm.GetResourceSet(culture, true, true);
+        if (resourceSet != null)
+        {
+            foreach (System.Collections.DictionaryEntry entry in resourceSet)
+            {
+                if (entry.Value is string s)
+                {
+                    if (string.IsNullOrWhiteSpace(s))
+                    {
+                        var fallback = rm.GetString(entry.Key.ToString() ?? "", System.Globalization.CultureInfo.InvariantCulture);
+                        if (!string.IsNullOrWhiteSpace(fallback))
+                        {
+                            Resources[entry.Key] = fallback;
+                            continue;
+                        }
+                    }
+
+                    Resources[entry.Key] = s;
+                }
+            }
+        }
+    }
 
     private async Task StartPipeServerAsync()
     {

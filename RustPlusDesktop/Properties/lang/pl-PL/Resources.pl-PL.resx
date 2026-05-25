@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>DESKTOP RUST+</value>
+  </data>
+  <data name="SteamAccount" xml:space="preserve">
+    <value>Konto Steam</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+    <value>Nie zalogowano</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>Sprawdź aktualizacje</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>Pobieranie...</value>
+  </data>
+  <data name="JoinDiscord" xml:space="preserve">
+    <value>Dołącz do Discorda</value>
+  </data>
+  <data name="PatchNotes" xml:space="preserve">
+    <value>Informacje o aktualizacji</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Ustawienia</value>
+  </data>
+  <data name="PairedServers" xml:space="preserve">
+    <value>PŁATNE SERWERY</value>
+  </data>
+  <data name="NoServersPaired" xml:space="preserve">
+    <value>Brak sparowanych serwerów</value>
+  </data>
+  <data name="PairingMaintenance" xml:space="preserve">
+    <value>PŁATNOŚĆ I OBSŁUGA</value>
+  </data>
+  <data name="PairingIdle" xml:space="preserve">
+    <value>Pairing: idle</value>
+  </data>
+  <data name="RightClickOptions" xml:space="preserve">
+    <value>Kliknij prawym przyciskiem myszy, aby wyświetlić opcje</value>
+  </data>
+  <data name="TrackingActive" xml:space="preserve">
+    <value>Śledzenie aktywne</value>
+  </data>
+  <data name="LastPull" xml:space="preserve">
+    <value>Ostatnie pociągnięcie: {0}</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>Wesprzyj</value>
+  </data>
+  <data name="SupportDeveloper" xml:space="preserve">
+    <value>Wesprzyj twórcę</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetWebSocket" xml:space="preserve">
+    <value>Zresetuj połączenie WebSocket</value>
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value>Gracze:</value>
+  </data>
+  <data name="ShowOnlinePlayers" xml:space="preserve">
+    <value>Pokaż zakładkę Graczy Online</value>
+  </data>
+  <data name="Queue" xml:space="preserve">
+    <value>Kolejka:</value>
+  </data>
+  <data name="DevicesTab" xml:space="preserve">
+    <value>Urządzenia</value>
+  </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>Klawisze skrótów</value>
+  </data>
+  <data name="ImportDevices" xml:space="preserve">
+    <value>Importuj urządzenia z drużyny</value>
+  </data>
+  <data name="ExportDevices" xml:space="preserve">
+    <value>Eksportuj urządzenia do kompanów</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Odśwież</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Spadek</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Prześlij zgodę</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Po kliknięciu przycisku "Akceptuj" inteligentne urządzenia (i potencjalnie rysunki map) dla tego serwera zostaną przesłane na serwer twórcy. Dzięki temu członkowie drużyny będą mogli je pobrać i zsynchronizować. Tylko twój Steam ID jest przesyłany w celu identyfikacji członków drużyny. Tylko gracze autoryzowani w Tool Cupboard mogą kontrolować urządzenia.
+
+Uwaga: Ta metoda transmisji zostanie zoptymalizowana w przyszłości. Jeśli członkowie drużyny nie mogą pobrać danych, spróbuj wyczyścić rysunki mapy i przesłać je ponownie.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="DeleteMissingOnly" xml:space="preserve">
+    <value>Możesz usunąć tylko brakujące urządzenia</value>
+  </data>
+  <data name="RenameDevice" xml:space="preserve">
+    <value>Zmień nazwę urządzenia</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>ONLINE</value>
+  </data>
+  <data name="Offline" xml:space="preserve">
+    <value>OFFLINE</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>Połącz</value>
+  </data>
+  <data name="FullConnect" xml:space="preserve">
+    <value>Pełne połączenie</value>
+  </data>
+  <data name="LoadMapTeam" xml:space="preserve">
+    <value>Załaduj mapę i zespół</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>Rozłącz</value>
+  </data>
+  <data name="ServerDetails" xml:space="preserve">
+    <value>Szczegóły serwera</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>Słuchaj</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Zatrzymaj</value>
+  </data>
+  <data name="TryPairingEdge" xml:space="preserve">
+    <value>Spróbuj parowania z krawędzią</value>
+  </data>
+  <data name="ResetPairingConfig" xml:space="preserve">
+    <value>Reset pairing (delete config)</value>
+  </data>
+  <data name="ResetListenPairing" xml:space="preserve">
+    <value>Resetuj + Słuchaj (przywróć parę)</value>
+  </data>
+  <data name="ResetListenEdge" xml:space="preserve">
+    <value>Zresetuj + słuchaj z krawędzią</value>
+  </data>
+  <data name="RelinkBattlemetrics" xml:space="preserve">
+    <value>Złącz Metryki Bitewne ID…</value>
+  </data>
+  <data name="DeleteServer" xml:space="preserve">
+    <value>Usuń serwer…</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Bitte warten …</value>
+  </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>Przełącz obszar serwera</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>Tryb streamera</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>Skala:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>Włącz tryb streamera (nazwy skrótów)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>Skrót nazw i identyfikatorów Steam w celu ochrony prywatności podczas strumienia. Automatycznie ukrywa konsolę i listę serwerów.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>Brak dostępnej pozycji (w trybie offline lub nie pojawił się).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>Zapisz grupę</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>Wprowadź nazwę grupy.</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>Wiadomość nie mogła zostać wysłana. Proszę spróbować ponownie. (Krzyż, jeśli jesteś w drużynie!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Błąd: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>Przypisz grupę</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>Ustawienia grupy: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Nazwa grupy</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>Wprowadź nazwę grupy...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>Kolor grupy</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Zapisz zmiany</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>Analiza aktywności gracza i prognozy</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>Gracze</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>Tryb Streamer-&amp; Mini Mapa</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>Tryb streamera</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>Skalowanie znacznika gracza</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>Mini Mapa polska</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>Wymagane działanie:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Usunięto śledzenie BattleMetrics</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>Przegląd systemu śledzenia graczy</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>Jak działa śledzenie gracza</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>Dodaj graczy do trackera, aby rozpocząć śledzenie</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>Śledzenie aktywne</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>Śledzenie bezczynności</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>Filtruj graczy...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>Połącz się z serwerem, aby załadować listę graczy</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Pobieranie graczy przez zapytanie Steam...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>ID utworu</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>Ręczna nazwa utworu...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Brak urządzeń.</value>
+  </data>
+  <data name="NoTokenRegistered" xml:space="preserve">
+    <value>Brak zarejestrowanych tokenów</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>Token wygasł!</value>
+  </data>
+  <data name="ExpiresInDays" xml:space="preserve">
+    <value>Wygasa za {0} dni</value>
+  </data>
+  <data name="UntilNight" xml:space="preserve">
+    <value>{0} do nocy</value>
+  </data>
+  <data name="UntilDay" xml:space="preserve">
+    <value>{0} do dnia</value>
+  </data>
+  <data name="FollowMe" xml:space="preserve">
+    <value>Śledź mnie</value>
+  </data>
+  <data name="FollowPlayer" xml:space="preserve">
+    <value>Obserwuj {0}</value>
+  </data>
+  <data name="PairingListening" xml:space="preserve">
+    <value>Parowanie: słuchanie…</value>
+  </data>
+  <data name="PairingStopped" xml:space="preserve">
+    <value>Parowanie: zatrzymane</value>
+  </data>
+  <data name="PairingFailed" xml:space="preserve">
+    <value>Parowanie: nie powiodło się</value>
+  </data>
+  <data name="AlarmActivated" xml:space="preserve">
+    <value>Alarm aktywowany!</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Serwer</value>
+  </data>
+  <data name="SmartAlarm" xml:space="preserve">
+    <value>Inteligentny Alarm</value>
+  </data>
+  <data name="UnableToReadLink" xml:space="preserve">
+    <value>Nie można odczytać RustPlus-Link: {0}
+Format: rustplus://IP:PORT</value>
+  </data>
+  <data name="DeletePairingConfigHeader" xml:space="preserve">
+    <value>Reset pairing</value>
+  </data>
+  <data name="DeletePairingConfigBody" xml:space="preserve">
+    <value>Usunąć istniejącą konfigurację parowania?
+Będziesz musiał sparować ponownie przy następnym uruchomieniu.</value>
+  </data>
+  <data name="ResetListenHeader" xml:space="preserve">
+    <value>Reset + Listen</value>
+  </data>
+  <data name="ResetListenBody" xml:space="preserve">
+    <value>Usunąć konfigurację parowania i natychmiast naparować/nasłuchać?</value>
+  </data>
+  <data name="ResetListenEdgeHeader" xml:space="preserve">
+    <value>Resetuj + Słuchaj (Edge)</value>
+  </data>
+  <data name="ResetListenEdgeBody" xml:space="preserve">
+    <value>Usunąć konfigurację parowania i natychmiast naparować/nasłuchiwać za pomocą Edge?</value>
+  </data>
+  <data name="UpdateQueryFailed" xml:space="preserve">
+    <value>Nie można odczytać najnowszej wersji. Spróbuj ponownie lub otwórz stronę wydań.</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Jesteś aktualny.</value>
+  </data>
+  <data name="UpdateAvailableHeader" xml:space="preserve">
+    <value>Dostępna aktualizacja</value>
+  </data>
+  <data name="UpdateAvailableBody" xml:space="preserve">
+    <value>Dostępna jest nowa wersja: {0}
+Otwórz stronę wydań?</value>
+  </data>
+  <data name="DownloadAndInstallBody" xml:space="preserve">
+    <value>Dostępna jest nowa wersja: {0}
+Pobrać i zainstalować teraz?</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Pobieranie nie powiodło się.</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Sprawdzanie aktualizacji nie powiodło się.
+{0}</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Brak urządzeń.</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>Zobacz profil</value>
+  </data>
+  <data name="ChangeGroup" xml:space="preserve">
+    <value>Zmień grupę</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Zmień nazwę</value>
+  </data>
+  <data name="RemoveTracked" xml:space="preserve">
+    <value>Usuń śledzone</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Widok</value>
+  </data>
+  <data name="MoreOptions" xml:space="preserve">
+    <value>Więcej opcji</value>
+  </data>
+  <data name="RelinkBattlemetricsId" xml:space="preserve">
+    <value>Złącz Metryki Bitewne ID…</value>
+  </data>
+  <data name="DeleteServerEllipsis" xml:space="preserve">
+    <value>Usuń serwer…</value>
+  </data>
+  <data name="RightClickRename" xml:space="preserve">
+    <value>Kliknij prawym przyciskiem myszy, aby zmienić nazwę</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>POBIERZ</value>
+  </data>
+  <data name="PopupWindow" xml:space="preserve">
+    <value>Wyskakujące okno</value>
+  </data>
+  <data name="InAppAlert" xml:space="preserve">
+    <value>Alarm w aplikacji</value>
+  </data>
+  <data name="AudioAlert" xml:space="preserve">
+    <value>Alarm audio</value>
+  </data>
+  <data name="CustomAudioFile" xml:space="preserve">
+    <value>Własny plik audio...</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>Przywróć domyślne</value>
+  </data>
+  <data name="Snapshot" xml:space="preserve">
+    <value>Snapshot: </value>
+  </data>
+  <data name="ItemsUpkeep" xml:space="preserve">
+    <value> Elementy, Upkeep=</value>
+  </data>
+  <data name="NoDevicesFound" xml:space="preserve">
+    <value>Nie znaleziono urządzeń</value>
+  </data>
+  <data name="PairDeviceToSee" xml:space="preserve">
+    <value>Sparuj inteligentne urządzenie, przełącznik lub alarm, aby zobaczyć je tutaj</value>
+  </data>
+  <data name="TeamTab" xml:space="preserve">
+    <value>Drużyna</value>
+  </data>
+  <data name="CenterOnMap" xml:space="preserve">
+    <value>Wyśrodkuj na mapie</value>
+  </data>
+  <data name="FollowOnMap" xml:space="preserve">
+    <value>Śledź na mapie</value>
+  </data>
+  <data name="OpenSteamProfile" xml:space="preserve">
+    <value>Otwórz profil Steam</value>
+  </data>
+  <data name="PromoteToLeader" xml:space="preserve">
+    <value>Promuj do lidera</value>
+  </data>
+  <data name="KickFromTeam" xml:space="preserve">
+    <value>Wyrzuć z Drużyny</value>
+  </data>
+  <data name="ProfileMarkers" xml:space="preserve">
+    <value>Znaczniki profilu</value>
+  </data>
+  <data name="DeathMarkers" xml:space="preserve">
+    <value>Znaczniki śmierci</value>
+  </data>
+  <data name="CamerasTab" xml:space="preserve">
+    <value>Kamery</value>
+  </data>
+  <data name="AddCamera" xml:space="preserve">
+    <value>Dodaj kamerę</value>
+  </data>
+  <data name="NoCamerasFound" xml:space="preserve">
+    <value>Nie znaleziono kamer</value>
+  </data>
+  <data name="PairCameraToSee" xml:space="preserve">
+    <value>Sparuj kamerę, aby zobaczyć jej podgląd</value>
+  </data>
+  <data name="PlayersTab" xml:space="preserve">
+    <value>Gracze</value>
+  </data>
+  <data name="HowToTrack" xml:space="preserve">
+    <value>Jak śledzić</value>
+  </data>
+  <data name="LearnHowTrackingWorks" xml:space="preserve">
+    <value>Dowiedz się, jak działa śledzenie gracza</value>
+  </data>
+  <data name="OnlineTab" xml:space="preserve">
+    <value>Dostępny</value>
+  </data>
+  <data name="OnlinePlayers" xml:space="preserve">
+    <value>Gracze online</value>
+  </data>
+  <data name="SearchBM" xml:space="preserve">
+    <value>Szukaj BM</value>
+  </data>
+  <data name="SearchServerBM" xml:space="preserve">
+    <value>Szukaj bieżącego serwera na BattleMetrics</value>
+  </data>
+  <data name="Popout" xml:space="preserve">
+    <value>Makuch</value>
+  </data>
+  <data name="OpenPlayersSeparateWindow" xml:space="preserve">
+    <value>Otwórz Graczy w osobnym oknie</value>
+  </data>
+  <data name="Track" xml:space="preserve">
+    <value>Ścieżka</value>
+  </data>
+  <data name="ManualTrackPlaceholder" xml:space="preserve">
+    <value>Ręczna nazwa utworu lub ID Steam...</value>
+  </data>
+  <data name="FilterPlayersPlaceholder" xml:space="preserve">
+    <value>Filtruj graczy...</value>
+  </data>
+  <data name="LoadingPlayers" xml:space="preserve">
+    <value>Ładowanie graczy...</value>
+  </data>
+  <data name="TrackedTab" xml:space="preserve">
+    <value>Śledzone</value>
+  </data>
+  <data name="TrackedPlayers" xml:space="preserve">
+    <value>Śledzeni gracze</value>
+  </data>
+  <data name="ManageGroups" xml:space="preserve">
+    <value>Zarządzaj grupami</value>
+  </data>
+  <data name="ViewFullAnalysisReport" xml:space="preserve">
+    <value>Zobacz pełny raport analityczny</value>
+  </data>
+  <data name="ReadyToExploreMap" xml:space="preserve">
+    <value>Gotowy do odkrywania mapy?</value>
+  </data>
+  <data name="ConnectToLoadMap" xml:space="preserve">
+    <value>Połącz się z wybranym serwerem, aby załadować mapę Rust na żywo i zespół.</value>
+  </data>
+  <data name="ReadyToDominate" xml:space="preserve">
+    <value>Gotowy do zdominowania Rust?</value>
+  </data>
+  <data name="PairAccountBenefits" xml:space="preserve">
+    <value>Sparuj swoje konto, aby rozpocząć śledzenie graczy, otrzymywać powiadomienia o deszczu i natychmiast kontrolować swoje inteligentne urządzenia.</value>
+  </data>
+  <data name="LoginPairAccount" xml:space="preserve">
+    <value>Konto logowania i para</value>
+  </data>
+  <data name="RequiresSteamLogin" xml:space="preserve">
+    <value>Wymaga logowania do Steam w domyślnej przeglądarce.</value>
+  </data>
+  <data name="DeleteServerHeader" xml:space="preserve">
+    <value>Usunąć serwer?</value>
+  </data>
+  <data name="DeleteServerConfirm" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć ten serwer? Tej akcji nie można cofnąć.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="DeleteAction" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="AutoHideAfter3s" xml:space="preserve">
+    <value>Automatyczne ukrywanie po 3 sekundach</value>
+  </data>
+  <data name="MapFilters" xml:space="preserve">
+    <value>MAPY FILTRY</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>Siatka</value>
+  </data>
+  <data name="Monuments" xml:space="preserve">
+    <value>Monumenty</value>
+  </data>
+  <data name="Shops" xml:space="preserve">
+    <value>Sklepy</value>
+  </data>
+  <data name="ChatAlerts" xml:space="preserve">
+    <value>ALERY CZATU</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Alerty</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>Skonfiguruj</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Zaznacz wszystko</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Odznacz wszystkie</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>WYDARZENIA</value>
+  </data>
+  <data name="CargoShip" xml:space="preserve">
+    <value>Statek towarowy</value>
+  </data>
+  <data name="CargoSpawn" xml:space="preserve">
+    <value>Zespawnuj</value>
+  </data>
+  <data name="CargoDock" xml:space="preserve">
+    <value>Stacja dokująca portu</value>
+  </data>
+  <data name="CargoEgress" xml:space="preserve">
+    <value>Odjazd (ostrzeżenie 5 m)</value>
+  </data>
+  <data name="CargoArrival" xml:space="preserve">
+    <value>Ostrzeżenie o przybyciu (5 m przed dokiem)</value>
+  </data>
+  <data name="Heli" xml:space="preserve">
+    <value>Śmigłowiec patrolowy</value>
+  </data>
+  <data name="Chinook" xml:space="preserve">
+    <value>Chinook (CH47)</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>Podróżny sprzedawca</value>
+  </data>
+  <data name="OilRig" xml:space="preserve">
+    <value>Wyzwalacz wyzwalacza ropy</value>
+  </data>
+  <data name="DeepSea" xml:space="preserve">
+    <value>Wydarzenie dalekomorskie</value>
+  </data>
+  <data name="SmartAlerts" xml:space="preserve">
+    <value>Inteligentne alerty</value>
+  </data>
+  <data name="PlayerOnline" xml:space="preserve">
+    <value>Status online</value>
+  </data>
+  <data name="PlayerOffline" xml:space="preserve">
+    <value>Status offline</value>
+  </data>
+  <data name="AnnounceTracking" xml:space="preserve">
+    <value>Powiadomienia śledzące</value>
+  </data>
+  <data name="PlayerDeathSelf" xml:space="preserve">
+    <value>Samochód</value>
+  </data>
+  <data name="PlayerDeathTeam" xml:space="preserve">
+    <value>Śmierć Drużynowa</value>
+  </data>
+  <data name="PlayerRespawnSelf" xml:space="preserve">
+    <value>Samodzielne Odrodzenie</value>
+  </data>
+  <data name="PlayerRespawnTeam" xml:space="preserve">
+    <value>Odrodzenie drużyny</value>
+  </data>
+  <data name="NewShops" xml:space="preserve">
+    <value>Nowe sklepy</value>
+  </data>
+  <data name="SuspiciousShops" xml:space="preserve">
+    <value>Podejrzane sklepy</value>
+  </data>
+  <data name="TradeAlerts" xml:space="preserve">
+    <value>Alarmy handlowe</value>
+  </data>
+  <data name="CrosshairStyle" xml:space="preserve">
+    <value>Styl krzyżownicy</value>
+  </data>
+  <data name="GreenDot" xml:space="preserve">
+    <value>Zielona kropka</value>
+  </data>
+  <data name="MiniGreen" xml:space="preserve">
+    <value>Mini Zielony</value>
+  </data>
+  <data name="OpenCrosshairRG" xml:space="preserve">
+    <value>Otwarty krzyżownik (R/G)</value>
+  </data>
+  <data name="ThinRedCircle" xml:space="preserve">
+    <value>Cienki Czerwony okrąg</value>
+  </data>
+  <data name="SquareDot" xml:space="preserve">
+    <value>Kwadratowy + kropka</value>
+  </data>
+  <data name="MagentaDot" xml:space="preserve">
+    <value>Magentowa kropka</value>
+  </data>
+  <data name="MagentaOpenCross" xml:space="preserve">
+    <value>Magenta Otwarty Krzyż</value>
+  </data>
+  <data name="RangeLineTicks" xml:space="preserve">
+    <value>Linia zakresu (ticki)</value>
+  </data>
+  <data name="DrawCrosshair" xml:space="preserve">
+    <value>Rysuj krzyżówkę...</value>
+  </data>
+  <data name="ChooseMonitor" xml:space="preserve">
+    <value>Wybierz monitor</value>
+  </data>
+  <data name="DrawOverlay" xml:space="preserve">
+    <value>Rysuj nakładkę</value>
+  </data>
+  <data name="DrawToolTip" xml:space="preserve">
+    <value>Rysuj (Prawy Przycisk: Rozmiar / Kolor)</value>
+  </data>
+  <data name="PlaceTextToolTip" xml:space="preserve">
+    <value>Umieść tekst (Prawy Przycisk: Kolor / Rozmiar)</value>
+  </data>
+  <data name="PlaceIconToolTip" xml:space="preserve">
+    <value>Umieść ikonę (Prawy Przycisk: Wybierz ikonę)</value>
+  </data>
+  <data name="EraserToolTip" xml:space="preserve">
+    <value>Guma (przytrzymaj lub kliknij)</value>
+  </data>
+  <data name="DeleteOverlayToolTip" xml:space="preserve">
+    <value>Usuń własną nakładkę</value>
+  </data>
+  <data name="UploadOverlayToolTip" xml:space="preserve">
+    <value>Prześlij własną Nakładkę / Udostępnij</value>
+  </data>
+  <data name="ProfitTrades" xml:space="preserve">
+    <value>Profit Trades</value>
+  </data>
+  <data name="ArbitrageOpportunities" xml:space="preserve">
+    <value>Bezpośrednie możliwości arbitrażu | kup niski → sprzedawać wysoki.</value>
+  </data>
+  <data name="BuyXForY" xml:space="preserve">
+    <value>Kup X za Y</value>
+  </data>
+  <data name="Analyze" xml:space="preserve">
+    <value>Analizuj</value>
+  </data>
+  <data name="IWantToGet" xml:space="preserve">
+    <value>Chcę GET</value>
+  </data>
+  <data name="ICanPayWith" xml:space="preserve">
+    <value>Mogę wypłacić Z</value>
+  </data>
+  <data name="TeamChat" xml:space="preserve">
+    <value>Czat Drużynowy</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Wyślij</value>
+  </data>
+  <data name="FcmCredentials" xml:space="preserve">
+    <value>Dane logowania FCM</value>
+  </data>
+  <data name="RightClickConfigure" xml:space="preserve">
+    <value>Kliknij prawym przyciskiem myszy, aby skonfigurować</value>
+  </data>
+  <data name="ResetMap" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetMapToolTip" xml:space="preserve">
+    <value>Zresetuj powiększenie i pozycję mapy</value>
+  </data>
+  <data name="MiniMap" xml:space="preserve">
+    <value>Mini</value>
+  </data>
+  <data name="CrosshairToolTip" xml:space="preserve">
+    <value>Krzyżyk wł/wył (Prawy przycisk dla opcji)</value>
+  </data>
+  <data name="TrackPlayer" xml:space="preserve">
+    <value>GRACZ ŚWIATŁA</value>
+  </data>
+  <data name="CloseBMBrowser" xml:space="preserve">
+    <value>Zamknij Przeglądarkę Bitewną</value>
+  </data>
+  <data name="ShopSearchTitle" xml:space="preserve">
+    <value>SZUKAJ SKLEP</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>Zamknij wyszukiwanie</value>
+  </data>
+  <data name="ActivateShopsFirst" xml:space="preserve">
+    <value>Proszę najpierw aktywować sklepy</value>
+  </data>
+  <data name="ActivateShopPolling" xml:space="preserve">
+    <value>Aktywuj ankietę w sklepie</value>
+  </data>
+  <data name="TeamChatTitle" xml:space="preserve">
+    <value>CZAT ZADAŃ</value>
+  </data>
+  <data name="CloseChat" xml:space="preserve">
+    <value>Zamknij czat</value>
+  </data>
+  <data name="ChatCommandsSettings" xml:space="preserve">
+    <value>Ustawienia komend czatu</value>
+  </data>
+  <data name="ChatCommands" xml:space="preserve">
+    <value>Polecenia czatu</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Powrót</value>
+  </data>
+  <data name="Forward" xml:space="preserve">
+    <value>Przekaż</value>
+  </data>
+  <data name="OpenInExternalBrowser" xml:space="preserve">
+    <value>Otwórz w zewnętrznej przeglądarce</value>
+  </data>
+  <data name="SearchBMPlaceholder" xml:space="preserve">
+    <value>Wyszukaj BM...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Szukaj</value>
+  </data>
+  <data name="SelectAServer" xml:space="preserve">
+    <value>Wybierz serwer</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>ODŁĄCZONO</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>POŁĄCZENIE...</value>
+  </data>
+  <data name="StatusInitializing" xml:space="preserve">
+    <value>INICJALIZACJA...</value>
+  </data>
+  <data name="StatusDevicesActive" xml:space="preserve">
+    <value>URZĄDZENIA AKTYWNE</value>
+  </data>
+  <data name="StatusFullyConnected" xml:space="preserve">
+    <value>PEŁNY POŁĄCZONY</value>
+  </data>
+  <data name="StatusUnknown" xml:space="preserve">
+    <value>NIEZGODNOŚĆ</value>
+  </data>
+  <data name="MayTakeAMoment" xml:space="preserve">
+    <value>To może zająć chwilę...</value>
+  </data>
+  <data name="AppSettingsTitle" xml:space="preserve">
+    <value>Ustawienia aplikacji</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Ogólny</value>
+  </data>
+  <data name="LaunchWithWindows" xml:space="preserve">
+    <value>Uruchom z systemem Windows (zminimalizowany)</value>
+  </data>
+  <data name="StartMinimizedAlways" xml:space="preserve">
+    <value>Uruchom zminimalizowane (zawsze)</value>
+  </data>
+  <data name="AutoConnectLastServer" xml:space="preserve">
+    <value>Automatyczne połączenie z ostatnim serwerem przy starcie</value>
+  </data>
+  <data name="AutoConnectToolTip" xml:space="preserve">
+    <value>Automatycznie łączy się z ostatnim serwerem i ładuje mapę.</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Zachowanie</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>Minimalizuj do zasobnika zamiast zamykać</value>
+  </data>
+  <data name="BackgroundTracking" xml:space="preserve">
+    <value>Włącz śledzenie w tle</value>
+  </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>Zachowuje śledzenie graczy przez BattleMetrics nawet po zminimalizowaniu.</value>
+  </data>
+  <data name="HideSystemConsole" xml:space="preserve">
+    <value>Ukryj konsolę systemową (Declutter)</value>
+  </data>
+  <data name="HideConsoleToolTip" xml:space="preserve">
+    <value>Ukrywa dolny panel log/konsoli, aby zapisać miejsce na mapie.</value>
+  </data>
+  <data name="MapSettings" xml:space="preserve">
+    <value>Ustawienia mapy</value>
+  </data>
+  <data name="AutoLoadShops" xml:space="preserve">
+    <value>Automatyczne wczytywanie sklepów przy połączeniu</value>
+  </data>
+  <data name="AutoLoadShopsToolTip" xml:space="preserve">
+    <value>Automatycznie uruchamia odpytywanie sklepów i alertów po połączeniu z serwerem.</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Używanie etykiet tekstowych monumentów zamiast ikon</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Po włączeniu tej opcji nazwy zabytków na mapie Rust są renderowane jako tekst przy użyciu czcionki Permanent Marker zamiast ikon.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Monument Style:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Monument Scale:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Monument Opacity:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Ikony autorstwa rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Oryginalny tekst nazwy pomnika</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Kredyty</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Ikony zabytków na mapie dostarczone przez </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - użyto za zgodą.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Wszystkie ikony pomników i powiązane grafiki są własnością rustmaps.com. Dziękujemy za wspieranie społeczności Rust!</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Czat</value>
+  </data>
+  <data name="ModifyChatAlerts" xml:space="preserve">
+    <value>Modyfikuj powiadomienia Czatu</value>
+  </data>
+  <data name="ManageSteamAccountInfo" xml:space="preserve">
+    <value>Zarządzaj swoim połączonym kontem Steam w oknie głównym.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Zamknij</value>
+  </data>
+  <data name="IncomingAlarms" xml:space="preserve">
+    <value>ALARMY DOCHODOWE</value>
+  </data>
+  <data name="Wipe" xml:space="preserve">
+    <value>Wyczyść</value>
+  </data>
+  <data name="PlayersOnly" xml:space="preserve">
+    <value>Gracze</value>
+  </data>
+  <data name="PlayersHeader" xml:space="preserve">
+    <value>Gracze</value>
+  </data>
+  <data name="IWantToGetToolTip" xml:space="preserve">
+    <value>Chcę GET (np. ropa naftowa)</value>
+  </data>
+  <data name="ICanPayWithToolTip" xml:space="preserve">
+    <value>Chcę PŁAĆ WITH (np. Scrap)</value>
+  </data>
+  <data name="DeleteServerConfirmFormatted" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć serwer "{0}"? Tej akcji nie można cofnąć.</value>
+  </data>
+  <data name="PairingError" xml:space="preserve">
+    <value>Pairing: error</value>
+  </data>
+  <data name="PairingStarting" xml:space="preserve">
+    <value>Parowanie: uruchamianie...</value>
+  </data>
+  <data name="StartingPairingListener" xml:space="preserve">
+    <value>Uruchamianie słuchacza parowania...</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+    <value>Zalogowano</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>Zasoby</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Cena</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>WŁĄCZONY</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>WYŁĄCZONE</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>AKTYWNE</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>NIEAKTYWNE</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>GRUPA</value>
+  </data>
+  <data name="ImportDevicesTitle" xml:space="preserve">
+    <value>Rust+ Desk - Importuj urządzenia</value>
+  </data>
+  <data name="ImportDevicesHeader" xml:space="preserve">
+    <value>Importuj urządzenia</value>
+  </data>
+  <data name="ImportDevicesSelectPrompt" xml:space="preserve">
+    <value>Wybierz urządzenia, które chcesz zaimportować dla tego serwera.</value>
+  </data>
+  <data name="CheckDeviceStatus" xml:space="preserve">
+    <value>Sprawdź status urządzenia</value>
+  </data>
+  <data name="ImportSelected" xml:space="preserve">
+    <value>Importuj wybrane</value>
+  </data>
+  <data name="BmShortcuts" xml:space="preserve">
+    <value>Skróty BM</value>
+  </data>
+  <data name="PairingConfigDeleted" xml:space="preserve">
+    <value>Parowanie: konfiguracja usunięta</value>
+  </data>
+  <data name="TrayIconDefault" xml:space="preserve">
+    <value>Śledzenie biurkowe Rust+</value>
+  </data>
+  <data name="TrayIconTracking" xml:space="preserve">
+    <value>Biurko Rust+ (Śledzenie {0})</value>
+  </data>
+  <data name="RenameGroup" xml:space="preserve">
+    <value>Zmień nazwę grupy</value>
+  </data>
+  <data name="NewNameForGroup" xml:space="preserve">
+    <value>Nowa nazwa grupy:</value>
+  </data>
+  <data name="NewNameForDevice" xml:space="preserve">
+    <value>Nowa nazwa dla #{0}:</value>
+  </data>
+  <data name="EnterBattlemetricsIdFor" xml:space="preserve">
+    <value>Wprowadź identyfikator serwera Battlemetrics dla "{0}":</value>
+  </data>
+  <data name="TrayTrackingStatus" xml:space="preserve">
+    <value>Śledzenie: {0}</value>
+  </data>
+  <data name="TrayLastUpdate" xml:space="preserve">
+    <value>Ostatnia aktualizacja: {0}</value>
+  </data>
+  <data name="OpenRustPlusDesk" xml:space="preserve">
+    <value>Otwórz biurko Rust+</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Wyjście</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Opis</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>Aparat</value>
+  </data>
+  <data name="Alarms" xml:space="preserve">
+    <value>Alarmy</value>
+  </data>
+  <data name="Identifier" xml:space="preserve">
+    <value>Identifier:</value>
+  </data>
+  <data name="FPS" xml:space="preserve">
+    <value>FPS:</value>
+  </data>
+  <data name="CameraFPSNote" xml:space="preserve">
+    <value>Uwaga: zaleca się 2 fps, wyższe FPS prawdopodobnie zamknij połączenie z serwerem</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>Pixel</value>
+  </data>
+  <data name="Pen" xml:space="preserve">
+    <value>Długopis</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>Linia</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>Kwadratowy</value>
+  </data>
+  <data name="Circle" xml:space="preserve">
+    <value>Okręg</value>
+  </data>
+  <data name="Thickness" xml:space="preserve">
+    <value>Grubość:</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Nieprzezroczystość:</value>
+  </data>
+  <data name="UploadPNG" xml:space="preserve">
+    <value>Prześlij PNG</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Wyczyść</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
+  <data name="AssignGlobalHotkeys" xml:space="preserve">
+    <value>Przypisz globalne skróty klawiszowe do Smart Switches. Wiele urządzeń może udostępniać jeden skrót klawiszowy (włączy się kolejno).</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Urządzenie</value>
+  </data>
+  <data name="EntityId" xml:space="preserve">
+    <value>EntityId</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>Klawisz skrótu</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Ustaw</value>
+  </data>
+  <data name="CloseDeactivate" xml:space="preserve">
+    <value>Zamknij i dezaktywuj</value>
+  </data>
+  <data name="CloseActivate" xml:space="preserve">
+    <value>Zamknij i aktywuj</value>
+  </data>
+  <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
+    <value>Ulepszenie, minimapa i aktualizacja śledzenia</value>
+  </data>
+  <data name="FeatureSummaryAdjustments" xml:space="preserve">
+    <value>Podsumowanie funkcji i korekty</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>Nie pokazuj tego ponownie</value>
+  </data>
+  <data name="AwesomeLetsGo" xml:space="preserve">
+    <value>Świetnie, idźmy!</value>
+  </data>
+  <data name="MiniMapSettings" xml:space="preserve">
+    <value>Ustawienia mini-mapy</value>
+  </data>
+  <data name="Shape" xml:space="preserve">
+    <value>Kształt</value>
+  </data>
+  <data name="Rectangle" xml:space="preserve">
+    <value>Prostokąt</value>
+  </data>
+  <data name="OpacityLabel" xml:space="preserve">
+    <value>Nieprzezroczystość: {0}%</value>
+  </data>
+  <data name="SizeLabel" xml:space="preserve">
+    <value>Rozmiar: {0}% (SHIFT+Koło myszy)</value>
+  </data>
+  <data name="ShowServerTime" xml:space="preserve">
+    <value>Pokaż czas serwera</value>
+  </data>
+  <data name="ServerInformation" xml:space="preserve">
+    <value>Informacje o serwerze</value>
+  </data>
+  <data name="NoDescriptionAvailable" xml:space="preserve">
+    <value>Brak dostępnego opisu.</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Bieżąca wersja: {0}</value>
+  </data>
+  <data name="PatchNotesHeader" xml:space="preserve">
+    <value>Notatki i Historia wersji</value>
+  </data>
+  <data name="EnableChatCommands" xml:space="preserve">
+    <value>Włącz polecenia czatu</value>
+  </data>
+  <data name="Prefix" xml:space="preserve">
+    <value>Prefiks:</value>
+  </data>
+  <data name="StandardCommands" xml:space="preserve">
+    <value>Standardowe polecenia</value>
+  </data>
+  <data name="Population" xml:space="preserve">
+    <value>Populacja:</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Czas:</value>
+  </data>
+  <data name="Promote" xml:space="preserve">
+    <value>Promocja:</value>
+  </data>
+  <data name="DeepSeaCommand" xml:space="preserve">
+    <value>Głębokie morze:</value>
+  </data>
+  <data name="CargoShipCommand" xml:space="preserve">
+    <value>Statek ładunkowy:</value>
+  </data>
+  <data name="OilRigCommand" xml:space="preserve">
+    <value>Ryż oleju:</value>
+  </data>
+  <data name="PatrolHeliCommand" xml:space="preserve">
+    <value>Patrol Heli:</value>
+  </data>
+  <data name="TravellingVendorCommand" xml:space="preserve">
+    <value>Podróżny sprzedawca:</value>
+  </data>
+  <data name="UpkeepDetails" xml:space="preserve">
+    <value>Szczegóły utrzymania:</value>
+  </data>
+  <data name="CommandDelay" xml:space="preserve">
+    <value>Opóźnienie polecenia:</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Język</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Wybierz język</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>Zmiana języka wymaga ponownego uruchomienia, aby uzyskać pełny efekt.</value>
+  </data>
+  <data name="SmartSwitches" xml:space="preserve">
+    <value>Inteligentne przełączniki</value>
+  </data>
+  <data name="UpkeepTcMonitors" xml:space="preserve">
+    <value>Monitory utrzymania (TC)</value>
+  </data>
+  <data name="NoTcMonitorsFound" xml:space="preserve">
+    <value>Nie znaleziono monitorów TC.</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Zapisz i zamknij</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Wiadomość...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Komunikat o błędzie tutaj</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Helikopter patrolowy</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Patrol Heli aktywny - działa na {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Połączono w trakcie wydarzenia - czas odrodzenia nieznany</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Hel patrolowy aktywny (czas odrodzenia nieznany)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Patrol Heli zestrzelony {0} temu w tej sesji</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Patrol Heli opuścił mapę {0} przed tą sesją.</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Miejsce dokowania: {0} - wypłynięcie z ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>port</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Już zadokowany do połączenia - czas odlotu nieznany</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Zadokowano pod adresem {0} (czas dokowania nie został jeszcze ustalony).</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Czas pozostały na mapie (od odrodzenia)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Połączenie w połowie trasy - czas nieznany</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Połączenie w połowie trasy - czas nieznany (całkowita trasa ~{0}m)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Statek towarowy odrodził się {0}m {1}s temu w tej sesji</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Podróżujący sprzedawca aktywny - bieg na {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Podróżujący sprzedawca aktywny (czas odrodzenia nieznany)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Podróżujący sprzedawca zniknął {0} temu w tej sesji</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea Active - bieg na {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Aktywny w głębinach morskich (czas odradzania nieznany)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Sesja Deep Sea zakończyła się {0} temu</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} graczy online.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Kolejka: {0} graczy.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Aktualny czas w grze: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} został awansowany na lidera.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea jest aktywny! Bieg na {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea jest obecnie aktywne (połączone w połowie wydarzenia - czas odrodzenia nieznany).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Sesja Deep Sea zakończyła się {0} minut temu.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Status wydarzenia Deep Sea nieznany (nie widziano go w tej sesji).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Statek towarowy nie jest aktywny.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Statek towarowy zadokowany pod adresem {0}. Odpłynie za około {1} minut.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Statek towarowy zadokowany pod adresem {0} i przygotowujący się do wypłynięcia.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Statek towarowy zadokowany pod adresem {0} (godzina wypłynięcia nieznana).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Statek towarowy aktywny. Odlatuje za około {0} minut.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Statek towarowy jest aktywny i przygotowuje się do odlotu.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Statek towarowy aktywny (czas trwania trasy nie został jeszcze nauczony dla tego serwera).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Statek towarowy aktywny (połączony po odrodzeniu - pozostały czas nieznany).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Statek towarowy nieaktywny. Odrodził się {0} minut temu w tej sesji.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: skrzynka w {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: ostatnie połączenie {1}m temu</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}nie wywołany w tej sesji</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Patrol Heli jest aktywny! Kandydat na {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Patrol Heli jest obecnie aktywny (połączony w połowie wydarzenia - czas odrodzenia nieznany).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Patrol Heli nie jest aktywny. To było {0} {1} temu w tej sesji.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>zestrzelony</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>opuścił mapę</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Status wydarzenia Patrol Heli nieznany (nie widziano go w tej sesji).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Travelling Vendor jest aktywny! Ubieganie się o {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Podróżujący sprzedawca jest obecnie aktywny (połączony w połowie wydarzenia - czas odrodzenia nieznany).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Podróżujący sprzedawca nieaktywny. Odrodził się {0} temu w tej sesji.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Status wydarzenia Travelling Vendor nieznany (nie widziano go w tej sesji).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Szafki narzędziowe nie są mapowane dla poleceń konserwacji.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Utrzymanie w {0} TC: Puste lub wygasłe.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Potrzeba/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Utrzymanie w {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} dni</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} godziny</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} minuty</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}Puste/wygasłe</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0} {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Utrzymanie: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Nie znaleziono lub nie sparowano monitorów Bound Tool Cupboard.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Nie znaleziono lub nie sparowano monitora Bound Tool Cupboard.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} włączony {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>WYŁ.</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Bound Smart Switch nie został znaleziony lub nie został sparowany.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Drewno</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Kamień</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Metal</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Mała platforma wiertnicza</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Duża platforma wiertnicza</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Sklep</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Statek towarowy</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Podróżujący sprzedawca</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Śmigłowiec patrolowy</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Skrzynia Oilrig</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Eksplozja</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Zablokowany budynek</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Wydarzenie</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] uruchomione! Skrzynka odblokowuje się w {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} uruchomiony!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Skrzynka zostanie odblokowana za 10 minut!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Skrzynka zostanie odblokowana w 5 minut!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Deep Sea jest już dostępne</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Nowy sklep {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Podejrzany sklep {0} [{1}] był online {2}s, sprzedawał {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Statek towarowy odrodził się {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>daleko na morzu (w pobliżu {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Statek towarowy zadokowany na {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Statek towarowy powinien zadokować na stronie {0} ({1}) za około 5 minut.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Statek towarowy odpływający z {0} w 5 minut ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Wykryto awarię z powodu opóźnienia serwera - Heli wciąż jest na mapie pod adresem {0}.</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} pojawił się na stronie {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Helikopter patrolowy zestrzelony na {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>nieznany</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} pojawił się online @ {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} przeszedł do trybu offline</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} zmarł @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} respawned @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Śledzenie] {0}{1} jest teraz ONLINE</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Śledzenie] {0}{1} jest teraz OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Śledzenie] Nazwa {0}{1} została zmieniona na {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>sprzedaje</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>zakupy</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Sklep</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) dla {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Lista poleceń czatu</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>POLECENIA: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Lokalizacja, modernizacja interfejsu użytkownika i przechowywanie</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dynamiczne przełączanie lokalizacji</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - Ponad 30 języków do wyboru</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Interfejs użytkownika poleceń czatu</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - Wyizolowany widok dla czystego wyglądu</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Nowa nakładka ustawień</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - Czysty pasek boczny dla wszystkich ustawień</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Usunięto śledzenie BattleMetrics</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Twoja baza jest atakowana!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Najpierw połącz się z serwerem.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Nie jesteś połączony z żadnym serwerem.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Czat nie jest obecnie dostępny.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Najpierw wybierz serwer.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Połączenie</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Czat</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Jak śledzić graczy</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Natywne śledzenie UDP</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Przewodnik śledzenia jest obecnie dostępny tylko w języku angielskim, ponieważ w najbliższej przyszłości ulegnie on zmianom. Prosimy o cierpliwość.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Zamknij to okno w dowolnym momencie - możesz je ponownie otworzyć za pomocą przycisku ❓ Jak śledzić.</value>
+  </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Konserwacja</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Czyszczenie, tworzenie kopii zapasowych lub przywracanie ustawień aplikacji, profili i niestandardowych rysunków.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Resetuj dane aplikacji...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Kopia zapasowa danych...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Przywracanie danych...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Resetowanie danych aplikacji</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Wybierz składniki, które chcesz wyczyścić z tego urządzenia. Wszystkie wybrane opcje zostaną trwale usunięte.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Aktywne połączenie z serwerem (Rozłącz)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Zapisane profile serwera (usuwanie sparowanych konfiguracji serwera)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Poświadczenia konta Steam (wyloguj się)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Konfiguracja parowania urządzeń (resetowanie tokenów rejestracyjnych)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Niestandardowy celownik (konfiguracje wymazywania)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Lokalna pamięć podręczna i rysunki (wyczyść zapisane mapy/linie)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Działanie to jest trwałe i nie można go cofnąć.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Potwierdź resetowanie</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Hasło kopii zapasowej</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Ochrona kopii zapasowych</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Wprowadź hasło, aby zaszyfrować ten plik kopii zapasowej. Jeśli pozostawisz to pole puste, kopia zapasowa nie zostanie zaszyfrowana.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Przywracanie kopii zapasowej</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Ta kopia zapasowa jest chroniona hasłem. Wprowadź hasło, aby ją odszyfrować:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Szyfrowanie</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Deszyfrowanie</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Kopia zapasowa danych aplikacji</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Kopia zapasowa utworzona pomyślnie w: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Kopia zapasowa utworzona pomyślnie!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Kopia zapasowa zakończona</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Błąd kopii zapasowej: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Błąd tworzenia kopii zapasowej: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Kopia zapasowa nie powiodła się</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Przywrócenie danych spowoduje nadpisanie bieżących profili serwera, niestandardowych krzyżyków, nakładek rysunkowych i konfiguracji minimapy.
+
+Czy na pewno chcesz kontynuować?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Potwierdzenie przywrócenia kopii zapasowej</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Przywracanie danych aplikacji</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Dane aplikacji zostały pomyślnie przywrócone!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Przywracanie zakończone</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>Błąd przywracania [SYSTEM]: Podano nieprawidłowe hasło.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Deszyfrowanie nie powiodło się. Nieprawidłowe hasło lub uszkodzony plik kopii zapasowej.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Przywracanie nie powiodło się</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Błąd przywracania: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Błąd przywracania kopii zapasowej: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Nieprawidłowy format pliku kopii zapasowej lub brak podpisu.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Rozpoczęcie operacji selektywnego resetowania...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Rozłączanie aktywnego połączenia z serwerem...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[Resetowanie połączenia zakończone.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Czyszczenie zapisanych profili serwera...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[Zapisane profile serwera zostały wyczyszczone.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Usuwanie poświadczeń konta Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[Poświadczenia Steam zostały wyczyszczone.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Konfiguracja parowania urządzeń...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[Konfiguracja parowania urządzeń została usunięta.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Czyszczenie niestandardowego celownika...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Błąd czyszczenia niestandardowego celownika: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[Wyczyszczono celownik niestandardowy.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Czyszczenie lokalnych plików pamięci podręcznej i rysunków nakładki...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Błąd czyszczenia folderu pamięci podręcznej: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[Wyczyszczono foldery pamięci podręcznej.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Ponowna rejestracja poświadczeń słuchacza i FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>Operacja resetu selektywnego [WIPE] została zakończona pomyślnie.</value>
+  </data>
+</root>

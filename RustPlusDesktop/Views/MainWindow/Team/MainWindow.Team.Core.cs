@@ -126,7 +126,7 @@ public partial class MainWindow
 
     private readonly Dictionary<ulong, (double x, double y, string name)> _lastPlayersBySid = new();
     private readonly Dictionary<ulong, (bool online, bool dead)> _lastPresence = new();
-    private ulong _mySteamId => (ulong.TryParse(_vm?.SteamId64, out var v) ? v : 0UL);
+    private ulong _mySteamId => (ulong.TryParse(_vm?.SteamId64, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : 0UL);
 
     private readonly Dictionary<ulong, string> _steamNames = new();
     private DateTime _lastTeamRefresh = DateTime.MinValue;
@@ -289,9 +289,9 @@ public partial class MainWindow
 
                 if (shouldAnnounce)
                 {
-                    var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : "unknown";
+                    var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : Properties.Resources.Unknown;
                     var dispName = GetDisplayPlayerName(vm.Name);
-                    var txt = now.online ? $"{dispName} came online @ {where}" : $"{dispName} went offline";
+                    var txt = now.online ? string.Format(Properties.Resources.AlertPlayerOnlineWithPos, dispName, where) : string.Format(Properties.Resources.AlertPlayerOffline, dispName);
                     await SendTeamChatSafeAsync(txt);
                 }
             }
@@ -318,9 +318,9 @@ public partial class MainWindow
 
                     if (shouldAnnounce)
                     {
-                        var where = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : "unknown";
+                        var where = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : Properties.Resources.Unknown;
                         var dispName = GetDisplayPlayerName(vm.Name);
-                        var txt = now.dead ? $"{dispName} died @ {where}" : $"{dispName} respawned @ {where}";
+                        var txt = now.dead ? string.Format(Properties.Resources.AlertPlayerDied, dispName, where) : string.Format(Properties.Resources.AlertPlayerRespawned, dispName, where);
                         await SendTeamChatSafeAsync(txt);
                     }
                 }
@@ -485,8 +485,7 @@ public partial class MainWindow
             CenterMapOnWorld(x, y);
             return;
         }
-        MessageBox.Show("Keine Position verfugbar (offline oder nicht gespawnt).");
-    }
+        MessageBox.Show(Properties.Resources.NoPositionAvailable);    }
 
     private bool TryResolvePosFromDynMarkers(ulong sid, out double x, out double y)
     {

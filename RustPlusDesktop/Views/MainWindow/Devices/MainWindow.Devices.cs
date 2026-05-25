@@ -1,4 +1,5 @@
 using RustPlusDesk.Models;
+using RustPlusDesk.Services.Data;
 using RustPlusDesk.Services;
 using System;
 using System.Collections.Generic;
@@ -367,6 +368,33 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
     }
 
     private System.Windows.Media.MediaPlayer? _alarmPlayer;
+    private System.Windows.Media.MediaPlayer? _loopPlayer;
+    private bool _isLooping;
+
+    public void StopLoopPlayer()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            if (_loopPlayer != null && _isLooping)
+            {
+                _isLooping = false;
+                _loopPlayer.Stop();
+                AppendLog($"[audio] Stopped looping audio.");
+            }
+        });
+    }
+
+    public void StopAlarmPlayer()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            if (_alarmPlayer != null)
+            {
+                _alarmPlayer.Stop();
+                AppendLog($"[audio] Stopped standard alarm audio.");
+            }
+        });
+    }
 
     private void PlayAlarmAudio(SmartDevice? dev)
     {
@@ -399,20 +427,46 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
                 var fullPath = System.IO.Path.GetFullPath(audioFile);
                 Dispatcher.Invoke(() =>
                 {
-                    if (_alarmPlayer == null)
-                    {
-                        _alarmPlayer = new System.Windows.Media.MediaPlayer();
-                        _alarmPlayer.MediaFailed += (s, e) => AppendLog($"[audio] Media Failed: {e.ErrorException?.Message}");
-                        // Optional: MediaOpened Handler für asynchrones Play, 
-                        // aber Play() direkt nach Open() funktioniert bei MediaPlayer meist auch.
-                    }
+                    bool useLoopPlayer = dev != null && dev.AudioLoopEnabled;
 
-                    _alarmPlayer.Stop(); // Stoppen, falls noch etwas läuft
-                    _alarmPlayer.Open(new Uri(fullPath, UriKind.Absolute));
-                    _alarmPlayer.Volume = 1.0;
-                    _alarmPlayer.Play(); // Starten
-                    
-                    AppendLog($"[audio] Playing: {fullPath}");
+                    if (useLoopPlayer)
+                    {
+                        if (_loopPlayer == null)
+                        {
+                            _loopPlayer = new System.Windows.Media.MediaPlayer();
+                            _loopPlayer.MediaFailed += (s, e) => AppendLog($"[audio] Loop Media Failed: {e.ErrorException?.Message}");
+                            _loopPlayer.MediaEnded += (s, e) => {
+                                if (_isLooping && _loopPlayer != null)
+                                {
+                                    _loopPlayer.Position = TimeSpan.Zero;
+                                    _loopPlayer.Play();
+                                }
+                            };
+                        }
+
+                        _loopPlayer.Stop(); // Stoppen, falls noch etwas läuft
+                        _loopPlayer.Open(new Uri(fullPath, UriKind.Absolute));
+                        _loopPlayer.Volume = 1.0;
+                        _isLooping = true;
+                        _loopPlayer.Play(); // Starten
+                        
+                        AppendLog($"[audio] Looping: {fullPath}");
+                    }
+                    else
+                    {
+                        if (_alarmPlayer == null)
+                        {
+                            _alarmPlayer = new System.Windows.Media.MediaPlayer();
+                            _alarmPlayer.MediaFailed += (s, e) => AppendLog($"[audio] Media Failed: {e.ErrorException?.Message}");
+                        }
+
+                        _alarmPlayer.Stop(); // Stoppen, falls noch etwas läuft
+                        _alarmPlayer.Open(new Uri(fullPath, UriKind.Absolute));
+                        _alarmPlayer.Volume = 1.0;
+                        _alarmPlayer.Play(); // Starten
+                        
+                        AppendLog($"[audio] Playing: {fullPath}");
+                    }
                 });
             }
             else
@@ -829,12 +883,12 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
         }
     }
 
-private void Device_Rename_Click(object sender, RoutedEventArgs e)
+    private void Device_Rename_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev) return;
 
-        var title = dev.IsGroup ? "Rename Group" : "Rename Device";
-        var promptText = dev.IsGroup ? "New name for group:" : $"New name for #{dev.EntityId}:";
+        var title = dev.IsGroup ? Properties.Resources.RenameGroup : Properties.Resources.RenameDevice;
+        var promptText = dev.IsGroup ? Properties.Resources.NewNameForGroup : string.Format(Properties.Resources.NewNameForDevice, dev.EntityId);
         var preset = string.IsNullOrWhiteSpace(dev.Alias) ? (dev.Name ?? "") : dev.Alias!;
         var input = PromptText(this, title, promptText, preset);
 
@@ -886,30 +940,33 @@ private void Device_Rename_Click(object sender, RoutedEventArgs e)
 
 public List<ExportedDeviceDto> Devices { get; set; } = new();
 
-    private async void BtnDevicesExport_Click(object sender, RoutedEventArgs e)
+    private void BtnDevicesExport_Click(object sender, RoutedEventArgs e)
     {
-        if (_vm.Selected is null)
+        ShowUploadConsent(async () =>
         {
-            AppendLog("[dev/export] No server selected.");
-            return;
-        }
+            if (_vm.Selected is null)
+            {
+                AppendLog("[dev/export] No server selected.");
+                return;
+            }
 
-        if (!await EnsureConnectedAsync())
-            return;
+            if (!await EnsureConnectedAsync())
+                return;
 
-        try
-        {
-            var count = await UploadDevicesSnapshotForCurrentServerAsync();
-            AppendLog($"[dev/export] Exported {count} devices for server '{_vm.Selected.Name}'.");
-            MessageBox.Show($"Exported {count} devices to your team share.", "Device Export",
-                MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-        catch (Exception ex)
-        {
-            AppendLog("[dev/export] Error: " + ex.Message);
-            MessageBox.Show("Device export failed:\n" + ex.Message, "Device Export",
-                MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+            try
+            {
+                var count = await UploadDevicesSnapshotForCurrentServerAsync();
+                AppendLog($"[dev/export] Exported {count} devices for server '{_vm.Selected.Name}'.");
+                MessageBox.Show($"Exported {count} devices to your team share.", "Device Export",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                AppendLog("[dev/export] Error: " + ex.Message);
+                MessageBox.Show("Device export failed:\n" + ex.Message, "Device Export",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        });
     }
 
     private async Task<int> UploadDevicesSnapshotForCurrentServerAsync()
@@ -918,83 +975,13 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         if (profile?.Devices == null || profile.Devices.Count == 0)
             throw new InvalidOperationException("No devices in current profile.");
 
-        // 1) aktuelles Overlay-JSON aufbauen (deine bestehende Methode)
-        var data = BuildCurrentOverlaySaveDataForMe(); // <- nutzt du bereits für Map-Overlay
-
-        // 2) Devices-Liste füllen (Rekursiv)
-        data.Devices.Clear();
-        foreach (var d in profile.Devices)
-        {
-            data.Devices.Add(MapDeviceToDto(d));
-        }
-
-        data.LastUpdatedUnix = UnixNow(); // damit remote/locally „neuer“ ist
-
-        // 3) JSON serialisieren, Größenlimit prüfen, Base64 wie beim Overlay
-        var json = System.Text.Json.JsonSerializer.Serialize(
-            data,
-            new System.Text.Json.JsonSerializerOptions { WriteIndented = false });
-
-        var rawBytes = Encoding.UTF8.GetBytes(json);
-        if (rawBytes.Length > OVERLAY_MAX_BYTES)
-            throw new InvalidOperationException("Device export is too big (>350KB).");
-
-        var overlayB64 = Convert.ToBase64String(rawBytes);
-
-        var serverKey = GetServerKey();
-        var ts = UnixNow().ToString();
-        var sigInput = _mySteamId.ToString() + "|" + serverKey + "|" + ts + "|" + overlayB64;
-        var sig = HmacSha256Hex(OVERLAY_SYNC_SECRET_HEX, sigInput);
-
-        var payloadObj = new
-        {
-            steamId = _mySteamId.ToString(),
-            serverKey = serverKey,
-            ts = ts,
-            overlayJsonB64 = overlayB64,
-            sig = sig
-        };
-
-        var payloadJson = System.Text.Json.JsonSerializer.Serialize(payloadObj);
-        var content = new StringContent(payloadJson, Encoding.UTF8, "application/json");
-
-        using (var http = new HttpClient())
-        {
-            var url = OVERLAY_SYNC_BASEURL + "/upload";
-            var resp = await http.PostAsync(url, content);
-            if (!resp.IsSuccessStatusCode)
-                throw new InvalidOperationException("Upload failed: HTTP " + (int)resp.StatusCode);
-        }
-
-        // 4) optional auch lokal die Datei aktualisieren, damit Import sofort darauf zugreifen kann
-        var localPath = GetOverlayJsonPathForPlayerServer(_mySteamId);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(localPath)!);
-        File.WriteAllText(localPath, json);
-
-        return data.Devices.Count;
+        var canvasOverlay = BuildCurrentOverlaySaveDataForMe();
+        return await DeviceDataModule.UploadDevicesSnapshotAsync(GetServerKey(), _mySteamId, profile.Devices, canvasOverlay);
     }
 
     private ExportedDeviceDto MapDeviceToDto(SmartDevice d)
     {
-        var dto = new ExportedDeviceDto
-        {
-            EntityId = d.EntityId,
-            Kind = d.Kind,
-            Name = d.Name,
-            Alias = d.Alias,
-            IsGroup = d.IsGroup
-        };
-
-        if (d.IsGroup && d.Children != null && d.Children.Count > 0)
-        {
-            dto.Children = new List<ExportedDeviceDto>();
-            foreach (var child in d.Children)
-            {
-                dto.Children.Add(MapDeviceToDto(child));
-            }
-        }
-
-        return dto;
+        return DeviceDataModule.MapDeviceToDto(d);
     }
 
     private async void BtnDevicesImport_Click(object sender, RoutedEventArgs e)
@@ -1209,25 +1196,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
     private SmartDevice MapDtoToDevice(ExportedDeviceDto dto)
     {
-        var dev = new SmartDevice
-        {
-            EntityId = dto.EntityId,
-            Kind = dto.Kind,
-            Name = dto.Name,
-            Alias = dto.Alias,
-            IsGroup = dto.IsGroup,
-            IsMissing = dto.IsGroup ? false : true
-        };
-
-        if (dto.Children != null && dto.Children.Count > 0)
-        {
-            foreach (var childDto in dto.Children)
-            {
-                dev.Children.Add(MapDtoToDevice(childDto));
-            }
-        }
-
-        return dev;
+        return DeviceDataModule.MapDtoToDevice(dto);
     }
 
 private void DeviceRow_Click(object sender, MouseButtonEventArgs e)

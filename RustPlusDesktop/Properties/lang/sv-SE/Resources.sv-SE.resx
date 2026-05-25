@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>RUST+ DESKTOP</value>
+  </data>
+  <data name="SteamAccount" xml:space="preserve">
+    <value>Steam konto</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+    <value>Inte inloggad</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>Sök efter uppdateringar</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>Hämtar...</value>
+  </data>
+  <data name="JoinDiscord" xml:space="preserve">
+    <value>Anslut till Discord</value>
+  </data>
+  <data name="PatchNotes" xml:space="preserve">
+    <value>Patch anteckningar</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Inställningar</value>
+  </data>
+  <data name="PairedServers" xml:space="preserve">
+    <value>FÖRSLAGA TJÄNSTER</value>
+  </data>
+  <data name="NoServersPaired" xml:space="preserve">
+    <value>Inga servrar parade ännu</value>
+  </data>
+  <data name="PairingMaintenance" xml:space="preserve">
+    <value>PAIRING &amp; MAINTENANCE</value>
+  </data>
+  <data name="PairingIdle" xml:space="preserve">
+    <value>Pairing: idle</value>
+  </data>
+  <data name="RightClickOptions" xml:space="preserve">
+    <value>Högerklicka för alternativ</value>
+  </data>
+  <data name="TrackingActive" xml:space="preserve">
+    <value>Spårning aktiv</value>
+  </data>
+  <data name="LastPull" xml:space="preserve">
+    <value>Senaste dragning: {0}</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>Donera</value>
+  </data>
+  <data name="SupportDeveloper" xml:space="preserve">
+    <value>Stöd utvecklaren</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetWebSocket" xml:space="preserve">
+    <value>Återställ WebSocket-anslutning</value>
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value>Spelare:</value>
+  </data>
+  <data name="ShowOnlinePlayers" xml:space="preserve">
+    <value>Visa fliken för spelare online</value>
+  </data>
+  <data name="Queue" xml:space="preserve">
+    <value>Kö:</value>
+  </data>
+  <data name="DevicesTab" xml:space="preserve">
+    <value>Enheter</value>
+  </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>Snabbtangenter</value>
+  </data>
+  <data name="ImportDevices" xml:space="preserve">
+    <value>Importera enheter från lagkamrater</value>
+  </data>
+  <data name="ExportDevices" xml:space="preserve">
+    <value>Exportera enheter till lagkamrater</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Uppdatera</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Nedgång</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Ladda upp samtycke</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Genom att klicka på "Acceptera" kommer smarta enheter (och eventuellt kartritningar) för den här servern att laddas upp till skaparens server. Detta gör att lagkamrater kan ladda ner och synkronisera dem. Endast ditt Steam-ID överförs för att identifiera lagkamrater. Endast spelare som är auktoriserade på Tool Cupboard kan styra enheterna.
+
+Obs: Denna överföringsmetod kommer att optimeras i framtiden. Om lagkamrater inte kan ladda ner data, försök att rensa dina kartritningar och ladda upp igen.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Radera</value>
+  </data>
+  <data name="DeleteMissingOnly" xml:space="preserve">
+    <value>Du kan bara ta bort saknade enheter</value>
+  </data>
+  <data name="RenameDevice" xml:space="preserve">
+    <value>Byt namn på enhet</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>ONLINE</value>
+  </data>
+  <data name="Offline" xml:space="preserve">
+    <value>AVBRYT</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>Anslut</value>
+  </data>
+  <data name="FullConnect" xml:space="preserve">
+    <value>Fullständig anslutning</value>
+  </data>
+  <data name="LoadMapTeam" xml:space="preserve">
+    <value>Ladda karta och team</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>Koppla från</value>
+  </data>
+  <data name="ServerDetails" xml:space="preserve">
+    <value>Serverdetaljer</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>Lyssna</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Stoppa</value>
+  </data>
+  <data name="TryPairingEdge" xml:space="preserve">
+    <value>Prova att para ihop med kant</value>
+  </data>
+  <data name="ResetPairingConfig" xml:space="preserve">
+    <value>Reset pairing (delete config)</value>
+  </data>
+  <data name="ResetListenPairing" xml:space="preserve">
+    <value>Återställ + Lyssna (para ihop igen)</value>
+  </data>
+  <data name="ResetListenEdge" xml:space="preserve">
+    <value>Återställ + Lyssna med kant</value>
+  </data>
+  <data name="RelinkBattlemetrics" xml:space="preserve">
+    <value>Relink Battlemetrics ID…</value>
+  </data>
+  <data name="DeleteServer" xml:space="preserve">
+    <value>Ta bort server…</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Bitte warten …</value>
+  </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>Växla serverområde</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>Streamer läge</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>Skala:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>Aktivera Streamer-läge (förkortar namn)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>Förkorta Steam-namn och -ID för att skydda sekretessen under strömmar. Dölj konsol och serverlista.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>Ingen position tillgänglig (offline eller ej skapat).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>Spara grupp</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>Ange ett gruppnamn.</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>Meddelandet kunde inte skickas. Försök igen. (Kontrollera om du är i ett team!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Fel: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>Tilldela grupp</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>Gruppinställningar: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Gruppens namn</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>Ange gruppnamn...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>Grupp Färg</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Spara ändringar</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>Spelarens aktivitetsanalys och prognoser</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>Spelare</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>Streamer-Mode och Mini Map Overhaul</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>Streamer läge</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>Spelarens markör skalning</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>Mini karta polska</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>Åtgärd krävs:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics Tracking borttagen</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>Översyn av systemet för spårning av spelare</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>Hur spårning av spelare fungerar</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>Lägg till spelare att spåra för att börja spåra</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>Spårning aktiv</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>Spårning Idle</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>Filtrera spelare...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>Anslut till en server för att ladda spelarlistan</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Hämtar spelare via Steam Query...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>Spåra ID</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>Manuellt spårnamn...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Inga enheter.</value>
+  </data>
+  <data name="NoTokenRegistered" xml:space="preserve">
+    <value>Ingen token registrerad</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>Token har gått ut!</value>
+  </data>
+  <data name="ExpiresInDays" xml:space="preserve">
+    <value>Förfaller om {0} dagar</value>
+  </data>
+  <data name="UntilNight" xml:space="preserve">
+    <value>{0} till natten</value>
+  </data>
+  <data name="UntilDay" xml:space="preserve">
+    <value>{0} till dag</value>
+  </data>
+  <data name="FollowMe" xml:space="preserve">
+    <value>Följ mig</value>
+  </data>
+  <data name="FollowPlayer" xml:space="preserve">
+    <value>Följ {0}</value>
+  </data>
+  <data name="PairingListening" xml:space="preserve">
+    <value>Parkoppling: lyssnar på…</value>
+  </data>
+  <data name="PairingStopped" xml:space="preserve">
+    <value>Parkoppling: stoppad</value>
+  </data>
+  <data name="PairingFailed" xml:space="preserve">
+    <value>Parkoppling: misslyckades</value>
+  </data>
+  <data name="AlarmActivated" xml:space="preserve">
+    <value>Alarm aktiverat!</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="SmartAlarm" xml:space="preserve">
+    <value>Smart larm</value>
+  </data>
+  <data name="UnableToReadLink" xml:space="preserve">
+    <value>Det går inte att läsa RustPlus-Link: {0}
+Format: rustplus://IP:PORT</value>
+  </data>
+  <data name="DeletePairingConfigHeader" xml:space="preserve">
+    <value>Reset pairing</value>
+  </data>
+  <data name="DeletePairingConfigBody" xml:space="preserve">
+    <value>Ta bort befintlig parkopplingskonfiguration?
+Du måste parkoppla igen vid nästa start.</value>
+  </data>
+  <data name="ResetListenHeader" xml:space="preserve">
+    <value>Reset + Listen</value>
+  </data>
+  <data name="ResetListenBody" xml:space="preserve">
+    <value>Ta bort parkopplingskonfiguration och para om/lyssna?</value>
+  </data>
+  <data name="ResetListenEdgeHeader" xml:space="preserve">
+    <value>Återställ + Lyssna (Edge)</value>
+  </data>
+  <data name="ResetListenEdgeBody" xml:space="preserve">
+    <value>Ta bort parningskonfiguration och para om/lyssna direkt med Edge?</value>
+  </data>
+  <data name="UpdateQueryFailed" xml:space="preserve">
+    <value>Kunde inte fråga senaste utgåvan. Försök igen eller öppna releasesidan.</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Du är uppdaterad.</value>
+  </data>
+  <data name="UpdateAvailableHeader" xml:space="preserve">
+    <value>Uppdatering tillgänglig</value>
+  </data>
+  <data name="UpdateAvailableBody" xml:space="preserve">
+    <value>Ny version tillgänglig: {0}
+Öppna utgåvor sida?</value>
+  </data>
+  <data name="DownloadAndInstallBody" xml:space="preserve">
+    <value>Ny version tillgänglig: {0}
+Ladda ner och installera nu?</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Nedladdning misslyckades.</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Uppdateringskontrollen misslyckades.
+{0}</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Inga enheter.</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>Visa profil</value>
+  </data>
+  <data name="ChangeGroup" xml:space="preserve">
+    <value>Ändra grupp</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Döp om</value>
+  </data>
+  <data name="RemoveTracked" xml:space="preserve">
+    <value>Ta bort spårad</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Visa</value>
+  </data>
+  <data name="MoreOptions" xml:space="preserve">
+    <value>Fler alternativ</value>
+  </data>
+  <data name="RelinkBattlemetricsId" xml:space="preserve">
+    <value>Relink Battlemetrics ID…</value>
+  </data>
+  <data name="DeleteServerEllipsis" xml:space="preserve">
+    <value>Ta bort server…</value>
+  </data>
+  <data name="RightClickRename" xml:space="preserve">
+    <value>Högerklicka för att byta namn</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>VÄXLA</value>
+  </data>
+  <data name="PopupWindow" xml:space="preserve">
+    <value>Popup-fönster</value>
+  </data>
+  <data name="InAppAlert" xml:space="preserve">
+    <value>Varning i appen</value>
+  </data>
+  <data name="AudioAlert" xml:space="preserve">
+    <value>Ljudvarning</value>
+  </data>
+  <data name="CustomAudioFile" xml:space="preserve">
+    <value>Anpassad ljudfil...</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>Återställ till standard</value>
+  </data>
+  <data name="Snapshot" xml:space="preserve">
+    <value>Snapshot: </value>
+  </data>
+  <data name="ItemsUpkeep" xml:space="preserve">
+    <value> Föremål, underhåll=</value>
+  </data>
+  <data name="NoDevicesFound" xml:space="preserve">
+    <value>Inga enheter hittades</value>
+  </data>
+  <data name="PairDeviceToSee" xml:space="preserve">
+    <value>Koppla ihop en smart enhet, växla eller larm för att se den här</value>
+  </data>
+  <data name="TeamTab" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="CenterOnMap" xml:space="preserve">
+    <value>Centrera på kartan</value>
+  </data>
+  <data name="FollowOnMap" xml:space="preserve">
+    <value>Följ på kartan</value>
+  </data>
+  <data name="OpenSteamProfile" xml:space="preserve">
+    <value>Öppna Steam-profil</value>
+  </data>
+  <data name="PromoteToLeader" xml:space="preserve">
+    <value>Marknadsför till ledare</value>
+  </data>
+  <data name="KickFromTeam" xml:space="preserve">
+    <value>Sparka från teamet</value>
+  </data>
+  <data name="ProfileMarkers" xml:space="preserve">
+    <value>Profilmarkörer</value>
+  </data>
+  <data name="DeathMarkers" xml:space="preserve">
+    <value>Död markörer</value>
+  </data>
+  <data name="CamerasTab" xml:space="preserve">
+    <value>Kameror</value>
+  </data>
+  <data name="AddCamera" xml:space="preserve">
+    <value>Lägg till kamera</value>
+  </data>
+  <data name="NoCamerasFound" xml:space="preserve">
+    <value>Inga kameror hittades</value>
+  </data>
+  <data name="PairCameraToSee" xml:space="preserve">
+    <value>Para ihop en kamera för att se dess förhandsgranskning här</value>
+  </data>
+  <data name="PlayersTab" xml:space="preserve">
+    <value>Spelare</value>
+  </data>
+  <data name="HowToTrack" xml:space="preserve">
+    <value>Hur man spårar</value>
+  </data>
+  <data name="LearnHowTrackingWorks" xml:space="preserve">
+    <value>Lär dig hur spelarspårning fungerar</value>
+  </data>
+  <data name="OnlineTab" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="OnlinePlayers" xml:space="preserve">
+    <value>Spelare online</value>
+  </data>
+  <data name="SearchBM" xml:space="preserve">
+    <value>Sök BM</value>
+  </data>
+  <data name="SearchServerBM" xml:space="preserve">
+    <value>Sök aktuell server på BattleMetrics</value>
+  </data>
+  <data name="Popout" xml:space="preserve">
+    <value>Utkik</value>
+  </data>
+  <data name="OpenPlayersSeparateWindow" xml:space="preserve">
+    <value>Öppna spelare i separat fönster</value>
+  </data>
+  <data name="Track" xml:space="preserve">
+    <value>Spår</value>
+  </data>
+  <data name="ManualTrackPlaceholder" xml:space="preserve">
+    <value>Manuellt spårnamn eller Steam-ID...</value>
+  </data>
+  <data name="FilterPlayersPlaceholder" xml:space="preserve">
+    <value>Filtrera spelare...</value>
+  </data>
+  <data name="LoadingPlayers" xml:space="preserve">
+    <value>Laddar spelare...</value>
+  </data>
+  <data name="TrackedTab" xml:space="preserve">
+    <value>Spårade</value>
+  </data>
+  <data name="TrackedPlayers" xml:space="preserve">
+    <value>Spårade spelare</value>
+  </data>
+  <data name="ManageGroups" xml:space="preserve">
+    <value>Hantera grupper</value>
+  </data>
+  <data name="ViewFullAnalysisReport" xml:space="preserve">
+    <value>Visa rapport för fullständig analys</value>
+  </data>
+  <data name="ReadyToExploreMap" xml:space="preserve">
+    <value>Redo att utforska kartan?</value>
+  </data>
+  <data name="ConnectToLoadMap" xml:space="preserve">
+    <value>Anslut till en vald server för att ladda live-Rust karta och team.</value>
+  </data>
+  <data name="ReadyToDominate" xml:space="preserve">
+    <value>Redo att dominera Rust?</value>
+  </data>
+  <data name="PairAccountBenefits" xml:space="preserve">
+    <value>Para ihop ditt konto för att börja spåra spelare, ta emot basraid varningar och kontrollera dina smarta enheter omedelbart.</value>
+  </data>
+  <data name="LoginPairAccount" xml:space="preserve">
+    <value>Logga in &amp; parkonto</value>
+  </data>
+  <data name="RequiresSteamLogin" xml:space="preserve">
+    <value>Kräver Steam-inloggning i din standardwebbläsare.</value>
+  </data>
+  <data name="DeleteServerHeader" xml:space="preserve">
+    <value>Ta bort servern?</value>
+  </data>
+  <data name="DeleteServerConfirm" xml:space="preserve">
+    <value>Är du säker på att du vill ta bort denna server? Denna åtgärd kan inte ångras.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Avbryt</value>
+  </data>
+  <data name="DeleteAction" xml:space="preserve">
+    <value>Radera</value>
+  </data>
+  <data name="AutoHideAfter3s" xml:space="preserve">
+    <value>Dölj automatiskt efter 3 s</value>
+  </data>
+  <data name="MapFilters" xml:space="preserve">
+    <value>KARTA FILTERAR</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>Rutnät</value>
+  </data>
+  <data name="Monuments" xml:space="preserve">
+    <value>Monument</value>
+  </data>
+  <data name="Shops" xml:space="preserve">
+    <value>Butiker</value>
+  </data>
+  <data name="ChatAlerts" xml:space="preserve">
+    <value>CHATT ALERINGAR</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Varningar</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>Konfigurera</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Markera alla</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Avmarkera alla</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>Händelser</value>
+  </data>
+  <data name="CargoShip" xml:space="preserve">
+    <value>Lastfartyg</value>
+  </data>
+  <data name="CargoSpawn" xml:space="preserve">
+    <value>Spawna</value>
+  </data>
+  <data name="CargoDock" xml:space="preserve">
+    <value>Hamn Dockning</value>
+  </data>
+  <data name="CargoEgress" xml:space="preserve">
+    <value>Avgång (5m Varning)</value>
+  </data>
+  <data name="CargoArrival" xml:space="preserve">
+    <value>Ankomst Varning (5m före docka)</value>
+  </data>
+  <data name="Heli" xml:space="preserve">
+    <value>Patrull Helikopter</value>
+  </data>
+  <data name="Chinook" xml:space="preserve">
+    <value>Chinook (CH47)</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>Resande Leverantör</value>
+  </data>
+  <data name="OilRig" xml:space="preserve">
+    <value>Olja Rigg Trigger</value>
+  </data>
+  <data name="DeepSea" xml:space="preserve">
+    <value>Djupa havet händelse</value>
+  </data>
+  <data name="SmartAlerts" xml:space="preserve">
+    <value>Smarta varningar</value>
+  </data>
+  <data name="PlayerOnline" xml:space="preserve">
+    <value>Status online</value>
+  </data>
+  <data name="PlayerOffline" xml:space="preserve">
+    <value>Status för offline</value>
+  </data>
+  <data name="AnnounceTracking" xml:space="preserve">
+    <value>Spårar notifikationer</value>
+  </data>
+  <data name="PlayerDeathSelf" xml:space="preserve">
+    <value>Självdöd</value>
+  </data>
+  <data name="PlayerDeathTeam" xml:space="preserve">
+    <value>Lagets död</value>
+  </data>
+  <data name="PlayerRespawnSelf" xml:space="preserve">
+    <value>Själv återuppstå</value>
+  </data>
+  <data name="PlayerRespawnTeam" xml:space="preserve">
+    <value>Team Respawna</value>
+  </data>
+  <data name="NewShops" xml:space="preserve">
+    <value>Nya butiker</value>
+  </data>
+  <data name="SuspiciousShops" xml:space="preserve">
+    <value>Misstänkta butiker</value>
+  </data>
+  <data name="TradeAlerts" xml:space="preserve">
+    <value>Varningar för handel</value>
+  </data>
+  <data name="CrosshairStyle" xml:space="preserve">
+    <value>Stil på hårkorset</value>
+  </data>
+  <data name="GreenDot" xml:space="preserve">
+    <value>Grön Punkt</value>
+  </data>
+  <data name="MiniGreen" xml:space="preserve">
+    <value>Mini Grön</value>
+  </data>
+  <data name="OpenCrosshairRG" xml:space="preserve">
+    <value>Öppet Crosshair (R/G)</value>
+  </data>
+  <data name="ThinRedCircle" xml:space="preserve">
+    <value>Tunn röd cirkel</value>
+  </data>
+  <data name="SquareDot" xml:space="preserve">
+    <value>Kvadrat + Punkt</value>
+  </data>
+  <data name="MagentaDot" xml:space="preserve">
+    <value>Magenta Punkt</value>
+  </data>
+  <data name="MagentaOpenCross" xml:space="preserve">
+    <value>Öppet ljuslila kors</value>
+  </data>
+  <data name="RangeLineTicks" xml:space="preserve">
+    <value>Räckvidd Linje (fästingar)</value>
+  </data>
+  <data name="DrawCrosshair" xml:space="preserve">
+    <value>Rita hårkorset...</value>
+  </data>
+  <data name="ChooseMonitor" xml:space="preserve">
+    <value>Välj bildskärm</value>
+  </data>
+  <data name="DrawOverlay" xml:space="preserve">
+    <value>Rita överlägg</value>
+  </data>
+  <data name="DrawToolTip" xml:space="preserve">
+    <value>Rita (Högerklicka: Storlek / färg)</value>
+  </data>
+  <data name="PlaceTextToolTip" xml:space="preserve">
+    <value>Placera text (Högerklicka: Färg / Storlek)</value>
+  </data>
+  <data name="PlaceIconToolTip" xml:space="preserve">
+    <value>Placera ikonen (Högerklicka: Välj ikon)</value>
+  </data>
+  <data name="EraserToolTip" xml:space="preserve">
+    <value>Suddgummi (håll eller klicka)</value>
+  </data>
+  <data name="DeleteOverlayToolTip" xml:space="preserve">
+    <value>Ta bort eget överlägg</value>
+  </data>
+  <data name="UploadOverlayToolTip" xml:space="preserve">
+    <value>Ladda upp egen överlagring / delning</value>
+  </data>
+  <data name="ProfitTrades" xml:space="preserve">
+    <value>Profit Trades</value>
+  </data>
+  <data name="ArbitrageOpportunities" xml:space="preserve">
+    <value>Direkt arbitrage möjligheter &lt;unk&gt; köpa låg → sälja hög.</value>
+  </data>
+  <data name="BuyXForY" xml:space="preserve">
+    <value>Köp X för Y</value>
+  </data>
+  <data name="Analyze" xml:space="preserve">
+    <value>Analysera</value>
+  </data>
+  <data name="IWantToGet" xml:space="preserve">
+    <value>Jag vill FÅ</value>
+  </data>
+  <data name="ICanPayWith" xml:space="preserve">
+    <value>Jag kan betala med</value>
+  </data>
+  <data name="TeamChat" xml:space="preserve">
+    <value>Team Chatt</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Skicka</value>
+  </data>
+  <data name="FcmCredentials" xml:space="preserve">
+    <value>FCM referenser</value>
+  </data>
+  <data name="RightClickConfigure" xml:space="preserve">
+    <value>Högerklicka för att konfigurera</value>
+  </data>
+  <data name="ResetMap" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetMapToolTip" xml:space="preserve">
+    <value>Återställ kartzoom och position</value>
+  </data>
+  <data name="MiniMap" xml:space="preserve">
+    <value>Mini</value>
+  </data>
+  <data name="CrosshairToolTip" xml:space="preserve">
+    <value>Crosshair på/av (Högerklicka för alternativ)</value>
+  </data>
+  <data name="TrackPlayer" xml:space="preserve">
+    <value>SPELA SPELARE</value>
+  </data>
+  <data name="CloseBMBrowser" xml:space="preserve">
+    <value>Stäng BattleMetrics Browser</value>
+  </data>
+  <data name="ShopSearchTitle" xml:space="preserve">
+    <value>SÖK SÖK</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>Stäng sökning</value>
+  </data>
+  <data name="ActivateShopsFirst" xml:space="preserve">
+    <value>Vänligen aktivera Butiker först</value>
+  </data>
+  <data name="ActivateShopPolling" xml:space="preserve">
+    <value>Aktivera Shop-röstning</value>
+  </data>
+  <data name="TeamChatTitle" xml:space="preserve">
+    <value>TEAM CHATT</value>
+  </data>
+  <data name="CloseChat" xml:space="preserve">
+    <value>Stäng chatt</value>
+  </data>
+  <data name="ChatCommandsSettings" xml:space="preserve">
+    <value>Inställningar för chattkommandon</value>
+  </data>
+  <data name="ChatCommands" xml:space="preserve">
+    <value>Chatt kommandon</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Tillbaka</value>
+  </data>
+  <data name="Forward" xml:space="preserve">
+    <value>Framåt</value>
+  </data>
+  <data name="OpenInExternalBrowser" xml:space="preserve">
+    <value>Öppna i extern webbläsare</value>
+  </data>
+  <data name="SearchBMPlaceholder" xml:space="preserve">
+    <value>Sök BM...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Sök</value>
+  </data>
+  <data name="SelectAServer" xml:space="preserve">
+    <value>Välj en server</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>AVSLUTADE</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>ANSLUT...</value>
+  </data>
+  <data name="StatusInitializing" xml:space="preserve">
+    <value>INITIALISERING...</value>
+  </data>
+  <data name="StatusDevicesActive" xml:space="preserve">
+    <value>ENHETER AKTIV</value>
+  </data>
+  <data name="StatusFullyConnected" xml:space="preserve">
+    <value>OLJLIGT ANSLUTET</value>
+  </data>
+  <data name="StatusUnknown" xml:space="preserve">
+    <value>OVÄND</value>
+  </data>
+  <data name="MayTakeAMoment" xml:space="preserve">
+    <value>Detta kan ta ett ögonblick...</value>
+  </data>
+  <data name="AppSettingsTitle" xml:space="preserve">
+    <value>Inställningar för program</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Allmänt</value>
+  </data>
+  <data name="LaunchWithWindows" xml:space="preserve">
+    <value>Starta med Windows (minimerad)</value>
+  </data>
+  <data name="StartMinimizedAlways" xml:space="preserve">
+    <value>Starta minimerad (alltid)</value>
+  </data>
+  <data name="AutoConnectLastServer" xml:space="preserve">
+    <value>Auto-Anslut till senaste servern vid uppstart</value>
+  </data>
+  <data name="AutoConnectToolTip" xml:space="preserve">
+    <value>Återansluter automatiskt till den senaste servern och laddar kartan.</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Beteende</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>Minimera till facket istället för att stänga</value>
+  </data>
+  <data name="BackgroundTracking" xml:space="preserve">
+    <value>Aktivera spårning av bakgrundsspelare</value>
+  </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>Håller spårning spelare via BattleMetrics även när minimeras.</value>
+  </data>
+  <data name="HideSystemConsole" xml:space="preserve">
+    <value>Dölj systemkonsolen (Declutter)</value>
+  </data>
+  <data name="HideConsoleToolTip" xml:space="preserve">
+    <value>Döljer den nedre loggen/konsolpanelen för att spara kartutrymme.</value>
+  </data>
+  <data name="MapSettings" xml:space="preserve">
+    <value>Inställningar för karta</value>
+  </data>
+  <data name="AutoLoadShops" xml:space="preserve">
+    <value>Ladda butiker automatiskt vid anslutning</value>
+  </data>
+  <data name="AutoLoadShopsToolTip" xml:space="preserve">
+    <value>Starta automatiskt frågelistor och varningar när de är anslutna till en server.</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Använd textetiketter för monument istället för ikoner</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>När den är aktiverad återges monumentnamn på Rust Map som text med teckensnittet Permanent Marker i stället för ikoner.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Monument Stil:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Monumentskala:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Monument Opacitet:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Ikoner av rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Original text monument namn</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Krediter</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Ikoner för kartmonument tillhandahålls av </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - används med tillstånd.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Alla monumentikoner och relaterade konstverk tillhör rustmaps.com. Tack för att du stöder Rust-communityn!</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Chatt</value>
+  </data>
+  <data name="ModifyChatAlerts" xml:space="preserve">
+    <value>Ändra chattvarningar</value>
+  </data>
+  <data name="ManageSteamAccountInfo" xml:space="preserve">
+    <value>Hantera ditt länkade Steam-konto i huvudfönstret.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Stäng</value>
+  </data>
+  <data name="IncomingAlarms" xml:space="preserve">
+    <value>INKOMMANDE ALARM</value>
+  </data>
+  <data name="Wipe" xml:space="preserve">
+    <value>Rensa</value>
+  </data>
+  <data name="PlayersOnly" xml:space="preserve">
+    <value>Spelare</value>
+  </data>
+  <data name="PlayersHeader" xml:space="preserve">
+    <value>Spelare</value>
+  </data>
+  <data name="IWantToGetToolTip" xml:space="preserve">
+    <value>Jag vill FÅ (t.ex. råolja)</value>
+  </data>
+  <data name="ICanPayWithToolTip" xml:space="preserve">
+    <value>Jag vill betala med (t.ex. skrot)</value>
+  </data>
+  <data name="DeleteServerConfirmFormatted" xml:space="preserve">
+    <value>Är du säker på att du vill ta bort Server "{0}"? Denna åtgärd kan inte ångras.</value>
+  </data>
+  <data name="PairingError" xml:space="preserve">
+    <value>Pairing: error</value>
+  </data>
+  <data name="PairingStarting" xml:space="preserve">
+    <value>Par: startar...</value>
+  </data>
+  <data name="StartingPairingListener" xml:space="preserve">
+    <value>Startar par-lyssnare...</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+    <value>Inloggad</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>Lager</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Pris</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>PÅ</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>AV</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>AKTIV</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>INAKTIV</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>GRUPP</value>
+  </data>
+  <data name="ImportDevicesTitle" xml:space="preserve">
+    <value>Rust+ skrivbord – Importera enheter</value>
+  </data>
+  <data name="ImportDevicesHeader" xml:space="preserve">
+    <value>Importera enheter</value>
+  </data>
+  <data name="ImportDevicesSelectPrompt" xml:space="preserve">
+    <value>Välj vilka enheter du vill importera för denna server.</value>
+  </data>
+  <data name="CheckDeviceStatus" xml:space="preserve">
+    <value>Kontrollera enhetens status</value>
+  </data>
+  <data name="ImportSelected" xml:space="preserve">
+    <value>Importera valda</value>
+  </data>
+  <data name="BmShortcuts" xml:space="preserve">
+    <value>BM genvägar</value>
+  </data>
+  <data name="PairingConfigDeleted" xml:space="preserve">
+    <value>Parkoppling: konfiguration borttagen</value>
+  </data>
+  <data name="TrayIconDefault" xml:space="preserve">
+    <value>Rust+ Desk Tracker</value>
+  </data>
+  <data name="TrayIconTracking" xml:space="preserve">
+    <value>Rust+ skrivbord (Spårning {0})</value>
+  </data>
+  <data name="RenameGroup" xml:space="preserve">
+    <value>Döp om grupp</value>
+  </data>
+  <data name="NewNameForGroup" xml:space="preserve">
+    <value>Nytt namn för gruppen:</value>
+  </data>
+  <data name="NewNameForDevice" xml:space="preserve">
+    <value>Nytt namn för #{0}:</value>
+  </data>
+  <data name="EnterBattlemetricsIdFor" xml:space="preserve">
+    <value>Ange Battlemetrics Server ID för "{0}":</value>
+  </data>
+  <data name="TrayTrackingStatus" xml:space="preserve">
+    <value>Spårning: {0}</value>
+  </data>
+  <data name="TrayLastUpdate" xml:space="preserve">
+    <value>Senaste uppdatering: {0}</value>
+  </data>
+  <data name="OpenRustPlusDesk" xml:space="preserve">
+    <value>Öppen Rust+ skrivbord</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Avsluta</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Beskrivning</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>Kamera</value>
+  </data>
+  <data name="Alarms" xml:space="preserve">
+    <value>Larm</value>
+  </data>
+  <data name="Identifier" xml:space="preserve">
+    <value>Identifier:</value>
+  </data>
+  <data name="FPS" xml:space="preserve">
+    <value>FPS:</value>
+  </data>
+  <data name="CameraFPSNote" xml:space="preserve">
+    <value>Obs: 2 fps rekommenderas, högre FPS sannolikt stänga din anslutning till servern</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>Pixel</value>
+  </data>
+  <data name="Pen" xml:space="preserve">
+    <value>Penna</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>Linje</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>Kvadrat</value>
+  </data>
+  <data name="Circle" xml:space="preserve">
+    <value>Cirkel</value>
+  </data>
+  <data name="Thickness" xml:space="preserve">
+    <value>Tjocklek:</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Opacitet:</value>
+  </data>
+  <data name="UploadPNG" xml:space="preserve">
+    <value>Ladda upp PNG</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Rensa</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Spara</value>
+  </data>
+  <data name="AssignGlobalHotkeys" xml:space="preserve">
+    <value>Tilldela globala snabbtangenter till Smarta switchar. Flera enheter kan dela en snabbtangent (kommer att växla sekventiellt).</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Enhet</value>
+  </data>
+  <data name="EntityId" xml:space="preserve">
+    <value>EntityId</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>Snabbtangent</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Ange</value>
+  </data>
+  <data name="CloseDeactivate" xml:space="preserve">
+    <value>Stäng &amp; inaktivera</value>
+  </data>
+  <data name="CloseActivate" xml:space="preserve">
+    <value>Stäng &amp; aktivera</value>
+  </data>
+  <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
+    <value>Uppdatering av underhåll, minimap och spårning</value>
+  </data>
+  <data name="FeatureSummaryAdjustments" xml:space="preserve">
+    <value>Sammanfattning av funktioner &amp; justeringar</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>Visa inte detta igen</value>
+  </data>
+  <data name="AwesomeLetsGo" xml:space="preserve">
+    <value>Grymt, låt oss gå!</value>
+  </data>
+  <data name="MiniMapSettings" xml:space="preserve">
+    <value>Inställningar för minikarta</value>
+  </data>
+  <data name="Shape" xml:space="preserve">
+    <value>Form</value>
+  </data>
+  <data name="Rectangle" xml:space="preserve">
+    <value>Rektangel</value>
+  </data>
+  <data name="OpacityLabel" xml:space="preserve">
+    <value>Opacitet: {0}%</value>
+  </data>
+  <data name="SizeLabel" xml:space="preserve">
+    <value>Storlek: {0}% (SHIFT+Mushjul)</value>
+  </data>
+  <data name="ShowServerTime" xml:space="preserve">
+    <value>Visa servertid</value>
+  </data>
+  <data name="ServerInformation" xml:space="preserve">
+    <value>Server Information</value>
+  </data>
+  <data name="NoDescriptionAvailable" xml:space="preserve">
+    <value>Ingen beskrivning tillgänglig.</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Nuvarande version: {0}</value>
+  </data>
+  <data name="PatchNotesHeader" xml:space="preserve">
+    <value>Patch Notes &amp; Version Historia</value>
+  </data>
+  <data name="EnableChatCommands" xml:space="preserve">
+    <value>Aktivera chattkommandon</value>
+  </data>
+  <data name="Prefix" xml:space="preserve">
+    <value>Prefix:</value>
+  </data>
+  <data name="StandardCommands" xml:space="preserve">
+    <value>Standard kommandon</value>
+  </data>
+  <data name="Population" xml:space="preserve">
+    <value>Befolkning:</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Tid:</value>
+  </data>
+  <data name="Promote" xml:space="preserve">
+    <value>Marknadsför:</value>
+  </data>
+  <data name="DeepSeaCommand" xml:space="preserve">
+    <value>Djupt hav:</value>
+  </data>
+  <data name="CargoShipCommand" xml:space="preserve">
+    <value>Lastfartyg:</value>
+  </data>
+  <data name="OilRigCommand" xml:space="preserve">
+    <value>Oljerigg:</value>
+  </data>
+  <data name="PatrolHeliCommand" xml:space="preserve">
+    <value>Patrull Heli:</value>
+  </data>
+  <data name="TravellingVendorCommand" xml:space="preserve">
+    <value>Resande Leverantör:</value>
+  </data>
+  <data name="UpkeepDetails" xml:space="preserve">
+    <value>Detaljerna för underhåll:</value>
+  </data>
+  <data name="CommandDelay" xml:space="preserve">
+    <value>Kommando fördröjning:</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Språk</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Välj språk</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>För att byta språk krävs en omstart för att få full effekt.</value>
+  </data>
+  <data name="SmartSwitches" xml:space="preserve">
+    <value>Smarta växlar</value>
+  </data>
+  <data name="UpkeepTcMonitors" xml:space="preserve">
+    <value>Underhåll (TC) Monitorer</value>
+  </data>
+  <data name="NoTcMonitorsFound" xml:space="preserve">
+    <value>Inga TC monitorer hittades.</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Spara &amp; Stäng</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Meddelande...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Felmeddelande här</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Patrull Heli</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Patrol Heli aktiv - kör för {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Ansluten i mitten av evenemanget - lektid okänd</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Patrol Heli aktiv (speltid okänd)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Patrol Heli nedskjuten {0} för ett år sedan</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Patrol Heli lämnade kartan {0} för länge sedan denna session</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Dockad på {0} - avgår i ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>Hamn</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Redan dockad på connect - avgångstid okänd</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Dockad på {0} (dockningstiden är ännu inte fastställd)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Återstående tid på kartan (från spawn)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Ansluten mitt i rutten - tid okänd</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Ansluten mitt i rutten - tid okänd (rutt ~{0}m totalt)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Cargo Ship despawned {0}m {1}s sedan denna session</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Resande Säljaren är aktiv och springer för {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Travelling Vendor aktiv (lektid okänd)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor despawned {0} för länge sedan denna session</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea aktiv - går in på {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Deep Sea active (lektiden okänd)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea avslutades för {0} sedan denna session</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} spelare som för närvarande är online.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Kö: {0} spelare.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Aktuell tid i spelet: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} befordrades till ledare.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea är aktiv! Löpande för {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea är för närvarande aktiv (ansluten mitt i evenemanget - lektid okänd).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea avslutades för {0} minuter sedan denna session.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Status för Deep Sea-händelsen okänd (har inte setts under denna session).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Cargo Ship inte aktiv.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Lastfartyg dockat på {0}. Avgår om ca. {1} minuter.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Lastfartyg dockat på {0} och förbereder sig för avgång.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Lastfartyg dockat på {0} (avgångstid okänd).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Lastfartyg aktiv. Avgår om ca. {0} minuter.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Lastfartyg aktivt och förbereder sig för att lämna snart.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Lastfartyg aktivt (ruttens varaktighet har ännu inte lärt sig för denna server).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Lastfartyg aktivt (anslutet efter lek - återstående tid okänd).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Lastfartyget är inte aktivt. Despawned {0} minuter sedan denna session.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: lådan i {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: senast anropad {1}m sedan</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: inte kallad denna session</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Patrol Heli är aktiv! Löpande för {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Patrol Heli är för närvarande aktiv (ansluten mitt i händelsen - speltid okänd).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Patrol Heli är inte aktiv. Det var {0} {1} sedan denna session.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>nedskjuten</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>lämnade kartan</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Status för Patrol Heli okänd (har inte setts under denna session).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Travelling Vendor är aktiv! Löpande för {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Travelling Vendor är för närvarande aktiv (ansluten mitt i händelsen - lektid okänd).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Resande säljare inte aktiv. Despawned {0} för denna session.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Travelling Vendor händelsestatus okänd (har inte setts under denna session).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Inga verktygsskåp är mappade för underhållskommandon.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Underhåll på {0} TC: Tomt eller föråldrat.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Behov/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Upprätthållande av {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} dagar</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} timmar</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} Protokoll</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Tom/utgången</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Underhåll: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Bound Tool Cupboard bildskärmar hittades inte eller parades inte ihop.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Bound Tool Cupboard-monitorn hittades inte eller parades inte ihop.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} vände {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Bound Smart Switch hittades inte eller har inte parats ihop.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Trä</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Sten</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Metall</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Liten oljerigg</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Stor oljerigg</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Butik</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Lastfartyg</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Resande försäljare</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Patrullhelikopter</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Oilrig-låda</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Explosion</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Byggnaden blockerad</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Händelse</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] utlöst! Lådan låses upp i {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} utlöst!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Crate låses upp om 10 minuter!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Crate låses upp på 5 minuter!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Deep Sea är uppe</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Ny butik {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Misstänkt butik {0} [{1}] var online {2}s, sålde {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Cargo Ship spawned {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>långt ute till havs (nära {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Lastfartyg dockat vid {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Lastfartyget förväntas lägga till vid {0} ({1}) om ca 5 minuter.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Lastfartyg avgår från {0} om 5 minuter ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Krasch upptäckt på grund av serverfördröjning - Heli finns fortfarande på kartan på {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} skapad på {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Patrullhelikopter nedskjuten på {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>okänd</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} kom online @ {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} gick offline</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} dog @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} återskapad @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Spårning] {0}{1} är nu ONLINE</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Spårning] {0}{1} är nu OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Spårning] {0}{1} byter namn till {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>säljer</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>köper</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Butik</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (lager {5}) för {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Lista chattkommandon</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>COMMANDS: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Lokalisering, modernisering av användargränssnitt och lagring</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dynamiskt byte av språkdräkt</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - 30+ språk att välja mellan</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Chattkommandon UI</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - Isolerad vy för ett rent utseende</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Nya inställningar Overlay</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - Ren sidofält för alla inställningar</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics Tracking borttagen</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Din bas är under attack!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Anslut först till en server.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Du är inte ansluten till någon server.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Chat är inte tillgängligt just nu.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Vänligen välj en server först.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Anslutning</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Chatt</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Hur man spårar spelare</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Inbyggd UDP-spårning</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Spårningsguiden är för närvarande endast tillgänglig på engelska, eftersom den kommer att genomgå förändringar inom en snar framtid. Vi ber om ert tålamod.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Stäng det här fönstret när som helst - du kan öppna det igen med ❓ How to Track-knappen.</value>
+  </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Underhåll</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Radera, säkerhetskopiera eller återställa programinställningar, profiler och anpassade ritningar.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Återställ appdata ...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Säkerhetskopiera data...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Återställ data...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Återställ applikationsdata</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Välj de komponenter som du vill radera från den här enheten. Alla valda alternativ kommer att raderas permanent.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Anslutning till Active Server (frånkoppling)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Saved Server Profiles (Ta bort parade serverkonfigurationer)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Uppgifter för Steam-konto (logga ut)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Device Pairing Config (Återställ registreringstoken)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Anpassat hårkors (Wipe-konfigurationer)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Lokal cache och ritningar (radera sparade kartor/linjer)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Denna åtgärd är permanent och kan inte ångras.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Bekräfta återställning</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Lösenord för säkerhetskopiering</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Skydd för säkerhetskopiering</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Ange ett lösenord för att kryptera den här säkerhetskopian. Om du lämnar fältet tomt kommer säkerhetskopian inte att krypteras.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Återställ säkerhetskopia</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Den här säkerhetskopian är lösenordsskyddad. Ange lösenordet för att dekryptera den:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Kryptera</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Dekryptera</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Säkerhetskopiera applikationsdata</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Backup skapades framgångsrikt vid: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Backup skapad framgångsrikt!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Säkerhetskopiering slutförd</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Fel vid säkerhetskopiering: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Fel vid skapande av säkerhetskopia: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Säkerhetskopieringen misslyckades</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Återställning av data kommer att skriva över dina nuvarande serverprofiler, anpassade hårkors, ritningsöverlägg och minimap-konfigurationer.
+
+Är du säker på att du vill fortsätta?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Bekräftelse av återställning av säkerhetskopia</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Återställ applikationsdata</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Programdata återställdes framgångsrikt!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Återställning slutförd</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Återställningsfel: Ogiltigt lösenord angavs.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Dekrypteringen misslyckades. Ogiltigt lösenord eller skadad backup-fil.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Återställningen misslyckades</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Återställningsfel: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Fel vid återställning av säkerhetskopia: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Ogiltigt filformat för säkerhetskopian eller saknad signatur.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Start av selektiv återställning...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Kopplar bort aktiv serveranslutning...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Återställning av anslutning slutförd.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Rensning av sparade serverprofiler...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Sparade serverprofiler rensas.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Ta bort inloggningsuppgifter för Steam-konto ...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Steam-legitimation rensad.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Raderar konfigurationen för enhetens parkoppling...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Konfigurationen för enhetens parkoppling raderad.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Torka anpassade hårkors ...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Fel vid rensning av anpassade hårkors: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Anpassat hårkors rensat.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Rensning av lokala cachefiler och överläggsritningar...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Fel vid rensning av cachemapp: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Cache-mappar rensade.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Omregistrering av lyssnar- och FCM-autentiseringsuppgifter ...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Den selektiva återställningen har slutförts framgångsrikt.</value>
+  </data>
+</root>

@@ -50,7 +50,7 @@ public partial class MainWindow
                     _deepSeaMidEvent = false;
                     string dir = GetDeepSeaDirection(deepSeaShop.X, deepSeaShop.Y);
                     if (_announceSpawns && TrackingService.AnnounceDeepSea)
-                        _ = SendTeamChatSafeAsync("Deep Sea is up");
+                        _ = SendTeamChatSafeAsync(Properties.Resources.AlertDeepSeaUp);
                     AppendLog($"[DEEPSEA] Spawn detected at {deepSeaShop.X:F0},{deepSeaShop.Y:F0} (Direction: {dir})");
                 }
                 else
@@ -155,6 +155,7 @@ public partial class MainWindow
 
             UpdateShopPollingWarning();
         }
+        UpdateSelectAllState();
     }
 
     private void RefreshShopIconScales()
@@ -290,9 +291,9 @@ public partial class MainWindow
                 ? string.Join(", ", preview)
                 : "no stock";
 
-            string msg =
-                $"New shop {(s.Label ?? "Shop")} [{GetGridLabel(s)}]: {offersShort}";
-            AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert [new shop] {(s.Label ?? "Shop")} [{GetGridLabel(s)}]: {offersShort}");
+            string shopName = s.Label ?? Properties.Resources.ShopWord;
+            string msg = string.Format(Properties.Resources.AlertNewShop, shopName, GetGridLabel(s), offersShort);
+            AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert [new shop] {shopName} [{GetGridLabel(s)}]: {offersShort}");
             await SendTeamChatSafeAsync(msg);
         }
     }
@@ -353,9 +354,8 @@ public partial class MainWindow
                                 ? string.Join(", ", preview)
                                 : "nothing in stock";
 
-                            string msg =
-                                $"Suspicious shop {(snap.Label ?? "Shop")} " +
-                                $"[{GetGridLabel(snap)}] was online {Math.Round(lived.TotalSeconds)}s, sold {firstFew}";
+                            string snapShopName = snap.Label ?? Properties.Resources.ShopWord;
+                            string msg = string.Format(Properties.Resources.AlertSuspiciousShop, snapShopName, GetGridLabel(snap), Math.Round(lived.TotalSeconds), firstFew);
 
                             life.AnnouncedSuspicious = true; // Set BEFORE sending to prevent race condition spam
                             _ = SendTeamChatSafeAsync(msg);
@@ -569,7 +569,7 @@ public partial class MainWindow
         ShopDetailsPopup.MouseLeave += (s, e) => StartShopDetailHideTimer();
     }
 
-    private void ShowShopDetails(List<RustPlusClientReal.ShopMarker> cluster, FrameworkElement anchor = null)
+    private void ShowShopDetails(List<RustPlusClientReal.ShopMarker> cluster, FrameworkElement? anchor = null)
     {
         if (ShopDetailsPopup == null || ShopDetailsContent == null) return;
         

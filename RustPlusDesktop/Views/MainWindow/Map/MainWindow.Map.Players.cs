@@ -72,7 +72,8 @@ public partial class MainWindow
 
     private FrameworkElement BuildPlayerDotMarker(ulong sid, string name, bool online, bool dead)
     {
-        var brush = dead ? Brushes.IndianRed : (online ? Brushes.LimeGreen : Brushes.LightGray);
+        var isSelf = sid == _mySteamId;
+        var brush = dead ? Brushes.IndianRed : (online ? (isSelf ? Brushes.ForestGreen : Brushes.LimeGreen) : Brushes.LightGray);
 
         var dot = new Ellipse
         {
@@ -121,7 +122,8 @@ public partial class MainWindow
 
     private FrameworkElement BuildPlayerMarker(ulong sid, string name, bool online, bool dead)
     {
-        var brush = dead ? Brushes.IndianRed : (online ? Brushes.LimeGreen : Brushes.Gray);
+        var isSelf = sid == _mySteamId;
+        var brush = dead ? Brushes.IndianRed : (online ? (isSelf ? Brushes.ForestGreen : Brushes.LimeGreen) : Brushes.Gray);
         var avatar = GetAvatar(sid);
 
         if (avatar == null)
@@ -233,7 +235,8 @@ public partial class MainWindow
 
         if (!_showProfileMarkers)
         {
-            var brush = dead ? Brushes.IndianRed : (online ? Brushes.LimeGreen : Brushes.LightGray);
+            var isSelf = sid == _mySteamId;
+            var brush = dead ? Brushes.IndianRed : (online ? (isSelf ? Brushes.ForestGreen : Brushes.LimeGreen) : Brushes.LightGray);
 
             if (el.Tag is not PlayerMarkerTag t || !t.IsDot)
             {
@@ -261,7 +264,8 @@ public partial class MainWindow
             return;
         }
 
-        var brush2 = dead ? Brushes.IndianRed : (online ? Brushes.LimeGreen : Brushes.LightGray);
+        var isSelf2 = sid == _mySteamId;
+        var brush2 = dead ? Brushes.IndianRed : (online ? (isSelf2 ? Brushes.ForestGreen : Brushes.LimeGreen) : Brushes.LightGray);
         var avatar = GetAvatarForMap(sid);
 
         if (el.Tag is PlayerMarkerTag tag)

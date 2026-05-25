@@ -1,0 +1,98 @@
+<UserControl x:Class="RustPlusDesk.Views.ImageGallery"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             x:Name="GalleryControl">
+    
+    <Border Background="{DynamicResource SurfaceAlt}" 
+            BorderBrush="{DynamicResource CardBorder}" 
+            BorderThickness="1" 
+            CornerRadius="10" 
+            Padding="12" 
+            Margin="0,0,0,12">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Active Image Preview with Nav Buttons -->
+            <Grid Grid.Row="0" Margin="0,0,0,10" x:Name="ImageGrid">
+                <!-- Large Image -->
+                <Border Height="360" CornerRadius="8" ClipToBounds="True" Background="#0A0D10" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+                    <Image x:Name="ImgPreview" 
+                           Stretch="Uniform" 
+                           Cursor="Hand"
+                           MouseLeftButtonDown="ImgPreview_MouseLeftButtonDown"
+                           RenderOptions.BitmapScalingMode="HighQuality"/>
+                </Border>
+
+                <!-- Navigation Buttons Overlay (Visible when multiple images exist) -->
+                <Grid x:Name="NavigationOverlay">
+                    <!-- Left Button -->
+                    <Button x:Name="BtnPrev" 
+                            HorizontalAlignment="Left" 
+                            VerticalAlignment="Center" 
+                            Margin="12,0,0,0"
+                            Width="36" Height="36"
+                            Padding="0"
+                            Background="#80000000"
+                            BorderThickness="0"
+                            Foreground="White"
+                            Cursor="Hand"
+                            Click="BtnPrev_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="18">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <ui:SymbolIcon Symbol="ChevronLeft24" FontSize="18"/>
+                    </Button>
+
+                    <!-- Right Button -->
+                    <Button x:Name="BtnNext" 
+                            HorizontalAlignment="Right" 
+                            VerticalAlignment="Center" 
+                            Margin="0,0,12,0"
+                            Width="36" Height="36"
+                            Padding="0"
+                            Background="#80000000"
+                            BorderThickness="0"
+                            Foreground="White"
+                            Cursor="Hand"
+                            Click="BtnNext_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="18">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <ui:SymbolIcon Symbol="ChevronRight24" FontSize="18"/>
+                    </Button>
+                </Grid>
+            </Grid>
+
+            <!-- Description Text -->
+            <TextBlock Grid.Row="1" 
+                       x:Name="TxtDescription" 
+                       TextWrapping="Wrap" 
+                       HorizontalAlignment="Center" 
+                       TextAlignment="Center" 
+                       FontSize="13" 
+                       Foreground="{DynamicResource TextPrimary}" 
+                       FontWeight="Medium"
+                       Margin="10,0,10,10"/>
+
+            <!-- Bullet Indicators (Dots) -->
+            <StackPanel Grid.Row="2" 
+                        x:Name="IndicatorPanel" 
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Center" 
+                        Margin="0,0,0,4"/>
+        </Grid>
+    </Border>
+</UserControl>

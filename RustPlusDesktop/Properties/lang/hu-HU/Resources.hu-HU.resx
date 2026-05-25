@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>RUST+ DESKTOP</value>
+  </data>
+  <data name="SteamAccount" xml:space="preserve">
+    <value>Steam fiók</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+    <value>Nincs bejelentkezve</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>Frissítések ellenőrzése</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>Letöltés...</value>
+  </data>
+  <data name="JoinDiscord" xml:space="preserve">
+    <value>Csatlakozz a Discordhoz</value>
+  </data>
+  <data name="PatchNotes" xml:space="preserve">
+    <value>Javítási megjegyzések</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Beállítások</value>
+  </data>
+  <data name="PairedServers" xml:space="preserve">
+    <value>FELSZERELT SZOLGÁLTATÓK</value>
+  </data>
+  <data name="NoServersPaired" xml:space="preserve">
+    <value>Még nincsenek párosított szerverek</value>
+  </data>
+  <data name="PairingMaintenance" xml:space="preserve">
+    <value>PÁROSÍTÁS ÉS KARBANTARTÁS</value>
+  </data>
+  <data name="PairingIdle" xml:space="preserve">
+    <value>Párosítás: üresjárat</value>
+  </data>
+  <data name="RightClickOptions" xml:space="preserve">
+    <value>Jobb gombbal kattintás a beállításokhoz</value>
+  </data>
+  <data name="TrackingActive" xml:space="preserve">
+    <value>Nyomon követés Aktív</value>
+  </data>
+  <data name="LastPull" xml:space="preserve">
+    <value>Utolsó húzás: {0}</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>Adományozni</value>
+  </data>
+  <data name="SupportDeveloper" xml:space="preserve">
+    <value>Támogassa a fejlesztőt</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetWebSocket" xml:space="preserve">
+    <value>WebSocket kapcsolat visszaállítása</value>
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value>Játékosok:</value>
+  </data>
+  <data name="ShowOnlinePlayers" xml:space="preserve">
+    <value>Online játékosok lap megjelenítése</value>
+  </data>
+  <data name="Queue" xml:space="preserve">
+    <value>Sorban állás:</value>
+  </data>
+  <data name="DevicesTab" xml:space="preserve">
+    <value>Eszközök</value>
+  </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>Hotkeys</value>
+  </data>
+  <data name="ImportDevices" xml:space="preserve">
+    <value>Eszközök importálása csapattársaktól</value>
+  </data>
+  <data name="ExportDevices" xml:space="preserve">
+    <value>Eszközök exportálása csapattársakhoz</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Frissítés</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Hanyatlás</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Hozzájárulás feltöltése</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Az "Elfogadom" gombra kattintva az adott szerverhez tartozó intelligens eszközök (és esetleges térképrajzok) feltöltődnek a készítő szerverére. Így a csapattársak letölthetik és szinkronizálhatják azokat. A csapattársak azonosításához csak a Steam azonosítóját továbbítja a rendszer. Az eszközöket csak az Eszközszekrénynél engedélyezett játékosok irányíthatják.
+
+Megjegyzés: Ez az átviteli módszer a jövőben optimalizálásra kerül. Ha a csapattársak nem tudják letölteni az adatokat, próbáld meg törölni a térképrajzokat és újra feltölteni.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Törölje a  címet.</value>
+  </data>
+  <data name="DeleteMissingOnly" xml:space="preserve">
+    <value>Csak a hiányzó eszközöket törölheti</value>
+  </data>
+  <data name="RenameDevice" xml:space="preserve">
+    <value>Eszköz átnevezése</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>ONLINE</value>
+  </data>
+  <data name="Offline" xml:space="preserve">
+    <value>OFFLINE</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>Csatlakozás</value>
+  </data>
+  <data name="FullConnect" xml:space="preserve">
+    <value>Full Connect</value>
+  </data>
+  <data name="LoadMapTeam" xml:space="preserve">
+    <value>Térkép és csapat betöltése</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>Kikapcsolás</value>
+  </data>
+  <data name="ServerDetails" xml:space="preserve">
+    <value>Kiszolgáló részletek</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>Hallgassa meg</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="TryPairingEdge" xml:space="preserve">
+    <value>Próbálja ki a párosítást az Edge-del</value>
+  </data>
+  <data name="ResetPairingConfig" xml:space="preserve">
+    <value>Párosítás visszaállítása (konfiguráció törlése)</value>
+  </data>
+  <data name="ResetListenPairing" xml:space="preserve">
+    <value>Reset + Listen (újrapárosítás)</value>
+  </data>
+  <data name="ResetListenEdge" xml:space="preserve">
+    <value>Reset + Listen az Edge segítségével</value>
+  </data>
+  <data name="RelinkBattlemetrics" xml:space="preserve">
+    <value>Relink Battlemetrics ID…</value>
+  </data>
+  <data name="DeleteServer" xml:space="preserve">
+    <value>Kiszolgáló törlése…</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Kérjük, várjon...</value>
+  </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>Kiszolgálóterület átkapcsolása</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>Streamer mód</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>Skála:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>Streamer mód engedélyezése (Nevek rövidítése)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>Rövidíti a Steam neveket és azonosítókat, hogy megvédje az adatforgalom során a magánéletet. Automatikusan elrejti a konzol- és szerverlistát.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>Nincs elérhető pozíció (offline vagy nem spawnolt).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>Csoport mentése</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>Kérjük, adjon meg egy csoportnevet.</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>Az üzenetet nem lehetett elküldeni. Kérjük, próbálja meg újra. (Ellenőrizze, hogy csapatban van-e!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Hiba: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>Csoport hozzárendelése</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>Csoportbeállítások: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Csoport neve</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>Adja meg a csoport nevét...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>Csoport színe</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Változások mentése</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>Játékosok aktivitásának elemzése és előrejelzései</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>Játékosok</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>Streamer-mód és mini térképek felújítása</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>Streamer mód</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>Játékos jelölő skálázás</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>Mini térkép lengyel</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>Szükséges intézkedés:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics nyomkövetés eltávolítva</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>Játékoskövető rendszer átalakítása</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>Hogyan működik a játékosok nyomon követése</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>Játékosok hozzáadása a nyomkövetőhöz a nyomon követés megkezdéséhez</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>Nyomon követés Aktív</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>Nyomon követés üresjárat</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>Játékosok szűrése...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>Csatlakozás egy szerverhez a játékosok listájának betöltéséhez</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Játékosok keresése Steam Query-n keresztül...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>Pálya azonosító</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>Kézi pálya neve...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Nincs eszköz.</value>
+  </data>
+  <data name="NoTokenRegistered" xml:space="preserve">
+    <value>Nincs regisztrált token</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>Token lejárt!</value>
+  </data>
+  <data name="ExpiresInDays" xml:space="preserve">
+    <value>Lejárat: {0} napokban</value>
+  </data>
+  <data name="UntilNight" xml:space="preserve">
+    <value>{0} éjszakáig</value>
+  </data>
+  <data name="UntilDay" xml:space="preserve">
+    <value>{0} addig a napig</value>
+  </data>
+  <data name="FollowMe" xml:space="preserve">
+    <value>Kövess engem</value>
+  </data>
+  <data name="FollowPlayer" xml:space="preserve">
+    <value>Kövesse a {0}</value>
+  </data>
+  <data name="PairingListening" xml:space="preserve">
+    <value>Párosítás: hallgató…</value>
+  </data>
+  <data name="PairingStopped" xml:space="preserve">
+    <value>Párosítás: megállt</value>
+  </data>
+  <data name="PairingFailed" xml:space="preserve">
+    <value>Párosítás: sikertelen</value>
+  </data>
+  <data name="AlarmActivated" xml:space="preserve">
+    <value>Riasztás aktiválva!</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Szerver</value>
+  </data>
+  <data name="SmartAlarm" xml:space="preserve">
+    <value>Intelligens riasztó</value>
+  </data>
+  <data name="UnableToReadLink" xml:space="preserve">
+    <value>Nem sikerült beolvasni a RustPlus-Linket: {0}
+Formátum: rustplus://IP:PORT</value>
+  </data>
+  <data name="DeletePairingConfigHeader" xml:space="preserve">
+    <value>Párosítás visszaállítása</value>
+  </data>
+  <data name="DeletePairingConfigBody" xml:space="preserve">
+    <value>Meglévő párosítási konfiguráció törlése?
+A következő indításkor újra kell párosítania.</value>
+  </data>
+  <data name="ResetListenHeader" xml:space="preserve">
+    <value>Visszaállítás + Meghallgatás</value>
+  </data>
+  <data name="ResetListenBody" xml:space="preserve">
+    <value>Törölje a párosítási konfigurációt, és azonnal újra párosítsa/meghallgassa?</value>
+  </data>
+  <data name="ResetListenEdgeHeader" xml:space="preserve">
+    <value>Reset + Listen (él)</value>
+  </data>
+  <data name="ResetListenEdgeBody" xml:space="preserve">
+    <value>Párosítási konfiguráció törlése és azonnali újrapárosítás/hallgatás az Edge használatával?</value>
+  </data>
+  <data name="UpdateQueryFailed" xml:space="preserve">
+    <value>Nem tudta lekérdezni a legújabb kiadást. Kérjük, próbálja meg újra, vagy nyissa meg a Kiadványok oldalt.</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Ön naprakész.</value>
+  </data>
+  <data name="UpdateAvailableHeader" xml:space="preserve">
+    <value>Frissítés elérhető</value>
+  </data>
+  <data name="UpdateAvailableBody" xml:space="preserve">
+    <value>Új verzió elérhető: {0}
+Nyissa meg a Kiadványok oldalt?</value>
+  </data>
+  <data name="DownloadAndInstallBody" xml:space="preserve">
+    <value>Új verzió elérhető: {0}
+Letöltés és telepítés most?</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Letöltés sikertelen.</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>A frissítés ellenőrzése sikertelen.
+{0}</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Nincs eszköz.</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>Profil megtekintése</value>
+  </data>
+  <data name="ChangeGroup" xml:space="preserve">
+    <value>Változás csoport</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Átnevezés</value>
+  </data>
+  <data name="RemoveTracked" xml:space="preserve">
+    <value>Távolítsa el a nyomon követett</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>A  megtekintése</value>
+  </data>
+  <data name="MoreOptions" xml:space="preserve">
+    <value>További lehetőségek</value>
+  </data>
+  <data name="RelinkBattlemetricsId" xml:space="preserve">
+    <value>Relink Battlemetrics ID…</value>
+  </data>
+  <data name="DeleteServerEllipsis" xml:space="preserve">
+    <value>Kiszolgáló törlése…</value>
+  </data>
+  <data name="RightClickRename" xml:space="preserve">
+    <value>Jobb klikk az átnevezéshez</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>TOGGLE</value>
+  </data>
+  <data name="PopupWindow" xml:space="preserve">
+    <value>Popup-ablak</value>
+  </data>
+  <data name="InAppAlert" xml:space="preserve">
+    <value>Alkalmazáson belüli riasztás</value>
+  </data>
+  <data name="AudioAlert" xml:space="preserve">
+    <value>Audio Alert</value>
+  </data>
+  <data name="CustomAudioFile" xml:space="preserve">
+    <value>Egyedi hangfájl...</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>Alapértelmezettre visszaállítása</value>
+  </data>
+  <data name="Snapshot" xml:space="preserve">
+    <value>Pillanatkép: </value>
+  </data>
+  <data name="ItemsUpkeep" xml:space="preserve">
+    <value> Tárgyak, fenntartás=</value>
+  </data>
+  <data name="NoDevicesFound" xml:space="preserve">
+    <value>Nem találtak eszközöket</value>
+  </data>
+  <data name="PairDeviceToSee" xml:space="preserve">
+    <value>Párosítson egy okos eszközt, kapcsolót vagy riasztót, hogy itt láthassa.</value>
+  </data>
+  <data name="TeamTab" xml:space="preserve">
+    <value>Csapat</value>
+  </data>
+  <data name="CenterOnMap" xml:space="preserve">
+    <value>Központ a térképen</value>
+  </data>
+  <data name="FollowOnMap" xml:space="preserve">
+    <value>Kövesse a térképen</value>
+  </data>
+  <data name="OpenSteamProfile" xml:space="preserve">
+    <value>Steam profil megnyitása</value>
+  </data>
+  <data name="PromoteToLeader" xml:space="preserve">
+    <value>Előléptetés vezetőnek</value>
+  </data>
+  <data name="KickFromTeam" xml:space="preserve">
+    <value>Rúgás a csapattól</value>
+  </data>
+  <data name="ProfileMarkers" xml:space="preserve">
+    <value>Profil jelölők</value>
+  </data>
+  <data name="DeathMarkers" xml:space="preserve">
+    <value>Haláljelzők</value>
+  </data>
+  <data name="CamerasTab" xml:space="preserve">
+    <value>Kamerák</value>
+  </data>
+  <data name="AddCamera" xml:space="preserve">
+    <value>Kamera hozzáadása</value>
+  </data>
+  <data name="NoCamerasFound" xml:space="preserve">
+    <value>Nem találtak kamerákat</value>
+  </data>
+  <data name="PairCameraToSee" xml:space="preserve">
+    <value>Párosítson egy kamerát, hogy megnézze az előnézetét itt</value>
+  </data>
+  <data name="PlayersTab" xml:space="preserve">
+    <value>Játékosok</value>
+  </data>
+  <data name="HowToTrack" xml:space="preserve">
+    <value>Hogyan kell követni</value>
+  </data>
+  <data name="LearnHowTrackingWorks" xml:space="preserve">
+    <value>Ismerje meg, hogyan működik a játékosok nyomon követése</value>
+  </data>
+  <data name="OnlineTab" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="OnlinePlayers" xml:space="preserve">
+    <value>Online játékosok</value>
+  </data>
+  <data name="SearchBM" xml:space="preserve">
+    <value>Keresés BM</value>
+  </data>
+  <data name="SearchServerBM" xml:space="preserve">
+    <value>Keresés a BattleMetrics aktuális szerverén</value>
+  </data>
+  <data name="Popout" xml:space="preserve">
+    <value>Popout</value>
+  </data>
+  <data name="OpenPlayersSeparateWindow" xml:space="preserve">
+    <value>Játékosok megnyitása külön ablakban</value>
+  </data>
+  <data name="Track" xml:space="preserve">
+    <value>Pálya</value>
+  </data>
+  <data name="ManualTrackPlaceholder" xml:space="preserve">
+    <value>Kézi pályanév vagy Steam ID...</value>
+  </data>
+  <data name="FilterPlayersPlaceholder" xml:space="preserve">
+    <value>Játékosok szűrése...</value>
+  </data>
+  <data name="LoadingPlayers" xml:space="preserve">
+    <value>Játékosok betöltése...</value>
+  </data>
+  <data name="TrackedTab" xml:space="preserve">
+    <value>Nyomkövető</value>
+  </data>
+  <data name="TrackedPlayers" xml:space="preserve">
+    <value>Nyomon követett játékosok</value>
+  </data>
+  <data name="ManageGroups" xml:space="preserve">
+    <value>Csoportok kezelése</value>
+  </data>
+  <data name="ViewFullAnalysisReport" xml:space="preserve">
+    <value>Teljes elemzési jelentés megtekintése</value>
+  </data>
+  <data name="ReadyToExploreMap" xml:space="preserve">
+    <value>Készen állsz a térkép felfedezésére?</value>
+  </data>
+  <data name="ConnectToLoadMap" xml:space="preserve">
+    <value>Csatlakozás egy kiválasztott szerverhez az élő Rust térkép és csapat betöltéséhez.</value>
+  </data>
+  <data name="ReadyToDominate" xml:space="preserve">
+    <value>Készen állsz a Rozsda uralmára?</value>
+  </data>
+  <data name="PairAccountBenefits" xml:space="preserve">
+    <value>Párosítsd a fiókodat, hogy azonnal elkezdhesd a játékosok követését, a bázis rajtaütéses riasztásokat és az okoseszközök vezérlését.</value>
+  </data>
+  <data name="LoginPairAccount" xml:space="preserve">
+    <value>Bejelentkezés és fiók párosítása</value>
+  </data>
+  <data name="RequiresSteamLogin" xml:space="preserve">
+    <value>Steam bejelentkezést igényel az alapértelmezett böngészőben.</value>
+  </data>
+  <data name="DeleteServerHeader" xml:space="preserve">
+    <value>Kiszolgáló törlése?</value>
+  </data>
+  <data name="DeleteServerConfirm" xml:space="preserve">
+    <value>Biztos, hogy törölni szeretné ezt a szervert? Ezt a műveletet nem lehet visszacsinálni.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Törölje</value>
+  </data>
+  <data name="DeleteAction" xml:space="preserve">
+    <value>Törölje a  címet.</value>
+  </data>
+  <data name="AutoHideAfter3s" xml:space="preserve">
+    <value>Automatikus elrejtés 3s után</value>
+  </data>
+  <data name="MapFilters" xml:space="preserve">
+    <value>MAP SZŰRŐK</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>Rács</value>
+  </data>
+  <data name="Monuments" xml:space="preserve">
+    <value>Műemlékek</value>
+  </data>
+  <data name="Shops" xml:space="preserve">
+    <value>Üzletek</value>
+  </data>
+  <data name="ChatAlerts" xml:space="preserve">
+    <value>CSEVEGŐ RIASZTÁSOK</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Riasztások</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>A  beállítása</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Válasszon ki mindent</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Mindenki kijelölésének megszüntetése</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>ESEMÉNYEK</value>
+  </data>
+  <data name="CargoShip" xml:space="preserve">
+    <value>Teherhajó</value>
+  </data>
+  <data name="CargoSpawn" xml:space="preserve">
+    <value>Spawn</value>
+  </data>
+  <data name="CargoDock" xml:space="preserve">
+    <value>Kikötő dokkolás</value>
+  </data>
+  <data name="CargoEgress" xml:space="preserve">
+    <value>Indulás (5m figyelmeztetés)</value>
+  </data>
+  <data name="CargoArrival" xml:space="preserve">
+    <value>Érkezési figyelmeztetés (5m a kikötő előtt)</value>
+  </data>
+  <data name="Heli" xml:space="preserve">
+    <value>Járőröző helikopter</value>
+  </data>
+  <data name="Chinook" xml:space="preserve">
+    <value>Chinook (CH47)</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>Utazó eladó</value>
+  </data>
+  <data name="OilRig" xml:space="preserve">
+    <value>Oil Rig Trigger</value>
+  </data>
+  <data name="DeepSea" xml:space="preserve">
+    <value>Mélytengeri esemény</value>
+  </data>
+  <data name="SmartAlerts" xml:space="preserve">
+    <value>Intelligens riasztások</value>
+  </data>
+  <data name="PlayerOnline" xml:space="preserve">
+    <value>Online állapot</value>
+  </data>
+  <data name="PlayerOffline" xml:space="preserve">
+    <value>Offline állapot</value>
+  </data>
+  <data name="AnnounceTracking" xml:space="preserve">
+    <value>Értesítések nyomon követése</value>
+  </data>
+  <data name="PlayerDeathSelf" xml:space="preserve">
+    <value>Önhalál</value>
+  </data>
+  <data name="PlayerDeathTeam" xml:space="preserve">
+    <value>Csapat Halál</value>
+  </data>
+  <data name="PlayerRespawnSelf" xml:space="preserve">
+    <value>Self Respawn</value>
+  </data>
+  <data name="PlayerRespawnTeam" xml:space="preserve">
+    <value>Team Respawn</value>
+  </data>
+  <data name="NewShops" xml:space="preserve">
+    <value>Új üzletek</value>
+  </data>
+  <data name="SuspiciousShops" xml:space="preserve">
+    <value>Gyanús üzletek</value>
+  </data>
+  <data name="TradeAlerts" xml:space="preserve">
+    <value>Kereskedelmi figyelmeztetések</value>
+  </data>
+  <data name="CrosshairStyle" xml:space="preserve">
+    <value>Keresztszemes stílus</value>
+  </data>
+  <data name="GreenDot" xml:space="preserve">
+    <value>Zöld pont</value>
+  </data>
+  <data name="MiniGreen" xml:space="preserve">
+    <value>Mini zöld</value>
+  </data>
+  <data name="OpenCrosshairRG" xml:space="preserve">
+    <value>Nyitott kereszttávcső (R/G)</value>
+  </data>
+  <data name="ThinRedCircle" xml:space="preserve">
+    <value>Vékony vörös kör</value>
+  </data>
+  <data name="SquareDot" xml:space="preserve">
+    <value>Négyzet + pont</value>
+  </data>
+  <data name="MagentaDot" xml:space="preserve">
+    <value>Magenta pont</value>
+  </data>
+  <data name="MagentaOpenCross" xml:space="preserve">
+    <value>Magenta nyitott kereszt</value>
+  </data>
+  <data name="RangeLineTicks" xml:space="preserve">
+    <value>Tartomány vonal (kullancsok)</value>
+  </data>
+  <data name="DrawCrosshair" xml:space="preserve">
+    <value>Draw Crosshair...</value>
+  </data>
+  <data name="ChooseMonitor" xml:space="preserve">
+    <value>Monitor kiválasztása</value>
+  </data>
+  <data name="DrawOverlay" xml:space="preserve">
+    <value>Draw Overlay</value>
+  </data>
+  <data name="DrawToolTip" xml:space="preserve">
+    <value>Rajzolás (jobb klikk: Méret / Szín)</value>
+  </data>
+  <data name="PlaceTextToolTip" xml:space="preserve">
+    <value>Szöveg elhelyezése (jobb klikk: Szín / Méret)</value>
+  </data>
+  <data name="PlaceIconToolTip" xml:space="preserve">
+    <value>Ikon elhelyezése (jobb klikk: Ikon kiválasztása)</value>
+  </data>
+  <data name="EraserToolTip" xml:space="preserve">
+    <value>Radír (tartsa lenyomva vagy kattintson)</value>
+  </data>
+  <data name="DeleteOverlayToolTip" xml:space="preserve">
+    <value>Saját overlay törlése</value>
+  </data>
+  <data name="UploadOverlayToolTip" xml:space="preserve">
+    <value>Saját Overlay feltöltése / megosztása</value>
+  </data>
+  <data name="ProfitTrades" xml:space="preserve">
+    <value>Profit Trades</value>
+  </data>
+  <data name="ArbitrageOpportunities" xml:space="preserve">
+    <value>Közvetlen arbitrázslehetőségek | alacsonyan veszel → magasan adsz el.</value>
+  </data>
+  <data name="BuyXForY" xml:space="preserve">
+    <value>Vásároljon X-et Y-ért</value>
+  </data>
+  <data name="Analyze" xml:space="preserve">
+    <value>Elemezze</value>
+  </data>
+  <data name="IWantToGet" xml:space="preserve">
+    <value>GET akarok kapni</value>
+  </data>
+  <data name="ICanPayWith" xml:space="preserve">
+    <value>Fizethetek</value>
+  </data>
+  <data name="TeamChat" xml:space="preserve">
+    <value>Csapat csevegés</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Küldje el a</value>
+  </data>
+  <data name="FcmCredentials" xml:space="preserve">
+    <value>FCM megbízólevelek</value>
+  </data>
+  <data name="RightClickConfigure" xml:space="preserve">
+    <value>Jobb gombbal kattintva konfigurálhatja</value>
+  </data>
+  <data name="ResetMap" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetMapToolTip" xml:space="preserve">
+    <value>Térkép zoom és pozíció visszaállítása</value>
+  </data>
+  <data name="MiniMap" xml:space="preserve">
+    <value>Mini</value>
+  </data>
+  <data name="CrosshairToolTip" xml:space="preserve">
+    <value>Keresztvonal be/ki (jobb klikk a beállításokhoz)</value>
+  </data>
+  <data name="TrackPlayer" xml:space="preserve">
+    <value>TRACK PLAYER</value>
+  </data>
+  <data name="CloseBMBrowser" xml:space="preserve">
+    <value>BattleMetrics böngésző bezárása</value>
+  </data>
+  <data name="ShopSearchTitle" xml:space="preserve">
+    <value>BOLT KERESÉS</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>Bezár keresés</value>
+  </data>
+  <data name="ActivateShopsFirst" xml:space="preserve">
+    <value>Kérjük, először aktiválja az Üzleteket</value>
+  </data>
+  <data name="ActivateShopPolling" xml:space="preserve">
+    <value>Aktiválja a Shop szavazást</value>
+  </data>
+  <data name="TeamChatTitle" xml:space="preserve">
+    <value>CSAPAT CSEVEGÉS</value>
+  </data>
+  <data name="CloseChat" xml:space="preserve">
+    <value>Csevegés bezárása</value>
+  </data>
+  <data name="ChatCommandsSettings" xml:space="preserve">
+    <value>Csevegőparancsok beállításai</value>
+  </data>
+  <data name="ChatCommands" xml:space="preserve">
+    <value>Chat parancsok</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Vissza</value>
+  </data>
+  <data name="Forward" xml:space="preserve">
+    <value>Előre</value>
+  </data>
+  <data name="OpenInExternalBrowser" xml:space="preserve">
+    <value>Megnyitás külső böngészőben</value>
+  </data>
+  <data name="SearchBMPlaceholder" xml:space="preserve">
+    <value>Keresés BM...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Keresés</value>
+  </data>
+  <data name="SelectAServer" xml:space="preserve">
+    <value>Kiszolgáló kiválasztása</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>DISCONNECTED</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>KAPCSOLAT...</value>
+  </data>
+  <data name="StatusInitializing" xml:space="preserve">
+    <value>INICIALIZÁLÁS...</value>
+  </data>
+  <data name="StatusDevicesActive" xml:space="preserve">
+    <value>AKTÍV ESZKÖZÖK</value>
+  </data>
+  <data name="StatusFullyConnected" xml:space="preserve">
+    <value>TELJESEN ÖSSZEKAPCSOLVA</value>
+  </data>
+  <data name="StatusUnknown" xml:space="preserve">
+    <value>ISMERETLEN</value>
+  </data>
+  <data name="MayTakeAMoment" xml:space="preserve">
+    <value>Ez eltarthat egy darabig...</value>
+  </data>
+  <data name="AppSettingsTitle" xml:space="preserve">
+    <value>Alkalmazás beállításai</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Általános</value>
+  </data>
+  <data name="LaunchWithWindows" xml:space="preserve">
+    <value>Indítás Windows alatt (minimalizálva)</value>
+  </data>
+  <data name="StartMinimizedAlways" xml:space="preserve">
+    <value>Minimalizált indítás (mindig)</value>
+  </data>
+  <data name="AutoConnectLastServer" xml:space="preserve">
+    <value>Automatikus csatlakozás az utolsó kiszolgálóhoz indításkor</value>
+  </data>
+  <data name="AutoConnectToolTip" xml:space="preserve">
+    <value>Automatikusan újracsatlakozik az utolsó szerverhez és betölti a térképet.</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Viselkedés</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>Bezárás helyett a Tálcára minimalizálás</value>
+  </data>
+  <data name="BackgroundTracking" xml:space="preserve">
+    <value>Háttérjátékos-követés engedélyezése</value>
+  </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>Továbbra is nyomon követi a játékosokat a BattleMetrics segítségével, még akkor is, ha minimalizálva van.</value>
+  </data>
+  <data name="HideSystemConsole" xml:space="preserve">
+    <value>Rendszerkonzol elrejtése (rendrakás)</value>
+  </data>
+  <data name="HideConsoleToolTip" xml:space="preserve">
+    <value>Elrejti az alsó napló/konzol panelt, hogy helyet takarítson meg a térképen.</value>
+  </data>
+  <data name="MapSettings" xml:space="preserve">
+    <value>Térkép beállítások</value>
+  </data>
+  <data name="AutoLoadShops" xml:space="preserve">
+    <value>Üzletek automatikus betöltése csatlakozáskor</value>
+  </data>
+  <data name="AutoLoadShopsToolTip" xml:space="preserve">
+    <value>Automatikusan elindítja az üzletek és riasztások lekérdezését, amikor csatlakozik egy kiszolgálóhoz.</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Emlékmű szöveges címkék használata ikonok helyett</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Ha engedélyezve van, a rozsdatérkép emlékműveinek nevei ikonok helyett szövegként jelennek meg az Állandó jelölő betűtípus használatával.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Emlékmű stílus:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Emlékmű lépték:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Emlékmű átlátszatlanság:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Ikonok a rustmaps.com által</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Eredeti szöveg műemléknevek</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Hitelek</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>A térkép műemlék ikonjait a </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - engedéllyel használták.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Minden emlékmű ikon és a kapcsolódó grafika a rustmaps.com tulajdonát képezi. Köszönjük, hogy támogatja a Ruszt közösséget!</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="ModifyChatAlerts" xml:space="preserve">
+    <value>Chat figyelmeztetések módosítása</value>
+  </data>
+  <data name="ManageSteamAccountInfo" xml:space="preserve">
+    <value>Kezeld a kapcsolódó Steam-fiókodat a főablakban.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Zárja be a</value>
+  </data>
+  <data name="IncomingAlarms" xml:space="preserve">
+    <value>BEJÖVŐ RIASZTÁSOK</value>
+  </data>
+  <data name="Wipe" xml:space="preserve">
+    <value>Törölje le a</value>
+  </data>
+  <data name="PlayersOnly" xml:space="preserve">
+    <value>Játékosok</value>
+  </data>
+  <data name="PlayersHeader" xml:space="preserve">
+    <value>Játékosok</value>
+  </data>
+  <data name="IWantToGetToolTip" xml:space="preserve">
+    <value>GET-et szeretnék (pl. nyersolaj)</value>
+  </data>
+  <data name="ICanPayWithToolTip" xml:space="preserve">
+    <value>Fizetni szeretnék (pl. selejt)</value>
+  </data>
+  <data name="DeleteServerConfirmFormatted" xml:space="preserve">
+    <value>Biztos, hogy törölni szeretné a "{0}" kiszolgálót? Ezt a műveletet nem lehet visszacsinálni.</value>
+  </data>
+  <data name="PairingError" xml:space="preserve">
+    <value>Párosítás: hiba</value>
+  </data>
+  <data name="PairingStarting" xml:space="preserve">
+    <value>Párosítás: kezdődik...</value>
+  </data>
+  <data name="StartingPairingListener" xml:space="preserve">
+    <value>Párosítás-hallgató indítása...</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+    <value>Bejelentkezve</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>Készlet</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Ár</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>AKTÍV</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>INACTIVE</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>CSOPORT</value>
+  </data>
+  <data name="ImportDevicesTitle" xml:space="preserve">
+    <value>Rust+ Desk - Eszközök importálása</value>
+  </data>
+  <data name="ImportDevicesHeader" xml:space="preserve">
+    <value>Eszközök importálása</value>
+  </data>
+  <data name="ImportDevicesSelectPrompt" xml:space="preserve">
+    <value>Válassza ki, hogy mely eszközöket kívánja importálni a kiszolgálóhoz.</value>
+  </data>
+  <data name="CheckDeviceStatus" xml:space="preserve">
+    <value>Az eszköz állapotának ellenőrzése</value>
+  </data>
+  <data name="ImportSelected" xml:space="preserve">
+    <value>Kiválasztott importálás</value>
+  </data>
+  <data name="BmShortcuts" xml:space="preserve">
+    <value>BM rövidítések</value>
+  </data>
+  <data name="PairingConfigDeleted" xml:space="preserve">
+    <value>Párosítás: config törölve</value>
+  </data>
+  <data name="TrayIconDefault" xml:space="preserve">
+    <value>Rust+ Desk Tracker</value>
+  </data>
+  <data name="TrayIconTracking" xml:space="preserve">
+    <value>Rust+ Desk (Nyomon követés {0})</value>
+  </data>
+  <data name="RenameGroup" xml:space="preserve">
+    <value>Csoport átnevezése</value>
+  </data>
+  <data name="NewNameForGroup" xml:space="preserve">
+    <value>A csoport új neve:</value>
+  </data>
+  <data name="NewNameForDevice" xml:space="preserve">
+    <value>A #{0} új neve:</value>
+  </data>
+  <data name="EnterBattlemetricsIdFor" xml:space="preserve">
+    <value>Adja meg a "{0} " Battlemetrics Server ID-t:</value>
+  </data>
+  <data name="TrayTrackingStatus" xml:space="preserve">
+    <value>Nyomon követés: {0}</value>
+  </data>
+  <data name="TrayLastUpdate" xml:space="preserve">
+    <value>Utolsó frissítés: {0}</value>
+  </data>
+  <data name="OpenRustPlusDesk" xml:space="preserve">
+    <value>Open Rust+ íróasztal</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Kilépés</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Leírás</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>Kamera</value>
+  </data>
+  <data name="Alarms" xml:space="preserve">
+    <value>Riasztások</value>
+  </data>
+  <data name="Identifier" xml:space="preserve">
+    <value>Azonosító:</value>
+  </data>
+  <data name="FPS" xml:space="preserve">
+    <value>FPS:</value>
+  </data>
+  <data name="CameraFPSNote" xml:space="preserve">
+    <value>Megjegyzés: 2 fps ajánlott, ennél magasabb FPS valószínűleg lezárja a szerverrel való kapcsolatot.</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>Pixel</value>
+  </data>
+  <data name="Pen" xml:space="preserve">
+    <value>Toll</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>Vonal</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>Négyzet</value>
+  </data>
+  <data name="Circle" xml:space="preserve">
+    <value>Kör</value>
+  </data>
+  <data name="Thickness" xml:space="preserve">
+    <value>Vastagság:</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Átlátszatlanság:</value>
+  </data>
+  <data name="UploadPNG" xml:space="preserve">
+    <value>PNG feltöltése</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Tiszta</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Mentés</value>
+  </data>
+  <data name="AssignGlobalHotkeys" xml:space="preserve">
+    <value>Globális gyorsbillentyűk hozzárendelése az intelligens kapcsolókhoz. Több eszköz is megoszthat egy gyorsbillentyűt (egymás után kapcsol).</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Eszköz</value>
+  </data>
+  <data name="EntityId" xml:space="preserve">
+    <value>EntityId</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>Hotkey</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Állítsa be a</value>
+  </data>
+  <data name="CloseDeactivate" xml:space="preserve">
+    <value>Bezárás és deaktiválás</value>
+  </data>
+  <data name="CloseActivate" xml:space="preserve">
+    <value>Bezárás és aktiválás</value>
+  </data>
+  <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
+    <value>Karbantartás, Minimap és nyomkövetés frissítés</value>
+  </data>
+  <data name="FeatureSummaryAdjustments" xml:space="preserve">
+    <value>Jellemzők összefoglalása és kiigazítások</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>Ne mutasd meg ezt még egyszer!</value>
+  </data>
+  <data name="AwesomeLetsGo" xml:space="preserve">
+    <value>Király, gyerünk!</value>
+  </data>
+  <data name="MiniMapSettings" xml:space="preserve">
+    <value>Mini-térkép beállítások</value>
+  </data>
+  <data name="Shape" xml:space="preserve">
+    <value>Shape</value>
+  </data>
+  <data name="Rectangle" xml:space="preserve">
+    <value>Téglalap alakú</value>
+  </data>
+  <data name="OpacityLabel" xml:space="preserve">
+    <value>Átlátszatlanság: {0}%</value>
+  </data>
+  <data name="SizeLabel" xml:space="preserve">
+    <value>Méret: {0}% (SHIFT+egérkerék)</value>
+  </data>
+  <data name="ShowServerTime" xml:space="preserve">
+    <value>Szerveridő megjelenítése</value>
+  </data>
+  <data name="ServerInformation" xml:space="preserve">
+    <value>Kiszolgáló információk</value>
+  </data>
+  <data name="NoDescriptionAvailable" xml:space="preserve">
+    <value>Nincs leírás.</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Jelenlegi verzió: {0}</value>
+  </data>
+  <data name="PatchNotesHeader" xml:space="preserve">
+    <value>Javítási megjegyzések és verziótörténet</value>
+  </data>
+  <data name="EnableChatCommands" xml:space="preserve">
+    <value>Chat-parancsok engedélyezése</value>
+  </data>
+  <data name="Prefix" xml:space="preserve">
+    <value>Előtag:</value>
+  </data>
+  <data name="StandardCommands" xml:space="preserve">
+    <value>Standard parancsok</value>
+  </data>
+  <data name="Population" xml:space="preserve">
+    <value>Népesség:</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Idő:</value>
+  </data>
+  <data name="Promote" xml:space="preserve">
+    <value>Előléptetni:</value>
+  </data>
+  <data name="DeepSeaCommand" xml:space="preserve">
+    <value>Mélytenger:</value>
+  </data>
+  <data name="CargoShipCommand" xml:space="preserve">
+    <value>Teherhajó:</value>
+  </data>
+  <data name="OilRigCommand" xml:space="preserve">
+    <value>Olajfúrótorony:</value>
+  </data>
+  <data name="PatrolHeliCommand" xml:space="preserve">
+    <value>Patrol Heli:</value>
+  </data>
+  <data name="TravellingVendorCommand" xml:space="preserve">
+    <value>Utazó árus:</value>
+  </data>
+  <data name="UpkeepDetails" xml:space="preserve">
+    <value>Fenntartási részletek:</value>
+  </data>
+  <data name="CommandDelay" xml:space="preserve">
+    <value>Parancs késleltetés:</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Nyelv</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Nyelv kiválasztása</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>A nyelvváltoztatás teljes hatálybalépéséhez újraindításra van szükség.</value>
+  </data>
+  <data name="SmartSwitches" xml:space="preserve">
+    <value>Intelligens kapcsolók</value>
+  </data>
+  <data name="UpkeepTcMonitors" xml:space="preserve">
+    <value>Fenntartás (TC) Monitorok</value>
+  </data>
+  <data name="NoTcMonitorsFound" xml:space="preserve">
+    <value>Nem találtunk TC-monitorokat.</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Mentés és bezárás</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Üzenet...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Hibaüzenet itt</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Patrol Heli</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Patrol Heli aktív - fut a {0} oldalon.</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Csatlakozott az esemény közepén - a szaporodási idő ismeretlen</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Patrol Heli aktív (a szaporodási idő ismeretlen)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Patrol Heli lelőtték {0} ezelőtt ezen az ülésen</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Patrol Heli elhagyta a térképet {0} ezelőtt ez a munkamenet</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Kikötve a {0} - indul ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>kikötő</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Már dokkolt a connect-en - indulási idő ismeretlen</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Dokkolva a {0} címen (a dokkolás időtartama még nem ismert).</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>A térképen hátralévő idő (a spawntól)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Útközben csatlakozott - idő ismeretlen</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Csatlakozás útvonal közepén - idő ismeretlen (útvonal ~{0}m összesen)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Cargo Ship despawned {0}m {1}s ago this session</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Utazó eladó aktív - futás a {0} oldalon.</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Utazó árus aktív (szaporodási idő ismeretlen)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor despawned {0} ago this session</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea active - futás a {0} oldalon</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Deep Sea aktív (ívási idő ismeretlen)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea véget ért {0} ezelőtt ez az ülésszak</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} jelenleg online játékosok.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Sorban állás: {0} játékosok.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Jelenlegi játékidő: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} vezetőnek léptették elő.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>A Deep Sea aktív! Futás a {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>A Deep Sea jelenleg aktív (az esemény közepén kapcsolódik - a szaporodási idő ismeretlen).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>A Deep Sea a {0} percekkel ezelőtt ért véget.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>A Deep Sea esemény státusza ismeretlen (nem látta ezt az ülést).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>A teherhajó nem aktív.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Teherhajó kikötött a {0}címen. Indulás kb. {1} perc múlva.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Teherhajó dokkol a {0} címen és indulásra készül.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>A teherhajó kikötött a {0} címen (indulási idő ismeretlen).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Teherhajó aktív. Kb. {0} perc múlva indul.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>A teherhajó aktív és hamarosan indulni készül.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>A teherhajó aktív (az útvonal időtartama még nem tanult meg erre a kiszolgálóra).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>A teherhajó aktív (a spawn után csatlakozik - a hátralévő idő ismeretlen).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>A teherhajó nem aktív. Despawned {0} percekkel ezelőtt ebben a munkamenetben.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: láda {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: utoljára hívták {1}m ago</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: ebben az ülésszakban nem hívták</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Patrol Heli aktív! Futás a {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>A Patrol Heli jelenleg aktív (az esemény közepén kapcsolódik - a spawn ideje ismeretlen).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Patrol Heli nem aktív. Ez volt {0} {1} ezelőtt ezen az ülésen.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>lelőtték</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>elhagyta a térképet</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Patrol Heli esemény státusza ismeretlen (nem látta ezt az ülést).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Travelling Vendor aktív! Indul a {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Az Utazó árus jelenleg aktív (az esemény közepén csatlakozik - a spawn ideje ismeretlen).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Utazó eladó nem aktív. Despawned {0} ezelőtt ebben a munkamenetben.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Travelling Vendor esemény státusza ismeretlen (nem látta ezt az ülést).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>A karbantartási parancsokhoz nincsenek szerszámos szekrények leképezve.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Fenntartás a {0} TC-n: Üres vagy lejárt.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Szükség/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Fenntartás a {0} TC-n: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} napok</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} órák</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} percek</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Üres/lejárt</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Fenntartás: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Nem talált vagy nem párosított monitorok a szerszámos szekrényben.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Nem talált vagy nem párosított monitor a szerszámos szekrényhez.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} fordult {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Nem található vagy nem párosított Smart Switch.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Fa</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Kő</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Fém</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Kis olajfúrótorony</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Nagy olajfúrótorony</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Shop</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Teherhajó</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Utazó eladó</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Járőröző helikopter</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Oilrig láda</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Robbanás</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Épület blokkolva</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Esemény</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] beindult! A láda feloldása a {1} oldalon történik.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} beindult!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] A láda 10 perc alatt feloldódik!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] A láda 5 perc alatt feloldódik!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Deep Sea fel</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Új üzlet {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Gyanús üzlet {0} [{1}] online volt {2}s, eladva {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Teherhajó szaporodott {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>messze a tengeren (a {0} közelében)</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Teherhajó kikötve a {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>A teherhajó várhatóan kb. 5 perc múlva dokkol a {0} ({1}) címen.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>A teherhajó 5 perc múlva indul a {0} honlapról ({1}).</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>A szerver késése miatt észlelt összeomlás - Heli még mindig a térképen van a {0} címen.</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} a {1} címen indult el.</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Patrol Heli lelőtték a {0} oldalon.</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>unknown</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} bekapcsolódott a {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} offline lett</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} meghalt @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} respawned @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Tracking] {0}{1} most már ONLINE</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Tracking] {0}{1} most már OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Tracking] {0}{1} átnevezve {2} -re !</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>eladja</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>vásárol</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Bolt</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (állomány {5}) a {6} {7} esetében.</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Chat parancsok listája</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>PARANCSOK: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Lokalizáció, UI modernizáció és tárolás</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dinamikus helyváltoztatás</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - 30+ nyelv választható</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Chat parancsok felhasználói felület</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - Elszigetelt nézet a tiszta megjelenésért</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Új beállítások Overlay</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - Tiszta oldalsáv minden beállításhoz</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics nyomkövetés eltávolítva</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>A bázisodat megtámadták!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Kérjük, először csatlakozzon egy kiszolgálóhoz.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Ön nem csatlakozik egyetlen kiszolgálóhoz sem.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>A csevegés jelenleg nem elérhető.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Kérjük, először válasszon ki egy kiszolgálót.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Kapcsolat</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Hogyan kövessük a játékosokat</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Natív UDP követés</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>A nyomkövetési útmutató jelenleg csak angol nyelven érhető el, mivel a közeljövőben változásokon fog átesni. Kérjük türelmét.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Ezt az ablakot bármikor bezárhatja - újra megnyithatja a ❓ Hogyan kövessük nyomon gombra kattintva.</value>
+  </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Karbantartás</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Alkalmazási beállítások, profilok és egyéni rajzok törlése, biztonsági mentése vagy visszaállítása.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Alkalmazásadatok visszaállítása...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Adatmentés...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Adatok visszaállítása...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Alkalmazási adatok visszaállítása</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Válassza ki az eszközről törölni kívánt komponenseket. Az összes kiválasztott opció véglegesen törlődik.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Aktív kiszolgálói kapcsolat (kapcsolat megszakítása)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Mentett kiszolgálóprofilok (párosított kiszolgáló konfigurációk törlése)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Steam fiók hitelesítő adatai (kijelentkezés)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Eszközpárosítás konfigurációja (regisztrációs tokenek visszaállítása)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Egyéni célkereszt (törlési konfigurációk)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Helyi gyorsítótár és rajzok (mentett térképek/vonalak törlése)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Ez a művelet végleges, és nem lehet visszacsinálni.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Visszaállítás megerősítése</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Biztonsági mentés jelszó</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Biztonsági mentés védelme</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Adjon meg egy jelszót a biztonsági mentési fájl titkosításához. Ha üresen hagyja, a biztonsági másolat nem lesz titkosítva.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Biztonsági mentés visszaállítása</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Ez a biztonsági mentés jelszóval védett. Adja meg a jelszót a visszafejtéshez:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Titkosítás</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Dekódolás</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Alkalmazási adatok biztonsági mentése</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Sikeresen létrehozott biztonsági mentés: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Sikeresen létrehozott biztonsági mentés!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Biztonsági mentés befejezve</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Biztonsági mentés hibája: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Hiba a biztonsági mentés létrehozásában: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Biztonsági mentés sikertelen</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Az adatok visszaállítása felülírja a jelenlegi kiszolgálóprofilokat, az egyéni célkereszteket, a rajzfelületeket és a minimap-konfigurációkat.
+
+Biztos, hogy folytatni szeretné?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Biztonsági mentés visszaállításának megerősítése</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Alkalmazási adatok visszaállítása</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Az alkalmazás adatai sikeresen helyreálltak!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Visszaállítás befejezve</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Visszaállítási hiba: Visszaállítás: Érvénytelen jelszó.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>A dekódolás sikertelen. Érvénytelen jelszó vagy sérült biztonsági mentési fájl.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Visszaállítás sikertelen</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Visszaállítási hiba: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Hiba a biztonsági mentés visszaállításában: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Érvénytelen mentési fájlformátum vagy hiányzó aláírás.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Szelektív alaphelyzetbe állítás megkezdése...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Aktív szerver kapcsolat megszakítása...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] A kapcsolat visszaállítása befejeződött.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Mentett szerverprofilok törlése...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] A mentett kiszolgálóprofilok törlődtek.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Steam fiók hitelesítő adatainak eltávolítása...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Steam hitelesítő adatok törölve.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] A készülék párosítási konfigurációjának törlése...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] A készülék párosítási konfigurációja törlődött.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Egyéni célkereszt törlése...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Hiba az egyéni célkeresztek törlésében: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Egyéni célkereszt kitisztítva.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Helyi cache fájlok és overlay rajzok törlése...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Hiba a cache mappa törlésében: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] A gyorsítótár mappák törlődtek.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Hallgató és FCM hitelesítő adatok újraregisztrálása...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] A szelektív visszaállítási művelet sikeresen befejeződött.</value>
+  </data>
+</root>

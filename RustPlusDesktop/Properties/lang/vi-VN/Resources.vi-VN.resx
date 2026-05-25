@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>RUST+ Phiên bản máy tính để bàn</value>
+  </data>
+  <data name="SteamAccount" xml:space="preserve">
+    <value>Tài khoản Steam</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+    <value>Chưa đăng nhập</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>Kiểm tra các bản cập nhật</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>Đang tải xuống...</value>
+  </data>
+  <data name="JoinDiscord" xml:space="preserve">
+    <value>Tham gia Discord</value>
+  </data>
+  <data name="PatchNotes" xml:space="preserve">
+    <value>Ghi chú bản cập nhật</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Cài đặt</value>
+  </data>
+  <data name="PairedServers" xml:space="preserve">
+    <value>MÁY CHỦ ĐÔI</value>
+  </data>
+  <data name="NoServersPaired" xml:space="preserve">
+    <value>Chưa có máy chủ nào được ghép nối</value>
+  </data>
+  <data name="PairingMaintenance" xml:space="preserve">
+    <value>KẾT HỢP VÀ BẢO DƯỠNG</value>
+  </data>
+  <data name="PairingIdle" xml:space="preserve">
+    <value>Phối hợp: nhàn rỗi</value>
+  </data>
+  <data name="RightClickOptions" xml:space="preserve">
+    <value>Nhấp chuột phải để xem các tùy chọn</value>
+  </data>
+  <data name="TrackingActive" xml:space="preserve">
+    <value>Theo dõi trạng thái hoạt động</value>
+  </data>
+  <data name="LastPull" xml:space="preserve">
+    <value>Lần truy cập gần nhất: {0}</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>Đóng góp</value>
+  </data>
+  <data name="SupportDeveloper" xml:space="preserve">
+    <value>Hãy ủng hộ nhà phát triển</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Đặt lại</value>
+  </data>
+  <data name="ResetWebSocket" xml:space="preserve">
+    <value>Đặt lại kết nối WebSocket</value>
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value>Các cầu thủ:</value>
+  </data>
+  <data name="ShowOnlinePlayers" xml:space="preserve">
+    <value>Hiển thị tab Người chơi trực tuyến</value>
+  </data>
+  <data name="Queue" xml:space="preserve">
+    <value>Hàng đợi:</value>
+  </data>
+  <data name="DevicesTab" xml:space="preserve">
+    <value>Thiết bị</value>
+  </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>Phím tắt</value>
+  </data>
+  <data name="ImportDevices" xml:space="preserve">
+    <value>Nhập thiết bị từ đồng đội</value>
+  </data>
+  <data name="ExportDevices" xml:space="preserve">
+    <value>Chia sẻ thiết bị với đồng đội</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Làm mới</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Sự suy giảm</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Đồng ý tải lên</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Khi nhấp vào 'Chấp nhận', các thiết bị thông minh (và có thể cả các bản vẽ bản đồ) của máy chủ này sẽ được tải lên máy chủ của người tạo. Điều này cho phép các thành viên trong đội tải xuống và đồng bộ hóa chúng. Chỉ ID Steam của bạn mới được truyền đi để xác định danh tính các thành viên trong đội. Chỉ những người chơi đã được ủy quyền tại Tool Cupboard mới có thể điều khiển các thiết bị này.
+
+Lưu ý: Phương thức truyền tải này sẽ được tối ưu hóa trong tương lai. Nếu các thành viên trong đội không thể tải xuống dữ liệu, vui lòng thử xóa các bản vẽ bản đồ của bạn và tải lên lại.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="DeleteMissingOnly" xml:space="preserve">
+    <value>Bạn chỉ có thể xóa các thiết bị bị mất</value>
+  </data>
+  <data name="RenameDevice" xml:space="preserve">
+    <value>Đổi tên thiết bị</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>TRỰC TUYẾN</value>
+  </data>
+  <data name="Offline" xml:space="preserve">
+    <value>NGỪNG HOẠT ĐỘNG</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>Kết nối</value>
+  </data>
+  <data name="FullConnect" xml:space="preserve">
+    <value>Kết nối toàn diện</value>
+  </data>
+  <data name="LoadMapTeam" xml:space="preserve">
+    <value>Tải bản đồ &amp; Đội</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>Ngắt kết nối</value>
+  </data>
+  <data name="ServerDetails" xml:space="preserve">
+    <value>Thông tin chi tiết về máy chủ</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>Hãy nghe</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Dừng lại</value>
+  </data>
+  <data name="TryPairingEdge" xml:space="preserve">
+    <value>Hãy thử ghép nối với Edge</value>
+  </data>
+  <data name="ResetPairingConfig" xml:space="preserve">
+    <value>Đặt lại kết nối (xóa cấu hình)</value>
+  </data>
+  <data name="ResetListenPairing" xml:space="preserve">
+    <value>Đặt lại + Nghe (kết nối lại)</value>
+  </data>
+  <data name="ResetListenEdge" xml:space="preserve">
+    <value>Đặt lại + Nghe cùng Edge</value>
+  </data>
+  <data name="RelinkBattlemetrics" xml:space="preserve">
+    <value>Liên kết lại ID Battlemetrics…</value>
+  </data>
+  <data name="DeleteServer" xml:space="preserve">
+    <value>Xóa máy chủ…</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Vui lòng chờ...</value>
+  </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>Chuyển đổi khu vực máy chủ</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>Chế độ phát trực tiếp</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>Tỷ lệ:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>Bật Chế độ Streamer (Tắt tên)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>Rút gọn tên và ID Steam để bảo vệ quyền riêng tư trong quá trình phát trực tiếp. Tự động ẩn bảng điều khiển và danh sách máy chủ.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>Không có vị trí nào khả dụng (đang ngoại tuyến hoặc chưa xuất hiện).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>Lưu nhóm</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>Vui lòng nhập tên nhóm.</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>Không thể gửi tin nhắn. Vui lòng thử lại. (Hãy kiểm tra xem bạn có đang ở trong một nhóm không!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Lỗi: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>Chỉ định nhóm</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>Cài đặt nhóm: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Tên nhóm</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>Nhập tên nhóm...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>Màu nhóm</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Lưu thay đổi</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>Phân tích và dự báo hoạt động của người chơi</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>Các cầu thủ</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>Cập nhật chế độ Streamer và bản đồ thu nhỏ</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>Chế độ phát trực tiếp</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>Điều chỉnh kích thước biểu tượng người chơi</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>Bản đồ thu nhỏ (tiếng Ba Lan)</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>Cần thực hiện:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Đã gỡ bỏ tính năng theo dõi BattleMetrics</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>Cải tổ hệ thống theo dõi cầu thủ</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>Cách thức hoạt động của tính năng theo dõi cầu thủ</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>Thêm người chơi vào danh sách theo dõi để bắt đầu theo dõi</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>Theo dõi trạng thái hoạt động</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>Theo dõi thời gian không hoạt động</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>Lọc người chơi...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>Kết nối với máy chủ để tải danh sách người chơi</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Đang truy vấn danh sách người chơi qua Steam...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>Mã bài hát</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>Nhập tên bài hát theo cách thủ công...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Không có thiết bị nào.</value>
+  </data>
+  <data name="NoTokenRegistered" xml:space="preserve">
+    <value>Chưa có mã thông báo nào được đăng ký</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>Thẻ đã hết hạn!</value>
+  </data>
+  <data name="ExpiresInDays" xml:space="preserve">
+    <value>Hết hạn sau {0} ngày</value>
+  </data>
+  <data name="UntilNight" xml:space="preserve">
+    <value>{0} cho đến tối</value>
+  </data>
+  <data name="UntilDay" xml:space="preserve">
+    <value>{0} cho đến ngày</value>
+  </data>
+  <data name="FollowMe" xml:space="preserve">
+    <value>Theo dõi tôi</value>
+  </data>
+  <data name="FollowPlayer" xml:space="preserve">
+    <value>Theo dõi {0}</value>
+  </data>
+  <data name="PairingListening" xml:space="preserve">
+    <value>Phối hợp: nghe…</value>
+  </data>
+  <data name="PairingStopped" xml:space="preserve">
+    <value>Kết hợp: đã dừng</value>
+  </data>
+  <data name="PairingFailed" xml:space="preserve">
+    <value>Kết nối: không thành công</value>
+  </data>
+  <data name="AlarmActivated" xml:space="preserve">
+    <value>Báo động đã được kích hoạt!</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Máy chủ</value>
+  </data>
+  <data name="SmartAlarm" xml:space="preserve">
+    <value>Báo động thông minh</value>
+  </data>
+  <data name="UnableToReadLink" xml:space="preserve">
+    <value>Không thể đọc RustPlus-Link: {0}
+Định dạng: rustplus://IP:PORT</value>
+  </data>
+  <data name="DeletePairingConfigHeader" xml:space="preserve">
+    <value>Đặt lại kết nối</value>
+  </data>
+  <data name="DeletePairingConfigBody" xml:space="preserve">
+    <value>Xóa cấu hình ghép nối hiện tại?
+Bạn sẽ cần ghép nối lại khi khởi động lần sau.</value>
+  </data>
+  <data name="ResetListenHeader" xml:space="preserve">
+    <value>Đặt lại + Lắng nghe</value>
+  </data>
+  <data name="ResetListenBody" xml:space="preserve">
+    <value>Xóa cấu hình ghép nối và tiến hành ghép nối lại/nghe ngay lập tức?</value>
+  </data>
+  <data name="ResetListenEdgeHeader" xml:space="preserve">
+    <value>Đặt lại + Nghe (Edge)</value>
+  </data>
+  <data name="ResetListenEdgeBody" xml:space="preserve">
+    <value>Xóa cấu hình ghép nối và ngay lập tức ghép nối lại/phát nhạc qua Edge?</value>
+  </data>
+  <data name="UpdateQueryFailed" xml:space="preserve">
+    <value>Không thể truy vấn phiên bản mới nhất. Vui lòng thử lại hoặc truy cập trang Phiên bản.</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Bạn đã cập nhật thông tin mới nhất.</value>
+  </data>
+  <data name="UpdateAvailableHeader" xml:space="preserve">
+    <value>Có bản cập nhật</value>
+  </data>
+  <data name="UpdateAvailableBody" xml:space="preserve">
+    <value>Phiên bản mới đã có sẵn: {0}
+Mở trang Bản phát hành?</value>
+  </data>
+  <data name="DownloadAndInstallBody" xml:space="preserve">
+    <value>Phiên bản mới đã có sẵn: {0}
+Tải xuống và cài đặt ngay bây giờ?</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Tải xuống không thành công.</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Không thể kiểm tra bản cập nhật.
+{0}</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Không có thiết bị nào.</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>Xem hồ sơ</value>
+  </data>
+  <data name="ChangeGroup" xml:space="preserve">
+    <value>Thay đổi nhóm</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Đổi tên</value>
+  </data>
+  <data name="RemoveTracked" xml:space="preserve">
+    <value>Xóa theo dõi</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Xem</value>
+  </data>
+  <data name="MoreOptions" xml:space="preserve">
+    <value>Các tùy chọn khác</value>
+  </data>
+  <data name="RelinkBattlemetricsId" xml:space="preserve">
+    <value>Liên kết lại ID Battlemetrics…</value>
+  </data>
+  <data name="DeleteServerEllipsis" xml:space="preserve">
+    <value>Xóa máy chủ…</value>
+  </data>
+  <data name="RightClickRename" xml:space="preserve">
+    <value>Nhấp chuột phải để đổi tên</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>CHUYỂN ĐỔI</value>
+  </data>
+  <data name="PopupWindow" xml:space="preserve">
+    <value>Cửa sổ bật lên</value>
+  </data>
+  <data name="InAppAlert" xml:space="preserve">
+    <value>Thông báo trong ứng dụng</value>
+  </data>
+  <data name="AudioAlert" xml:space="preserve">
+    <value>Cảnh báo bằng âm thanh</value>
+  </data>
+  <data name="CustomAudioFile" xml:space="preserve">
+    <value>Tệp âm thanh tùy chỉnh...</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>Khôi phục về cài đặt mặc định</value>
+  </data>
+  <data name="Snapshot" xml:space="preserve">
+    <value>Tổng quan: </value>
+  </data>
+  <data name="ItemsUpkeep" xml:space="preserve">
+    <value> Các mặt hàng, Bảo trì=</value>
+  </data>
+  <data name="NoDevicesFound" xml:space="preserve">
+    <value>Không tìm thấy thiết bị nào</value>
+  </data>
+  <data name="PairDeviceToSee" xml:space="preserve">
+    <value>Kết nối một thiết bị thông minh, công tắc hoặc thiết bị báo động để xem tại đây</value>
+  </data>
+  <data name="TeamTab" xml:space="preserve">
+    <value>Đội ngũ</value>
+  </data>
+  <data name="CenterOnMap" xml:space="preserve">
+    <value>Định vị trên bản đồ</value>
+  </data>
+  <data name="FollowOnMap" xml:space="preserve">
+    <value>Theo dõi trên bản đồ</value>
+  </data>
+  <data name="OpenSteamProfile" xml:space="preserve">
+    <value>Mở hồ sơ Steam</value>
+  </data>
+  <data name="PromoteToLeader" xml:space="preserve">
+    <value>Thăng chức lên vị trí Trưởng nhóm</value>
+  </data>
+  <data name="KickFromTeam" xml:space="preserve">
+    <value>Cú sút của đội</value>
+  </data>
+  <data name="ProfileMarkers" xml:space="preserve">
+    <value>Các chỉ báo hồ sơ</value>
+  </data>
+  <data name="DeathMarkers" xml:space="preserve">
+    <value>Dấu hiệu tử vong</value>
+  </data>
+  <data name="CamerasTab" xml:space="preserve">
+    <value>Máy ảnh</value>
+  </data>
+  <data name="AddCamera" xml:space="preserve">
+    <value>Thêm máy ảnh</value>
+  </data>
+  <data name="NoCamerasFound" xml:space="preserve">
+    <value>Không tìm thấy máy ảnh nào</value>
+  </data>
+  <data name="PairCameraToSee" xml:space="preserve">
+    <value>Kết nối máy ảnh để xem hình xem trước tại đây</value>
+  </data>
+  <data name="PlayersTab" xml:space="preserve">
+    <value>Người chơi</value>
+  </data>
+  <data name="HowToTrack" xml:space="preserve">
+    <value>Cách theo dõi</value>
+  </data>
+  <data name="LearnHowTrackingWorks" xml:space="preserve">
+    <value>Tìm hiểu cách thức hoạt động của tính năng theo dõi người chơi</value>
+  </data>
+  <data name="OnlineTab" xml:space="preserve">
+    <value>Trực tuyến</value>
+  </data>
+  <data name="OnlinePlayers" xml:space="preserve">
+    <value>Người chơi trực tuyến</value>
+  </data>
+  <data name="SearchBM" xml:space="preserve">
+    <value>Tìm kiếm BM</value>
+  </data>
+  <data name="SearchServerBM" xml:space="preserve">
+    <value>Tìm kiếm máy chủ hiện tại trên BattleMetrics</value>
+  </data>
+  <data name="Popout" xml:space="preserve">
+    <value>Cửa sổ bật lên</value>
+  </data>
+  <data name="OpenPlayersSeparateWindow" xml:space="preserve">
+    <value>Mở danh sách người chơi trong cửa sổ riêng</value>
+  </data>
+  <data name="Track" xml:space="preserve">
+    <value>Theo dõi</value>
+  </data>
+  <data name="ManualTrackPlaceholder" xml:space="preserve">
+    <value>Nhập tên bài hát hoặc ID Steam...</value>
+  </data>
+  <data name="FilterPlayersPlaceholder" xml:space="preserve">
+    <value>Lọc người chơi...</value>
+  </data>
+  <data name="LoadingPlayers" xml:space="preserve">
+    <value>Đang tải danh sách người chơi...</value>
+  </data>
+  <data name="TrackedTab" xml:space="preserve">
+    <value>Đã theo dõi</value>
+  </data>
+  <data name="TrackedPlayers" xml:space="preserve">
+    <value>Các cầu thủ được theo dõi</value>
+  </data>
+  <data name="ManageGroups" xml:space="preserve">
+    <value>Quản lý nhóm</value>
+  </data>
+  <data name="ViewFullAnalysisReport" xml:space="preserve">
+    <value>Xem báo cáo phân tích đầy đủ</value>
+  </data>
+  <data name="ReadyToExploreMap" xml:space="preserve">
+    <value>Bạn đã sẵn sàng khám phá bản đồ chưa?</value>
+  </data>
+  <data name="ConnectToLoadMap" xml:space="preserve">
+    <value>Kết nối với máy chủ đã chọn để tải bản đồ và đội hình Rust trực tiếp.</value>
+  </data>
+  <data name="ReadyToDominate" xml:space="preserve">
+    <value>Sẵn sàng chinh phục Rust chưa?</value>
+  </data>
+  <data name="PairAccountBenefits" xml:space="preserve">
+    <value>Kết nối tài khoản của bạn để bắt đầu theo dõi người chơi, nhận thông báo về các cuộc đột kích cơ bản và điều khiển các thiết bị thông minh của bạn ngay lập tức.</value>
+  </data>
+  <data name="LoginPairAccount" xml:space="preserve">
+    <value>Đăng nhập &amp; Kết nối tài khoản</value>
+  </data>
+  <data name="RequiresSteamLogin" xml:space="preserve">
+    <value>Yêu cầu đăng nhập Steam trên trình duyệt mặc định của bạn.</value>
+  </data>
+  <data name="DeleteServerHeader" xml:space="preserve">
+    <value>Xóa máy chủ?</value>
+  </data>
+  <data name="DeleteServerConfirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn xóa máy chủ này không? Hành động này không thể hoàn tác được.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Hủy</value>
+  </data>
+  <data name="DeleteAction" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="AutoHideAfter3s" xml:space="preserve">
+    <value>Tự động ẩn sau 3 giây</value>
+  </data>
+  <data name="MapFilters" xml:space="preserve">
+    <value>BỘ LỌC BẢN ĐỒ</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>Lưới</value>
+  </data>
+  <data name="Monuments" xml:space="preserve">
+    <value>Di tích</value>
+  </data>
+  <data name="Shops" xml:space="preserve">
+    <value>Cửa hàng</value>
+  </data>
+  <data name="ChatAlerts" xml:space="preserve">
+    <value>THÔNG BÁO TRÒ CHUYỆN</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Cảnh báo</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>Cấu hình</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Chọn tất cả</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Bỏ chọn tất cả</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>SỰ KIỆN</value>
+  </data>
+  <data name="CargoShip" xml:space="preserve">
+    <value>Tàu chở hàng</value>
+  </data>
+  <data name="CargoSpawn" xml:space="preserve">
+    <value>Sinh ra</value>
+  </data>
+  <data name="CargoDock" xml:space="preserve">
+    <value>Cảng neo đậu</value>
+  </data>
+  <data name="CargoEgress" xml:space="preserve">
+    <value>Thời gian khởi hành (Cảnh báo 5 phút)</value>
+  </data>
+  <data name="CargoArrival" xml:space="preserve">
+    <value>Cảnh báo đến (cách bến tàu 5 mét)</value>
+  </data>
+  <data name="Heli" xml:space="preserve">
+    <value>Trực thăng tuần tra</value>
+  </data>
+  <data name="Chinook" xml:space="preserve">
+    <value>Chinook (CH-47)</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>Người bán hàng rong</value>
+  </data>
+  <data name="OilRig" xml:space="preserve">
+    <value>Cơ chế kích hoạt giàn khoan dầu</value>
+  </data>
+  <data name="DeepSea" xml:space="preserve">
+    <value>Sự kiện Đại dương sâu thẳm</value>
+  </data>
+  <data name="SmartAlerts" xml:space="preserve">
+    <value>Cảnh báo thông minh</value>
+  </data>
+  <data name="PlayerOnline" xml:space="preserve">
+    <value>Trạng thái trực tuyến</value>
+  </data>
+  <data name="PlayerOffline" xml:space="preserve">
+    <value>Trạng thái ngoại tuyến</value>
+  </data>
+  <data name="AnnounceTracking" xml:space="preserve">
+    <value>Thông báo theo dõi</value>
+  </data>
+  <data name="PlayerDeathSelf" xml:space="preserve">
+    <value>Tự tử</value>
+  </data>
+  <data name="PlayerDeathTeam" xml:space="preserve">
+    <value>Đội Tử thần</value>
+  </data>
+  <data name="PlayerRespawnSelf" xml:space="preserve">
+    <value>Tự hồi sinh</value>
+  </data>
+  <data name="PlayerRespawnTeam" xml:space="preserve">
+    <value>Đội Respawn</value>
+  </data>
+  <data name="NewShops" xml:space="preserve">
+    <value>Cửa hàng mới</value>
+  </data>
+  <data name="SuspiciousShops" xml:space="preserve">
+    <value>Các cửa hàng đáng ngờ</value>
+  </data>
+  <data name="TradeAlerts" xml:space="preserve">
+    <value>Thông báo giao dịch</value>
+  </data>
+  <data name="CrosshairStyle" xml:space="preserve">
+    <value>Kiểu ngắm</value>
+  </data>
+  <data name="GreenDot" xml:space="preserve">
+    <value>Chấm xanh</value>
+  </data>
+  <data name="MiniGreen" xml:space="preserve">
+    <value>Mini Xanh</value>
+  </data>
+  <data name="OpenCrosshairRG" xml:space="preserve">
+    <value>Mở tâm ngắm (R/G)</value>
+  </data>
+  <data name="ThinRedCircle" xml:space="preserve">
+    <value>Vòng tròn đỏ mỏng</value>
+  </data>
+  <data name="SquareDot" xml:space="preserve">
+    <value>Hình vuông + Chấm</value>
+  </data>
+  <data name="MagentaDot" xml:space="preserve">
+    <value>Chấm màu đỏ tía</value>
+  </data>
+  <data name="MagentaOpenCross" xml:space="preserve">
+    <value>Magenta Open Cross</value>
+  </data>
+  <data name="RangeLineTicks" xml:space="preserve">
+    <value>Đường biên độ (điểm)</value>
+  </data>
+  <data name="DrawCrosshair" xml:space="preserve">
+    <value>Vẽ tâm ngắm...</value>
+  </data>
+  <data name="ChooseMonitor" xml:space="preserve">
+    <value>Chọn màn hình</value>
+  </data>
+  <data name="DrawOverlay" xml:space="preserve">
+    <value>Vẽ lớp phủ</value>
+  </data>
+  <data name="DrawToolTip" xml:space="preserve">
+    <value>Vẽ (Nhấp chuột phải: Kích thước / Màu sắc)</value>
+  </data>
+  <data name="PlaceTextToolTip" xml:space="preserve">
+    <value>Chèn văn bản (Nhấp chuột phải: Màu sắc / Kích thước)</value>
+  </data>
+  <data name="PlaceIconToolTip" xml:space="preserve">
+    <value>Biểu tượng vị trí (Nhấp chuột phải: Chọn biểu tượng)</value>
+  </data>
+  <data name="EraserToolTip" xml:space="preserve">
+    <value>Công cụ tẩy (giữ hoặc nhấp)</value>
+  </data>
+  <data name="DeleteOverlayToolTip" xml:space="preserve">
+    <value>Xóa lớp phủ của chính mình</value>
+  </data>
+  <data name="UploadOverlayToolTip" xml:space="preserve">
+    <value>Tải lên lớp phủ của riêng bạn / chia sẻ</value>
+  </data>
+  <data name="ProfitTrades" xml:space="preserve">
+    <value>Giao dịch sinh lời</value>
+  </data>
+  <data name="ArbitrageOpportunities" xml:space="preserve">
+    <value>Cơ hội chênh lệch giá trực tiếp | mua thấp → bán cao.</value>
+  </data>
+  <data name="BuyXForY" xml:space="preserve">
+    <value>Mua X với giá Y</value>
+  </data>
+  <data name="Analyze" xml:space="preserve">
+    <value>Phân tích</value>
+  </data>
+  <data name="IWantToGet" xml:space="preserve">
+    <value>Tôi muốn lấy</value>
+  </data>
+  <data name="ICanPayWith" xml:space="preserve">
+    <value>Tôi có thể thanh toán bằng</value>
+  </data>
+  <data name="TeamChat" xml:space="preserve">
+    <value>Trò chuyện nhóm</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Gửi</value>
+  </data>
+  <data name="FcmCredentials" xml:space="preserve">
+    <value>Thông tin xác thực FCM</value>
+  </data>
+  <data name="RightClickConfigure" xml:space="preserve">
+    <value>Nhấp chuột phải để cấu hình</value>
+  </data>
+  <data name="ResetMap" xml:space="preserve">
+    <value>Đặt lại</value>
+  </data>
+  <data name="ResetMapToolTip" xml:space="preserve">
+    <value>Đặt lại mức thu phóng và vị trí trên bản đồ</value>
+  </data>
+  <data name="MiniMap" xml:space="preserve">
+    <value>Mini</value>
+  </data>
+  <data name="CrosshairToolTip" xml:space="preserve">
+    <value>Bật/tắt tâm ngắm (Nhấp chuột phải để xem các tùy chọn)</value>
+  </data>
+  <data name="TrackPlayer" xml:space="preserve">
+    <value>TRÌNH PHÁT NHẠC</value>
+  </data>
+  <data name="CloseBMBrowser" xml:space="preserve">
+    <value>Đóng trình duyệt BattleMetrics</value>
+  </data>
+  <data name="ShopSearchTitle" xml:space="preserve">
+    <value>TÌM KIẾM CỬA HÀNG</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>Đóng tìm kiếm</value>
+  </data>
+  <data name="ActivateShopsFirst" xml:space="preserve">
+    <value>Vui lòng kích hoạt Shops trước</value>
+  </data>
+  <data name="ActivateShopPolling" xml:space="preserve">
+    <value>Kích hoạt cuộc thăm dò ý kiến trên Shop</value>
+  </data>
+  <data name="TeamChatTitle" xml:space="preserve">
+    <value>TRÒ CHUYỆN NHÓM</value>
+  </data>
+  <data name="CloseChat" xml:space="preserve">
+    <value>Đóng cuộc trò chuyện</value>
+  </data>
+  <data name="ChatCommandsSettings" xml:space="preserve">
+    <value>Cài đặt lệnh trò chuyện</value>
+  </data>
+  <data name="ChatCommands" xml:space="preserve">
+    <value>Lệnh trò chuyện</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Quay lại</value>
+  </data>
+  <data name="Forward" xml:space="preserve">
+    <value>Tiền đạo</value>
+  </data>
+  <data name="OpenInExternalBrowser" xml:space="preserve">
+    <value>Mở trong trình duyệt bên ngoài</value>
+  </data>
+  <data name="SearchBMPlaceholder" xml:space="preserve">
+    <value>Tìm kiếm BM...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Tìm kiếm</value>
+  </data>
+  <data name="SelectAServer" xml:space="preserve">
+    <value>Chọn máy chủ</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>NGẮT KẾT NỐI</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>ĐANG KẾT NỐI...</value>
+  </data>
+  <data name="StatusInitializing" xml:space="preserve">
+    <value>ĐANG KHỞI TẠO...</value>
+  </data>
+  <data name="StatusDevicesActive" xml:space="preserve">
+    <value>CÁC THIẾT BỊ ĐANG HOẠT ĐỘNG</value>
+  </data>
+  <data name="StatusFullyConnected" xml:space="preserve">
+    <value>KẾT NỐI HOÀN TOÀN</value>
+  </data>
+  <data name="StatusUnknown" xml:space="preserve">
+    <value>CHƯA BIẾT</value>
+  </data>
+  <data name="MayTakeAMoment" xml:space="preserve">
+    <value>Việc này có thể mất một chút thời gian...</value>
+  </data>
+  <data name="AppSettingsTitle" xml:space="preserve">
+    <value>Cài đặt ứng dụng</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Chung</value>
+  </data>
+  <data name="LaunchWithWindows" xml:space="preserve">
+    <value>Khởi động cùng Windows (Chế độ thu nhỏ)</value>
+  </data>
+  <data name="StartMinimizedAlways" xml:space="preserve">
+    <value>Khởi động ở chế độ thu nhỏ (Luôn luôn)</value>
+  </data>
+  <data name="AutoConnectLastServer" xml:space="preserve">
+    <value>Tự động kết nối với máy chủ cuối cùng khi khởi động</value>
+  </data>
+  <data name="AutoConnectToolTip" xml:space="preserve">
+    <value>Tự động kết nối lại với máy chủ gần nhất và tải bản đồ.</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Hành vi</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>Thu nhỏ xuống khay hệ thống thay vì đóng lại</value>
+  </data>
+  <data name="BackgroundTracking" xml:space="preserve">
+    <value>Bật tính năng theo dõi người chơi ở chế độ nền</value>
+  </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>Tiếp tục theo dõi người chơi qua BattleMetrics ngay cả khi ứng dụng đang ở chế độ thu nhỏ.</value>
+  </data>
+  <data name="HideSystemConsole" xml:space="preserve">
+    <value>Ẩn Bảng điều khiển hệ thống (Giảm bớt lộn xộn)</value>
+  </data>
+  <data name="HideConsoleToolTip" xml:space="preserve">
+    <value>Ẩn bảng nhật ký/bảng điều khiển phía dưới để tiết kiệm không gian trên bản đồ.</value>
+  </data>
+  <data name="MapSettings" xml:space="preserve">
+    <value>Cài đặt bản đồ</value>
+  </data>
+  <data name="AutoLoadShops" xml:space="preserve">
+    <value>Tự động tải các cửa hàng khi kết nối</value>
+  </data>
+  <data name="AutoLoadShopsToolTip" xml:space="preserve">
+    <value>Tự động bắt đầu kiểm tra các cửa hàng và gửi thông báo khi kết nối với máy chủ.</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Sử dụng nhãn văn bản thay vì biểu tượng</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Khi được bật, tên các địa danh trên bản đồ Rust sẽ được hiển thị dưới dạng văn bản sử dụng phông chữ Permanent Marker thay vì biểu tượng.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Phong cách kiến trúc:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Tỷ lệ mô hình:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Độ mờ của tượng đài:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Hình ảnh biểu tượng do rustmaps.com cung cấp</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Tên các di tích trong văn bản gốc</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Phần cảm ơn</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Các biểu tượng địa danh trên bản đồ do </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> — Được sử dụng với sự cho phép.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Tất cả các biểu tượng di tích và các tác phẩm nghệ thuật liên quan đều thuộc sở hữu của rustmaps.com. Cảm ơn bạn đã ủng hộ cộng đồng Rust!</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Trò chuyện</value>
+  </data>
+  <data name="ModifyChatAlerts" xml:space="preserve">
+    <value>Chỉnh sửa thông báo trò chuyện</value>
+  </data>
+  <data name="ManageSteamAccountInfo" xml:space="preserve">
+    <value>Quản lý tài khoản Steam đã liên kết của bạn trong cửa sổ chính.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Đóng</value>
+  </data>
+  <data name="IncomingAlarms" xml:space="preserve">
+    <value>CÁC CẢNH BÁO ĐANG ĐẾN</value>
+  </data>
+  <data name="Wipe" xml:space="preserve">
+    <value>Lau</value>
+  </data>
+  <data name="PlayersOnly" xml:space="preserve">
+    <value>Các cầu thủ</value>
+  </data>
+  <data name="PlayersHeader" xml:space="preserve">
+    <value>Các cầu thủ</value>
+  </data>
+  <data name="IWantToGetToolTip" xml:space="preserve">
+    <value>Tôi muốn mua (ví dụ: Dầu thô)</value>
+  </data>
+  <data name="ICanPayWithToolTip" xml:space="preserve">
+    <value>Tôi muốn THANH TOÁN BẰNG (ví dụ: Scrap)</value>
+  </data>
+  <data name="DeleteServerConfirmFormatted" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn xóa máy chủ "{0}" không? Hành động này không thể hoàn tác.</value>
+  </data>
+  <data name="PairingError" xml:space="preserve">
+    <value>Sự kết hợp: lỗi</value>
+  </data>
+  <data name="PairingStarting" xml:space="preserve">
+    <value>Kết nối: đang bắt đầu...</value>
+  </data>
+  <data name="StartingPairingListener" xml:space="preserve">
+    <value>Đang khởi động Pairing-Listener...</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+    <value>Đã đăng nhập</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>Cổ phiếu</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Giá</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>BẬT</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>TẮT</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>ĐANG HOẠT ĐỘNG</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>KHÔNG HOẠT ĐỘNG</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>NHÓM</value>
+  </data>
+  <data name="ImportDevicesTitle" xml:space="preserve">
+    <value>Rust+ Desk – Nhập thiết bị</value>
+  </data>
+  <data name="ImportDevicesHeader" xml:space="preserve">
+    <value>Nhập thiết bị</value>
+  </data>
+  <data name="ImportDevicesSelectPrompt" xml:space="preserve">
+    <value>Chọn các thiết bị mà bạn muốn nhập vào máy chủ này.</value>
+  </data>
+  <data name="CheckDeviceStatus" xml:space="preserve">
+    <value>Kiểm tra trạng thái thiết bị</value>
+  </data>
+  <data name="ImportSelected" xml:space="preserve">
+    <value>Nhập các mục đã chọn</value>
+  </data>
+  <data name="BmShortcuts" xml:space="preserve">
+    <value>Các phím tắt BM</value>
+  </data>
+  <data name="PairingConfigDeleted" xml:space="preserve">
+    <value>Kết hợp: cấu hình đã bị xóa</value>
+  </data>
+  <data name="TrayIconDefault" xml:space="preserve">
+    <value>Rust+ Trình theo dõi bàn làm việc</value>
+  </data>
+  <data name="TrayIconTracking" xml:space="preserve">
+    <value>Bàn làm việc Rust+ (Theo dõi {0})</value>
+  </data>
+  <data name="RenameGroup" xml:space="preserve">
+    <value>Đổi tên nhóm</value>
+  </data>
+  <data name="NewNameForGroup" xml:space="preserve">
+    <value>Tên mới của nhóm:</value>
+  </data>
+  <data name="NewNameForDevice" xml:space="preserve">
+    <value>Tên mới của trang web #{0}:</value>
+  </data>
+  <data name="EnterBattlemetricsIdFor" xml:space="preserve">
+    <value>Nhập ID máy chủ Battlemetrics cho "{0}":</value>
+  </data>
+  <data name="TrayTrackingStatus" xml:space="preserve">
+    <value>Theo dõi: {0}</value>
+  </data>
+  <data name="TrayLastUpdate" xml:space="preserve">
+    <value>Cập nhật lần cuối: {0}</value>
+  </data>
+  <data name="OpenRustPlusDesk" xml:space="preserve">
+    <value>Mở bàn làm việc Rust+</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Thoát</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Mô tả</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>Máy ảnh</value>
+  </data>
+  <data name="Alarms" xml:space="preserve">
+    <value>Cảnh báo</value>
+  </data>
+  <data name="Identifier" xml:space="preserve">
+    <value>Mã định danh:</value>
+  </data>
+  <data name="FPS" xml:space="preserve">
+    <value>FPS:</value>
+  </data>
+  <data name="CameraFPSNote" xml:space="preserve">
+    <value>Lưu ý: Nên duy trì tốc độ khung hình (FPS) ở mức 2; nếu FPS cao hơn, kết nối của bạn với máy chủ có thể bị ngắt.</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>Pixel</value>
+  </data>
+  <data name="Pen" xml:space="preserve">
+    <value>Bút</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>Dòng</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>Hình vuông</value>
+  </data>
+  <data name="Circle" xml:space="preserve">
+    <value>Vòng tròn</value>
+  </data>
+  <data name="Thickness" xml:space="preserve">
+    <value>Độ dày:</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Độ mờ:</value>
+  </data>
+  <data name="UploadPNG" xml:space="preserve">
+    <value>Tải lên tệp PNG</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Lưu</value>
+  </data>
+  <data name="AssignGlobalHotkeys" xml:space="preserve">
+    <value>Gán phím tắt toàn cầu cho các công tắc thông minh. Nhiều thiết bị có thể dùng chung một phím tắt (sẽ chuyển đổi lần lượt).</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Thiết bị</value>
+  </data>
+  <data name="EntityId" xml:space="preserve">
+    <value>Mã định danh thực thể</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>Phím tắt</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Bộ</value>
+  </data>
+  <data name="CloseDeactivate" xml:space="preserve">
+    <value>Đóng &amp; Tắt</value>
+  </data>
+  <data name="CloseActivate" xml:space="preserve">
+    <value>Đóng &amp; Kích hoạt</value>
+  </data>
+  <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
+    <value>Cập nhật về bảo trì, bản đồ thu nhỏ và tính năng theo dõi</value>
+  </data>
+  <data name="FeatureSummaryAdjustments" xml:space="preserve">
+    <value>Tổng quan về tính năng &amp; các điều chỉnh</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>Đừng hiển thị thông báo này nữa</value>
+  </data>
+  <data name="AwesomeLetsGo" xml:space="preserve">
+    <value>Tuyệt quá, đi thôi!</value>
+  </data>
+  <data name="MiniMapSettings" xml:space="preserve">
+    <value>Cài đặt bản đồ thu nhỏ</value>
+  </data>
+  <data name="Shape" xml:space="preserve">
+    <value>Hình dạng</value>
+  </data>
+  <data name="Rectangle" xml:space="preserve">
+    <value>Hình chữ nhật</value>
+  </data>
+  <data name="OpacityLabel" xml:space="preserve">
+    <value>Độ mờ: {0}%</value>
+  </data>
+  <data name="SizeLabel" xml:space="preserve">
+    <value>Kích thước: {0}% (SHIFT + bánh xe chuột)</value>
+  </data>
+  <data name="ShowServerTime" xml:space="preserve">
+    <value>Hiển thị giờ máy chủ</value>
+  </data>
+  <data name="ServerInformation" xml:space="preserve">
+    <value>Thông tin máy chủ</value>
+  </data>
+  <data name="NoDescriptionAvailable" xml:space="preserve">
+    <value>Không có mô tả.</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Phiên bản hiện tại: {0}</value>
+  </data>
+  <data name="PatchNotesHeader" xml:space="preserve">
+    <value>Ghi chú bản vá &amp; Lịch sử phiên bản</value>
+  </data>
+  <data name="EnableChatCommands" xml:space="preserve">
+    <value>Bật các lệnh trò chuyện</value>
+  </data>
+  <data name="Prefix" xml:space="preserve">
+    <value>Tiền tố:</value>
+  </data>
+  <data name="StandardCommands" xml:space="preserve">
+    <value>Các lệnh tiêu chuẩn</value>
+  </data>
+  <data name="Population" xml:space="preserve">
+    <value>Dân số:</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Thời gian:</value>
+  </data>
+  <data name="Promote" xml:space="preserve">
+    <value>Quảng bá:</value>
+  </data>
+  <data name="DeepSeaCommand" xml:space="preserve">
+    <value>Đại dương sâu thẳm:</value>
+  </data>
+  <data name="CargoShipCommand" xml:space="preserve">
+    <value>Tàu chở hàng:</value>
+  </data>
+  <data name="OilRigCommand" xml:space="preserve">
+    <value>Giàn khoan dầu:</value>
+  </data>
+  <data name="PatrolHeliCommand" xml:space="preserve">
+    <value>Trực thăng tuần tra:</value>
+  </data>
+  <data name="TravellingVendorCommand" xml:space="preserve">
+    <value>Người bán hàng rong:</value>
+  </data>
+  <data name="UpkeepDetails" xml:space="preserve">
+    <value>Thông tin bảo trì:</value>
+  </data>
+  <data name="CommandDelay" xml:space="preserve">
+    <value>Thời gian trễ lệnh:</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Ngôn ngữ</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Chọn ngôn ngữ</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>Để thay đổi ngôn ngữ có hiệu lực hoàn toàn, bạn cần khởi động lại thiết bị.</value>
+  </data>
+  <data name="SmartSwitches" xml:space="preserve">
+    <value>Công tắc thông minh</value>
+  </data>
+  <data name="UpkeepTcMonitors" xml:space="preserve">
+    <value>Màn hình bảo trì (TC)</value>
+  </data>
+  <data name="NoTcMonitorsFound" xml:space="preserve">
+    <value>Không tìm thấy màn hình TC nào.</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Lưu và đóng</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Thông điệp...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Thông báo lỗi ở đây</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Trực thăng tuần tra</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Trực thăng tuần tra đang hoạt động – đang bay tại {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Kết nối trong khi sự kiện đang diễn ra – thời gian xuất hiện chưa xác định</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Trực thăng tuần tra đang hoạt động (thời gian xuất hiện chưa rõ)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Máy bay trực thăng tuần tra bị bắn rơi {0} trước đó trong phiên này</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Trực thăng tuần tra đã rời khỏi bản đồ {0} trong phiên này</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Đang neo đậu tại {0} – khởi hành trong khoảng{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>cảng</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Đã cập cảng – thời gian khởi hành chưa xác định</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Đang neo đậu tại {0} (thời gian neo đậu chưa được xác định)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Thời gian còn lại trên bản đồ (tính từ lúc xuất hiện)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Kết nối giữa chừng – thời gian chưa xác định</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Kết nối giữa chặng đường – thời gian không rõ (tổng chiều dài lộ trình ~{0}m)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Tàu chở hàng đã biến mất {0}phút {1}giây trước trong phiên này</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Người bán hàng lưu động đang hoạt động – đang chạy cho {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Người bán rong đang hoạt động (thời gian xuất hiện chưa rõ)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Người bán hàng rong đã biến mất {0} trước đó trong phiên này</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea active – chạy bộ vì {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Deep Sea active (thời gian sinh sản chưa rõ)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea đã kết thúc {0} trước đó trong phiên này</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} Người chơi hiện đang trực tuyến.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Danh sách chờ: {0} người chơi.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Thời gian hiện tại trong trò chơi: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} đã được thăng chức làm trưởng nhóm.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea đã hoạt động! Đang chạy cho {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea hiện đang hoạt động (đã kết nối giữa chừng sự kiện – thời gian xuất hiện chưa rõ).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea đã kết thúc phiên làm việc này cách đây {0} phút.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Tình trạng sự kiện Deep Sea chưa rõ (chưa được quan sát thấy trong phiên này).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Tàu chở hàng không hoạt động.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Tàu chở hàng đã cập cảng tại {0}. Sẽ khởi hành trong khoảng {1} phút.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Tàu chở hàng đã cập cảng tại {0} và đang chuẩn bị khởi hành.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Tàu chở hàng đã cập cảng tại {0} (thời gian khởi hành chưa rõ).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Tàu chở hàng đang hoạt động. Sẽ khởi hành trong khoảng {0} phút.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Tàu chở hàng đang hoạt động và chuẩn bị rời cảng trong thời gian tới.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Tàu chở hàng đang hoạt động (thời gian di chuyển trên tuyến đường này chưa được xác định cho máy chủ này).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Tàu chở hàng đang hoạt động (đã kết nối sau khi xuất hiện – thời gian còn lại chưa rõ).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Tàu chở hàng hiện không hoạt động. Đã biến mất khỏi màn hình cách đây {0} phút trong phiên này.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: crate trong {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: Cuộc gọi gần nhất đến số {1}cách đây m phút</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: không được gọi trong phiên này</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Trực thăng tuần tra đã hoạt động! Đang chạy cho {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Trực thăng tuần tra hiện đang hoạt động (đã kết nối giữa sự kiện – thời gian xuất hiện chưa rõ).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Trực thăng tuần tra hiện không hoạt động. Lần cuối cùng nó hoạt động trong phiên này là cách đây {0} {1}.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>bị bắn hạ</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>đã rời khỏi bản đồ</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Tình trạng sự kiện trực thăng tuần tra chưa rõ (chưa được phát hiện trong phiên này).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Travelling Vendor đã hoạt động! Đang chạy cho {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Người bán rong hiện đang hoạt động (đã kết nối giữa sự kiện – thời gian xuất hiện chưa rõ).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Người bán hàng rong hiện không hoạt động. Đã biến mất khỏi phiên này cách đây {0}.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Tình trạng sự kiện của người bán hàng lưu động hiện chưa rõ (chưa thấy trong phiên này).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Không có tủ dụng cụ nào được gán cho các lệnh bảo trì.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Quản lý tại {0} TC: Trống hoặc đã hết hạn.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Liên hệ 24/7: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Bảo trì tại {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} ngày</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} giờ</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} biên bản</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Trống/đã hết hạn</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Quản trị: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Không tìm thấy hoặc chưa ghép nối các màn hình của tủ dụng cụ Bound.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Không tìm thấy màn hình tủ dụng cụ Bound hoặc chưa ghép nối.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} đã chuyển sang {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>BẬT</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>TẮT</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Không tìm thấy hoặc chưa ghép nối với công tắc thông minh Bound.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Gỗ</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Đá</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Kim loại</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Giàn khoan dầu nhỏ</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Giàn khoan dầu cỡ lớn</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Cửa hàng</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Tàu chở hàng</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Người bán hàng rong</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Trực thăng tuần tra</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Thùng chứa giàn khoan</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Vụ nổ</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Công trình bị chặn</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Sự kiện</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] đã được kích hoạt! Hộp quà sẽ được mở khóa tại {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>CẢNH BÁO: {0} đã được kích hoạt!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Hộp quà sẽ mở khóa trong 10 phút nữa!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Hộp quà sẽ được mở khóa trong 5 phút nữa!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Deep Sea đã ra mắt</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Cửa hàng mới {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Cửa hàng đáng ngờ {0} [{1}] đã trực tuyến {2}, đã bán {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Tàu chở hàng xuất hiện tại {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>ở ngoài khơi xa (gần {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Tàu chở hàng đã cập cảng tại {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Tàu chở hàng dự kiến sẽ cập cảng tại {0} ({1}) trong khoảng 5 phút nữa.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Tàu chở hàng sẽ rời cảng {0} trong 5 phút nữa ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Phát hiện sự cố do độ trễ máy chủ — Chiếc trực thăng vẫn còn trên bản đồ tại {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} được tạo ra tại {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Máy bay trực thăng tuần tra bị bắn rơi tại {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>không rõ</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} đã được đăng tải tại {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} đã ngắt kết nối</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} đã qua đời @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} đã được đăng lại tại {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Theo dõi] {0}{1} hiện đã hoạt động</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Theo dõi] {0}{1} hiện đang NGỪNG HOẠT ĐỘNG</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Cập nhật] {0}{1} đã được đổi tên thành {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>bán</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>mua</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Cửa hàng</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (Cổ phiếu {5}) cho {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Danh sách các lệnh trò chuyện</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>CÁC LỆNH: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Địa phương hóa, Hiện đại hóa giao diện người dùng &amp; Lưu trữ</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Chuyển đổi vùng ngôn ngữ động</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> — Hơn 30 ngôn ngữ để lựa chọn</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Giao diện người dùng các lệnh trò chuyện</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> — Giao diện đơn giản, gọn gàng</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Cửa sổ cài đặt mới</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> — Thanh bên gọn gàng cho tất cả các cài đặt</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Đã gỡ bỏ tính năng theo dõi BattleMetrics</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Căn cứ của bạn đang bị tấn công!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Vui lòng kết nối với máy chủ trước.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Bạn hiện không kết nối với bất kỳ máy chủ nào.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Hiện tại, tính năng trò chuyện không khả dụng.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Vui lòng chọn máy chủ trước.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Kết nối</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Trò chuyện</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Cách theo dõi người chơi</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Theo dõi UDP gốc</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>Hiện tại, hướng dẫn theo dõi chỉ có sẵn bằng tiếng Anh, vì tài liệu này sẽ được cập nhật trong thời gian tới. Rất mong quý vị thông cảm.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Bạn có thể đóng cửa sổ này bất cứ lúc nào — bạn có thể mở lại cửa sổ này bằng nút ❓ Cách theo dõi.</value>
+  </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Bảo trì</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Xóa, sao lưu hoặc khôi phục cài đặt ứng dụng, hồ sơ và bản vẽ tùy chỉnh.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Xóa dữ liệu ứng dụng...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Sao lưu dữ liệu...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Khôi phục dữ liệu...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Đặt lại dữ liệu ứng dụng</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Chọn các thành phần mà bạn muốn xóa khỏi thiết bị này. Tất cả các tùy chọn đã chọn sẽ bị xóa vĩnh viễn.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Kết nối máy chủ đang hoạt động (Ngắt kết nối)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Hồ sơ máy chủ đã lưu (Xóa các cấu hình máy chủ đã ghép nối)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Thông tin đăng nhập tài khoản Steam (Đăng xuất)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Cài đặt ghép nối thiết bị (Đặt lại mã đăng ký)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Điểm ngắm tùy chỉnh (Cấu hình hiệu ứng chuyển cảnh)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Bộ nhớ đệm cục bộ &amp; Bản vẽ (Xóa bản đồ/đường đã lưu)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Thao tác này là vĩnh viễn và không thể hoàn tác.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Xác nhận khôi phục cài đặt gốc</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Mật khẩu dự phòng</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Bảo vệ dữ liệu sao lưu</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Nhập mật khẩu để mã hóa tệp sao lưu này. Nếu bạn để trống, tệp sao lưu sẽ không được mã hóa.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Khôi phục bản sao lưu</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Bản sao lưu này được bảo vệ bằng mật khẩu. Vui lòng nhập mật khẩu để giải mã:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Mã hóa</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Giải mã</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>Được rồi</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Sao lưu dữ liệu ứng dụng</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[HỆ THỐNG] Đã tạo bản sao lưu thành công tại: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Quá trình sao lưu đã hoàn tất thành công!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Quá trình sao lưu đã hoàn tất</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[HỆ THỐNG] Lỗi sao lưu: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Lỗi khi tạo bản sao lưu: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Sao lưu không thành công</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Việc khôi phục dữ liệu sẽ ghi đè lên các cấu hình máy chủ hiện tại, các kiểu ngắm tùy chỉnh, các lớp phủ vẽ và cài đặt bản đồ thu nhỏ của bạn.
+
+Bạn có chắc chắn muốn tiếp tục không?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Xác nhận khôi phục bản sao lưu</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Khôi phục dữ liệu ứng dụng</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Dữ liệu ứng dụng đã được khôi phục thành công!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Quá trình khôi phục đã hoàn tất</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[HỆ THỐNG] Lỗi khôi phục: Mật khẩu không hợp lệ.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Quá trình giải mã không thành công. Mật khẩu không hợp lệ hoặc tệp sao lưu bị hỏng.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Không khôi phục được</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[HỆ THỐNG] Lỗi khôi phục: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Lỗi khi khôi phục bản sao lưu: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Định dạng tệp sao lưu không hợp lệ hoặc thiếu chữ ký.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Đang bắt đầu quá trình khôi phục có chọn lọc...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Đang ngắt kết nối máy chủ đang hoạt động...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Đã hoàn tất thiết lập lại kết nối.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[XÓA] Đang xóa các cấu hình máy chủ đã lưu...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[XÓA] Các cấu hình máy chủ đã lưu đã bị xóa.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Đang xóa thông tin đăng nhập tài khoản Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[XÓA] Thông tin đăng nhập Steam đã bị xóa.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[XÓA] Đang xóa cấu hình ghép nối thiết bị...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[XÓA] Cấu hình ghép nối thiết bị đã bị xóa.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[XÓA] Đang xóa tâm ngắm tùy chỉnh...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Lỗi khi xóa dấu ngắm tùy chỉnh: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[XÓA] Đã xóa tâm ngắm tùy chỉnh.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[XÓA] Đang xóa các tệp bộ nhớ đệm cục bộ và các bản vẽ lớp phủ...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Lỗi khi xóa thư mục bộ nhớ đệm: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[XÓA] Các thư mục bộ nhớ đệm đã được xóa.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Đang đăng ký lại thông tin đăng nhập của người nghe và FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Quá trình khôi phục cài đặt gốc đã hoàn tất thành công.</value>
+  </data>
+</root>

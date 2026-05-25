@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using ui = Wpf.Ui.Controls;
+using WpfUi = Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views;
 
@@ -67,14 +67,14 @@ public static class HowToTrackWindow
         var titleBlock = new StackPanel();
         titleBlock.Children.Add(new TextBlock
         {
-            Text = "How to Track Players",
+            Text = Properties.Resources.HowToTrackPlayersTitle ?? "How to Track Players",
             FontSize = 18,
             FontWeight = FontWeights.Bold,
             Foreground = Brushes.White,
         });
         titleBlock.Children.Add(new TextBlock
         {
-            Text = "Native UDP tracking",
+            Text = Properties.Resources.NativeUDPTrackingSubtitle ?? "Native UDP tracking",
             FontSize = 12,
             Foreground = new SolidColorBrush(Color.FromRgb(140, 150, 170)),
         });
@@ -96,6 +96,8 @@ public static class HowToTrackWindow
         root.Children.Add(scroll);
 
         // ── Sections ─────────────────────────────────────────────────────────
+
+        content.Children.Add(InfoBox(Properties.Resources.TrackingGuideEnglishOnlyNotice ?? "The tracking guide is currently only available in English, as it will undergo changes in the near future. We ask for your patience.", isNote: false));
 
         // 1 — Native tracking
         content.Children.Add(SectionHeader("Native UDP Tracking", "🔵"));
@@ -139,16 +141,16 @@ public static class HowToTrackWindow
 
         footerGrid.Children.Add(new TextBlock
         {
-            Text = "Close this window at any time — you can reopen it with the  ❓ How to Track  button.",
+            Text = Properties.Resources.HowToTrackCloseHint ?? "Close this window at any time — you can reopen it with the  ❓ How to Track  button.",
             Foreground = new SolidColorBrush(Color.FromRgb(110, 120, 140)),
             FontSize = 11,
             VerticalAlignment = VerticalAlignment.Center,
         });
 
-        var closeBtn = new ui.Button
+        var closeBtn = new WpfUi.Button
         {
-            Content = "Close",
-            Appearance = ui.ControlAppearance.Secondary,
+            Content = Properties.Resources.Close ?? "Close",
+            Appearance = WpfUi.ControlAppearance.Secondary,
             Padding = new Thickness(20, 6, 20, 6),
         };
         closeBtn.Click += (_, _) => win.Close();

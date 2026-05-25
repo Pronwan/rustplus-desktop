@@ -12,7 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
-using ui = Wpf.Ui.Controls;
+using WpfUi = Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views;
 
@@ -23,6 +23,9 @@ public partial class MainWindow
     private DateTime? _lastChatTsForCurrentServer = null;
     private readonly HashSet<string> _pendingChatConfirms = new();
     private DateTime _lastChatDate = DateTime.MinValue;
+    private int _displayedMessagesCount = 20;
+    private bool _isLoadingMoreChat = false;
+    private ScrollViewer? _chatScrollViewer;
 
     // ====== VIEW MODEL ======
     public ObservableCollection<ChatMessageVM> ChatMessages { get; } = new();
@@ -35,11 +38,12 @@ public partial class MainWindow
         public ImageSource? Avatar { get; set; }
         public bool ShowSeparator { get; set; }
         public string? SeparatorText { get; set; }
+        public bool IsMe { get; set; }
     }
 
     // ====== LOGIC ======
     
-    private void AddIncomingChatMessage(string author, string text, DateTime? ts = null, ulong steamId = 0)
+    private void AddIncomingChatMessage(string author, string text, DateTime? ts = null, ulong steamId = 0, bool autoScroll = true)
     {
         if (string.IsNullOrWhiteSpace(text)) return;
         var time = ts ?? DateTime.Now;
@@ -50,8 +54,8 @@ public partial class MainWindow
         if (time.Date != _lastChatDate.Date)
         {
             showSep = true;
-            // Force English culture for dates as requested
-            sepText = time.ToString("dddd, MMMM dd, yyyy", CultureInfo.InvariantCulture);
+            // Localize the date using the current selected UI culture
+            sepText = time.ToString("D", System.Globalization.CultureInfo.CurrentUICulture);
             _lastChatDate = time.Date;
         }
 
@@ -62,15 +66,20 @@ public partial class MainWindow
             Timestamp = time,
             Avatar = (steamId != 0 && _avatarCache.TryGetValue(steamId, out var img)) ? img : null,
             ShowSeparator = showSep,
-            SeparatorText = sepText
+            SeparatorText = sepText,
+            IsMe = steamId != 0 && steamId == _mySteamId
         };
 
         ChatMessages.Add(vm);
         
         // Auto-Scroll if chat overlay is visible
-        if (ChatOverlayPanel.Visibility == Visibility.Visible)
+        if (autoScroll)
         {
-            ScrollChatToBottom();
+            _displayedMessagesCount++;
+            if (ChatOverlayPanel.Visibility == Visibility.Visible)
+            {
+                ScrollChatToBottom();
+            }
         }
     }
 
@@ -234,7 +243,10 @@ public partial class MainWindow
             m = new TeamChatMessage(m.Timestamp, m.Author, m.SteamId, $"[Chat Command] {m.Text}");
         }
 
-        Dispatcher.InvokeAsync(() => AddIncomingChatMessage(m.Author, m.Text, m.Timestamp.ToLocalTime(), m.SteamId));
+        if (!isHistorical)
+        {
+            Dispatcher.InvokeAsync(() => AddIncomingChatMessage(m.Author, m.Text, m.Timestamp.ToLocalTime(), m.SteamId, autoScroll: true));
+        }
         
         // Timestamp für History-Anfragen aktuell halten
         if (!_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value)
@@ -253,25 +265,50 @@ public partial class MainWindow
         Dispatcher.Invoke(() => AddIncomingChatMessage(e.Author, e.Text, e.Timestamp.ToLocalTime(), e.SteamId));
     }
 
+    private void RebuildChatMessages()
+    {
+        ChatMessages.Clear();
+        _lastChatDate = DateTime.MinValue;
+
+        List<TeamChatMessage> toDisplay;
+        lock (_chatHistoryLog)
+        {
+            toDisplay = _chatHistoryLog
+                .OrderBy(x => x.Timestamp)
+                .Skip(Math.Max(0, _chatHistoryLog.Count - _displayedMessagesCount))
+                .ToList();
+        }
+
+        foreach (var m in toDisplay)
+        {
+            AddIncomingChatMessage(m.Author, m.Text, m.Timestamp.ToLocalTime(), m.SteamId, autoScroll: false);
+        }
+    }
+
     // ====== UI INTERACTIONS ======
 
     private async void BtnToggleChat_Click(object sender, RoutedEventArgs e)
     {
+        if (ChatContentBorder.Visibility == Visibility.Visible)
+        {
+            CloseChatOverlay();
+            return;
+        }
+
+        await OpenChatOverlayAsync();
+    }
+
+    public async Task OpenChatOverlayAsync()
+    {
         if (_rust is not RustPlusClientReal real)
         {
-            ShowInfoSnackbar("Connection", "You are not connected to any server.", ui.ControlAppearance.Caution);
+            ShowInfoSnackbar(Properties.Resources.SnackbarTitleConnection, Properties.Resources.NotConnectedError, WpfUi.ControlAppearance.Caution);
             return;
         }
 
         if (!(_vm.Selected?.IsConnected ?? false))
         {
-            ShowInfoSnackbar("Chat", "Please connect to a server first.", ui.ControlAppearance.Info);
-            return;
-        }
-
-        if (ChatContentBorder.Visibility == Visibility.Visible)
-        {
-            CloseChatOverlay();
+            ShowInfoSnackbar(Properties.Resources.SnackbarTitleChat, Properties.Resources.PleaseConnectFirst, WpfUi.ControlAppearance.Info);
             return;
         }
 
@@ -283,29 +320,19 @@ public partial class MainWindow
         }
         catch (InvalidOperationException)
         {
-            ShowInfoSnackbar("Chat", "Please connect to a server first.", ui.ControlAppearance.Info);
+            ShowInfoSnackbar(Properties.Resources.SnackbarTitleChat, Properties.Resources.PleaseConnectFirst, WpfUi.ControlAppearance.Info);
             return;
         }
         catch (Exception ex)
         {
             AppendLog("PrimeChat failed: " + ex.Message);
-            ShowInfoSnackbar("Chat", "Chat is not available right now.", ui.ControlAppearance.Danger);
+            ShowInfoSnackbar(Properties.Resources.SnackbarTitleChat, Properties.Resources.ChatNotAvailable, WpfUi.ControlAppearance.Danger);
             return;
         }
 
-        // WICHTIG: Hier spielen wir den alten Verlauf ab (Replay) falls das Overlay gerade erst geöffnet wird
-        // Das passiert jetzt im UI, indem wir einfach sicherstellen, dass die Liste aktuell ist.
-        // Die ChatMessages collection hält die Nachrichten. Wenn _chatHistoryLog neu geladen wurde:
-        if (ChatMessages.Count == 0 && _chatHistoryLog.Count > 0)
-        {
-            lock (_chatHistoryLog)
-            {
-                foreach (var m in _chatHistoryLog.OrderBy(x => x.Timestamp))
-                {
-                    AddIncomingChatMessage(m.Author, m.Text, m.Timestamp.ToLocalTime(), m.SteamId);
-                }
-            }
-        }
+        // Initialize displayed messages count and rebuild messages from log
+        _displayedMessagesCount = 20;
+        RebuildChatMessages();
 
         // Overlay einblenden
         ChatContentBorder.Visibility = Visibility.Visible;
@@ -333,6 +360,10 @@ public partial class MainWindow
                 {
                     AppendChatIfNew(m, isHistorical: true);
                 }
+                
+                // Refresh list with any new historical items
+                RebuildChatMessages();
+                ScrollChatToBottom();
             }
         }
         catch (Exception ex)
@@ -388,19 +419,19 @@ public partial class MainWindow
             {
                 // Nicht bestätigt -> Error-Box im Overlay anzeigen, KEIN Popup
                 ChatErrorBox.Visibility = Visibility.Visible;
-                ChatErrorText.Text = "Message could not be sent. Please try again. (Check if you are in a team!)";
+                ChatErrorText.Text = Properties.Resources.MessageNotSentError;
             }
         }
         catch (Exception ex)
         {
             ChatErrorBox.Visibility = Visibility.Visible;
-            ChatErrorText.Text = "Error: " + ex.Message;
+            ChatErrorText.Text = Properties.Resources.ErrorPrefix + ex.Message;
         }
         finally
         {
             BtnSendChat.IsEnabled = true;
             TxtChatInput.IsEnabled = true;
-            BtnSendChat.Content = "Send";
+            BtnSendChat.Content = Properties.Resources.Send;
             TxtChatInput.Focus();
         }
     }
@@ -416,6 +447,84 @@ public partial class MainWindow
         {
             e.Handled = true;
             await SendChatInputAsync();
+        }
+    }
+
+    private ScrollViewer? GetChatScrollViewer()
+    {
+        if (VisualTreeHelper.GetChildrenCount(ChatList) > 0)
+        {
+            var border = VisualTreeHelper.GetChild(ChatList, 0) as Border;
+            return border?.Child as ScrollViewer;
+        }
+        return null;
+    }
+
+    private void ChatList_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        var scrollViewer = _chatScrollViewer ?? GetChatScrollViewer();
+        if (scrollViewer != null)
+        {
+            _chatScrollViewer = scrollViewer;
+            if (scrollViewer.VerticalOffset == 0 && e.Delta > 0 && !_isLoadingMoreChat)
+            {
+                LoadMoreChatMessages();
+                e.Handled = true;
+            }
+        }
+    }
+
+    private void ChatScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+    {
+        if (e.OriginalSource is ScrollViewer scrollViewer)
+        {
+            _chatScrollViewer = scrollViewer;
+            if (scrollViewer.VerticalOffset == 0 && e.VerticalChange < 0 && !_isLoadingMoreChat)
+            {
+                LoadMoreChatMessages();
+            }
+        }
+    }
+
+    private void LoadMoreChatMessages()
+    {
+        int totalAvailable;
+        lock (_chatHistoryLog)
+        {
+            totalAvailable = _chatHistoryLog.Count;
+        }
+
+        if (_displayedMessagesCount >= totalAvailable)
+        {
+            // No more older messages to load
+            return;
+        }
+
+        _isLoadingMoreChat = true;
+        try
+        {
+            var scrollViewer = _chatScrollViewer ?? GetChatScrollViewer();
+            if (scrollViewer != null)
+            {
+                double oldOffset = scrollViewer.VerticalOffset;
+                double oldHeight = scrollViewer.ExtentHeight;
+
+                // Load 20 more messages
+                _displayedMessagesCount += 20;
+
+                // Rebuild the chat list
+                RebuildChatMessages();
+
+                // Force layout update so the ScrollViewer updates its ExtentHeight
+                ChatList.UpdateLayout();
+
+                double newHeight = scrollViewer.ExtentHeight;
+                scrollViewer.ScrollToVerticalOffset(newHeight - oldHeight + oldOffset);
+            }
+        }
+        finally
+        {
+            _isLoadingMoreChat = false;
         }
     }
 }

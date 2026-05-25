@@ -8,7 +8,6 @@
 		<ApplicationIcon>Assets\rustplus-desktop-icon.ico</ApplicationIcon>
 		
 		<!-- Fixes for Single-File Publish and Cleanup -->
-		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
 		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
 		<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
@@ -20,12 +19,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>5.2.0</Version>
+		<Version>5.4.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>5.2.0</AssemblyVersion>
-		<FileVersion>5.2.0</FileVersion>
-		<InformationalVersion>5.2.0</InformationalVersion>
+		<AssemblyVersion>5.4.0</AssemblyVersion>
+		<FileVersion>5.4.0</FileVersion>
+		<InformationalVersion>5.4.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -139,6 +138,7 @@
 	  <None Remove="Assets\icons\waterwell.png" />
 	  <None Remove="Assets\Data\rust-item-list.json" />
 	  <None Remove="Assets\icons\discord.png" />
+	  <None Remove="Assets\Images\5.3.0\LoopAudio_StopLogic.png" />
 	  <None Remove="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
 	  <None Remove="Assets\rustplus-desktop-icon.ico" />
 	  <None Remove="Assets\Data\rust_items.json" />
@@ -232,6 +232,7 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
     <Resource Include="Assets\icons\airfield.png" />
+    <Resource Include="Assets\Fonts\PermanentMarker.ttf" />
     <Resource Include="Assets\icons\arcticresearch.png" />
     <Resource Include="Assets\icons\banditcamp.png" />
     <Resource Include="Assets\icons\barn.png" />
@@ -292,6 +293,7 @@
     <Resource Include="Assets\icons\swamp.png" />
     <Resource Include="Assets\icons\traintunnel.png" />
     <Resource Include="Assets\icons\traintunnel2.png" />
+    <Resource Include="Assets\icons\assets_markers_train.png" />
     <Resource Include="Assets\icons\trainyard.png" />
     <Resource Include="Assets\icons\underwater.png" />
     <Resource Include="Assets\icons\vending.png" />
@@ -304,6 +306,7 @@
     <Resource Include="Assets\icons\waterwell.png" />
     <Resource Include="Assets\Data\rust-item-list.json" />
     <Resource Include="Assets\icons\discord.png" />
+    <Resource Include="Assets\Images\5.3.0\LoopAudio_StopLogic.png" />
     <Resource Include="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
     <Resource Include="Assets\rustplus-desktop-icon.ico" />
     <Resource Include="Assets\Screenshots\3.0_1.png" />
@@ -342,9 +345,15 @@
     <Resource Include="Assets\Screenshots\beta-5.1_6.png" />
     <Resource Include="Assets\Screenshots\beta-5.1_7.png" />
     <Resource Include="Assets\Screenshots\Notifications.png" />
+    <Resource Include="Assets\Flags\*.png" />
     <Resource Include="Assets\TitleScreen-rust-plus-desktop.png" />
     <Resource Include="Assets\Data\rust_items.json" />
     <Resource Include="Assets\Data\ShopSearch.html" />
+    <Resource Include="Assets\Images\5.3.0\ChatCommandsUI-1.png" />
+    <Resource Include="Assets\Images\5.3.0\ChatCommandsUI-2.png" />
+    <Resource Include="Assets\Images\5.3.0\NewLanguageSelector.png" />
+    <Resource Include="Assets\Images\5.3.0\NewSettingOverlayOnLeftPanel.png" />
+    <Resource Include="Assets\Images\5.3.0\newTeamChatUI.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -353,11 +362,26 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Map nested localized resources using Link to keep culture naming intact while avoiding manifest name collisions -->
+    <EmbeddedResource Update="Properties/lang/**/*.resx">
+      <TargetPath>Properties\%(Filename)%(Extension)</TargetPath>
+    </EmbeddedResource>
+  </ItemGroup>
+
 
 	
 	<PropertyGroup>
 		<CopyRetryCount>60</CopyRetryCount>
 		<CopyRetryDelayMilliseconds>250</CopyRetryDelayMilliseconds>
 	</PropertyGroup>
+
+	<Target Name="ObfuscateSecretsTarget" BeforeTargets="BeforeBuild">
+		<Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\..\obfuscate_secrets.ps1&quot; &quot;$(MSBuildProjectDirectory)&quot;" />
+		<ItemGroup>
+			<Compile Remove="$(MSBuildProjectDirectory)\Services\Data\ObfuscatedSecrets.cs" />
+			<Compile Include="$(MSBuildProjectDirectory)\Services\Data\ObfuscatedSecrets.cs" />
+		</ItemGroup>
+	</Target>
 	
 </Project>

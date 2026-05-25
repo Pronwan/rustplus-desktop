@@ -13,7 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Threading;
-using ui = Wpf.Ui.Controls;
+using WpfUi = Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views;
 
@@ -123,6 +123,7 @@ public partial class MainWindow
         HydrateSteamUiFromStorage();
         RegisterAllHotkeys();
         ActivateHotkeysForCurrentServer();
+        UpdateRustMapsUi();
     }
 
     private async Task PerformConnectDevicesOnlyAsync(ServerProfile profile)
@@ -157,8 +158,15 @@ public partial class MainWindow
             _statusCts?.Cancel();
             _statusCts = new CancellationTokenSource();
             _ = PollServerStatusLoopAsync(_statusCts.Token);
-            
+
+            // Start A2S player polling so the Players tab works on soft connect too
+            TrackingService.StartPolling(profile.Host ?? "", profile.Port, profile.Name ?? "", profile.BattleMetricsId);
+            _ = TrackingService.FetchOnlinePlayersNowAsync();
+
+            _ = SearchRustMapsAsync(false);
+
             AppendLog("Soft-connect complete.");
+
         }
         catch (Exception ex)
         {
@@ -230,7 +238,7 @@ public partial class MainWindow
 
         if (_vm.Selected is null)
         {
-            if (!silent) ShowInfoSnackbar("Connection", "Please select a server first.", ui.ControlAppearance.Info);
+            if (!silent) ShowInfoSnackbar(Properties.Resources.SnackbarTitleConnection, Properties.Resources.PleaseSelectServerFirst, WpfUi.ControlAppearance.Info);
             return false;
         }
 
@@ -312,6 +320,7 @@ public partial class MainWindow
             _vm.Selected.IsFullConnected = true;
 
             _vm.NotifyDevicesChanged();
+            _ = SearchRustMapsAsync(false);
             AppendLog($"Connection initialization complete. Server: {_vm.Selected.Name}");
 
             // Finally, refresh all device statuses to ensure the UI reflects the current server state

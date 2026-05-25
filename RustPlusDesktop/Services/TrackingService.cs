@@ -67,6 +67,10 @@ public class TrackingSettings
     public bool MapShowDeathTags { get; set; } = false;
     public bool MapAbbreviateNames { get; set; } = false;
     public double MapPlayerIconScale { get; set; } = 1.0;
+    public bool MapUseMonumentText { get; set; } = false;
+    public int MapMonumentDisplayMode { get; set; } = 0;
+    public double MapMonumentScale { get; set; } = 1.0;
+    public double MapMonumentOpacity { get; set; } = 1.0;
     public bool BackgroundTrackingEnabled { get; set; } = true;
     public bool CloseToTrayEnabled { get; set; } = false;
     public bool StartMinimizedEnabled { get; set; } = false;
@@ -91,6 +95,7 @@ public class TrackingSettings
     public bool AnnounceNewShops { get; set; } = false;
     public bool AnnounceSuspiciousShops { get; set; } = false;
     public bool AnnounceTradeAlerts { get; set; } = false;
+    public string SelectedLanguage { get; set; } = "";
     public Dictionary<string, bool> GroupStates { get; set; } = new();
     public Dictionary<string, List<string>> GroupOrder { get; set; } = new();
     public bool AnnounceCargoDocking { get; set; } = false;
@@ -109,6 +114,8 @@ public class TrackingSettings
     public DateTime? FcmExpiresAt { get; set; }
     public bool AnnounceTracking { get; set; } = false;
     public Dictionary<string, int> LearnedQueryPorts { get; set; } = new();
+    public bool TranslationConsentGiven { get; set; } = false;
+    public bool UploadConsentGiven { get; set; } = false;
 }
 
 
@@ -596,10 +603,29 @@ public static class TrackingService
         get => _settings.AnnounceTradeAlerts;
         set { _settings.AnnounceTradeAlerts = value; SaveDB(); }
     }
+
+    public static string SelectedLanguage
+    {
+        get => _settings.SelectedLanguage;
+        set { _settings.SelectedLanguage = value; SaveDB(); }
+    }
+
     public static bool AnnounceSpawnsMaster
     {
         get => _settings.AnnounceSpawnsMaster;
         set { _settings.AnnounceSpawnsMaster = value; SaveDB(); }
+    }
+
+    public static bool TranslationConsentGiven
+    {
+        get => _settings.TranslationConsentGiven;
+        set { _settings.TranslationConsentGiven = value; SaveDB(); }
+    }
+
+    public static bool UploadConsentGiven
+    {
+        get => _settings.UploadConsentGiven;
+        set { _settings.UploadConsentGiven = value; SaveDB(); }
     }
 
     public static bool AnnounceCargoDocking
@@ -658,6 +684,26 @@ public static class TrackingService
     {
         get => _settings.MapPlayerIconScale;
         set { _settings.MapPlayerIconScale = value; SaveDB(); }
+    }
+    public static bool MapUseMonumentText
+    {
+        get => _settings.MapMonumentDisplayMode == 1;
+        set { _settings.MapMonumentDisplayMode = value ? 1 : 0; SaveDB(); }
+    }
+    public static int MapMonumentDisplayMode
+    {
+        get => _settings.MapMonumentDisplayMode;
+        set { _settings.MapMonumentDisplayMode = value; SaveDB(); }
+    }
+    public static double MapMonumentScale
+    {
+        get => _settings.MapMonumentScale;
+        set { _settings.MapMonumentScale = value; SaveDB(); }
+    }
+    public static double MapMonumentOpacity
+    {
+        get => _settings.MapMonumentOpacity;
+        set { _settings.MapMonumentOpacity = value; SaveDB(); }
     }
     public static string LastSeenVersion
     {
@@ -755,7 +801,7 @@ public static class TrackingService
 
     public static async Task<string> FetchPlayerNameAsync(string bmId)
     {
-        if (bmId.Length == 17 && bmId.StartsWith("7656") && ulong.TryParse(bmId, out _))
+        if (bmId.Length == 17 && bmId.StartsWith("7656") && ulong.TryParse(bmId, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             try
             {
@@ -1351,7 +1397,7 @@ public static class TrackingService
                     if (AnnounceTracking)
                     {
                         var groupStr = string.IsNullOrWhiteSpace(tp.GroupName) ? "" : $" [{tp.GroupName}]";
-                        OnTrackingNotification?.Invoke($"[Tracking] {tp.Name}{groupStr} is now ONLINE", serverName);
+                        OnTrackingNotification?.Invoke(string.Format(Properties.Resources.AlertTrackingOnline, tp.Name, groupStr), serverName);
                     }
                 }
                 else
@@ -1406,7 +1452,7 @@ public static class TrackingService
                         if (AnnounceTracking)
                         {
                             var groupStr = string.IsNullOrWhiteSpace(tp.GroupName) ? "" : $" [{tp.GroupName}]";
-                            OnTrackingNotification?.Invoke($"[Tracking] {oldName}{groupStr} renamed to {newName}!", serverName);
+                            OnTrackingNotification?.Invoke(string.Format(Properties.Resources.AlertTrackingRenamed, oldName, groupStr, newName), serverName);
                         }
                         
                         continue; // Skip the disconnect logic
@@ -1429,7 +1475,7 @@ public static class TrackingService
                     if (AnnounceTracking)
                     {
                         var groupStr = string.IsNullOrWhiteSpace(tp.GroupName) ? "" : $" [{tp.GroupName}]";
-                        OnTrackingNotification?.Invoke($"[Tracking] {tp.Name}{groupStr} is now OFFLINE", serverName);
+                        OnTrackingNotification?.Invoke(string.Format(Properties.Resources.AlertTrackingOffline, tp.Name, groupStr), serverName);
                     }
                 }
             }

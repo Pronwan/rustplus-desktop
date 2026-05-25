@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>RUST+ DESKTOP</value>
+  </data>
+  <data name="SteamAccount" xml:space="preserve">
+    <value>Steamアカウント</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+    <value>ログインしていません</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>アップデートの確認</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>ダウンロード中...</value>
+  </data>
+  <data name="JoinDiscord" xml:space="preserve">
+    <value>Discord に参加</value>
+  </data>
+  <data name="PatchNotes" xml:space="preserve">
+    <value>パッチノート</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="PairedServers" xml:space="preserve">
+    <value>ペアリングサーバー</value>
+  </data>
+  <data name="NoServersPaired" xml:space="preserve">
+    <value>ペアリングされたサーバーがありません</value>
+  </data>
+  <data name="PairingMaintenance" xml:space="preserve">
+    <value>ペイントとメンテナンス</value>
+  </data>
+  <data name="PairingIdle" xml:space="preserve">
+    <value>Pairing: idle</value>
+  </data>
+  <data name="RightClickOptions" xml:space="preserve">
+    <value>右クリックでオプション</value>
+  </data>
+  <data name="TrackingActive" xml:space="preserve">
+    <value>トラッキング有効</value>
+  </data>
+  <data name="LastPull" xml:space="preserve">
+    <value>最後のプル: {0}</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>寄付</value>
+  </data>
+  <data name="SupportDeveloper" xml:space="preserve">
+    <value>開発者を支援する</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetWebSocket" xml:space="preserve">
+    <value>WebSocket 接続をリセット</value>
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value>プレイヤー:</value>
+  </data>
+  <data name="ShowOnlinePlayers" xml:space="preserve">
+    <value>オンラインプレイヤータブを表示</value>
+  </data>
+  <data name="Queue" xml:space="preserve">
+    <value>キュー:</value>
+  </data>
+  <data name="DevicesTab" xml:space="preserve">
+    <value>デバイス</value>
+  </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>ホットキー</value>
+  </data>
+  <data name="ImportDevices" xml:space="preserve">
+    <value>チームメイトからデバイスをインポート</value>
+  </data>
+  <data name="ExportDevices" xml:space="preserve">
+    <value>デバイスをチームメイトにエクスポート</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>減少</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>同意のアップロード</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>Accept」をクリックすると、このサーバーのスマートデバイス（および潜在的にマップ図面）がクリエイターのサーバーにアップロードされます。これにより、チームメイトはそれらをダウンロードして同期することができます。チームメイトを識別するために送信されるのはSteam IDのみです。Tool Cupboardで承認されたプレイヤーだけがデバイスを操作できます。
+
+注意：この送信方法は将来的に最適化される予定です。チームメイトがデータをダウンロードできない場合は、マップの描画をクリアして再度アップロードしてみてください。</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="DeleteMissingOnly" xml:space="preserve">
+    <value>不足しているデバイスのみ削除できます</value>
+  </data>
+  <data name="RenameDevice" xml:space="preserve">
+    <value>デバイス名の変更</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>オンライン</value>
+  </data>
+  <data name="Offline" xml:space="preserve">
+    <value>オフライン</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>接続する</value>
+  </data>
+  <data name="FullConnect" xml:space="preserve">
+    <value>フル接続</value>
+  </data>
+  <data name="LoadMapTeam" xml:space="preserve">
+    <value>マップとチームを読み込む</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>接続を解除</value>
+  </data>
+  <data name="ServerDetails" xml:space="preserve">
+    <value>サーバーの詳細</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>Listen</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="TryPairingEdge" xml:space="preserve">
+    <value>エッジとペアリングしてみてください</value>
+  </data>
+  <data name="ResetPairingConfig" xml:space="preserve">
+    <value>Reset pairing (delete config)</value>
+  </data>
+  <data name="ResetListenPairing" xml:space="preserve">
+    <value>Reset + Listen (再ペア)</value>
+  </data>
+  <data name="ResetListenEdge" xml:space="preserve">
+    <value>Reset + Listen with Edge</value>
+  </data>
+  <data name="RelinkBattlemetrics" xml:space="preserve">
+    <value>Relink Battlemetrics ID…</value>
+  </data>
+  <data name="DeleteServer" xml:space="preserve">
+    <value>サーバーの削除…</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Bitte warten …</value>
+  </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>サーバーエリアの切り替え</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>配信モード</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>スケール:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>配信モードを有効にする (名前を短縮)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>ストリーム中のプライバシーを保護するためにSteam名とIDを省略します。コンソールとサーバーリストを自動的に非表示にします。</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>ポジションがありません（オフラインまたはスポーンされていません）。</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>グループを保存</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>グループ名を入力してください。</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>メッセージを送信できませんでした。もう一度やり直してください（チームにいるか確認してください）</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>エラー: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>グループを割り当てる</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>グループ設定: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>グループ名</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>グループ名を入力...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>グループの色</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>変更を保存</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>プレイヤーのアクティビティ分析と予測</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>プレイヤー</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>ストリーマーモードとミニマップのオーバーホール</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>配信モード</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>プレイヤーマーカーのスケール</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>ポーランドのミニマップ</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>アクションが必要:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>バトルメトリクスのトラッキングが削除</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>プレイヤー追跡システムのオーバーホール</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>プレイヤー追跡の仕組み</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>トラッカーにプレイヤーを追加してトラッキングを開始</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>トラッキング有効</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>待機中</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>プレイヤーをフィルター...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>サーバーに接続してプレイヤーリストを読み込みます。</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Steamクエリでプレイヤーを取得しています...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>トラック ID</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>手動トラック名...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>デバイスがありません。</value>
+  </data>
+  <data name="NoTokenRegistered" xml:space="preserve">
+    <value>トークンが登録されていません</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>トークンの有効期限が切れました！</value>
+  </data>
+  <data name="ExpiresInDays" xml:space="preserve">
+    <value>有効期限： {0} 日</value>
+  </data>
+  <data name="UntilNight" xml:space="preserve">
+    <value>夜まで {0}</value>
+  </data>
+  <data name="UntilDay" xml:space="preserve">
+    <value>日まで {0}</value>
+  </data>
+  <data name="FollowMe" xml:space="preserve">
+    <value>フォローしてください</value>
+  </data>
+  <data name="FollowPlayer" xml:space="preserve">
+    <value>{0}をフォロー</value>
+  </data>
+  <data name="PairingListening" xml:space="preserve">
+    <value>ペアリング：リスニング…</value>
+  </data>
+  <data name="PairingStopped" xml:space="preserve">
+    <value>ペアリング: 停止</value>
+  </data>
+  <data name="PairingFailed" xml:space="preserve">
+    <value>ペアリングに失敗しました</value>
+  </data>
+  <data name="AlarmActivated" xml:space="preserve">
+    <value>アラームが有効になりました！</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>サーバー</value>
+  </data>
+  <data name="SmartAlarm" xml:space="preserve">
+    <value>スマートアラーム</value>
+  </data>
+  <data name="UnableToReadLink" xml:space="preserve">
+    <value>RustPlus-Link: {0}
+フォーマット: rustplus://IP:PORT</value>
+  </data>
+  <data name="DeletePairingConfigHeader" xml:space="preserve">
+    <value>Reset pairing</value>
+  </data>
+  <data name="DeletePairingConfigBody" xml:space="preserve">
+    <value>既存のペアリング設定を削除しますか？
+次回の起動時に再度ペアリングする必要があります。</value>
+  </data>
+  <data name="ResetListenHeader" xml:space="preserve">
+    <value>Reset + Listen</value>
+  </data>
+  <data name="ResetListenBody" xml:space="preserve">
+    <value>ペアリング設定を削除して直ちにペアリング/リッスンしますか？</value>
+  </data>
+  <data name="ResetListenEdgeHeader" xml:space="preserve">
+    <value>Reset + Listen (Edge)</value>
+  </data>
+  <data name="ResetListenEdgeBody" xml:space="preserve">
+    <value>ペアリング設定を削除し、エッジを使用して直ちにペアリング/リッスンしますか？</value>
+  </data>
+  <data name="UpdateQueryFailed" xml:space="preserve">
+    <value>最新のリリースを照会できませんでした。もう一度試すか、リリースページを開いてください。</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>あなたは最新です。</value>
+  </data>
+  <data name="UpdateAvailableHeader" xml:space="preserve">
+    <value>アップデートがあります</value>
+  </data>
+  <data name="UpdateAvailableBody" xml:space="preserve">
+    <value>{0}
+リリースページを開きますか？</value>
+  </data>
+  <data name="DownloadAndInstallBody" xml:space="preserve">
+    <value>{0}
+今すぐダウンロードしてインストールしますか？</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>ダウンロードに失敗しました。</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>更新の確認に失敗しました。
+{0}</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>デバイスがありません。</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>プロフィールを表示</value>
+  </data>
+  <data name="ChangeGroup" xml:space="preserve">
+    <value>グループの変更</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>名前の変更</value>
+  </data>
+  <data name="RemoveTracked" xml:space="preserve">
+    <value>トラックを削除</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>表示</value>
+  </data>
+  <data name="MoreOptions" xml:space="preserve">
+    <value>その他のオプション</value>
+  </data>
+  <data name="RelinkBattlemetricsId" xml:space="preserve">
+    <value>Relink Battlemetrics ID…</value>
+  </data>
+  <data name="DeleteServerEllipsis" xml:space="preserve">
+    <value>サーバーの削除…</value>
+  </data>
+  <data name="RightClickRename" xml:space="preserve">
+    <value>右クリックして名前を変更</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>切り替え</value>
+  </data>
+  <data name="PopupWindow" xml:space="preserve">
+    <value>ポップアップ ウィンドウ</value>
+  </data>
+  <data name="InAppAlert" xml:space="preserve">
+    <value>アプリ内アラート</value>
+  </data>
+  <data name="AudioAlert" xml:space="preserve">
+    <value>音声アラート</value>
+  </data>
+  <data name="CustomAudioFile" xml:space="preserve">
+    <value>カスタムオーディオファイル...</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>デフォルトにリセット</value>
+  </data>
+  <data name="Snapshot" xml:space="preserve">
+    <value>Snapshot: </value>
+  </data>
+  <data name="ItemsUpkeep" xml:space="preserve">
+    <value> アイテム、Upkeep=</value>
+  </data>
+  <data name="NoDevicesFound" xml:space="preserve">
+    <value>デバイスが見つかりません</value>
+  </data>
+  <data name="PairDeviceToSee" xml:space="preserve">
+    <value>スマートデバイスをペアリングし、スイッチまたはアラームをここに表示する</value>
+  </data>
+  <data name="TeamTab" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="CenterOnMap" xml:space="preserve">
+    <value>地図の中央揃え</value>
+  </data>
+  <data name="FollowOnMap" xml:space="preserve">
+    <value>地図をフォローする</value>
+  </data>
+  <data name="OpenSteamProfile" xml:space="preserve">
+    <value>Steamプロファイルを開く</value>
+  </data>
+  <data name="PromoteToLeader" xml:space="preserve">
+    <value>リーダーに昇格する</value>
+  </data>
+  <data name="KickFromTeam" xml:space="preserve">
+    <value>チームから退出する</value>
+  </data>
+  <data name="ProfileMarkers" xml:space="preserve">
+    <value>プロファイルマーカー</value>
+  </data>
+  <data name="DeathMarkers" xml:space="preserve">
+    <value>死亡マーカー</value>
+  </data>
+  <data name="CamerasTab" xml:space="preserve">
+    <value>カメラ</value>
+  </data>
+  <data name="AddCamera" xml:space="preserve">
+    <value>カメラを追加</value>
+  </data>
+  <data name="NoCamerasFound" xml:space="preserve">
+    <value>カメラが見つかりません</value>
+  </data>
+  <data name="PairCameraToSee" xml:space="preserve">
+    <value>カメラをペアリングしてプレビューをここで確認する</value>
+  </data>
+  <data name="PlayersTab" xml:space="preserve">
+    <value>プレイヤー</value>
+  </data>
+  <data name="HowToTrack" xml:space="preserve">
+    <value>追跡する方法</value>
+  </data>
+  <data name="LearnHowTrackingWorks" xml:space="preserve">
+    <value>プレイヤー追跡の仕組みを学ぶ</value>
+  </data>
+  <data name="OnlineTab" xml:space="preserve">
+    <value>オンライン</value>
+  </data>
+  <data name="OnlinePlayers" xml:space="preserve">
+    <value>オンラインプレイヤー</value>
+  </data>
+  <data name="SearchBM" xml:space="preserve">
+    <value>BMを検索</value>
+  </data>
+  <data name="SearchServerBM" xml:space="preserve">
+    <value>BattleMetricsで現在のサーバーを検索</value>
+  </data>
+  <data name="Popout" xml:space="preserve">
+    <value>ポップアウト</value>
+  </data>
+  <data name="OpenPlayersSeparateWindow" xml:space="preserve">
+    <value>別ウィンドウでプレイヤーを開く</value>
+  </data>
+  <data name="Track" xml:space="preserve">
+    <value>トラック</value>
+  </data>
+  <data name="ManualTrackPlaceholder" xml:space="preserve">
+    <value>手動トラック名またはスチームID...</value>
+  </data>
+  <data name="FilterPlayersPlaceholder" xml:space="preserve">
+    <value>プレイヤーをフィルター...</value>
+  </data>
+  <data name="LoadingPlayers" xml:space="preserve">
+    <value>プレイヤーを読み込んでいます...</value>
+  </data>
+  <data name="TrackedTab" xml:space="preserve">
+    <value>追跡</value>
+  </data>
+  <data name="TrackedPlayers" xml:space="preserve">
+    <value>追跡済みプレイヤー</value>
+  </data>
+  <data name="ManageGroups" xml:space="preserve">
+    <value>グループの管理</value>
+  </data>
+  <data name="ViewFullAnalysisReport" xml:space="preserve">
+    <value>完全な分析レポートを表示</value>
+  </data>
+  <data name="ReadyToExploreMap" xml:space="preserve">
+    <value>マップを探索する準備はできましたか？</value>
+  </data>
+  <data name="ConnectToLoadMap" xml:space="preserve">
+    <value>ライブRustマップとチームをロードするために、選択したサーバーに接続します。</value>
+  </data>
+  <data name="ReadyToDominate" xml:space="preserve">
+    <value>Rustを制覇する準備はできましたか？</value>
+  </data>
+  <data name="PairAccountBenefits" xml:space="preserve">
+    <value>アカウントをペアにしてプレイヤーの追跡を開始し、基本レイドアラートを受信し、スマートデバイスを瞬時に制御します。</value>
+  </data>
+  <data name="LoginPairAccount" xml:space="preserve">
+    <value>ログイン＆ペア アカウント</value>
+  </data>
+  <data name="RequiresSteamLogin" xml:space="preserve">
+    <value>デフォルトのブラウザでSteamログインが必要です。</value>
+  </data>
+  <data name="DeleteServerHeader" xml:space="preserve">
+    <value>サーバーを削除しますか？</value>
+  </data>
+  <data name="DeleteServerConfirm" xml:space="preserve">
+    <value>このサーバーを削除してもよろしいですか？この操作は元に戻せません。</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="DeleteAction" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="AutoHideAfter3s" xml:space="preserve">
+    <value>3秒後に自動的に隠す</value>
+  </data>
+  <data name="MapFilters" xml:space="preserve">
+    <value>地図フィルター</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>グリッド</value>
+  </data>
+  <data name="Monuments" xml:space="preserve">
+    <value>記念品</value>
+  </data>
+  <data name="Shops" xml:space="preserve">
+    <value>ショップ</value>
+  </data>
+  <data name="ChatAlerts" xml:space="preserve">
+    <value>チャットアラート</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>アラート</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>すべて選択</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>すべての選択を解除</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>イベント</value>
+  </data>
+  <data name="CargoShip" xml:space="preserve">
+    <value>貨物船</value>
+  </data>
+  <data name="CargoSpawn" xml:space="preserve">
+    <value>スポーン</value>
+  </data>
+  <data name="CargoDock" xml:space="preserve">
+    <value>ハーバードッキング</value>
+  </data>
+  <data name="CargoEgress" xml:space="preserve">
+    <value>出発（5m警告）</value>
+  </data>
+  <data name="CargoArrival" xml:space="preserve">
+    <value>到着警告 (Dockの5分前)</value>
+  </data>
+  <data name="Heli" xml:space="preserve">
+    <value>ヘリコプターをパトロールする</value>
+  </data>
+  <data name="Chinook" xml:space="preserve">
+    <value>Chinook (CH47)</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>Vendor, vendor</value>
+  </data>
+  <data name="OilRig" xml:space="preserve">
+    <value>オイルリグトリガー</value>
+  </data>
+  <data name="DeepSea" xml:space="preserve">
+    <value>深海イベント</value>
+  </data>
+  <data name="SmartAlerts" xml:space="preserve">
+    <value>スマートアラート</value>
+  </data>
+  <data name="PlayerOnline" xml:space="preserve">
+    <value>オンラインステータス</value>
+  </data>
+  <data name="PlayerOffline" xml:space="preserve">
+    <value>オフライン状態</value>
+  </data>
+  <data name="AnnounceTracking" xml:space="preserve">
+    <value>トラッキング通知</value>
+  </data>
+  <data name="PlayerDeathSelf" xml:space="preserve">
+    <value>自己死</value>
+  </data>
+  <data name="PlayerDeathTeam" xml:space="preserve">
+    <value>チーム死</value>
+  </data>
+  <data name="PlayerRespawnSelf" xml:space="preserve">
+    <value>自己リスポーン回数</value>
+  </data>
+  <data name="PlayerRespawnTeam" xml:space="preserve">
+    <value>チームのリスポーン回数</value>
+  </data>
+  <data name="NewShops" xml:space="preserve">
+    <value>新しいショップ</value>
+  </data>
+  <data name="SuspiciousShops" xml:space="preserve">
+    <value>不審なショップ</value>
+  </data>
+  <data name="TradeAlerts" xml:space="preserve">
+    <value>取引アラート</value>
+  </data>
+  <data name="CrosshairStyle" xml:space="preserve">
+    <value>クロスヘアスタイル</value>
+  </data>
+  <data name="GreenDot" xml:space="preserve">
+    <value>緑のドット</value>
+  </data>
+  <data name="MiniGreen" xml:space="preserve">
+    <value>ミニグリーン</value>
+  </data>
+  <data name="OpenCrosshairRG" xml:space="preserve">
+    <value>Open Crossshair (R/G)</value>
+  </data>
+  <data name="ThinRedCircle" xml:space="preserve">
+    <value>薄い赤い円</value>
+  </data>
+  <data name="SquareDot" xml:space="preserve">
+    <value>正方形＋ドット</value>
+  </data>
+  <data name="MagentaDot" xml:space="preserve">
+    <value>赤紫色のドット</value>
+  </data>
+  <data name="MagentaOpenCross" xml:space="preserve">
+    <value>赤紫色のオープンクロス</value>
+  </data>
+  <data name="RangeLineTicks" xml:space="preserve">
+    <value>範囲線 (ティック)</value>
+  </data>
+  <data name="DrawCrosshair" xml:space="preserve">
+    <value>クロスヘアを描画...</value>
+  </data>
+  <data name="ChooseMonitor" xml:space="preserve">
+    <value>モニターを選択</value>
+  </data>
+  <data name="DrawOverlay" xml:space="preserve">
+    <value>重ね合わせを描く</value>
+  </data>
+  <data name="DrawToolTip" xml:space="preserve">
+    <value>描画（右クリック：サイズ/色）</value>
+  </data>
+  <data name="PlaceTextToolTip" xml:space="preserve">
+    <value>テキストを配置（右クリック：色/サイズ）</value>
+  </data>
+  <data name="PlaceIconToolTip" xml:space="preserve">
+    <value>プレースアイコン (右クリック: アイコンを選択)</value>
+  </data>
+  <data name="EraserToolTip" xml:space="preserve">
+    <value>消しゴム（長押しまたはクリック）</value>
+  </data>
+  <data name="DeleteOverlayToolTip" xml:space="preserve">
+    <value>自分のオーバーレイを削除</value>
+  </data>
+  <data name="UploadOverlayToolTip" xml:space="preserve">
+    <value>自分のオーバーレイ/共有をアップロード</value>
+  </data>
+  <data name="ProfitTrades" xml:space="preserve">
+    <value>Profit Trades</value>
+  </data>
+  <data name="ArbitrageOpportunities" xml:space="preserve">
+    <value>直接裁定の機会 | 低く購入 → 高く販売</value>
+  </data>
+  <data name="BuyXForY" xml:space="preserve">
+    <value>XをYで購入</value>
+  </data>
+  <data name="Analyze" xml:space="preserve">
+    <value>分析</value>
+  </data>
+  <data name="IWantToGet" xml:space="preserve">
+    <value>取得したい</value>
+  </data>
+  <data name="ICanPayWith" xml:space="preserve">
+    <value>私は支払うことができます</value>
+  </data>
+  <data name="TeamChat" xml:space="preserve">
+    <value>チームチャット</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>送信</value>
+  </data>
+  <data name="FcmCredentials" xml:space="preserve">
+    <value>FCM 資格情報</value>
+  </data>
+  <data name="RightClickConfigure" xml:space="preserve">
+    <value>右クリックで設定</value>
+  </data>
+  <data name="ResetMap" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetMapToolTip" xml:space="preserve">
+    <value>マップのズームと位置をリセット</value>
+  </data>
+  <data name="MiniMap" xml:space="preserve">
+    <value>Mini</value>
+  </data>
+  <data name="CrosshairToolTip" xml:space="preserve">
+    <value>クロスエアオン/オフ (右クリックでオプション)</value>
+  </data>
+  <data name="TrackPlayer" xml:space="preserve">
+    <value>トラックプレイヤー</value>
+  </data>
+  <data name="CloseBMBrowser" xml:space="preserve">
+    <value>バトルメトリックブラウザを閉じる</value>
+  </data>
+  <data name="ShopSearchTitle" xml:space="preserve">
+    <value>ショップ検索</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>検索を閉じる</value>
+  </data>
+  <data name="ActivateShopsFirst" xml:space="preserve">
+    <value>最初にショップを有効にしてください</value>
+  </data>
+  <data name="ActivateShopPolling" xml:space="preserve">
+    <value>ショップのポーリングを有効にする</value>
+  </data>
+  <data name="TeamChatTitle" xml:space="preserve">
+    <value>チームチャット</value>
+  </data>
+  <data name="CloseChat" xml:space="preserve">
+    <value>チャットを閉じる</value>
+  </data>
+  <data name="ChatCommandsSettings" xml:space="preserve">
+    <value>チャットコマンドの設定</value>
+  </data>
+  <data name="ChatCommands" xml:space="preserve">
+    <value>チャットコマンド</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>戻る</value>
+  </data>
+  <data name="Forward" xml:space="preserve">
+    <value>転送</value>
+  </data>
+  <data name="OpenInExternalBrowser" xml:space="preserve">
+    <value>外部ブラウザで開く</value>
+  </data>
+  <data name="SearchBMPlaceholder" xml:space="preserve">
+    <value>BMを検索...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>検索</value>
+  </data>
+  <data name="SelectAServer" xml:space="preserve">
+    <value>サーバーを選択</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>切断されました</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>接続中...</value>
+  </data>
+  <data name="StatusInitializing" xml:space="preserve">
+    <value>初期化中char@@0</value>
+  </data>
+  <data name="StatusDevicesActive" xml:space="preserve">
+    <value>デバイスを有効にする</value>
+  </data>
+  <data name="StatusFullyConnected" xml:space="preserve">
+    <value>完全に接続</value>
+  </data>
+  <data name="StatusUnknown" xml:space="preserve">
+    <value>不明</value>
+  </data>
+  <data name="MayTakeAMoment" xml:space="preserve">
+    <value>これは少し時間がかかることがあります...</value>
+  </data>
+  <data name="AppSettingsTitle" xml:space="preserve">
+    <value>アプリケーションの設定</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>全般</value>
+  </data>
+  <data name="LaunchWithWindows" xml:space="preserve">
+    <value>Windowsで起動（最小化）</value>
+  </data>
+  <data name="StartMinimizedAlways" xml:space="preserve">
+    <value>最小化を開始（常時）</value>
+  </data>
+  <data name="AutoConnectLastServer" xml:space="preserve">
+    <value>起動時に最後のサーバーに自動接続</value>
+  </data>
+  <data name="AutoConnectToolTip" xml:space="preserve">
+    <value>自動的に最後のサーバーに再接続し、マップを読み込みます。</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>動作</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>閉じる代わりにトレイに最小化する</value>
+  </data>
+  <data name="BackgroundTracking" xml:space="preserve">
+    <value>バックグラウンドプレイヤーの追跡を有効にする</value>
+  </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>最小化された場合でも、BattleMetrics経由でプレイヤーの追跡を維持します。</value>
+  </data>
+  <data name="HideSystemConsole" xml:space="preserve">
+    <value>システムコンソールを隠す (Declutter)</value>
+  </data>
+  <data name="HideConsoleToolTip" xml:space="preserve">
+    <value>下部のログ/コンソールパネルを非表示にして、マップ領域を節約します。</value>
+  </data>
+  <data name="MapSettings" xml:space="preserve">
+    <value>地図の設定</value>
+  </data>
+  <data name="AutoLoadShops" xml:space="preserve">
+    <value>接続時にショップを自動的に読み込む</value>
+  </data>
+  <data name="AutoLoadShopsToolTip" xml:space="preserve">
+    <value>サーバーに接続したときに自動的にポーリングショップとアラートを開始します。</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>アイコンの代わりにモニュメント・テキスト・ラベルを使用</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>有効にすると、Rustマップのモニュメント名はアイコンではなく、Permanent Markerフォントを使用したテキストとして表示されます。</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>モニュメントのスタイル</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>モニュメントの規模：</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>モニュメントの不透明度</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>アイコン by rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>原文 モニュメント名</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>クレジット</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>地図モニュメントアイコン提供 </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - 許可を得て使用している。</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>すべてのモニュメントアイコンと関連アートワークはrustmaps.comの所有物です。Rustコミュニティをご支援いただきありがとうございます！</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>チャット</value>
+  </data>
+  <data name="ModifyChatAlerts" xml:space="preserve">
+    <value>チャットアラートの変更</value>
+  </data>
+  <data name="ManageSteamAccountInfo" xml:space="preserve">
+    <value>リンクされたSteamアカウントをメインウィンドウで管理します。</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="IncomingAlarms" xml:space="preserve">
+    <value>アラームを受信する</value>
+  </data>
+  <data name="Wipe" xml:space="preserve">
+    <value>消去</value>
+  </data>
+  <data name="PlayersOnly" xml:space="preserve">
+    <value>プレイヤー</value>
+  </data>
+  <data name="PlayersHeader" xml:space="preserve">
+    <value>プレイヤー</value>
+  </data>
+  <data name="IWantToGetToolTip" xml:space="preserve">
+    <value>GETしたい（例えばクルドオイル）</value>
+  </data>
+  <data name="ICanPayWithToolTip" xml:space="preserve">
+    <value>支払いをしたい（例：スクラップ）</value>
+  </data>
+  <data name="DeleteServerConfirmFormatted" xml:space="preserve">
+    <value>サーバー "{0}" を削除してもよろしいですか？この操作は元に戻せません。</value>
+  </data>
+  <data name="PairingError" xml:space="preserve">
+    <value>Pairing: error</value>
+  </data>
+  <data name="PairingStarting" xml:space="preserve">
+    <value>ペアリング: 開始中...</value>
+  </data>
+  <data name="StartingPairingListener" xml:space="preserve">
+    <value>ペアリングリスナーを開始しています...</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+    <value>ログイン中</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>在庫数</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>価格</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>アクティブにする</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>無効</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>グループ</value>
+  </data>
+  <data name="ImportDevicesTitle" xml:space="preserve">
+    <value>Rust+ デスク – インポートデバイス</value>
+  </data>
+  <data name="ImportDevicesHeader" xml:space="preserve">
+    <value>デバイスをインポート</value>
+  </data>
+  <data name="ImportDevicesSelectPrompt" xml:space="preserve">
+    <value>このサーバーにインポートするデバイスを選択します。</value>
+  </data>
+  <data name="CheckDeviceStatus" xml:space="preserve">
+    <value>デバイスの状態を確認する</value>
+  </data>
+  <data name="ImportSelected" xml:space="preserve">
+    <value>選択したものをインポート</value>
+  </data>
+  <data name="BmShortcuts" xml:space="preserve">
+    <value>BMショートカット</value>
+  </data>
+  <data name="PairingConfigDeleted" xml:space="preserve">
+    <value>ペアリング: 設定が削除されました</value>
+  </data>
+  <data name="TrayIconDefault" xml:space="preserve">
+    <value>Rust+ デスク トラッカー</value>
+  </data>
+  <data name="TrayIconTracking" xml:space="preserve">
+    <value>Rust+ デスク (追跡 {0})</value>
+  </data>
+  <data name="RenameGroup" xml:space="preserve">
+    <value>グループ名の変更</value>
+  </data>
+  <data name="NewNameForGroup" xml:space="preserve">
+    <value>グループの新しい名前:</value>
+  </data>
+  <data name="NewNameForDevice" xml:space="preserve">
+    <value>#{0} の新しい名前:</value>
+  </data>
+  <data name="EnterBattlemetricsIdFor" xml:space="preserve">
+    <value>「{0}」のバトルメトリックサーバーIDを入力してください：</value>
+  </data>
+  <data name="TrayTrackingStatus" xml:space="preserve">
+    <value>追跡中： {0}</value>
+  </data>
+  <data name="TrayLastUpdate" xml:space="preserve">
+    <value>最終更新: {0}</value>
+  </data>
+  <data name="OpenRustPlusDesk" xml:space="preserve">
+    <value>Rust+ デスク</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>終了</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>説明</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>カメラ</value>
+  </data>
+  <data name="Alarms" xml:space="preserve">
+    <value>アラーム</value>
+  </data>
+  <data name="Identifier" xml:space="preserve">
+    <value>Identifier:</value>
+  </data>
+  <data name="FPS" xml:space="preserve">
+    <value>FPS:</value>
+  </data>
+  <data name="CameraFPSNote" xml:space="preserve">
+    <value>注: 2 fps を推奨します。サーバーへの接続を切断する可能性が高いです。</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>ピクセル</value>
+  </data>
+  <data name="Pen" xml:space="preserve">
+    <value>ペン</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>線</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>正方形（正方形）</value>
+  </data>
+  <data name="Circle" xml:space="preserve">
+    <value>円</value>
+  </data>
+  <data name="Thickness" xml:space="preserve">
+    <value>厚さ:</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>不透明度:</value>
+  </data>
+  <data name="UploadPNG" xml:space="preserve">
+    <value>PNGをアップロード</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>クリア</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="AssignGlobalHotkeys" xml:space="preserve">
+    <value>スマートスイッチにグローバルホットキーを割り当てます。複数のデバイスが1つのホットキーを共有できます（連続的に切り替えられます）。</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>デバイス</value>
+  </data>
+  <data name="EntityId" xml:space="preserve">
+    <value>EntityId</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>Hotkey</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="CloseDeactivate" xml:space="preserve">
+    <value>閉じる &amp; 無効化</value>
+  </data>
+  <data name="CloseActivate" xml:space="preserve">
+    <value>閉じて有効化</value>
+  </data>
+  <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
+    <value>アップキープ、ミニマップ、トラッキングアップデート</value>
+  </data>
+  <data name="FeatureSummaryAdjustments" xml:space="preserve">
+    <value>機能概要と調整</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>今後表示しない</value>
+  </data>
+  <data name="AwesomeLetsGo" xml:space="preserve">
+    <value>素晴らしい、行きましょう！</value>
+  </data>
+  <data name="MiniMapSettings" xml:space="preserve">
+    <value>ミニマップ設定</value>
+  </data>
+  <data name="Shape" xml:space="preserve">
+    <value>形状</value>
+  </data>
+  <data name="Rectangle" xml:space="preserve">
+    <value>矩形</value>
+  </data>
+  <data name="OpacityLabel" xml:space="preserve">
+    <value>不透明度: {0}%</value>
+  </data>
+  <data name="SizeLabel" xml:space="preserve">
+    <value>サイズ: {0}% (SHIFT+Mousewheel)</value>
+  </data>
+  <data name="ShowServerTime" xml:space="preserve">
+    <value>サーバー時間を表示</value>
+  </data>
+  <data name="ServerInformation" xml:space="preserve">
+    <value>サーバー情報</value>
+  </data>
+  <data name="NoDescriptionAvailable" xml:space="preserve">
+    <value>説明はありません。</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>現在のバージョン： {0}</value>
+  </data>
+  <data name="PatchNotesHeader" xml:space="preserve">
+    <value>パッチノートとバージョン履歴</value>
+  </data>
+  <data name="EnableChatCommands" xml:space="preserve">
+    <value>チャットコマンドを有効にする</value>
+  </data>
+  <data name="Prefix" xml:space="preserve">
+    <value>プレフィックス:</value>
+  </data>
+  <data name="StandardCommands" xml:space="preserve">
+    <value>標準コマンド</value>
+  </data>
+  <data name="Population" xml:space="preserve">
+    <value>人口:</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>時間:</value>
+  </data>
+  <data name="Promote" xml:space="preserve">
+    <value>プロモーション:</value>
+  </data>
+  <data name="DeepSeaCommand" xml:space="preserve">
+    <value>深海:</value>
+  </data>
+  <data name="CargoShipCommand" xml:space="preserve">
+    <value>物資輸送:</value>
+  </data>
+  <data name="OilRigCommand" xml:space="preserve">
+    <value>オイルリグ:</value>
+  </data>
+  <data name="PatrolHeliCommand" xml:space="preserve">
+    <value>パトロールヘリ:</value>
+  </data>
+  <data name="TravellingVendorCommand" xml:space="preserve">
+    <value>Vendor:</value>
+  </data>
+  <data name="UpkeepDetails" xml:space="preserve">
+    <value>維持の詳細:</value>
+  </data>
+  <data name="CommandDelay" xml:space="preserve">
+    <value>コマンドの遅延:</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>言語</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>言語の選択</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>言語を変更するには再起動が必要です。</value>
+  </data>
+  <data name="SmartSwitches" xml:space="preserve">
+    <value>スマートスイッチ</value>
+  </data>
+  <data name="UpkeepTcMonitors" xml:space="preserve">
+    <value>アップキープ(TC) モニター</value>
+  </data>
+  <data name="NoTcMonitorsFound" xml:space="preserve">
+    <value>TCモニターが見つかりません。</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>保存して閉じる</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>メッセージ</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>エラーメッセージはこちら</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>パトロール・ヘリ</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>パトロールヘリが活躍 - {0} のために走る</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>イベント途中で接続 - スポーン時間不明</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>パトロールヘリ活動中（スポーン時間不明）</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>{0} このセッションの前に撃墜されたパトロール・ヘリ</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>パトロール・ヘリがマップを離れた {0} このセッションの前</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>{0} でドック入り - ～{1} で出発。</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>港</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>コネクトにドッキング済み - 出発時刻は不明</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>{0} にドッキング（ドック時間は未確認）</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>マップでの残り時間（スポーンから）</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>ルート途中で接続 - 時刻不明</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>ルート半ばで接続-時間は不明（ルート～合計{0}m）</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>カーゴシップがデスポーンした {0}m {1}s ago this session</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>トラベリング・ベンダー - {0} のために走る</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>トラベリングベンダー活動中（スポーン時間不明）</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>トラベリング・ヴェンダーがデスポーン {0} このセッションの前</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>ディープシー・アクティブ - {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>ディープシー・アクティブ（スポーン時間不明）</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>ディープ・シー {0} 今セッション終了</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} 現在オンライン中の選手{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> キュー： {0} 選手。</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>現在の試合時間： {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} がリーダーに昇格した。</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>深海はアクティブ！ {0}。</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>深海は現在アクティブである（イベント中盤に接続-スポーン時間は不明）。</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>深海はこのセッションで {0} 分前に終了した。</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>深海のイベント状況は不明（このセッションは未見）。</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>カーゴ・シップは活動していない。</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>貨物船は {0}に停泊。約 {1} 分後に出発。</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>{0} 、出港準備中の貨物船。</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>{0} （出港時間不明）にドック入りした貨物船。</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>貨物船活躍中。約 {0} 分後に出発。</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>貨物船は活動中で、間もなく出航する準備をしている。</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>貨物船がアクティブ（このサーバーのルート期間はまだ学習されていない）。</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>カーゴシップがアクティブになる（スポーン後に接続-残り時間は不明）。</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>カーゴシップはアクティブではありません。 {0} 分前にデスポーンした。</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: 木箱 {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}最後に電話したのは {1}m前</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}このセッションでは呼ばれなかった</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>パトロールヘリが活躍！ {0}。</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>パトロール・ヘリは現在活動中（イベント途中で接続、スポーン時間は不明）。</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>パトロールヘリはアクティブではない。このセッションは {0} {1}。</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>撃墜</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>地図を離れる</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>パトロールヘリのイベント状況は不明（このセッションは未確認）。</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>トラベリング・ベンダーが活動中！ {0}。</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Travelelling Vendorは現在活動中（イベント途中で接続、スポーン時間は不明）。</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>トラベリング・ベンダーはアクティブではない。 {0} このセッションでデスポーンした。</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>トラベリングベンダーのイベント状況は不明（このセッションは未見）。</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>アップキープコマンドのためのツール・カップボードはマッピングされていない。</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>{0} TCのアップキープ：空か期限切れ。</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Need/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>{0} TCでのアップキープ： {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} 日</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} 時間</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} 議事録</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}空／期限切れ</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>アップキープ： {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>バウンドツールカップボードのモニターが見つからないか、ペアリングされていない。</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>バウンドツールカップボードのモニターが見つからないか、ペアリングされていません。</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} {1} になった。</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>オン</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>オフ</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>スマートスイッチが見つからないか、ペアリングされていません。</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>木材</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>ストーン</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>メタル</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>量子力学</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>小型石油掘削装置</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>大型石油掘削装置</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>ショップ</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>貨物船</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>旅行業者</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>パトロール・ヘリコプター</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>オイルリグ・クレート</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>爆発</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>ビルディング・ブロック</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>イベント</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] がトリガーされた！クレートは {1} でアンロックされます。</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0}！</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] クレートは10分でアンロックされる！</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] クレートは5分でアンロックされる！</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>深海がアップ</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>新店舗 {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>怪しい店 {0} [{1}] オンラインだった {2}s, 販売 {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>カーゴシップのスポーン {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>はるか沖合 ( {0} 近く)</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>{0} に停泊する貨物船 ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>貨物船は {0} ({1}) に約5分で接岸する予定。</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>{0} から5分で出発する貨物船 ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>サーバーのラグによりクラッシュを検知 - ヘリはまだマップ上にいる {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>{0} で撃墜されたパトロール・ヘリ</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>不明</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} オフライン</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[トラッキング] {0}{1} がオンラインになった。</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[トラッキング] {0}{1} は現在オフラインです。</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[トラッキング] {0}{1} を {2} に改名！</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>販売</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>おみやげ</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>ショップ</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} ×{3} {4} （在庫 {5}） for {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>チャットコマンド一覧</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>COMMANDS: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>ローカライゼーション、UIモダナイゼーション、ストレージ</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>動的ロケール切り替え</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - 選べる30以上の言語</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>チャットコマンドUI</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - クリーンな外観のための分離されたビュー</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>新しい設定オーバーレイ</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - すべての設定が可能なクリーンなサイドバー</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>バトルメトリクスのトラッキングが削除</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>基地が攻撃を受けている！</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>まずサーバーに接続してください。</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>どのサーバーにも接続されていない。</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>チャットは現在ご利用いただけません。</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>最初にサーバーを選択してください。</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>接続</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>チャット</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>選手の追跡方法</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>ネイティブUDPトラッキング</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>トラッキングガイドは近日中に変更されるため、現在英語版のみとなっております。今しばらくお待ちください。</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>このウィンドウはいつでも閉じることができます。</value>
+  </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>メンテナンス</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>アプリケーション設定、プロファイル、カスタム図面のワイプ、バックアップ、復元。</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>アプリデータをリセット...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>バックアップデータ...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>データの復元...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>アプリケーションデータのリセット</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>このデバイスからワイプしたいコンポーネントを選択します。選択したオプションはすべて永久に削除されます。</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>アクティブサーバー接続（切断）</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>保存されたサーバープロファイル（ペアリングされたサーバー設定の削除）</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Steamアカウントの認証情報（ログアウト）</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>デバイスペアリング設定（登録トークンのリセット）</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>カスタム十字キー（ワイプ設定）</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>ローカルキャッシュと描画（保存された地図/線を消去する）</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>この処置は永続的であり、取り消すことはできない。</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>リセットの確認</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>バックアップパスワード</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>バックアップ保護</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>このバックアップ・ファイルを暗号化するためのパスワードを入力します。空のままにすると、バックアップは暗号化されません。</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>バックアップの復元</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>このバックアップはパスワードで保護されています。パスワードを入力して暗号化を解除してください：</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>エンクリプト</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>デクリプト</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>アプリケーションデータのバックアップ</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] バックアップが正常に作成されました： {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>バックアップは正常に作成されました！</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>バックアップ完了</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] バックアップエラー: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>バックアップ作成エラー: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>バックアップ失敗</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>データを復元すると、現在のサーバープロファイル、カスタム十字線、描画オーバーレイ、ミニマップの設定が上書きされます。
+
+本当に続けますか？</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>バックアップの復元確認</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>アプリケーションデータの復元</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>アプリケーションデータは正常に復元されました！</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>リストア完了</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] 復元エラーです：無効なパスワードが入力されました。</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>復号化に失敗しました。パスワードが無効か、バックアップファイルが破損しています。</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>リストア失敗</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] リストアエラー: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>バックアップの復元エラー: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>無効なバックアップファイル形式、または署名がありません。</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] 選択リセット操作の開始...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] アクティブなサーバー接続を切断しています...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] 接続リセットが完了しました。</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] 保存されたサーバープロファイルをクリアする...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] 保存されたサーバープロファイルがクリアされました。</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Steamアカウントの認証情報を削除...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Steamクレデンシャルがクリアされました。</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] デバイスのペアリング設定を消去中...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] デバイスペアリング設定が削除されました。</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] カスタム十字キーの拭き取り...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] カスタム十字キーのクリアエラー: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] カスタム十字線をクリアしました。</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] ローカルキャッシュファイルとオーバーレイ図面をクリアする...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] キャッシュフォルダのクリアエラー: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] キャッシュフォルダがクリアされました。</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] リスナーとFCM認証情報の再登録...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] 選択リセット操作が正常に完了しました。</value>
+  </data>
+</root>

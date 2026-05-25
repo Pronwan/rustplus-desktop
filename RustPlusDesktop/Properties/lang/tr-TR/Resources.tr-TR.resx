@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>RUST+ MASAÜSTÜ</value>
+  </data>
+  <data name="SteamAccount" xml:space="preserve">
+    <value>Steam Hesabı</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+    <value>Oturum Açılmadı</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>Güncellemeleri Kontrol Edin</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>İndiriliyor...</value>
+  </data>
+  <data name="JoinDiscord" xml:space="preserve">
+    <value>Discord'a Katılın</value>
+  </data>
+  <data name="PatchNotes" xml:space="preserve">
+    <value>Yama Notları</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="PairedServers" xml:space="preserve">
+    <value>BOYALI SUNUCULAR</value>
+  </data>
+  <data name="NoServersPaired" xml:space="preserve">
+    <value>Henüz eşleştirilmiş sunucu yok</value>
+  </data>
+  <data name="PairingMaintenance" xml:space="preserve">
+    <value>EŞLEŞTİRME &amp; BAKIM</value>
+  </data>
+  <data name="PairingIdle" xml:space="preserve">
+    <value>Eşleştirme: boşta</value>
+  </data>
+  <data name="RightClickOptions" xml:space="preserve">
+    <value>Seçenekler için sağ tıklayın</value>
+  </data>
+  <data name="TrackingActive" xml:space="preserve">
+    <value>Aktif Takip</value>
+  </data>
+  <data name="LastPull" xml:space="preserve">
+    <value>Son çekme: {0}</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>Bağış Yapın</value>
+  </data>
+  <data name="SupportDeveloper" xml:space="preserve">
+    <value>Geliştiriciyi destekleyin</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Sıfırla</value>
+  </data>
+  <data name="ResetWebSocket" xml:space="preserve">
+    <value>WebSocket bağlantısını sıfırlama</value>
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value>Oyuncular:</value>
+  </data>
+  <data name="ShowOnlinePlayers" xml:space="preserve">
+    <value>Çevrimiçi Oyuncular Sekmesini Göster</value>
+  </data>
+  <data name="Queue" xml:space="preserve">
+    <value>Sıraya girin:</value>
+  </data>
+  <data name="DevicesTab" xml:space="preserve">
+    <value>Cihazlar</value>
+  </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>Kısayol Tuşları</value>
+  </data>
+  <data name="ImportDevices" xml:space="preserve">
+    <value>Ekip arkadaşlarından cihazları içe aktarma</value>
+  </data>
+  <data name="ExportDevices" xml:space="preserve">
+    <value>Cihazları ekip arkadaşlarına aktarma</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Yenile</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Düşüş</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Onay Yükle</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>'Kabul Et' seçeneğine tıklandığında, bu sunucuya ait akıllı cihazlar (ve potansiyel olarak harita çizimleri) oluşturucunun sunucusuna yüklenecektir. Bu, takım arkadaşlarının bunları indirmesine ve senkronize etmesine olanak tanır. Takım arkadaşlarınızı tanımlamak için sadece Steam ID'niz iletilir. Yalnızca Alet Dolabında yetkilendirilmiş oyuncular cihazları kontrol edebilir.
+
+Not: Bu iletim yöntemi gelecekte optimize edilecektir. Eğer takım arkadaşlarınız verileri indiremiyorsa, lütfen harita çizimlerinizi temizlemeyi ve tekrar yüklemeyi deneyin.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Silme</value>
+  </data>
+  <data name="DeleteMissingOnly" xml:space="preserve">
+    <value>Yalnızca eksik cihazları silebilirsiniz</value>
+  </data>
+  <data name="RenameDevice" xml:space="preserve">
+    <value>Cihazı yeniden adlandırın</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>ONLINE</value>
+  </data>
+  <data name="Offline" xml:space="preserve">
+    <value>OFFLINE</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>Bağlan</value>
+  </data>
+  <data name="FullConnect" xml:space="preserve">
+    <value>Tam Bağlantı</value>
+  </data>
+  <data name="LoadMapTeam" xml:space="preserve">
+    <value>Harita ve Ekip Yükle</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>Bağlantıyı Kes</value>
+  </data>
+  <data name="ServerDetails" xml:space="preserve">
+    <value>Sunucu Detayları</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>Dinle</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Dur</value>
+  </data>
+  <data name="TryPairingEdge" xml:space="preserve">
+    <value>Edge ile Eşleştirmeyi Deneyin</value>
+  </data>
+  <data name="ResetPairingConfig" xml:space="preserve">
+    <value>Eşleştirmeyi sıfırla (yapılandırmayı sil)</value>
+  </data>
+  <data name="ResetListenPairing" xml:space="preserve">
+    <value>Sıfırla + Dinle (yeniden eşleştirme)</value>
+  </data>
+  <data name="ResetListenEdge" xml:space="preserve">
+    <value>Edge ile Sıfırla + Dinle</value>
+  </data>
+  <data name="RelinkBattlemetrics" xml:space="preserve">
+    <value>Battlemetrics Kimliğini Yeniden Bağlayın…</value>
+  </data>
+  <data name="DeleteServer" xml:space="preserve">
+    <value>Sunucuyu sil…</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Lütfen bekleyin...</value>
+  </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>Sunucu Alanını Değiştir</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>Streamer Modu</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>Ölçek:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>Streamer Modunu Etkinleştir (İsimleri Kısaltır)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>Yayınlar sırasında gizliliği korumak için Steam Adlarını ve Kimliklerini kısaltır. Konsolu ve sunucu listesini otomatik olarak gizler.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>Mevcut pozisyon yok (çevrimdışı veya doğmamış).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>Grup Kaydet</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>Lütfen bir grup adı girin.</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>Mesaj gönderilemedi. Lütfen tekrar deneyin. (Bir takımda olup olmadığınızı kontrol edin!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Hata: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>Grup Atama</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>Grup Ayarları: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Grup Adı</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>Grup adını girin...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>Grup Rengi</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Değişiklikleri Kaydet</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>Oyuncu Aktivite Analizi ve Tahminleri</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>Oyuncular</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>Streamer-Modu ve Mini Harita Revizyonu</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>Streamer Modu</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>Oyuncu İşaretleyici Ölçeklendirme</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>Mini Harita Cilası</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>Gerekli Eylem:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics İzleme Kaldırıldı</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>Oyuncu Takip Sistemi Revizyonu</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>Oyuncu Takibi Nasıl Çalışır?</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>İzlemeye başlamak için oyuncuları izleyiciye ekleyin</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>Aktif Takip</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>Boşta İzleme</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>Oyuncuları filtrele...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>Oyuncu listesini yüklemek için bir sunucuya bağlanma</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Steam Sorgusu ile oyuncuları getirme...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>Parça Kimliği</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>Manuel Parça Adı...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Cihaz yok.</value>
+  </data>
+  <data name="NoTokenRegistered" xml:space="preserve">
+    <value>Kayıtlı belirteç yok</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>Jeton süresi doldu!</value>
+  </data>
+  <data name="ExpiresInDays" xml:space="preserve">
+    <value>{0} gün içinde sona erer</value>
+  </data>
+  <data name="UntilNight" xml:space="preserve">
+    <value>{0} geceye kadar</value>
+  </data>
+  <data name="UntilDay" xml:space="preserve">
+    <value>{0} güne kadar</value>
+  </data>
+  <data name="FollowMe" xml:space="preserve">
+    <value>Beni takip et</value>
+  </data>
+  <data name="FollowPlayer" xml:space="preserve">
+    <value>{0} adresini takip edin</value>
+  </data>
+  <data name="PairingListening" xml:space="preserve">
+    <value>Eşleştirme: dinleme…</value>
+  </data>
+  <data name="PairingStopped" xml:space="preserve">
+    <value>Eşleştirme: durdu</value>
+  </data>
+  <data name="PairingFailed" xml:space="preserve">
+    <value>Eşleştirme: başarısız</value>
+  </data>
+  <data name="AlarmActivated" xml:space="preserve">
+    <value>Alarm aktif!</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Sunucu</value>
+  </data>
+  <data name="SmartAlarm" xml:space="preserve">
+    <value>Akıllı Alarm</value>
+  </data>
+  <data name="UnableToReadLink" xml:space="preserve">
+    <value>RustPlus-Link okunamıyor: {0}
+Biçim: rustplus://IP:PORT</value>
+  </data>
+  <data name="DeletePairingConfigHeader" xml:space="preserve">
+    <value>Eşleştirmeyi sıfırla</value>
+  </data>
+  <data name="DeletePairingConfigBody" xml:space="preserve">
+    <value>Mevcut eşleştirme yapılandırması silindi mi?
+Bir sonraki başlangıçta tekrar eşleştirmeniz gerekecektir.</value>
+  </data>
+  <data name="ResetListenHeader" xml:space="preserve">
+    <value>Sıfırla + Dinle</value>
+  </data>
+  <data name="ResetListenBody" xml:space="preserve">
+    <value>Eşleştirme yapılandırmasını silin ve hemen yeniden eşleştirin/dinleyin?</value>
+  </data>
+  <data name="ResetListenEdgeHeader" xml:space="preserve">
+    <value>Sıfırla + Dinle (Kenar)</value>
+  </data>
+  <data name="ResetListenEdgeBody" xml:space="preserve">
+    <value>Eşleştirme yapılandırmasını silin ve Edge kullanarak hemen yeniden eşleştirin/dinleyin?</value>
+  </data>
+  <data name="UpdateQueryFailed" xml:space="preserve">
+    <value>En son sürüm sorgulanamadı. Lütfen tekrar deneyin veya Sürümler sayfasını açın.</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Güncelsin.</value>
+  </data>
+  <data name="UpdateAvailableHeader" xml:space="preserve">
+    <value>Güncelleme mevcut</value>
+  </data>
+  <data name="UpdateAvailableBody" xml:space="preserve">
+    <value>Yeni sürüm mevcut: {0}
+Sürümler sayfasını aç?</value>
+  </data>
+  <data name="DownloadAndInstallBody" xml:space="preserve">
+    <value>Yeni sürüm mevcut: {0}
+Şimdi indirin ve yükleyin?</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>İndirme başarısız oldu.</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Güncelleme kontrolü başarısız oldu.
+{0}</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Cihaz yok.</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>Profili Görüntüle</value>
+  </data>
+  <data name="ChangeGroup" xml:space="preserve">
+    <value>Değişim Grubu</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Yeniden Adlandır</value>
+  </data>
+  <data name="RemoveTracked" xml:space="preserve">
+    <value>İzlenenleri Kaldır</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Görünüm</value>
+  </data>
+  <data name="MoreOptions" xml:space="preserve">
+    <value>Daha Fazla Seçenek</value>
+  </data>
+  <data name="RelinkBattlemetricsId" xml:space="preserve">
+    <value>Battlemetrics Kimliğini Yeniden Bağlayın…</value>
+  </data>
+  <data name="DeleteServerEllipsis" xml:space="preserve">
+    <value>Sunucuyu sil…</value>
+  </data>
+  <data name="RightClickRename" xml:space="preserve">
+    <value>Yeniden adlandırmak için sağ tıklayın</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>TOGGLE</value>
+  </data>
+  <data name="PopupWindow" xml:space="preserve">
+    <value>Açılır Pencere</value>
+  </data>
+  <data name="InAppAlert" xml:space="preserve">
+    <value>Uygulama İçi Uyarı</value>
+  </data>
+  <data name="AudioAlert" xml:space="preserve">
+    <value>Sesli Uyarı</value>
+  </data>
+  <data name="CustomAudioFile" xml:space="preserve">
+    <value>Özel Ses Dosyası...</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>Varsayılana Sıfırla</value>
+  </data>
+  <data name="Snapshot" xml:space="preserve">
+    <value>Anlık görüntü: </value>
+  </data>
+  <data name="ItemsUpkeep" xml:space="preserve">
+    <value> Öğeler, Bakım=</value>
+  </data>
+  <data name="NoDevicesFound" xml:space="preserve">
+    <value>Hiçbir cihaz bulunamadı</value>
+  </data>
+  <data name="PairDeviceToSee" xml:space="preserve">
+    <value>Burada görmek için bir akıllı cihazı, anahtarı veya alarmı eşleştirin</value>
+  </data>
+  <data name="TeamTab" xml:space="preserve">
+    <value>Takım</value>
+  </data>
+  <data name="CenterOnMap" xml:space="preserve">
+    <value>Harita üzerinde merkez</value>
+  </data>
+  <data name="FollowOnMap" xml:space="preserve">
+    <value>Haritada Takip Et</value>
+  </data>
+  <data name="OpenSteamProfile" xml:space="preserve">
+    <value>Steam profilini aç</value>
+  </data>
+  <data name="PromoteToLeader" xml:space="preserve">
+    <value>Liderliğe Terfi</value>
+  </data>
+  <data name="KickFromTeam" xml:space="preserve">
+    <value>Takımdan Tekme</value>
+  </data>
+  <data name="ProfileMarkers" xml:space="preserve">
+    <value>Profil işaretleri</value>
+  </data>
+  <data name="DeathMarkers" xml:space="preserve">
+    <value>Ölüm işaretleri</value>
+  </data>
+  <data name="CamerasTab" xml:space="preserve">
+    <value>Kameralar</value>
+  </data>
+  <data name="AddCamera" xml:space="preserve">
+    <value>Kamera Ekle</value>
+  </data>
+  <data name="NoCamerasFound" xml:space="preserve">
+    <value>Kamera bulunamadı</value>
+  </data>
+  <data name="PairCameraToSee" xml:space="preserve">
+    <value>Önizlemesini burada görmek için bir kamera eşleştirin</value>
+  </data>
+  <data name="PlayersTab" xml:space="preserve">
+    <value>Oyuncular</value>
+  </data>
+  <data name="HowToTrack" xml:space="preserve">
+    <value>Nasıl Takip Edilir</value>
+  </data>
+  <data name="LearnHowTrackingWorks" xml:space="preserve">
+    <value>Oyuncu takibinin nasıl çalıştığını öğrenin</value>
+  </data>
+  <data name="OnlineTab" xml:space="preserve">
+    <value>Çevrimiçi</value>
+  </data>
+  <data name="OnlinePlayers" xml:space="preserve">
+    <value>Çevrimiçi Oyuncular</value>
+  </data>
+  <data name="SearchBM" xml:space="preserve">
+    <value>Arama BM</value>
+  </data>
+  <data name="SearchServerBM" xml:space="preserve">
+    <value>BattleMetrics'te mevcut sunucuyu ara</value>
+  </data>
+  <data name="Popout" xml:space="preserve">
+    <value>Popout</value>
+  </data>
+  <data name="OpenPlayersSeparateWindow" xml:space="preserve">
+    <value>Oyuncuları ayrı pencerede aç</value>
+  </data>
+  <data name="Track" xml:space="preserve">
+    <value>Parça</value>
+  </data>
+  <data name="ManualTrackPlaceholder" xml:space="preserve">
+    <value>Manuel Parça Adı veya Steam ID...</value>
+  </data>
+  <data name="FilterPlayersPlaceholder" xml:space="preserve">
+    <value>Oyuncuları filtrele...</value>
+  </data>
+  <data name="LoadingPlayers" xml:space="preserve">
+    <value>Oyuncular yükleniyor...</value>
+  </data>
+  <data name="TrackedTab" xml:space="preserve">
+    <value>İzlendi</value>
+  </data>
+  <data name="TrackedPlayers" xml:space="preserve">
+    <value>İzlenen Oyuncular</value>
+  </data>
+  <data name="ManageGroups" xml:space="preserve">
+    <value>Grupları Yönet</value>
+  </data>
+  <data name="ViewFullAnalysisReport" xml:space="preserve">
+    <value>Analiz Raporunun Tamamını Görüntüle</value>
+  </data>
+  <data name="ReadyToExploreMap" xml:space="preserve">
+    <value>Haritayı keşfetmeye hazır mısınız?</value>
+  </data>
+  <data name="ConnectToLoadMap" xml:space="preserve">
+    <value>Canlı Rust haritasını ve takımı yüklemek için seçilen bir sunucuya bağlanın.</value>
+  </data>
+  <data name="ReadyToDominate" xml:space="preserve">
+    <value>Rust'a hükmetmeye hazır mısınız?</value>
+  </data>
+  <data name="PairAccountBenefits" xml:space="preserve">
+    <value>Oyuncuları takip etmeye, üs baskını uyarıları almaya ve akıllı cihazlarınızı anında kontrol etmeye başlamak için hesabınızı eşleştirin.</value>
+  </data>
+  <data name="LoginPairAccount" xml:space="preserve">
+    <value>Giriş &amp; Çift Hesap</value>
+  </data>
+  <data name="RequiresSteamLogin" xml:space="preserve">
+    <value>Varsayılan tarayıcınızda Steam girişi gerektirir.</value>
+  </data>
+  <data name="DeleteServerHeader" xml:space="preserve">
+    <value>Sunucuyu silelim mi?</value>
+  </data>
+  <data name="DeleteServerConfirm" xml:space="preserve">
+    <value>Bu sunucuyu silmek istediğinizden emin misiniz? Bu eylem geri alınamaz.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="DeleteAction" xml:space="preserve">
+    <value>Silme</value>
+  </data>
+  <data name="AutoHideAfter3s" xml:space="preserve">
+    <value>3 saniye sonra otomatik gizle</value>
+  </data>
+  <data name="MapFilters" xml:space="preserve">
+    <value>HARİTA FİLTRELERİ</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>Izgara</value>
+  </data>
+  <data name="Monuments" xml:space="preserve">
+    <value>Anıtlar</value>
+  </data>
+  <data name="Shops" xml:space="preserve">
+    <value>Dükkanlar</value>
+  </data>
+  <data name="ChatAlerts" xml:space="preserve">
+    <value>SOHBET UYARILARI</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Uyarılar</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>Yapılandırma</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Tümünü Seçin</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Tümünün Seçimini Kaldır</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>ETKİNLİKLER</value>
+  </data>
+  <data name="CargoShip" xml:space="preserve">
+    <value>Kargo Gemisi</value>
+  </data>
+  <data name="CargoSpawn" xml:space="preserve">
+    <value>Spawn</value>
+  </data>
+  <data name="CargoDock" xml:space="preserve">
+    <value>Liman İskelesi</value>
+  </data>
+  <data name="CargoEgress" xml:space="preserve">
+    <value>Kalkış (5m Uyarı)</value>
+  </data>
+  <data name="CargoArrival" xml:space="preserve">
+    <value>Varış Uyarısı (İskeleden 5m önce)</value>
+  </data>
+  <data name="Heli" xml:space="preserve">
+    <value>Devriye Helikopteri</value>
+  </data>
+  <data name="Chinook" xml:space="preserve">
+    <value>Chinook (CH47)</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>Gezgin Satıcı</value>
+  </data>
+  <data name="OilRig" xml:space="preserve">
+    <value>Petrol Sondajı Tetikleyicisi</value>
+  </data>
+  <data name="DeepSea" xml:space="preserve">
+    <value>Derin Deniz Etkinliği</value>
+  </data>
+  <data name="SmartAlerts" xml:space="preserve">
+    <value>Akıllı Uyarılar</value>
+  </data>
+  <data name="PlayerOnline" xml:space="preserve">
+    <value>Çevrimiçi Durum</value>
+  </data>
+  <data name="PlayerOffline" xml:space="preserve">
+    <value>Çevrimdışı Durum</value>
+  </data>
+  <data name="AnnounceTracking" xml:space="preserve">
+    <value>Bildirimlerin Takibi</value>
+  </data>
+  <data name="PlayerDeathSelf" xml:space="preserve">
+    <value>Kendi Kendine Ölüm</value>
+  </data>
+  <data name="PlayerDeathTeam" xml:space="preserve">
+    <value>Ölüm Takımı</value>
+  </data>
+  <data name="PlayerRespawnSelf" xml:space="preserve">
+    <value>Kendiliğinden Yeniden Doğma</value>
+  </data>
+  <data name="PlayerRespawnTeam" xml:space="preserve">
+    <value>Respawn Takımı</value>
+  </data>
+  <data name="NewShops" xml:space="preserve">
+    <value>Yeni Mağazalar</value>
+  </data>
+  <data name="SuspiciousShops" xml:space="preserve">
+    <value>Şüpheli Mağazalar</value>
+  </data>
+  <data name="TradeAlerts" xml:space="preserve">
+    <value>Ticaret Uyarıları</value>
+  </data>
+  <data name="CrosshairStyle" xml:space="preserve">
+    <value>Nişangah Stili</value>
+  </data>
+  <data name="GreenDot" xml:space="preserve">
+    <value>Yeşil Nokta</value>
+  </data>
+  <data name="MiniGreen" xml:space="preserve">
+    <value>Mini Yeşil</value>
+  </data>
+  <data name="OpenCrosshairRG" xml:space="preserve">
+    <value>Açık Nişangah (R/G)</value>
+  </data>
+  <data name="ThinRedCircle" xml:space="preserve">
+    <value>İnce Kırmızı Çember</value>
+  </data>
+  <data name="SquareDot" xml:space="preserve">
+    <value>Kare + Nokta</value>
+  </data>
+  <data name="MagentaDot" xml:space="preserve">
+    <value>Eflatun Nokta</value>
+  </data>
+  <data name="MagentaOpenCross" xml:space="preserve">
+    <value>Magenta Açık Haç</value>
+  </data>
+  <data name="RangeLineTicks" xml:space="preserve">
+    <value>Aralık Çizgisi (tik)</value>
+  </data>
+  <data name="DrawCrosshair" xml:space="preserve">
+    <value>Artı İşareti Çiz...</value>
+  </data>
+  <data name="ChooseMonitor" xml:space="preserve">
+    <value>Monitör seçin</value>
+  </data>
+  <data name="DrawOverlay" xml:space="preserve">
+    <value>Yer Paylaşımı Çiz</value>
+  </data>
+  <data name="DrawToolTip" xml:space="preserve">
+    <value>Çiz (Sağ Tıklama: Boyut / Renk)</value>
+  </data>
+  <data name="PlaceTextToolTip" xml:space="preserve">
+    <value>Metin Yerleştirme (Sağ Tıklama: Renk / Boyut)</value>
+  </data>
+  <data name="PlaceIconToolTip" xml:space="preserve">
+    <value>Simge Yerleştir (Sağ Tıklama: Simge Seç)</value>
+  </data>
+  <data name="EraserToolTip" xml:space="preserve">
+    <value>Silgi (basılı tutun veya tıklayın)</value>
+  </data>
+  <data name="DeleteOverlayToolTip" xml:space="preserve">
+    <value>Kendi kaplamasını sil</value>
+  </data>
+  <data name="UploadOverlayToolTip" xml:space="preserve">
+    <value>Kendi Kaplamanızı yükleyin / paylaşın</value>
+  </data>
+  <data name="ProfitTrades" xml:space="preserve">
+    <value>Kar İşlemleri</value>
+  </data>
+  <data name="ArbitrageOpportunities" xml:space="preserve">
+    <value>Doğrudan arbitraj fırsatları | düşük al → yüksek sat.</value>
+  </data>
+  <data name="BuyXForY" xml:space="preserve">
+    <value>Y için X satın alın</value>
+  </data>
+  <data name="Analyze" xml:space="preserve">
+    <value>Analiz</value>
+  </data>
+  <data name="IWantToGet" xml:space="preserve">
+    <value>ALMAK istiyorum</value>
+  </data>
+  <data name="ICanPayWith" xml:space="preserve">
+    <value>İLE ÖDEME YAPABİLİRİM</value>
+  </data>
+  <data name="TeamChat" xml:space="preserve">
+    <value>Takım Sohbeti</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Gönder</value>
+  </data>
+  <data name="FcmCredentials" xml:space="preserve">
+    <value>FCM Kimlik Bilgileri</value>
+  </data>
+  <data name="RightClickConfigure" xml:space="preserve">
+    <value>Yapılandırmak için sağ tıklayın</value>
+  </data>
+  <data name="ResetMap" xml:space="preserve">
+    <value>Sıfırla</value>
+  </data>
+  <data name="ResetMapToolTip" xml:space="preserve">
+    <value>Harita yakınlaştırma ve konumunu sıfırlama</value>
+  </data>
+  <data name="MiniMap" xml:space="preserve">
+    <value>Mini</value>
+  </data>
+  <data name="CrosshairToolTip" xml:space="preserve">
+    <value>Artı işareti açık/kapalı (Seçenekler için Sağ Tıklama)</value>
+  </data>
+  <data name="TrackPlayer" xml:space="preserve">
+    <value>PİST OYUNCUSU</value>
+  </data>
+  <data name="CloseBMBrowser" xml:space="preserve">
+    <value>BattleMetrics Tarayıcısını Kapat</value>
+  </data>
+  <data name="ShopSearchTitle" xml:space="preserve">
+    <value>MAĞAZA ARAMA</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>Yakın Arama</value>
+  </data>
+  <data name="ActivateShopsFirst" xml:space="preserve">
+    <value>Lütfen önce Shops'u etkinleştirin</value>
+  </data>
+  <data name="ActivateShopPolling" xml:space="preserve">
+    <value>Mağaza yoklamasını etkinleştirin</value>
+  </data>
+  <data name="TeamChatTitle" xml:space="preserve">
+    <value>TAKIM SOHBETİ</value>
+  </data>
+  <data name="CloseChat" xml:space="preserve">
+    <value>Sohbeti Kapat</value>
+  </data>
+  <data name="ChatCommandsSettings" xml:space="preserve">
+    <value>Sohbet Komutları Ayarları</value>
+  </data>
+  <data name="ChatCommands" xml:space="preserve">
+    <value>Sohbet Komutları</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Geri</value>
+  </data>
+  <data name="Forward" xml:space="preserve">
+    <value>İleri</value>
+  </data>
+  <data name="OpenInExternalBrowser" xml:space="preserve">
+    <value>Harici tarayıcıda aç</value>
+  </data>
+  <data name="SearchBMPlaceholder" xml:space="preserve">
+    <value>BM'yi ara...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Arama</value>
+  </data>
+  <data name="SelectAServer" xml:space="preserve">
+    <value>Bir Sunucu Seçin</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>BAĞLANTISI KESİLDİ</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>BAĞLANIYORUZ...</value>
+  </data>
+  <data name="StatusInitializing" xml:space="preserve">
+    <value>BAŞLATILIYOR...</value>
+  </data>
+  <data name="StatusDevicesActive" xml:space="preserve">
+    <value>AKTİF CİHAZLAR</value>
+  </data>
+  <data name="StatusFullyConnected" xml:space="preserve">
+    <value>TAMAMEN BAĞLI</value>
+  </data>
+  <data name="StatusUnknown" xml:space="preserve">
+    <value>BİLİNMİYOR</value>
+  </data>
+  <data name="MayTakeAMoment" xml:space="preserve">
+    <value>Bu biraz zaman alabilir...</value>
+  </data>
+  <data name="AppSettingsTitle" xml:space="preserve">
+    <value>Uygulama Ayarları</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Genel</value>
+  </data>
+  <data name="LaunchWithWindows" xml:space="preserve">
+    <value>Windows ile Başlat (Simge Durumuna Küçültülmüş)</value>
+  </data>
+  <data name="StartMinimizedAlways" xml:space="preserve">
+    <value>Simge Durumuna Küçültülmüş Olarak Başlat (Her Zaman)</value>
+  </data>
+  <data name="AutoConnectLastServer" xml:space="preserve">
+    <value>Başlangıçta son sunucuya otomatik bağlanma</value>
+  </data>
+  <data name="AutoConnectToolTip" xml:space="preserve">
+    <value>Son sunucuya otomatik olarak yeniden bağlanır ve haritayı yükler.</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Davranış</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>Kapatmak yerine Tepsiye Küçült</value>
+  </data>
+  <data name="BackgroundTracking" xml:space="preserve">
+    <value>Arka Planda Oyuncu İzlemeyi Etkinleştir</value>
+  </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>Simge durumuna küçültüldüğünde bile BattleMetrics aracılığıyla oyuncuları izlemeye devam eder.</value>
+  </data>
+  <data name="HideSystemConsole" xml:space="preserve">
+    <value>Sistem Konsolunu Gizle (Declutter)</value>
+  </data>
+  <data name="HideConsoleToolTip" xml:space="preserve">
+    <value>Harita alanından tasarruf etmek için alt günlük/konsol panelini gizler.</value>
+  </data>
+  <data name="MapSettings" xml:space="preserve">
+    <value>Harita Ayarları</value>
+  </data>
+  <data name="AutoLoadShops" xml:space="preserve">
+    <value>Bağlantıda otomatik yükleme mağazaları</value>
+  </data>
+  <data name="AutoLoadShopsToolTip" xml:space="preserve">
+    <value>Bir sunucuya bağlandığında mağazaları ve uyarıları otomatik olarak yoklamaya başlar.</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Simgeler yerine anıt metin etiketleri kullanın</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Etkinleştirildiğinde, Rust harita anıt adları simgeler yerine Kalıcı İşaretleyici yazı tipi kullanılarak metin olarak işlenir.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Anıt Stili:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Anıt Ölçeği:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Anıt Opaklığı:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Simgeler rustmaps.com tarafından</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Orijinal metin anıt isimleri</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Krediler</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Harita anıt simgeleri tarafından sağlanmıştır </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> - izin alınarak kullanılmıştır.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Tüm anıt simgeleri ve ilgili sanat eserleri rustmaps.com'un mülkiyetindedir. Rust topluluğunu desteklediğiniz için teşekkür ederiz!</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Sohbet</value>
+  </data>
+  <data name="ModifyChatAlerts" xml:space="preserve">
+    <value>Sohbet Uyarılarını Değiştirme</value>
+  </data>
+  <data name="ManageSteamAccountInfo" xml:space="preserve">
+    <value>Ana pencerede bağlı Steam hesabınızı yönetin.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="IncomingAlarms" xml:space="preserve">
+    <value>GELEN ALARMLAR</value>
+  </data>
+  <data name="Wipe" xml:space="preserve">
+    <value>Silin</value>
+  </data>
+  <data name="PlayersOnly" xml:space="preserve">
+    <value>Oyuncular</value>
+  </data>
+  <data name="PlayersHeader" xml:space="preserve">
+    <value>Oyuncular</value>
+  </data>
+  <data name="IWantToGetToolTip" xml:space="preserve">
+    <value>ALMAK istiyorum (örneğin Ham Petrol)</value>
+  </data>
+  <data name="ICanPayWithToolTip" xml:space="preserve">
+    <value>İLE ÖDEME yapmak istiyorum (örn. Hurda)</value>
+  </data>
+  <data name="DeleteServerConfirmFormatted" xml:space="preserve">
+    <value>"{0}" sunucusunu silmek istediğinizden emin misiniz? Bu eylem geri alınamaz.</value>
+  </data>
+  <data name="PairingError" xml:space="preserve">
+    <value>Eşleştirme: hata</value>
+  </data>
+  <data name="PairingStarting" xml:space="preserve">
+    <value>Eşleştirme: başlıyor...</value>
+  </data>
+  <data name="StartingPairingListener" xml:space="preserve">
+    <value>Eşleştirmeye Başlama-Dinleyici...</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+    <value>Giriş Yapıldı</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>Stok</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Fiyat</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>AÇIK</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>KAPALI</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>AKTİF</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>AKTİF DEĞİL</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>GRUP</value>
+  </data>
+  <data name="ImportDevicesTitle" xml:space="preserve">
+    <value>Rust+ Desk - Cihazları İçe Aktarın</value>
+  </data>
+  <data name="ImportDevicesHeader" xml:space="preserve">
+    <value>Cihazları içe aktarma</value>
+  </data>
+  <data name="ImportDevicesSelectPrompt" xml:space="preserve">
+    <value>Bu sunucu için hangi cihazları içe aktarmak istediğinizi seçin.</value>
+  </data>
+  <data name="CheckDeviceStatus" xml:space="preserve">
+    <value>Cihaz durumunu kontrol edin</value>
+  </data>
+  <data name="ImportSelected" xml:space="preserve">
+    <value>Seçili içe aktar</value>
+  </data>
+  <data name="BmShortcuts" xml:space="preserve">
+    <value>BM Kısayolları</value>
+  </data>
+  <data name="PairingConfigDeleted" xml:space="preserve">
+    <value>Eşleştirme: yapılandırma silindi</value>
+  </data>
+  <data name="TrayIconDefault" xml:space="preserve">
+    <value>Rust+ Masa İzleyici</value>
+  </data>
+  <data name="TrayIconTracking" xml:space="preserve">
+    <value>Rust+ Desk (Takip {0})</value>
+  </data>
+  <data name="RenameGroup" xml:space="preserve">
+    <value>Grubu Yeniden Adlandır</value>
+  </data>
+  <data name="NewNameForGroup" xml:space="preserve">
+    <value>Grup için yeni isim:</value>
+  </data>
+  <data name="NewNameForDevice" xml:space="preserve">
+    <value>#{0} için yeni isim:</value>
+  </data>
+  <data name="EnterBattlemetricsIdFor" xml:space="preserve">
+    <value>"{0} " için Battlemetrics Sunucu Kimliğini girin:</value>
+  </data>
+  <data name="TrayTrackingStatus" xml:space="preserve">
+    <value>Takip: {0}</value>
+  </data>
+  <data name="TrayLastUpdate" xml:space="preserve">
+    <value>Son güncelleme: {0}</value>
+  </data>
+  <data name="OpenRustPlusDesk" xml:space="preserve">
+    <value>Açık Rust+ Masa</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Çıkış</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Açıklama</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>Kamera</value>
+  </data>
+  <data name="Alarms" xml:space="preserve">
+    <value>Alarmlar</value>
+  </data>
+  <data name="Identifier" xml:space="preserve">
+    <value>Tanımlayıcı:</value>
+  </data>
+  <data name="FPS" xml:space="preserve">
+    <value>FPS:</value>
+  </data>
+  <data name="CameraFPSNote" xml:space="preserve">
+    <value>Not: 2 fps önerilir, daha yüksek FPS muhtemelen sunucuyla bağlantınızı kapatır</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>Piksel</value>
+  </data>
+  <data name="Pen" xml:space="preserve">
+    <value>Kalem</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>Hat</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>Kare</value>
+  </data>
+  <data name="Circle" xml:space="preserve">
+    <value>Daire</value>
+  </data>
+  <data name="Thickness" xml:space="preserve">
+    <value>Kalınlık:</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Opaklık:</value>
+  </data>
+  <data name="UploadPNG" xml:space="preserve">
+    <value>PNG Yükle</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Temiz</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="AssignGlobalHotkeys" xml:space="preserve">
+    <value>Akıllı Anahtarlara genel kısayol tuşları atayın. Birden fazla cihaz bir kısayol tuşunu paylaşabilir (sırayla geçiş yapacaktır).</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Cihaz</value>
+  </data>
+  <data name="EntityId" xml:space="preserve">
+    <value>EntityId</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>Kısayol Tuşu</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Set</value>
+  </data>
+  <data name="CloseDeactivate" xml:space="preserve">
+    <value>Kapat &amp; Devre Dışı Bırak</value>
+  </data>
+  <data name="CloseActivate" xml:space="preserve">
+    <value>Kapat &amp; Etkinleştir</value>
+  </data>
+  <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
+    <value>Bakım, Minimap ve İzleme Güncellemesi</value>
+  </data>
+  <data name="FeatureSummaryAdjustments" xml:space="preserve">
+    <value>Özellik Özeti ve Ayarlamalar</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>Bunu bir daha gösterme.</value>
+  </data>
+  <data name="AwesomeLetsGo" xml:space="preserve">
+    <value>Harika, hadi gidelim!</value>
+  </data>
+  <data name="MiniMapSettings" xml:space="preserve">
+    <value>Mini Harita Ayarları</value>
+  </data>
+  <data name="Shape" xml:space="preserve">
+    <value>Şekil</value>
+  </data>
+  <data name="Rectangle" xml:space="preserve">
+    <value>Dikdörtgen</value>
+  </data>
+  <data name="OpacityLabel" xml:space="preserve">
+    <value>Opaklık: {0}%</value>
+  </data>
+  <data name="SizeLabel" xml:space="preserve">
+    <value>Boyut: {0}% (SHIFT+Mousewheel)</value>
+  </data>
+  <data name="ShowServerTime" xml:space="preserve">
+    <value>Sunucu Saatini Göster</value>
+  </data>
+  <data name="ServerInformation" xml:space="preserve">
+    <value>Sunucu Bilgileri</value>
+  </data>
+  <data name="NoDescriptionAvailable" xml:space="preserve">
+    <value>Açıklama mevcut değil.</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Geçerli Sürüm: {0}</value>
+  </data>
+  <data name="PatchNotesHeader" xml:space="preserve">
+    <value>Yama Notları ve Sürüm Geçmişi</value>
+  </data>
+  <data name="EnableChatCommands" xml:space="preserve">
+    <value>Sohbet Komutlarını Etkinleştir</value>
+  </data>
+  <data name="Prefix" xml:space="preserve">
+    <value>Önek:</value>
+  </data>
+  <data name="StandardCommands" xml:space="preserve">
+    <value>Standart Komutlar</value>
+  </data>
+  <data name="Population" xml:space="preserve">
+    <value>Nüfus:</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Zaman:</value>
+  </data>
+  <data name="Promote" xml:space="preserve">
+    <value>Teşvik et:</value>
+  </data>
+  <data name="DeepSeaCommand" xml:space="preserve">
+    <value>Derin Deniz:</value>
+  </data>
+  <data name="CargoShipCommand" xml:space="preserve">
+    <value>Kargo gemisi:</value>
+  </data>
+  <data name="OilRigCommand" xml:space="preserve">
+    <value>Petrol kulesi:</value>
+  </data>
+  <data name="PatrolHeliCommand" xml:space="preserve">
+    <value>Devriye Helikopteri:</value>
+  </data>
+  <data name="TravellingVendorCommand" xml:space="preserve">
+    <value>Gezgin Satıcı:</value>
+  </data>
+  <data name="UpkeepDetails" xml:space="preserve">
+    <value>Bakım Detayları:</value>
+  </data>
+  <data name="CommandDelay" xml:space="preserve">
+    <value>Komut Gecikmesi:</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Dil Seçiniz</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>Dil değişikliğinin tam olarak etkili olması için yeniden başlatma gerekir.</value>
+  </data>
+  <data name="SmartSwitches" xml:space="preserve">
+    <value>Akıllı Anahtarlar</value>
+  </data>
+  <data name="UpkeepTcMonitors" xml:space="preserve">
+    <value>Bakım (TC) Monitörleri</value>
+  </data>
+  <data name="NoTcMonitorsFound" xml:space="preserve">
+    <value>TC monitörü bulunamadı.</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Kaydet ve Kapat</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Mesaj.</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Hata mesajı burada</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Devriye Helikopteri</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Devriye Helikopteri aktif - {0} için çalışıyor</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Etkinliğin ortasında bağlandı - ortaya çıkma zamanı bilinmiyor</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Devriye Helikopteri aktif (ortaya çıkma zamanı bilinmiyor)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Devriye Helikopteri {0} bu oturumdan önce düşürüldü</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Devriye Heli bu oturumdan {0} önce haritadan ayrıldı</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>{0} adresinde demirledi - ~{1} adresinden kalkıyor</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>liman</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Halihazırda bağlantı noktasına yanaşmış durumda - kalkış saati bilinmiyor</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>{0} adresinde demirledi (demirlenme süresi henüz öğrenilmedi)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Haritada kalan süre (yumurtlamadan itibaren)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Rotanın ortasında bağlandı - zaman bilinmiyor</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Rotanın ortasında bağlandı - zaman bilinmiyor (rota ~{0}m toplam)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Kargo Gemisi bu oturumdan {0}m {1}s önce çözüldü</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Seyahat eden Satıcı aktif - {0} için koşuyor</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Gezgin Satıcı aktif (ortaya çıkma zamanı bilinmiyor)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Gezgin Satıcı {0} bu oturumdan önce despaw oldu</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea active - {0} için çalışıyor</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Derin Deniz aktif (yumurtlama zamanı bilinmiyor)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea {0} bu oturumdan önce sona erdi</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} şu anda çevrimiçi olan oyuncular.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Sıra: {0} oyuncular.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Şu anki oyun içi zaman: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} liderliğe terfi etti.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Derin Deniz aktif! {0} için koşuyor.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Derin Deniz şu anda aktif (etkinliğin ortasında bağlı - ortaya çıkma zamanı bilinmiyor).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea bu seans {0} dakika önce sona erdi.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Derin Deniz etkinlik durumu bilinmiyor (bu oturumda görülmedi).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Kargo gemisi aktif değil.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Kargo gemisi {0}adresine yanaşmıştır. Yaklaşık {1} dakika içinde kalkacaktır.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Kargo gemisi {0} adresine yanaştı ve yola çıkmaya hazırlanıyor.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Kargo gemisi {0} adresine yanaştı (kalkış saati bilinmiyor).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Kargo gemisi aktif. Yaklaşık {0} dakika içinde kalkıyor.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Kargo gemisi aktif ve yakında ayrılmaya hazırlanıyor.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Kargo Gemisi aktif (rota süresi bu sunucu için henüz öğrenilmedi).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Kargo Gemisi aktif (doğduktan sonra bağlandı - kalan süre bilinmiyor).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Kargo Gemisi aktif değil. Bu oturumda {0} dakika önce çözüldü.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: {1}m {2}s adresindeki sandık</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: son arama {1}m önce</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: bu oturumda çağrılmadı</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Devriye Heli aktif! {0} için koşuyor.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Devriye Heli şu anda aktif (etkinliğin ortasında bağlandı - ortaya çıkma zamanı bilinmiyor).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Devriye Helikopteri aktif değil. Bu oturumdan önce {0} {1} idi.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>vuruldu</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>haritayı terk etti</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Devriye Heli olay durumu bilinmiyor (bu oturumda görülmedi).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Gezgin Satıcı aktif! {0} için koşuyor.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Gezgin Satıcı şu anda aktif (etkinliğin ortasında bağlandı - ortaya çıkma zamanı bilinmiyor).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Gezgin Satıcı aktif değil. Bu oturumdan {0} önce çözüldü.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Gezgin Satıcı etkinlik durumu bilinmiyor (bu oturumda görülmedi).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>Bakım komutları için Alet Dolabı eşleştirilmemiştir.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>{0} TC'de bakım: Boş veya süresi dolmuş.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> İhtiyaç/24 saat: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>{0} TC'de bakım: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} günler</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} saatler</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} dakika</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Boş/süresi dolmuş</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Bakım: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Bağlı Alet Dolabı monitörleri bulunamadı veya eşleştirilmedi.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Bağlı Alet Dolabı monitörü bulunamadı veya eşleştirilmedi.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} {1} adresine döndü.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>AÇIK</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>KAPALI</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Bağlı Akıllı Anahtar bulunamadı veya eşleştirilmedi.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Ahşap</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Taş</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Metal</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Küçük Petrol Kulesi</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Büyük Petrol Kulesi</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Mağaza</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Kargo Gemisi</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Gezgin Satıcı</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Devriye Helikopteri</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Oilrig Sandığı</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Patlama</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Bina Engellendi</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Etkinlik</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] tetiklendi! Sandık {1} adresinde açılır.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} tetiklendi!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Sandık 10 dakika içinde açılıyor!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Sandık 5 dakika içinde açılıyor!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Derin Deniz çıktı</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Yeni mağaza {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Şüpheli mağaza {0} [{1}] çevrimiçiydi {2}s, satıldı {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Kargo Gemisi yumurtladı {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>denizden uzakta ( {0} yakınında)</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Kargo Gemisi {0} ({1} ) adresinde demirledi</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Kargo gemisinin yaklaşık 5 dakika içinde {0} ({1}) adresine yanaşması beklenmektedir.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Kargo Gemisi 5 dakika içinde {0} adresinden kalkıyor ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Sunucu gecikmesi nedeniyle çökme algılandı - Heli {0} adresinde hala haritada</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} {1} adresinde ortaya çıktı.</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Devriye Helikopteri {0} adresinde vuruldu</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Bilinmiyor</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} {1} adresinde çevrimiçi oldu</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} çevrimdışı oldu</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} {1} adresinde öldü</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} yeniden doğdu @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Takip] {0}{1} artık ÇEVRİMİÇİ</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Takip] {0}{1} artık ÇEVRİMDIŞI</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[İzleme] {0}{1} , {2} olarak yeniden adlandırıldı!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>satıyor</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>satın alır</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Mağaza</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (Stok {5}) {6} {7} için</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Sohbet Komutlarını Listele</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>KOMUTLAR: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Yerelleştirme, UI Modernizasyonu ve Depolama</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dinamik Yerel Ayar Değiştirme</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> - Seçilebilecek 30+ dil</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Sohbet Komutları Kullanıcı Arayüzü</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> - Temiz görünüm için izole görünüm</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Yeni Ayarlar Yerleşimi</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> - Tüm ayarlar için temiz kenar çubuğu</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics İzleme Kaldırıldı</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Üssünüz saldırı altında!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Lütfen önce bir sunucuya bağlanın.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>Herhangi bir sunucuya bağlı değilsiniz.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Sohbet şu anda mevcut değil.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Lütfen önce bir sunucu seçin.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Bağlantı</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Sohbet</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Oyuncular Nasıl Takip Edilir</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Yerel UDP izleme</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>İzleme kılavuzu, yakın gelecekte değişikliklere uğrayacağından şu anda yalnızca İngilizce olarak mevcuttur. Sabırlı olmanızı rica ediyoruz.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Bu pencereyi istediğiniz zaman kapatın - ❓ Nasıl Takip Edilir düğmesi ile yeniden açabilirsiniz.</value>
+  </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Bakım</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Uygulama ayarlarını, profilleri ve özel çizimleri silin, yedekleyin veya geri yükleyin.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Uygulama Verilerini Sıfırla...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Yedekleme Verileri...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Verileri Geri Yükle...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Uygulama Verilerini Sıfırla</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Bu cihazdan silmek istediğiniz bileşenleri seçin. Seçilen tüm seçenekler kalıcı olarak silinecektir.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Aktif Sunucu Bağlantısı (Bağlantıyı Kes)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Kayıtlı Sunucu Profilleri (Eşleştirilmiş sunucu konfigürasyonlarını silme)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Steam Hesabı Kimlik Bilgileri (Oturumu Kapat)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Cihaz Eşleştirme Yapılandırması (Kayıt belirteçlerini sıfırlayın)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Özel Artı İşaretleri (Silme konfigürasyonları)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Yerel Önbellek ve Çizimler (Kayıtlı haritaları/çizgileri sil)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Bu işlem kalıcıdır ve geri alınamaz.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Sıfırlamayı Onayla</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Yedekleme Şifresi</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Yedekleme Koruması</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Bu yedekleme dosyasını şifrelemek için bir parola girin. Boş bırakırsanız, yedekleme şifrelenmeyecektir.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Yedeklemeyi Geri Yükle</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Bu yedekleme parola korumalıdır. Şifreyi çözmek için şifreyi girin:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Şifreleme</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Şifre çözme</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>TAMAM.</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Uygulama Verilerini Yedekleme</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] adresinde yedekleme başarıyla oluşturuldu: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Yedekleme başarıyla oluşturuldu!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Yedekleme Tamamlandı</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SİSTEM] Yedekleme hatası: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Yedekleme oluşturulurken hata oluştu: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Yedekleme Başarısız</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Verilerin geri yüklenmesi mevcut sunucu profillerinizin, özel artı işaretlerinin, çizim kaplamalarının ve mini harita yapılandırmalarının üzerine yazacaktır.
+
+Devam etmek istediğinizden emin misiniz?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Yedeklemeyi Geri Yükleme Onayı</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Uygulama Verilerini Geri Yükleme</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Uygulama verileri başarıyla geri yüklendi!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Geri Yükleme Tamamlandı</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[Geri yükleme hatası: Geçersiz parola sağlandı.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Şifre çözme başarısız oldu. Geçersiz parola veya bozuk yedekleme dosyası.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Geri Yükleme Başarısız</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SİSTEM] Geri yükleme hatası: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Yedekleme geri yüklenirken hata oluştu: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Geçersiz yedekleme dosyası biçimi veya eksik imza.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Seçici sıfırlama işlemi başlatılıyor...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[Aktif sunucu bağlantısı kesiliyor...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[Bağlantı sıfırlama tamamlandı.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Kayıtlı sunucu profilleri temizleniyor...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Kaydedilen sunucu profilleri temizlendi.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[Steam hesabı kimlik bilgileri kaldırılıyor...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Steam kimlik bilgileri temizlendi.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Cihaz eşleştirme yapılandırması siliniyor...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Cihaz eşleştirme yapılandırması silindi.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[Özel artı işaretleri siliniyor...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Özel artı işaretleri temizlenirken hata oluştu: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[Özel artı işaretleri temizlendi.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Yerel önbellek dosyaları ve kaplama çizimleri temizleniyor...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Önbellek klasörü temizlenirken hata oluştu: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Önbellek klasörleri temizlendi.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[Dinleyici ve FCM kimlik bilgileri yeniden kaydediliyor...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Seçici sıfırlama işlemi başarıyla tamamlandı.</value>
+  </data>
+</root>

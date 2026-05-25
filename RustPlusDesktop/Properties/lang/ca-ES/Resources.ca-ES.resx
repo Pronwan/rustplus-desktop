@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>RUST+ ESCRIVANIA</value>
+  </data>
+  <data name="SteamAccount" xml:space="preserve">
+    <value>Compte de Steam</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+    <value>No heu iniciat la sessió</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>Comprovar actualitzacions</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>Descarregant...</value>
+  </data>
+  <data name="JoinDiscord" xml:space="preserve">
+    <value>Uneix-te a Discord</value>
+  </data>
+  <data name="PatchNotes" xml:space="preserve">
+    <value>Notes del pegat</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Configuració</value>
+  </data>
+  <data name="PairedServers" xml:space="preserve">
+    <value>Servidors emparellats</value>
+  </data>
+  <data name="NoServersPaired" xml:space="preserve">
+    <value>Encara no s'han emparellat cap servidor</value>
+  </data>
+  <data name="PairingMaintenance" xml:space="preserve">
+    <value>MANTENIMENT I COMBINACIÓ</value>
+  </data>
+  <data name="PairingIdle" xml:space="preserve">
+    <value>Parellament: oci</value>
+  </data>
+  <data name="RightClickOptions" xml:space="preserve">
+    <value>Feu clic amb el botó dret per a opcions</value>
+  </data>
+  <data name="TrackingActive" xml:space="preserve">
+    <value>Seguiment actiu</value>
+  </data>
+  <data name="LastPull" xml:space="preserve">
+    <value>Darrera tirada: {0}</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>Dona</value>
+  </data>
+  <data name="SupportDeveloper" xml:space="preserve">
+    <value>Dona suport al desenvolupador</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Restablir</value>
+  </data>
+  <data name="ResetWebSocket" xml:space="preserve">
+    <value>Restablir la connexió WebSocket</value>
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value>Jugadors:</value>
+  </data>
+  <data name="ShowOnlinePlayers" xml:space="preserve">
+    <value>Mostra la pestanya de jugadors en línia</value>
+  </data>
+  <data name="Queue" xml:space="preserve">
+    <value>Fila:</value>
+  </data>
+  <data name="DevicesTab" xml:space="preserve">
+    <value>Dispositius</value>
+  </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>Tecles d'accés ràpid</value>
+  </data>
+  <data name="ImportDevices" xml:space="preserve">
+    <value>Importar dispositius dels companys d'equip</value>
+  </data>
+  <data name="ExportDevices" xml:space="preserve">
+    <value>Exporta dispositius als companys d'equip</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Actualitzar</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Declivi</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Càrrega del consentiment</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>En fer clic a 'Acceptar', els dispositius intel·ligents (i potencialment els dibuixos de mapa) d'aquest servidor s'enviaran al servidor del creador. Això permet als companys d'equip descarregar-los i sincronitzar-los. Només es transmet el vostre ID de Steam per identificar els companys d'equip. Només els jugadors autoritzats a la Caixa d'Eines poden controlar els dispositius.
+
+Nota: aquest mètode de transmissió s'optimitzarà en el futur. Si els companys d'equip no poden descarregar les dades, proveu d'esborrar els dibuixos de mapa i tornar-los a pujar.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Suprimeix</value>
+  </data>
+  <data name="DeleteMissingOnly" xml:space="preserve">
+    <value>Només podeu suprimir dispositius que falten.</value>
+  </data>
+  <data name="RenameDevice" xml:space="preserve">
+    <value>Renombrar dispositiu</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>En línia</value>
+  </data>
+  <data name="Offline" xml:space="preserve">
+    <value>Fora de línia</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>Connectar</value>
+  </data>
+  <data name="FullConnect" xml:space="preserve">
+    <value>Connectar completament</value>
+  </data>
+  <data name="LoadMapTeam" xml:space="preserve">
+    <value>Càrrega del mapa i de l'equip</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>Desconnectar</value>
+  </data>
+  <data name="ServerDetails" xml:space="preserve">
+    <value>Detalls del servidor</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>Escolta</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Atura't</value>
+  </data>
+  <data name="TryPairingEdge" xml:space="preserve">
+    <value>Prova d'emparellar amb Edge</value>
+  </data>
+  <data name="ResetPairingConfig" xml:space="preserve">
+    <value>Restablir l'aparellament (esborrar la configuració)</value>
+  </data>
+  <data name="ResetListenPairing" xml:space="preserve">
+    <value>Restablir + Escoltar (reparar)</value>
+  </data>
+  <data name="ResetListenEdge" xml:space="preserve">
+    <value>Restablir + Escoltar amb Edge</value>
+  </data>
+  <data name="RelinkBattlemetrics" xml:space="preserve">
+    <value>Relink ID de Battlemetrics…</value>
+  </data>
+  <data name="DeleteServer" xml:space="preserve">
+    <value>Suprimeix el servidor…</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Si us plau, espereu...</value>
+  </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>Canvia l'àrea del servidor</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>Mode de transmissió en directe</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>Escala:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>Activa el mode Streamer (abrevia els noms)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>Abrevia els noms i ID de Steam per protegir la privadesa durant les retransmissions. Oculta automàticament la consola i la llista de servidors.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>No hi ha cap posició disponible (fora de línia o no generada).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>Desa grup</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>Introdueix un nom de grup.</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>El missatge no s'ha pogut enviar. Torna-ho a provar. (Comprova si formes part d'un equip!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Error: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>Assignar grup</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>Configuració del grup: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Nom del grup</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>Introdueix el nom del grup...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>Color del grup</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Desa els canvis</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>Anàlisi i previsions de l'activitat dels jugadors</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>Jugadors</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>Millora del mode streamer i del mapa miniatura</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>Mode de transmissió en directe</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>Escalament de marcadors de jugadors</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>Millora de la mini mapa</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>Cal prendre mesures:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Seguiment de BattleMetrics eliminat</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>Renovació del sistema de seguiment de jugadors</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>Com funciona el seguiment de jugadors</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>Afegeix jugadors al seguidor per començar a fer el seguiment</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>Seguiment actiu</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>Seguiment ociosa</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>Filtra jugadors...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>Connecta a un servidor per carregar la llista de jugadors</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Recuperant jugadors mitjançant la consulta de Steam...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>Identificador de pista</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>Nom de la pista manual...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Sense dispositius.</value>
+  </data>
+  <data name="NoTokenRegistered" xml:space="preserve">
+    <value>Cap token registrat</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>Token caducat!</value>
+  </data>
+  <data name="ExpiresInDays" xml:space="preserve">
+    <value>Caduca d'aquí a {0} dies</value>
+  </data>
+  <data name="UntilNight" xml:space="preserve">
+    <value>{0} fins a la nit</value>
+  </data>
+  <data name="UntilDay" xml:space="preserve">
+    <value>{0} fins al dia</value>
+  </data>
+  <data name="FollowMe" xml:space="preserve">
+    <value>Segueix-me</value>
+  </data>
+  <data name="FollowPlayer" xml:space="preserve">
+    <value>Segueix {0}</value>
+  </data>
+  <data name="PairingListening" xml:space="preserve">
+    <value>Parell: escolta…</value>
+  </data>
+  <data name="PairingStopped" xml:space="preserve">
+    <value>Parellament: aturat</value>
+  </data>
+  <data name="PairingFailed" xml:space="preserve">
+    <value>Parellament: fallit</value>
+  </data>
+  <data name="AlarmActivated" xml:space="preserve">
+    <value>Alerta activada!</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Servei</value>
+  </data>
+  <data name="SmartAlarm" xml:space="preserve">
+    <value>Alarma intel·ligent</value>
+  </data>
+  <data name="UnableToReadLink" xml:space="preserve">
+    <value>No es pot llegir RustPlus-Link: {0}
+Format: rustplus://IP:PORT</value>
+  </data>
+  <data name="DeletePairingConfigHeader" xml:space="preserve">
+    <value>Restablir l'aparellament</value>
+  </data>
+  <data name="DeletePairingConfigBody" xml:space="preserve">
+    <value>Eliminar la configuració d'emparellament existent?
+Hauràs d'emparellar de nou en el proper inici.</value>
+  </data>
+  <data name="ResetListenHeader" xml:space="preserve">
+    <value>Restablir + Escoltar</value>
+  </data>
+  <data name="ResetListenBody" xml:space="preserve">
+    <value>Suprimir la configuració d'emparellament i emparellar/escoltar immediatament?</value>
+  </data>
+  <data name="ResetListenEdgeHeader" xml:space="preserve">
+    <value>Restablir + Escoltar (Edge)</value>
+  </data>
+  <data name="ResetListenEdgeBody" xml:space="preserve">
+    <value>Eliminar la configuració d'aparellament i aparellar/escoltar de nou immediatament amb l'Edge?</value>
+  </data>
+  <data name="UpdateQueryFailed" xml:space="preserve">
+    <value>No s'ha pogut consultar l'última versió. Torneu-ho a provar o obriu la pàgina de versions.</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Estàs al dia.</value>
+  </data>
+  <data name="UpdateAvailableHeader" xml:space="preserve">
+    <value>Actualització disponible</value>
+  </data>
+  <data name="UpdateAvailableBody" xml:space="preserve">
+    <value>Nova versió disponible: {0}
+? Obre la pàgina de llançaments oberts?</value>
+  </data>
+  <data name="DownloadAndInstallBody" xml:space="preserve">
+    <value>Nova versió disponible: {0}
+. La descarregues i instal·les ara?</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>La descàrrega ha fallat.</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Comprovació d'actualitzacions fallida.
+{0}</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Sense dispositius.</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>Veure el perfil</value>
+  </data>
+  <data name="ChangeGroup" xml:space="preserve">
+    <value>Canviar grup</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Canvia el nom</value>
+  </data>
+  <data name="RemoveTracked" xml:space="preserve">
+    <value>Eliminar el seguiment</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Vista</value>
+  </data>
+  <data name="MoreOptions" xml:space="preserve">
+    <value>Més opcions</value>
+  </data>
+  <data name="RelinkBattlemetricsId" xml:space="preserve">
+    <value>Relink ID de Battlemetrics…</value>
+  </data>
+  <data name="DeleteServerEllipsis" xml:space="preserve">
+    <value>Suprimeix el servidor…</value>
+  </data>
+  <data name="RightClickRename" xml:space="preserve">
+    <value>Feu clic amb el botó dret per canviar el nom</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>CANVIAR</value>
+  </data>
+  <data name="PopupWindow" xml:space="preserve">
+    <value>Finestra emergent</value>
+  </data>
+  <data name="InAppAlert" xml:space="preserve">
+    <value>Alerta dins de l'aplicació</value>
+  </data>
+  <data name="AudioAlert" xml:space="preserve">
+    <value>Alerta d'àudio</value>
+  </data>
+  <data name="CustomAudioFile" xml:space="preserve">
+    <value>Fitxer d'àudio personalitzat...</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>Restablir als valors per defecte</value>
+  </data>
+  <data name="Snapshot" xml:space="preserve">
+    <value>Imatge instantània: </value>
+  </data>
+  <data name="ItemsUpkeep" xml:space="preserve">
+    <value> Objectes, manteniment=</value>
+  </data>
+  <data name="NoDevicesFound" xml:space="preserve">
+    <value>No s'han trobat dispositius</value>
+  </data>
+  <data name="PairDeviceToSee" xml:space="preserve">
+    <value>Pareu un dispositiu intel·ligent, un interruptor o una alarma per veure'l aquí</value>
+  </data>
+  <data name="TeamTab" xml:space="preserve">
+    <value>Equip</value>
+  </data>
+  <data name="CenterOnMap" xml:space="preserve">
+    <value>Centre al mapa</value>
+  </data>
+  <data name="FollowOnMap" xml:space="preserve">
+    <value>Segueix al mapa</value>
+  </data>
+  <data name="OpenSteamProfile" xml:space="preserve">
+    <value>Obre el perfil de Steam</value>
+  </data>
+  <data name="PromoteToLeader" xml:space="preserve">
+    <value>Promocionar a líder</value>
+  </data>
+  <data name="KickFromTeam" xml:space="preserve">
+    <value>Cop de l'equip</value>
+  </data>
+  <data name="ProfileMarkers" xml:space="preserve">
+    <value>Marcadors de perfil</value>
+  </data>
+  <data name="DeathMarkers" xml:space="preserve">
+    <value>Marcadors de la mort</value>
+  </data>
+  <data name="CamerasTab" xml:space="preserve">
+    <value>Càmeres</value>
+  </data>
+  <data name="AddCamera" xml:space="preserve">
+    <value>Afegeix càmera</value>
+  </data>
+  <data name="NoCamerasFound" xml:space="preserve">
+    <value>No s'han trobat càmeres</value>
+  </data>
+  <data name="PairCameraToSee" xml:space="preserve">
+    <value>Pareu una càmera per veure'n la previsualització aquí</value>
+  </data>
+  <data name="PlayersTab" xml:space="preserve">
+    <value>Jugadors</value>
+  </data>
+  <data name="HowToTrack" xml:space="preserve">
+    <value>Com fer un seguiment</value>
+  </data>
+  <data name="LearnHowTrackingWorks" xml:space="preserve">
+    <value>Aprèn com funciona el seguiment de jugadors</value>
+  </data>
+  <data name="OnlineTab" xml:space="preserve">
+    <value>En línia</value>
+  </data>
+  <data name="OnlinePlayers" xml:space="preserve">
+    <value>Jugadors en línia</value>
+  </data>
+  <data name="SearchBM" xml:space="preserve">
+    <value>Cerca BM</value>
+  </data>
+  <data name="SearchServerBM" xml:space="preserve">
+    <value>Cerca el servidor actual a BattleMetrics</value>
+  </data>
+  <data name="Popout" xml:space="preserve">
+    <value>Popout</value>
+  </data>
+  <data name="OpenPlayersSeparateWindow" xml:space="preserve">
+    <value>Obre els jugadors en una finestra separada</value>
+  </data>
+  <data name="Track" xml:space="preserve">
+    <value>Pista</value>
+  </data>
+  <data name="ManualTrackPlaceholder" xml:space="preserve">
+    <value>Nom de pista manual o ID de Steam...</value>
+  </data>
+  <data name="FilterPlayersPlaceholder" xml:space="preserve">
+    <value>Filtra jugadors...</value>
+  </data>
+  <data name="LoadingPlayers" xml:space="preserve">
+    <value>Cargant jugadors...</value>
+  </data>
+  <data name="TrackedTab" xml:space="preserve">
+    <value>Seguit</value>
+  </data>
+  <data name="TrackedPlayers" xml:space="preserve">
+    <value>Jugadors seguits</value>
+  </data>
+  <data name="ManageGroups" xml:space="preserve">
+    <value>Gestiona grups</value>
+  </data>
+  <data name="ViewFullAnalysisReport" xml:space="preserve">
+    <value>Veure l'informe d'anàlisi complet</value>
+  </data>
+  <data name="ReadyToExploreMap" xml:space="preserve">
+    <value>Estàs a punt per explorar el mapa?</value>
+  </data>
+  <data name="ConnectToLoadMap" xml:space="preserve">
+    <value>Connecta a un servidor seleccionat per carregar el mapa i l'equip de Rust en directe.</value>
+  </data>
+  <data name="ReadyToDominate" xml:space="preserve">
+    <value>Preparat per dominar Rust?</value>
+  </data>
+  <data name="PairAccountBenefits" xml:space="preserve">
+    <value>Enllaça el teu compte per començar a fer el seguiment dels jugadors, rebre alertes de raids bàsiques i controlar els teus dispositius intel·ligents a l'instant.</value>
+  </data>
+  <data name="LoginPairAccount" xml:space="preserve">
+    <value>Inicia la sessió i vincula el compte</value>
+  </data>
+  <data name="RequiresSteamLogin" xml:space="preserve">
+    <value>Requereix inici de sessió a Steam al navegador per defecte.</value>
+  </data>
+  <data name="DeleteServerHeader" xml:space="preserve">
+    <value>Suprimir servidor?</value>
+  </data>
+  <data name="DeleteServerConfirm" xml:space="preserve">
+    <value>Estàs segur que vols esborrar aquest servidor? Aquesta acció no es pot desfer.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel·la</value>
+  </data>
+  <data name="DeleteAction" xml:space="preserve">
+    <value>Suprimeix</value>
+  </data>
+  <data name="AutoHideAfter3s" xml:space="preserve">
+    <value>Amagar automàticament després de 3 s</value>
+  </data>
+  <data name="MapFilters" xml:space="preserve">
+    <value>Filtres de mapa</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>Griu</value>
+  </data>
+  <data name="Monuments" xml:space="preserve">
+    <value>Monuments</value>
+  </data>
+  <data name="Shops" xml:space="preserve">
+    <value>Botigues</value>
+  </data>
+  <data name="ChatAlerts" xml:space="preserve">
+    <value>ALERTES DE XAT</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Alertes</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>Configurar</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Selecciona-ho tot</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Deselecciona-ho tot</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>EVENTS</value>
+  </data>
+  <data name="CargoShip" xml:space="preserve">
+    <value>Vaixell de càrrega</value>
+  </data>
+  <data name="CargoSpawn" xml:space="preserve">
+    <value>Naixement</value>
+  </data>
+  <data name="CargoDock" xml:space="preserve">
+    <value>Atracament al port</value>
+  </data>
+  <data name="CargoEgress" xml:space="preserve">
+    <value>Sortida (avís de 5 minuts)</value>
+  </data>
+  <data name="CargoArrival" xml:space="preserve">
+    <value>Avís d'arribada (5 m abans del moll)</value>
+  </data>
+  <data name="Heli" xml:space="preserve">
+    <value>Helikòpter de patrulla</value>
+  </data>
+  <data name="Chinook" xml:space="preserve">
+    <value>Chinook (CH47)</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>Venedor itinerant</value>
+  </data>
+  <data name="OilRig" xml:space="preserve">
+    <value>Activador de plataforma petroliera</value>
+  </data>
+  <data name="DeepSea" xml:space="preserve">
+    <value>Esdeveniment de l'oceà profund</value>
+  </data>
+  <data name="SmartAlerts" xml:space="preserve">
+    <value>Alertes intel·ligents</value>
+  </data>
+  <data name="PlayerOnline" xml:space="preserve">
+    <value>Estat en línia</value>
+  </data>
+  <data name="PlayerOffline" xml:space="preserve">
+    <value>Estat fora de línia</value>
+  </data>
+  <data name="AnnounceTracking" xml:space="preserve">
+    <value>Seguiment de notificacions</value>
+  </data>
+  <data name="PlayerDeathSelf" xml:space="preserve">
+    <value>Suïcidi</value>
+  </data>
+  <data name="PlayerDeathTeam" xml:space="preserve">
+    <value>Equip de la Mort</value>
+  </data>
+  <data name="PlayerRespawnSelf" xml:space="preserve">
+    <value>Ressuscitació automàtica</value>
+  </data>
+  <data name="PlayerRespawnTeam" xml:space="preserve">
+    <value>Equip Respawn</value>
+  </data>
+  <data name="NewShops" xml:space="preserve">
+    <value>Botigues noves</value>
+  </data>
+  <data name="SuspiciousShops" xml:space="preserve">
+    <value>Botigues sospitoses</value>
+  </data>
+  <data name="TradeAlerts" xml:space="preserve">
+    <value>Alertes comercials</value>
+  </data>
+  <data name="CrosshairStyle" xml:space="preserve">
+    <value>Estil de mira creuada</value>
+  </data>
+  <data name="GreenDot" xml:space="preserve">
+    <value>Punt Verd</value>
+  </data>
+  <data name="MiniGreen" xml:space="preserve">
+    <value>Mini Verd</value>
+  </data>
+  <data name="OpenCrosshairRG" xml:space="preserve">
+    <value>Obre mira creuada (D/E)</value>
+  </data>
+  <data name="ThinRedCircle" xml:space="preserve">
+    <value>Cercle Vermell Fi</value>
+  </data>
+  <data name="SquareDot" xml:space="preserve">
+    <value>Quadrat + Punt</value>
+  </data>
+  <data name="MagentaDot" xml:space="preserve">
+    <value>Punt magenta</value>
+  </data>
+  <data name="MagentaOpenCross" xml:space="preserve">
+    <value>Creu Oberta Magenta</value>
+  </data>
+  <data name="RangeLineTicks" xml:space="preserve">
+    <value>Línia de rang (punts)</value>
+  </data>
+  <data name="DrawCrosshair" xml:space="preserve">
+    <value>Dibuixa el mirall...</value>
+  </data>
+  <data name="ChooseMonitor" xml:space="preserve">
+    <value>Tria monitor</value>
+  </data>
+  <data name="DrawOverlay" xml:space="preserve">
+    <value>Dibuixa superposició</value>
+  </data>
+  <data name="DrawToolTip" xml:space="preserve">
+    <value>Dibuixa (Dret del ratolí: Mida / Color)</value>
+  </data>
+  <data name="PlaceTextToolTip" xml:space="preserve">
+    <value>Col·locar text (Dret del ratolí: Color / Mida)</value>
+  </data>
+  <data name="PlaceIconToolTip" xml:space="preserve">
+    <value>Col·locar icona (Dret del ratolí: Tria d'icona)</value>
+  </data>
+  <data name="EraserToolTip" xml:space="preserve">
+    <value>Erasor (toca i mantén o fes clic)</value>
+  </data>
+  <data name="DeleteOverlayToolTip" xml:space="preserve">
+    <value>Suprimeix la teva superposició</value>
+  </data>
+  <data name="UploadOverlayToolTip" xml:space="preserve">
+    <value>Pujar el teu propi superposat / compartir</value>
+  </data>
+  <data name="ProfitTrades" xml:space="preserve">
+    <value>Comerços de benefici</value>
+  </data>
+  <data name="ArbitrageOpportunities" xml:space="preserve">
+    <value>Oportunitats d'arbitratge directes | comprar barat → vendre car.</value>
+  </data>
+  <data name="BuyXForY" xml:space="preserve">
+    <value>Compra X per Y</value>
+  </data>
+  <data name="Analyze" xml:space="preserve">
+    <value>Analitzar</value>
+  </data>
+  <data name="IWantToGet" xml:space="preserve">
+    <value>Vull obtenir</value>
+  </data>
+  <data name="ICanPayWith" xml:space="preserve">
+    <value>Puc pagar amb</value>
+  </data>
+  <data name="TeamChat" xml:space="preserve">
+    <value>Xat d'equip</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Envia</value>
+  </data>
+  <data name="FcmCredentials" xml:space="preserve">
+    <value>Credencials FCM</value>
+  </data>
+  <data name="RightClickConfigure" xml:space="preserve">
+    <value>Feu clic amb el botó dret per configurar</value>
+  </data>
+  <data name="ResetMap" xml:space="preserve">
+    <value>Restablir</value>
+  </data>
+  <data name="ResetMapToolTip" xml:space="preserve">
+    <value>Restablir el zoom i la posició del mapa</value>
+  </data>
+  <data name="MiniMap" xml:space="preserve">
+    <value>Mini</value>
+  </data>
+  <data name="CrosshairToolTip" xml:space="preserve">
+    <value>Mirilla encreuada: Activar/Desactivar (Fes clic amb el botó dret per a opcions)</value>
+  </data>
+  <data name="TrackPlayer" xml:space="preserve">
+    <value>Reproductor de pista</value>
+  </data>
+  <data name="CloseBMBrowser" xml:space="preserve">
+    <value>Tanca el navegador de BattleMetrics</value>
+  </data>
+  <data name="ShopSearchTitle" xml:space="preserve">
+    <value>Cerca a la botiga</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>Tanca la cerca</value>
+  </data>
+  <data name="ActivateShopsFirst" xml:space="preserve">
+    <value>Si us plau, activeu primer les botigues.</value>
+  </data>
+  <data name="ActivateShopPolling" xml:space="preserve">
+    <value>Activa la votació de la botiga</value>
+  </data>
+  <data name="TeamChatTitle" xml:space="preserve">
+    <value>XAT D'EQUIPS</value>
+  </data>
+  <data name="CloseChat" xml:space="preserve">
+    <value>Tanca el xat</value>
+  </data>
+  <data name="ChatCommandsSettings" xml:space="preserve">
+    <value>Configuració de les ordres de xat</value>
+  </data>
+  <data name="ChatCommands" xml:space="preserve">
+    <value>Comandes de xat</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Enrere</value>
+  </data>
+  <data name="Forward" xml:space="preserve">
+    <value>Davant</value>
+  </data>
+  <data name="OpenInExternalBrowser" xml:space="preserve">
+    <value>Obre en un navegador extern</value>
+  </data>
+  <data name="SearchBMPlaceholder" xml:space="preserve">
+    <value>Cerca BM...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Cerca</value>
+  </data>
+  <data name="SelectAServer" xml:space="preserve">
+    <value>Seleccioneu un servidor</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>DESCONNECTAT</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>CONECTANT...</value>
+  </data>
+  <data name="StatusInitializing" xml:space="preserve">
+    <value>INICIALITZANT...</value>
+  </data>
+  <data name="StatusDevicesActive" xml:space="preserve">
+    <value>Dispositius actius</value>
+  </data>
+  <data name="StatusFullyConnected" xml:space="preserve">
+    <value>Totalment connectat</value>
+  </data>
+  <data name="StatusUnknown" xml:space="preserve">
+    <value>DESCONEGUT</value>
+  </data>
+  <data name="MayTakeAMoment" xml:space="preserve">
+    <value>Això pot trigar un moment...</value>
+  </data>
+  <data name="AppSettingsTitle" xml:space="preserve">
+    <value>Configuració de l'aplicació</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="LaunchWithWindows" xml:space="preserve">
+    <value>Inicia amb Windows (minimitzat)</value>
+  </data>
+  <data name="StartMinimizedAlways" xml:space="preserve">
+    <value>Iniciar minimitzat (Sempre)</value>
+  </data>
+  <data name="AutoConnectLastServer" xml:space="preserve">
+    <value>Connectar-se automàticament al darrer servidor en iniciar-se</value>
+  </data>
+  <data name="AutoConnectToolTip" xml:space="preserve">
+    <value>Es reconnecta automàticament al darrer servidor i carrega el mapa.</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Comportament</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>Minimitzar a la safata en lloc de tancar</value>
+  </data>
+  <data name="BackgroundTracking" xml:space="preserve">
+    <value>Activa el seguiment del reproductor en segon pla</value>
+  </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>Manté el seguiment dels jugadors mitjançant BattleMetrics fins i tot quan està minimitzat.</value>
+  </data>
+  <data name="HideSystemConsole" xml:space="preserve">
+    <value>Amaga la consola del sistema (Desfer-te del desordre)</value>
+  </data>
+  <data name="HideConsoleToolTip" xml:space="preserve">
+    <value>Amaga el panell inferior de registre/consola per estalviar espai al mapa.</value>
+  </data>
+  <data name="MapSettings" xml:space="preserve">
+    <value>Configuració del mapa</value>
+  </data>
+  <data name="AutoLoadShops" xml:space="preserve">
+    <value>Càrrega automàtica de botigues en connectar-se</value>
+  </data>
+  <data name="AutoLoadShopsToolTip" xml:space="preserve">
+    <value>Comença automàticament a consultar les botigues i a enviar alertes quan està connectat a un servidor.</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Utilitzeu etiquetes de text per als monuments en lloc d'icones.</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>Quan està habilitat, els noms dels monuments del mapa de Rust es mostren com a text amb la font Permanent Marker en lloc d'icones.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Estil del monument:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Escala del monument:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Opaqunitat del monument:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Icones de rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Text original dels noms dels monuments</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Crèdits</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Icones de monuments del mapa proporcionades per </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> — usat amb permís.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>Totes les icones de monuments i les obres d'art relacionades són propietat de rustmaps.com. Gràcies per donar suport a la comunitat de Rust!</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Xat</value>
+  </data>
+  <data name="ModifyChatAlerts" xml:space="preserve">
+    <value>Modificar les alertes de xat</value>
+  </data>
+  <data name="ManageSteamAccountInfo" xml:space="preserve">
+    <value>Gestiona el teu compte de Steam vinculat a la finestra principal.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Tanca</value>
+  </data>
+  <data name="IncomingAlarms" xml:space="preserve">
+    <value>ALARMES D'ENTRADA</value>
+  </data>
+  <data name="Wipe" xml:space="preserve">
+    <value>Eixugar</value>
+  </data>
+  <data name="PlayersOnly" xml:space="preserve">
+    <value>Jugadors</value>
+  </data>
+  <data name="PlayersHeader" xml:space="preserve">
+    <value>Jugadors</value>
+  </data>
+  <data name="IWantToGetToolTip" xml:space="preserve">
+    <value>Vull obtenir (p. ex. petroli cru)</value>
+  </data>
+  <data name="ICanPayWithToolTip" xml:space="preserve">
+    <value>Vull PAGAR AMB (p. ex. Scrap)</value>
+  </data>
+  <data name="DeleteServerConfirmFormatted" xml:space="preserve">
+    <value>Estàs segur que vols eliminar el servidor "{0}"? Aquesta acció no es pot desfer.</value>
+  </data>
+  <data name="PairingError" xml:space="preserve">
+    <value>Parellament: error</value>
+  </data>
+  <data name="PairingStarting" xml:space="preserve">
+    <value>Parellant: s'inicia...</value>
+  </data>
+  <data name="StartingPairingListener" xml:space="preserve">
+    <value>Iniciant la llista d'escoltadors de parell...</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+    <value>Iniciat</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>Estoc</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Preu</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>ENCESA</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Apagat</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Actiu</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactiu</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>GRUP</value>
+  </data>
+  <data name="ImportDevicesTitle" xml:space="preserve">
+    <value>Rust+ Escriptori – Dispositius d'importació</value>
+  </data>
+  <data name="ImportDevicesHeader" xml:space="preserve">
+    <value>Importar dispositius</value>
+  </data>
+  <data name="ImportDevicesSelectPrompt" xml:space="preserve">
+    <value>Seleccioneu quins dispositius voleu importar per a aquest servidor.</value>
+  </data>
+  <data name="CheckDeviceStatus" xml:space="preserve">
+    <value>Comproveu l'estat del dispositiu</value>
+  </data>
+  <data name="ImportSelected" xml:space="preserve">
+    <value>Importació seleccionada</value>
+  </data>
+  <data name="BmShortcuts" xml:space="preserve">
+    <value>BM Atrevit</value>
+  </data>
+  <data name="PairingConfigDeleted" xml:space="preserve">
+    <value>Parell: configuració eliminada</value>
+  </data>
+  <data name="TrayIconDefault" xml:space="preserve">
+    <value>Rastrejador d'escriptori Rust+</value>
+  </data>
+  <data name="TrayIconTracking" xml:space="preserve">
+    <value>Rust+ Escriptori (Seguiment {0})</value>
+  </data>
+  <data name="RenameGroup" xml:space="preserve">
+    <value>Canvia el nom del grup</value>
+  </data>
+  <data name="NewNameForGroup" xml:space="preserve">
+    <value>Nou nom per al grup:</value>
+  </data>
+  <data name="NewNameForDevice" xml:space="preserve">
+    <value>Nou nom per a #{0}:</value>
+  </data>
+  <data name="EnterBattlemetricsIdFor" xml:space="preserve">
+    <value>Introduïu l'ID del servidor de Battlemetrics per a "{0}":</value>
+  </data>
+  <data name="TrayTrackingStatus" xml:space="preserve">
+    <value>Seguiment: {0}</value>
+  </data>
+  <data name="TrayLastUpdate" xml:space="preserve">
+    <value>Darrera actualització: {0}</value>
+  </data>
+  <data name="OpenRustPlusDesk" xml:space="preserve">
+    <value>Escriptori Open Rust+</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Sortida</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Descripció</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>Càmera</value>
+  </data>
+  <data name="Alarms" xml:space="preserve">
+    <value>Alertes</value>
+  </data>
+  <data name="Identifier" xml:space="preserve">
+    <value>Identificador:</value>
+  </data>
+  <data name="FPS" xml:space="preserve">
+    <value>FPS:</value>
+  </data>
+  <data name="CameraFPSNote" xml:space="preserve">
+    <value>Nota: es recomana 2 fps, un FPS més alt probablement tallarà la vostra connexió amb el servidor.</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>Píxel</value>
+  </data>
+  <data name="Pen" xml:space="preserve">
+    <value>Retolador</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>Línia</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>Quadrat</value>
+  </data>
+  <data name="Circle" xml:space="preserve">
+    <value>Cercle</value>
+  </data>
+  <data name="Thickness" xml:space="preserve">
+    <value>Gruix:</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Opacitat:</value>
+  </data>
+  <data name="UploadPNG" xml:space="preserve">
+    <value>Pujar PNG</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clar</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Desa</value>
+  </data>
+  <data name="AssignGlobalHotkeys" xml:space="preserve">
+    <value>Assigna tecles de d'acció globals als Smart Switches. Diversos dispositius poden compartir una mateixa tecla de d'acció (s'alternaran seqüencialment).</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Dispositiu</value>
+  </data>
+  <data name="EntityId" xml:space="preserve">
+    <value>Identificador d'entitat</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>Tec de drecera</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Establert</value>
+  </data>
+  <data name="CloseDeactivate" xml:space="preserve">
+    <value>Tanca i desactiva</value>
+  </data>
+  <data name="CloseActivate" xml:space="preserve">
+    <value>Tanca i activa</value>
+  </data>
+  <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
+    <value>Actualització del manteniment, del minimapa i del seguiment</value>
+  </data>
+  <data name="FeatureSummaryAdjustments" xml:space="preserve">
+    <value>Resum de característiques i ajustaments</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>No tornar a mostrar això</value>
+  </data>
+  <data name="AwesomeLetsGo" xml:space="preserve">
+    <value>Genial, anem-hi!</value>
+  </data>
+  <data name="MiniMapSettings" xml:space="preserve">
+    <value>Configuració del mini mapa</value>
+  </data>
+  <data name="Shape" xml:space="preserve">
+    <value>Forma</value>
+  </data>
+  <data name="Rectangle" xml:space="preserve">
+    <value>Rectangle</value>
+  </data>
+  <data name="OpacityLabel" xml:space="preserve">
+    <value>Opacitat: {0}%</value>
+  </data>
+  <data name="SizeLabel" xml:space="preserve">
+    <value>Mida: {0}% (MAYUS+rueda del ratolí)</value>
+  </data>
+  <data name="ShowServerTime" xml:space="preserve">
+    <value>Mostra l'hora del servidor</value>
+  </data>
+  <data name="ServerInformation" xml:space="preserve">
+    <value>Informació del servidor</value>
+  </data>
+  <data name="NoDescriptionAvailable" xml:space="preserve">
+    <value>No hi ha cap descripció disponible.</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Versió actual: {0}</value>
+  </data>
+  <data name="PatchNotesHeader" xml:space="preserve">
+    <value>Notes del pegat i historial de versions</value>
+  </data>
+  <data name="EnableChatCommands" xml:space="preserve">
+    <value>Activa les ordres de xat</value>
+  </data>
+  <data name="Prefix" xml:space="preserve">
+    <value>Prefix:</value>
+  </data>
+  <data name="StandardCommands" xml:space="preserve">
+    <value>Comandes estàndard</value>
+  </data>
+  <data name="Population" xml:space="preserve">
+    <value>Població:</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Hora:</value>
+  </data>
+  <data name="Promote" xml:space="preserve">
+    <value>Promoure:</value>
+  </data>
+  <data name="DeepSeaCommand" xml:space="preserve">
+    <value>Mar profunda:</value>
+  </data>
+  <data name="CargoShipCommand" xml:space="preserve">
+    <value>Vaixell de càrrega:</value>
+  </data>
+  <data name="OilRigCommand" xml:space="preserve">
+    <value>Plataforma petroliera:</value>
+  </data>
+  <data name="PatrolHeliCommand" xml:space="preserve">
+    <value>Helikòpter de patrulla:</value>
+  </data>
+  <data name="TravellingVendorCommand" xml:space="preserve">
+    <value>Venedor itinerant:</value>
+  </data>
+  <data name="UpkeepDetails" xml:space="preserve">
+    <value>Detalls del manteniment:</value>
+  </data>
+  <data name="CommandDelay" xml:space="preserve">
+    <value>Retard del comandament:</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Llengua</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Selecciona l'idioma</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>Canviar l'idioma requereix un reinici perquè tingui efecte complet.</value>
+  </data>
+  <data name="SmartSwitches" xml:space="preserve">
+    <value>Switches intel·ligents</value>
+  </data>
+  <data name="UpkeepTcMonitors" xml:space="preserve">
+    <value>Manteniment (TC) Monitors</value>
+  </data>
+  <data name="NoTcMonitorsFound" xml:space="preserve">
+    <value>No s'han trobat monitors TC.</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Desa i tanca</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Missatge...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Missatge d'error aquí</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Helikòpter de patrulla</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Heli de patrulla actiu – en funcionament per a {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Connectat durant l'esdeveniment – hora d'aparició desconeguda</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Heli de patrulla actiu (hora d'aparició desconeguda)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>L'helicòpter de patrulla va abatre l' {0} fa una sessió</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>L'helicòpter de patrulla va deixar el mapa fa {0} en aquesta sessió</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Amarrat a {0} – surt cap a les{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>port</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Ja atracat a Connect – hora de sortida desconeguda</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Amarrat a {0} (durada de l'amarratge encara desconeguda)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Temps restant al mapa (des del renaixement)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Connectat a mitja ruta – hora desconeguda</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Connectat a mitja ruta – hora desconeguda (ruta ~{0}m de desnivell total)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>El vaixell de càrrega va desaparèixer fa {0}minuts i {1}segons en aquesta sessió</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Venedor itinerant actiu – en funcionament per a {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Vendedor itinerant actiu (hora d'aparició desconeguda)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>El venedor itinerant va desaparèixer fa {0} en aquesta sessió</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea actiu – participant en {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Mar profunda activa (època de desova desconeguda)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea va acabar fa {0} en aquesta sessió</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}ms</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} jugadors actualment en línia.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Fila: {0} jugadors.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Hora actual del joc: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} Va ser ascendit a líder.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea està actiu! Corren per a {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea està actualment actiu (connectat a mitja esdeveniment – hora d'aparició desconeguda).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea va acabar {0} minuts abans d'aquesta sessió.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Estat de l'esdeveniment Deep Sea desconegut (no s'ha vist aquesta sessió).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Vaixell de càrrega no actiu.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Vaixell de càrrega atracat a l' {0}. Salpa en uns {1} minuts.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Vaixell de càrrega atracat a l' {0} i preparant-se per a la sortida.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Vaixell de càrrega atracat a l' {0} (hora de sortida desconeguda).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Vaixell de càrrega actiu. Salpa en aproximadament {0} minuts.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>El vaixell de càrrega està actiu i es prepara per marxar aviat.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Vaixell de càrrega actiu (la durada de la ruta encara no s'ha après per a aquest servidor).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Vaixell de càrrega actiu (connectat després de la generació – temps restant desconegut).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Vaixell de càrrega no actiu. Desaparegut fa {0} minuts en aquesta sessió.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: caixa a {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: última crida {1}fa m anys</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: no s'ha cridat en aquesta sessió</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Patrol Heli està actiu! Corren per a {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>El Patrol Heli està actualment actiu (connectat a mitja esdeveniment – hora d'aparició desconeguda).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Heli de patrulla no actiu. Fa {0} {1} en aquesta sessió.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>abatre</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>va deixar el mapa</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Estat de l'esdeveniment de Patrol Heli desconegut (no vist en aquesta sessió).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Travelling Vendor està actiu! Corren {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>El venedor itinerant està actualment actiu (connectat a mitja esdeveniment – hora d'aparició desconeguda).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Vendedor itinerant no actiu. Desaparegut fa {0} hores en aquesta sessió.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Estat de l'esdeveniment de venedor itinerant desconegut (no s'ha vist aquesta sessió).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>No s'han assignat cap armari d'eines a les ordres de manteniment.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Manteniment a {0} TC: buit o caducat.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Necessitat/24 h: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Manteniment a {0} TC: {1}</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} dies</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} hores</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} minuts</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Buid/caducat</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0} {1}, {2}</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Manteniment: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>No s'han trobat o no s'han emparellat els monitors de l'armari d'eines Bound.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Monitor de l'armari d'eines Bound no trobat o no emparellat.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} es va convertir en {1}</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>ENCESA</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>Apagat</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Smart Switch vinculat no trobat o no emparellat.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Fusta</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Pedra</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Metall</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Petita plataforma petroliera</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Gran plataforma petroliera</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Botiga</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Vaixell de càrrega</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Venedor itinerant</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Helikòpter de patrulla</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Caixa de plataforma petroliera</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Explosió</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Construint bloquejat</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Esdeveniment</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] activat! La caixa s'obre a {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARMA: {0} activat!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] La caixa s'obrirà en 10 minuts!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] La caixa s'obrirà en 5 minuts!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Deep Sea ja està disponible.</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>Botiga nova {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Botiga sospitosa {0} [{1}] estava en línia {2}s, venuda {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>S'ha generat un vaixell de càrrega. {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>lluny al mar (a prop de {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Vaixell de càrrega atracat a {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>El vaixell de càrrega s'espera que atraqui a l' {0} ({1}) en uns 5 minuts.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Vaixell de càrrega sortint de {0} en 5 minuts ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>S'ha detectat un error per retard del servidor — l'helicòpter encara és al mapa a {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} generat a {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Un helicòpter de patrulla abatut a {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>desconegut</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} es va connectar a {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} es va desconnectar</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} va morir a {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} ha reaparegut a {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Seguiment] {0}{1} ara en línia</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Seguiment] {0}{1} ara està desconnectat</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Seguiment] {0}{1} rebatejat com a {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>ven</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>compren</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Botiga</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) per {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>Llista les ordres de xat</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>COMANDAMENTS: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Localització, modernització de la IU i emmagatzematge</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Canvi dinàmic de local</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> — Més de 30 idiomes per triar</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Interfície d'usuari d'ordres de xat</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> — Vista aïllada per a un aspecte net</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>Nova superposició de configuració</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> — Netejar la barra lateral per a tots els paràmetres</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>Seguiment de BattleMetrics eliminat</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>La teva base està sota atac!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Si us plau, connecteu-vos primer a un servidor.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>No estàs connectat a cap servidor.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>El xat no està disponible ara mateix.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Si us plau, seleccioneu primer un servidor.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Coneixement</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Xat</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>Com fer el seguiment dels jugadors</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Seguiment nadiu de UDP</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>La guia de seguiment està actualment disponible només en anglès, ja que s'hi introduiran canvis en un futur pròxim. Us demanem paciència.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Tanca aquesta finestra en qualsevol moment — la pots tornar a obrir amb el botó ❓ Com fer el seguiment.</value>
+  </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Manteniment</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Esborrar, fer còpia de seguretat o restaurar la configuració de l'aplicació, els perfils i els dibuixos personalitzats.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Restabliments de les dades de l'aplicació...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Dades de còpia de seguretat...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Restablix dades...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Restablir les dades de l'aplicació</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Seleccioneu els components que voleu esborrar d'aquest dispositiu. Totes les opcions seleccionades s'esborraran de manera permanent.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Coneixement de servidor actiu (Desconnectar)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Perfils de servidor guardats (Suprimir les configuracions de servidor emparellat)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Credencials del compte de Steam (Tanca la sessió)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Configuració d'emparellament de dispositius (Restabliment de tokens d'inscripció)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Mirades de punyent personalitzades (configuracions de supressió)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Cach local i dibuixos (Esborrar mapes/línies desades)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>Aquesta acció és permanent i no es pot desfer.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Confirma el restabliment</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Contrassena de còpia de seguretat</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Protecció de còpia de seguretat</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Introdueix una contrasenya per xifrar aquest fitxer de còpia de seguretat. Si la deixes en blanc, la còpia de seguretat no es xifrarà.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Restablix la còpia de seguretat</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>Aquesta còpia de seguretat està protegida per contrasenya. Introdueix la contrasenya per descifrar-la:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Xifra</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Desxifrar</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>D'acord</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Còpia de seguretat de les dades de l'aplicació</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Còpia de seguretat creada amb èxit a: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Còpia de seguretat creada amb èxit!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Còpia de seguretat completada</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Error de còpia de seguretat: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Error en crear la còpia de seguretat: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Copia de seguretat fallida</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>La restauració de dades sobreescriurà els perfils del servidor actuals, les mirades personalitzades, les superposicions de dibuix i les configuracions de minimapa.
+
+Estàs segur que vols continuar?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Restablix la confirmació de còpia de seguretat</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Restabliu les dades de l'aplicació</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Les dades de la sol·licitud s'han restaurat correctament!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Restauració completada</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Error de restauració: contrasenya incorrecta.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>La descodificació ha fallat. Contrasenya incorrecta o fitxer de còpia de seguretat corrupte.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Restauració fallida</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Error de restauració: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Error en restaurar la còpia de seguretat: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Format de fitxer de còpia de seguretat invàlid o signatura absent.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Començant l'operació de reinici selectiu...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Desconnectant la connexió de servidor activa...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Restabliment de la connexió completat.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Esborrant els perfils de servidor desats...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Perfils de servidor desats esborrats.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Eliminant les credencials del compte de Steam...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Les credencials de Steam s'han esborrat.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[SUPRESSIÓ] Esborrant la configuració d'emparellament del dispositiu...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Configuració d'emparellament del dispositiu eliminada.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Esborrant els miradors personalitzats...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Error en esborrar els miradors personalitzats: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Apuntadors personalitzats esborrats.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Esborrant els fitxers de memòria cau locals i els dibuixos superposats...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Error en esborrar la carpeta de la memòria cau: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Carpetes de la memòria cau esborrades.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Tornant a registrar l'oient i les credencials de l'FCM...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] L'operació de reinici selectiu s'ha completat correctament.</value>
+  </data>
+</root>

@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>RUST+ DESKTOP</value>
+  </data>
+  <data name="SteamAccount" xml:space="preserve">
+    <value>Steam Account</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+    <value>Not Logged In</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>Check for Updates</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>Downloading...</value>
+  </data>
+  <data name="JoinDiscord" xml:space="preserve">
+    <value>Join Discord</value>
+  </data>
+  <data name="PatchNotes" xml:space="preserve">
+    <value>Patch Notes</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="PairedServers" xml:space="preserve">
+    <value>PAIRED SERVERS</value>
+  </data>
+  <data name="NoServersPaired" xml:space="preserve">
+    <value>No servers paired yet</value>
+  </data>
+  <data name="PairingMaintenance" xml:space="preserve">
+    <value>PAIRING &amp; MAINTENANCE</value>
+  </data>
+  <data name="PairingIdle" xml:space="preserve">
+    <value>Pairing: idle</value>
+  </data>
+  <data name="RightClickOptions" xml:space="preserve">
+    <value>Right-click for options</value>
+  </data>
+  <data name="TrackingActive" xml:space="preserve">
+    <value>Tracking Active</value>
+  </data>
+  <data name="LastPull" xml:space="preserve">
+    <value>Last pull: {0}</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>Donate</value>
+  </data>
+  <data name="SupportDeveloper" xml:space="preserve">
+    <value>Support the developer</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetWebSocket" xml:space="preserve">
+    <value>Reset WebSocket connection</value>
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value>Players:</value>
+  </data>
+  <data name="ShowOnlinePlayers" xml:space="preserve">
+    <value>Show Online Players Tab</value>
+  </data>
+  <data name="Queue" xml:space="preserve">
+    <value>Queue:</value>
+  </data>
+  <data name="DevicesTab" xml:space="preserve">
+    <value>Devices</value>
+  </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>Hotkeys</value>
+  </data>
+  <data name="ImportDevices" xml:space="preserve">
+    <value>Import devices from teammates</value>
+  </data>
+  <data name="ExportDevices" xml:space="preserve">
+    <value>Export devices to teammates</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Decline</value>
+  </data>
+  <data name="UploadConsentTitle" xml:space="preserve">
+    <value>Upload Consent</value>
+  </data>
+  <data name="UploadConsentText" xml:space="preserve">
+    <value>By clicking 'Accept', the smart devices (and potentially map drawings) for this server will be uploaded to the creator's server. This allows teammates to download and sync them. Only your Steam ID is transmitted to identify teammates. Only players authorized at the Tool Cupboard can control the devices.
+
+Note: This transmission method will be optimized in the future. If teammates are unable to download the data, please try clearing your map drawings and uploading again.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DeleteMissingOnly" xml:space="preserve">
+    <value>You can only delete missing devices</value>
+  </data>
+  <data name="RenameDevice" xml:space="preserve">
+    <value>Rename device</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>ONLINE</value>
+  </data>
+  <data name="Offline" xml:space="preserve">
+    <value>OFFLINE</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>Connect</value>
+  </data>
+  <data name="FullConnect" xml:space="preserve">
+    <value>Full Connect</value>
+  </data>
+  <data name="LoadMapTeam" xml:space="preserve">
+    <value>Load Map &amp; Team</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>Disconnect</value>
+  </data>
+  <data name="ServerDetails" xml:space="preserve">
+    <value>Server Details</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>Listen</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="TryPairingEdge" xml:space="preserve">
+    <value>Try Pairing with Edge</value>
+  </data>
+  <data name="ResetPairingConfig" xml:space="preserve">
+    <value>Reset pairing (delete config)</value>
+  </data>
+  <data name="ResetListenPairing" xml:space="preserve">
+    <value>Reset + Listen (re-pair)</value>
+  </data>
+  <data name="ResetListenEdge" xml:space="preserve">
+    <value>Reset + Listen with Edge</value>
+  </data>
+  <data name="RelinkBattlemetrics" xml:space="preserve">
+    <value>Relink Battlemetrics ID…</value>
+  </data>
+  <data name="DeleteServer" xml:space="preserve">
+    <value>Delete server…</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Please wait...</value>
+  </data>
+  <data name="ToggleServerArea" xml:space="preserve">
+    <value>Toggle Server Area</value>
+  </data>
+  <data name="StreamerMode" xml:space="preserve">
+    <value>Streamer Mode</value>
+  </data>
+  <data name="ScaleLabel" xml:space="preserve">
+    <value>Scale:</value>
+  </data>
+  <data name="EnableStreamerMode" xml:space="preserve">
+    <value>Enable Streamer Mode (Abbreviates Names)</value>
+  </data>
+  <data name="StreamerModeToolTip" xml:space="preserve">
+    <value>Abbreviates Steam Names and IDs to protect privacy during streams. Auto-hides console and server list.</value>
+  </data>
+  <data name="NoPositionAvailable" xml:space="preserve">
+    <value>No position available (offline or not spawned).</value>
+  </data>
+  <data name="SaveGroup" xml:space="preserve">
+    <value>Save Group</value>
+  </data>
+  <data name="EnterGroupName" xml:space="preserve">
+    <value>Please enter a group name.</value>
+  </data>
+  <data name="MessageNotSentError" xml:space="preserve">
+    <value>Message could not be sent. Please try again. (Check if you are in a team!)</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Error: </value>
+  </data>
+  <data name="AssignGroup" xml:space="preserve">
+    <value>Assign Group</value>
+  </data>
+  <data name="GroupSettingsTitle" xml:space="preserve">
+    <value>Group Settings: {0}</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Group Name</value>
+  </data>
+  <data name="EnterGroupNamePlaceholder" xml:space="preserve">
+    <value>Enter group name...</value>
+  </data>
+  <data name="GroupColor" xml:space="preserve">
+    <value>Group Color</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Save Changes</value>
+  </data>
+  <data name="PlayerAnalyticsTitle" xml:space="preserve">
+    <value>Player Activity Analytics &amp; Forecasts</value>
+  </data>
+  <data name="PlayersTitle" xml:space="preserve">
+    <value>Players</value>
+  </data>
+  <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
+    <value>Streamer-Mode &amp; Mini Map Overhaul</value>
+  </data>
+  <data name="StreamerModeTitle" xml:space="preserve">
+    <value>Streamer Mode</value>
+  </data>
+  <data name="PlayerMarkerScalingTitle" xml:space="preserve">
+    <value>Player Marker Scaling</value>
+  </data>
+  <data name="MiniMapPolishTitle" xml:space="preserve">
+    <value>Mini Map Polish</value>
+  </data>
+  <data name="ActionRequiredTitle" xml:space="preserve">
+    <value>Action Required:</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics Removal:</value>
+  </data>
+  <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
+    <value>Player Tracking System Overhaul</value>
+  </data>
+  <data name="HowPlayerTrackingWorks" xml:space="preserve">
+    <value>How Player Tracking Works</value>
+  </data>
+  <data name="AddPlayersToStartTracking" xml:space="preserve">
+    <value>Add players to tracker to start tracking</value>
+  </data>
+  <data name="TrackingActiveStatus" xml:space="preserve">
+    <value>Tracking Active</value>
+  </data>
+  <data name="TrackingIdleStatus" xml:space="preserve">
+    <value>Tracking Idle</value>
+  </data>
+  <data name="FilterPlayers" xml:space="preserve">
+    <value>Filter players...</value>
+  </data>
+  <data name="ConnectToLoadPlayers" xml:space="preserve">
+    <value>Connect to a server to load players list</value>
+  </data>
+  <data name="FetchingPlayersSteam" xml:space="preserve">
+    <value>Fetching players via Steam Query...</value>
+  </data>
+  <data name="TrackID" xml:space="preserve">
+    <value>Track ID</value>
+  </data>
+  <data name="ManualTrackNamePlaceholder" xml:space="preserve">
+    <value>Manual Track Name...</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>No devices.</value>
+  </data>
+  <data name="NoTokenRegistered" xml:space="preserve">
+    <value>No token registered</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>Token expired!</value>
+  </data>
+  <data name="ExpiresInDays" xml:space="preserve">
+    <value>Expires in {0} days</value>
+  </data>
+  <data name="UntilNight" xml:space="preserve">
+    <value>{0} until night</value>
+  </data>
+  <data name="UntilDay" xml:space="preserve">
+    <value>{0} until day</value>
+  </data>
+  <data name="FollowMe" xml:space="preserve">
+    <value>Follow Me</value>
+  </data>
+  <data name="FollowPlayer" xml:space="preserve">
+    <value>Follow {0}</value>
+  </data>
+  <data name="PairingListening" xml:space="preserve">
+    <value>Pairing: listening…</value>
+  </data>
+  <data name="PairingStopped" xml:space="preserve">
+    <value>Pairing: stopped</value>
+  </data>
+  <data name="PairingFailed" xml:space="preserve">
+    <value>Pairing: failed</value>
+  </data>
+  <data name="AlarmActivated" xml:space="preserve">
+    <value>Alarm activated!</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="SmartAlarm" xml:space="preserve">
+    <value>Smart Alarm</value>
+  </data>
+  <data name="UnableToReadLink" xml:space="preserve">
+    <value>Unable to read RustPlus-Link: {0}
+Format: rustplus://IP:PORT</value>
+  </data>
+  <data name="DeletePairingConfigHeader" xml:space="preserve">
+    <value>Reset pairing</value>
+  </data>
+  <data name="DeletePairingConfigBody" xml:space="preserve">
+    <value>Delete existing pairing config?
+You will need to pair again on next start.</value>
+  </data>
+  <data name="ResetListenHeader" xml:space="preserve">
+    <value>Reset + Listen</value>
+  </data>
+  <data name="ResetListenBody" xml:space="preserve">
+    <value>Delete pairing config and immediately re-pair/listen?</value>
+  </data>
+  <data name="ResetListenEdgeHeader" xml:space="preserve">
+    <value>Reset + Listen (Edge)</value>
+  </data>
+  <data name="ResetListenEdgeBody" xml:space="preserve">
+    <value>Delete pairing config and immediately re-pair/listen using Edge?</value>
+  </data>
+  <data name="UpdateQueryFailed" xml:space="preserve">
+    <value>Could not query latest release. Please try again or open Releases page.</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>You are up to date.</value>
+  </data>
+  <data name="UpdateAvailableHeader" xml:space="preserve">
+    <value>Update available</value>
+  </data>
+  <data name="UpdateAvailableBody" xml:space="preserve">
+    <value>New version available: {0}
+Open Releases page?</value>
+  </data>
+  <data name="DownloadAndInstallBody" xml:space="preserve">
+    <value>New version available: {0}
+Download and install now?</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Download failed.</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Update check failed.
+{0}</value>
+  </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>No devices.</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>View Profile</value>
+  </data>
+  <data name="ChangeGroup" xml:space="preserve">
+    <value>Change Group</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="RemoveTracked" xml:space="preserve">
+    <value>Remove Tracked</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="MoreOptions" xml:space="preserve">
+    <value>More Options</value>
+  </data>
+  <data name="RelinkBattlemetricsId" xml:space="preserve">
+    <value>Relink Battlemetrics ID…</value>
+  </data>
+  <data name="DeleteServerEllipsis" xml:space="preserve">
+    <value>Delete server…</value>
+  </data>
+  <data name="RightClickRename" xml:space="preserve">
+    <value>Right click to rename</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>TOGGLE</value>
+  </data>
+  <data name="PopupWindow" xml:space="preserve">
+    <value>Popup-Window</value>
+  </data>
+  <data name="InAppAlert" xml:space="preserve">
+    <value>In-App Alert</value>
+  </data>
+  <data name="AudioAlert" xml:space="preserve">
+    <value>Audio Alert</value>
+  </data>
+  <data name="CustomAudioFile" xml:space="preserve">
+    <value>Custom Audio File...</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>Reset to Default</value>
+  </data>
+  <data name="Snapshot" xml:space="preserve">
+    <value>Snapshot: </value>
+  </data>
+  <data name="ItemsUpkeep" xml:space="preserve">
+    <value> Items, Upkeep=</value>
+  </data>
+  <data name="NoDevicesFound" xml:space="preserve">
+    <value>No devices found</value>
+  </data>
+  <data name="PairDeviceToSee" xml:space="preserve">
+    <value>Pair a smart device, switch or alarm to see it here</value>
+  </data>
+  <data name="TeamTab" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="CenterOnMap" xml:space="preserve">
+    <value>Center on map</value>
+  </data>
+  <data name="FollowOnMap" xml:space="preserve">
+    <value>Follow on Map</value>
+  </data>
+  <data name="OpenSteamProfile" xml:space="preserve">
+    <value>Open Steam profile</value>
+  </data>
+  <data name="PromoteToLeader" xml:space="preserve">
+    <value>Promote to Leader</value>
+  </data>
+  <data name="KickFromTeam" xml:space="preserve">
+    <value>Kick from Team</value>
+  </data>
+  <data name="ProfileMarkers" xml:space="preserve">
+    <value>Profile markers</value>
+  </data>
+  <data name="DeathMarkers" xml:space="preserve">
+    <value>Death markers</value>
+  </data>
+  <data name="CamerasTab" xml:space="preserve">
+    <value>Cameras</value>
+  </data>
+  <data name="AddCamera" xml:space="preserve">
+    <value>Add Camera</value>
+  </data>
+  <data name="NoCamerasFound" xml:space="preserve">
+    <value>No cameras found</value>
+  </data>
+  <data name="PairCameraToSee" xml:space="preserve">
+    <value>Pair a camera to see its preview here</value>
+  </data>
+  <data name="PlayersTab" xml:space="preserve">
+    <value>Players</value>
+  </data>
+  <data name="HowToTrack" xml:space="preserve">
+    <value>How to Track</value>
+  </data>
+  <data name="LearnHowTrackingWorks" xml:space="preserve">
+    <value>Learn how player tracking works</value>
+  </data>
+  <data name="OnlineTab" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="OnlinePlayers" xml:space="preserve">
+    <value>Online Players</value>
+  </data>
+  <data name="SearchBM" xml:space="preserve">
+    <value>Search BM</value>
+  </data>
+  <data name="SearchServerBM" xml:space="preserve">
+    <value>Search current server on BattleMetrics</value>
+  </data>
+  <data name="Popout" xml:space="preserve">
+    <value>Popout</value>
+  </data>
+  <data name="OpenPlayersSeparateWindow" xml:space="preserve">
+    <value>Open Players in separate window</value>
+  </data>
+  <data name="Track" xml:space="preserve">
+    <value>Track</value>
+  </data>
+  <data name="ManualTrackPlaceholder" xml:space="preserve">
+    <value>Manual Track Name or Steam ID...</value>
+  </data>
+  <data name="FilterPlayersPlaceholder" xml:space="preserve">
+    <value>Filter players...</value>
+  </data>
+  <data name="LoadingPlayers" xml:space="preserve">
+    <value>Loading players...</value>
+  </data>
+  <data name="TrackedTab" xml:space="preserve">
+    <value>Tracked</value>
+  </data>
+  <data name="TrackedPlayers" xml:space="preserve">
+    <value>Tracked Players</value>
+  </data>
+  <data name="ManageGroups" xml:space="preserve">
+    <value>Manage Groups</value>
+  </data>
+  <data name="ViewFullAnalysisReport" xml:space="preserve">
+    <value>View Full Analysis Report</value>
+  </data>
+  <data name="ReadyToExploreMap" xml:space="preserve">
+    <value>Ready to explore the map?</value>
+  </data>
+  <data name="ConnectToLoadMap" xml:space="preserve">
+    <value>Connect to a selected server to load the live Rust map and team.</value>
+  </data>
+  <data name="ReadyToDominate" xml:space="preserve">
+    <value>Ready to dominate Rust?</value>
+  </data>
+  <data name="PairAccountBenefits" xml:space="preserve">
+    <value>Pair your account to start tracking players, receiving base raid alerts, and controlling your smart devices instantly.</value>
+  </data>
+  <data name="LoginPairAccount" xml:space="preserve">
+    <value>Login &amp; Pair Account</value>
+  </data>
+  <data name="RequiresSteamLogin" xml:space="preserve">
+    <value>Requires Steam login in your default browser.</value>
+  </data>
+  <data name="DeleteServerHeader" xml:space="preserve">
+    <value>Delete Server?</value>
+  </data>
+  <data name="DeleteServerConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete this server? This action cannot be undone.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="DeleteAction" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="AutoHideAfter3s" xml:space="preserve">
+    <value>Auto-hide after 3s</value>
+  </data>
+  <data name="MapFilters" xml:space="preserve">
+    <value>MAP FILTERS</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>Grid</value>
+  </data>
+  <data name="Monuments" xml:space="preserve">
+    <value>Monuments</value>
+  </data>
+  <data name="Shops" xml:space="preserve">
+    <value>Shops</value>
+  </data>
+  <data name="ChatAlerts" xml:space="preserve">
+    <value>CHAT ALERTS</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Alerts</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>Configure</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Deselect All</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>EVENTS</value>
+  </data>
+  <data name="CargoShip" xml:space="preserve">
+    <value>Cargo Ship</value>
+  </data>
+  <data name="CargoSpawn" xml:space="preserve">
+    <value>Spawn</value>
+  </data>
+  <data name="CargoDock" xml:space="preserve">
+    <value>Harbor Docking</value>
+  </data>
+  <data name="CargoEgress" xml:space="preserve">
+    <value>Departure (5m Warning)</value>
+  </data>
+  <data name="CargoArrival" xml:space="preserve">
+    <value>Arrival Warning (5m before Dock)</value>
+  </data>
+  <data name="Heli" xml:space="preserve">
+    <value>Patrol Helicopter</value>
+  </data>
+  <data name="Chinook" xml:space="preserve">
+    <value>Chinook (CH47)</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>Travelling Vendor</value>
+  </data>
+  <data name="OilRig" xml:space="preserve">
+    <value>Oil Rig Trigger</value>
+  </data>
+  <data name="DeepSea" xml:space="preserve">
+    <value>Deep Sea Event</value>
+  </data>
+  <data name="SmartAlerts" xml:space="preserve">
+    <value>Smart Alerts</value>
+  </data>
+  <data name="PlayerOnline" xml:space="preserve">
+    <value>Online Status</value>
+  </data>
+  <data name="PlayerOffline" xml:space="preserve">
+    <value>Offline Status</value>
+  </data>
+  <data name="AnnounceTracking" xml:space="preserve">
+    <value>Tracking Notifications</value>
+  </data>
+  <data name="PlayerDeathSelf" xml:space="preserve">
+    <value>Self Death</value>
+  </data>
+  <data name="PlayerDeathTeam" xml:space="preserve">
+    <value>Team Death</value>
+  </data>
+  <data name="PlayerRespawnSelf" xml:space="preserve">
+    <value>Self Respawn</value>
+  </data>
+  <data name="PlayerRespawnTeam" xml:space="preserve">
+    <value>Team Respawn</value>
+  </data>
+  <data name="NewShops" xml:space="preserve">
+    <value>New Shops</value>
+  </data>
+  <data name="SuspiciousShops" xml:space="preserve">
+    <value>Suspicious Shops</value>
+  </data>
+  <data name="TradeAlerts" xml:space="preserve">
+    <value>Trade Alerts</value>
+  </data>
+  <data name="CrosshairStyle" xml:space="preserve">
+    <value>Crosshair Style</value>
+  </data>
+  <data name="GreenDot" xml:space="preserve">
+    <value>Green Dot</value>
+  </data>
+  <data name="MiniGreen" xml:space="preserve">
+    <value>Mini Green</value>
+  </data>
+  <data name="OpenCrosshairRG" xml:space="preserve">
+    <value>Open Crosshair (R/G)</value>
+  </data>
+  <data name="ThinRedCircle" xml:space="preserve">
+    <value>Thin Red Circle</value>
+  </data>
+  <data name="SquareDot" xml:space="preserve">
+    <value>Square + Dot</value>
+  </data>
+  <data name="MagentaDot" xml:space="preserve">
+    <value>Magenta Dot</value>
+  </data>
+  <data name="MagentaOpenCross" xml:space="preserve">
+    <value>Magenta Open Cross</value>
+  </data>
+  <data name="RangeLineTicks" xml:space="preserve">
+    <value>Range Line (ticks)</value>
+  </data>
+  <data name="DrawCrosshair" xml:space="preserve">
+    <value>Draw Crosshair...</value>
+  </data>
+  <data name="ChooseMonitor" xml:space="preserve">
+    <value>Choose monitor</value>
+  </data>
+  <data name="DrawOverlay" xml:space="preserve">
+    <value>Draw Overlay</value>
+  </data>
+  <data name="DrawToolTip" xml:space="preserve">
+    <value>Draw (Right Click: Size / Color)</value>
+  </data>
+  <data name="PlaceTextToolTip" xml:space="preserve">
+    <value>Place Text (Right Click: Color / Size)</value>
+  </data>
+  <data name="PlaceIconToolTip" xml:space="preserve">
+    <value>Place Icon (Right Click: Pick Icon)</value>
+  </data>
+  <data name="EraserToolTip" xml:space="preserve">
+    <value>Eraser (hold or click)</value>
+  </data>
+  <data name="DeleteOverlayToolTip" xml:space="preserve">
+    <value>Delete own overlay</value>
+  </data>
+  <data name="UploadOverlayToolTip" xml:space="preserve">
+    <value>Upload own Overlay / share</value>
+  </data>
+  <data name="ProfitTrades" xml:space="preserve">
+    <value>Profit Trades</value>
+  </data>
+  <data name="ArbitrageOpportunities" xml:space="preserve">
+    <value>Direct arbitrage opportunities | buy low → sell high.</value>
+  </data>
+  <data name="BuyXForY" xml:space="preserve">
+    <value>Buy X for Y</value>
+  </data>
+  <data name="Analyze" xml:space="preserve">
+    <value>Analyze</value>
+  </data>
+  <data name="IWantToGet" xml:space="preserve">
+    <value>I want to GET</value>
+  </data>
+  <data name="ICanPayWith" xml:space="preserve">
+    <value>I can PAY WITH</value>
+  </data>
+  <data name="TeamChat" xml:space="preserve">
+    <value>Team Chat</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="FcmCredentials" xml:space="preserve">
+    <value>FCM Credentials</value>
+  </data>
+  <data name="RightClickConfigure" xml:space="preserve">
+    <value>Right-click to configure</value>
+  </data>
+  <data name="ResetMap" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetMapToolTip" xml:space="preserve">
+    <value>Reset map zoom and position</value>
+  </data>
+  <data name="MiniMap" xml:space="preserve">
+    <value>Mini</value>
+  </data>
+  <data name="CrosshairToolTip" xml:space="preserve">
+    <value>Crosshair on/off (Right Click For Options)</value>
+  </data>
+  <data name="TrackPlayer" xml:space="preserve">
+    <value>TRACK PLAYER</value>
+  </data>
+  <data name="CloseBMBrowser" xml:space="preserve">
+    <value>Close BattleMetrics Browser</value>
+  </data>
+  <data name="ShopSearchTitle" xml:space="preserve">
+    <value>SHOP SEARCH</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>Close Search</value>
+  </data>
+  <data name="ActivateShopsFirst" xml:space="preserve">
+    <value>Please activate Shops first</value>
+  </data>
+  <data name="ActivateShopPolling" xml:space="preserve">
+    <value>Activate Shop polling</value>
+  </data>
+  <data name="TeamChatTitle" xml:space="preserve">
+    <value>TEAM CHAT</value>
+  </data>
+  <data name="CloseChat" xml:space="preserve">
+    <value>Close Chat</value>
+  </data>
+  <data name="ChatCommandsSettings" xml:space="preserve">
+    <value>Chat Commands Settings</value>
+  </data>
+  <data name="ChatCommands" xml:space="preserve">
+    <value>Chat Commands</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Forward" xml:space="preserve">
+    <value>Forward</value>
+  </data>
+  <data name="OpenInExternalBrowser" xml:space="preserve">
+    <value>Open in external browser</value>
+  </data>
+  <data name="SearchBMPlaceholder" xml:space="preserve">
+    <value>Search BM...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="SelectAServer" xml:space="preserve">
+    <value>Select a Server</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>DISCONNECTED</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>CONNECTING...</value>
+  </data>
+  <data name="StatusInitializing" xml:space="preserve">
+    <value>INITIALIZING...</value>
+  </data>
+  <data name="StatusDevicesActive" xml:space="preserve">
+    <value>DEVICES ACTIVE</value>
+  </data>
+  <data name="StatusFullyConnected" xml:space="preserve">
+    <value>FULLY CONNECTED</value>
+  </data>
+  <data name="StatusUnknown" xml:space="preserve">
+    <value>UNKNOWN</value>
+  </data>
+  <data name="MayTakeAMoment" xml:space="preserve">
+    <value>This may take a moment...</value>
+  </data>
+  <data name="AppSettingsTitle" xml:space="preserve">
+    <value>Application Settings</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="LaunchWithWindows" xml:space="preserve">
+    <value>Launch with Windows (Minimized)</value>
+  </data>
+  <data name="StartMinimizedAlways" xml:space="preserve">
+    <value>Start Minimized (Always)</value>
+  </data>
+  <data name="AutoConnectLastServer" xml:space="preserve">
+    <value>Auto-Connect to last server on startup</value>
+  </data>
+  <data name="AutoConnectToolTip" xml:space="preserve">
+    <value>Automatically reconnects to the last server and loads the map.</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Behavior</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>Minimize to Tray instead of closing</value>
+  </data>
+  <data name="BackgroundTracking" xml:space="preserve">
+    <value>Enable Background Player Tracking</value>
+  </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>Keeps tracking players via BattleMetrics even when minimized.</value>
+  </data>
+  <data name="HideSystemConsole" xml:space="preserve">
+    <value>Hide System Console (Declutter)</value>
+  </data>
+  <data name="HideConsoleToolTip" xml:space="preserve">
+    <value>Hides the bottom log/console panel to save map space.</value>
+  </data>
+  <data name="MapSettings" xml:space="preserve">
+    <value>Map Settings</value>
+  </data>
+  <data name="AutoLoadShops" xml:space="preserve">
+    <value>Auto load shops on connection</value>
+  </data>
+  <data name="AutoLoadShopsToolTip" xml:space="preserve">
+    <value>Automatically starts polling shops and alerts when connected to a server.</value>
+  </data>
+  <data name="UseMonumentNames" xml:space="preserve">
+    <value>Use monument text labels instead of icons</value>
+  </data>
+  <data name="UseMonumentNamesToolTip" xml:space="preserve">
+    <value>When enabled, Rust map monument names are rendered as text using the Permanent Marker font instead of icons.</value>
+  </data>
+  <data name="MonumentStyle" xml:space="preserve">
+    <value>Monument Style:</value>
+  </data>
+  <data name="MonumentScale" xml:space="preserve">
+    <value>Monument Scale:</value>
+  </data>
+  <data name="MonumentOpacity" xml:space="preserve">
+    <value>Monument Opacity:</value>
+  </data>
+  <data name="MonumentStyleIcons" xml:space="preserve">
+    <value>Icons by rustmaps.com</value>
+  </data>
+  <data name="MonumentStyleText" xml:space="preserve">
+    <value>Original text monument names</value>
+  </data>
+  <data name="CreditsTitle" xml:space="preserve">
+    <value>Credits</value>
+  </data>
+  <data name="CreditsIconsPrefix" xml:space="preserve">
+    <value>Map monument icons provided by </value>
+  </data>
+  <data name="CreditsIconsSuffix" xml:space="preserve">
+    <value> — used with permission.</value>
+  </data>
+  <data name="CreditsIconsNote" xml:space="preserve">
+    <value>All monument icons and related artwork are the property of rustmaps.com. Thank you for supporting the Rust community!</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="ModifyChatAlerts" xml:space="preserve">
+    <value>Modify Chat Alerts</value>
+  </data>
+  <data name="ManageSteamAccountInfo" xml:space="preserve">
+    <value>Manage your linked Steam account in the main window.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="IncomingAlarms" xml:space="preserve">
+    <value>INCOMING ALARMS</value>
+  </data>
+  <data name="Wipe" xml:space="preserve">
+    <value>Wipe</value>
+  </data>
+  <data name="PlayersOnly" xml:space="preserve">
+    <value>Players</value>
+  </data>
+  <data name="PlayersHeader" xml:space="preserve">
+    <value>Players</value>
+  </data>
+  <data name="IWantToGetToolTip" xml:space="preserve">
+    <value>I want to GET (e.g. Crude Oil)</value>
+  </data>
+  <data name="ICanPayWithToolTip" xml:space="preserve">
+    <value>I want to PAY WITH (e.g. Scrap)</value>
+  </data>
+  <data name="DeleteServerConfirmFormatted" xml:space="preserve">
+    <value>Are you sure you want to delete Server "{0}"? This action cannot be undone.</value>
+  </data>
+  <data name="PairingError" xml:space="preserve">
+    <value>Pairing: error</value>
+  </data>
+  <data name="PairingStarting" xml:space="preserve">
+    <value>Pairing: starting...</value>
+  </data>
+  <data name="StartingPairingListener" xml:space="preserve">
+    <value>Starting Pairing-Listener...</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+    <value>Logged In</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>Stock</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>ACTIVE</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>INACTIVE</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>GROUP</value>
+  </data>
+  <data name="ImportDevicesTitle" xml:space="preserve">
+    <value>Rust+ Desk – Import Devices</value>
+  </data>
+  <data name="ImportDevicesHeader" xml:space="preserve">
+    <value>Import devices</value>
+  </data>
+  <data name="ImportDevicesSelectPrompt" xml:space="preserve">
+    <value>Select which devices you want to import for this server.</value>
+  </data>
+  <data name="CheckDeviceStatus" xml:space="preserve">
+    <value>Check device status</value>
+  </data>
+  <data name="ImportSelected" xml:space="preserve">
+    <value>Import selected</value>
+  </data>
+  <data name="BmShortcuts" xml:space="preserve">
+    <value>BM Shortcuts</value>
+  </data>
+  <data name="PairingConfigDeleted" xml:space="preserve">
+    <value>Pairing: config deleted</value>
+  </data>
+  <data name="TrayIconDefault" xml:space="preserve">
+    <value>Rust+ Desk Tracker</value>
+  </data>
+  <data name="TrayIconTracking" xml:space="preserve">
+    <value>Rust+ Desk (Tracking {0})</value>
+  </data>
+  <data name="RenameGroup" xml:space="preserve">
+    <value>Rename Group</value>
+  </data>
+  <data name="NewNameForGroup" xml:space="preserve">
+    <value>New name for group:</value>
+  </data>
+  <data name="NewNameForDevice" xml:space="preserve">
+    <value>New name for #{0}:</value>
+  </data>
+  <data name="EnterBattlemetricsIdFor" xml:space="preserve">
+    <value>Enter Battlemetrics Server ID for "{0}":</value>
+  </data>
+  <data name="TrayTrackingStatus" xml:space="preserve">
+    <value>Tracking: {0}</value>
+  </data>
+  <data name="TrayLastUpdate" xml:space="preserve">
+    <value>Last update: {0}</value>
+  </data>
+  <data name="OpenRustPlusDesk" xml:space="preserve">
+    <value>Open Rust+ Desk</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>Camera</value>
+  </data>
+  <data name="Alarms" xml:space="preserve">
+    <value>Alarms</value>
+  </data>
+  <data name="Identifier" xml:space="preserve">
+    <value>Identifier:</value>
+  </data>
+  <data name="FPS" xml:space="preserve">
+    <value>FPS:</value>
+  </data>
+  <data name="CameraFPSNote" xml:space="preserve">
+    <value>Note: 2 fps is recommended, higher FPS likely close your connection to server</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>Pixel</value>
+  </data>
+  <data name="Pen" xml:space="preserve">
+    <value>Pen</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>Line</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>Square</value>
+  </data>
+  <data name="Circle" xml:space="preserve">
+    <value>Circle</value>
+  </data>
+  <data name="Thickness" xml:space="preserve">
+    <value>Thickness:</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Opacity:</value>
+  </data>
+  <data name="UploadPNG" xml:space="preserve">
+    <value>Upload PNG</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="AssignGlobalHotkeys" xml:space="preserve">
+    <value>Assign global hotkeys to Smart Switches. Multiple devices can share one hotkey (will toggle sequentially).</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Device</value>
+  </data>
+  <data name="EntityId" xml:space="preserve">
+    <value>EntityId</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>Hotkey</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Set</value>
+  </data>
+  <data name="CloseDeactivate" xml:space="preserve">
+    <value>Close &amp; Deactivate</value>
+  </data>
+  <data name="CloseActivate" xml:space="preserve">
+    <value>Close &amp; Activate</value>
+  </data>
+  <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
+    <value>Upkeep, Minimap &amp; Tracking Update</value>
+  </data>
+  <data name="FeatureSummaryAdjustments" xml:space="preserve">
+    <value>Feature Summary &amp; Adjustments</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>Don't show this again</value>
+  </data>
+  <data name="AwesomeLetsGo" xml:space="preserve">
+    <value>Awesome, let's go!</value>
+  </data>
+  <data name="MiniMapSettings" xml:space="preserve">
+    <value>Mini-Map Settings</value>
+  </data>
+  <data name="Shape" xml:space="preserve">
+    <value>Shape</value>
+  </data>
+  <data name="Rectangle" xml:space="preserve">
+    <value>Rectangle</value>
+  </data>
+  <data name="OpacityLabel" xml:space="preserve">
+    <value>Opacity: {0}%</value>
+  </data>
+  <data name="SizeLabel" xml:space="preserve">
+    <value>Size: {0}% (SHIFT+Mousewheel)</value>
+  </data>
+  <data name="ShowServerTime" xml:space="preserve">
+    <value>Show Server Time</value>
+  </data>
+  <data name="ServerInformation" xml:space="preserve">
+    <value>Server Information</value>
+  </data>
+  <data name="NoDescriptionAvailable" xml:space="preserve">
+    <value>No description available.</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Current Version: {0}</value>
+  </data>
+  <data name="PatchNotesHeader" xml:space="preserve">
+    <value>Patch Notes &amp; Version History</value>
+  </data>
+  <data name="EnableChatCommands" xml:space="preserve">
+    <value>Enable Chat Commands</value>
+  </data>
+  <data name="Prefix" xml:space="preserve">
+    <value>Prefix:</value>
+  </data>
+  <data name="StandardCommands" xml:space="preserve">
+    <value>Standard Commands</value>
+  </data>
+  <data name="Population" xml:space="preserve">
+    <value>Population:</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Time:</value>
+  </data>
+  <data name="Promote" xml:space="preserve">
+    <value>Promote:</value>
+  </data>
+  <data name="DeepSeaCommand" xml:space="preserve">
+    <value>Deep Sea:</value>
+  </data>
+  <data name="CargoShipCommand" xml:space="preserve">
+    <value>Cargo Ship:</value>
+  </data>
+  <data name="OilRigCommand" xml:space="preserve">
+    <value>Oil Rig:</value>
+  </data>
+  <data name="PatrolHeliCommand" xml:space="preserve">
+    <value>Patrol Heli:</value>
+  </data>
+  <data name="TravellingVendorCommand" xml:space="preserve">
+    <value>Travelling Vendor:</value>
+  </data>
+  <data name="UpkeepDetails" xml:space="preserve">
+    <value>Upkeep Details:</value>
+  </data>
+  <data name="CommandDelay" xml:space="preserve">
+    <value>Command Delay:</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Select Language</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>Changing language requires a restart to take full effect.</value>
+  </data>
+  <data name="SmartSwitches" xml:space="preserve">
+    <value>Smart Switches</value>
+  </data>
+  <data name="UpkeepTcMonitors" xml:space="preserve">
+    <value>Upkeep (TC) Monitors</value>
+  </data>
+  <data name="NoTcMonitorsFound" xml:space="preserve">
+    <value>No TC monitors found.</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Save &amp; Close</value>
+  </data>
+  <data name="ChatMessagePlaceholder" xml:space="preserve">
+    <value>Message...</value>
+  </data>
+  <data name="ChatErrorPlaceholder" xml:space="preserve">
+    <value>Error message here</value>
+  </data>
+  <data name="HeliEventName" xml:space="preserve">
+    <value>Patrol Heli</value>
+  </data>
+  <data name="HeliActiveRunningFor" xml:space="preserve">
+    <value>Patrol Heli active – running for {0}</value>
+  </data>
+  <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
+    <value>Connected mid-event – spawn time unknown</value>
+  </data>
+  <data name="HeliActiveSpawnUnknown" xml:space="preserve">
+    <value>Patrol Heli active (spawn time unknown)</value>
+  </data>
+  <data name="HeliShotDownAgo" xml:space="preserve">
+    <value>Patrol Heli shot down {0} ago this session</value>
+  </data>
+  <data name="HeliLeftMapAgo" xml:space="preserve">
+    <value>Patrol Heli left the map {0} ago this session</value>
+  </data>
+  <data name="CargoDockedDepartsIn" xml:space="preserve">
+    <value>Docked at {0} – departs in ~{1}</value>
+  </data>
+  <data name="HarborFallback" xml:space="preserve">
+    <value>harbor</value>
+  </data>
+  <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
+    <value>Already docked on connect – depart time unknown</value>
+  </data>
+  <data name="CargoDockedDurationNotLearned" xml:space="preserve">
+    <value>Docked at {0} (dock duration not yet learned)</value>
+  </data>
+  <data name="CargoTimeRemainingOnMap" xml:space="preserve">
+    <value>Time remaining on map (from spawn)</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
+    <value>Connected mid-route – time unknown</value>
+  </data>
+  <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
+    <value>Connected mid-route – time unknown (route ~{0}m total)</value>
+  </data>
+  <data name="CargoDespawnedAgo" xml:space="preserve">
+    <value>Cargo Ship despawned {0}m {1}s ago this session</value>
+  </data>
+  <data name="VendorActiveRunningFor" xml:space="preserve">
+    <value>Travelling Vendor active – running for {0}</value>
+  </data>
+  <data name="VendorActiveSpawnUnknown" xml:space="preserve">
+    <value>Travelling Vendor active (spawn time unknown)</value>
+  </data>
+  <data name="VendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor despawned {0} ago this session</value>
+  </data>
+  <data name="DeepSeaActiveRunningFor" xml:space="preserve">
+    <value>Deep Sea active – running for {0}</value>
+  </data>
+  <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
+    <value>Deep Sea active (spawn time unknown)</value>
+  </data>
+  <data name="DeepSeaEndedAgo" xml:space="preserve">
+    <value>Deep Sea ended {0} ago this session</value>
+  </data>
+  <data name="TimerHoursMinutes" xml:space="preserve">
+    <value>{0}h {1:D2}m</value>
+  </data>
+  <data name="TimerMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1:D2}s</value>
+  </data>
+  <data name="AgoHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="DurationMinutesSeconds" xml:space="preserve">
+    <value>{0}m {1}s</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}s</value>
+  </data>
+  <data name="ChatCmdPopResponse" xml:space="preserve">
+    <value>{0} players currently online.{1}</value>
+  </data>
+  <data name="ChatCmdPopQueue" xml:space="preserve">
+    <value> Queue: {0} players.</value>
+  </data>
+  <data name="ChatCmdTimeResponse" xml:space="preserve">
+    <value>Current in-game time: {0}.</value>
+  </data>
+  <data name="ChatCmdPromoteResponse" xml:space="preserve">
+    <value>{0} was promoted to leader.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActive" xml:space="preserve">
+    <value>Deep Sea is active! Running for {0}.</value>
+  </data>
+  <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
+    <value>Deep Sea is currently active (connected mid-event – spawn time unknown).</value>
+  </data>
+  <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
+    <value>Deep Sea ended {0} minutes ago this session.</value>
+  </data>
+  <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
+    <value>Deep Sea event status unknown (not seen this session).</value>
+  </data>
+  <data name="ChatCmdCargoNotActive" xml:space="preserve">
+    <value>Cargo Ship not active.</value>
+  </data>
+  <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
+    <value>Cargo Ship docked at {0}. Departs in approx. {1} minutes.</value>
+  </data>
+  <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
+    <value>Cargo Ship docked at {0} and preparing to depart.</value>
+  </data>
+  <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
+    <value>Cargo Ship docked at {0} (departure time unknown).</value>
+  </data>
+  <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
+    <value>Cargo Ship active. Leaves in approx. {0} minutes.</value>
+  </data>
+  <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
+    <value>Cargo Ship active and preparing to leave soon.</value>
+  </data>
+  <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
+    <value>Cargo Ship active (route duration not yet learned for this server).</value>
+  </data>
+  <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
+    <value>Cargo Ship active (connected after spawn – remaining time unknown).</value>
+  </data>
+  <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
+    <value>Cargo Ship not active. Despawned {0} minutes ago this session.</value>
+  </data>
+  <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
+    <value>{0}: crate in {1}m {2}s</value>
+  </data>
+  <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
+    <value>{0}: last called {1}m ago</value>
+  </data>
+  <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
+    <value>{0}: not called this session</value>
+  </data>
+  <data name="ChatCmdHeliActive" xml:space="preserve">
+    <value>Patrol Heli is active! Running for {0}.</value>
+  </data>
+  <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
+    <value>Patrol Heli is currently active (connected mid-event – spawn time unknown).</value>
+  </data>
+  <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
+    <value>Patrol Heli not active. It was {0} {1} ago this session.</value>
+  </data>
+  <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
+    <value>shot down</value>
+  </data>
+  <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
+    <value>left the map</value>
+  </data>
+  <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
+    <value>Patrol Heli event status unknown (not seen this session).</value>
+  </data>
+  <data name="ChatCmdVendorActive" xml:space="preserve">
+    <value>Travelling Vendor is active! Running for {0}.</value>
+  </data>
+  <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
+    <value>Travelling Vendor is currently active (connected mid-event – spawn time unknown).</value>
+  </data>
+  <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
+    <value>Travelling Vendor not active. Despawned {0} ago this session.</value>
+  </data>
+  <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
+    <value>Travelling Vendor event status unknown (not seen this session).</value>
+  </data>
+  <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
+    <value>No Tool Cupboards are mapped for upkeep commands.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
+    <value>Upkeep in {0} TC: Empty or expired.</value>
+  </data>
+  <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
+    <value> Need/24h: {0}.</value>
+  </data>
+  <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
+    <value>Upkeep in {0} TC: {1}.</value>
+  </data>
+  <data name="ChatCmdUpkeepDays" xml:space="preserve">
+    <value>{0} days</value>
+  </data>
+  <data name="ChatCmdUpkeepHours" xml:space="preserve">
+    <value>{0} hours</value>
+  </data>
+  <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
+    <value>{0} minutes</value>
+  </data>
+  <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
+    <value>{0}: Empty/expired</value>
+  </data>
+  <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
+    <value>{0}: {1}d, {2}h</value>
+  </data>
+  <data name="ChatCmdUpkeepHeader" xml:space="preserve">
+    <value>Upkeep: {0}</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
+    <value>Bound Tool Cupboard monitors not found or not paired.</value>
+  </data>
+  <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
+    <value>Bound Tool Cupboard monitor not found or not paired.</value>
+  </data>
+  <data name="ChatCmdSwitchToggled" xml:space="preserve">
+    <value>{0} turned {1}.</value>
+  </data>
+  <data name="ChatCmdSwitchStateOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="ChatCmdSwitchStateOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
+    <value>Bound Smart Switch not found or not paired.</value>
+  </data>
+  <data name="MaterialWood" xml:space="preserve">
+    <value>Wood</value>
+  </data>
+  <data name="MaterialStone" xml:space="preserve">
+    <value>Stone</value>
+  </data>
+  <data name="MaterialMetal" xml:space="preserve">
+    <value>Metal</value>
+  </data>
+  <data name="MaterialHQM" xml:space="preserve">
+    <value>HQM</value>
+  </data>
+  <data name="SmallOilRig" xml:space="preserve">
+    <value>Small Oil Rig</value>
+  </data>
+  <data name="LargeOilRig" xml:space="preserve">
+    <value>Large Oil Rig</value>
+  </data>
+  <data name="ShopWord" xml:space="preserve">
+    <value>Shop</value>
+  </data>
+  <data name="EventCargoShip" xml:space="preserve">
+    <value>Cargo Ship</value>
+  </data>
+  <data name="EventTravellingVendor" xml:space="preserve">
+    <value>Travelling Vendor</value>
+  </data>
+  <data name="EventCH47" xml:space="preserve">
+    <value>CH47</value>
+  </data>
+  <data name="EventPatrolHelicopter" xml:space="preserve">
+    <value>Patrol Helicopter</value>
+  </data>
+  <data name="EventOilrigCrate" xml:space="preserve">
+    <value>Oilrig Crate</value>
+  </data>
+  <data name="EventExplosion" xml:space="preserve">
+    <value>Explosion</value>
+  </data>
+  <data name="EventBuildingBlocked" xml:space="preserve">
+    <value>Building Blocked</value>
+  </data>
+  <data name="EventGeneric" xml:space="preserve">
+    <value>Event</value>
+  </data>
+  <data name="AlertOilRigTriggered" xml:space="preserve">
+    <value>[{0}] triggered! Crate unlocks in {1}.</value>
+  </data>
+  <data name="AlertAlarmTriggered" xml:space="preserve">
+    <value>ALARM: {0} triggered!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
+    <value>[{0}] Crate unlocks in 10 minutes!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
+    <value>[{0}] Crate unlocks in 5 minutes!</value>
+  </data>
+  <data name="AlertDeepSeaUp" xml:space="preserve">
+    <value>Deep Sea is up</value>
+  </data>
+  <data name="AlertNewShop" xml:space="preserve">
+    <value>New shop {0} [{1}]: {2}</value>
+  </data>
+  <data name="AlertSuspiciousShop" xml:space="preserve">
+    <value>Suspicious shop {0} [{1}] was online {2}s, sold {3}</value>
+  </data>
+  <data name="AlertCargoSpawned" xml:space="preserve">
+    <value>Cargo Ship spawned {0}</value>
+  </data>
+  <data name="CargoFarOutAtSea" xml:space="preserve">
+    <value>far out at sea (near {0})</value>
+  </data>
+  <data name="AlertCargoDocked" xml:space="preserve">
+    <value>Cargo Ship docked at {0} ({1})</value>
+  </data>
+  <data name="AlertCargoExpectedDock" xml:space="preserve">
+    <value>Cargo Ship expected to dock at {0} ({1}) in approx. 5 minutes.</value>
+  </data>
+  <data name="AlertCargoDeparting" xml:space="preserve">
+    <value>Cargo Ship departing from {0} in 5 minutes ({1})</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
+    <value>Crash detected due to server lag — Heli is still on map at {0}</value>
+  </data>
+  <data name="AlertEventSpawned" xml:space="preserve">
+    <value>{0} spawned in at {1}</value>
+  </data>
+  <data name="AlertHeliShotDown" xml:space="preserve">
+    <value>Patrol Heli shot down at {0}</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>unknown</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
+    <value>{0} came online @ {1}</value>
+  </data>
+  <data name="AlertPlayerOffline" xml:space="preserve">
+    <value>{0} went offline</value>
+  </data>
+  <data name="AlertPlayerDied" xml:space="preserve">
+    <value>{0} died @ {1}</value>
+  </data>
+  <data name="AlertPlayerRespawned" xml:space="preserve">
+    <value>{0} respawned @ {1}</value>
+  </data>
+  <data name="AlertTrackingOnline" xml:space="preserve">
+    <value>[Tracking] {0}{1} is now ONLINE</value>
+  </data>
+  <data name="AlertTrackingOffline" xml:space="preserve">
+    <value>[Tracking] {0}{1} is now OFFLINE</value>
+  </data>
+  <data name="AlertTrackingRenamed" xml:space="preserve">
+    <value>[Tracking] {0}{1} renamed to {2}!</value>
+  </data>
+  <data name="AlertShopSells" xml:space="preserve">
+    <value>sells</value>
+  </data>
+  <data name="AlertShopBuys" xml:space="preserve">
+    <value>buys</value>
+  </data>
+  <data name="AlertShopLabelFallback" xml:space="preserve">
+    <value>Shop</value>
+  </data>
+  <data name="AlertShopMatch" xml:space="preserve">
+    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) for {6} {7}</value>
+  </data>
+  <data name="ListCommandsCommand" xml:space="preserve">
+    <value>List Chat Commands</value>
+  </data>
+  <data name="ChatCmdListHeader" xml:space="preserve">
+    <value>COMMANDS: {0}</value>
+  </data>
+  <data name="Update530Title" xml:space="preserve">
+    <value>Localization, UI Modernization &amp; Storage</value>
+  </data>
+  <data name="FeatureLanguage" xml:space="preserve">
+    <value>Dynamic Locale Switching</value>
+  </data>
+  <data name="FeatureLanguageDesc" xml:space="preserve">
+    <value> — 30+ languages to pick</value>
+  </data>
+  <data name="FeatureChatCommands" xml:space="preserve">
+    <value>Chat Commands UI</value>
+  </data>
+  <data name="FeatureChatCommandsDesc" xml:space="preserve">
+    <value> — Isolated view for clean look</value>
+  </data>
+  <data name="FeatureSettings" xml:space="preserve">
+    <value>New Settings Overlay</value>
+  </data>
+  <data name="FeatureSettingsDesc" xml:space="preserve">
+    <value> — Clean sidebar for all settings</value>
+  </data>
+  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
+    <value>BattleMetrics Tracking Removed</value>
+  </data>
+  <data name="YourBaseIsUnderAttack" xml:space="preserve">
+    <value>Your base is under attack!</value>
+  </data>
+  <data name="PleaseConnectFirst" xml:space="preserve">
+    <value>Please connect to a server first.</value>
+  </data>
+  <data name="NotConnectedError" xml:space="preserve">
+    <value>You are not connected to any server.</value>
+  </data>
+  <data name="ChatNotAvailable" xml:space="preserve">
+    <value>Chat is not available right now.</value>
+  </data>
+  <data name="PleaseSelectServerFirst" xml:space="preserve">
+    <value>Please select a server first.</value>
+  </data>
+  <data name="SnackbarTitleConnection" xml:space="preserve">
+    <value>Connection</value>
+  </data>
+  <data name="SnackbarTitleChat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="HowToTrackPlayersTitle" xml:space="preserve">
+    <value>How to Track Players</value>
+  </data>
+  <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
+    <value>Native UDP tracking</value>
+  </data>
+  <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
+    <value>The tracking guide is currently only available in English, as it will undergo changes in the near future. We ask for your patience.</value>
+  </data>
+  <data name="HowToTrackCloseHint" xml:space="preserve">
+    <value>Close this window at any time — you can reopen it with the  ❓ How to Track  button.</value>
+  </data>
+  <data name="MaintenanceTitle" xml:space="preserve">
+    <value>Maintenance</value>
+  </data>
+  <data name="MaintenanceDesc" xml:space="preserve">
+    <value>Wipe, backup, or restore application settings, profiles, and custom drawings.</value>
+  </data>
+  <data name="ResetAppData" xml:space="preserve">
+    <value>Reset App Data...</value>
+  </data>
+  <data name="BackupData" xml:space="preserve">
+    <value>Backup Data...</value>
+  </data>
+  <data name="RestoreData" xml:space="preserve">
+    <value>Restore Data...</value>
+  </data>
+  <data name="ResetDataTitle" xml:space="preserve">
+    <value>Reset Application Data</value>
+  </data>
+  <data name="ResetDataDesc" xml:space="preserve">
+    <value>Select the components you want to wipe from this device. All selected options will be permanently deleted.</value>
+  </data>
+  <data name="ResetOptionConnection" xml:space="preserve">
+    <value>Active Server Connection (Disconnect)</value>
+  </data>
+  <data name="ResetOptionProfiles" xml:space="preserve">
+    <value>Saved Server Profiles (Delete paired server configurations)</value>
+  </data>
+  <data name="ResetOptionSteam" xml:space="preserve">
+    <value>Steam Account Credentials (Log out)</value>
+  </data>
+  <data name="ResetOptionPairing" xml:space="preserve">
+    <value>Device Pairing Config (Reset registration tokens)</value>
+  </data>
+  <data name="ResetOptionCrosshairs" xml:space="preserve">
+    <value>Custom Crosshairs (Wipe configurations)</value>
+  </data>
+  <data name="ResetOptionCache" xml:space="preserve">
+    <value>Local Cache &amp; Drawings (Wipe saved maps/lines)</value>
+  </data>
+  <data name="ResetDataWarning" xml:space="preserve">
+    <value>This action is permanent and cannot be undone.</value>
+  </data>
+  <data name="ConfirmReset" xml:space="preserve">
+    <value>Confirm Reset</value>
+  </data>
+  <data name="BackupPasswordTitle" xml:space="preserve">
+    <value>Backup Password</value>
+  </data>
+  <data name="BackupProtectionTitle" xml:space="preserve">
+    <value>Backup Protection</value>
+  </data>
+  <data name="BackupProtectionDesc" xml:space="preserve">
+    <value>Enter a password to encrypt this backup file. If you leave it empty, the backup will not be encrypted.</value>
+  </data>
+  <data name="RestoreBackupTitle" xml:space="preserve">
+    <value>Restore Backup</value>
+  </data>
+  <data name="RestoreBackupDesc" xml:space="preserve">
+    <value>This backup is password-protected. Enter the password to decrypt it:</value>
+  </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>Encrypt</value>
+  </data>
+  <data name="Decrypt" xml:space="preserve">
+    <value>Decrypt</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="BackupApplicationDataTitle" xml:space="preserve">
+    <value>Backup Application Data</value>
+  </data>
+  <data name="BackupSuccessLog" xml:space="preserve">
+    <value>[SYSTEM] Backup created successfully at: {0}</value>
+  </data>
+  <data name="BackupSuccessMessage" xml:space="preserve">
+    <value>Backup created successfully!</value>
+  </data>
+  <data name="BackupSuccessTitle" xml:space="preserve">
+    <value>Backup Completed</value>
+  </data>
+  <data name="BackupErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Backup error: {0}</value>
+  </data>
+  <data name="BackupErrorMessage" xml:space="preserve">
+    <value>Error creating backup: {0}</value>
+  </data>
+  <data name="BackupFailedTitle" xml:space="preserve">
+    <value>Backup Failed</value>
+  </data>
+  <data name="RestoreConfirmMessage" xml:space="preserve">
+    <value>Restoring data will overwrite your current server profiles, custom crosshairs, drawing overlays, and minimap configurations.
+
+Are you sure you want to continue?</value>
+  </data>
+  <data name="RestoreConfirmTitle" xml:space="preserve">
+    <value>Restore Backup Confirmation</value>
+  </data>
+  <data name="RestoreApplicationDataTitle" xml:space="preserve">
+    <value>Restore Application Data</value>
+  </data>
+  <data name="RestoreSuccessMessage" xml:space="preserve">
+    <value>Application data restored successfully!</value>
+  </data>
+  <data name="RestoreSuccessTitle" xml:space="preserve">
+    <value>Restore Completed</value>
+  </data>
+  <data name="RestorePasswordErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Restore error: Invalid password provided.</value>
+  </data>
+  <data name="RestorePasswordErrorMessage" xml:space="preserve">
+    <value>Decryption failed. Invalid password or corrupted backup file.</value>
+  </data>
+  <data name="RestoreFailedTitle" xml:space="preserve">
+    <value>Restore Failed</value>
+  </data>
+  <data name="RestoreErrorLog" xml:space="preserve">
+    <value>[SYSTEM] Restore error: {0}</value>
+  </data>
+  <data name="RestoreErrorMessage" xml:space="preserve">
+    <value>Error restoring backup: {0}</value>
+  </data>
+  <data name="InvalidBackupFormat" xml:space="preserve">
+    <value>Invalid backup file format or missing signature.</value>
+  </data>
+  <data name="WipeLogStart" xml:space="preserve">
+    <value>[WIPE] Starting selective reset operation...</value>
+  </data>
+  <data name="WipeLogConnStart" xml:space="preserve">
+    <value>[WIPE] Disconnecting active server connection...</value>
+  </data>
+  <data name="WipeLogConnEnd" xml:space="preserve">
+    <value>[WIPE] Connection reset complete.</value>
+  </data>
+  <data name="WipeLogProfilesStart" xml:space="preserve">
+    <value>[WIPE] Clearing saved server profiles...</value>
+  </data>
+  <data name="WipeLogProfilesEnd" xml:space="preserve">
+    <value>[WIPE] Saved server profiles cleared.</value>
+  </data>
+  <data name="WipeLogSteamStart" xml:space="preserve">
+    <value>[WIPE] Removing Steam account credentials...</value>
+  </data>
+  <data name="WipeLogSteamEnd" xml:space="preserve">
+    <value>[WIPE] Steam credentials cleared.</value>
+  </data>
+  <data name="WipeLogPairingStart" xml:space="preserve">
+    <value>[WIPE] Wiping device pairing configuration...</value>
+  </data>
+  <data name="WipeLogPairingEnd" xml:space="preserve">
+    <value>[WIPE] Device pairing configuration deleted.</value>
+  </data>
+  <data name="WipeLogCrosshairsStart" xml:space="preserve">
+    <value>[WIPE] Wiping custom crosshairs...</value>
+  </data>
+  <data name="WipeLogCrosshairsError" xml:space="preserve">
+    <value>[WIPE] Error clearing custom crosshairs: {0}</value>
+  </data>
+  <data name="WipeLogCrosshairsEnd" xml:space="preserve">
+    <value>[WIPE] Custom crosshairs cleared.</value>
+  </data>
+  <data name="WipeLogCacheStart" xml:space="preserve">
+    <value>[WIPE] Clearing local cache files and overlay drawings...</value>
+  </data>
+  <data name="WipeLogCacheError" xml:space="preserve">
+    <value>[WIPE] Error clearing cache folder: {0}</value>
+  </data>
+  <data name="WipeLogCacheEnd" xml:space="preserve">
+    <value>[WIPE] Cache folders cleared.</value>
+  </data>
+  <data name="WipeLogPairingRestart" xml:space="preserve">
+    <value>[WIPE] Re-registering listener and FCM credentials...</value>
+  </data>
+  <data name="WipeLogComplete" xml:space="preserve">
+    <value>[WIPE] Selective reset operation completed successfully.</value>
+  </data>
+</root>

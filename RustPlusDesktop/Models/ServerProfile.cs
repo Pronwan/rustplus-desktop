@@ -138,7 +138,7 @@ public class ServerProfile : INotifyPropertyChanged
         {
             var list = new System.Collections.Generic.List<SmartDevice>();
             list.Add(new SmartDevice { Name = "(None)", EntityId = 0 });
-            list.AddRange(System.Linq.Enumerable.Where(AllDevices, d => (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor") && d.Storage?.IsToolCupboard == true));
+            list.AddRange(System.Linq.Enumerable.Where(AllDevices, d => (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor") && (d.Storage == null || d.Storage.IsToolCupboard || d.Storage.ItemsCount == 0)));
             return list;
         }
     }
@@ -159,6 +159,13 @@ public class ServerProfile : INotifyPropertyChanged
     {
         get => _cmdPop;
         set { _cmdPop = ValidateCommand(value, "pop"); OnProp(); }
+    }
+
+    private string _cmdList = "commands";
+    public string CmdList
+    {
+        get => _cmdList;
+        set { _cmdList = ValidateCommand(value, "commands"); OnProp(); }
     }
 
     private string _cmdTime = "time";
@@ -295,7 +302,7 @@ public class ServerProfile : INotifyPropertyChanged
         }
 
         // Sync Upkeep (Storage Monitors on TCs)
-        var tcs = AllDevices.Where(d => d.Kind == "StorageMonitor" && d.Storage?.IsToolCupboard == true).ToList();
+        var tcs = AllDevices.Where(d => (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor") && (d.Storage == null || d.Storage.IsToolCupboard || d.Storage.ItemsCount == 0)).ToList();
         while (UpkeepCommandMappings.Count < tcs.Count)
         {
             int next = UpkeepCommandMappings.Count + 1;
@@ -315,6 +322,27 @@ public class ServerProfile : INotifyPropertyChanged
         
         OnProp(nameof(SwitchCommandMappings));
         OnProp(nameof(UpkeepCommandMappings));
+    }
+
+    private string? _rustMapsMapId;
+    public string? RustMapsMapId
+    {
+        get => _rustMapsMapId;
+        set { _rustMapsMapId = value; OnProp(); }
+    }
+
+    private DateTime? _rustMapsFetchTime;
+    public DateTime? RustMapsFetchTime
+    {
+        get => _rustMapsFetchTime;
+        set { _rustMapsFetchTime = value; OnProp(); }
+    }
+
+    private DateTime? _rustMapsWipeTime;
+    public DateTime? RustMapsWipeTime
+    {
+        get => _rustMapsWipeTime;
+        set { _rustMapsWipeTime = value; OnProp(); }
     }
 }
 

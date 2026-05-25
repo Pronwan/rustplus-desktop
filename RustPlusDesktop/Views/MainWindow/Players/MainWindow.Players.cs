@@ -12,7 +12,7 @@ using Microsoft.Web.WebView2.Wpf;
 using RustPlusDesk.Helpers;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
-using ui = Wpf.Ui.Controls;
+using WpfUi = Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views;
 
@@ -109,7 +109,7 @@ public partial class MainWindow
                 {
                     if (TxtTrackingStatus != null)
                     {
-                        TxtTrackingStatus.Text = "Add players to tracker to start tracking";
+                        TxtTrackingStatus.Text = Properties.Resources.AddPlayersToStartTracking;
                         TxtTrackingStatus.Foreground = Brushes.Gray;
                         TxtTrackingStatus.FontStyle = FontStyles.Italic;
                     }
@@ -121,13 +121,13 @@ public partial class MainWindow
                         bool hasRealTracked = TrackingService.GetTrackedPlayers().Any(p => !p.IsBMOnly);
                         if (hasRealTracked)
                         {
-                            TxtTrackingStatus.Text = TrackingService.IsTracking ? "Tracking Active" : "Tracking Idle";
+                            TxtTrackingStatus.Text = TrackingService.IsTracking ? Properties.Resources.TrackingActiveStatus : Properties.Resources.TrackingIdleStatus;
                             TxtTrackingStatus.Foreground = TrackingService.IsTracking ? Brushes.White : Brushes.Gray;
                         }
                         else
                         {
                             // Only BM shortcuts — no UDP polling needed
-                            TxtTrackingStatus.Text = "BM Shortcuts";
+                            TxtTrackingStatus.Text = Properties.Resources.BmShortcuts;
                             TxtTrackingStatus.Foreground = Brushes.Gray;
                         }
                         TxtTrackingStatus.FontStyle = FontStyles.Normal;
@@ -136,11 +136,11 @@ public partial class MainWindow
                 
                 if (TrackingService.LastPullTime.HasValue && anyTracked)
                 {
-                    if (TxtLastPull != null) TxtLastPull.Text = $"Last pull: {TrackingService.LastPullTime.Value:HH:mm:ss}";
+                    if (TxtLastPull != null) TxtLastPull.Text = string.Format(Properties.Resources.LastPull, TrackingService.LastPullTime.Value.ToString("HH:mm:ss"));
                 }
                 else
                 {
-                    if (TxtLastPull != null) TxtLastPull.Text = "Last pull: --:--";
+                    if (TxtLastPull != null) TxtLastPull.Text = string.Format(Properties.Resources.LastPull, "--:--");
                 }
             });
         }
@@ -166,23 +166,14 @@ public partial class MainWindow
         try
         {
             var players = TrackingService.LastOnlinePlayers;
-            
-            // Dynamic Filter visibility
-            if (players.Count > 0) {
-                if (TxtOnlineFilter != null)
-                {
-                    TxtOnlineFilter.Visibility = Visibility.Visible;
-                    if (string.IsNullOrEmpty(TxtOnlineFilter.Text) && !TxtOnlineFilter.IsFocused) {
-                        TxtOnlineFilter.Text = "Filter players...";
-                        TxtOnlineFilter.Foreground = Brushes.Gray;
-                    }
-                }
-            } else {
-                if (TxtOnlineFilter != null) TxtOnlineFilter.Visibility = Visibility.Collapsed;
-            }
+
+            // Show filter box when there are players, hide it when empty
+            if (TxtOnlineFilter != null)
+                TxtOnlineFilter.Visibility = players.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+
 
             var filterTxt = TxtOnlineFilter?.Text;
-            if (!string.IsNullOrEmpty(filterTxt) && filterTxt != "Filter players...")
+            if (!string.IsNullOrWhiteSpace(filterTxt))
             {
                 players = players.Where(p => p.Name.Contains(filterTxt, StringComparison.OrdinalIgnoreCase)).ToList();
             }
@@ -199,11 +190,15 @@ public partial class MainWindow
                 if (TxtOnlinePlayersStatus != null) TxtOnlinePlayersStatus.Text = TrackingService.StatusMessage;
                 if (PnlOnlineStatus != null) PnlOnlineStatus.Visibility = Visibility.Visible;
                 
-                bool isWorking = string.IsNullOrEmpty(TrackingService.StatusMessage) || 
-                                 TrackingService.StatusMessage.Contains("Fetching") || 
+                // Only show the spinner when actively polling a server.
+                // An empty StatusMessage with no server means "not connected" — don't spin forever.
+                bool hasServer = !string.IsNullOrEmpty(TrackingService.LastServer.host);
+                bool isWorking = hasServer && (
+                                 string.IsNullOrEmpty(TrackingService.StatusMessage) ||
+                                 TrackingService.StatusMessage.Contains("Fetching") ||
                                  TrackingService.StatusMessage.Contains("Looking") ||
-                                 TrackingService.StatusMessage.Contains("Auto-Discovering");
-                                 
+                                 TrackingService.StatusMessage.Contains("Auto-Discovering"));
+
                 if (PbOnlineLoading != null) PbOnlineLoading.Visibility = isWorking ? Visibility.Visible : Visibility.Collapsed;
                 
                 if (PnlManualTrack != null) PnlManualTrack.Visibility = Visibility.Visible;
@@ -220,20 +215,8 @@ public partial class MainWindow
         catch { }
     }
 
-    private void TxtOnlineFilter_GotFocus(object sender, RoutedEventArgs e) {
-        if (TxtOnlineFilter.Text == "Filter players...") {
-            TxtOnlineFilter.Text = "";
-            TxtOnlineFilter.Foreground = Brushes.White;
-        }
-    }
-    private void TxtOnlineFilter_LostFocus(object sender, RoutedEventArgs e) {
-        if (string.IsNullOrWhiteSpace(TxtOnlineFilter.Text)) {
-            TxtOnlineFilter.Text = "Filter players...";
-            TxtOnlineFilter.Foreground = Brushes.Gray;
-        }
-    }
     private void TxtOnlineFilter_TextChanged(object sender, TextChangedEventArgs e) {
-        if (TxtOnlineFilter.Text != "Filter players...") RefreshOnlinePlayersList();
+        RefreshOnlinePlayersList();
     }
 
     private async void BtnShowOnline_Click(object sender, RoutedEventArgs e)
@@ -245,14 +228,14 @@ public partial class MainWindow
 
         if (_vm.Selected == null || string.IsNullOrEmpty(_vm.Selected.Host))
         {
-            TxtOnlinePlayersStatus.Text = "Connect to a server to load players list";
+            TxtOnlinePlayersStatus.Text = Properties.Resources.ConnectToLoadPlayers;
             PnlOnlineStatus.Visibility = Visibility.Visible;
             PbOnlineLoading.Visibility = Visibility.Collapsed;
             ListOnlinePlayers.ItemsSource = null;
             return;
         }
 
-        TxtOnlinePlayersStatus.Text = "Fetching players via Steam Query...";
+        TxtOnlinePlayersStatus.Text = Properties.Resources.FetchingPlayersSteam;
         PnlOnlineStatus.Visibility = Visibility.Visible;
         PbOnlineLoading.Visibility = Visibility.Visible;
         if (PnlManualTrack != null) PnlManualTrack.Visibility = Visibility.Visible;
@@ -300,23 +283,10 @@ public partial class MainWindow
 
 
 
-    private void TxtManualBMId_GotFocus(object sender, RoutedEventArgs e) {
-        if (TxtManualBMId.Text == "Manual Track Name...") {
-            TxtManualBMId.Text = "";
-            TxtManualBMId.Foreground = Brushes.White;
-        }
-    }
-    private void TxtManualBMId_LostFocus(object sender, RoutedEventArgs e) {
-        if (string.IsNullOrWhiteSpace(TxtManualBMId.Text)) {
-            TxtManualBMId.Text = "Manual Track Name...";
-            TxtManualBMId.Foreground = Brushes.Gray;
-        }
-    }
-
     private async void BtnAddManual_Click(object sender, RoutedEventArgs e)
     {
         var bmId = TxtManualBMId.Text?.Trim();
-        if (string.IsNullOrEmpty(bmId) || bmId == "Manual Track Name...") return;
+        if (string.IsNullOrEmpty(bmId)) return;
 
         TxtManualBMId.IsEnabled = false;
         BtnAddManual.Content = "...";
@@ -329,10 +299,9 @@ public partial class MainWindow
 
         TrackingService.TrackPlayer(bmId, name, serverName, lastSession);
         
-        TxtManualBMId.Text = "Manual Track Name...";
-        TxtManualBMId.Foreground = Brushes.Gray;
+        TxtManualBMId.Text = "";
         TxtManualBMId.IsEnabled = true;
-        BtnAddManual.Content = "Track ID";
+        BtnAddManual.Content = Properties.Resources.TrackID;
         
         var sessionMsg = lastSession != null ? $" (found last session: {lastSession.ConnectTime.ToLocalTime():g})" : "";
         AppendLog($"[tracking] Manually added {name} ({bmId}) to tracking list on server: {serverName}{sessionMsg}");
@@ -346,7 +315,7 @@ public partial class MainWindow
             if (ListTrackedPlayers == null) return;
             ListTrackedPlayers.Children.Clear();
             var players = TrackingService.GetTrackedPlayers();
-            if (!string.IsNullOrEmpty(filter) && filter != "Filter players...")
+            if (!string.IsNullOrEmpty(filter))
             {
                 players = players.Where(p =>
                     (p.Name?.Contains(filter, StringComparison.OrdinalIgnoreCase) ?? false) ||
@@ -479,7 +448,7 @@ public partial class MainWindow
                     ListTrackedPlayers.Children.Add(expander);
                 }
             }
-            if (players.Count == 0 && !string.IsNullOrEmpty(filter) && filter != "Filter players...")
+            if (players.Count == 0 && !string.IsNullOrEmpty(filter))
             {
                 ListTrackedPlayers.Children.Add(new TextBlock { Text = "No results found matching filter.", Margin = new Thickness(0, 20, 0, 0), Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center });
             }
@@ -573,21 +542,10 @@ public partial class MainWindow
         _draggedTrackedGroup = null;
     }
 
-    private void TxtTrackedFilter_GotFocus(object sender, RoutedEventArgs e) {
-        if (TxtTrackedFilter.Text == "Filter players...") {
-            TxtTrackedFilter.Text = "";
-            TxtTrackedFilter.Foreground = Brushes.White;
-        }
-    }
-    private void TxtTrackedFilter_LostFocus(object sender, RoutedEventArgs e) {
-        if (string.IsNullOrWhiteSpace(TxtTrackedFilter.Text)) {
-            TxtTrackedFilter.Text = "Filter players...";
-            TxtTrackedFilter.Foreground = Brushes.Gray;
-        }
-    }
     private void TxtTrackedFilter_TextChanged(object sender, TextChangedEventArgs e) {
-        if (TxtTrackedFilter.Text != "Filter players...") RefreshTrackedPlayersList(TxtTrackedFilter.Text);
+        RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
     }
+
 
     private void BtnManageGroups_Click(object sender, RoutedEventArgs e) {
         if (ShowBulkGroupEditorDialog() == true) {
@@ -691,7 +649,7 @@ public partial class MainWindow
     {
         var win = new Window
         {
-            Title = "Create / Manage Group",
+            Title = Properties.Resources.ManageGroups,
             Width = 450,
             Height = 600,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
@@ -726,7 +684,7 @@ public partial class MainWindow
         Grid.SetRow(nameLabel, 1);
         grid.Children.Add(nameLabel);
 
-        var nameInput = new ui.TextBox { PlaceholderText = "Enter group name..." };
+        var nameInput = new WpfUi.TextBox { PlaceholderText = "Enter group name..." };
         Grid.SetRow(nameInput, 2);
         grid.Children.Add(nameInput);
         
@@ -754,11 +712,11 @@ public partial class MainWindow
 
         foreach(var g in existingGroups)
         {
-            var gBtn = new ui.Button { 
+            var gBtn = new WpfUi.Button { 
                 Content = g, 
                 Margin = new Thickness(0,0,4,4), 
                 Padding = new Thickness(8,4,8,4),
-                Appearance = ui.ControlAppearance.Secondary
+                Appearance = WpfUi.ControlAppearance.Secondary
             };
             gBtn.Click += (s, e) => {
                 nameInput.Text = g;
@@ -773,7 +731,7 @@ public partial class MainWindow
             existingPanel.Children.Add(gBtn);
         }
 
-        var colorLabel = new TextBlock { Text = "Group Color", Margin = new Thickness(0, 16, 0, 8), Foreground = (Brush)FindResource("TextSubtle") };
+        var colorLabel = new TextBlock { Text = Properties.Resources.GroupColor, Margin = new Thickness(0, 16, 0, 8), Foreground = (Brush)FindResource("TextSubtle") };
         Grid.SetRow(colorLabel, 4);
         grid.Children.Add(colorLabel);
 
@@ -786,8 +744,8 @@ public partial class MainWindow
         grid.Children.Add(scroll);
 
         var btnPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
-        var okBtn = new ui.Button { Content = "Save Group", Width = 120, Margin = new Thickness(0, 0, 12, 0), Appearance = ui.ControlAppearance.Primary };
-        var cancelBtn = new ui.Button { Content = "Cancel", Width = 90 };
+        var okBtn = new WpfUi.Button { Content = "Save Group", Width = 120, Margin = new Thickness(0, 0, 12, 0), Appearance = WpfUi.ControlAppearance.Primary };
+        var cancelBtn = new WpfUi.Button { Content = "Cancel", Width = 90 };
 
         bool saved = false;
         okBtn.Click += (s, e) => { 
@@ -856,7 +814,7 @@ public partial class MainWindow
         stack.Children.Add(new TextBlock { Text = $"Group Settings: {player.Name}", FontSize = 20, FontWeight = FontWeights.Bold, Margin = new Thickness(0,0,0,16) });
         
         stack.Children.Add(new TextBlock { Text = "Group Name", Foreground = (Brush)FindResource("TextSubtle") });
-        var input = new ui.TextBox { 
+        var input = new WpfUi.TextBox { 
             Text = player.GroupName, 
             PlaceholderText = "Enter group name..."
         };
@@ -870,10 +828,10 @@ public partial class MainWindow
         
         (string, string)? result = null;
 
-        var saveBtn = new ui.Button { Content = "Save Changes", Appearance = ui.ControlAppearance.Primary, Width = 130, Margin = new Thickness(0,0,12,0) };
+        var saveBtn = new WpfUi.Button { Content = "Save Changes", Appearance = WpfUi.ControlAppearance.Primary, Width = 130, Margin = new Thickness(0,0,12,0) };
         saveBtn.Click += (s, e) => { result = (input.Text.Trim(), colorSelector.Getter()); win.DialogResult = true; };
 
-        var cancelBtn = new ui.Button { Content = "Cancel", Width = 90 };
+        var cancelBtn = new WpfUi.Button { Content = "Cancel", Width = 90 };
         cancelBtn.Click += (s, e) => { win.DialogResult = false; };
 
         btnPanel.Children.Add(saveBtn);
@@ -1116,12 +1074,12 @@ public partial class MainWindow
                     row.Children.Add(pt);
                 }
 
-                var btnTrack = new ui.Button
+                var btnTrack = new WpfUi.Button
                 {
                     Content = p.IsTracked ? "Details" : "Track",
                     Padding = new Thickness(6, 2, 6, 2),
                     FontSize = 11,
-                    Appearance = p.IsTracked ? ui.ControlAppearance.Primary : ui.ControlAppearance.Secondary,
+                    Appearance = p.IsTracked ? WpfUi.ControlAppearance.Primary : WpfUi.ControlAppearance.Secondary,
                     Tag = p.BMId,
                 };
                 Grid.SetColumn(btnTrack, 2);
@@ -1139,7 +1097,7 @@ public partial class MainWindow
                         var srvName = TrackingService.LastServer.name ?? "Unknown";
                         TrackingService.TrackPlayer(capturedBmId, capturedName, srvName);
                         btnTrack.Content = "Details";
-                        btnTrack.Appearance = ui.ControlAppearance.Primary;
+                        btnTrack.Appearance = WpfUi.ControlAppearance.Primary;
                     }
                 };
 
@@ -1284,12 +1242,12 @@ public partial class MainWindow
                         // Action button: BM-only → "View on BM" opens BM browser; native → "View" opens Analysis
                         string capturedBmId2 = p.BMId;
                         bool capturedIsBmOnly = p.IsBMOnly;
-                        var actionBtn = new ui.Button
+                        var actionBtn = new WpfUi.Button
                         {
                             Content = capturedIsBmOnly ? "View on BM" : "View",
                             Padding = new Thickness(6, 2, 6, 2),
                             FontSize = 11,
-                            Appearance = capturedIsBmOnly ? ui.ControlAppearance.Secondary : ui.ControlAppearance.Primary,
+                            Appearance = capturedIsBmOnly ? WpfUi.ControlAppearance.Secondary : WpfUi.ControlAppearance.Primary,
                             Margin = new Thickness(6, 0, 0, 0),
                             VerticalAlignment = VerticalAlignment.Center,
                         };

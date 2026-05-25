@@ -1,7 +1,8 @@
 ﻿<Window x:Class="RustPlusDesk.Views.CameraWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Camera" Width="665" Height="480"
+        xmlns:p="clr-namespace:RustPlusDesk.Properties"
+        Title="{DynamicResource Camera}" Width="665" Height="480"
         Background="#1E1E1E" Foreground="#F0F0F0">
     <Grid Margin="8">
         <Grid.RowDefinitions>
@@ -11,16 +12,16 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-            <TextBlock Text="Identifier:" VerticalAlignment="Center"/>
+            <TextBlock Text="{DynamicResource Identifier}" VerticalAlignment="Center"/>
             <TextBlock x:Name="TxtId" Margin="8,0,0,0" FontWeight="SemiBold" />
             <StackPanel Orientation="Horizontal" Margin="16,0,0,0">
-                <TextBlock Text="FPS:" VerticalAlignment="Center"/>
+                <TextBlock Text="{DynamicResource FPS}" VerticalAlignment="Center"/>
                 <ComboBox x:Name="CmbFps" Width="60" Margin="6,0,0,0">
                     <ComboBoxItem Content="2" IsSelected="True"/>
                     <ComboBoxItem Content="4"/>
                     <ComboBoxItem Content="8"/>
                 </ComboBox>
-                <TextBlock Text="Note: 2 fps is recommended, higher FPS likely close your connection to server" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                <TextBlock Text="{DynamicResource CameraFPSNote}" VerticalAlignment="Center" Margin="16,0,0,0"/>
             </StackPanel>
         </StackPanel>
 
