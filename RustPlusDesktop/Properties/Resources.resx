@@ -1803,4 +1803,10 @@ Are you sure you want to continue?</value>
   <data name="TurnOffNow" xml:space="preserve">
     <value>Turn off now</value>
   </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>Smart Alert behaviors have changed (including the new Audio Loop feature), and Chat Alerts have been updated. Please ensure your Smart Alert preferences (Audio/Popups) and Chat Alert configurations are still set correctly!</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>Please verify your Alert Settings</value>
+  </data>
 </root>

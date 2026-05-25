@@ -1352,18 +1352,16 @@
                                         x:Key="ServerCtx"
                                         Foreground="White"
                                         Style="{StaticResource DarkContextMenu}">
-                                        <!--  Der Trick: den aktuellen Server ins Tag binden  -->
-                                        <MenuItem
-                                            Click="Server_RelinkBM_Click"
-                                            Foreground="Black"
-                                            Header="{DynamicResource RelinkBattlemetricsId}"
-                                            Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
-                                        <Separator />
                                         <MenuItem
                                             Click="Server_Delete_Click"
                                             Foreground="Black"
-                                            Header="{DynamicResource DeleteServerEllipsis}"
-                                            Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                                            Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                            <MenuItem.Header>
+                                                <TextBlock>
+                                                    <Run Text="🗑️ " /><Run Text="{DynamicResource DeleteServerEllipsis}" />
+                                                </TextBlock>
+                                            </MenuItem.Header>
+                                        </MenuItem>
                                     </ContextMenu>
                                 </ListBox.Resources>
 
@@ -3049,7 +3047,13 @@
                                                 Background="Transparent">
                                                 <Grid.ContextMenu>
                                                     <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                                        <MenuItem Click="Server_RelinkBM_Click" Header="{DynamicResource RelinkBattlemetricsId}" />
+                                                        <MenuItem Click="Server_Delete_Click" Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                            <MenuItem.Header>
+                                                                <TextBlock>
+                                                                    <Run Text="🗑️ " /><Run Text="{DynamicResource DeleteServerEllipsis}" />
+                                                                </TextBlock>
+                                                            </MenuItem.Header>
+                                                        </MenuItem>
                                                     </ContextMenu>
                                                 </Grid.ContextMenu>
                                                 <StackPanel>

@@ -1803,4 +1803,10 @@
   <data name="TurnOffNow" xml:space="preserve">
     <value>现在关闭</value>
   </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>智能警报行为已更改（包括新的音频循环功能），并且聊天警报已更新。请确保您的智能警报首选项（音频/弹出窗口）和聊天警报配置仍然设置正确！</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>请验证您的警报设置</value>
+  </data>
 </root>

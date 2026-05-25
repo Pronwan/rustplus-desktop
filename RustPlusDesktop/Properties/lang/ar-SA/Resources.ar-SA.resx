@@ -1803,4 +1803,10 @@
   <data name="TurnOffNow" xml:space="preserve">
     <value>إيقاف الآن</value>
   </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>لقد تغيرت سلوكيات التنبيه الذكي (بما في ذلك ميزة تكرار الصوت الجديدة)، وتم تحديث تنبيهات الدردشة. يرجى التأكد من أن تفضيلات التنبيه الذكي (الصوت / النوافذ المنبثقة) وتكوينات تنبيهات الدردشة لا تزال مضبوطة بشكل صحيح!</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>يرجى التحقق من إعدادات التنبيه الخاصة بك</value>
+  </data>
 </root>
