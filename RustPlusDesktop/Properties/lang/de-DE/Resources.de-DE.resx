@@ -148,7 +148,7 @@
     <value>Noch keine Server gekoppelt</value>
   </data>
   <data name="PairingMaintenance" xml:space="preserve">
-    <value>KOPPLUNG &amp; WARTUNG</value>
+    <value>KOPPLUNG &amp; SYNC</value>
   </data>
   <data name="PairingIdle" xml:space="preserve">
     <value>Pairing: wartet</value>
@@ -974,16 +974,16 @@ jetzt herunterladen und installieren?</value>
     <value>Chat</value>
   </data>
   <data name="ModifyChatAlerts" xml:space="preserve">
-    <value>Chat-Alarme ändern</value>
+    <value>Chat-Alerts ändern</value>
   </data>
   <data name="ManageSteamAccountInfo" xml:space="preserve">
-    <value>Verwalten Sie Ihr verknüpftes Steam Konto im Hauptfenster.</value>
+    <value>Verwalte dein verknüpftes Steam-Konto im Hauptfenster.</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Schließen</value>
   </data>
   <data name="IncomingAlarms" xml:space="preserve">
-    <value>ALARME EINKOMMEN</value>
+    <value>EINGEHENDE ALARME</value>
   </data>
   <data name="Wipe" xml:space="preserve">
     <value>Löschen</value>
@@ -995,16 +995,16 @@ jetzt herunterladen und installieren?</value>
     <value>Spieler</value>
   </data>
   <data name="IWantToGetToolTip" xml:space="preserve">
-    <value>Ich möchte GET (z.B. Rohöl)</value>
+    <value>Ich möchte KAUFEN (z.B. Rohöl)</value>
   </data>
   <data name="ICanPayWithToolTip" xml:space="preserve">
-    <value>Ich möchte MIT ZAHL (z.B. Schrott)</value>
+    <value>Ich möchte ZAHLEN MIT (z.B. Schrott)</value>
   </data>
   <data name="DeleteServerConfirmFormatted" xml:space="preserve">
     <value>Bist du sicher, dass du den Server "{0}" löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.</value>
   </data>
   <data name="PairingError" xml:space="preserve">
-    <value>Pairing: error</value>
+    <value>Pairing: Fehler</value>
   </data>
   <data name="PairingStarting" xml:space="preserve">
     <value>Paarung: startet...</value>
@@ -1022,7 +1022,7 @@ jetzt herunterladen und installieren?</value>
     <value>Preis</value>
   </data>
   <data name="On" xml:space="preserve">
-    <value>ON</value>
+    <value>AN</value>
   </data>
   <data name="Off" xml:space="preserve">
     <value>AUS</value>
@@ -1037,7 +1037,7 @@ jetzt herunterladen und installieren?</value>
     <value>GRUPPE</value>
   </data>
   <data name="ImportDevicesTitle" xml:space="preserve">
-    <value>Rost+ Schreibtisch – Geräte importieren</value>
+    <value>Rust+ Desktop – Geräte importieren</value>
   </data>
   <data name="ImportDevicesHeader" xml:space="preserve">
     <value>Geräte importieren</value>
@@ -1058,10 +1058,10 @@ jetzt herunterladen und installieren?</value>
     <value>Paarung: Konfiguration gelöscht</value>
   </data>
   <data name="TrayIconDefault" xml:space="preserve">
-    <value>Rost+ Schreibtisch-Tracker</value>
+    <value>Rust+ Desktop-Tracker</value>
   </data>
   <data name="TrayIconTracking" xml:space="preserve">
-    <value>Rost+ Schreibtisch (Tracking {0})</value>
+    <value>Rust+ Desktop (Tracking {0})</value>
   </data>
   <data name="RenameGroup" xml:space="preserve">
     <value>Gruppe umbenennen</value>
@@ -1073,16 +1073,16 @@ jetzt herunterladen und installieren?</value>
     <value>Neuer Name für #{0}:</value>
   </data>
   <data name="EnterBattlemetricsIdFor" xml:space="preserve">
-    <value>Geben Sie die Battlemetrics Server ID für "{0}":</value>
+    <value>Gib die Battlemetrics Server ID ein für "{0}":</value>
   </data>
   <data name="TrayTrackingStatus" xml:space="preserve">
-    <value>Verfolgung: {0}</value>
+    <value>Tracking: {0}</value>
   </data>
   <data name="TrayLastUpdate" xml:space="preserve">
     <value>Letzte Aktualisierung: {0}</value>
   </data>
   <data name="OpenRustPlusDesk" xml:space="preserve">
-    <value>Öffne Rost+ Schreibtisch</value>
+    <value>Öffne Rust+ Desktop</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>Beenden</value>
@@ -1103,7 +1103,7 @@ jetzt herunterladen und installieren?</value>
     <value>FPS:</value>
   </data>
   <data name="CameraFPSNote" xml:space="preserve">
-    <value>Hinweis: 2 fps werden empfohlen, höhere FPS wird wahrscheinlich Ihre Verbindung zum Server schließen</value>
+    <value>Hinweis: 2 fps werden empfohlen, höhere FPS wird wahrscheinlich die Verbindung zum Server schließen</value>
   </data>
   <data name="Pixel" xml:space="preserve">
     <value>Pixel</value>
@@ -1130,13 +1130,13 @@ jetzt herunterladen und installieren?</value>
     <value>PNG hochladen</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Leeren</value>
+    <value>Löschen</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Speichern</value>
   </data>
   <data name="AssignGlobalHotkeys" xml:space="preserve">
-    <value>Weisen Sie Smart Switches globale Hotkeys zu. Mehrere Geräte können einen Hotkey teilen (wechselt sequentiell um).</value>
+    <value>Weise Smart-Schaltern globale Hotkeys zu. Mehrere Geräte können einen Hotkey teilen (wechselt sequentiell um).</value>
   </data>
   <data name="Device" xml:space="preserve">
     <value>Gerät</value>
@@ -1157,7 +1157,7 @@ jetzt herunterladen und installieren?</value>
     <value>Schließen &amp; aktivieren</value>
   </data>
   <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
-    <value>Erhaltung, Minimap &amp; Tracking Update</value>
+    <value>Upkeep, Minimap &amp; Tracking Update</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
     <value>Feature-Zusammenfassung &amp; Anpassung</value>
@@ -1250,13 +1250,13 @@ jetzt herunterladen und installieren?</value>
     <value>Smart-Schalter</value>
   </data>
   <data name="UpkeepTcMonitors" xml:space="preserve">
-    <value>Ukeep (TC) Monitore</value>
+    <value>Upkeep (TC) Monitore</value>
   </data>
   <data name="NoTcMonitorsFound" xml:space="preserve">
     <value>Keine TC-Monitore gefunden.</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
-    <value>Speichern &amp; Schließen</value>
+    <value>Speichern</value>
   </data>
   <data name="ChatMessagePlaceholder" xml:space="preserve">
     <value>Nachricht...</value>
@@ -1607,7 +1607,7 @@ jetzt herunterladen und installieren?</value>
     <value>{0} [{1}] {2} x{3} {4} (Bestand {5}) für {6} {7}</value>
   </data>
   <data name="ListCommandsCommand" xml:space="preserve">
-    <value>Chat-Befehle auflisten</value>
+    <value>Chat-Befehle zeigen</value>
   </data>
   <data name="ChatCmdListHeader" xml:space="preserve">
     <value>BEFEHLE: {0}</value>
@@ -1667,7 +1667,7 @@ jetzt herunterladen und installieren?</value>
     <value>Schließe dieses Fenster jederzeit — du kannst es über den  ❓ Wie man trackt  Button wieder öffnen.</value>
   </data>
   <data name="MaintenanceTitle" xml:space="preserve">
-    <value>Upkeep</value>
+    <value>Wartung und Backup</value>
   </data>
   <data name="MaintenanceDesc" xml:space="preserve">
     <value>Löschen, Sichern oder Wiederherstellen von Anwendungseinstellungen, Profilen und benutzerdefinierten Zeichnungen.</value>
@@ -1709,10 +1709,10 @@ jetzt herunterladen und installieren?</value>
     <value>Dies ist endgültig und kann nicht rückgängig gemacht werden.</value>
   </data>
   <data name="ConfirmReset" xml:space="preserve">
-    <value>Bestätige den Reset</value>
+    <value>Jetzt resetten</value>
   </data>
   <data name="BackupPasswordTitle" xml:space="preserve">
-    <value>Passwort sichern</value>
+    <value>Passwortschutz</value>
   </data>
   <data name="BackupProtectionTitle" xml:space="preserve">
     <value>Backup-Schutz</value>
