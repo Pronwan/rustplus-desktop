@@ -680,13 +680,13 @@ jetzt herunterladen und installieren?</value>
     <value>Ankunftswarnung (5 m vor dem Dock)</value>
   </data>
   <data name="Heli" xml:space="preserve">
-    <value>Patrouillenhubschrauber</value>
+    <value>Patrouillen-Heli</value>
   </data>
   <data name="Chinook" xml:space="preserve">
     <value>Chinook (CH47)</value>
   </data>
   <data name="Vendor" xml:space="preserve">
-    <value>Reisender Verkäufer</value>
+    <value>Reisender Händler</value>
   </data>
   <data name="OilRig" xml:space="preserve">
     <value>Ölbohrinsel-Trigger</value>
@@ -1208,13 +1208,13 @@ jetzt herunterladen und installieren?</value>
     <value>Standardbefehle</value>
   </data>
   <data name="Population" xml:space="preserve">
-    <value>Bevölkerung:</value>
+    <value>Online-Spieler:</value>
   </data>
   <data name="Time" xml:space="preserve">
     <value>Zeit:</value>
   </data>
   <data name="Promote" xml:space="preserve">
-    <value>Bewerbung:</value>
+    <value>Befördern:</value>
   </data>
   <data name="DeepSeaCommand" xml:space="preserve">
     <value>Tiefsee:</value>
@@ -1223,19 +1223,19 @@ jetzt herunterladen und installieren?</value>
     <value>Frachtschiff:</value>
   </data>
   <data name="OilRigCommand" xml:space="preserve">
-    <value>Ölförderung:</value>
+    <value>Ölbohrinsel:</value>
   </data>
   <data name="PatrolHeliCommand" xml:space="preserve">
-    <value>Patrouillen-Helikopter:</value>
+    <value>Patrouillen-Heli:</value>
   </data>
   <data name="TravellingVendorCommand" xml:space="preserve">
-    <value>Reisender Verkäufer:</value>
+    <value>Reisender Händler:</value>
   </data>
   <data name="UpkeepDetails" xml:space="preserve">
-    <value>Details:</value>
+    <value>Detail-Upkeep:</value>
   </data>
   <data name="CommandDelay" xml:space="preserve">
-    <value>Befehlsverzögerung:</value>
+    <value>Chat-Verzögerung:</value>
   </data>
   <data name="Language" xml:space="preserve">
     <value>Sprache</value>
@@ -1247,10 +1247,10 @@ jetzt herunterladen und installieren?</value>
     <value>Ändern der Sprache erfordert einen Neustart um die volle Wirkung zu erzielen.</value>
   </data>
   <data name="SmartSwitches" xml:space="preserve">
-    <value>Intelligente Schalter</value>
+    <value>Smart-Schalter</value>
   </data>
   <data name="UpkeepTcMonitors" xml:space="preserve">
-    <value>Wartung (TC) Monitore</value>
+    <value>Ukeep (TC) Monitore</value>
   </data>
   <data name="NoTcMonitorsFound" xml:space="preserve">
     <value>Keine TC-Monitore gefunden.</value>
@@ -1268,7 +1268,7 @@ jetzt herunterladen und installieren?</value>
     <value>Heli</value>
   </data>
   <data name="HeliActiveRunningFor" xml:space="preserve">
-    <value>Patrol Heli aktiv - läuft für {0}</value>
+    <value>Patrouillen-Heli seit {0} aktiv</value>
   </data>
   <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
     <value>Mitten im Ereignis verbunden - Laichzeit unbekannt</value>
@@ -1277,10 +1277,10 @@ jetzt herunterladen und installieren?</value>
     <value>Patrouillen-Heli aktiv (Spawnzeit unbekannt)</value>
   </data>
   <data name="HeliShotDownAgo" xml:space="preserve">
-    <value>Patrouillen-Heli abgeschossen {0} vor dieser Sitzung</value>
+    <value>Patrouillen-Heli abgeschossen {0} vor dieser Session</value>
   </data>
   <data name="HeliLeftMapAgo" xml:space="preserve">
-    <value>Patrol Heli hat die Karte {0} vor dieser Sitzung verlassen.</value>
+    <value>Patrouillen-Heli hat die Karte von {0} in dieser Session verlassen.</value>
   </data>
   <data name="CargoDockedDepartsIn" xml:space="preserve">
     <value>Angedockt an {0} - Abreise in ~{1}</value>
@@ -1289,7 +1289,7 @@ jetzt herunterladen und installieren?</value>
     <value>hafen</value>
   </data>
   <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
-    <value>Bereits angedockt an connect - Abfahrtszeit unbekannt</value>
+    <value>Bereits angedockt bei Verbindung - Abfahrtszeit unbekannt</value>
   </data>
   <data name="CargoDockedDurationNotLearned" xml:space="preserve">
     <value>Angedockt an {0} (Andockdauer noch nicht bekannt)</value>
@@ -1304,19 +1304,19 @@ jetzt herunterladen und installieren?</value>
     <value>Mitten auf der Strecke verbunden - Zeit unbekannt (Strecke ~{0}m insgesamt)</value>
   </data>
   <data name="CargoDespawnedAgo" xml:space="preserve">
-    <value>Frachtschiff despawned {0}m {1}s ago this session</value>
+    <value>Frachtschiff vor {0}m {1}s despawned in dieser Session</value>
   </data>
   <data name="VendorActiveRunningFor" xml:space="preserve">
-    <value>Travelling Vendor aktiv - Laufen für {0}</value>
+    <value>Reisender Händler seit {0} aktiv.</value>
   </data>
   <data name="VendorActiveSpawnUnknown" xml:space="preserve">
-    <value>Reisender Verkäufer aktiv (Spawnzeit unbekannt)</value>
+    <value>Reisender Händler aktiv (Spawnzeit unbekannt)</value>
   </data>
   <data name="VendorDespawnedAgo" xml:space="preserve">
-    <value>Travelling Vendor wurde vor dieser Sitzung despawned {0}</value>
+    <value>Reisender Händler ist vor dieser Sitzung despawned {0}</value>
   </data>
   <data name="DeepSeaActiveRunningFor" xml:space="preserve">
-    <value>Tiefsee aktiv - Laufen für {0}</value>
+    <value>Deep Sea seit {0} aktiv</value>
   </data>
   <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
     <value>Deep Sea aktiv (Spawn unbekannt)</value>
@@ -1358,13 +1358,13 @@ jetzt herunterladen und installieren?</value>
     <value>Deep Sea ist seit {0} aktiv!</value>
   </data>
   <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
-    <value>Deep Sea ist derzeit aktiv (verbunden in der Mitte des Events - Spawn unbekannt).</value>
+    <value>Deep Sea ist derzeit aktiv (verbunden während Events - Spawn unbekannt).</value>
   </data>
   <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
     <value>Deep Sea endete vor {0} Minuten in dieser Session.</value>
   </data>
   <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
-    <value>Tiefsee-Ereignisstatus unbekannt (in dieser Sitzung nicht gesehen).</value>
+    <value>Deep Sea-Status unbekannt (in dieser Session nicht gesehen).</value>
   </data>
   <data name="ChatCmdCargoNotActive" xml:space="preserve">
     <value>Frachtschiff nicht aktiv.</value>
@@ -1373,7 +1373,7 @@ jetzt herunterladen und installieren?</value>
     <value>Frachtschiff angedockt an {0}. Abfahrt in ca. {1} Minuten.</value>
   </data>
   <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
-    <value>Ein Frachtschiff hat an {0} angedockt und bereitet sich auf die Abfahrt vor.</value>
+    <value>Frachtschiff an {0} angedockt und bereitet sich auf die Abfahrt vor.</value>
   </data>
   <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
     <value>Frachtschiff angedockt an {0} (Abfahrtszeit unbekannt).</value>
@@ -1505,13 +1505,13 @@ jetzt herunterladen und installieren?</value>
     <value>Frachtschiff</value>
   </data>
   <data name="EventTravellingVendor" xml:space="preserve">
-    <value>Reisender Lieferant</value>
+    <value>Reisender Händler</value>
   </data>
   <data name="EventCH47" xml:space="preserve">
     <value>CH47</value>
   </data>
   <data name="EventPatrolHelicopter" xml:space="preserve">
-    <value>Hubschrauber patrouillieren</value>
+    <value>Patrouillen-Heli</value>
   </data>
   <data name="EventOilrigCrate" xml:space="preserve">
     <value>Bohrinsel Kiste</value>
@@ -1523,10 +1523,10 @@ jetzt herunterladen und installieren?</value>
     <value>Gebäude blockiert</value>
   </data>
   <data name="EventGeneric" xml:space="preserve">
-    <value>Veranstaltung</value>
+    <value>Event</value>
   </data>
   <data name="AlertOilRigTriggered" xml:space="preserve">
-    <value>[{0}] ausgelöst! Die Kiste wird auf {1} freigeschaltet.</value>
+    <value>[{0}] ausgelöst! Die Kiste wird in {1} freigeschaltet.</value>
   </data>
   <data name="AlertAlarmTriggered" xml:space="preserve">
     <value>ALARM: {0} ausgelöst!</value>
@@ -1538,10 +1538,10 @@ jetzt herunterladen und installieren?</value>
     <value>[{0}] Kiste wird in 5 Minuten freigeschaltet!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Tiefsee ist oben</value>
+    <value>Deep Sea offen</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
-    <value>Neues Geschäft {0} [{1}]: {2}</value>
+    <value>Neuer Verkaufsautomat {0} [{1}]: {2}</value>
   </data>
   <data name="AlertSuspiciousShop" xml:space="preserve">
     <value>Verdächtiger Shop {0} [{1}] war für {2}s online, verkaufte {3}</value>
@@ -1559,7 +1559,7 @@ jetzt herunterladen und installieren?</value>
     <value>Frachtschiff wird in ca. 5 min am {0} ({1}) andocken.</value>
   </data>
   <data name="AlertCargoDeparting" xml:space="preserve">
-    <value>Das Frachtschiff fährt in 5 Minuten von {0} ab ({1})</value>
+    <value>Frachtschiff fährt in 5 Minuten von {0} ab ({1})</value>
   </data>
   <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
     <value>Absturz aufgrund von Server-Lag festgestellt - Heli ist immer noch auf der Karte in {0}</value>
@@ -1667,7 +1667,7 @@ jetzt herunterladen und installieren?</value>
     <value>Schließe dieses Fenster jederzeit — du kannst es über den  ❓ Wie man trackt  Button wieder öffnen.</value>
   </data>
   <data name="MaintenanceTitle" xml:space="preserve">
-    <value>Wartung</value>
+    <value>Upkeep</value>
   </data>
   <data name="MaintenanceDesc" xml:space="preserve">
     <value>Löschen, Sichern oder Wiederherstellen von Anwendungseinstellungen, Profilen und benutzerdefinierten Zeichnungen.</value>
