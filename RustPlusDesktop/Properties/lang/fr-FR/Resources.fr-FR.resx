@@ -1809,4 +1809,10 @@ Télécharger et installer maintenant ?</value>
   <data name="MigrationAlertCheckTitle" xml:space="preserve">
     <value>Veuillez vérifier vos paramètres d'alerte</value>
   </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Boucle d'alerte audio : </value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>Bouclez et arrêtez vos alertes.</value>
+  </data>
 </root>

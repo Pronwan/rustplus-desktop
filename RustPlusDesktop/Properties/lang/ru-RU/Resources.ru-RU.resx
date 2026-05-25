@@ -1809,4 +1809,10 @@
   <data name="MigrationAlertCheckTitle" xml:space="preserve">
     <value>Пожалуйста, проверьте настройки оповещений</value>
   </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Зацикливание звука: </value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>Зацикливайте и останавливайте оповещения.</value>
+  </data>
 </root>

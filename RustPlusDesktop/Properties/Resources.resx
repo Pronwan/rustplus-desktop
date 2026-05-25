@@ -1809,4 +1809,10 @@ Are you sure you want to continue?</value>
   <data name="MigrationAlertCheckTitle" xml:space="preserve">
     <value>Please verify your Alert Settings</value>
   </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Audio Alert Loop: </value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>Loop and Stop your Alerts.</value>
+  </data>
 </root>

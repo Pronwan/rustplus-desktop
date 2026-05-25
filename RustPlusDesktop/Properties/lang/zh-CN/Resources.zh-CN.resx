@@ -1809,4 +1809,10 @@
   <data name="MigrationAlertCheckTitle" xml:space="preserve">
     <value>请验证您的警报设置</value>
   </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>音频警报循环：</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>循环播放并停止您的警报。</value>
+  </data>
 </root>

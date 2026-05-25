@@ -1863,4 +1863,10 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   <data name="MigrationAlertCheckTitle" xml:space="preserve">
     <value>Bitte überprüfe deine Alert-Einstellungen</value>
   </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Audio Alert Loop: </value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>Alarme in Dauerschleife und Stopp-Funktion.</value>
+  </data>
 </root>
