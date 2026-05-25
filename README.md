@@ -49,6 +49,32 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+## 🚀 Patch 5.4.0 is live! 🌍 Global Localization & more
+**30+ Languages:** The app now supports over 30 languages with instant, on-the-fly switching.
+
+
+**🎨 UI Modernization & Overlays**
+New Sidebars: Replaced bulky pop-up windows with sleek, modern sidebar overlays for settings.
+Cleaner chat views: Chat commands and alerts now open in isolated views to prevent chat clutter.
+Your own Map Marker is now slightly darker than your teammates' markers for better visibility.
+
+**🚨 Smart Alert Rework**
+Audio alerts can now loop! The mandatory in-app alert popup now acts as your "stop" button when closed.
+
+**🛡️ Data Management & Security**
+Backup & Restore: You can now easily backup and restore your server profiles, tracked players, and drawings to an encrypted file.
+Granular Reset: Selectively wipe specific app data (e.g., just the cache or pairing config) without needing a full reinstall.
+Improved background processes to eliminate UI freezes during state transitions.
+
+**🏗️ Storage & Smart Home**
+Fixed the annoying "0 items" Storage Monitor bug – upkeep and items now sync immediately upon connecting!
+Improved accuracy for the !upkeep and !upkeepdetail commands.
+
+**🛠️ Bug Fixes & Stability**
+Fixed race condition crashes when rapidly switching servers or opening the player window.
+Player lists now populate instantly upon "soft connecting".
+Fixed infinite loading spinners, broken UI flags, and search filters.
+
 ## 🛠️ v5.1.0 🛠️
 
 The "Game Changer" just got a lot more polish. This beta is all about workflow and stability.
