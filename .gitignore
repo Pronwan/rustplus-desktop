@@ -47,7 +47,8 @@ docs/*
 !RustPlusDesktop/*.jpg
 RustPlusDesktop/RustPlusDesk_lbvqmzga_wpftmp.csproj
 RustPlusDesktop/Setup.iss
-
+.opencode
+.agents
 # Secrets config
 .env
 RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs
