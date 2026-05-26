@@ -4,7 +4,7 @@
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="Rust+ Desktop – v5.4.0 Update"
-        Width="490" Height="570"
+        Width="490" Height="530"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         Background="#0F1215"
@@ -71,18 +71,18 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="🔊" FontSize="14" Margin="0,0,8,0"/>
                             <TextBlock TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Foreground="White" Text="Audio Alert Loop: "/>
-                                <Run Foreground="#8090A0" Text="Loop and Stop your Alerts."/>
+                                <Run FontWeight="SemiBold" Foreground="White" Text="{DynamicResource FeatureAudioLoopTitle}"/>
+                                <Run Foreground="#8090A0" Text="{DynamicResource FeatureAudioLoopDesc}"/>
                             </TextBlock>
                         </StackPanel>
                     </StackPanel>
                 </Border>
 
-                <!-- Tracking warning box -->
-                <Border Background="#331414" BorderBrush="#8A2323" BorderThickness="1" CornerRadius="8" Padding="12,10">
-                    <TextBlock TextWrapping="Wrap" Foreground="#FFCCCC" FontSize="12" LineHeight="18">
-                        <Run FontWeight="Bold" Foreground="#FF5555" Text="{DynamicResource BattleMetricsRemovalTitle}"/>
-                        <Run> We have completely removed the BattleMetrics integration from Rust+ Desk. BattleMetrics does not want us as a partner, and we want to protect the users of our app at all costs. Player tracking is now exclusively handled natively via direct UDP queries.</Run>
+                <!-- Alert warning box -->
+                <Border Background="#1A2233" BorderBrush="#334466" BorderThickness="1" CornerRadius="8" Padding="12,10">
+                    <TextBlock TextWrapping="Wrap" Foreground="#CCDDEE" FontSize="12" LineHeight="18">
+                        <Run FontWeight="Bold" Foreground="#6699FF" Text="{DynamicResource MigrationAlertCheckTitle}"/><Run Text=": "/>
+                        <Run Text="{DynamicResource MigrationAlertCheckDesc}"/>
                     </TextBlock>
                 </Border>
             </StackPanel>

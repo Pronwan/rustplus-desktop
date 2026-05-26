@@ -2215,6 +2215,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     PrimaryButtonText = Properties.Resources.TurnOffNow,
                     CloseButtonText = Properties.Resources.KeepActive
                 };
+                msgBox.Owner = this;
+                msgBox.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
                 var result = await msgBox.ShowDialogAsync();
                 if (result == Wpf.Ui.Controls.MessageBoxResult.Primary)
                 {
@@ -2239,6 +2241,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 PrimaryButtonText = Properties.Resources.TurnOffNow,
                 CloseButtonText = Properties.Resources.KeepActive
             };
+            msgBox.Owner = this;
+            msgBox.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             var result = await msgBox.ShowDialogAsync();
             if (result == Wpf.Ui.Controls.MessageBoxResult.Primary)
             {
@@ -2780,34 +2784,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private ServerProfile? _serverToDelete;
 
-    private void Server_RelinkBM_Click(object sender, RoutedEventArgs e)
-    {
-        ServerProfile? prof = null;
-        if (sender is FrameworkElement fe && fe.Tag is ServerProfile p)
-        {
-            prof = p;
-        }
-        else
-        {
-            prof = _vm.Selected;
-        }
 
-        if (prof == null) return;
-
-        var newId = ShowInputBox(string.Format(Properties.Resources.EnterBattlemetricsIdFor, prof.Name), Properties.Resources.RelinkBattlemetricsId, prof.BattleMetricsId ?? "");
-        if (newId != null)
-        {
-            prof.BattleMetricsId = string.IsNullOrWhiteSpace(newId) ? null : newId.Trim();
-            _vm.Save();
-            AppendLog($"BM ID updated for {prof.Name}: {prof.BattleMetricsId ?? "Auto"}");
-
-            // If it's the current server, restart polling
-            if (_vm.Selected == prof)
-            {
-                TrackingService.StartPolling(prof.Host ?? "", prof.Port, prof.Name ?? "", prof.BattleMetricsId);
-            }
-        }
-    }
 
     private void Server_Delete_Click(object sender, RoutedEventArgs e)
     {
