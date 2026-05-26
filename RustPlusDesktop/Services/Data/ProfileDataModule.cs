@@ -10,9 +10,12 @@ namespace RustPlusDesk.Services.Data
     {
         public static void SaveProfiles(IEnumerable<ServerProfile> profiles)
         {
-            Directory.CreateDirectory(DataManager.AppDir);
+            var path = DataManager.ProfilesPath;
+            var dir = Path.GetDirectoryName(path);
+            if (dir != null) Directory.CreateDirectory(dir);
+
             var json = JsonSerializer.Serialize(profiles, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(DataManager.ProfilesPath, json);
+            File.WriteAllText(path, json);
         }
 
         public static List<ServerProfile> LoadProfiles()

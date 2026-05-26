@@ -246,6 +246,7 @@ public partial class MainWindow
         if (!isHistorical)
         {
             Dispatcher.InvokeAsync(() => AddIncomingChatMessage(m.Author, m.Text, m.Timestamp.ToLocalTime(), m.SteamId, autoScroll: true));
+            try { SaveChatHistory(profile); } catch { }
         }
         
         // Timestamp für History-Anfragen aktuell halten

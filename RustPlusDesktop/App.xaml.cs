@@ -24,12 +24,16 @@ public partial class App : Application
     private MainWindow? _main;
     private System.Windows.Forms.NotifyIcon? _trayIcon;
 
+    public static bool IsRestartingForProfileSwitch { get; set; } = false;
+
     [System.Runtime.InteropServices.DllImport("user32.dll")]
     private static extern bool SetForegroundWindow(IntPtr hWnd);
 
     protected override void OnStartup(StartupEventArgs e)
     {
         SetLanguage();
+        ProfileManager.Initialize();
+        TrackingService.Initialize();
         base.OnStartup(e);
 
         EnsureUrlProtocolRegistered();
@@ -206,6 +210,61 @@ public partial class App : Application
     }
 
     private static async Task SendLinkToRunningInstanceAsync(string link) => await SendCommandToRunningInstanceAsync(link);
+
+    public static async Task RestartAsync()
+    {
+        if (Current.MainWindow is MainWindow main)
+        {
+            try
+            {
+                await main.StopPairingListenerForRestartAsync();
+            }
+            catch { }
+        }
+
+        try
+        {
+            var nodes = System.Diagnostics.Process.GetProcessesByName("node");
+            foreach (var p in nodes)
+            {
+                try
+                {
+                    if (p.MainWindowHandle == IntPtr.Zero)
+                    {
+                        p.Kill(true);
+                    }
+                }
+                catch { }
+            }
+        }
+        catch { }
+
+        if (_single != null)
+        {
+            try
+            {
+                _single.ReleaseMutex();
+                _single.Dispose();
+                _single = null;
+            }
+            catch { }
+        }
+
+        try
+        {
+            var exePath = Environment.ProcessPath ?? System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
+            if (!string.IsNullOrEmpty(exePath))
+            {
+                System.Diagnostics.Process.Start(exePath);
+            }
+        }
+        catch { }
+
+        Current.Dispatcher.Invoke(() =>
+        {
+            Current.Shutdown();
+        });
+    }
 
     public void SetLanguage()
     {

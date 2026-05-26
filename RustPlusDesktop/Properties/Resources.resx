@@ -1693,6 +1693,26 @@ Download and install now?</value>
   <data name="BackupSuccessTitle" xml:space="preserve">
     <value>Backup Completed</value>
   </data>
+  <data name="SwitchAccount" xml:space="preserve">
+    <value>Switch Account</value>
+  </data>
+  <data name="ChooseAccount" xml:space="preserve">
+    <value>Choose an account to switch to:</value>
+  </data>
+  <data name="Switch" xml:space="preserve">
+    <value>Switch</value>
+  </data>
+    <value>Cancel</value>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="LogoutConfirmMessage" xml:space="preserve">
+    <value>Logging out will remove this profile and all its data. You can create a new profile to start fresh.</value>
+  </data>
+  <data name="LogoutConfirmTitle" xml:space="preserve">
+    <value>Logout Confirmation</value>
+  </data>
+
   <data name="BackupErrorLog" xml:space="preserve">
     <value>[SYSTEM] Backup error: {0}</value>
   </data>
@@ -1736,6 +1756,27 @@ Are you sure you want to continue?</value>
   </data>
   <data name="InvalidBackupFormat" xml:space="preserve">
     <value>Invalid backup file format or missing signature.</value>
+  </data>
+  <data name="SelectProfilesToBackup" xml:space="preserve">
+    <value>Select profiles to backup:</value>
+  </data>
+  <data name="SelectProfilesToRestore" xml:space="preserve">
+    <value>Select profiles to restore:</value>
+  </data>
+  <data name="BackupProfilesTitle" xml:space="preserve">
+    <value>Backup Profiles</value>
+  </data>
+  <data name="RestoreProfilesTitle" xml:space="preserve">
+    <value>Restore Profiles</value>
+  </data>
+  <data name="RestoreModeAppend" xml:space="preserve">
+    <value>Append (add to existing profiles)</value>
+  </data>
+  <data name="RestoreModeReplace" xml:space="preserve">
+    <value>Replace (remove all existing profiles first)</value>
+  </data>
+  <data name="RestoreMode" xml:space="preserve">
+    <value>Restore Mode</value>
   </data>
   <data name="WipeLogStart" xml:space="preserve">
     <value>[WIPE] Starting selective reset operation...</value>
@@ -1802,5 +1843,50 @@ Are you sure you want to continue?</value>
   </data>
   <data name="TurnOffNow" xml:space="preserve">
     <value>Turn off now</value>
+  </data>
+  <data name="CustomMarkers" xml:space="preserve">
+    <value>Custom Map Markers</value>
+  </data>
+  <data name="LoadCustomMarkers" xml:space="preserve">
+    <value>Load JSON File:</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="FilterByMarker" xml:space="preserve">
+    <value>Filter:</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="CustomMarkerCount" xml:space="preserve">
+    <value>{0} markers loaded, {1} enabled</value>
+  </data>
+  <data name="LoadCustomMarkersTitle" xml:space="preserve">
+    <value>Load Custom Markers JSON</value>
+  </data>
+  <data name="CustomMarkersLoaded" xml:space="preserve">
+    <value>Successfully loaded {0} markers with {1} unique names</value>
+  </data>
+  <data name="InvalidMarkerFile" xml:space="preserve">
+    <value>The selected file is not a valid marker JSON file</value>
+  </data>
+  <data name="ErrorLoadingMarkers" xml:space="preserve">
+    <value>Error loading markers: {0}</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="ClearAll" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="SelectMarkersToShow" xml:space="preserve">
+    <value>Select Markers to Show</value>
   </data>
 </root>

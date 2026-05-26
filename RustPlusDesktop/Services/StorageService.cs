@@ -13,8 +13,7 @@ public static class StorageService
         ProfileDataModule.SaveProfiles(profiles);
     }
 
-    public static string GetProfilesPath() =>
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RustPlusDesk", "profiles.json");
+    public static string GetProfilesPath() => DataManager.ProfilesPath;
 
     public static List<ServerProfile> LoadProfiles()
     {

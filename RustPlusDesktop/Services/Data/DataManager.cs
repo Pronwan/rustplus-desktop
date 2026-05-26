@@ -27,13 +27,41 @@ namespace RustPlusDesk.Services.Data
         public static string AppDir =>
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RustPlusDesk");
 
-        public static string ProfilesPath => Path.Combine(AppDir, "profiles.json");
+        public static string ProfilesPath
+        {
+            get
+            {
+                if (RustPlusDesk.Services.ProfileManager.CurrentProfile != null)
+                {
+                    var path1 = Path.Combine(RustPlusDesk.Services.ProfileManager.CurrentProfile.FolderPath, "profiles.json");
+                    var path2 = Path.Combine(RustPlusDesk.Services.ProfileManager.CurrentProfile.FolderPath, "servers.json");
+                    if (!File.Exists(path1) && File.Exists(path2))
+                        return path2;
+                    return path1;
+                }
+                return Path.Combine(AppDir, "profiles.json");
+            }
+        }
 
-        public static string CacheDir => Path.Combine(AppDir, "cache");
+        public static string CacheDir
+        {
+            get
+            {
+                if (ProfileManager.CurrentProfile != null)
+                    return ProfileManager.CurrentProfile.CachePath;
+                return Path.Combine(AppDir, "cache");
+            }
+        }
 
         public static string GetOverlayJsonPath(string serverKey, ulong steamId)
         {
-            var baseDir = Path.Combine(AppDir, "Overlays", serverKey);
+            string overlaysBase;
+            if (ProfileManager.CurrentProfile != null)
+                overlaysBase = ProfileManager.CurrentProfile.OverlaysPath;
+            else
+                overlaysBase = Path.Combine(AppDir, "Overlays");
+
+            var baseDir = Path.Combine(overlaysBase, serverKey);
             Directory.CreateDirectory(baseDir);
             return Path.Combine(baseDir, $"{steamId}.json");
         }

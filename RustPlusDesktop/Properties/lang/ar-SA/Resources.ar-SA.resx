@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -1270,7 +1271,7 @@
     <value>{0} دقيقة و {1:D2} ثانية</value>
   </data>
   <data name="AgoHoursMinutes" xml:space="preserve">
-    <value منذ {0} ساعة و {1} دقيقة</value>
+    <value>منذ {0} ساعة و {1} دقيقة</value>
   </data>
   <data name="AgoMinutes" xml:space="preserve">
     <value>منذ {0} دقيقة</value>

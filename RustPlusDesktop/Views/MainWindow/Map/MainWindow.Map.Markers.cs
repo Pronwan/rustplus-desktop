@@ -67,6 +67,9 @@ public partial class MainWindow
     }
     private readonly List<HeliCrashSite> _heliCrashSites = new();
 
+    // Custom markers from JSON
+    private readonly Dictionary<string, FrameworkElement> _customMarkerEls = new();
+
     private bool IsInsideMap(double x, double y)
         => _worldSizeS > 0 && x > 0 && x < _worldSizeS && y > 0 && y < _worldSizeS;
 
@@ -129,6 +132,105 @@ public partial class MainWindow
             fe.Visibility = _showMonuments ? Visibility.Visible : Visibility.Collapsed;
         }
         PopulateMonumentList();
+        BuildCustomMarkerOverlays();
+    }
+
+    private void BuildCustomMarkerOverlays()
+    {
+        if (Overlay == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0) return;
+
+        foreach (var kv in _customMarkerEls) Overlay.Children.Remove(kv.Value);
+        _customMarkerEls.Clear();
+
+        var markers = TrackingService.GetCustomMarkers();
+        if (markers.Count == 0) return;
+
+        var fontUri = new Uri("pack://application:,,,/");
+        var markerFont = new FontFamily(fontUri, "./Assets/Fonts/#Permanent Marker");
+
+        foreach (var marker in markers)
+        {
+            double offset = _worldSizeS / 2.0;
+            var p = WorldToImagePx(marker.X + offset, marker.Y + offset);
+
+            var color = GetBrushFromHex(marker.Color) ?? Brushes.DeepSkyBlue;
+
+            var grid = new Grid { Tag = marker.Name };
+
+            var circle = new Ellipse
+            {
+                Width = marker.Size,
+                Height = marker.Size,
+                Fill = color,
+                Stroke = Brushes.Black,
+                StrokeThickness = 1.5
+            };
+            grid.Children.Add(circle);
+
+            var textLayer = new Grid();
+            int[][] offsets = { new[] { -1, -1 }, new[] { -1, 1 }, new[] { 1, -1 }, new[] { 1, 1 }, new[] { -1, 0 }, new[] { 1, 0 }, new[] { 0, -1 }, new[] { 0, 1 } };
+            foreach (var o in offsets)
+            {
+                int dx = o[0], dy = o[1];
+                textLayer.Children.Add(new TextBlock
+                {
+                    Text = marker.Name,
+                    FontFamily = markerFont,
+                    Foreground = Brushes.Black,
+                    FontSize = 11,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextAlignment = TextAlignment.Center,
+                    Margin = new Thickness(2 + dx, dy, 2 - dx, -dy)
+                });
+            }
+            textLayer.Children.Add(new TextBlock
+            {
+                Text = marker.Name,
+                FontFamily = markerFont,
+                Foreground = Brushes.White,
+                FontSize = 11,
+                FontWeight = FontWeights.Bold,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextAlignment = TextAlignment.Center,
+                Margin = new Thickness(2, 0, 2, 0)
+            });
+            grid.Children.Add(textLayer);
+
+            grid.ToolTip = $"{marker.Name} ({marker.X + offset:F0}, {marker.Y + offset:F0})";
+
+            grid.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            double w = grid.DesiredSize.Width > 0 ? grid.DesiredSize.Width : marker.Size + 40;
+            double h = grid.DesiredSize.Height > 0 ? grid.DesiredSize.Height : marker.Size + 10;
+
+            Canvas.SetLeft(grid, p.X - w / 2);
+            Canvas.SetTop(grid, p.Y - h / 2);
+
+            Panel.SetZIndex(grid, 950);
+
+            Overlay.Children.Add(grid);
+            _customMarkerEls[marker.Name + "@" + p.X.ToString("0") + "," + p.Y.ToString("0")] = grid;
+        }
+    }
+
+    private static Brush? GetBrushFromHex(string? hex)
+    {
+        if (string.IsNullOrEmpty(hex)) return null;
+        try
+        {
+            if (hex.StartsWith("#") && hex.Length == 7)
+            {
+                var color = Color.FromRgb(
+                    Convert.ToByte(hex.Substring(1, 2), 16),
+                    Convert.ToByte(hex.Substring(3, 2), 16),
+                    Convert.ToByte(hex.Substring(5, 2), 16));
+                return new SolidColorBrush(color);
+            }
+        }
+        catch { }
+        return null;
     }
 
     private void RefreshMonumentOverlayPositions()

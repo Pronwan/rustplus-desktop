@@ -1737,6 +1737,27 @@ Are you sure you want to continue?</value>
   <data name="InvalidBackupFormat" xml:space="preserve">
     <value>Invalid backup file format or missing signature.</value>
   </data>
+  <data name="SelectProfilesToBackup" xml:space="preserve">
+    <value>Select profiles to backup:</value>
+  </data>
+  <data name="SelectProfilesToRestore" xml:space="preserve">
+    <value>Select profiles to restore:</value>
+  </data>
+  <data name="BackupProfilesTitle" xml:space="preserve">
+    <value>Backup Profiles</value>
+  </data>
+  <data name="RestoreProfilesTitle" xml:space="preserve">
+    <value>Restore Profiles</value>
+  </data>
+  <data name="RestoreModeAppend" xml:space="preserve">
+    <value>Append (add to existing profiles)</value>
+  </data>
+  <data name="RestoreModeReplace" xml:space="preserve">
+    <value>Replace (remove all existing profiles first)</value>
+  </data>
+  <data name="RestoreMode" xml:space="preserve">
+    <value>Restore Mode</value>
+  </data>
   <data name="WipeLogStart" xml:space="preserve">
     <value>[WIPE] Starting selective reset operation...</value>
   </data>

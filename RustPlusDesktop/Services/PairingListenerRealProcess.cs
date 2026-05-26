@@ -65,9 +65,7 @@ namespace RustPlusDesk.Services
 
 
 
-        private string ConfigPath => Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "RustPlusDesk", "rustplusjs-config.json");
+        private string ConfigPath => TrackingService.FcmConfigPath;
         public event EventHandler<TeamChatMessage>? ChatReceived;
 
         private void TryFlushChat()

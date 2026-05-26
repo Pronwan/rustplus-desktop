@@ -1,6 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Text.Json;
+using RustPlusDesk.Models;
+using RustPlusDesk.Views;
 
 namespace RustPlusDesk.Services.Data
 {
@@ -33,39 +38,72 @@ namespace RustPlusDesk.Services.Data
 
         public static void CreateBackup(string zipPath, string password)
         {
+            CreateBackup(zipPath, password, null);
+        }
+
+        public static void CreateBackup(string zipPath, string password, List<string>? profileIdsToBackup)
+        {
             string tempDir = Path.Combine(DataManager.AppDir, "temp_backup_staging");
             string tempZip = Path.Combine(DataManager.AppDir, "temp_backup_archive.zip");
-            
+
             try
             {
-                // 1. Clean previous staging just in case
                 if (Directory.Exists(tempDir))
-                {
                     Directory.Delete(tempDir, true);
-                }
                 Directory.CreateDirectory(tempDir);
 
                 if (File.Exists(tempZip))
-                {
                     File.Delete(tempZip);
-                }
 
-                // 2. Copy profiles.json
-                if (File.Exists(DataManager.ProfilesPath))
+                var profilesPath = ProfileManager.ProfilesRootPath;
+                var profilesIndexPath = Path.Combine(profilesPath, "profiles.json");
+                ProfileList? profileList = null;
+
+                if (File.Exists(profilesIndexPath))
                 {
-                    File.Copy(DataManager.ProfilesPath, Path.Combine(tempDir, "profiles.json"), true);
+                    var json = File.ReadAllText(profilesIndexPath);
+                    if (!string.IsNullOrWhiteSpace(json))
+                    {
+                        try
+                        {
+                            profileList = JsonSerializer.Deserialize<ProfileList>(json);
+                        }
+                        catch
+                        {
+                            profileList = null;
+                        }
+                    }
                 }
 
-                // 2b. Copy rustplusjs-config.json
-                string fcmConfigPath = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    "RustPlusDesk", "rustplusjs-config.json");
-                if (File.Exists(fcmConfigPath))
+                if (profileList != null && profileIdsToBackup != null)
                 {
-                    File.Copy(fcmConfigPath, Path.Combine(tempDir, "rustplusjs-config.json"), true);
+                    profileList.Profiles = profileList.Profiles
+                        .Where(p => profileIdsToBackup.Contains(p.Id))
+                        .ToList();
                 }
 
-                // 3. Copy custom_crosshairs.json
+                if (profileList != null && profileList.Profiles.Count > 0)
+                {
+                    var filteredJson = JsonSerializer.Serialize(profileList, new JsonSerializerOptions { WriteIndented = true });
+                    File.WriteAllText(Path.Combine(tempDir, "profiles.json"), filteredJson);
+
+                    foreach (var profile in profileList.Profiles)
+                    {
+                        var profileFolder = profile.FolderPath;
+                        if (Directory.Exists(profileFolder))
+                        {
+                            var destFolder = Path.Combine(tempDir, "profiles", profile.Id);
+                            CopyDirectory(profileFolder, destFolder);
+                        }
+                    }
+                }
+
+                string minimapPath = Path.Combine(DataManager.CacheDir, "minimap_settings.json");
+                if (File.Exists(minimapPath))
+                {
+                    File.Copy(minimapPath, Path.Combine(tempDir, "minimap_settings.json"), true);
+                }
+
                 string crosshairPath = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                     "RustPlusDesk", "custom_crosshairs.json");
@@ -74,28 +112,10 @@ namespace RustPlusDesk.Services.Data
                     File.Copy(crosshairPath, Path.Combine(tempDir, "custom_crosshairs.json"), true);
                 }
 
-                // 4. Copy minimap_settings.json
-                string minimapPath = Path.Combine(DataManager.CacheDir, "minimap_settings.json");
-                if (File.Exists(minimapPath))
-                {
-                    File.Copy(minimapPath, Path.Combine(tempDir, "minimap_settings.json"), true);
-                }
-
-                // 5. Copy Overlays folder
-                string overlaysSource = Path.Combine(DataManager.AppDir, "Overlays");
-                if (Directory.Exists(overlaysSource))
-                {
-                    CopyDirectory(overlaysSource, Path.Combine(tempDir, "Overlays"));
-                }
-
-                // 6. Zip everything to a temp zip file first
                 ZipFile.CreateFromDirectory(tempDir, tempZip);
 
-                // 7. If password is provided, encrypt; else copy standard zip directly
                 if (File.Exists(zipPath))
-                {
                     File.Delete(zipPath);
-                }
 
                 if (!string.IsNullOrEmpty(password))
                 {
@@ -108,87 +128,127 @@ namespace RustPlusDesk.Services.Data
             }
             finally
             {
-                // 8. Cleanup staging folders and temp zip
                 if (Directory.Exists(tempDir))
-                {
                     Directory.Delete(tempDir, true);
-                }
                 if (File.Exists(tempZip))
-                {
                     File.Delete(tempZip);
-                }
             }
         }
 
         public static void RestoreBackup(string zipPath, string password)
+        {
+            RestoreBackup(zipPath, password, null, RestoreMode.Append);
+        }
+
+        public static void RestoreBackup(string zipPath, string password, List<string>? profileIdsToRestore, RestoreMode mode)
         {
             string tempDir = Path.Combine(DataManager.AppDir, "temp_restore_staging");
             string tempZip = Path.Combine(DataManager.AppDir, "temp_restore_archive.zip");
 
             try
             {
-                // 1. Clean staging just in case
                 if (Directory.Exists(tempDir))
-                {
                     Directory.Delete(tempDir, true);
-                }
                 if (File.Exists(tempZip))
-                {
                     File.Delete(tempZip);
-                }
 
-                // 2. Decrypt zip first if encrypted; otherwise copy directly
                 if (IsBackupEncrypted(zipPath))
-                {
                     DecryptFile(zipPath, tempZip, password);
-                }
                 else
-                {
                     File.Copy(zipPath, tempZip, true);
-                }
 
-                // 3. Extract standard zip to staging folder
                 ZipFile.ExtractToDirectory(tempZip, tempDir);
 
-                // 4. Restore profiles.json
                 string stagingProfiles = Path.Combine(tempDir, "profiles.json");
+                ProfileList? backupProfileList = null;
                 if (File.Exists(stagingProfiles))
                 {
-                    Directory.CreateDirectory(DataManager.AppDir);
-                    File.Copy(stagingProfiles, DataManager.ProfilesPath, true);
-                }
-
-                // 4b. Restore rustplusjs-config.json
-                string stagingFcm = Path.Combine(tempDir, "rustplusjs-config.json");
-                if (File.Exists(stagingFcm))
-                {
-                    string targetFcm = Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                        "RustPlusDesk", "rustplusjs-config.json");
-                    string targetDir = Path.GetDirectoryName(targetFcm);
-                    if (targetDir != null)
+                    var json = File.ReadAllText(stagingProfiles);
+                    if (!string.IsNullOrWhiteSpace(json))
                     {
-                        Directory.CreateDirectory(targetDir);
+                        try
+                        {
+                            backupProfileList = JsonSerializer.Deserialize<ProfileList>(json);
+                        }
+                        catch
+                        {
+                            backupProfileList = null;
+                        }
                     }
-                    File.Copy(stagingFcm, targetFcm, true);
                 }
 
-                // 5. Restore custom_crosshairs.json
-                string stagingCrosshairs = Path.Combine(tempDir, "custom_crosshairs.json");
-                if (File.Exists(stagingCrosshairs))
+                var profilesDir = ProfileManager.ProfilesRootPath;
+                Directory.CreateDirectory(profilesDir);
+
+                if (mode == RestoreMode.Replace && backupProfileList != null)
                 {
-                    string targetCrosshairs = Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                        "RustPlusDesk", "custom_crosshairs.json");
-                    string targetDir = Path.GetDirectoryName(targetCrosshairs);
-                    if (targetDir != null)
+                    foreach (var p in backupProfileList.Profiles)
                     {
-                        Directory.CreateDirectory(targetDir);
+                        var folder = Path.Combine(profilesDir, p.Id);
+                        if (Directory.Exists(folder))
+                            Directory.Delete(folder, true);
                     }
-                    File.Copy(stagingCrosshairs, targetCrosshairs, true);
+                    if (File.Exists(Path.Combine(ProfileManager.ProfilesRootPath, "profiles.json")))
+                    {
+                        var existingJson = File.ReadAllText(Path.Combine(ProfileManager.ProfilesRootPath, "profiles.json"));
+                        var existingList = JsonSerializer.Deserialize<ProfileList>(existingJson);
+                        if (existingList != null)
+                        {
+                            foreach (var p in existingList.Profiles.ToList())
+                            {
+                                if (backupProfileList.Profiles.All(bp => bp.Id != p.Id))
+                                    existingList.Profiles.Remove(p);
+                            }
+                            File.WriteAllText(Path.Combine(ProfileManager.ProfilesRootPath, "profiles.json"), JsonSerializer.Serialize(existingList, new JsonSerializerOptions { WriteIndented = true }));
+                        }
+                    }
                 }
 
-                // 6. Restore minimap_settings.json
+                if (backupProfileList != null)
+                {
+                    var idsToRestore = profileIdsToRestore ?? backupProfileList.Profiles.Select(p => p.Id).ToList();
+                    var profilesToRestore = backupProfileList.Profiles.Where(p => idsToRestore.Contains(p.Id)).ToList();
+
+                    var stagingProfilesDir = Path.Combine(tempDir, "profiles");
+
+                    ProfileList targetList;
+                    if (File.Exists(Path.Combine(ProfileManager.ProfilesRootPath, "profiles.json")))
+                    {
+                        var existingJson = File.ReadAllText(Path.Combine(ProfileManager.ProfilesRootPath, "profiles.json"));
+                        targetList = JsonSerializer.Deserialize<ProfileList>(existingJson) ?? new ProfileList();
+                    }
+                    else
+                    {
+                        targetList = new ProfileList();
+                    }
+
+                    foreach (var profile in profilesToRestore)
+                    {
+                        if (mode == RestoreMode.Append && targetList.Profiles.Any(p => p.Id == profile.Id))
+                            continue;
+
+                        var stagingFolder = Path.Combine(stagingProfilesDir, profile.Id);
+                        if (Directory.Exists(stagingFolder))
+                        {
+                            var destFolder = Path.Combine(profilesDir, profile.Id);
+                            if (Directory.Exists(destFolder) && mode == RestoreMode.Append)
+                            {
+                            }
+                            else
+                            {
+                                if (Directory.Exists(destFolder))
+                                    Directory.Delete(destFolder, true);
+                                CopyDirectory(stagingFolder, destFolder);
+                            }
+                        }
+
+                        if (!targetList.Profiles.Any(p => p.Id == profile.Id))
+                            targetList.Profiles.Add(profile);
+                    }
+
+                    File.WriteAllText(Path.Combine(ProfileManager.ProfilesRootPath, "profiles.json"), JsonSerializer.Serialize(targetList, new JsonSerializerOptions { WriteIndented = true }));
+                }
+
                 string stagingMinimap = Path.Combine(tempDir, "minimap_settings.json");
                 if (File.Exists(stagingMinimap))
                 {
@@ -196,35 +256,75 @@ namespace RustPlusDesk.Services.Data
                     File.Copy(stagingMinimap, Path.Combine(DataManager.CacheDir, "minimap_settings.json"), true);
                 }
 
-                // 7. Restore Overlays folder
-                string stagingOverlays = Path.Combine(tempDir, "Overlays");
-                if (Directory.Exists(stagingOverlays))
+                string stagingCrosshairs = Path.Combine(tempDir, "custom_crosshairs.json");
+                if (File.Exists(stagingCrosshairs))
                 {
-                    string targetOverlays = Path.Combine(DataManager.AppDir, "Overlays");
-                    if (Directory.Exists(targetOverlays))
-                    {
-                        Directory.Delete(targetOverlays, true);
-                    }
-                    CopyDirectory(stagingOverlays, targetOverlays);
+                    string targetCrosshairs = Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        "RustPlusDesk", "custom_crosshairs.json");
+                    string targetDir = Path.GetDirectoryName(targetCrosshairs)!;
+                    Directory.CreateDirectory(targetDir);
+                    File.Copy(stagingCrosshairs, targetCrosshairs, true);
                 }
             }
             finally
             {
-                // 8. Cleanup staging
                 if (Directory.Exists(tempDir))
-                {
                     Directory.Delete(tempDir, true);
-                }
                 if (File.Exists(tempZip))
-                {
                     File.Delete(tempZip);
+            }
+        }
+
+        public static List<Profile> GetProfilesFromBackup(string zipPath, string password)
+        {
+            string tempDir = Path.Combine(DataManager.AppDir, "temp_backup_inspect");
+            string tempZip = Path.Combine(DataManager.AppDir, "temp_backup_inspect.zip");
+
+            try
+            {
+                if (Directory.Exists(tempDir))
+                    Directory.Delete(tempDir, true);
+                if (File.Exists(tempZip))
+                    File.Delete(tempZip);
+
+                if (IsBackupEncrypted(zipPath))
+                    DecryptFile(zipPath, tempZip, password);
+                else
+                    File.Copy(zipPath, tempZip, true);
+
+                ZipFile.ExtractToDirectory(tempZip, tempDir);
+
+                string stagingProfiles = Path.Combine(tempDir, "profiles.json");
+                if (File.Exists(stagingProfiles))
+                {
+                    var json = File.ReadAllText(stagingProfiles);
+                    if (!string.IsNullOrWhiteSpace(json))
+                    {
+                        try
+                        {
+                            var profileList = JsonSerializer.Deserialize<ProfileList>(json);
+                            return profileList?.Profiles ?? new List<Profile>();
+                        }
+                        catch
+                        {
+                        }
+                    }
                 }
+
+                return new List<Profile>();
+            }
+            finally
+            {
+                if (Directory.Exists(tempDir))
+                    Directory.Delete(tempDir, true);
+                if (File.Exists(tempZip))
+                    File.Delete(tempZip);
             }
         }
 
         private static void EncryptFile(string srcPath, string destPath, string password)
         {
-            // 1. Generate salt and IV
             byte[] salt = new byte[16];
             byte[] iv = new byte[16];
             using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
@@ -233,21 +333,16 @@ namespace RustPlusDesk.Services.Data
                 rng.GetBytes(iv);
             }
 
-            // 2. Derive key from password using PBKDF2
             byte[] key;
             using (var pbkdf2 = new System.Security.Cryptography.Rfc2898DeriveBytes(password, salt, 10000, System.Security.Cryptography.HashAlgorithmName.SHA256))
             {
-                key = pbkdf2.GetBytes(32); // AES-256 key
+                key = pbkdf2.GetBytes(32);
             }
 
-            // 3. Perform AES encryption
             using (var fsOut = new FileStream(destPath, FileMode.Create, FileAccess.Write))
             {
-                // Write magic header signature
                 fsOut.Write(EncSig, 0, EncSig.Length);
-                // Write salt
                 fsOut.Write(salt, 0, salt.Length);
-                // Write IV
                 fsOut.Write(iv, 0, iv.Length);
 
                 using (var aes = System.Security.Cryptography.Aes.Create())
@@ -276,7 +371,6 @@ namespace RustPlusDesk.Services.Data
         {
             using (var fsIn = new FileStream(srcPath, FileMode.Open, FileAccess.Read))
             {
-                // 1. Verify header
                 byte[] header = new byte[EncSig.Length];
                 fsIn.Read(header, 0, header.Length);
                 for (int i = 0; i < EncSig.Length; i++)
@@ -285,22 +379,18 @@ namespace RustPlusDesk.Services.Data
                         throw new InvalidOperationException(Properties.Resources.InvalidBackupFormat);
                 }
 
-                // 2. Read Salt
                 byte[] salt = new byte[16];
                 fsIn.Read(salt, 0, salt.Length);
 
-                // 3. Read IV
                 byte[] iv = new byte[16];
                 fsIn.Read(iv, 0, iv.Length);
 
-                // 4. Derive key using PBKDF2
                 byte[] key;
                 using (var pbkdf2 = new System.Security.Cryptography.Rfc2898DeriveBytes(password, salt, 10000, System.Security.Cryptography.HashAlgorithmName.SHA256))
                 {
                     key = pbkdf2.GetBytes(32);
                 }
 
-                // 5. Perform AES decryption
                 using (var aes = System.Security.Cryptography.Aes.Create())
                 {
                     aes.Key = key;

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "ast-grep": {
+      "source": "ast-grep/agent-skill",
+      "sourceType": "github",
+      "skillPath": "ast-grep/skills/ast-grep/SKILL.md",
+      "computedHash": "74e1f29217c771ff5321e10e89fd64db144a4116f15df7af6c01a994ef062458"
+    },
+    "dotnet-patterns": {
+      "source": "affaan-m/everything-claude-code",
+      "sourceType": "github",
+      "skillPath": "skills/dotnet-patterns/SKILL.md",
+      "computedHash": "093acce04bc58e34881af59c839829cbedf6816a97ca268fe5037d2d4f12cfa7"
+    }
+  }
+}

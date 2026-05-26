@@ -1,4 +1,5 @@
 using RustPlusDesk.Models;
+using RustPlusDesk.Services;
 using RustPlusDesk.Services.Data;
 using System;
 using System.Collections.Generic;
@@ -337,12 +338,15 @@ private bool _overlayToolsVisible = false;
 
     private string GetOverlayPngPathForPlayer(ulong steamId)
     {
-        var baseDir = System.IO.Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "RustPlusDesk",
-            "Overlays",
-            GetServerKey()
-        );
+        string overlaysBase;
+        if (ProfileManager.CurrentProfile != null)
+            overlaysBase = ProfileManager.CurrentProfile.OverlaysPath;
+        else
+            overlaysBase = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "RustPlusDesk", "Overlays");
+
+        var baseDir = System.IO.Path.Combine(overlaysBase, GetServerKey());
         Directory.CreateDirectory(baseDir);
         return System.IO.Path.Combine(baseDir, $"{steamId}.png");
     }

@@ -459,6 +459,8 @@ public class MainViewModel : INotifyPropertyChanged
     public void Load()
     {
         Servers.Clear();
+        Selected = null; // Unconditionally reset the selection to prevent persisting the old profile's selected server!
+        SteamId64 = ""; // Reset Steam ID so it can be re-hydrated correctly
         foreach (var p in StorageService.LoadProfiles())
         {
             p.Devices ??= new ObservableCollection<SmartDevice>(); // niemals null
@@ -468,7 +470,7 @@ public class MainViewModel : INotifyPropertyChanged
         }
 
         // WICHTIG: Vorauswahl, sonst bleibt CurrentDevices=null
-        if (Servers.Count > 0 && Selected == null)
+        if (Servers.Count > 0)
             Selected = Servers[0];
     }
 

@@ -338,6 +338,9 @@ public partial class MainWindow
         foreach (var fe in _deathPins.Values)
             ApplyCurrentOverlayScale(fe);
 
+        foreach (var fe in _customMarkerEls.Values)
+            ApplyCurrentOverlayScale(fe);
+
         RefreshShopIconScales();
     }
 

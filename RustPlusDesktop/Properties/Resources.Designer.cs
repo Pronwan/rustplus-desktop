@@ -615,6 +615,12 @@ namespace RustPlusDesk.Properties {
         public static string Encrypt => GetString("Encrypt");
         public static string Decrypt => GetString("Decrypt");
         public static string OK => GetString("OK");
+        public static string Logout => GetString("Logout");
+        public static string LogoutConfirmMessage => GetString("LogoutConfirmMessage");
+        public static string LogoutConfirmTitle => GetString("LogoutConfirmTitle");
+        public static string SwitchAccount => GetString("SwitchAccount");
+        public static string ChooseAccount => GetString("ChooseAccount");
+        public static string Switch => GetString("Switch");
         public static string BackupApplicationDataTitle => GetString("BackupApplicationDataTitle");
         public static string BackupSuccessLog => GetString("BackupSuccessLog");
         public static string BackupSuccessMessage => GetString("BackupSuccessMessage");
@@ -633,6 +639,13 @@ namespace RustPlusDesk.Properties {
         public static string RestoreErrorLog => GetString("RestoreErrorLog");
         public static string RestoreErrorMessage => GetString("RestoreErrorMessage");
         public static string InvalidBackupFormat => GetString("InvalidBackupFormat");
+        public static string SelectProfilesToBackup => GetString("SelectProfilesToBackup");
+        public static string SelectProfilesToRestore => GetString("SelectProfilesToRestore");
+        public static string BackupProfilesTitle => GetString("BackupProfilesTitle");
+        public static string RestoreProfilesTitle => GetString("RestoreProfilesTitle");
+        public static string RestoreModeAppend => GetString("RestoreModeAppend");
+        public static string RestoreModeReplace => GetString("RestoreModeReplace");
+        public static string RestoreMode => GetString("RestoreMode");
         public static string WipeLogStart => GetString("WipeLogStart");
         public static string WipeLogConnStart => GetString("WipeLogConnStart");
         public static string WipeLogConnEnd => GetString("WipeLogConnEnd");
@@ -655,5 +668,17 @@ namespace RustPlusDesk.Properties {
         public static string LoopAudioGlobalPrompt => GetString("LoopAudioGlobalPrompt");
         public static string TurnOffNow => GetString("TurnOffNow");
         public static string KeepActive => GetString("KeepActive");
+        public static string CustomMarkers => GetString("CustomMarkers");
+        public static string LoadCustomMarkers => GetString("LoadCustomMarkers");
+        public static string Browse => GetString("Browse");
+        public static string FilterByMarker => GetString("FilterByMarker");
+        public static string ClearMarkers => GetString("Clear");
+        public static string CustomMarkerCount => GetString("CustomMarkerCount");
+        public static string LoadCustomMarkersTitle => GetString("LoadCustomMarkersTitle");
+        public static string CustomMarkersLoaded => GetString("CustomMarkersLoaded");
+        public static string InvalidMarkerFile => GetString("InvalidMarkerFile");
+        public static string ErrorLoadingMarkers => GetString("ErrorLoadingMarkers");
+        public static string Success => GetString("Success");
+        public static string Error => GetString("Error");
     }
 }

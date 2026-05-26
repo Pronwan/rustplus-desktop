@@ -103,12 +103,39 @@ public partial class MainWindow
         }
     }
 
+    public void ClearMapAndDisconnect()
+    {
+        _ = HardDisconnectAsync();
+    }
+
+    private async Task HardDisconnectAsync()
+    {
+        try
+        {
+            if (_rust != null)
+                await _rust.DisconnectAsync();
+        }
+        catch { }
+
+        Dispatcher.Invoke(() =>
+        {
+            Overlay.Children.Clear();
+            _monEls.Clear();
+            _shopEls.Clear();
+            _customMarkerEls.Clear();
+            _monData.Clear();
+            _worldSizeS = 0;
+            _worldRectPx = default;
+            ResetMapDisplay();
+        });
+    }
+
     public async Task PerformGranularResetAsync(
-        bool connection, 
-        bool profiles, 
-        bool steam, 
-        bool pairing, 
-        bool crosshairs, 
+        bool connection,
+        bool profiles,
+        bool steam,
+        bool pairing,
+        bool crosshairs,
         bool cache)
     {
         AppendLog(Properties.Resources.WipeLogStart);
@@ -169,12 +196,26 @@ public partial class MainWindow
             AppendLog(Properties.Resources.WipeLogCacheStart);
             try
             {
-                if (System.IO.Directory.Exists(RustPlusDesk.Services.Data.DataManager.CacheDir))
+                if (ProfileManager.CurrentProfile != null)
                 {
-                    System.IO.Directory.Delete(RustPlusDesk.Services.Data.DataManager.CacheDir, true);
+                    if (System.IO.Directory.Exists(ProfileManager.CurrentProfile.CachePath))
+                        System.IO.Directory.Delete(ProfileManager.CurrentProfile.CachePath, true);
+                    if (System.IO.Directory.Exists(ProfileManager.CurrentProfile.ChatCachePath))
+                        System.IO.Directory.Delete(ProfileManager.CurrentProfile.ChatCachePath, true);
                 }
-                
-                var overlaysDir = System.IO.Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "Overlays");
+                else
+                {
+                    if (System.IO.Directory.Exists(RustPlusDesk.Services.Data.DataManager.CacheDir))
+                        System.IO.Directory.Delete(RustPlusDesk.Services.Data.DataManager.CacheDir, true);
+                    var legacyChatPath = System.IO.Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                        "RustPlusDesk", "chat");
+                    if (System.IO.Directory.Exists(legacyChatPath))
+                        System.IO.Directory.Delete(legacyChatPath, true);
+                }
+
+                var overlaysDir = ProfileManager.CurrentProfile?.OverlaysPath
+                    ?? System.IO.Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "Overlays");
                 if (System.IO.Directory.Exists(overlaysDir))
                 {
                     System.IO.Directory.Delete(overlaysDir, true);

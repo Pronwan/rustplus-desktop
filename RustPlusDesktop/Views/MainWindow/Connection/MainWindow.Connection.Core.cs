@@ -114,7 +114,7 @@ public partial class MainWindow
                 _vm.SteamId64 = prof.SteamId64;
 
             // Trigger soft connect to devices only if there are any devices to control
-            if (!prof.IsConnected && prof.Devices.Any())
+            if (this.IsLoaded && !prof.IsConnected && prof.Devices.Any())
             {
                 await PerformConnectDevicesOnlyAsync(prof);
             }

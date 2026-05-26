@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using RustPlusDesk.Models;
 
 namespace RustPlusDesk.Services;
 
@@ -116,6 +117,9 @@ public class TrackingSettings
     public Dictionary<string, int> LearnedQueryPorts { get; set; } = new();
     public bool TranslationConsentGiven { get; set; } = false;
     public bool UploadConsentGiven { get; set; } = false;
+    public string? CustomMarkersJson { get; set; } = null;
+    public bool CustomMarkersEnabled { get; set; } = true;
+    public HashSet<string> EnabledCustomMarkerNames { get; set; } = new();
 }
 
 
@@ -138,17 +142,29 @@ public class OnlinePlayerBM
 public static class TrackingService
 {
     private static readonly HttpClient _http = new();
-    private static readonly string _dbPath = Path.Combine(
+    private static readonly string _baseDir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
-        "RustPlusDesk", "tracked_players.json");
-    private static readonly string _settingsPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "RustPlusDesk", "tracking_settings.json");
+        "RustPlusDesk");
 
-    private static readonly string _fcmConfigPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "RustPlusDesk", "rustplusjs-config.json");
+    private static string _dbPath => ProfileManager.CurrentProfile != null
+        ? Path.Combine(ProfileManager.CurrentProfile.FolderPath, "tracked_players.json")
+        : Path.Combine(_baseDir, "tracked_players.json");
 
+    private static string _settingsPath => ProfileManager.CurrentProfile != null
+        ? Path.Combine(ProfileManager.CurrentProfile.FolderPath, "tracking_settings.json")
+        : Path.Combine(_baseDir, "tracking_settings.json");
+
+    private static string _fcmConfigPath => ProfileManager.CurrentProfile != null
+        ? ProfileManager.CurrentProfile.FcmConfigPath
+        : Path.Combine(_baseDir, "rustplusjs-config.json");
+
+    private static string _languageSettingsPath => Path.Combine(_baseDir, "language_settings.json");
+
+    private static string _logPath => ProfileManager.CurrentProfile != null
+        ? Path.Combine(ProfileManager.CurrentProfile.FolderPath, "tracking_log.txt")
+        : Path.Combine(_baseDir, "tracking_log.txt");
+
+    public static string FcmConfigPath => _fcmConfigPath;
     public static bool IsFcmConfigured()
         => File.Exists(_fcmConfigPath) && new FileInfo(_fcmConfigPath).Length > 50;
 
@@ -225,7 +241,21 @@ public static class TrackingService
         }
         catch { }
     }
-    
+
+    public static void LogoutFromCurrentProfile()
+    {
+        if (ProfileManager.CurrentProfile == null) return;
+        var fcmPath = ProfileManager.CurrentProfile.FcmConfigPath;
+        if (File.Exists(fcmPath))
+        {
+            try { File.Delete(fcmPath); } catch { }
+        }
+        ProfileManager.DeleteProfileAllowLast(ProfileManager.CurrentProfile.Id);
+        _trackedPlayers = new();
+        _settings = new();
+        OnOnlinePlayersUpdated?.Invoke();
+    }
+
     private static readonly object _dbLock = new();
     private static Dictionary<string, TrackedPlayer> _trackedPlayers = new();
     private static TrackingSettings _settings = new();
@@ -244,7 +274,12 @@ public static class TrackingService
 
     static TrackingService()
     {
+        LoadDB();
         _http.DefaultRequestHeaders.Add("User-Agent", "RustPlusDesk/1.0");
+    }
+
+    public static void Initialize()
+    {
         LoadDB();
     }
 
@@ -265,6 +300,17 @@ public static class TrackingService
             }
         }
         catch { }
+    }
+
+    public static void ReloadForProfile()
+    {
+        StopPolling();
+        _trackedPlayers = new();
+        _settings = new();
+        LastOnlinePlayers = new List<OnlinePlayerBM>();
+        LastPullTime = null;
+        StatusMessage = "";
+        LoadDB();
     }
 
     public static void SaveDB()
@@ -296,9 +342,7 @@ public static class TrackingService
     {
         try
         {
-            var logPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "RustPlusDesk", "tracking_log.txt");
+            var logPath = _logPath;
             var dir = Path.GetDirectoryName(logPath);
             if (dir != null && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
             File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}");
@@ -604,10 +648,48 @@ public static class TrackingService
         set { _settings.AnnounceTradeAlerts = value; SaveDB(); }
     }
 
+    private static string _cachedLanguage = "";
+
     public static string SelectedLanguage
     {
-        get => _settings.SelectedLanguage;
-        set { _settings.SelectedLanguage = value; SaveDB(); }
+        get
+        {
+            if (_cachedLanguage == "")
+            {
+                if (File.Exists(_languageSettingsPath))
+                {
+                    try
+                    {
+                        var json = File.ReadAllText(_languageSettingsPath);
+                        var data = JsonSerializer.Deserialize<LanguageSettings>(json);
+                        _cachedLanguage = data?.Language ?? "";
+                    }
+                    catch { }
+                }
+                if (_cachedLanguage == "" && _settings?.SelectedLanguage != null)
+                {
+                    _cachedLanguage = _settings.SelectedLanguage;
+                }
+            }
+            return _cachedLanguage;
+        }
+        set
+        {
+            _cachedLanguage = value;
+            try
+            {
+                var dir = Path.GetDirectoryName(_languageSettingsPath);
+                if (dir != null) Directory.CreateDirectory(dir);
+                var json = JsonSerializer.Serialize(new LanguageSettings { Language = value }, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(_languageSettingsPath, json);
+            }
+            catch { }
+        }
+    }
+
+    private class LanguageSettings
+    {
+        public string Language { get; set; } = "";
     }
 
     public static bool AnnounceSpawnsMaster
@@ -772,6 +854,97 @@ public static class TrackingService
     {
         get => _settings.SaveAlertSelection;
         set { _settings.SaveAlertSelection = value; SaveDB(); }
+    }
+
+    public static string? CustomMarkersJson
+    {
+        get
+        {
+            var markersPath = ProfileManager.CurrentProfile?.MarkersPath;
+            if (string.IsNullOrEmpty(markersPath) || !File.Exists(markersPath))
+                return _settings.CustomMarkersJson;
+            try { return File.ReadAllText(markersPath); } catch { return _settings.CustomMarkersJson; }
+        }
+        set
+        {
+            _settings.CustomMarkersJson = value;
+            var markersPath = ProfileManager.CurrentProfile?.MarkersPath;
+            if (!string.IsNullOrEmpty(markersPath))
+            {
+                try
+                {
+                    var dir = Path.GetDirectoryName(markersPath);
+                    if (dir != null && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
+                    File.WriteAllText(markersPath, value ?? "");
+                }
+                catch { }
+            }
+            SaveDB();
+        }
+    }
+
+    public static HashSet<string> EnabledCustomMarkerNames
+    {
+        get => _settings.EnabledCustomMarkerNames;
+        set { _settings.EnabledCustomMarkerNames = value; SaveDB(); }
+    }
+
+    public static bool CustomMarkersEnabled
+    {
+        get => _settings.CustomMarkersEnabled;
+        set { _settings.CustomMarkersEnabled = value; SaveDB(); }
+    }
+
+    private static List<CustomMapMarker>? DeserializeMarkerData()
+    {
+        var json = CustomMarkersJson;
+        if (string.IsNullOrEmpty(json)) return null;
+        try
+        {
+            var data = JsonSerializer.Deserialize<CustomMarkerFile>(json);
+            if (data != null && data.Markers.Count > 0) return data.Markers;
+        }
+        catch { }
+
+        try
+        {
+            return JsonSerializer.Deserialize<List<CustomMapMarker>>(_settings.CustomMarkersJson);
+        }
+        catch { return null; }
+    }
+
+    public static List<string> GetUniqueMarkerNames()
+    {
+        var markers = DeserializeMarkerData();
+        return markers?.Select(m => m.Name).Distinct().ToList() ?? new List<string>();
+    }
+
+    public static List<string> GetUniqueSizeCategories()
+    {
+        var markers = DeserializeMarkerData();
+        return markers?.Select(m => m.SizeCategory ?? "").Distinct().Where(s => !string.IsNullOrEmpty(s)).OrderBy(s => s).ToList() ?? new List<string>();
+    }
+
+    public static List<CustomMapMarker> GetCustomMarkers(string? filterName = null)
+    {
+        if (!_settings.CustomMarkersEnabled) return new List<CustomMapMarker>();
+        var markers = DeserializeMarkerData();
+        if (markers == null || markers.Count == 0) return new List<CustomMapMarker>();
+
+        if (filterName == null && _settings.EnabledCustomMarkerNames.Count > 0)
+        {
+            return markers.Where(m => _settings.EnabledCustomMarkerNames.Contains(m.Name)).ToList();
+        }
+        else if (filterName != null)
+        {
+            return markers.Where(m => m.Name == filterName).ToList();
+        }
+        return markers;
+    }
+
+    public static List<CustomMapMarker> GetAllCustomMarkers()
+    {
+        return DeserializeMarkerData() ?? new List<CustomMapMarker>();
     }
 
     private static void SetAutoStart(bool enabled)

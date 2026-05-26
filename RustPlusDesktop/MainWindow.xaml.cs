@@ -59,6 +59,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 {
 
     private readonly MainViewModel _vm = new();
+    public MainViewModel ViewModel => _vm;
     private bool _chatOpenedForCommandsOnly = false;
     private readonly UpdateService _updateService = new();
 
@@ -365,6 +366,13 @@ public partial class MainWindow : WpfUi.FluentWindow
                 _ = Task.Run(async () => {
                     await Task.Delay(1000); // Give Pairing Listener a head start
                     await Dispatcher.InvokeAsync(async () => await PerformConnectAsync(true));
+                });
+            }
+            else if (_vm.Selected != null && !_vm.Selected.IsConnected && _vm.Selected.Devices.Any())
+            {
+                _ = Task.Run(async () => {
+                    await Task.Delay(1000); // Give it a slight delay so FCM/Loaded finishes cleanly
+                    await Dispatcher.InvokeAsync(async () => await PerformConnectDevicesOnlyAsync(_vm.Selected));
                 });
             }
 
@@ -1035,10 +1043,8 @@ public partial class MainWindow : WpfUi.FluentWindow
     private const double SHOP_CARD_WIDTH = 320; // feste Breite deiner Shop-Karte
     private const double SHOP_GAP = 8;   // Abstand zwischen Karten
 
-    // Lokaler Icon-Cache (z.B. %LOCALAPPDATA%\RustPlusDesk\icons)
-    private static readonly string sIconCacheDir =
-        System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                               "RustPlusDesk", "icons");
+    // Lokaler Icon-Cache (global, nicht pro Profile)
+    private static string IconCacheDir => Profile.GlobalIconsCachePath;
 
     // === Layers ===
     // Optional: externe Ergänzungen laden (Datei neben der EXE)
@@ -1099,9 +1105,10 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private string GetChatCachePath(string serverId)
     {
-        var dir = System.IO.Path.Combine(sIconCacheDir, "..", "chat"); // ../chat/
+        var dir = ProfileManager.CurrentProfile?.ChatCachePath
+            ?? System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                      "RustPlusDesk", "chat");
         Directory.CreateDirectory(dir);
-        // Sanitize Filename
         foreach (var c in System.IO.Path.GetInvalidFileNameChars()) serverId = serverId.Replace(c, '_');
         return System.IO.Path.Combine(dir, $"{serverId}.json");
     }
@@ -2304,12 +2311,19 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
+        if (App.IsRestartingForProfileSwitch)
+        {
+            // Do not save the old VM servers list to the new profile's path on exit
+            return;
+        }
+
         if (TrackingService.CloseToTrayEnabled)
         {
             e.Cancel = true;
             this.Hide();
             // We still save profiles just in case
             try { _vm.Save(); } catch { }
+            try { SaveChatHistory(_lastChatProfile); } catch { }
             return;
         }
 
@@ -2319,6 +2333,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.Save();
         }
         catch (Exception ex) { AppendLog("Saving failed: " + ex.Message); }
+
+        try
+        {
+            SaveChatHistory(_lastChatProfile);
+        }
+        catch { }
     }
 
     public void HandleRustPlusLink(string link)
@@ -2484,8 +2504,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             var prof = _vm.Servers.FirstOrDefault(s =>
                 s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
-                s.Port == keyPort &&
-                s.SteamId64 == keySteam);
+                s.Port == keyPort);
 
             var serverName = string.IsNullOrWhiteSpace(e.ServerName) ? $"{e.Host}:{e.Port}" : e.ServerName!;
 
@@ -2502,6 +2521,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     Devices = new ObservableCollection<SmartDevice>()
                 };
                 _vm.AddServer(prof);
+
+                // Force ItemsSource refresh when a new server is added to avoid WPF binding issues
+                ListServers.ItemsSource = null;
+                ListServers.ItemsSource = _vm.Servers;
+
                 AppendLog($"Pairing received → {prof.Name} ({prof.Host}:{prof.Port})");
             }
             else
@@ -2636,11 +2660,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 }
                 /* >>>>>>> /ENDE Einfügeblock <<<<<<< */
 
-                if (_vm.Selected != prof)
-                    _vm.Selected = prof;
-
-                _vm.Save();
             }
+
+            if (_vm.Selected != prof)
+                _vm.Selected = prof;
+
+            // Programmatically force ListBox selection synchronization
+            ListServers.SelectedItem = prof;
+
+            _vm.Save();
+            _vm.NotifyDevicesChanged();
 
 
         });
@@ -2899,6 +2928,148 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
+    public void SaveCurrentProfileBeforeRestart()
+    {
+        try
+        {
+            _vm.Save();
+        }
+        catch { }
+        try
+        {
+            SaveChatHistory(_lastChatProfile);
+        }
+        catch { }
+    }
+
+    public async Task StopPairingListenerForRestartAsync()
+    {
+        if (_pairing != null && _pairing.IsRunning)
+        {
+            try
+            {
+                await Task.Run(async () => await _pairing.StopAsync());
+            }
+            catch { }
+        }
+    }
+
+    public async Task OnProfileSwitchedAsync()
+    {
+        // 1. Stop Pairing Listener if running
+        if (_pairing != null && _pairing.IsRunning)
+        {
+            AppendLog("[pairing] Stopping listener due to profile switch...");
+            try
+            {
+                await Task.Run(async () => await _pairing.StopAsync());
+            }
+            catch (Exception ex)
+            {
+                AppendLog("[pairing] Error stopping listener: " + ex.Message);
+            }
+        }
+
+        // 2. Load VM data
+        _vm.Load();
+
+        // Refresh ListServers ItemsSource to force WPF UI redraw and ensure synchronization
+        ListServers.ItemsSource = null;
+        ListServers.ItemsSource = _vm.Servers;
+        if (_vm.Selected != null)
+        {
+            ListServers.SelectedItem = _vm.Selected;
+        }
+
+        // 3. Clear Map, Disconnect, and stop background tracking polls
+        ClearMapAndDisconnect();
+
+        try { StopDynPolling(clearKnown: true); } catch { }
+        try { StopTeamPolling(); } catch { }
+        try { _statusCts?.Cancel(); _statusCts = null; } catch { }
+        try { _statusTimer?.Stop(); } catch { }
+        try { _shopTimer?.Stop(); _shopTimer = null; } catch { }
+        try { _storageTimer?.Stop(); _storageTimer = null; } catch { }
+        try { Dispatcher.Invoke(() => ChkShops.IsChecked = false); } catch { }
+        try { TeamMembers.Clear(); } catch { }
+        try { _avatarCache.Clear(); } catch { }
+        try { _lastPresence.Clear(); } catch { }
+        try { ClearAllDeathPins(); } catch { }
+        try { ClearAllToggleBusy(); } catch { }
+        try { ResetAllBusyStates(); } catch { }
+        try { _lastShops.Clear(); } catch { }
+        try { _shopLifetimes.Clear(); } catch { }
+        try { _knownShopIds.Clear(); } catch { }
+        _firstShopPollDone = false;
+        _initialShopSnapshotTimeUtc = DateTime.MinValue;
+        _alertsNeedRebaseline = true;
+        _lastChatSendUtc = DateTime.MinValue;
+        try { ClearUserOverlayElements(); } catch { }
+
+        HydrateSteamUiFromStorage();
+
+        // 4. Re-read FCM configuration for the new profile
+        TrackingService.ReadFcmConfig();
+        _vm.NotifyFcmChanged();
+
+        // 5. Apply new settings
+        ApplySettings();
+
+        // 6. Restart Pairing Listener if configured for the new profile
+        if (TrackingService.IsFcmConfigured())
+        {
+            AppendLog("[pairing] Restarting pairing listener with new credentials...");
+            StartPairingSilent(true);
+        }
+
+        // 7. Auto-connect / soft-connect if applicable
+        if (TrackingService.AutoConnectEnabled && _vm.Selected != null && !_vm.Selected.IsConnected)
+        {
+            _ = Task.Run(async () => {
+                await Task.Delay(1000);
+                await Dispatcher.InvokeAsync(async () => await PerformConnectAsync(true));
+            });
+        }
+        else if (_vm.Selected != null && !_vm.Selected.IsConnected && _vm.Selected.Devices.Any())
+        {
+            _ = Task.Run(async () => {
+                await Task.Delay(1000);
+                await Dispatcher.InvokeAsync(async () => await PerformConnectDevicesOnlyAsync(_vm.Selected));
+            });
+        }
+    }
+
+    private async void BtnOverlaySwitchAccount_Click(object sender, RoutedEventArgs e)
+    {
+        var profiles = ProfileManager.GetAllProfiles();
+        if (profiles.Count == 0) return;
+
+        var dlg = new AccountSwitchDialog(profiles, ProfileManager.CurrentProfile) { Owner = this };
+        if (dlg.ShowDialog() == true && dlg.SelectedProfileId != null)
+        {
+            SaveCurrentProfileBeforeRestart();
+            App.IsRestartingForProfileSwitch = true;
+            ProfileManager.SwitchToProfile(dlg.SelectedProfileId);
+            await App.RestartAsync();
+        }
+    }
+
+    private void BtnOverlayLogout_Click(object sender, RoutedEventArgs e)
+    {
+        var ask = MessageBox.Show(
+            Properties.Resources.LogoutConfirmMessage,
+            Properties.Resources.LogoutConfirmTitle,
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+        if (ask != MessageBoxResult.Yes) return;
+
+        TrackingService.LogoutFromCurrentProfile();
+        _vm.SteamId64 = string.Empty;
+        HydrateSteamUiFromStorage();
+        _vm.NotifyFcmChanged();
+        AppendLog("[AUTH] Logged out from profile. FCM config cleared.");
+    }
+
     private async void BtnStopPairing_Click(object sender, RoutedEventArgs e)
     {
         try
@@ -3145,9 +3316,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private static string GetIconCachePath(string url)
     {
-        Directory.CreateDirectory(sIconCacheDir);
+        Directory.CreateDirectory(IconCacheDir);
         var hash = Convert.ToHexString(SHA1.HashData(Encoding.UTF8.GetBytes(url))).ToLowerInvariant();
-        return System.IO.Path.Combine(sIconCacheDir, hash + ".png");
+        return System.IO.Path.Combine(IconCacheDir, hash + ".png");
     }
 
     private static ImageSource? TryLoadBitmapFromFile(string path, int decodePx)
@@ -4384,10 +4555,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     // NEW CLICK HANDLERS TO DELETE JSON CONFIG
 
-    private static string PairingConfigPath =>
-    System.IO.Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "RustPlusDesk", "rustplusjs-config.json");
+    private static string PairingConfigPath => TrackingService.FcmConfigPath;
 
     private async Task<bool> ResetPairingConfigAsync(bool stopListenerFirst = true)
     {

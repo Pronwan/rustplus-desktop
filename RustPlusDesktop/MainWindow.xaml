@@ -5356,6 +5356,34 @@
                             </ui:Button.Content>
                         </ui:Button>
 
+                        <ui:Button
+                            x:Name="BtnOverlayLogout"
+                            Height="40"
+                            Margin="0,12,0,0"
+                            HorizontalAlignment="Stretch"
+                            Appearance="Secondary"
+                            Click="BtnOverlayLogout_Click"
+                            FontSize="14"
+                            Icon="{ui:SymbolIcon Symbol=Globe24}">
+                            <ui:Button.Content>
+                                <TextBlock Margin="8,0,0,0" Text="{DynamicResource Logout}" />
+                            </ui:Button.Content>
+                        </ui:Button>
+
+                        <ui:Button
+                            x:Name="BtnOverlaySwitchAccount"
+                            Height="40"
+                            Margin="0,12,0,0"
+                            HorizontalAlignment="Stretch"
+                            Appearance="Secondary"
+                            Click="BtnOverlaySwitchAccount_Click"
+                            FontSize="14"
+                            Icon="{ui:SymbolIcon Symbol=PersonSwap24}">
+                            <ui:Button.Content>
+                                <TextBlock Margin="8,0,0,0" Text="{DynamicResource SwitchAccount}" />
+                            </ui:Button.Content>
+                        </ui:Button>
+
                         <TextBlock
                             Margin="0,20,0,0"
                             FontSize="11"

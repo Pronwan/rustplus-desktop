@@ -27,6 +27,29 @@
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="12">
+                <!-- Profile Section -->
+                <TextBlock Text="Profile" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="CmbProfile"
+                                      SelectionChanged="CmbProfile_SelectionChanged"
+                                      DisplayMemberPath="DisplayName"
+                                      VerticalAlignment="Center"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0">
+                                <ui:Button x:Name="BtnNewProfile" Icon="{ui:SymbolIcon Symbol=Add24}" Appearance="Secondary" Padding="8,4" Click="BtnNewProfile_Click" ToolTip="New Profile"/>
+                                <ui:Button x:Name="BtnRenameProfile" Icon="{ui:SymbolIcon Symbol=Edit24}" Appearance="Secondary" Padding="8,4" Margin="4,0,0,0" Click="BtnRenameProfile_Click" ToolTip="Rename Profile"/>
+                                <ui:Button x:Name="BtnDeleteProfile" Icon="{ui:SymbolIcon Symbol=Delete24}" Appearance="Caution" Padding="8,4" Margin="4,0,0,0" Click="BtnDeleteProfile_Click" ToolTip="Delete Profile"/>
+                            </StackPanel>
+                        </Grid>
+                        <TextBlock x:Name="TxtProfilePath" Text="" Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
                 <!-- General Section -->
                 <TextBlock Text="{DynamicResource General}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
                 <Border Style="{StaticResource Card}" Margin="0,0,0,16">
@@ -175,13 +198,48 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="{DynamicResource MonumentOpacity}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Margin="4,0,10,0" FontSize="12"/>
-                            <Slider Grid.Column="1" x:Name="SliderMonumentOpacity" 
-                                    Minimum="0.1" Maximum="1.0" Value="1.0" 
+                            <Slider Grid.Column="1" x:Name="SliderMonumentOpacity"
+                                    Minimum="0.1" Maximum="1.0" Value="1.0"
                                     ValueChanged="OnSettingChanged"
                                     VerticalAlignment="Center" />
-                            <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=SliderMonumentOpacity, StringFormat={}{0:0%}}" 
+                            <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=SliderMonumentOpacity, StringFormat={}{0:0%}}"
                                        VerticalAlignment="Center" Margin="10,0,0,0" Foreground="{DynamicResource TextPrimary}" FontSize="12" Width="40"/>
                         </Grid>
+
+<!-- Custom Markers Section -->
+                        <TextBlock Text="{DynamicResource CustomMarkers}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" Margin="0,16,0,8"/>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{DynamicResource LoadCustomMarkers}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Margin="0,0,10,0"/>
+                            <ui:Button Grid.Column="1" x:Name="BtnLoadCustomMarkers"
+                                       Content="{DynamicResource Browse}"
+                                       Appearance="Secondary"
+                                       Icon="{ui:SymbolIcon Symbol=Folder24}"
+                                       HorizontalAlignment="Left"
+                                       Height="32"
+                                       Click="BtnLoadCustomMarkers_Click"/>
+                        </Grid>
+
+                        <TextBlock x:Name="TxtMarkerCount" Text="" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,4,0,8"/>
+
+                        <ui:TextBox x:Name="TxtMarkerSearch"
+                                    PlaceholderText="{DynamicResource Search}"
+                                    TextChanged="TxtMarkerSearch_TextChanged"
+                                    Margin="0,0,0,8"
+                                    VerticalAlignment="Center"/>
+
+                        <ComboBox x:Name="CmbSizeCategory"
+                                  SelectionChanged="CmbSizeCategory_SelectionChanged"
+                                  Margin="0,0,0,8"
+                                  VerticalAlignment="Center"/>
+
+                        <Expander Header="{DynamicResource SelectMarkersToShow}" IsExpanded="False" Foreground="{DynamicResource TextPrimary}">
+                            <StackPanel x:Name="PanelMarkerFilters" Margin="0,8,0,0"/>
+                        </Expander>
                     </StackPanel>
                 </Border>
 
