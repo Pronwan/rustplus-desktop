@@ -38,6 +38,24 @@ public static class ProfileManager
         }
     }
 
+    /// <summary>
+    /// Creates a brand-new empty profile with no data migration. Used when wiping the last profile
+    /// so that old data is not copied back in and re-appear on next launch.
+    /// </summary>
+    private static Profile CreateFreshEmptyProfile()
+    {
+        var profile = new Profile
+        {
+            Name = "Default",
+            Id = Guid.NewGuid().ToString()
+        };
+        Directory.CreateDirectory(profile.FolderPath);
+        _profileList.Profiles.Add(profile);
+        _profileList.CurrentProfileId = profile.Id;
+        SaveProfiles();
+        return profile;
+    }
+
     private static Profile CreateDefaultProfileWithMigration()
     {
         var profile = new Profile
@@ -167,6 +185,15 @@ public static class ProfileManager
         File.WriteAllText(ProfilesIndexPath, json);
     }
 
+    /// <summary>
+    /// Re-reads profiles.json from disk into the in-memory list.
+    /// Call this after an external operation (e.g. backup restore) writes the index file directly.
+    /// </summary>
+    public static void ReloadFromDisk()
+    {
+        LoadProfiles();
+    }
+
     public static Profile CreateProfile(string name, string steamId = "", string steamName = "")
     {
         var profile = new Profile
@@ -204,7 +231,7 @@ public static class ProfileManager
 
     public static void DeleteProfile(string profileId)
     {
-        DeleteProfile(profileId, false);
+        DeleteProfile(profileId, true);
     }
 
     public static void DeleteProfileAllowLast(string profileId)
@@ -242,7 +269,8 @@ public static class ProfileManager
 
         if (_profileList.Profiles.Count == 0)
         {
-            var defaultProfile = CreateDefaultProfileWithMigration();
+            // Use a clean empty profile — never migrate old data back when this is a wipe.
+            var defaultProfile = CreateFreshEmptyProfile();
             SwitchToProfile(defaultProfile.Id);
         }
 

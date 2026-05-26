@@ -2851,7 +2851,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         await StartPairingListenerUiAsync();
     }
 
-    private void BtnOverlayRestore_Click(object sender, RoutedEventArgs e)
+    private async void BtnOverlayRestore_Click(object sender, RoutedEventArgs e)
     {
         var ask = MessageBox.Show(
             Properties.Resources.RestoreConfirmMessage,
@@ -2891,6 +2891,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 RustPlusDesk.Services.Data.BackupDataModule.RestoreBackup(ofd.FileName, password);
                 ReloadApplicationData();
                 MessageBox.Show(Properties.Resources.RestoreSuccessMessage, Properties.Resources.RestoreSuccessTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                // Prompt the user to switch to one of the restored accounts
+                await ShowAccountSwitchAfterRestore();
             }
             catch (System.Security.Cryptography.CryptographicException)
             {
@@ -3031,7 +3033,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    private void BtnOverlayLogout_Click(object sender, RoutedEventArgs e)
+    private async void BtnOverlayLogout_Click(object sender, RoutedEventArgs e)
     {
         var ask = MessageBox.Show(
             Properties.Resources.LogoutConfirmMessage,
@@ -3040,11 +3042,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             MessageBoxImage.Warning);
         if (ask != MessageBoxResult.Yes) return;
 
+        App.IsRestartingForProfileSwitch = true;
         TrackingService.LogoutFromCurrentProfile();
-        _vm.SteamId64 = string.Empty;
-        HydrateSteamUiFromStorage();
-        _vm.NotifyFcmChanged();
-        AppendLog("[AUTH] Logged out from profile. FCM config cleared.");
+        await App.RestartAsync();
     }
 
     private async void BtnStopPairing_Click(object sender, RoutedEventArgs e)
@@ -5421,6 +5421,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     // DTOs moved to Models/SharingModels.cs
     public void ReloadApplicationData()
     {
+        // Refresh in-memory profile list from the just-written profiles.json
+        ProfileManager.ReloadFromDisk();
+
         _vm.Load();
         LoadCustomCrosshairs();
         HydrateSteamUiFromStorage();
@@ -5432,6 +5435,26 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _vm.NotifyFcmChanged();
         
         AppendLog("[SYSTEM] Application data reloaded successfully after restore.");
+    }
+
+    /// <summary>
+    /// Shows the Account Switch dialog populated with all currently known profiles.
+    /// Call this immediately after a successful backup restore so the user can pick
+    /// which restored account to load. Performs a restart on selection.
+    /// </summary>
+    public async Task ShowAccountSwitchAfterRestore()
+    {
+        var profiles = ProfileManager.GetAllProfiles();
+        if (profiles.Count == 0) return;
+
+        var dlg = new AccountSwitchDialog(profiles, ProfileManager.CurrentProfile) { Owner = this };
+        if (dlg.ShowDialog() == true && dlg.SelectedProfileId != null)
+        {
+            SaveCurrentProfileBeforeRestart();
+            App.IsRestartingForProfileSwitch = true;
+            ProfileManager.SwitchToProfile(dlg.SelectedProfileId);
+            await App.RestartAsync();
+        }
     }
 }
 

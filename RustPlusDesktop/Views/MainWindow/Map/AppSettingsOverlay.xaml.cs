@@ -442,7 +442,7 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private void BtnRestoreData_Click(object sender, RoutedEventArgs e)
+        private async void BtnRestoreData_Click(object sender, RoutedEventArgs e)
         {
             if (ParentWindow == null) return;
 
@@ -489,6 +489,8 @@ namespace RustPlusDesk.Views
                 RustPlusDesk.Services.Data.BackupDataModule.RestoreBackup(ofd.FileName, password, restoreDialog.SelectedProfileIds, restoreDialog.Mode);
                 ParentWindow.ReloadApplicationData();
                 MessageBox.Show(Properties.Resources.RestoreSuccessMessage, Properties.Resources.RestoreSuccessTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                // Prompt the user to switch to one of the restored accounts
+                await ParentWindow.ShowAccountSwitchAfterRestore();
             }
             catch (System.Security.Cryptography.CryptographicException)
             {
