@@ -1803,4 +1803,16 @@
   <data name="TurnOffNow" xml:space="preserve">
     <value>Отключить сейчас</value>
   </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>Поведение умных оповещений было изменено (включая новую функцию Audio Loop), а оповещения в чате были обновлены. Пожалуйста, убедитесь, что ваши настройки умных оповещений (Аудио/Окна) и настройки чата по-прежнему верны!</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>Пожалуйста, проверьте настройки оповещений</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Зацикливание звука: </value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>Зацикливайте и останавливайте оповещения.</value>
+  </data>
 </root>

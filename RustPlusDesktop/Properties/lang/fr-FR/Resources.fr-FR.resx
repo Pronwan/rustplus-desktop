@@ -1803,4 +1803,16 @@ Télécharger et installer maintenant ?</value>
   <data name="TurnOffNow" xml:space="preserve">
     <value>Désactiver maintenant</value>
   </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>Les comportements des alertes intelligentes ont changé (y compris la nouvelle boucle audio) et les alertes de chat ont été mises à jour. Veuillez vérifier que vos préférences d'alertes (Audio/Popups) et de chat sont toujours correctes !</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>Veuillez vérifier vos paramètres d'alerte</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Boucle d'alerte audio : </value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>Bouclez et arrêtez vos alertes.</value>
+  </data>
 </root>
