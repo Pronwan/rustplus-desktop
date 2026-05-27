@@ -398,7 +398,7 @@ public partial class MainWindow
     private ListBox? _wantPreviewList;
     private ListBox? _payPreviewList;
     private bool _pathFinderInitialized;
-    private void OpenPathFinderWindow()
+    internal void OpenPathFinderWindow()
     {
         if (BuyXForYPanel.Visibility == Visibility.Visible)
         {
@@ -1921,7 +1921,7 @@ public partial class MainWindow
 
     private ListBox? _analysisListBox;
     private bool _profitTradesInitialized;
-    private void OpenAnalysisWindow()
+    internal void OpenAnalysisWindow()
     {
         if (ProfitTradesPanel.Visibility == Visibility.Visible)
         {
