@@ -1,0 +1,57 @@
+<UserControl
+    x:Class="RustPlusDesk.Views.CamerasTabContent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DockPanel LastChildFill="True">
+        <StackPanel
+            Margin="0,10,0,0"
+            HorizontalAlignment="Right"
+            DockPanel.Dock="Bottom"
+            Orientation="Horizontal">
+            <Button x:Name="BtnAddCam" Style="{StaticResource PrimaryButton}">
+                <StackPanel Margin="6,1" Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="📷 " />
+                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource AddCamera}" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <ItemsControl x:Name="CamItems">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel ItemHeight="180" ItemWidth="220" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <StackPanel
+                    Margin="0,50"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    IsHitTestVisible="False">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasItems, ElementName=CamItems}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        FontStyle="Italic"
+                        Foreground="{StaticResource TextSubtle}"
+                        Text="{DynamicResource NoCamerasFound}" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        FontSize="10"
+                        Foreground="{StaticResource TextSubtle}"
+                        Opacity="0.6"
+                        Text="{DynamicResource PairCameraToSee}" />
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>
