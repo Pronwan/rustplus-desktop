@@ -74,9 +74,11 @@ public partial class MainWindow
         var head = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 6) };
         
         // Shop Name
+        var shopTitle = CleanLabel(s.Label) ?? "Shop";
+        
         head.Children.Add(new TextBlock
         {
-            Text       = CleanLabel(s.Label) ?? "Shop",
+            Text       = shopTitle,
             Foreground = SearchText,
             FontWeight = FontWeights.Bold,
             FontSize   = compact ? 13 : 15,

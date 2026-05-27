@@ -24,6 +24,9 @@ namespace RustPlusDesk.Views
         private bool _filterBuy = true;
         private bool _filterHideZero = false;
 
+        private string _sortMode = "default";
+        private int _resourceFilterId = 0;
+
         // Custom colors matching HTML premium styles
         private static readonly Brush ActiveAccentBg = new SolidColorBrush(Color.FromArgb(38, 0, 173, 239)); // rgba(0, 173, 239, .15)
         private static readonly Brush ActiveAccentBorder = new SolidColorBrush(Color.FromRgb(0, 173, 239)); // #00adef
@@ -49,11 +52,45 @@ namespace RustPlusDesk.Views
             // Initial button styles
             UpdateFilterButtonsStyles();
             
+            // Populate resource dropdown with icons
+            PopulateResourceComboBox();
+            
             // Populate current alerts
             RefreshAlertListUI();
 
             // Refresh search results
             RefreshSearchResults();
+        }
+
+        // Helper for Resource ComboBox with icons
+        public class ResourceItem
+        {
+            public int Id { get; set; }
+            public string Display { get; set; }
+            public string Tag { get; set; }
+            public ImageSource? Icon { get; set; }
+        }
+
+        private void PopulateResourceComboBox()
+        {
+            var resources = new List<ResourceItem>
+            {
+                new ResourceItem { Id = 0, Display = "All Resources", Tag = "all", Icon = null },
+                new ResourceItem { Id = -932201673, Display = "Scrap", Tag = "scrap", Icon = MainWindow.ResolveItemIcon(-932201673, "scrap") },
+                new ResourceItem { Id = 317398316, Display = "High Quality Metal", Tag = "hqm", Icon = MainWindow.ResolveItemIcon(317398316, "metal.refined") },
+                new ResourceItem { Id = -1581843485, Display = "Sulfur", Tag = "sulfur", Icon = MainWindow.ResolveItemIcon(-1581843485, "sulfur") },
+                new ResourceItem { Id = 69511070, Display = "Metal Fragments", Tag = "metal", Icon = MainWindow.ResolveItemIcon(69511070, "metal.fragments") },
+                new ResourceItem { Id = -2099697608, Display = "Stone", Tag = "stone", Icon = MainWindow.ResolveItemIcon(-2099697608, "stones") },
+                new ResourceItem { Id = -151838493, Display = "Wood", Tag = "wood", Icon = MainWindow.ResolveItemIcon(-151838493, "wood") },
+                new ResourceItem { Id = -4031221, Display = "Metal Ore", Tag = "metalore", Icon = MainWindow.ResolveItemIcon(-4031221, "metal.ore") },
+                new ResourceItem { Id = -1157596551, Display = "Sulfur Ore", Tag = "sulfurore", Icon = MainWindow.ResolveItemIcon(-1157596551, "sulfur.ore") },
+                new ResourceItem { Id = -1982036270, Display = "High Quality Ore", Tag = "hqore", Icon = MainWindow.ResolveItemIcon(-1982036270, "hq.metal.ore") },
+                new ResourceItem { Id = -321733511, Display = "Crude Oil", Tag = "crude", Icon = MainWindow.ResolveItemIcon(-321733511, "crude.oil") },
+                new ResourceItem { Id = -946369541, Display = "Low Grade", Tag = "lowgrade", Icon = MainWindow.ResolveItemIcon(-946369541, "lowgradefuel") },
+                new ResourceItem { Id = 1568388703, Display = "Diesel", Tag = "diesel", Icon = MainWindow.ResolveItemIcon(1568388703, "diesel_barrel") },
+            };
+            CmbResource.ItemsSource = resources;
+            CmbResource.SelectedIndex = 0;
         }
 
         // Autocomplete item helper
@@ -336,6 +373,24 @@ namespace RustPlusDesk.Views
             RefreshSearchResults();
         }
 
+        private void CmbSort_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CmbSort.SelectedItem is ComboBoxItem item)
+            {
+                _sortMode = item.Tag?.ToString() ?? "default";
+                RefreshSearchResults();
+            }
+        }
+
+        private void CmbResource_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CmbResource.SelectedItem is ResourceItem item)
+            {
+                _resourceFilterId = item.Id;
+                RefreshSearchResults();
+            }
+        }
+
 
         // Collapsible alerts section trigger
         private void AlertHdr_MouseDown(object sender, MouseButtonEventArgs e)
@@ -377,33 +432,98 @@ namespace RustPlusDesk.Views
             // Perform CPU-heavy shop list filtering on background thread
             var matchedResults = await System.Threading.Tasks.Task.Run(() =>
             {
+                var clusters = _mainWindow.ClusterShops(shops);
                 var list = new List<(RustPlusClientReal.ShopMarker Shop, List<RustPlusClientReal.ShopOrder> Offers)>();
-                foreach (var s in shops)
+                
+                foreach (var cluster in clusters)
                 {
-                    if (s.Orders == null || !s.Orders.Any()) continue;
-
-                    var matchingOffers = s.Orders.Where(o =>
+                    var matchingOffers = new List<RustPlusClientReal.ShopOrder>();
+                    foreach (var s in cluster)
                     {
-                        // Stock filter
-                        if (_filterHideZero && o.Stock <= 0) return false;
+                        if (s.Orders == null || !s.Orders.Any()) continue;
 
-                        // Text Query matches
-                        if (string.IsNullOrWhiteSpace(query)) return true;
+                        var shopMatches = s.Orders.Where(o =>
+                        {
+                            // Stock filter
+                            if (_filterHideZero && o.Stock <= 0) return false;
 
-                        string oName = MainWindow.ResolveItemName(o.ItemId, o.ItemShortName).ToLowerInvariant();
-                        string cName = MainWindow.ResolveItemName(o.CurrencyItemId, o.CurrencyShortName).ToLowerInvariant();
+                            // Resource ID filter
+                            if (_resourceFilterId != 0)
+                            {
+                                bool isCurrencyMatch = o.CurrencyItemId == _resourceFilterId;
+                                bool isItemMatch = o.ItemId == _resourceFilterId;
+                                if (!isCurrencyMatch && !isItemMatch) return false;
+                            }
 
-                        bool matchSell = _filterSell && oName.Contains(query);
-                        bool matchBuy = _filterBuy && cName.Contains(query);
+                            // Text Query matches
+                            if (string.IsNullOrWhiteSpace(query)) return true;
 
-                        return matchSell || matchBuy;
-                    }).ToList();
+                            string oName = MainWindow.ResolveItemName(o.ItemId, o.ItemShortName).ToLowerInvariant();
+                            string cName = MainWindow.ResolveItemName(o.CurrencyItemId, o.CurrencyShortName).ToLowerInvariant();
+
+                            bool matchSell = _filterSell && oName.Contains(query);
+                            bool matchBuy = _filterBuy && cName.Contains(query);
+
+                            return matchSell || matchBuy;
+                        });
+                        matchingOffers.AddRange(shopMatches);
+                    }
 
                     if (matchingOffers.Any())
                     {
-                        list.Add((s, matchingOffers));
+                        // Use the first shop as representative for the card, but it will show ALL matching offers from the cluster
+                        list.Add((cluster[0], matchingOffers));
                     }
                 }
+
+                // If a resource filter is active and sort is default, auto-switch to price_asc for better UX
+                if (_resourceFilterId != 0 && _sortMode == "default")
+                {
+                    _sortMode = "price_asc";
+                    // Update UI state on main thread
+                    Dispatcher.Invoke(() => CmbSort.SelectedIndex = 1);
+                }
+
+                // Sorting logic
+                if (_sortMode != "default")
+                {
+                    list = list.OrderBy(item =>
+                    {
+                        if (_sortMode == "stock")
+                            return -item.Offers.Max(o => o.Stock);
+
+                        if (_sortMode == "price_asc" || _sortMode == "price_desc")
+                        {
+                            double bestPrice = _sortMode == "price_asc" ? double.MaxValue : double.MinValue;
+                            foreach (var o in item.Offers)
+                            {
+                                double price = (double)o.CurrencyAmount / Math.Max(1, o.Quantity);
+                                
+                                // Optimization: If we have a resource filter, we prioritize offers using that currency
+                                // to ensure the price comparison is meaningful.
+                                if (_resourceFilterId != 0 && o.CurrencyItemId != _resourceFilterId)
+                                {
+                                    // If we are looking for sulfur, and this offer is for scrap, it's less relevant
+                                    // but currently the filter already hides non-sulfur offers if _resourceFilterId is set.
+                                }
+
+                                if (_sortMode == "price_asc")
+                                    bestPrice = Math.Min(bestPrice, price);
+                                else
+                                    bestPrice = Math.Max(bestPrice, price);
+                            }
+                            return _sortMode == "price_asc" ? bestPrice : -bestPrice;
+                        }
+                        
+                        if (_sortMode == "currency")
+                        {
+                            return item.Offers.FirstOrDefault()?.CurrencyItemId ?? 0;
+                        }
+                        
+                        return 0.0;
+                    }).ToList();
+                }
+
                 return list;
             });
 

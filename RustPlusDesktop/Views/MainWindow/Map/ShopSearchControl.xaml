@@ -189,6 +189,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -299,7 +300,7 @@
         </Grid>
 
         <!-- Row 1: Glassy Filter Pill Toggles flowing naturally -->
-        <WrapPanel Grid.Row="1" Margin="10,2,10,8" Orientation="Horizontal">
+        <WrapPanel Grid.Row="1" Margin="10,2,10,4" Orientation="Horizontal">
             <Button
                 x:Name="TglShopSells"
                 Style="{StaticResource GlassyPillButton}"
@@ -337,9 +338,42 @@
             </Button>
         </WrapPanel>
 
-        <!-- Row 2: Collapsible Active Item Alerts Widget Header -->
+        <!-- Row 2: Sorting and Grouping -->
+        <Grid Grid.Row="2" Margin="10,2,10,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                <TextBlock Text="Sort by" Foreground="#80ECEFF1" FontSize="10" Margin="2,0,0,4"/>
+                <ComboBox x:Name="CmbSort" SelectionChanged="CmbSort_SelectionChanged" Height="34">
+                    <ComboBoxItem Content="Default" Tag="default" IsSelected="True"/>
+                    <ComboBoxItem Content="Price (Low to High)" Tag="price_asc"/>
+                    <ComboBoxItem Content="Price (High to Low)" Tag="price_desc"/>
+                    <ComboBoxItem Content="Stock" Tag="stock"/>
+                    <ComboBoxItem Content="Currency" Tag="currency"/>
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                <TextBlock Text="Payment Resource" Foreground="#80ECEFF1" FontSize="10" Margin="2,0,0,4"/>
+                <ComboBox x:Name="CmbResource" SelectionChanged="CmbResource_SelectionChanged" Height="34">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding Icon}" Width="16" Height="16" Margin="0,0,8,0" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                <TextBlock Text="{Binding Display}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+
+        <!-- Row 3: Collapsible Active Item Alerts Widget Header -->
         <Border
-            Grid.Row="2"
+            Grid.Row="3"
             Margin="10,2,10,2"
             Background="#12151B"
             BorderBrush="#25FFFFFF"
@@ -381,10 +415,10 @@
             </Grid>
         </Border>
 
-        <!-- Row 3: Collapsible Item Alerts List Panel -->
+        <!-- Row 4: Collapsible Item Alerts List Panel -->
         <Border
             x:Name="BrdAlertListContainer"
-            Grid.Row="3"
+            Grid.Row="4"
             Margin="10,0,10,4"
             Background="#0D1015"
             BorderBrush="#20FFFFFF"
@@ -402,9 +436,9 @@
             </ListBox>
         </Border>
 
-        <!-- Row 4: Redesigned Scrollable Shop Results -->
+        <!-- Row 5: Redesigned Scrollable Shop Results -->
         <ScrollViewer
-            Grid.Row="4"
+            Grid.Row="5"
             Margin="10,4,10,6"
             VerticalScrollBarVisibility="Auto"
             HorizontalScrollBarVisibility="Disabled">
