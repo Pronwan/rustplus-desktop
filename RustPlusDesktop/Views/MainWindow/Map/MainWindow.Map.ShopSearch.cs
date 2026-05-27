@@ -19,53 +19,99 @@ public partial class MainWindow
 {
     // ── Fields ──────────────────────────────────────────────────────────────
     private Window?   _shopSearchWin;
-    private WebView2? _shopSearchWebView;
 
-    // Proxy controls – never added to visual tree, kept for compat with
-    // AddAlertFromCurrentSearch / RefreshAlertListUI in MainWindow.xaml.cs
+    // Proxy controls kept for backward compatibility if referenced elsewhere
     private TextBox?  _searchTb;
     private CheckBox? _chkSell;
     private CheckBox? _chkBuy;
-    private ListBox?  _alertList;    // stays null → alerts pushed via WebView2
+    private ListBox?  _alertList;
 
-    // ── WPF card builder — still used by PathFinder & map hover popup ─────────
-    private FrameworkElement BuildShopSearchCard(
+    // ── WPF card builder — still used by PathFinder, map hover popup & ShopSearchControl ─────────
+    internal FrameworkElement BuildShopSearchCard(
         RustPlusClientReal.ShopMarker s,
         IEnumerable<RustPlusClientReal.ShopOrder> offers,
         bool compact)
     {
+        // 1. High-End Linear Gradient Background (Slate to Dark Carbon)
+        var glassyBg = new LinearGradientBrush
+        {
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(0, 1)
+        };
+        glassyBg.GradientStops.Add(new GradientStop(Color.FromRgb(45, 50, 60), 0.0)); // Slate
+        glassyBg.GradientStops.Add(new GradientStop(Color.FromRgb(29, 32, 38), 1.0)); // Charcoal
+
+        var defaultBorderBrush = new SolidColorBrush(Color.FromArgb(38, 255, 255, 255)); // rgba(255, 255, 255, 0.15)
+        var hoverBorderBrush = new SolidColorBrush(Color.FromRgb(0, 173, 239)); // Electric Blue #00adef
+
         var card = new Border
         {
-            Background       = SearchCardBg,
-            BorderBrush      = SearchCardBrd,
+            Background       = glassyBg,
+            BorderBrush      = defaultBorderBrush,
             BorderThickness  = new Thickness(1),
-            CornerRadius     = new CornerRadius(8),
-            Padding          = new Thickness(8),
-            Margin           = new Thickness(0, 4, 0, 4)
+            CornerRadius     = new CornerRadius(10),
+            Padding          = new Thickness(10),
+            Margin           = new Thickness(0, 0, 0, 8),
+            Cursor           = Cursors.Hand
+        };
+
+        // Reactive Pointer Highlights (Hover states)
+        card.MouseEnter += (sender, e) =>
+        {
+            card.BorderBrush = hoverBorderBrush;
+            card.BorderThickness = new Thickness(1.2);
+        };
+        card.MouseLeave += (sender, e) =>
+        {
+            card.BorderBrush = defaultBorderBrush;
+            card.BorderThickness = new Thickness(1.0);
         };
 
         var root = new StackPanel { Orientation = Orientation.Vertical };
         card.Child = root;
 
-        var head = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 4) };
+        // Header Stack
+        var head = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 6) };
+        
+        // Shop Name
+        var shopTitle = CleanLabel(s.Label) ?? "Shop";
+        
         head.Children.Add(new TextBlock
         {
-            Text       = CleanLabel(s.Label) ?? "Shop",
+            Text       = shopTitle,
             Foreground = SearchText,
-            FontWeight = FontWeights.SemiBold,
-            FontSize   = compact ? 12 : 14
+            FontWeight = FontWeights.Bold,
+            FontSize   = compact ? 13 : 15,
+            VerticalAlignment = VerticalAlignment.Center
         });
-        head.Children.Add(new TextBlock
+
+        // Grid coordinates badge pill
+        var gridBadge = new Border
         {
-            Text                = $"   [{GetGridLabel(s)}]",
-            Foreground          = SearchSubtle,
-            VerticalAlignment   = VerticalAlignment.Center,
-            FontSize            = 11
-        });
+            Background = new SolidColorBrush(Color.FromArgb(20, 0, 173, 239)), // semi-transparent accent
+            BorderBrush = new SolidColorBrush(Color.FromArgb(60, 0, 173, 239)),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(10),
+            Padding = new Thickness(6, 1, 6, 1),
+            Margin = new Thickness(8, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        gridBadge.Child = new TextBlock
+        {
+            Text = GetGridLabel(s) ?? "",
+            Foreground = new SolidColorBrush(Color.FromRgb(0, 173, 239)),
+            FontSize = 10,
+            FontWeight = FontWeights.Bold
+        };
+        head.Children.Add(gridBadge);
+        
         root.Children.Add(head);
 
+        // Offer Rows
         foreach (var o in offers)
+        {
             root.Children.Add(BuildOfferRowSearchUI(o, compact));
+        }
 
         card.MouseLeftButtonUp += (_, __) => { CenterMapOnWorldAnimated(s.X, s.Y, false, true); };
         return card;
@@ -74,38 +120,112 @@ public partial class MainWindow
     private FrameworkElement BuildOfferRowSearchUI(RustPlusClientReal.ShopOrder o, bool compact)
     {
         bool outOfStock = o.Stock <= 0;
-        var g = new Grid { Margin = new Thickness(0, 2, 0, 2), Opacity = outOfStock ? 0.6 : 1.0 };
-        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        g.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        
+        var rowBorder = new Border
+        {
+            Padding = new Thickness(8, 5, 8, 5),
+            Margin = new Thickness(0, 2, 0, 2),
+            CornerRadius = new CornerRadius(6),
+            Background = new SolidColorBrush(Color.FromArgb(10, 255, 255, 255))
+        };
 
-        var li = new Image { Width = 16, Height = 16, Margin = new Thickness(0, 0, 4, 0) };
+        var g = new Grid { Opacity = outOfStock ? 0.65 : 1.0 };
+        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 0: Item Icon
+        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 1: Item Name
+        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 2: Pay Currency Details
+        g.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // 3: Spacer
+        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 4: Stock Capsule Badge
+
+        // 0: Item Icon
+        var li = new Image { Width = 16, Height = 16, Margin = new Thickness(0, 0, 6, 0) };
+        RenderOptions.SetBitmapScalingMode(li, BitmapScalingMode.HighQuality);
         BindIcon(li, o.ItemShortName, o.ItemId);
         Grid.SetColumn(li, 0);
         g.Children.Add(li);
 
+        // 1: Item Name
         var name = ResolveItemName(o.ItemId, o.ItemShortName);
-        if (compact && name.Length > 14) name = name[..14] + "…";
-        var lt = new TextBlock { Text = name, Foreground = SearchText, VerticalAlignment = VerticalAlignment.Center };
+        if (compact && name.Length > 16) name = name[..16] + "…";
+        var lt = new TextBlock 
+        { 
+            Text = name, 
+            Foreground = SearchText, 
+            VerticalAlignment = VerticalAlignment.Center,
+            FontWeight = FontWeights.SemiBold,
+            FontSize = 12
+        };
         Grid.SetColumn(lt, 1);
         g.Children.Add(lt);
 
-        var right = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
-        right.Children.Add(new TextBlock { Text = "→  ", Foreground = SearchSubtle });
-        var ci = new Image { Width = 14, Height = 14, Margin = new Thickness(0, 0, 3, 0) };
+        // 2: Dynamic Transaction Flow indicator & Currency (Muted soft gray/blue arrow!)
+        var right = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0, 0, 0) };
+        right.Children.Add(new TextBlock 
+        { 
+            Text = " →  ", 
+            Foreground = new SolidColorBrush(Color.FromRgb(138, 162, 178)), // Muted soft gray/blue arrow
+            FontWeight = FontWeights.Bold,
+            FontSize = 12
+        });
+        
+        var ci = new Image { Width = 14, Height = 14, Margin = new Thickness(0, 0, 4, 0) };
+        RenderOptions.SetBitmapScalingMode(ci, BitmapScalingMode.HighQuality);
         BindIcon(ci, o.CurrencyShortName, o.CurrencyItemId);
         right.Children.Add(ci);
+        
         right.Children.Add(new TextBlock
         {
             Text       = $"{o.CurrencyAmount} {ResolveItemName(o.CurrencyItemId, o.CurrencyShortName)}",
             Foreground = SearchText,
-            FontWeight = FontWeights.SemiBold
+            FontWeight = FontWeights.SemiBold,
+            FontSize   = 12
         });
         Grid.SetColumn(right, 2);
         g.Children.Add(right);
-        return g;
-    }
 
+        // 4: Emerald or Amber Stock Badge Capsule
+        var stockBadge = new Border
+        {
+            CornerRadius = new CornerRadius(8),
+            Padding = new Thickness(6, 2, 6, 2),
+            Margin = new Thickness(8, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Right
+        };
+        Grid.SetColumn(stockBadge, 4);
+
+        if (outOfStock)
+        {
+            stockBadge.Background = new SolidColorBrush(Color.FromArgb(20, 239, 83, 80)); // Soft red
+            stockBadge.BorderBrush = new SolidColorBrush(Color.FromArgb(50, 239, 83, 80));
+            stockBadge.BorderThickness = new Thickness(1);
+            stockBadge.Child = new TextBlock
+            {
+                Text = "○ Out of stock",
+                Foreground = new SolidColorBrush(Color.FromRgb(239, 83, 80)),
+                FontSize = 9.5,
+                FontWeight = FontWeights.Bold
+            };
+        }
+        else
+        {
+            stockBadge.Background = new SolidColorBrush(Color.FromArgb(20, 102, 187, 106)); // Soft green
+            stockBadge.BorderBrush = new SolidColorBrush(Color.FromArgb(50, 102, 187, 106));
+            stockBadge.BorderThickness = new Thickness(1);
+            stockBadge.Child = new TextBlock
+            {
+                Text = $"● Stock: {o.Stock}",
+                Foreground = new SolidColorBrush(Color.FromRgb(102, 187, 106)),
+                FontSize = 9.5,
+                FontWeight = FontWeights.Bold
+            };
+        }
+
+        Grid.SetColumn(stockBadge, 3);
+        g.Children.Add(stockBadge);
+
+        rowBorder.Child = g;
+        return rowBorder;
+    }
 
     private static bool LooksLikeOrdersLabel(string? s)
     {
@@ -129,8 +249,7 @@ public partial class MainWindow
         ToggleShopSearch();
         if (ShopSearchContent.Visibility == Visibility.Visible)
         {
-            _ = PushShopsToWebViewAsync();
-            _ = PushAlertsToWebViewAsync();
+            _ = InitEmbeddedShopSearchAsync();
         }
     }
 
@@ -138,7 +257,7 @@ public partial class MainWindow
     {
         if (ShopSearchContent.Visibility == Visibility.Collapsed)
         {
-            if (_shopSearchWebView == null) _ = InitEmbeddedShopSearchAsync();
+            _ = InitEmbeddedShopSearchAsync();
             UpdateShopPollingWarning();
             
             ShopSearchContent.Visibility = Visibility.Visible;
@@ -204,403 +323,69 @@ public partial class MainWindow
         UpdateShopPollingWarning();
     }
 
-    internal async Task InitEmbeddedShopSearchAsync()
+    // ── Native C# Initialization ──────────────────────────────────────────────
+    internal Task InitEmbeddedShopSearchAsync()
     {
-        if (_shopSearchWebView != null) return;
-
-        _searchTb  = new TextBox();
-        _chkSell   = new CheckBox { IsChecked = true };
-        _chkBuy    = new CheckBox { IsChecked = true };
-
-        var wv = EmbeddedShopSearch;
-        _shopSearchWebView = wv;
-
-        try
+        Dispatcher.Invoke(() =>
         {
-            var dataPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "RustPlusDesk", "WebView2_ShopSearch");
-            Directory.CreateDirectory(dataPath);
-
-            var env = await CoreWebView2Environment.CreateAsync(userDataFolder: dataPath);
-            await wv.EnsureCoreWebView2Async(env);
-
-            wv.CoreWebView2.Settings.AreDevToolsEnabled = true;
-            wv.CoreWebView2.WebMessageReceived += ShopSearch_WebMessageReceived;
-
-            string html = BuildShopSearchHtml();
-            if (!string.IsNullOrWhiteSpace(html))
-            {
-                var iconPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "icons");
-                if (Directory.Exists(iconPath))
-                    wv.CoreWebView2.SetVirtualHostNameToFolderMapping("rusticons.local", iconPath, CoreWebView2HostResourceAccessKind.Allow);
-
-                wv.CoreWebView2.NavigateToString(html);
-            }
-            else
-                wv.NavigateToString(FallbackHtml());
-
-            wv.NavigationCompleted += async (_, args) =>
-            {
-                if (!args.IsSuccess) return;
-                await Task.Delay(80);
-                await InjectItemsAsync();
-                await PushShopsToWebViewAsync();
-                await PushAlertsToWebViewAsync();
-                UpdateShopSearchConfig();
-            };
-        }
-        catch (Exception ex)
-        {
-            AppendLog($"[ShopSearch] WebView2 Error: {ex.Message}");
-        }
-
-        if (_alertRules.All(r => !r.IsSaved))
-        {
-            LoadPersistentAlerts();
-            SyncAlertMenuItems();
-        }
-
-        UpdateShopSearchToolHighlights();
+            EmbeddedShopSearch?.Initialize(this);
+            EmbeddedShopSearch?.UpdateFilterButtonsStyles();
+        });
+        return Task.CompletedTask;
     }
 
     public void UpdateShopSearchToolHighlights()
     {
-        if (_shopSearchWebView == null) return;
-        bool profitOpen = ProfitTradesPanel.Visibility == Visibility.Visible;
-        bool pathOpen = BuyXForYPanel.Visibility == Visibility.Visible;
-
-        _ = _shopSearchWebView.ExecuteScriptAsync($"window.updateToolHighlights({profitOpen.ToString().ToLower()}, {pathOpen.ToString().ToLower()})");
+        Dispatcher.Invoke(() =>
+        {
+            EmbeddedShopSearch?.UpdateFilterButtonsStyles();
+        });
     }
 
-    // ── Refresh (called by PollShopsOnceAsync) ───────────────────────────────
+    // ── Helper getters/setters for ShopSearchControl ─────────────────────────
+    internal List<RustPlusClientReal.ShopMarker> GetLastShopsList()
+    {
+        return _lastShops;
+    }
+
+    internal List<ShopAlertRule> GetAlertRulesList()
+    {
+        return _alertRules;
+    }
+
+    internal void AddAlertRule(ShopAlertRule rule)
+    {
+        _alertRules.Add(rule);
+        SavePersistentAlerts();
+        UpdateMasterToggleState();
+        SyncAlertMenuItems();
+        EmbeddedShopSearch?.RefreshAlertListUI();
+    }
+
+    internal void RemoveAlertRule(ShopAlertRule rule)
+    {
+        _alertRules.Remove(rule);
+        SavePersistentAlerts();
+        UpdateMasterToggleState();
+        SyncAlertMenuItems();
+        EmbeddedShopSearch?.RefreshAlertListUI();
+    }
+
+    // Stub method for compatibility if anything in MainWindow tries to invoke alerts pushing
+    public Task PushAlertsToWebViewAsync()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            EmbeddedShopSearch?.RefreshAlertListUI();
+        });
+        return Task.CompletedTask;
+    }
+
     private void RefreshShopSearchResults()
     {
-        if (_shopSearchWebView == null) return;
-        _ = PushShopsToWebViewAsync();
+        Dispatcher.Invoke(() =>
+        {
+            EmbeddedShopSearch?.RefreshSearchResults();
+        });
     }
-
-    // ── Push data to WebView2 ────────────────────────────────────────────────
-    private async Task InjectItemsAsync()
-    {
-        if (_shopSearchWebView == null) return;
-        try
-        {
-            EnsureNewItemDbLoaded();
-            var items = sItemsById.Values
-                .Where(ii => !string.IsNullOrWhiteSpace(ii.Display))
-                .Select(ii =>
-                {
-                    string shortName = ii.ShortName ?? "";
-                    // Try to find cached icon using the same logic as ResolveItemIcon
-                    string clashUrl = !string.IsNullOrWhiteSpace(shortName) 
-                        ? $"https://wiki.rustclash.com/img/items40/{shortName}.png" : "";
-                    string helpUrl = ii.IconUrl ?? "";
-
-                    string finalUrl = clashUrl;
-                    if (!string.IsNullOrWhiteSpace(clashUrl))
-                    {
-                        var cp = GetIconCachePath(clashUrl);
-                        if (File.Exists(cp)) finalUrl = $"http://rusticons.local/{Path.GetFileName(cp)}";
-                    }
-                    else if (!string.IsNullOrWhiteSpace(helpUrl))
-                    {
-                        var cp = GetIconCachePath(helpUrl);
-                        if (File.Exists(cp)) finalUrl = $"http://rusticons.local/{Path.GetFileName(cp)}";
-                        else finalUrl = helpUrl;
-                    }
-
-                    return new
-                    {
-                        id      = ii.Id,
-                        sn      = shortName,
-                        display = ii.Display,
-                        icon    = finalUrl
-                    };
-                })
-                .OrderBy(x => x.display)
-                .ToList();
-
-            var json = JsonSerializer.Serialize(items);
-            await _shopSearchWebView.ExecuteScriptAsync($"window.loadItems({json})");
-        }
-        catch { }
-    }
-
-    private async Task PushShopsToWebViewAsync()
-    {
-        if (_shopSearchWebView == null) return;
-        try
-        {
-            var payload = _lastShops
-                .Where(s => s.Orders is { Count: > 0 })
-                .Select(s => new
-                {
-                    id     = s.Id,
-                    label  = CleanLabel(s.Label) ?? "Shop",
-                    grid   = GetGridLabel(s),
-                    x      = s.X,
-                    y      = s.Y,
-                    orders = s.Orders!.Select(o => new
-                    {
-                        iName  = ResolveItemName(o.ItemId, o.ItemShortName),
-                        iIcon  = GetItemIconUrl(o.ItemId, o.ItemShortName),
-                        qty    = o.Quantity,
-                        stock  = o.Stock,
-                        cName  = ResolveItemName(o.CurrencyItemId, o.CurrencyShortName),
-                        cIcon  = GetItemIconUrl(o.CurrencyItemId, o.CurrencyShortName),
-                        cAmt   = o.CurrencyAmount,
-                        bp     = o.IsBlueprint
-                    }).ToList()
-                }).ToList();
-
-            var json = JsonSerializer.Serialize(payload);
-            await _shopSearchWebView.ExecuteScriptAsync($"window.updateShops({json})");
-        }
-        catch { }
-    }
-
-    public async Task PushAlertsToWebViewAsync()
-    {
-        if (_shopSearchWebView == null) return;
-        try
-        {
-            AppendLog($"[ShopSearch] Pushing {_alertRules.Count} alerts to WebView");
-            var alerts = _alertRules.Select(r => new
-            {
-                id    = r.Id.ToString(),
-                query = r.QueryText,
-                sell  = r.MatchSellSide,
-                buy   = r.MatchBuySide,
-                chat  = r.NotifyChat,
-                sound = r.NotifySound,
-                saved = r.IsSaved
-            }).ToList();
-
-            var json = JsonSerializer.Serialize(alerts);
-            await _shopSearchWebView.ExecuteScriptAsync($"window.updateAlerts({json})");
-        }
-        catch { }
-    }
-
-    // ── Web message handler ──────────────────────────────────────────────────
-    private void ShopSearch_WebMessageReceived(object? sender,
-        CoreWebView2WebMessageReceivedEventArgs e)
-    {
-        try
-        {
-            var json = e.WebMessageAsJson;
-            var doc    = JsonDocument.Parse(json);
-            var root   = doc.RootElement;
-            var action = root.GetProperty("action").GetString();
-
-            AppendLog($"[ShopSearch] Message received: {action}");
-
-            Dispatcher.Invoke(() =>
-            {
-                switch (action)
-                {
-                    case "filterChanged":
-                        if (_searchTb != null)
-                            _searchTb.Text = root.TryGetProperty("query", out var q)
-                                ? q.GetString() ?? "" : "";
-                        if (_chkSell != null)
-                            _chkSell.IsChecked = root.TryGetProperty("sell", out var sv)
-                                && sv.GetBoolean();
-                        if (_chkBuy != null)
-                            _chkBuy.IsChecked = root.TryGetProperty("buy", out var bv)
-                                && bv.GetBoolean();
-                        _ = PushShopsToWebViewAsync();
-                        break;
-
-                    case "centerMap":
-                        double cx = root.GetProperty("x").GetDouble();
-                        double cy = root.GetProperty("y").GetDouble();
-                        AppendLog($"[ShopSearch] Centering map on {cx}, {cy}");
-                        StopTracking();
-                        CenterMapOnWorldAnimated(cx, cy);
-                        break;
-
-                    case "addAlert":
-                        if (root.TryGetProperty("query", out var aq))
-                        {
-                            string qText = aq.GetString() ?? "";
-                            bool aSell = root.TryGetProperty("sell", out var asv) && asv.GetBoolean();
-                            bool aBuy  = root.TryGetProperty("buy", out var abv) && abv.GetBoolean();
-                            
-                            AppendLog($"[ShopSearch] Adding alert for: {qText} (S={aSell}, B={aBuy})");
-                            
-                            // If we have a query from JS, use it instead of reading from _searchTb
-                            var rule = new ShopAlertRule
-                            {
-                                QueryText = qText,
-                                MatchSellSide = aSell,
-                                MatchBuySide = aBuy,
-                                NotifyChat = true,
-                                NotifySound = true
-                            };
-                            
-                            // Baseline logic (matches logic in MainWindow.xaml.cs)
-                            foreach (var shop in _lastShops)
-                            {
-                                if (shop.Orders == null) continue;
-                                foreach (var o in shop.Orders)
-                                {
-                                    rule.Baseline.Add(new AlertSeenOrder
-                                    {
-                                        ShopId = shop.Id,
-                                        ItemShort = o.ItemShortName ?? "",
-                                        CurrencyShort = o.CurrencyShortName ?? "",
-                                        Quantity = o.Quantity,
-                                        CurrencyAmount = o.CurrencyAmount,
-                                        Stock = o.Stock
-                                    });
-                                }
-                            }
-
-                            _alertRules.Add(rule);
-                            SavePersistentAlerts();
-                            RefreshAlertListUI();
-                            UpdateMasterToggleState();
-                            SyncAlertMenuItems();
-                        }
-                        else
-                        {
-                            AddAlertFromCurrentSearch();
-                        }
-                        break;
-
-                    case "notifyNew":
-                        bool onNew = root.GetProperty("on").GetBoolean();
-                        TrackingService.AnnounceNewShops = onNew;
-                        UpdateMasterToggleState();
-                        SyncAlertMenuItems();
-                        break;
-
-                    case "notifySuspicious":
-                        bool onSusp = root.GetProperty("on").GetBoolean();
-                        TrackingService.AnnounceSuspiciousShops = onSusp;
-                        UpdateMasterToggleState();
-                        SyncAlertMenuItems();
-                        break;
-
-                    case "removeAlert":
-                        var rid = Guid.Parse(root.GetProperty("id").GetString()!);
-                        var rr  = _alertRules.FirstOrDefault(r => r.Id == rid);
-                        if (rr != null) 
-                        { 
-                            _alertRules.Remove(rr); 
-                            SavePersistentAlerts();
-                            UpdateMasterToggleState();
-                            SyncAlertMenuItems();
-                        }
-                        _ = PushAlertsToWebViewAsync();
-                        break;
-
-                    case "saveAlert":
-                        var sid  = Guid.Parse(root.GetProperty("id").GetString()!);
-                        var sr   = _alertRules.FirstOrDefault(r => r.Id == sid);
-                        if (sr != null)
-                        {
-                            sr.IsSaved = root.GetProperty("saved").GetBoolean();
-                            SavePersistentAlerts();
-                        }
-                        _ = PushAlertsToWebViewAsync();
-                        break;
-
-                    case "alertNotify":
-                        var nid = Guid.Parse(root.GetProperty("id").GetString()!);
-                        var nr  = _alertRules.FirstOrDefault(r => r.Id == nid);
-                        if (nr != null)
-                        {
-                            nr.NotifyChat  = root.GetProperty("chat").GetBoolean();
-                            nr.NotifySound = root.GetProperty("sound").GetBoolean();
-                            SavePersistentAlerts();
-
-                            // Sync global Chat Alert menu state
-                            UpdateMasterToggleState();
-                            SyncAlertMenuItems();
-                        }
-                        break;
-
-                    case "openAnalysis":
-                        AppendLog("[ShopSearch] Toggling Profit Trades panel");
-                        OpenAnalysisWindow();
-                        break;
-
-                    case "openPathFinder":
-                        AppendLog("[ShopSearch] Toggling Buy X for Y panel");
-                        OpenPathFinderWindow();
-                        break;
-
-                        break;
-                }
-            });
-        }
-        catch (Exception ex)
-        {
-            AppendLog($"[ShopSearch] Error in message handler: {ex.Message}");
-        }
-    }
-
-
-
-    // ── Helpers ──────────────────────────────────────────────────────────────
-    private static string GetItemIconUrl(int itemId, string? shortName)
-    {
-        EnsureNewItemDbLoaded();
-        
-        // 1) Logic matches ResolveItemIcon: RustClash is primary
-        if (string.IsNullOrWhiteSpace(shortName) && itemId != 0 && sItemsById.TryGetValue(itemId, out var ii0))
-            shortName = ii0.ShortName;
-
-        if (!string.IsNullOrWhiteSpace(shortName))
-        {
-            var clashUrl = $"https://wiki.rustclash.com/img/items40/{shortName}.png";
-            var cp = GetIconCachePath(clashUrl);
-            if (File.Exists(cp)) return $"http://rusticons.local/{Path.GetFileName(cp)}";
-        }
-
-        // 2) Fallback to RustHelp (ii.IconUrl)
-        string? helpUrl = null;
-        if (itemId != 0 && sItemsById.TryGetValue(itemId, out var ii1)) helpUrl = ii1.IconUrl;
-        else if (!string.IsNullOrWhiteSpace(shortName) && sItemsByShort.TryGetValue(shortName!, out var ii2)) helpUrl = ii2.IconUrl;
-
-        if (!string.IsNullOrWhiteSpace(helpUrl))
-        {
-            var cp = GetIconCachePath(helpUrl);
-            if (File.Exists(cp)) return $"http://rusticons.local/{Path.GetFileName(cp)}";
-            return helpUrl;
-        }
-
-        // 3) Default to Clash URL if nothing cached
-        return !string.IsNullOrWhiteSpace(shortName) 
-            ? $"https://wiki.rustclash.com/img/items40/{shortName}.png" 
-            : "";
-    }
-
-    // ── HTML builder ──────────────────────────────────────────────────────────
-    private static string BuildShopSearchHtml()
-    {
-        try
-        {
-            var uri = new Uri("pack://application:,,,/Assets/Data/ShopSearch.html");
-            var streamInfo = Application.GetResourceStream(uri);
-            if (streamInfo != null)
-            {
-                using var reader = new StreamReader(streamInfo.Stream);
-                return reader.ReadToEnd();
-            }
-        }
-        catch { }
-
-        // Fallback for local development if resource loading fails
-        string localPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Data", "ShopSearch.html");
-        if (File.Exists(localPath)) return File.ReadAllText(localPath);
-
-        return FallbackHtml();
-    }
-
-    private static string FallbackHtml() =>
-        "<html><body style='background:#16181c;color:#fff;padding:20px'>ShopSearch.html not found.</body></html>";
 }

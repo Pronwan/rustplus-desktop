@@ -1227,7 +1227,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         return $"{author}|{text}";
     }
 
-    private sealed class ItemInfo
+    public sealed class ItemInfo
     {
         public int Id { get; init; }
         public string ShortName { get; init; } = "";
@@ -1235,8 +1235,8 @@ public partial class MainWindow : WpfUi.FluentWindow
         public string? IconUrl { get; init; }
     }
 
-    private static readonly Dictionary<int, ItemInfo> sItemsById = new();
-    private static readonly Dictionary<string, ItemInfo> sItemsByShort = new(StringComparer.OrdinalIgnoreCase);
+    internal static readonly Dictionary<int, ItemInfo> sItemsById = new();
+    internal static readonly Dictionary<string, ItemInfo> sItemsByShort = new(StringComparer.OrdinalIgnoreCase);
     private static readonly Dictionary<string, ImageSource> sIconCache = new(StringComparer.OrdinalIgnoreCase);
     private static readonly HashSet<string> sPendingDownloads = new();
     private static bool sNewDbLoaded = false;
@@ -3547,7 +3547,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                !TrackingService.AnnounceSmartAlerts && !TrackingService.AnnounceTradeAlerts;
     }
 
-    private void UpdateMasterToggleState()
+    internal void UpdateMasterToggleState()
     {
         _announceSpawns = TrackingService.AnnounceSpawnsMaster;
         ChatAnnounce.IsChecked = _announceSpawns;
@@ -3588,7 +3588,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    private void SyncAlertMenuItems()
+    internal void SyncAlertMenuItems()
     {
         bool masterOn = TrackingService.AnnounceSpawnsMaster;
         PopulateTradeAlertsSubMenu(masterOn);
@@ -3717,23 +3717,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    private async void UpdateShopSearchConfig()
+    internal void UpdateShopSearchConfig()
     {
-        if (EmbeddedShopSearch?.CoreWebView2 != null)
+        Dispatcher.Invoke(() =>
         {
-            try
-            {
-                var config = new
-                {
-                    notifyNew = TrackingService.AnnounceNewShops,
-                    notifySuspicious = TrackingService.AnnounceSuspiciousShops,
-                    notifyTradeAlerts = _alertRules.Any(r => r.NotifyChat)
-                };
-                string json = JsonSerializer.Serialize(config);
-                await EmbeddedShopSearch.CoreWebView2.ExecuteScriptAsync($"if(window.updateConfig) window.updateConfig({json});");
-            }
-            catch { }
-        }
+            EmbeddedShopSearch?.UpdateFilterButtonsStyles();
+        });
     }
 
 
@@ -3812,7 +3801,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
    
 
-    private class ShopAlertRule
+    public class ShopAlertRule
     {
         public Guid Id { get; } = Guid.NewGuid();
 
@@ -4084,7 +4073,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         ApplyThinScrollbar(_alertList);
     }
 
-    private void SavePersistentAlerts()
+    internal void SavePersistentAlerts()
     {
         try
         {
@@ -4173,7 +4162,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private DateTime _lastChatSendUtc = DateTime.MinValue; // Rate-Limit (1/sec)
 
     // pro Alert merken wir, welche Angebote schon existierten beim Setzen
-    private class AlertSeenOrder
+    public class AlertSeenOrder
     {
         public uint ShopId;
         public string ItemShort;

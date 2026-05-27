@@ -3564,7 +3564,7 @@
 
                         <Border
                             x:Name="ShopSearchPanel"
-                            Width="400"
+                            Width="450"
                             Margin="0,0,12,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
@@ -3579,13 +3579,17 @@
                                 <Border
                                     x:Name="ShopSearchContent"
                                     Grid.Row="0"
+                                    Panel.ZIndex="5"
                                     Height="540"
-                                    Background="#16181C"
-                                    BorderBrush="#40FFFFFF"
+                                    Background="#D916181C"
+                                    BorderBrush="#25FFFFFF"
                                     BorderThickness="1"
                                     CornerRadius="12"
                                     RenderTransformOrigin="0.5,1"
                                     Visibility="Collapsed">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="20" ShadowDepth="4" Opacity="0.55" Color="#000000" />
+                                    </Border.Effect>
                                     <Border.RenderTransform>
                                         <TransformGroup>
                                             <ScaleTransform x:Name="ShopSearchScale" ScaleY="1" />
@@ -3594,55 +3598,57 @@
                                     </Border.RenderTransform>
                                     <Grid>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="30" />
+                                            <RowDefinition Height="34" />
                                             <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
 
                                         <!--  Header / Drag / Close Area  -->
-                                        <Grid Grid.Row="0" Background="#1E2126">
-                                            <StackPanel Margin="12,0,0,0" Orientation="Horizontal">
-                                                <TextBlock
+                                        <Border Grid.Row="0" Background="#401E2126" CornerRadius="12,12,0,0" BorderThickness="0,0,0,1" BorderBrush="#15FFFFFF">
+                                            <Grid>
+                                                <StackPanel Margin="12,0,0,0" Orientation="Horizontal">
+                                                    <TextBlock
+                                                        VerticalAlignment="Center"
+                                                        FontSize="11"
+                                                        Text="🛒 " />
+                                                    <TextBlock
+                                                        HorizontalAlignment="Left"
+                                                        VerticalAlignment="Center"
+                                                        FontSize="11"
+                                                        FontWeight="Bold"
+                                                        Foreground="#80FFFFFF"
+                                                        Text="{DynamicResource ShopSearchTitle}" />
+                                                </StackPanel>
+                                                <Button
+                                                    x:Name="BtnCloseShopSearch"
+                                                    Width="26"
+                                                    Height="26"
+                                                    Margin="0,0,4,0"
+                                                    HorizontalAlignment="Right"
                                                     VerticalAlignment="Center"
-                                                    FontSize="10"
-                                                    Text="🛒 " />
-                                                <TextBlock
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center"
-                                                    FontSize="10"
-                                                    FontWeight="Bold"
-                                                    Foreground="#60FFFFFF"
-                                                    Text="{DynamicResource ShopSearchTitle}" />
-                                            </StackPanel>
-                                            <Button
-                                                x:Name="BtnCloseShopSearch"
-                                                Width="26"
-                                                Height="26"
-                                                Margin="0,0,4,0"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Center"
-                                                Click="BtnCloseShopSearch_Click"
-                                                Content="&#x2715;"
-                                                Cursor="Hand"
-                                                FontSize="12"
-                                                Foreground="#99FFFFFF"
-                                                Style="{StaticResource GhostButton}"
-                                                ToolTip="{DynamicResource CloseSearch}">
-                                                <Button.Resources>
-                                                    <Style BasedOn="{StaticResource GhostButton}" TargetType="Button">
-                                                        <Setter Property="Background" Value="Transparent" />
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Foreground" Value="White" />
-                                                                <Setter Property="Background" Value="#20FFFFFF" />
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Button.Resources>
-                                            </Button>
-                                        </Grid>
+                                                    Click="BtnCloseShopSearch_Click"
+                                                    Content="&#x2715;"
+                                                    Cursor="Hand"
+                                                    FontSize="12"
+                                                    Foreground="#99FFFFFF"
+                                                    Style="{StaticResource GhostButton}"
+                                                    ToolTip="{DynamicResource CloseSearch}">
+                                                    <Button.Resources>
+                                                        <Style BasedOn="{StaticResource GhostButton}" TargetType="Button">
+                                                            <Setter Property="Background" Value="Transparent" />
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Foreground" Value="White" />
+                                                                    <Setter Property="Background" Value="#20FFFFFF" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Resources>
+                                                </Button>
+                                            </Grid>
+                                        </Border>
 
                                         <Grid Grid.Row="1">
-                                            <wv2:WebView2 x:Name="EmbeddedShopSearch" />
+                                            <views:ShopSearchControl x:Name="EmbeddedShopSearch" />
 
                                             <Grid x:Name="ShopSearchWarning" Background="#F216181C" Visibility="Collapsed">
                                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">

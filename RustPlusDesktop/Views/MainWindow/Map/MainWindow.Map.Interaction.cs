@@ -255,7 +255,7 @@ public partial class MainWindow
     private bool _isAnimatingMap = false;
 
     // Smoothly fly to a world coordinate (x,y) with a zoom dip
-    private async void CenterMapOnWorldAnimated(double targetX, double targetY, bool allowDip = true, bool fast = false, bool keepTracking = false, double? targetZoom = null)
+    internal async void CenterMapOnWorldAnimated(double targetX, double targetY, bool allowDip = true, bool fast = false, bool keepTracking = false, double? targetZoom = null)
     {
         if (_worldSizeS <= 0) return;
 
