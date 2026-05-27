@@ -1,0 +1,24 @@
+<UserControl
+    x:Class="RustPlusDesk.Views.UploadConsentOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <Grid x:Name="UploadConsentRoot" Visibility="Collapsed" Background="#C0000000" Panel.ZIndex="10000">
+        <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="20" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="450">
+            <StackPanel>
+                <TextBlock Text="{DynamicResource UploadConsentTitle}" FontWeight="Bold" FontSize="18" Margin="0,0,0,12"/>
+                <TextBlock Text="{DynamicResource UploadConsentText}" TextWrapping="Wrap" Margin="0,0,0,16" LineHeight="20"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="{DynamicResource Decline}" Margin="0,0,8,0" Padding="16,6" Click="BtnDecline_Click" Background="#404040" Foreground="White" BorderThickness="0" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="4"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <ui:Button Content="{DynamicResource Accept}" Appearance="Primary" Padding="24,6" Click="BtnAccept_Click" Cursor="Hand" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

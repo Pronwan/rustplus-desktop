@@ -1270,7 +1270,7 @@
     <value>{0} دقيقة و {1:D2} ثانية</value>
   </data>
   <data name="AgoHoursMinutes" xml:space="preserve">
-    <value منذ {0} ساعة و {1} دقيقة</value>
+    <value>منذ {0} ساعة و {1} دقيقة</value>
   </data>
   <data name="AgoMinutes" xml:space="preserve">
     <value>منذ {0} دقيقة</value>

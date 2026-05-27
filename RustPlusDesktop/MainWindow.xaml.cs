@@ -57,7 +57,6 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow : WpfUi.FluentWindow
 {
-
     private readonly MainViewModel _vm = new();
     private bool _chatOpenedForCommandsOnly = false;
     private readonly UpdateService _updateService = new();
@@ -269,6 +268,9 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _vm.IsInitializing = true;
         InitializeComponent();
+        
+        PlayersTab?.SetMainWindow(this);
+        
         UpdateLanguageFlag();
         InitializeAppSettings();
         
@@ -2786,7 +2788,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
 
 
-    private void Server_Delete_Click(object sender, RoutedEventArgs e)
+    public void Server_Delete_Click(object sender, RoutedEventArgs e)
     {
         if (((FrameworkElement)sender).Tag is not ServerProfile prof) return;
         
