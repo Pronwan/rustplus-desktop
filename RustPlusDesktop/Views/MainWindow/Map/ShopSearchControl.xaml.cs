@@ -88,6 +88,8 @@ namespace RustPlusDesk.Views
                 new ResourceItem { Id = -321733511, Display = "Crude Oil", Tag = "crude", Icon = MainWindow.ResolveItemIcon(-321733511, "crude.oil") },
                 new ResourceItem { Id = -946369541, Display = "Low Grade", Tag = "lowgrade", Icon = MainWindow.ResolveItemIcon(-946369541, "lowgradefuel") },
                 new ResourceItem { Id = 1568388703, Display = "Diesel", Tag = "diesel", Icon = MainWindow.ResolveItemIcon(1568388703, "diesel_barrel") },
+                new ResourceItem { Id = -858312878, Display = "Cloth", Tag = "cloth", Icon = MainWindow.ResolveItemIcon(-858312878, "cloth") },
+                new ResourceItem { Id = -1938052175, Display = "Charcoal", Tag = "charcoal", Icon = MainWindow.ResolveItemIcon(-1938052175, "charcoal") },
             };
             CmbResource.ItemsSource = resources;
             CmbResource.SelectedIndex = 0;
@@ -432,47 +434,64 @@ namespace RustPlusDesk.Views
             // Perform CPU-heavy shop list filtering on background thread
             var matchedResults = await System.Threading.Tasks.Task.Run(() =>
             {
-                var clusters = _mainWindow.ClusterShops(shops);
                 var list = new List<(RustPlusClientReal.ShopMarker Shop, List<RustPlusClientReal.ShopOrder> Offers)>();
                 
-                foreach (var cluster in clusters)
+                foreach (var s in shops)
                 {
-                    var matchingOffers = new List<RustPlusClientReal.ShopOrder>();
-                    foreach (var s in cluster)
-                    {
-                        if (s.Orders == null || !s.Orders.Any()) continue;
+                    if (s.Orders == null || !s.Orders.Any()) continue;
 
-                        var shopMatches = s.Orders.Where(o =>
+                    bool hasQuery = !string.IsNullOrWhiteSpace(query);
+
+                    var shopMatches = s.Orders.Where(o =>
+                    {
+                        // 1. Stock filter
+                        if (_filterHideZero && o.Stock <= 0) return false;
+
+                        // 2. Resource ID filter & Text Query combination
+                        string oName = MainWindow.ResolveItemName(o.ItemId, o.ItemShortName).ToLowerInvariant();
+                        string cName = MainWindow.ResolveItemName(o.CurrencyItemId, o.CurrencyShortName).ToLowerInvariant();
+
+                        bool hasResourceFilter = _resourceFilterId != 0;
+
+                        // Combine text query (matching display names or shortnames) and resource filters under the Sells and Buys toggles
+                        bool isSellMatch = true;
+                        if (hasQuery)
                         {
-                            // Stock filter
-                            if (_filterHideZero && o.Stock <= 0) return false;
-
-                            // Resource ID filter
-                            if (_resourceFilterId != 0)
+                            bool matchesSellQuery = oName.Contains(query) || (o.ItemShortName != null && o.ItemShortName.Contains(query, StringComparison.OrdinalIgnoreCase));
+                            if (!matchesSellQuery)
                             {
-                                bool isCurrencyMatch = o.CurrencyItemId == _resourceFilterId;
-                                bool isItemMatch = o.ItemId == _resourceFilterId;
-                                if (!isCurrencyMatch && !isItemMatch) return false;
+                                isSellMatch = false;
                             }
+                        }
+                        if (hasResourceFilter && o.CurrencyItemId != _resourceFilterId)
+                        {
+                            isSellMatch = false;
+                        }
 
-                            // Text Query matches
-                            if (string.IsNullOrWhiteSpace(query)) return true;
+                        bool isBuyMatch = true;
+                        if (hasQuery)
+                        {
+                            bool matchesBuyQuery = cName.Contains(query) || (o.CurrencyShortName != null && o.CurrencyShortName.Contains(query, StringComparison.OrdinalIgnoreCase));
+                            if (!matchesBuyQuery)
+                            {
+                                isBuyMatch = false;
+                            }
+                        }
+                        if (hasResourceFilter && o.ItemId != _resourceFilterId)
+                        {
+                            isBuyMatch = false;
+                        }
 
-                            string oName = MainWindow.ResolveItemName(o.ItemId, o.ItemShortName).ToLowerInvariant();
-                            string cName = MainWindow.ResolveItemName(o.CurrencyItemId, o.CurrencyShortName).ToLowerInvariant();
+                        // Combine with the active Sells and Buys toggles
+                        bool matchSell = _filterSell && isSellMatch;
+                        bool matchBuy = _filterBuy && isBuyMatch;
 
-                            bool matchSell = _filterSell && oName.Contains(query);
-                            bool matchBuy = _filterBuy && cName.Contains(query);
+                        return matchSell || matchBuy;
+                    }).ToList();
 
-                            return matchSell || matchBuy;
-                        });
-                        matchingOffers.AddRange(shopMatches);
-                    }
-
-                    if (matchingOffers.Any())
+                    if (shopMatches.Any())
                     {
-                        // Use the first shop as representative for the card, but it will show ALL matching offers from the cluster
-                        list.Add((cluster[0], matchingOffers));
+                        list.Add((s, shopMatches));
                     }
                 }
 

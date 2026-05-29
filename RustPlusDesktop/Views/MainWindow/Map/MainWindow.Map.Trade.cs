@@ -408,6 +408,12 @@ public partial class MainWindow
 
         ProfitTradesPanel.Visibility = Visibility.Collapsed;
 
+        if (AppSettingsPanel.Visibility == Visibility.Visible)
+        {
+            AppSettingsPanel.Visibility = Visibility.Collapsed;
+            ApplySettings();
+        }
+
         if (!_pathFinderInitialized)
         {
             _pathFinderInitialized = true;
@@ -1930,6 +1936,12 @@ public partial class MainWindow
         }
 
         BuyXForYPanel.Visibility = Visibility.Collapsed;
+
+        if (AppSettingsPanel.Visibility == Visibility.Visible)
+        {
+            AppSettingsPanel.Visibility = Visibility.Collapsed;
+            ApplySettings();
+        }
 
         if (!_profitTradesInitialized)
         {
