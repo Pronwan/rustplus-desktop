@@ -65,6 +65,8 @@ public class TrackingSettings
     public string? LastBMId { get; set; } = null;
     public bool MapShowSteamMarkers { get; set; } = true;
     public bool MapShowDeathTags { get; set; } = false;
+    public int MaxSelfDeathMarkers { get; set; } = 3;
+    public int MaxTeamDeathMarkers { get; set; } = 3;
     public bool MapAbbreviateNames { get; set; } = false;
     public double MapPlayerIconScale { get; set; } = 1.0;
     public bool MapUseMonumentText { get; set; } = false;
@@ -674,6 +676,16 @@ public static class TrackingService
     {
         get => _settings.MapShowDeathTags;
         set { _settings.MapShowDeathTags = value; SaveDB(); }
+    }
+    public static int MaxSelfDeathMarkers
+    {
+        get => _settings.MaxSelfDeathMarkers;
+        set { _settings.MaxSelfDeathMarkers = value; SaveDB(); }
+    }
+    public static int MaxTeamDeathMarkers
+    {
+        get => _settings.MaxTeamDeathMarkers;
+        set { _settings.MaxTeamDeathMarkers = value; SaveDB(); }
     }
     public static bool MapAbbreviateNames
     {

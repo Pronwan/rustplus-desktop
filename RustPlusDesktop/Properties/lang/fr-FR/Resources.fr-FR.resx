@@ -1815,4 +1815,25 @@ Télécharger et installer maintenant ?</value>
   <data name="FeatureAudioLoopDesc" xml:space="preserve">
     <value>Bouclez et arrêtez vos alertes.</value>
   </data>
+  <data name="DeleteDeathMarker" xml:space="preserve">
+    <value>Effacer les marqueurs de mort</value>
+  </data>
+  <data name="RenameDeathMarker" xml:space="preserve">
+    <value>Renommer le marqueur de mort</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="Death" xml:space="preserve">
+    <value>Mort</value>
+  </data>
+  <data name="Markers" xml:space="preserve">
+    <value>Marqueurs:</value>
+  </data>
+<data name="WipeDeathMarkers" xml:space="preserve">
+    <value>Effacer tous les marqueurs</value>
+  </data>
+<data name="Accept" xml:space="preserve">
+    <value>Accepter</value>
+  </data>
 </root>

@@ -655,5 +655,14 @@ namespace RustPlusDesk.Properties {
         public static string LoopAudioGlobalPrompt => GetString("LoopAudioGlobalPrompt");
         public static string TurnOffNow => GetString("TurnOffNow");
         public static string KeepActive => GetString("KeepActive");
+        public static string DeleteDeathMarker => GetString("DeleteDeathMarker");
+        public static string WipeDeathMarkers => GetString("WipeDeathMarkers");
+        public static string Accept => GetString("Accept");
+        public static string RenameDeathMarker => GetString("RenameDeathMarker");
+        public static string Profile => GetString("Profile");
+        public static string TimeOfDeath => GetString("TimeOfDeath");
+        public static string Death => GetString("Death");
+        public static string Markers => GetString("Markers");
     }
 }
+

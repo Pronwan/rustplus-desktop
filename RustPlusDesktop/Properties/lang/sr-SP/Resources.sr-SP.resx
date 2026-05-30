@@ -1788,4 +1788,25 @@
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Селективна операција ресетовања успешно завршена.</value>
   </data>
+<data name="DeleteDeathMarker" xml:space="preserve">
+    <value>Обриши ознаке смрти</value>
+  </data>
+<data name="WipeDeathMarkers" xml:space="preserve">
+    <value>Обриши све</value>
+  </data>
+<data name="Accept" xml:space="preserve">
+    <value>Прихвати</value>
+  </data>
+<data name="RenameDeathMarker" xml:space="preserve">
+    <value>Преименуј ознаку смрти</value>
+  </data>
+<data name="Profile" xml:space="preserve">
+    <value>Профил</value>
+  </data>
+<data name="Death" xml:space="preserve">
+    <value>Смрт</value>
+  </data>
+<data name="Markers" xml:space="preserve">
+    <value>Ознаке:</value>
+  </data>
 </root>

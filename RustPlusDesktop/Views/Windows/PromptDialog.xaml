@@ -1,0 +1,31 @@
+<Window x:Class="RustPlusDesk.Views.Windows.PromptDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="{Binding DialogTitle}" 
+        Height="200" Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#1E2126"
+        WindowStyle="None"
+        AllowsTransparency="True">
+    <Window.Clip>
+        <RectangleGeometry Rect="0,0,400,200" RadiusX="12" RadiusY="12" />
+    </Window.Clip>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Text="{Binding DialogTitle}" FontSize="18" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,16"/>
+        
+        <ui:TextBox x:Name="TxtInput" Grid.Row="1" Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" PlaceholderText="..." FontSize="14" />
+        
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <ui:Button Content="Cancel" Appearance="Secondary" Margin="0,0,8,0" Click="BtnCancel_Click"/>
+            <ui:Button Content="Save" Appearance="Primary" Click="BtnSave_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

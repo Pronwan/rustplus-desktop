@@ -89,6 +89,9 @@ public class ServerProfile : INotifyPropertyChanged
     }
     public ObservableCollection<string> CameraIds { get; set; } = new();
 
+    [JsonPropertyName("deathMarkers")]
+    public List<DeathMarkerData> DeathMarkers { get; set; } = new();
+
     public double LearnedDaySpeed { get; set; } = 12.0 / 50.0;
     public double LearnedNightSpeed { get; set; } = 12.0 / 10.0;
 
