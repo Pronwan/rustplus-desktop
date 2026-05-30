@@ -3087,7 +3087,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private bool _showDeathMarkers = false;
 
     // death pins per player
-    private readonly Dictionary<ulong, FrameworkElement> _deathPins = new();
+    private readonly Dictionary<Guid, FrameworkElement> _deathPins = new();
 
 
 

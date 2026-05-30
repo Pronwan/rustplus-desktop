@@ -8,7 +8,9 @@
     mc:Ignorable="d"
     d:DesignHeight="540"
     d:DesignWidth="400"
-    Background="Transparent">
+    Background="Transparent"
+    UseLayoutRounding="True"
+    SnapsToDevicePixels="True">
 
     <UserControl.Resources>
         <!-- Style 1: Glassy Pill/Capsule Button (Filters) -->

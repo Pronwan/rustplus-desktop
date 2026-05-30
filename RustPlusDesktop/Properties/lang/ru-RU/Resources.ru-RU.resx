@@ -1815,4 +1815,25 @@
   <data name="FeatureAudioLoopDesc" xml:space="preserve">
     <value>Зацикливайте и останавливайте оповещения.</value>
   </data>
+  <data name="DeleteDeathMarker" xml:space="preserve">
+    <value>Удалить маркеры смерти</value>
+  </data>
+  <data name="RenameDeathMarker" xml:space="preserve">
+    <value>Переименовать маркер смерти</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Профиль</value>
+  </data>
+  <data name="Death" xml:space="preserve">
+    <value>Смерть</value>
+  </data>
+  <data name="Markers" xml:space="preserve">
+    <value>Маркеры:</value>
+  </data>
+<data name="WipeDeathMarkers" xml:space="preserve">
+    <value>Очистить все</value>
+  </data>
+<data name="Accept" xml:space="preserve">
+    <value>Принять</value>
+  </data>
 </root>

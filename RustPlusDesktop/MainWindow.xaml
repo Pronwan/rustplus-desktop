@@ -1901,141 +1901,127 @@
                                         </ListBox.ItemTemplate>
                                     </ListBox>
 
-                                    <!--  Buttonleiste unten  -->
-                                    <Grid Grid.Row="1" Margin="0,10,0,0">
-                                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                            <!--  Profile marker toggle (default ON)  -->
-                                            <CheckBox
-                                                x:Name="ChkProfileMarkers"
-                                                Margin="0,0,12,0"
-                                                Checked="ChkProfileMarkers_Toggled"
-                                                IsChecked="True"
-                                                Style="{StaticResource DotCheckBox}"
-                                                Unchecked="ChkProfileMarkers_Toggled">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Grid
-                                                        Width="20"
-                                                        Height="20"
-                                                        Margin="0,0,6,0">
-                                                        <!--  Avatar Preview (Visible when checked)  -->
-                                                        <Ellipse
-                                                            Width="18"
-                                                            Height="18"
-                                                            Stroke="Black"
-                                                            StrokeThickness="1"
-                                                            Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibility}}">
-                                                            <Ellipse.Fill>
-                                                                <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
-                                                            </Ellipse.Fill>
-                                                        </Ellipse>
-                                                        <!--  Dot Preview (Visible when unchecked)  -->
-                                                        <Ellipse
-                                                            Width="10"
-                                                            Height="10"
-                                                            Fill="LimeGreen"
-                                                            Stroke="Black"
-                                                            StrokeThickness="1.5"
-                                                            Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
-                                                    </Grid>
-                                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource ProfileMarkers}" />
-                                                </StackPanel>
-                                            </CheckBox>
+                                    <!-- RESPONSIVE SETTINGS GRID -->
+                                    <Grid Grid.Row="1" Margin="8,4,8,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
 
-                                            <!--  Death markers toggle (default OFF)  -->
-                                            <CheckBox
-                                                x:Name="ChkDeathMarkers"
-                                                Margin="0,0,12,0"
-                                                Checked="ChkDeathMarkers_Toggled"
-                                                IsChecked="False"
-                                                Style="{StaticResource DotCheckBox}"
-                                                Unchecked="ChkDeathMarkers_Toggled">
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,12,0" VerticalAlignment="Center">
+                                            <TextBlock Text="{DynamicResource Markers}" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#AAA" FontSize="11" />
+                                            
+                                            <!-- Profile Markers -->
+                                            <CheckBox x:Name="ChkProfileMarkers" IsChecked="True" Checked="ChkProfileMarkers_Toggled" Unchecked="ChkProfileMarkers_Toggled" Margin="0,0,12,0" Style="{StaticResource DotCheckBox}">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <Grid
-                                                        Width="20"
-                                                        Height="20"
-                                                        Margin="0,0,6,0">
-                                                        <!--  Death Preview (Visible when checked)  -->
-                                                        <Grid Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibility}}">
-                                                            <Path
-                                                                Width="16"
-                                                                Height="20"
-                                                                Data="M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z"
-                                                                Fill="IndianRed"
-                                                                Stretch="Uniform"
-                                                                Stroke="Black"
-                                                                StrokeThickness="1" />
-                                                            <Ellipse
-                                                                Width="10"
-                                                                Height="10"
-                                                                Margin="0,0,0,5">
+                                                    <Viewbox Width="18" Height="18" Margin="0,0,6,0" Stretch="Uniform">
+                                                        <Grid Width="40" Height="40">
+                                                            <!-- Real profile marker preview (lime dot with avatar) -->
+                                                            <Ellipse Width="38" Height="38" Stroke="Black" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibility}}">
                                                                 <Ellipse.Fill>
                                                                     <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
                                                                 </Ellipse.Fill>
                                                             </Ellipse>
+                                                            <!-- Fallback if unchecked -->
+                                                            <Ellipse Width="18" Height="18" Fill="LimeGreen" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
                                                         </Grid>
-                                                        <!--  Grey dot (Visible when unchecked - indicates hidden/none)  -->
-                                                        <Ellipse
-                                                            Width="10"
-                                                            Height="10"
-                                                            Fill="#444"
-                                                            Stroke="#666"
-                                                            StrokeThickness="1.5"
-                                                            Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
-                                                    </Grid>
-                                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource DeathMarkers}" />
+                                                    </Viewbox>
+                                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource Profile}" TextTrimming="CharacterEllipsis" />
                                                 </StackPanel>
                                             </CheckBox>
 
-                                            <!-- Abbreviate Names Toggle -->
-                                            <ToggleButton x:Name="BtnAbbreviateNames"
-                                                          Margin="0,0,12,0"
-                                                          Width="24" Height="24"
-                                                          ToolTip="{DynamicResource StreamerMode}"                                                          Checked="BtnAbbreviateNames_Toggled"
-                                                          Unchecked="BtnAbbreviateNames_Toggled">
-                                                <ToggleButton.Style>
-                                                    <Style TargetType="ToggleButton">
-                                                        <Setter Property="Background" Value="Transparent"/>
-                                                        <Setter Property="BorderThickness" Value="1"/>
-                                                        <Setter Property="BorderBrush" Value="#444"/>
-                                                        <Setter Property="Foreground" Value="#CCC"/>
-                                                        <Setter Property="Template">
-                                                            <Setter.Value>
-                                                                <ControlTemplate TargetType="ToggleButton">
-                                                                    <Border Background="{TemplateBinding Background}"
-                                                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                                                            BorderThickness="{TemplateBinding BorderThickness}"
-                                                                            CornerRadius="3">
-                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                    </Border>
-                                                                </ControlTemplate>
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Background" Value="#222"/>
-                                                            </Trigger>
-                                                            <Trigger Property="IsChecked" Value="True">
-                                                                <Setter Property="Background" Value="#1C4B82"/>
-                                                                <Setter Property="BorderBrush" Value="#2A6CA6"/>
-                                                                <Setter Property="Foreground" Value="White"/>
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </ToggleButton.Style>
-                                                <TextBlock Text="A..." FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
-                                            </ToggleButton>
+                                            <!-- Death Markers -->
+                                            <Grid x:Name="DeathMarkerToggleContainer" Background="Transparent">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <CheckBox x:Name="ChkDeathMarkers" IsChecked="False" Checked="ChkDeathMarkers_Toggled" Unchecked="ChkDeathMarkers_Toggled" Style="{StaticResource DotCheckBox}" VerticalAlignment="Center">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Viewbox Width="18" Height="22" Margin="0,0,6,0" Stretch="Uniform">
+                                                                <Grid Width="40" Height="56">
+                                                                    <!-- Path matching BuildDeathPin -->
+                                                                    <Path Data="M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z" Fill="IndianRed" Stroke="Black" StrokeThickness="2" Stretch="Fill" Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibility}}" />
+                                                                    
+                                                                    <!-- Avatar Circle inside the pin -->
+                                                                    <Ellipse Width="26" Height="26" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,5,0,0" Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibility}}">
+                                                                        <Ellipse.Fill>
+                                                                            <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
+                                                                        </Ellipse.Fill>
+                                                                    </Ellipse>
 
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <TextBlock Text="{DynamicResource ScaleLabel}" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10"/>
-                                                <Slider x:Name="SliderPlayerIconSize" 
-                                                        Width="50" Minimum="0.5" Maximum="1.5" Value="1.0" 
-                                                        TickFrequency="0.05" IsSnapToTickEnabled="True" 
-                                                        ValueChanged="SliderPlayerIconSize_ValueChanged"
-                                                        VerticalAlignment="Center" />
-                                                <TextBlock Text="{Binding Value, ElementName=SliderPlayerIconSize, StringFormat={}{0:P0}}" 
-                                                           VerticalAlignment="Center" Margin="4,0,0,0" Foreground="#AAA" FontSize="10" Width="30"/>
-                                            </StackPanel>
+                                                                    <!-- Checkbox unchecked state (gray dot) -->
+                                                                    <Ellipse Width="16" Height="16" Fill="#444" Stroke="#666" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
+                                                                </Grid>
+                                                            </Viewbox>
+                                                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource Death}" TextTrimming="CharacterEllipsis" />
+                                                        </StackPanel>
+                                                    </CheckBox>
+                                                    
+                                                    <ui:Button x:Name="BtnDeathMarkerSettings"
+                                                               Appearance="Transparent"
+                                                               Padding="2"
+                                                               Margin="2,0,0,0"
+                                                               VerticalAlignment="Center"
+                                                               Click="BtnDeathMarkerSettings_Click">
+                                                        <ui:SymbolIcon Symbol="Settings24" FontSize="12" Foreground="#AAA" />
+                                                        <ui:Button.Style>
+                                                            <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                                                <Setter Property="Opacity" Value="0" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsMouseOver, ElementName=DeathMarkerToggleContainer}" Value="True">
+                                                                        <Setter Property="Opacity" Value="1" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </ui:Button.Style>
+                                                    </ui:Button>
+                                                </StackPanel>
+                                            </Grid>
                                         </StackPanel>
+
+                                        <!-- Abbreviate Names Toggle -->
+                                        <ToggleButton Grid.Column="1" x:Name="BtnAbbreviateNames" Margin="0,0,12,0" Width="24" Height="24" ToolTip="{DynamicResource StreamerMode}" Checked="BtnAbbreviateNames_Toggled" Unchecked="BtnAbbreviateNames_Toggled">
+                                            <ToggleButton.Style>
+                                                <Style TargetType="ToggleButton">
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Setter Property="BorderThickness" Value="1"/>
+                                                    <Setter Property="BorderBrush" Value="#444"/>
+                                                    <Setter Property="Foreground" Value="#CCC"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ToggleButton">
+                                                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3">
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#222"/></Trigger>
+                                                        <Trigger Property="IsChecked" Value="True">
+                                                            <Setter Property="Background" Value="#1C4B82"/>
+                                                            <Setter Property="BorderBrush" Value="#2A6CA6"/>
+                                                            <Setter Property="Foreground" Value="White"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ToggleButton.Style>
+                                            <TextBlock Text="A..." FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                        </ToggleButton>
+
+                                        <!-- Dynamic Slider -->
+                                        <Grid Grid.Column="2" VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="{DynamicResource ScaleLabel}" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10" />
+                                            <Slider Grid.Column="1" x:Name="SliderPlayerIconSize" Minimum="0.5" Maximum="1.5" Value="1.0" TickFrequency="0.05" IsSnapToTickEnabled="True" ValueChanged="SliderPlayerIconSize_ValueChanged" VerticalAlignment="Center" MinWidth="30" />
+                                            <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=SliderPlayerIconSize, StringFormat={}{0:P0}}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="#AAA" FontSize="10" Width="30" />
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -2123,32 +2109,93 @@
                     <Border
                         x:Name="ProfitTradesPanel"
                         Background="{DynamicResource Surface}"
-                        Visibility="Collapsed">
+                        Visibility="Collapsed"
+                        UseLayoutRounding="True"
+                        SnapsToDevicePixels="True"
+                        BorderBrush="{DynamicResource CardBorder}"
+                        BorderThickness="1,0,0,0">
                         <Grid ClipToBounds="True">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="36" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <Border Grid.Row="0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="12,0">
-                                <Grid>
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="💰" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                        <TextBlock Text="{DynamicResource ProfitTrades}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <!-- Glassy Capsule-like Premium Header -->
+                            <Border Grid.Row="0" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#1A2D3540" Offset="0.0"/>
+                                        <GradientStop Color="#002D3540" Offset="1.0"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Grid Margin="12,10,12,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="💰" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="{DynamicResource ProfitTrades}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
+                                            <TextBlock Text="{DynamicResource ArbitrageOpportunities}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" Margin="0,1,0,0" />
+                                        </StackPanel>
                                     </StackPanel>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <Button x:Name="BtnRefreshProfitTrades" Content="⟳" Style="{StaticResource GhostButton}" Width="26" Height="26" Padding="0" FontSize="15" Margin="0,0,6,0" ToolTip="{DynamicResource Refresh}" />
-                                        <Button x:Name="BtnCloseProfitTrades" Content="&#x2715;" Style="{StaticResource GhostButton}" Width="26" Height="26" Padding="0" FontSize="12" Foreground="{DynamicResource TextSubtle}" />
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <Button x:Name="BtnRefreshProfitTrades" Content="⟳" Style="{StaticResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="16" Margin="0,0,6,0" ToolTip="{DynamicResource Refresh}" />
+                                        <Button x:Name="BtnCloseProfitTrades" Content="&#x2715;" Style="{StaticResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="13" Foreground="{DynamicResource TextSubtle}" />
                                     </StackPanel>
                                 </Grid>
                             </Border>
 
-                            <Border Grid.Row="1" Padding="12,7" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="{DynamicResource ArbitrageOpportunities}" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
+                            <!-- Modern User-Friendly Filter Controls (Search + Min Profit) -->
+                            <Border Grid.Row="1" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="12,8">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="2*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Search input -->
+                                    <Border Grid.Column="0"
+                                            Background="#14171C"
+                                            BorderBrush="#25FFFFFF"
+                                            BorderThickness="1"
+                                            CornerRadius="6"
+                                            Height="32"
+                                            Margin="0,0,8,0"
+                                            VerticalAlignment="Center">
+                                        <ui:TextBox
+                                            x:Name="TxtProfitSearch"
+                                            PlaceholderText="Search items (e.g. sulfur)..."
+                                            TextChanged="TxtProfitSearch_TextChanged"
+                                            Icon="Search24"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Foreground="White"
+                                            FontSize="12"
+                                            VerticalAlignment="Stretch"
+                                            VerticalContentAlignment="Center"
+                                            Padding="6,0,6,0" />
+                                    </Border>
+
+                                    <!-- Min Profit ComboBox -->
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <TextBlock Text="Min profit:" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                        <ComboBox x:Name="CmbMinProfit" SelectionChanged="CmbMinProfit_SelectionChanged" Height="32" Width="100" FontSize="11.5">
+                                            <ComboBoxItem Content="Show All" Tag="0" IsSelected="True"/>
+                                            <ComboBoxItem Content="≥ 10" Tag="10"/>
+                                            <ComboBoxItem Content="≥ 50" Tag="50"/>
+                                            <ComboBoxItem Content="≥ 100" Tag="100"/>
+                                            <ComboBoxItem Content="≥ 500" Tag="500"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </Grid>
                             </Border>
 
-                            <ListBox x:Name="ProfitTradesList" Grid.Row="2" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Padding="10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
+                            <!-- Clean List container -->
+                            <ListBox x:Name="ProfitTradesList" Grid.Row="2" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Padding="12" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                         </Grid>
                     </Border>
 
@@ -2156,79 +2203,189 @@
                     <Border
                         x:Name="BuyXForYPanel"
                         Background="{DynamicResource Surface}"
-                        Visibility="Collapsed">
+                        Visibility="Collapsed"
+                        UseLayoutRounding="True"
+                        SnapsToDevicePixels="True"
+                        BorderBrush="{DynamicResource CardBorder}"
+                        BorderThickness="1,0,0,0">
                         <Grid ClipToBounds="True">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="36" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="130" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <Border Grid.Row="0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="12,0">
-                                <Grid>
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="🔁" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                        <TextBlock Text="{DynamicResource BuyXForY}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <!-- Glassy Capsule-like Premium Header -->
+                            <Border Grid.Row="0" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#1A2D3540" Offset="0.0"/>
+                                        <GradientStop Color="#002D3540" Offset="1.0"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Grid Margin="12,10,12,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="🔁" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="{DynamicResource BuyXForY}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
+                                            <TextBlock Text="Optimal multi-hop trade pathfinder" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" Margin="0,1,0,0" />
+                                        </StackPanel>
                                     </StackPanel>
-                                    <Button x:Name="BtnCloseBuyXForY" Content="&#x2715;" Style="{StaticResource GhostButton}" Width="26" Height="26" Padding="0" FontSize="12" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                    <ui:Button x:Name="BtnCloseBuyXForY" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="4" Appearance="Transparent" Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
                                 </Grid>
                             </Border>
 
-                            <Grid Grid.Row="1" Margin="12,8,12,6" HorizontalAlignment="Stretch">
+                            <!-- Glassy Form Input Controls -->
+                            <Grid Grid.Row="1" Margin="12,10,12,8" HorizontalAlignment="Stretch">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*" />
                                     <ColumnDefinition Width="2*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="6,3">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="🎯" Margin="0,0,4,0" VerticalAlignment="Center" FontSize="13" />
-                                        <TextBox x:Name="BuyXForY_WantTb" Grid.Column="1" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextPrimary}" CaretBrush="{DynamicResource TextPrimary}" Padding="2,3" VerticalContentAlignment="Center" ToolTip="{DynamicResource IWantToGetToolTip}" FontSize="12" />
-                                    </Grid>
-                                </Border>
+                                <!-- Target/Want TextBox Card -->
+                                <Grid Grid.Column="0" Margin="0,0,6,0" VerticalAlignment="Center">
+                                    <ui:TextBox
+                                        x:Name="BuyXForY_WantTb"
+                                        Height="34"
+                                        FontSize="12"
+                                        PlaceholderText="Want item (e.g. blue)..."
+                                        Icon="Target24"
+                                        VerticalAlignment="Stretch"
+                                        VerticalContentAlignment="Center"
+                                        ToolTip="{DynamicResource IWantToGetToolTip}" />
 
-                                <Border Grid.Column="1" Margin="4,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="6,3">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="💰" Margin="0,0,4,0" VerticalAlignment="Center" FontSize="13" />
-                                        <TextBox x:Name="BuyXForY_PayTb" Grid.Column="1" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextPrimary}" CaretBrush="{DynamicResource TextPrimary}" Padding="2,3" VerticalContentAlignment="Center" ToolTip="{DynamicResource ICanPayWithToolTip}" FontSize="12" />
-                                    </Grid>
-                                </Border>
+                                    <!-- Auto-complete Suggestions popup -->
+                                    <Popup
+                                        x:Name="PopupAutocomplete_Want"
+                                        PlacementTarget="{Binding ElementName=BuyXForY_WantTb}"
+                                        Placement="Bottom"
+                                        IsOpen="False"
+                                        StaysOpen="False"
+                                        MinWidth="200"
+                                        MaxHeight="200"
+                                        PopupAnimation="Fade">
+                                        <Border
+                                            Background="#16191E"
+                                            BorderBrush="#35FFFFFF"
+                                            BorderThickness="1"
+                                            CornerRadius="6">
+                                            <ListBox
+                                                x:Name="LstAutocomplete_Want"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                MaxHeight="190"
+                                                ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Padding="6,4" Background="Transparent">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Image Width="16" Height="16" Margin="0,0,8,0" Source="{Binding Icon}" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                <TextBlock Text="{Binding Display}" Foreground="White" FontSize="11" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </Border>
+                                    </Popup>
+                                </Grid>
 
-                                <Button x:Name="BuyXForY_AnalyzeBtn" Grid.Column="2" Content="{DynamicResource Analyze}" Style="{StaticResource PrimaryButton}" Margin="4,0,0,0" Padding="12,3" FontSize="12" />
+                                <!-- Payment/Pay TextBox Card -->
+                                <Grid Grid.Column="1" Margin="4,0" VerticalAlignment="Center">
+                                    <ui:TextBox
+                                        x:Name="BuyXForY_PayTb"
+                                        Height="34"
+                                        FontSize="12"
+                                        PlaceholderText="Pay item (e.g. cloth)..."
+                                        Icon="Money24"
+                                        VerticalAlignment="Stretch"
+                                        VerticalContentAlignment="Center"
+                                        ToolTip="{DynamicResource ICanPayWithToolTip}" />
+
+                                    <!-- Auto-complete Suggestions popup -->
+                                    <Popup
+                                        x:Name="PopupAutocomplete_Pay"
+                                        PlacementTarget="{Binding ElementName=BuyXForY_PayTb}"
+                                        Placement="Bottom"
+                                        IsOpen="False"
+                                        StaysOpen="False"
+                                        MinWidth="200"
+                                        MaxHeight="200"
+                                        PopupAnimation="Fade">
+                                        <Border
+                                            Background="#16191E"
+                                            BorderBrush="#35FFFFFF"
+                                            BorderThickness="1"
+                                            CornerRadius="6">
+                                            <ListBox
+                                                x:Name="LstAutocomplete_Pay"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                MaxHeight="190"
+                                                ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Padding="6,4" Background="Transparent">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Image Width="16" Height="16" Margin="0,0,8,0" Source="{Binding Icon}" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                <TextBlock Text="{Binding Display}" Foreground="White" FontSize="11" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </Border>
+                                    </Popup>
+                                </Grid>
+
+                                <!-- Analyze Primary Button -->
+                                <ui:Button
+                                    x:Name="BuyXForY_AnalyzeBtn"
+                                    Grid.Column="2"
+                                    Content="{DynamicResource Analyze}"
+                                    Appearance="Primary"
+                                    Margin="6,0,0,0"
+                                    Padding="14,0"
+                                    Height="34"
+                                    FontSize="12"
+                                    FontWeight="Bold"
+                                    Cursor="Hand"
+                                    VerticalAlignment="Center" />
                             </Grid>
 
+                            <!-- Visual Previews Sub-Cards Grid -->
                             <Grid Grid.Row="2" Margin="12,0,12,6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="5">
+                                <!-- Left Preview Box: Items to Get -->
+                                <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="6">
                                     <DockPanel>
-                                        <TextBlock DockPanel.Dock="Top" Text="{DynamicResource IWantToGet}" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="SemiBold" Margin="0,0,0,3" />
+                                        <TextBlock DockPanel.Dock="Top" Text="{DynamicResource IWantToGet}" Foreground="{DynamicResource Accent}" FontSize="9.5" FontWeight="Bold" Margin="4,0,0,4" />
                                         <ListBox x:Name="BuyXForY_WantPreview" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                                     </DockPanel>
                                 </Border>
 
-                                <Border Grid.Column="1" Margin="4,0,0,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="5">
+                                <!-- Right Preview Box: Items to Pay -->
+                                <Border Grid.Column="1" Margin="4,0,0,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="6">
                                     <DockPanel>
-                                        <TextBlock DockPanel.Dock="Top" Text="{DynamicResource ICanPayWith}" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="SemiBold" Margin="0,0,0,3" />
+                                        <TextBlock DockPanel.Dock="Top" Text="{DynamicResource ICanPayWith}" Foreground="{DynamicResource Accent}" FontSize="9.5" FontWeight="Bold" Margin="4,0,0,4" />
                                         <ListBox x:Name="BuyXForY_PayPreview" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                                     </DockPanel>
                                 </Border>
                             </Grid>
 
-                            <ListBox x:Name="BuyXForY_ResultList" Grid.Row="3" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Margin="12,0,12,10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
+                            <!-- Results Scroller list -->
+                            <ListBox x:Name="BuyXForY_ResultList" Grid.Row="3" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Margin="12,4,12,10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                         </Grid>
                     </Border>
 
@@ -3431,13 +3588,39 @@
                                     </ui:Button>
                                 </Grid>
                             </ui:Card>
+                            
+                            <ui:Card
+                                x:Name="WipeDeathMarkersOverlay"
+                                Margin="8,0,0,0"
+                                Padding="0"
+                                Background="#AA16181C"
+                                BorderBrush="#40FFFFFF"
+                                BorderThickness="1"
+                                VerticalAlignment="Top"
+                                Visibility="Collapsed">
+                                <Grid>
+                                    <ui:Button
+                                        x:Name="BtnWipeDeathMarkers"
+                                        Padding="4"
+                                        Appearance="Transparent"
+                                        Click="BtnWipeDeathMarkers_Click"
+                                        ToolTip="{DynamicResource WipeDeathMarkers}">
+                                        <StackPanel Orientation="Horizontal" Margin="4,2">
+                                            <Grid Width="14" Height="16" Margin="0,0,4,0">
+                                                <Path Width="14" Height="16" Data="M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z" Fill="IndianRed" Stretch="Uniform" Stroke="Black" StrokeThickness="1" />
+                                            </Grid>
+                                            <ui:SymbolIcon Symbol="Delete24" Foreground="IndianRed" FontSize="14" />
+                                        </StackPanel>
+                                    </ui:Button>
+                                </Grid>
+                            </ui:Card>
                         </StackPanel>
 
 
                         <!--  LIVE EVENT DOCK (Top Right)  -->
                         <StackPanel
                             x:Name="EventDock"
-                            Margin="15"
+                            Margin="15,45,15,15"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
                             Panel.ZIndex="100"
@@ -3586,7 +3769,10 @@
                                     BorderThickness="1"
                                     CornerRadius="12"
                                     RenderTransformOrigin="0.5,1"
-                                    Visibility="Collapsed">
+                                    Visibility="Collapsed"
+                                    UseLayoutRounding="True"
+                                    SnapsToDevicePixels="True"
+                                    RenderOptions.ClearTypeHint="Enabled">
                                     <Border.Effect>
                                         <DropShadowEffect BlurRadius="20" ShadowDepth="4" Opacity="0.55" Color="#000000" />
                                     </Border.Effect>
@@ -3648,7 +3834,11 @@
                                         </Border>
 
                                         <Grid Grid.Row="1">
-                                            <views:ShopSearchControl x:Name="EmbeddedShopSearch" />
+                                            <views:ShopSearchControl 
+                                                x:Name="EmbeddedShopSearch"
+                                                UseLayoutRounding="True"
+                                                SnapsToDevicePixels="True"
+                                                RenderOptions.ClearTypeHint="Enabled" />
 
                                             <Grid x:Name="ShopSearchWarning" Background="#F216181C" Visibility="Collapsed">
                                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">

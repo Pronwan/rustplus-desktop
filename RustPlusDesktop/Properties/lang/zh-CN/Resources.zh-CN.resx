@@ -1815,4 +1815,25 @@
   <data name="FeatureAudioLoopDesc" xml:space="preserve">
     <value>循环播放并停止您的警报。</value>
   </data>
+  <data name="DeleteDeathMarker" xml:space="preserve">
+    <value>清除死亡标记</value>
+  </data>
+  <data name="RenameDeathMarker" xml:space="preserve">
+    <value>重命名死亡标记</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>个人资料</value>
+  </data>
+  <data name="Death" xml:space="preserve">
+    <value>死亡</value>
+  </data>
+  <data name="Markers" xml:space="preserve">
+    <value>标记:</value>
+  </data>
+<data name="WipeDeathMarkers" xml:space="preserve">
+    <value>清除所有</value>
+  </data>
+<data name="Accept" xml:space="preserve">
+    <value>接受</value>
+  </data>
 </root>

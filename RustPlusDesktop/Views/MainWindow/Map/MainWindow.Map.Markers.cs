@@ -316,6 +316,7 @@ public partial class MainWindow
             {
                 RefreshAllOverlayScales();
                 RefreshMonumentOverlayPositions();
+                RedrawDeathPins();
             }, DispatcherPriority.Loaded);
             StartDynPolling();
             SyncAlertMenuItems(); // Refresh arrival warning enabled state now that host is known

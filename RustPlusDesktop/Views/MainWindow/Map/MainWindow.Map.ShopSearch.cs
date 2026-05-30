@@ -131,21 +131,23 @@ public partial class MainWindow
 
         var g = new Grid { Opacity = outOfStock ? 0.65 : 1.0 };
         g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 0: Item Icon
-        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 1: Item Name
+        g.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // 1: Item Name & Stock stack
         g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 2: Pay Currency Details
-        g.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // 3: Spacer
-        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 4: Stock Capsule Badge
 
         // 0: Item Icon
-        var li = new Image { Width = 16, Height = 16, Margin = new Thickness(0, 0, 6, 0) };
+        var li = new Image { Width = 16, Height = 16, Margin = new Thickness(0, 0, 6, 0), VerticalAlignment = VerticalAlignment.Center };
         RenderOptions.SetBitmapScalingMode(li, BitmapScalingMode.HighQuality);
         BindIcon(li, o.ItemShortName, o.ItemId);
         Grid.SetColumn(li, 0);
         g.Children.Add(li);
 
-        // 1: Item Name
+        // 1: Item Name + Stock Stack (Massive horizontal space, no squeezing)
+        var nameStack = new StackPanel { Orientation = Orientation.Vertical, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(4, 0, 10, 0) };
+        
         var name = ResolveItemName(o.ItemId, o.ItemShortName);
-        if (compact && name.Length > 16) name = name[..16] + "…";
+        if (o.Quantity > 1) name = $"x{o.Quantity} {name}";
+        if (compact && name.Length > 28) name = name[..28] + "…";
+        
         var lt = new TextBlock 
         { 
             Text = name, 
@@ -154,15 +156,29 @@ public partial class MainWindow
             FontWeight = FontWeights.SemiBold,
             FontSize = 12
         };
-        Grid.SetColumn(lt, 1);
-        g.Children.Add(lt);
+        nameStack.Children.Add(lt);
 
-        // 2: Dynamic Transaction Flow indicator & Currency (Muted soft gray/blue arrow!)
-        var right = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0, 0, 0) };
+        // Stock label directly below name, matching its association with item sold
+        var stockPanel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 2, 0, 0) };
+        stockPanel.Children.Add(new TextBlock
+        {
+            Text = outOfStock ? "📦 Out of stock" : $"📦 Stock: {o.Stock}",
+            Foreground = outOfStock 
+                ? new SolidColorBrush(Color.FromRgb(239, 83, 80)) 
+                : new SolidColorBrush(Color.FromRgb(102, 187, 106)),
+            FontSize = 9.5,
+            FontWeight = FontWeights.Bold
+        });
+        nameStack.Children.Add(stockPanel);
+        Grid.SetColumn(nameStack, 1);
+        g.Children.Add(nameStack);
+
+        // 2: Dynamic Transaction Flow indicator & Currency (Aligned beautifully at the right)
+        var right = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
         right.Children.Add(new TextBlock 
         { 
             Text = " →  ", 
-            Foreground = new SolidColorBrush(Color.FromRgb(138, 162, 178)), // Muted soft gray/blue arrow
+            Foreground = new SolidColorBrush(Color.FromRgb(138, 162, 178)), 
             FontWeight = FontWeights.Bold,
             FontSize = 12
         });
@@ -181,47 +197,6 @@ public partial class MainWindow
         });
         Grid.SetColumn(right, 2);
         g.Children.Add(right);
-
-        // 4: Emerald or Amber Stock Badge Capsule
-        var stockBadge = new Border
-        {
-            CornerRadius = new CornerRadius(8),
-            Padding = new Thickness(6, 2, 6, 2),
-            Margin = new Thickness(8, 0, 0, 0),
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Right
-        };
-        Grid.SetColumn(stockBadge, 4);
-
-        if (outOfStock)
-        {
-            stockBadge.Background = new SolidColorBrush(Color.FromArgb(20, 239, 83, 80)); // Soft red
-            stockBadge.BorderBrush = new SolidColorBrush(Color.FromArgb(50, 239, 83, 80));
-            stockBadge.BorderThickness = new Thickness(1);
-            stockBadge.Child = new TextBlock
-            {
-                Text = "○ Out of stock",
-                Foreground = new SolidColorBrush(Color.FromRgb(239, 83, 80)),
-                FontSize = 9.5,
-                FontWeight = FontWeights.Bold
-            };
-        }
-        else
-        {
-            stockBadge.Background = new SolidColorBrush(Color.FromArgb(20, 102, 187, 106)); // Soft green
-            stockBadge.BorderBrush = new SolidColorBrush(Color.FromArgb(50, 102, 187, 106));
-            stockBadge.BorderThickness = new Thickness(1);
-            stockBadge.Child = new TextBlock
-            {
-                Text = $"● Stock: {o.Stock}",
-                Foreground = new SolidColorBrush(Color.FromRgb(102, 187, 106)),
-                FontSize = 9.5,
-                FontWeight = FontWeights.Bold
-            };
-        }
-
-        Grid.SetColumn(stockBadge, 3);
-        g.Children.Add(stockBadge);
 
         rowBorder.Child = g;
         return rowBorder;
@@ -260,10 +235,15 @@ public partial class MainWindow
             _ = InitEmbeddedShopSearchAsync();
             UpdateShopPollingWarning();
             
+            var scaleTrans = new ScaleTransform(1, 0.85);
+            var translateTrans = new TranslateTransform(0, 40);
+            var transformGroup = new TransformGroup();
+            transformGroup.Children.Add(scaleTrans);
+            transformGroup.Children.Add(translateTrans);
+            
+            ShopSearchContent.RenderTransform = transformGroup;
             ShopSearchContent.Visibility = Visibility.Visible;
             ShopSearchContent.Opacity = 0;
-            ShopSearchScale.ScaleY = 0.85;
-            ShopSearchTranslate.Y = 40;
 
             var sb = new System.Windows.Media.Animation.Storyboard();
             var fade = new System.Windows.Media.Animation.DoubleAnimation(1, TimeSpan.FromMilliseconds(250)) { EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut } };
@@ -272,18 +252,32 @@ public partial class MainWindow
 
             System.Windows.Media.Animation.Storyboard.SetTarget(fade, ShopSearchContent);
             System.Windows.Media.Animation.Storyboard.SetTargetProperty(fade, new PropertyPath("Opacity"));
-            System.Windows.Media.Animation.Storyboard.SetTarget(scale, ShopSearchScale);
+            System.Windows.Media.Animation.Storyboard.SetTarget(scale, scaleTrans);
             System.Windows.Media.Animation.Storyboard.SetTargetProperty(scale, new PropertyPath("ScaleY"));
-            System.Windows.Media.Animation.Storyboard.SetTarget(slide, ShopSearchTranslate);
+            System.Windows.Media.Animation.Storyboard.SetTarget(slide, translateTrans);
             System.Windows.Media.Animation.Storyboard.SetTargetProperty(slide, new PropertyPath("Y"));
 
             sb.Children.Add(fade);
             sb.Children.Add(scale);
             sb.Children.Add(slide);
+            sb.Completed += (s, e) =>
+            {
+                ShopSearchContent.Opacity = 1.0;
+                ShopSearchContent.RenderTransform = null; // Completely clear transforms to prevent subpixel layout flickering when typing/focusing
+                ShopSearchContent.BeginAnimation(UIElement.OpacityProperty, null);
+            };
             sb.Begin();
         }
         else
         {
+            var scaleTrans = new ScaleTransform(1, 1);
+            var translateTrans = new TranslateTransform(0, 0);
+            var transformGroup = new TransformGroup();
+            transformGroup.Children.Add(scaleTrans);
+            transformGroup.Children.Add(translateTrans);
+            
+            ShopSearchContent.RenderTransform = transformGroup;
+
             var sb = new System.Windows.Media.Animation.Storyboard();
             var fade = new System.Windows.Media.Animation.DoubleAnimation(0, TimeSpan.FromMilliseconds(200));
             var scale = new System.Windows.Media.Animation.DoubleAnimation(0.85, TimeSpan.FromMilliseconds(200));
@@ -291,15 +285,19 @@ public partial class MainWindow
 
             System.Windows.Media.Animation.Storyboard.SetTarget(fade, ShopSearchContent);
             System.Windows.Media.Animation.Storyboard.SetTargetProperty(fade, new PropertyPath("Opacity"));
-            System.Windows.Media.Animation.Storyboard.SetTarget(scale, ShopSearchScale);
+            System.Windows.Media.Animation.Storyboard.SetTarget(scale, scaleTrans);
             System.Windows.Media.Animation.Storyboard.SetTargetProperty(scale, new PropertyPath("ScaleY"));
-            System.Windows.Media.Animation.Storyboard.SetTarget(slide, ShopSearchTranslate);
+            System.Windows.Media.Animation.Storyboard.SetTarget(slide, translateTrans);
             System.Windows.Media.Animation.Storyboard.SetTargetProperty(slide, new PropertyPath("Y"));
 
             sb.Children.Add(fade);
             sb.Children.Add(scale);
             sb.Children.Add(slide);
-            sb.Completed += (s, e) => ShopSearchContent.Visibility = Visibility.Collapsed;
+            sb.Completed += (s, e) =>
+            {
+                ShopSearchContent.Visibility = Visibility.Collapsed;
+                ShopSearchContent.RenderTransform = null;
+            };
             sb.Begin();
         }
     }

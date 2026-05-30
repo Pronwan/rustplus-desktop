@@ -21,4 +21,5 @@ public partial class TeamTabContent : UserControl
     private void ChkDeathMarkers_Toggled(object sender, RoutedEventArgs e) { }
     private void BtnAbbreviateNames_Toggled(object sender, RoutedEventArgs e) { }
     private void SliderPlayerIconSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) { }
+    private void BtnDeathMarkerSettings_Click(object sender, RoutedEventArgs e) { }
 }

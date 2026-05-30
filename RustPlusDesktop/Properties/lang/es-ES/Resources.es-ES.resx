@@ -1788,4 +1788,25 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Operación de reinicio selectivo completada con éxito.</value>
   </data>
+  <data name="DeleteDeathMarker" xml:space="preserve">
+    <value>Borrar marcadores de muerte</value>
+  </data>
+  <data name="RenameDeathMarker" xml:space="preserve">
+    <value>Renombrar marcador de muerte</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="Death" xml:space="preserve">
+    <value>Muerte</value>
+  </data>
+  <data name="Markers" xml:space="preserve">
+    <value>Marcadores:</value>
+  </data>
+<data name="WipeDeathMarkers" xml:space="preserve">
+    <value>Borrar todos</value>
+  </data>
+<data name="Accept" xml:space="preserve">
+    <value>Aceptar</value>
+  </data>
 </root>

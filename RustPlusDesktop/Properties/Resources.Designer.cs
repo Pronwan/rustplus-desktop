@@ -680,5 +680,14 @@ namespace RustPlusDesk.Properties {
         public static string ErrorLoadingMarkers => GetString("ErrorLoadingMarkers");
         public static string Success => GetString("Success");
         public static string Error => GetString("Error");
+        public static string DeleteDeathMarker => GetString("DeleteDeathMarker");
+        public static string WipeDeathMarkers => GetString("WipeDeathMarkers");
+        public static string Accept => GetString("Accept");
+        public static string RenameDeathMarker => GetString("RenameDeathMarker");
+        public static string Profile => GetString("Profile");
+        public static string TimeOfDeath => GetString("TimeOfDeath");
+        public static string Death => GetString("Death");
+        public static string Markers => GetString("Markers");
     }
 }
+

@@ -1780,4 +1780,25 @@
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[تصفير] اكتملت عملية إعادة الضبط الانتقائي والتصفير بنجاح تام وبدون مشاكل.</value>
   </data>
+  <data name="DeleteDeathMarker" xml:space="preserve">
+    <value>مسح علامات الموت</value>
+  </data>
+  <data name="RenameDeathMarker" xml:space="preserve">
+    <value>إعادة تسمية علامة الموت</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>الملف الشخصي</value>
+  </data>
+  <data name="Death" xml:space="preserve">
+    <value>موت</value>
+  </data>
+  <data name="Markers" xml:space="preserve">
+    <value>علامات:</value>
+  </data>
+<data name="WipeDeathMarkers" xml:space="preserve">
+    <value>مسح الكل</value>
+  </data>
+<data name="Accept" xml:space="preserve">
+    <value>قبول</value>
+  </data>
 </root>

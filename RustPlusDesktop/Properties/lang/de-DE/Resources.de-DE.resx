@@ -1869,4 +1869,25 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   <data name="FeatureAudioLoopDesc" xml:space="preserve">
     <value>Alarme in Dauerschleife und Stopp-Funktion.</value>
   </data>
+<data name="DeleteDeathMarker" xml:space="preserve">
+    <value>Todesmarker löschen</value>
+  </data>
+<data name="WipeDeathMarkers" xml:space="preserve">
+    <value>Alle Todesmarker löschen</value>
+  </data>
+<data name="Accept" xml:space="preserve">
+    <value>Akzeptieren</value>
+  </data>
+<data name="RenameDeathMarker" xml:space="preserve">
+    <value>Todesmarker umbenennen</value>
+  </data>
+<data name="Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+<data name="Death" xml:space="preserve">
+    <value>Tod</value>
+  </data>
+<data name="Markers" xml:space="preserve">
+    <value>Marker:</value>
+  </data>
 </root>

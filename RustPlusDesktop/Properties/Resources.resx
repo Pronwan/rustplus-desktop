@@ -1901,4 +1901,29 @@ Are you sure you want to continue?</value>
   <data name="FeatureAudioLoopDesc" xml:space="preserve">
     <value>Loop and Stop your Alerts.</value>
   </data>
+  <data name="DeleteDeathMarker" xml:space="preserve">
+    <value>Delete Death Marker</value>
+  </data>
+  <data name="RenameDeathMarker" xml:space="preserve">
+    <value>Rename Death Marker</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Death" xml:space="preserve">
+    <value>Death</value>
+  </data>
+  <data name="Markers" xml:space="preserve">
+    <value>Markers:</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>Time of Death</value>
+  </data>
+  <data name="WipeDeathMarkers" xml:space="preserve">
+    <value>Wipe Death Markers</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Accept</value>
+  </data>
 </root>
+
