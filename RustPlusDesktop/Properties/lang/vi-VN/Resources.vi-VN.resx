@@ -1788,4 +1788,25 @@ Bạn có chắc chắn muốn tiếp tục không?</value>
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Quá trình khôi phục cài đặt gốc đã hoàn tất thành công.</value>
   </data>
+<data name="DeleteDeathMarker" xml:space="preserve">
+    <value>Xóa đánh dấu tử vong</value>
+  </data>
+<data name="WipeDeathMarkers" xml:space="preserve">
+    <value>Xóa tất cả</value>
+  </data>
+<data name="Accept" xml:space="preserve">
+    <value>Chấp nhận</value>
+  </data>
+<data name="RenameDeathMarker" xml:space="preserve">
+    <value>Đổi tên đánh dấu tử vong</value>
+  </data>
+<data name="Profile" xml:space="preserve">
+    <value>Hồ sơ</value>
+  </data>
+<data name="Death" xml:space="preserve">
+    <value>Tử vong</value>
+  </data>
+<data name="Markers" xml:space="preserve">
+    <value>Đánh dấu:</value>
+  </data>
 </root>

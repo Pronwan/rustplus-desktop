@@ -1788,4 +1788,25 @@
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Операцію вибіркового скидання успішно завершено.</value>
   </data>
+<data name="DeleteDeathMarker" xml:space="preserve">
+    <value>Видалити маркери смерті</value>
+  </data>
+<data name="WipeDeathMarkers" xml:space="preserve">
+    <value>Очистити все</value>
+  </data>
+<data name="Accept" xml:space="preserve">
+    <value>Прийняти</value>
+  </data>
+<data name="RenameDeathMarker" xml:space="preserve">
+    <value>Перейменувати маркер смерті</value>
+  </data>
+<data name="Profile" xml:space="preserve">
+    <value>Профіль</value>
+  </data>
+<data name="Death" xml:space="preserve">
+    <value>Смерть</value>
+  </data>
+<data name="Markers" xml:space="preserve">
+    <value>Маркери:</value>
+  </data>
 </root>

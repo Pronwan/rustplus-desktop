@@ -118,130 +118,127 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Grid Grid.Row="1" Margin="0,10,0,0">
-            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                <CheckBox
-                    x:Name="ChkProfileMarkers"
-                    Margin="0,0,12,0"
-                    Checked="ChkProfileMarkers_Toggled"
-                    IsChecked="True"
-                    Style="{StaticResource DotCheckBox}"
-                    Unchecked="ChkProfileMarkers_Toggled">
+        <Grid Grid.Row="1" Margin="8,4,8,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Marker Toggles -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="{DynamicResource Markers}" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#AAA" FontSize="11" />
+                
+                <CheckBox x:Name="ChkProfileMarkers" IsChecked="True" Checked="ChkProfileMarkers_Toggled" Unchecked="ChkProfileMarkers_Toggled" Margin="0,0,12,0" Cursor="Hand">
+                    <CheckBox.Template>
+                        <ControlTemplate TargetType="CheckBox">
+                            <Border Background="Transparent">
+                                <ContentPresenter />
+                            </Border>
+                        </ControlTemplate>
+                    </CheckBox.Template>
                     <StackPanel Orientation="Horizontal">
-                        <Grid
-                            Width="20"
-                            Height="20"
-                            Margin="0,0,6,0">
-                            <Ellipse
-                                Width="18"
-                                Height="18"
-                                Stroke="Black"
-                                StrokeThickness="1"
-                                Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibility}}">
-                                <Ellipse.Fill>
-                                    <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
-                                </Ellipse.Fill>
-                            </Ellipse>
-                            <Ellipse
-                                Width="10"
-                                Height="10"
-                                Fill="LimeGreen"
-                                Stroke="Black"
-                                StrokeThickness="1.5"
-                                Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
-                        </Grid>
-                        <TextBlock VerticalAlignment="Center" Text="{DynamicResource ProfileMarkers}" />
-                    </StackPanel>
-                </CheckBox>
-                <CheckBox
-                    x:Name="ChkDeathMarkers"
-                    Margin="0,0,12,0"
-                    Checked="ChkDeathMarkers_Toggled"
-                    IsChecked="False"
-                    Style="{StaticResource DotCheckBox}"
-                    Unchecked="ChkDeathMarkers_Toggled">
-                    <StackPanel Orientation="Horizontal">
-                        <Grid
-                            Width="20"
-                            Height="20"
-                            Margin="0,0,6,0">
-                            <Grid Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibility}}">
-                                <Path
-                                    Width="16"
-                                    Height="20"
-                                    Data="M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z"
-                                    Fill="IndianRed"
-                                    Stretch="Uniform"
-                                    Stroke="Black"
-                                    StrokeThickness="1" />
-                                <Ellipse
-                                    Width="10"
-                                    Height="10"
-                                    Margin="0,0,0,5">
+                        <Viewbox Width="18" Height="18" Margin="0,0,6,0" Stretch="Uniform">
+                            <Grid Width="40" Height="40">
+                                <Ellipse Width="38" Height="38" Stroke="Black" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibility}}">
                                     <Ellipse.Fill>
                                         <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
                                     </Ellipse.Fill>
                                 </Ellipse>
+                                <Ellipse Width="18" Height="18" Fill="LimeGreen" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
                             </Grid>
-                            <Ellipse
-                                Width="10"
-                                Height="10"
-                                Fill="#444"
-                                Stroke="#666"
-                                StrokeThickness="1.5"
-                                Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
-                        </Grid>
-                        <TextBlock VerticalAlignment="Center" Text="{DynamicResource DeathMarkers}" />
+                        </Viewbox>
+                        <TextBlock VerticalAlignment="Center" Text="{DynamicResource Profile}" TextTrimming="CharacterEllipsis" />
                     </StackPanel>
                 </CheckBox>
-                <ToggleButton x:Name="BtnAbbreviateNames"
-                              Margin="0,0,12,0"
-                              Width="24" Height="24"
-                              ToolTip="{DynamicResource StreamerMode}"
-                              Checked="BtnAbbreviateNames_Toggled"
-                              Unchecked="BtnAbbreviateNames_Toggled">
-                    <ToggleButton.Style>
-                        <Style TargetType="ToggleButton">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="BorderThickness" Value="1"/>
-                            <Setter Property="BorderBrush" Value="#444"/>
-                            <Setter Property="Foreground" Value="#CCC"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ToggleButton">
-                                        <Border Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                CornerRadius="3">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#222"/>
-                                </Trigger>
-                                <Trigger Property="IsChecked" Value="True">
-                                    <Setter Property="Background" Value="#1C4B82"/>
-                                    <Setter Property="BorderBrush" Value="#2A6CA6"/>
-                                    <Setter Property="Foreground" Value="White"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ToggleButton.Style>
-                    <TextBlock Text="A..." FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
-                </ToggleButton>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="{DynamicResource ScaleLabel}" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10"/>
-                    <Slider x:Name="SliderPlayerIconSize" 
-                            Width="50" Minimum="0.5" Maximum="1.5" Value="1.0" 
-                            TickFrequency="0.05" IsSnapToTickEnabled="True" 
-                            ValueChanged="SliderPlayerIconSize_ValueChanged"
-                            VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding Value, ElementName=SliderPlayerIconSize, StringFormat={}{0:P0}}" 
-                               VerticalAlignment="Center" Margin="4,0,0,0" Foreground="#AAA" FontSize="10" Width="30"/>
-                </StackPanel>
+
+                <Grid x:Name="DeathMarkerToggleContainer" Background="Transparent" Margin="0,0,12,0">
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox x:Name="ChkDeathMarkers" IsChecked="False" Checked="ChkDeathMarkers_Toggled" Unchecked="ChkDeathMarkers_Toggled" VerticalAlignment="Center" Cursor="Hand">
+                            <CheckBox.Template>
+                                <ControlTemplate TargetType="CheckBox">
+                                    <Border Background="Transparent">
+                                        <ContentPresenter />
+                                    </Border>
+                                </ControlTemplate>
+                            </CheckBox.Template>
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox Width="18" Height="22" Margin="0,0,6,0" Stretch="Uniform">
+                                    <Grid Width="40" Height="56">
+                                        <Path Data="M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z" Fill="IndianRed" Stroke="Black" StrokeThickness="2" Stretch="Fill" Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibility}}" />
+                                        <Ellipse Width="26" Height="26" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,5,0,0" Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibility}}">
+                                            <Ellipse.Fill>
+                                                <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+                                        <Ellipse Width="16" Height="16" Fill="#444" Stroke="#666" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
+                                    </Grid>
+                                </Viewbox>
+                                <TextBlock VerticalAlignment="Center" Text="{DynamicResource Death}" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </CheckBox>
+                        
+                        <Button x:Name="BtnDeathMarkerSettings"
+                                Padding="2"
+                                Margin="2,0,0,0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                VerticalAlignment="Center"
+                                Click="BtnDeathMarkerSettings_Click">
+                            <TextBlock Text="⚙" FontSize="12" Foreground="#AAA" />
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Opacity" Value="0" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsMouseOver, ElementName=DeathMarkerToggleContainer}" Value="True">
+                                            <Setter Property="Opacity" Value="1" />
+                                        </DataTrigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#333" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+            <!-- Abbreviate / Streamer Mode -->
+            <ToggleButton Grid.Column="1" x:Name="BtnAbbreviateNames" Margin="0,0,12,0" Width="24" Height="24" HorizontalAlignment="Left" ToolTip="{DynamicResource StreamerMode}" Checked="BtnAbbreviateNames_Toggled" Unchecked="BtnAbbreviateNames_Toggled">
+                <ToggleButton.Style>
+                    <Style TargetType="ToggleButton">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="BorderBrush" Value="#444"/>
+                        <Setter Property="Foreground" Value="#CCC"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#222"/></Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Background" Value="#1C4B82"/>
+                                <Setter Property="BorderBrush" Value="#2A6CA6"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ToggleButton.Style>
+                <TextBlock Text="A..." FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+            </ToggleButton>
+
+            <!-- Icon Size -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                <TextBlock Text="{DynamicResource ScaleLabel}" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10"/>
+                <Slider x:Name="SliderPlayerIconSize" Width="50" Minimum="0.5" Maximum="1.5" Value="1.0" TickFrequency="0.05" IsSnapToTickEnabled="True" ValueChanged="SliderPlayerIconSize_ValueChanged" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding Value, ElementName=SliderPlayerIconSize, StringFormat={}{0:P0}}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="#AAA" FontSize="10" Width="30"/>
             </StackPanel>
         </Grid>
     </Grid>

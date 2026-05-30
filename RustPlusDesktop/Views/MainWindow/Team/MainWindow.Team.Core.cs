@@ -189,6 +189,7 @@ public partial class MainWindow
                     {
                         _vm.MyAvatar = vm.Avatar;
                     }
+                    RedrawDeathPins();
                 });
 
                 _avatarNextTry.Remove(vm.SteamId);
@@ -269,6 +270,11 @@ public partial class MainWindow
             AppendLog("[team] " + ex.Message);
         }
 
+        await Dispatcher.InvokeAsync(() =>
+        {
+            RedrawDeathPins();
+        });
+
         if (_overlayToolsVisible)
         {
             await Dispatcher.InvokeAsync(() =>
@@ -325,9 +331,52 @@ public partial class MainWindow
                     }
                 }
 
-                if (_showDeathMarkers && now.dead && px.HasValue && py.HasValue)
+                if (now.dead && px.HasValue && py.HasValue)
                 {
-                    PlaceOrMoveDeathPin(vm.SteamId, px.Value, py.Value, vm.Name);
+                    if (_vm?.Selected != null)
+                    {
+                        var list = _vm.Selected.DeathMarkers;
+                        bool isSelf = vm.SteamId == _mySteamId;
+
+                        var newMarker = new Models.DeathMarkerData
+                        {
+                            Id = Guid.NewGuid(),
+                            SteamId = vm.SteamId,
+                            OriginalName = vm.Name,
+                            TimeOfDeath = DateTime.Now,
+                            X = px.Value,
+                            Y = py.Value
+                        };
+                        
+                        list.Add(newMarker);
+                        
+                        // Apply limits
+                        int selfMax = TrackingService.MaxSelfDeathMarkers;
+                        int teamMax = TrackingService.MaxTeamDeathMarkers;
+                        
+                        var myMarkers = list.Where(m => m.SteamId == _mySteamId).OrderByDescending(m => m.TimeOfDeath).ToList();
+                        while (myMarkers.Count > selfMax)
+                        {
+                            var oldest = myMarkers.Last();
+                            list.Remove(oldest);
+                            myMarkers.Remove(oldest);
+                        }
+
+                        var teamGroups = list.Where(m => m.SteamId != _mySteamId).GroupBy(m => m.SteamId);
+                        foreach (var group in teamGroups)
+                        {
+                            var teamMarkers = group.OrderByDescending(m => m.TimeOfDeath).ToList();
+                            while (teamMarkers.Count > teamMax)
+                            {
+                                var oldest = teamMarkers.Last();
+                                list.Remove(oldest);
+                                teamMarkers.Remove(oldest);
+                            }
+                        }
+
+                        _vm.Save();
+                        RedrawDeathPins();
+                    }
                 }
             }
         }
