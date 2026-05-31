@@ -421,9 +421,9 @@ public partial class MainWindow : WpfUi.FluentWindow
                 }
             }
 
-            if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "5.2.0"))
+            if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "5.4.0"))
             {
-                // Upgrade von 5.2.0 oder geringer: Popup zeigen
+                // Upgrade von 5.4.0 oder geringer: Popup zeigen
                 Dispatcher.InvokeAsync(() =>
                 {
                     var dlg = new Views.MigrationNoticeWindow { Owner = this };

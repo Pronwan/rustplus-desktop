@@ -3652,7 +3652,7 @@
                             </ui:Button>
                             
                             <Popup x:Name="PopupCustomTimer" AllowsTransparency="True" StaysOpen="False" PlacementTarget="{Binding ElementName=BtnCustomTimer}" Placement="Left" HorizontalOffset="-10">
-                                <ui:Card Margin="0,0,10,10" Padding="15" MinWidth="300" MaxWidth="350">
+                                <ui:Card Margin="0,0,10,10" Padding="15" MinWidth="300" MaxWidth="350" Background="#E60F1215" BorderBrush="#334466" BorderThickness="1">
                                     <StackPanel>
                                         <TextBlock Text="{DynamicResource ActiveTimersCategory}" FontWeight="SemiBold" Margin="0,0,0,10" />
                                         

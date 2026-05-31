@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        Title="Rust+ Desktop – v5.4.0 Update"
+        Title="Rust+ Desktop – v5.5.0 Update"
         Width="490" Height="530"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
@@ -32,7 +32,7 @@
             <Border Grid.Row="0" Background="#161B22" CornerRadius="12,12,0,0" Padding="20,14">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Border Background="#E8611A" CornerRadius="5" Padding="6,3" Margin="0,0,10,0">
-                        <TextBlock Text="v5.4.0" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="v5.5.0" FontSize="11" FontWeight="Bold" Foreground="White"/>
                     </Border>
                     <TextBlock Text="{DynamicResource Update530Title}" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
                 </StackPanel>
@@ -68,11 +68,18 @@
                                 <Run Foreground="#8090A0" Text="{DynamicResource FeatureSettingsDesc}"/>
                             </TextBlock>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                             <TextBlock Text="🔊" FontSize="14" Margin="0,0,8,0"/>
                             <TextBlock TextWrapping="Wrap">
                                 <Run FontWeight="SemiBold" Foreground="White" Text="{DynamicResource FeatureAudioLoopTitle}"/>
                                 <Run Foreground="#8090A0" Text="{DynamicResource FeatureAudioLoopDesc}"/>
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="⏱️" FontSize="14" Margin="0,0,8,0"/>
+                            <TextBlock TextWrapping="Wrap">
+                                <Run FontWeight="SemiBold" Foreground="White" Text="{DynamicResource FeatureTimerAlerts}"/>
+                                <Run Foreground="#8090A0" Text="{DynamicResource FeatureTimerAlertsDesc}"/>
                             </TextBlock>
                         </StackPanel>
                     </StackPanel>

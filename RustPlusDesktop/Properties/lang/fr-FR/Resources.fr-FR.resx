@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1559,22 +1559,22 @@ Télécharger et installer maintenant ?</value>
     <value>Localisation, modernisation de l'interface utilisateur et stockage</value>
   </data>
   <data name="FeatureLanguage" xml:space="preserve">
-    <value>Changement dynamique de langue</value>
+    <value>Custom Alerts</value>
   </data>
   <data name="FeatureLanguageDesc" xml:space="preserve">
-    <value> - Plus de 30 langues au choix</value>
+    <value> - !timer [name],[minutes]</value>
   </data>
   <data name="FeatureChatCommands" xml:space="preserve">
-    <value>Commandes de chat UI</value>
+    <value>Mini Map</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> - Vue isolée pour un aspect propre</value>
+    <value> - Fonctionne une fois minimisé</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
-    <value>Superposition de nouveaux paramètres</value>
+    <value>Shop Overhaul</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
-    <value> - Barre latérale propre pour tous les paramètres</value>
+    <value> - Nouvelle interface de la boutique</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
     <value>Suppression du suivi de BattleMetrics</value>
@@ -1804,16 +1804,16 @@ Télécharger et installer maintenant ?</value>
     <value>Désactiver maintenant</value>
   </data>
   <data name="MigrationAlertCheckDesc" xml:space="preserve">
-    <value>Les comportements des alertes intelligentes ont changé (y compris la nouvelle boucle audio) et les alertes de chat ont été mises à jour. Veuillez vérifier que vos préférences d'alertes (Audio/Popups) et de chat sont toujours correctes !</value>
+    <value>Vérifiez vos paramètres Chat-Alert pour les nouveaux minuteries personnalisées. Les marqueurs de mort sont désormais toujours enregistrés localement. La mini-carte est mise à jour même réduite.</value>
   </data>
   <data name="MigrationAlertCheckTitle" xml:space="preserve">
-    <value>Veuillez vérifier vos paramètres d'alerte</value>
+    <value>Veuillez noter</value>
   </data>
   <data name="FeatureAudioLoopTitle" xml:space="preserve">
-    <value>Boucle d'alerte audio : </value>
+    <value>Death Marker</value>
   </data>
   <data name="FeatureAudioLoopDesc" xml:space="preserve">
-    <value>Bouclez et arrêtez vos alertes.</value>
+    <value> - Marqueurs personnalisés pour l'équipe</value>
   </data>
   <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Effacer les marqueurs de mort</value>
@@ -1830,10 +1830,10 @@ Télécharger et installer maintenant ?</value>
   <data name="Markers" xml:space="preserve">
     <value>Marqueurs:</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Effacer tous les marqueurs</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Accepter</value>
   </data>
   <data name="CustomTimerCategory" xml:space="preserve">
@@ -1862,5 +1862,23 @@ Télécharger et installer maintenant ?</value>
   </data>
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
     <value>Maximum 5 minuteries.</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Timer Alerts</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value> - 60,30,10,3 m avant la fin</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Consentement de traduction</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>En cliquant sur Accepter, le contenu des notes de mise à jour sera envoyé à Google Translate (USA) pour traduction. Acceptez-vous ?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Conditions de l'API Google Translate</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Traduire via Google</value>
   </data>
 </root>

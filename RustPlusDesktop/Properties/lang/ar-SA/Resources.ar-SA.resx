@@ -1,44 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1555,22 +1555,22 @@
     <value>تحديث واجهة المستخدم واللغات ونظام التخزين</value>
   </data>
   <data name="FeatureLanguage" xml:space="preserve">
-    <value>تغيير لغة التطبيق الفوري (الديناميكي)</value>
+    <value>تنبيهات مخصصة</value>
   </data>
   <data name="FeatureLanguageDesc" xml:space="preserve">
-    <value> - أكثر من 30 لغة مختلفة متاحة للاختيار بينها</value>
+    <value> - !timer [name],[minutes]</value>
   </data>
   <data name="FeatureChatCommands" xml:space="preserve">
-    <value>واجهة مستخدم مخصصة لأوامر الشات</value>
+    <value>خريطة مصغرة</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> - نافذة عرض مستقلة تمنحك مظهراً منسقاً ونظيفاً</value>
+    <value> - يعمل عند التصغير</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
-    <value>لوحة عرض جديدة كلياً للإعدادات</value>
+    <value>إصلاح المتجر</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
-    <value> - شريط جانبي مريح يضم كافة خيارات التحكم والإعدادات</value>
+    <value> - واجهة مستخدم جديدة للمتجر</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>قاعدتك تتعرض للهجوم والغزو الآن (Raid Alert)!</value>
@@ -1794,10 +1794,10 @@
   <data name="Markers" xml:space="preserve">
     <value>علامات:</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>مسح الكل</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>قبول</value>
   </data>
   <data name="CustomTimerCategory" xml:space="preserve">
@@ -1826,5 +1826,35 @@
   </data>
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
     <value>الحد الأقصى 5 مؤقتات.</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>علامة الموت</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value> - علامات مخصصة للفريق</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>تنبيهات المؤقت</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value> - 60,30,10,3 م قبل النهاية</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>موافقة الترجمة</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>بالنقر فوق قبول، سيتم إرسال محتويات ملاحظات التصحيح إلى خدمة ترجمة Google (الولايات المتحدة الأمريكية) للترجمة. هل تقبل؟</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>شروط واجهة برمجة تطبيقات Google Translate</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>يرجى الملاحظة</value>
+  </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>تحقق من إعدادات تنبيهات الدردشة للمؤقتات المخصصة الجديدة. يتم الآن دائمًا حفظ علامات الموت محليًا. يتم الآن أيضًا تحديث الخريطة المصغرة أثناء التصغير.</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>ترجمة عبر جوجل</value>
   </data>
 </root>

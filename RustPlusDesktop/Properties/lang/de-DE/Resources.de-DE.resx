@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1616,22 +1616,22 @@ jetzt herunterladen und installieren?</value>
     <value>Lokalisierung, UI-Update &amp; Storage</value>
   </data>
   <data name="FeatureLanguage" xml:space="preserve">
-    <value>Dynamische Sprachauswahl</value>
+    <value>Custom Alerts</value>
   </data>
   <data name="FeatureLanguageDesc" xml:space="preserve">
-    <value> — Über 30 Sprachen wählbar</value>
+    <value> - !timer [name],[minutes]</value>
   </data>
   <data name="FeatureChatCommands" xml:space="preserve">
-    <value>Chat-Befehle UI</value>
+    <value>Mini Map</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> — Bessere Ansicht für Team-Chat</value>
+    <value> - Funktioniert wenn minimiert</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
-    <value>Einstellungs-Overlay</value>
+    <value>Shop Overhaul</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
-    <value> — Seitenleiste für Einstellungen</value>
+    <value> - Neues Shop UI</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Deine Basis wird angegriffen!</value>
@@ -1858,36 +1858,36 @@ Bist du sicher, dass du fortfahren möchtest?</value>
     <value>Jetzt ausschalten</value>
   </data>
   <data name="MigrationAlertCheckDesc" xml:space="preserve">
-    <value>Die Funktionen für Smart Alerts wurden erweitert (inklusive der neuen Audio-Loop-Funktion) und Chat Alerts wurden aktualisiert. Bitte prüfe, ob deine Smart Alert-Präferenzen (Audio/Popups) und Chat Alert-Einstellungen noch korrekt hinterlegt sind!</value>
+    <value>Bitte Chat-Alert Einstellungen für die Custom Timers prüfen. Death Markers werden nun lokal gespeichert. Die Minimap funktioniert auch wenn die App minimiert ist.</value>
   </data>
   <data name="MigrationAlertCheckTitle" xml:space="preserve">
-    <value>Bitte überprüfe deine Alert-Einstellungen</value>
+    <value>Bitte beachten</value>
   </data>
   <data name="FeatureAudioLoopTitle" xml:space="preserve">
-    <value>Audio Alert Loop: </value>
+    <value>Death Marker</value>
   </data>
   <data name="FeatureAudioLoopDesc" xml:space="preserve">
-    <value>Alarme in Dauerschleife und Stopp-Funktion.</value>
+    <value> - Eigene Marker für das Team</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Todesmarker löschen</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Todesmarker löschen</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Akzeptieren</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Todesmarker umbenennen</value>
   </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profil</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Tod</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Marker:</value>
   </data>
   <data name="CustomTimerCategory" xml:space="preserve">
@@ -1916,5 +1916,23 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   </data>
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
     <value>Maximal 5 Timer erlaubt.</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Timer Alerts</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value> - 60,30,10,3 m vor Ablauf</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Übersetzungs-Zustimmung</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>Mit Klick auf Akzeptieren werden die Inhalte der Patch Notes an Google Translate (USA) zur Übersetzung gesendet. Akzeptieren?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Google Translate API Bedingungen</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Mit Google übersetzen</value>
   </data>
 </root>

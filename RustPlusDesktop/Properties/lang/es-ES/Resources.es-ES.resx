@@ -1,44 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1559,22 +1559,22 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
     <value>Localización, modernización de la interfaz de usuario y almacenamiento</value>
   </data>
   <data name="FeatureLanguage" xml:space="preserve">
-    <value>Cambio dinámico de configuración regional</value>
+    <value>Custom Alerts</value>
   </data>
   <data name="FeatureLanguageDesc" xml:space="preserve">
-    <value> - Más de 30 idiomas para elegir</value>
+    <value> - !timer [name],[minutes]</value>
   </data>
   <data name="FeatureChatCommands" xml:space="preserve">
-    <value>Interfaz de comandos de chat</value>
+    <value>Mini Map</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> - Vista aislada para un aspecto limpio</value>
+    <value> - Funciona cuando se minimiza</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
-    <value>Nueva superposición de ajustes</value>
+    <value>Shop Overhaul</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
-    <value> - Barra lateral limpia para todos los ajustes</value>
+    <value> - Nueva interfaz de usuario de la tienda</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
     <value>Eliminado el seguimiento de BattleMetrics</value>
@@ -1803,10 +1803,10 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   <data name="Markers" xml:space="preserve">
     <value>Marcadores:</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Borrar todos</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Aceptar</value>
   </data>
   <data name="CustomTimerCategory" xml:space="preserve">
@@ -1835,5 +1835,35 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   </data>
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
     <value>Máximo 5 temporizadores permitidos.</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Death Marker</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value> - Marcadores personalizados para el equipo</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Timer Alerts</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value> - 60,30,10,3 m antes del final</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Consentimiento de traducción</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>Al hacer clic en Aceptar, el contenido de las notas del parche se enviará a Google Translate (EE. UU.) para su traducción. ¿Aceptas?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Términos de la API de Google Translate</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>Tenga en cuenta</value>
+  </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>Comprueba tus ajustes de Chat-Alert para los nuevos temporizadores personalizados. Los marcadores de muerte ahora siempre se guardan localmente. El minimapa también se actualiza al minimizarse.</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Traducir con Google</value>
   </data>
 </root>

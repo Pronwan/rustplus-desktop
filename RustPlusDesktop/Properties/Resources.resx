@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1559,22 +1559,22 @@ Download and install now?</value>
     <value>Localization, UI Modernization &amp; Storage</value>
   </data>
   <data name="FeatureLanguage" xml:space="preserve">
-    <value>Dynamic Locale Switching</value>
+    <value>Custom Alerts</value>
   </data>
   <data name="FeatureLanguageDesc" xml:space="preserve">
-    <value> — 30+ languages to pick</value>
+    <value> - !timer [name],[minutes]</value>
   </data>
   <data name="FeatureChatCommands" xml:space="preserve">
-    <value>Chat Commands UI</value>
+    <value>Mini Map</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> — Isolated view for clean look</value>
+    <value> - Works when minimized</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
-    <value>New Settings Overlay</value>
+    <value>Shop Overhaul</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
-    <value> — Clean sidebar for all settings</value>
+    <value> - New Shop UI</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
     <value>BattleMetrics Tracking Removed</value>
@@ -1804,30 +1804,30 @@ Are you sure you want to continue?</value>
     <value>Turn off now</value>
   </data>
   <data name="MigrationAlertCheckDesc" xml:space="preserve">
-    <value>Smart Alert behaviors have changed (including the new Audio Loop feature), and Chat Alerts have been updated. Please ensure your Smart Alert preferences (Audio/Popups) and Chat Alert configurations are still set correctly!</value>
+    <value>Check your Chat-Alert settings for the new custom timers. Also, death markers are now always saved locally. Minimap now also updates while minimized.</value>
   </data>
   <data name="MigrationAlertCheckTitle" xml:space="preserve">
-    <value>Please verify your Alert Settings</value>
+    <value>Please note</value>
   </data>
   <data name="FeatureAudioLoopTitle" xml:space="preserve">
-    <value>Audio Alert Loop: </value>
+    <value>Death Marker</value>
   </data>
   <data name="FeatureAudioLoopDesc" xml:space="preserve">
-    <value>Loop and Stop your Alerts.</value>
+    <value> - Custom markers for team</value>
   </data>
   <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="TimeOfDeath" xml:space="preserve">
@@ -1866,5 +1866,22 @@ Are you sure you want to continue?</value>
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
     <value>Maximum of 5 timers allowed.</value>
   </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Timer Alerts</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value> - 60,30,10,3 m before end</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Translation Consent</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>By clicking Accept, the contents of the patch notes will be sent to Google Translate (USA) for translation. Do you accept?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Google Translate API Terms</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Translate via Google</value>
+  </data>
 </root>
-
