@@ -267,6 +267,28 @@ public class ServerProfile : INotifyPropertyChanged
         return trimmed;
     }
 
+    private string _cmdCustomTimer = "timer";
+    public string CmdCustomTimer
+    {
+        get => _cmdCustomTimer;
+        set { _cmdCustomTimer = ValidateCommand(value, "timer"); OnProp(); }
+    }
+
+    private bool _alertCustomTimer = true;
+    public bool AlertCustomTimer
+    {
+        get => _alertCustomTimer;
+        set { _alertCustomTimer = value; OnProp(); }
+    }
+
+    private ObservableCollection<CustomTimer> _customTimers = new();
+    public ObservableCollection<CustomTimer> CustomTimers
+    {
+        get => _customTimers;
+        set { _customTimers = value ?? new(); OnProp(); }
+    }
+
+
     [JsonIgnore]
     public string CmdSwitch1 { get => SwitchCommandMappings.Count > 0 ? SwitchCommandMappings[0].Command : "switch1"; set { if (SwitchCommandMappings.Count > 0) SwitchCommandMappings[0].Command = ValidateCommand(value, "switch1"); } }
     [JsonIgnore]
@@ -377,6 +399,48 @@ public class ChatCommandMapping : INotifyPropertyChanged
 
     private uint _entityId;
     public uint EntityId { get => _entityId; set { _entityId = value; OnProp(); } }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+    protected void OnProp([CallerMemberName] string? n = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
+}
+
+public class CustomTimer : INotifyPropertyChanged
+{
+    private string _id = Guid.NewGuid().ToString();
+    public string Id { get => _id; set { _id = value; OnProp(); } }
+
+    private string _name = "";
+    public string Name { get => _name; set { _name = value; OnProp(); } }
+
+    private string _command = "";
+    public string Command { get => _command; set { _command = value; OnProp(); } }
+
+    private DateTime _endTimeUtc;
+    public DateTime EndTimeUtc { get => _endTimeUtc; set { _endTimeUtc = value; OnProp(); } }
+
+    [JsonIgnore]
+    public string RemainingTimeText 
+    {
+        get 
+        {
+            var remaining = EndTimeUtc - DateTime.UtcNow;
+            if (remaining.TotalSeconds <= 0) return "00:00:00";
+            if (remaining.TotalHours >= 1.0) return $"{(int)remaining.TotalHours:D2}:{remaining.Minutes:D2}:{remaining.Seconds:D2}";
+            return $"{remaining.Minutes:D2}:{remaining.Seconds:D2}";
+        }
+    }
+
+    public void RefreshRemainingTime()
+    {
+        OnProp(nameof(RemainingTimeText));
+    }
+
+    public bool CreatedNotified { get; set; }
+    public bool Notified60 { get; set; }
+    public bool Notified30 { get; set; }
+    public bool Notified10 { get; set; }
+    public bool Notified3 { get; set; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
     protected void OnProp([CallerMemberName] string? n = null)

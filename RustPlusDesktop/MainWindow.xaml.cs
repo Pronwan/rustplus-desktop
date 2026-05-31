@@ -74,6 +74,9 @@ public partial class MainWindow : WpfUi.FluentWindow
     private readonly System.Windows.Threading.DispatcherTimer _upkeepTimer =
     new() { Interval = TimeSpan.FromSeconds(60) };
 
+    private readonly System.Windows.Threading.DispatcherTimer _customTimerTicker =
+    new() { Interval = TimeSpan.FromSeconds(1) };
+
     private Viewbox? _mapView;
     private Grid? _scene;
     private bool _isPanning;
@@ -345,6 +348,9 @@ public partial class MainWindow : WpfUi.FluentWindow
         // _statusTimer.Tick += async (_, __) => await UpdateServerStatusAsync();
         _upkeepTimer.Tick += (_, __) => RefreshUpkeepUI();
         _upkeepTimer.Start();
+        
+        _customTimerTicker.Tick += (_, __) => CheckCustomTimers();
+        _customTimerTicker.Start();
 
         ListServers.ItemsSource = _vm.Servers;
         _vm.Servers.CollectionChanged += (_, __) => Dispatcher.Invoke(() => UpdatePairingGuideSnackbar());
@@ -3409,6 +3415,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "PlayerRespawnTeam": TrackingService.AnnouncePlayerRespawnTeam = val; break;
                 case "NewShops": TrackingService.AnnounceNewShops = val; break;
                 case "SuspiciousShops": TrackingService.AnnounceSuspiciousShops = val; break;
+                case "CustomTimer": if (_vm.Selected != null) { _vm.Selected.AlertCustomTimer = val; } break;
             }
 
             UpdateMasterToggleState();
@@ -3485,6 +3492,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "PlayerRespawnTeam": isSelected = TrackingService.AnnouncePlayerRespawnTeam; break;
                 case "NewShops": isSelected = TrackingService.AnnounceNewShops; break;
                 case "SuspiciousShops": isSelected = TrackingService.AnnounceSuspiciousShops; break;
+                case "CustomTimer": isSelected = _vm.Selected?.AlertCustomTimer ?? false; break;
             }
 
             if (tag != "CargoArrival") mi.IsEnabled = masterOn;
@@ -5241,7 +5249,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     // MAP DRAW OVERLAY
 
-    // DTOs moved to Models/SharingModels.cs
+
+
     public void ReloadApplicationData()
     {
         _vm.Load();

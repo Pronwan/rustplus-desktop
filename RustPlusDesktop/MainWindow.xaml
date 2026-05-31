@@ -2765,6 +2765,13 @@
                                                              StaysOpenOnClick="True"
                                                              Style="{StaticResource DarkMenuItem}"
                                                              Tag="SmartAlerts" />
+                                                         <MenuItem
+                                                             Click="Alert_MenuItem_Click"
+                                                             Header="{DynamicResource CustomTimerCategory}"
+                                                             IsCheckable="True"
+                                                             StaysOpenOnClick="True"
+                                                             Style="{StaticResource DarkMenuItem}"
+                                                             Tag="CustomTimer" />
                                                      </MenuItem>
 
                                                      <!-- Column 2: Players -->
@@ -3617,14 +3624,97 @@
                         </StackPanel>
 
 
-                        <!--  LIVE EVENT DOCK (Top Right)  -->
+                        <!--  LIVE EVENT DOCK & TIMER DOCK (Top Right)  -->
                         <StackPanel
-                            x:Name="EventDock"
                             Margin="15,45,15,15"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
                             Panel.ZIndex="100"
-                            Orientation="Vertical" />
+                            Orientation="Vertical">
+                            
+                            <StackPanel
+                                x:Name="EventDock"
+                                Orientation="Vertical" />
+                            
+                            <ui:Button
+                                x:Name="BtnCustomTimer"
+                                Margin="0,10,0,0"
+                                Padding="8"
+                                Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}"
+                                Background="#B414191E"
+                                BorderBrush="#3CFFFFFF"
+                                BorderThickness="1"
+                                CornerRadius="10"
+                                Appearance="Transparent"
+                                Click="BtnCustomTimer_Click"
+                                ToolTip="{DynamicResource HoverCustomTimer}">
+                                <ui:SymbolIcon x:Name="IconCustomTimer" Symbol="Timer24" FontSize="20" Foreground="{DynamicResource TextPrimary}" />
+                            </ui:Button>
+                            
+                            <Popup x:Name="PopupCustomTimer" AllowsTransparency="True" StaysOpen="False" PlacementTarget="{Binding ElementName=BtnCustomTimer}" Placement="Left" HorizontalOffset="-10">
+                                <ui:Card Margin="0,0,10,10" Padding="15" MinWidth="300" MaxWidth="350">
+                                    <StackPanel>
+                                        <TextBlock Text="{DynamicResource ActiveTimersCategory}" FontWeight="SemiBold" Margin="0,0,0,10" />
+                                        
+                                        <!-- List of active timers -->
+                                        <ItemsControl x:Name="ListActiveTimers">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="0,0,0,8">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock VerticalAlignment="Center" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}">
+                                                            <Run Text="{Binding Name}" />
+                                                            <Run Text=" (" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
+                                                            <Run Text="{Binding PlacementTarget.DataContext.Selected.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=Popup}}" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
+                                                            <Run Text="{Binding Command}" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
+                                                            <Run Text=")" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
+                                                        </TextBlock>
+                                                        <TextBlock Grid.Column="1" Text="{Binding RemainingTimeText}" VerticalAlignment="Center" Margin="10,0,10,0" FontFamily="Consolas" />
+                                                        <ui:Button Grid.Column="2" Appearance="Transparent" Padding="4" Tag="{Binding Id}" Click="BtnDeleteTimer_Click">
+                                                            <ui:SymbolIcon Symbol="Dismiss24" Foreground="IndianRed" FontSize="14" />
+                                                        </ui:Button>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        
+                                        <!-- Add Timer Section -->
+                                        <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ControlStrokeDefault}" Margin="0,5,0,10" Padding="0,10,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="{DynamicResource AddTimer}" FontWeight="SemiBold" Margin="0,0,0,10" />
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <ui:TextBox x:Name="TxtTimerName" PlaceholderText="{DynamicResource TimerName}" TextChanged="TxtTimerName_TextChanged" />
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,0,0,0">
+                                                        <ui:TextBox x:Name="TxtTimerHours" PlaceholderText="hh" MaxLength="2" Width="60" Margin="0,0,5,0" TextAlignment="Center" />
+                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                        <ui:TextBox x:Name="TxtTimerMinutes" PlaceholderText="mm" MaxLength="2" Width="60" TextAlignment="Center" />
+                                                    </StackPanel>
+                                                </Grid>
+                                                <Grid Margin="0,10,0,0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding PlacementTarget.DataContext.Selected.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=Popup}}" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,2,0" />
+                                                        <TextBlock x:Name="TxtTimerCommandPreview" Text="" Foreground="{DynamicResource TextSubtle}" />
+                                                    </StackPanel>
+                                                    <ui:Button Grid.Column="1" x:Name="BtnAddTimer" Content="{DynamicResource AddTimer}" Appearance="Primary" Click="BtnAddTimer_Click" />
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </ui:Card>
+                            </Popup>
+                        </StackPanel>
 
                         <Canvas x:Name="GridLayer" IsHitTestVisible="False" />
                         <Canvas x:Name="Overlay" IsHitTestVisible="True" />

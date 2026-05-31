@@ -1836,4 +1836,31 @@
 <data name="Accept" xml:space="preserve">
     <value>接受</value>
   </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>自定义计时器</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>计时器 {0} 已创建，时长 {1}小时 {2}分钟</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>自定义计时器</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>活动计时器</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>添加计时器</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>命令:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>使用下方命令查看状态。</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>最多允许 5 个计时器。</value>
+  </data>
 </root>
