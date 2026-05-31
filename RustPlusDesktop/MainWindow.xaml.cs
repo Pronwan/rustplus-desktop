@@ -1088,6 +1088,12 @@ public partial class MainWindow : WpfUi.FluentWindow
                 _overlay = null;
             }
 
+            if (_miniMap != null)
+            {
+                _miniMap.Close();
+                _miniMap = null;
+            }
+
             // Kontextmenü sauber schließen (optional)
             BtnCrosshair.ContextMenu?.IsOpen.Equals(false);
 
