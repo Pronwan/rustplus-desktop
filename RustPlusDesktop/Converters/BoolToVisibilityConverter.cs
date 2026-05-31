@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -11,7 +11,11 @@ namespace RustPlusDesk.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var b = value is bool v && v;
+            bool b = false;
+            if (value is bool v) b = v;
+            else if (value is int i) b = i > 0;
+            else if (value is uint ui) b = ui > 0;
+            else if (value is double d) b = d > 0;
 
             // Param-Unterstützung, ohne vorhandene Invert-Verwendungen zu brechen:
             bool invert = Invert;

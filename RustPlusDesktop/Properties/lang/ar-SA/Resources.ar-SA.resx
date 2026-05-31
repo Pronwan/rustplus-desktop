@@ -1800,4 +1800,31 @@
 <data name="Accept" xml:space="preserve">
     <value>قبول</value>
   </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>مؤقت مخصص</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>تم إنشاء المؤقت {0} لمدة {1}س {2}د</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>مؤقت مخصص</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>المؤقتات النشطة</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>إضافة مؤقت</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>أمر:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>استخدم الأمر للتحقق.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>الحد الأقصى 5 مؤقتات.</value>
+  </data>
 </root>

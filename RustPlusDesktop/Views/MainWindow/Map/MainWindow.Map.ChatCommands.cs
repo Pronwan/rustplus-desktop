@@ -57,6 +57,9 @@ public partial class MainWindow
         if (cmd == profile.CmdList.ToLowerInvariant())
         {
             var standardCmds = new List<string>();
+            var firstTimer = profile.CustomTimers.FirstOrDefault();
+            if (firstTimer != null) standardCmds.Add(prefix + firstTimer.Command);
+            
             if (!string.IsNullOrWhiteSpace(profile.CmdPop)) standardCmds.Add(prefix + profile.CmdPop);
             if (!string.IsNullOrWhiteSpace(profile.CmdTime)) standardCmds.Add(prefix + profile.CmdTime);
             if (!string.IsNullOrWhiteSpace(profile.CmdPromote)) standardCmds.Add(prefix + profile.CmdPromote);
@@ -313,6 +316,81 @@ public partial class MainWindow
             }
             _ = SendTeamChatSafeAsync(msg);
             AppendLog($"[ChatCommand] Vendor executed by {m.Author}");
+            return;
+        }
+
+        // Check Custom Timers Check Commands
+        foreach (var timer in profile.CustomTimers)
+        {
+            if (cmd == timer.Command.ToLowerInvariant())
+            {
+                var remaining = timer.EndTimeUtc - DateTime.UtcNow;
+                if (remaining.TotalSeconds > 0)
+                {
+                    string timeStr = remaining.TotalHours >= 1.0 
+                        ? $"{(int)remaining.TotalHours:D2}:{remaining.Minutes:D2}:{remaining.Seconds:D2}"
+                        : $"{remaining.Minutes:D2}:{remaining.Seconds:D2}";
+                    _ = SendTeamChatSafeAsync($"{timer.Name}: {timeStr}");
+                    AppendLog($"[ChatCommand] Timer '{timer.Name}' checked by {m.Author}");
+                }
+                return;
+            }
+        }
+
+        // Create Custom Timer (e.g. !timer TEST,70) or List Timers (!timer)
+        var createTimerCmd = profile.CmdCustomTimer.ToLowerInvariant();
+        if (cmd == createTimerCmd)
+        {
+            if (profile.CustomTimers.Count == 0)
+            {
+                _ = SendTeamChatSafeAsync("No active timers.");
+            }
+            else
+            {
+                var timerStrings = profile.CustomTimers.Select(t => $"{profile.ChatCommandPrefix}{t.Command} : {t.RemainingTimeText}").ToList();
+                string output = string.Join(" | ", timerStrings);
+                _ = SendTeamChatSafeAsync(output);
+            }
+            return;
+        }
+        else if (cmd.StartsWith(createTimerCmd + " "))
+        {
+            if (profile.CustomTimers.Count >= 5)
+            {
+                _ = SendTeamChatSafeAsync(Properties.Resources.ChatCmdTimerMaxReached ?? "Maximum of 5 timers allowed.");
+                return;
+            }
+            
+            var args = cmd.Substring(createTimerCmd.Length + 1).Split(',');
+            if (args.Length == 2 && int.TryParse(args[1].Trim(), out int mins) && mins > 0)
+            {
+                string name = args[0].Trim();
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    var newCmd = new string(name.Where(c => !char.IsWhiteSpace(c)).ToArray()).ToLower();
+                    var timer = new CustomTimer
+                    {
+                        Name = name,
+                        Command = newCmd,
+                        EndTimeUtc = DateTime.UtcNow.AddMinutes(mins),
+                        CreatedNotified = false,
+                        Notified60 = mins <= 60,
+                        Notified30 = mins <= 30,
+                        Notified10 = mins <= 10,
+                        Notified3 = mins <= 3
+                    };
+                    Dispatcher.Invoke(() => profile.CustomTimers.Add(timer));
+                    
+                    if (profile.AlertCustomTimer)
+                    {
+                        int h = mins / 60;
+                        int remMins = mins % 60;
+                        var msg = string.Format(Properties.Resources.TimerCreated, profile.ChatCommandPrefix + newCmd, h, remMins);
+                        _ = SendTeamChatSafeAsync(msg);
+                    }
+                    AppendLog($"[ChatCommand] Timer created by {m.Author}: {name} for {mins}m");
+                }
+            }
             return;
         }
 

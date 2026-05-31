@@ -1839,5 +1839,32 @@ Are you sure you want to continue?</value>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>Custom Timer</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>Timer {0} created for {1}h {2}m</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>Custom Timer</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>Active Timers</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>Add Timer</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>Timer Name</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>Chat Command:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>Use chat command below to check status.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>Maximum of 5 timers allowed.</value>
+  </data>
 </root>
 

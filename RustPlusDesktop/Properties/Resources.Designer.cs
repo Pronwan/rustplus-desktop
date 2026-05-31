@@ -663,6 +663,15 @@ namespace RustPlusDesk.Properties {
         public static string TimeOfDeath => GetString("TimeOfDeath");
         public static string Death => GetString("Death");
         public static string Markers => GetString("Markers");
+
+        public static string CustomTimerCategory => GetString("CustomTimerCategory");
+        public static string TimerCreated => GetString("TimerCreated");
+        public static string HoverCustomTimer => GetString("HoverCustomTimer");
+        public static string ActiveTimersCategory => GetString("ActiveTimersCategory");
+        public static string AddTimer => GetString("AddTimer");
+        public static string TimerName => GetString("TimerName");
+        public static string TimerCreateCmdLabel => GetString("TimerCreateCmdLabel");
+        public static string CheckTimerStatusInfo => GetString("CheckTimerStatusInfo");
+        public static string ChatCmdTimerMaxReached => GetString("ChatCmdTimerMaxReached");
     }
 }
-
