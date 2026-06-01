@@ -2,12 +2,12 @@ using System.Windows;
 
 namespace RustPlusDesk.Views;
 
-public partial class MigrationNoticeWindow : Window
+public partial class CloudDisclaimerWindow : Window
 {
     public bool HasMadeChoice { get; private set; } = false;
     public bool CloudSyncAccepted { get; private set; } = false;
 
-    public MigrationNoticeWindow()
+    public CloudDisclaimerWindow()
     {
         InitializeComponent();
     }

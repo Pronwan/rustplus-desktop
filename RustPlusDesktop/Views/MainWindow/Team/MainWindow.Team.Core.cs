@@ -264,6 +264,18 @@ public partial class MainWindow
             for (int i = TeamMembers.Count - 1; i >= 0; i--)
                 if (TeamMembers[i].MissingCount > 2)
                     TeamMembers.RemoveAt(i);
+
+            _ = RustPlusDesk.Services.Auth.SupabaseAuthManager.UpdatePresenceAsync(
+                GetServerKey(),
+                _vm.Selected?.Name,
+                TeamMembers.Select(t => new RustPlusDesk.Services.Auth.SupabaseAuthManager.CloudTeamMemberDto
+                {
+                    SteamId = t.SteamId.ToString(),
+                    Name = t.Name,
+                    IsOnline = t.IsOnline,
+                    IsDead = t.IsDead,
+                    IsLeader = t.IsLeader
+                }).ToList());
         }
         catch (Exception ex)
         {

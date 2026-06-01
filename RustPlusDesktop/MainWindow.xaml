@@ -990,10 +990,21 @@
                             <ui:Button
                                 x:Name="BtnHotkeys"
                                 Width="90"
-                                Margin="0,0,10,0"
+                                Margin="0,0,5,0"
                                 Appearance="Secondary"
                                 Click="BtnHotkeys_Click"
                                 Content="{DynamicResource Hotkeys}" />
+
+                            <ui:Button
+                                x:Name="BtnPremiumInfoDevices"
+                                Appearance="Transparent"
+                                Width="32"
+                                Margin="0,0,10,0"
+                                Icon="{ui:SymbolIcon Symbol=Info24, Filled=True}"
+                                Foreground="#e03131"
+                                Click="BtnPremiumInfoDevices_Click"
+                                ToolTip="{DynamicResource PremiumFeatures}" />
+
                             <ui:Button
                                 x:Name="BtnDevicesImport"
                                 Width="36"
@@ -1012,7 +1023,7 @@
                                 Padding="4"
                                 Appearance="Secondary"
                                 Click="BtnDevicesExport_Click"
-                                Icon="{ui:SymbolIcon Symbol=ArrowUpload24}"
+                                Icon="{ui:SymbolIcon Symbol=Cloud24}"
                                 ToolTip="{DynamicResource ExportDevices}" />
                             <ui:Button
                                 Width="80"
@@ -3204,6 +3215,7 @@
 
                                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                         <ui:Button
+                                            x:Name="MapUiBtnConnect"
                                             Padding="16,8"
                                             Appearance="Primary"
                                             Click="BtnConnect_Click"
@@ -3212,6 +3224,7 @@
                                             Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}" />
 
                                         <ui:Button
+                                            x:Name="MapUiBtnFullConnect"
                                             Padding="16,8"
                                             Appearance="Primary"
                                             Click="BtnConnect_Click"
@@ -4396,8 +4409,30 @@
                                     Margin="2,0"
                                     Click="ToolUploadButton_Click"
                                     ToolTip="{DynamicResource UploadOverlayToolTip}">
-                                    <Image Source="pack://application:,,,/Assets/icons/upload.png" />
+                                    <Image Source="pack://application:,,,/Assets/icons/cloud-upload.png" />
                                 </Button>
+
+                                <ui:Button
+                                    x:Name="BtnPremiumInfoMap"
+                                    Appearance="Transparent"
+                                    Width="32"
+                                    Height="32"
+                                    Margin="2,0"
+                                    Icon="{ui:SymbolIcon Symbol=Info24, Filled=True}"
+                                    Foreground="#e03131"
+                                    Click="BtnPremiumInfoMap_Click"
+                                    ToolTip="{DynamicResource PremiumFeatures}" />
+
+                                <ui:Button
+                                    x:Name="BtnAdminPanel"
+                                    Appearance="Primary"
+                                    Width="32"
+                                    Height="32"
+                                    Margin="2,0"
+                                    Icon="{ui:SymbolIcon Symbol=Shield24, Filled=True}"
+                                    Visibility="Collapsed"
+                                    Click="BtnAdminPanel_Click"
+                                    ToolTip="Admin Panel" />
 
                             </StackPanel>
                         </Border>

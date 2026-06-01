@@ -4736,19 +4736,18 @@ rp.connect();
         var ids = entityIds.Distinct().ToList();
         if (ids.Count == 0) return;
 
-        using var semaphore = new SemaphoreSlim(5);
-        var tasks = ids.Select(async id =>
+        _log?.Invoke($"[prime] Priming {ids.Count} subscriptions sequentially with a safe delay...");
+        foreach (var id in ids)
         {
-            await semaphore.WaitAsync(ct);
+            if (ct.IsCancellationRequested) break;
             try
             {
                 await EnsureSubOnceAsync(id);
-                await Task.Delay(100, ct);
+                // A safe 300ms delay between each subscription/poke to prevent flooding the Rust+ server
+                await Task.Delay(300, ct);
             }
             catch { }
-            finally { semaphore.Release(); }
-        });
-        await Task.WhenAll(tasks);
+        }
     }
 
     public async Task ConnectAsync(ServerProfile profile, CancellationToken ct)

@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        Title="Rust+ Desktop – v5.5.0 Update"
-        Width="490" Height="530"
+        Title="Rust+ Desktop &#x1F6E0;&#xFE0F; v5.5.0 Update"
+        Width="500" Height="700"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         Background="#0F1215"
@@ -48,35 +48,35 @@
                 <Border Background="#161B22" BorderBrush="#2A3040" BorderThickness="1" CornerRadius="8" Padding="14,12" Margin="0,0,0,14">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                            <TextBlock Text="🌍" FontSize="14" Margin="0,0,8,0"/>
+                            <TextBlock Text="&#x1F310;" FontSize="14" Margin="0,0,8,0"/>
                             <TextBlock TextWrapping="Wrap">
                                 <Run FontWeight="SemiBold" Foreground="White" Text="{DynamicResource FeatureLanguage}"/>
                                 <Run Foreground="#8090A0" Text="{DynamicResource FeatureLanguageDesc}"/>
                             </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                            <TextBlock Text="💬" FontSize="14" Margin="0,0,8,0"/>
+                            <TextBlock Text="&#x1F4AC;" FontSize="14" Margin="0,0,8,0"/>
                             <TextBlock TextWrapping="Wrap">
                                 <Run FontWeight="SemiBold" Foreground="White" Text="{DynamicResource FeatureChatCommands}"/>
                                 <Run Foreground="#8090A0" Text="{DynamicResource FeatureChatCommandsDesc}"/>
                             </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                            <TextBlock Text="🎛️" FontSize="14" Margin="0,0,8,0"/>
+                            <TextBlock Text="&#x1F39B;&#xFE0F;" FontSize="14" Margin="0,0,8,0"/>
                             <TextBlock TextWrapping="Wrap">
                                 <Run FontWeight="SemiBold" Foreground="White" Text="{DynamicResource FeatureSettings}"/>
                                 <Run Foreground="#8090A0" Text="{DynamicResource FeatureSettingsDesc}"/>
                             </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                            <TextBlock Text="🔊" FontSize="14" Margin="0,0,8,0"/>
+                            <TextBlock Text="&#x1F50A;" FontSize="14" Margin="0,0,8,0"/>
                             <TextBlock TextWrapping="Wrap">
                                 <Run FontWeight="SemiBold" Foreground="White" Text="{DynamicResource FeatureAudioLoopTitle}"/>
                                 <Run Foreground="#8090A0" Text="{DynamicResource FeatureAudioLoopDesc}"/>
                             </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="⏱️" FontSize="14" Margin="0,0,8,0"/>
+                            <TextBlock Text="&#x23F1;&#xFE0F;" FontSize="14" Margin="0,0,8,0"/>
                             <TextBlock TextWrapping="Wrap">
                                 <Run FontWeight="SemiBold" Foreground="White" Text="{DynamicResource FeatureTimerAlerts}"/>
                                 <Run Foreground="#8090A0" Text="{DynamicResource FeatureTimerAlertsDesc}"/>
@@ -86,10 +86,18 @@
                 </Border>
 
                 <!-- Alert warning box -->
-                <Border Background="#1A2233" BorderBrush="#334466" BorderThickness="1" CornerRadius="8" Padding="12,10">
+                <Border Background="#1A2233" BorderBrush="#334466" BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,14">
                     <TextBlock TextWrapping="Wrap" Foreground="#CCDDEE" FontSize="12" LineHeight="18">
                         <Run FontWeight="Bold" Foreground="#6699FF" Text="{DynamicResource MigrationAlertCheckTitle}"/><Run Text=": "/>
                         <Run Text="{DynamicResource MigrationAlertCheckDesc}"/>
+                    </TextBlock>
+                </Border>
+
+                <!-- Privacy/Disclaimer Box -->
+                <Border Background="#221111" BorderBrush="#883333" BorderThickness="1" CornerRadius="8" Padding="12,10">
+                    <TextBlock TextWrapping="Wrap" Foreground="#EECCCC" FontSize="12" LineHeight="18">
+                        <Run FontWeight="Bold" Foreground="#FF6666" Text="{DynamicResource PrivacyDisclaimerTitle}"/><Run Text=": "/>
+                        <Run Text="{DynamicResource PrivacyDisclaimerDesc}"/>
                     </TextBlock>
                 </Border>
             </StackPanel>
@@ -97,22 +105,34 @@
             <!-- Footer -->
             <Border Grid.Row="2" Margin="0,20,0,0" Padding="0,15,0,0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource CardBorder}">
                 <Grid>
-                    <CheckBox x:Name="ChkDontShow" 
-                              Content="{DynamicResource DontShowAgain}" 
-                              VerticalAlignment="Center" 
-                              Style="{StaticResource DotCheckBox}"
-                              Foreground="{DynamicResource TextSubtle}"/>
-                    
-                    <ui:Button Content="{DynamicResource AwesomeLetsGo}" 
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ui:Button Grid.Column="1"
+                            Content="{DynamicResource DeclineCloud}" 
+                            Appearance="Secondary"
+                            Padding="20,8" 
+                            FontSize="13"
+                            FontWeight="SemiBold" 
+                            Cursor="Hand"
+                            Margin="0,0,10,0"
+                            Click="BtnDecline_Click" />
+
+                    <ui:Button Grid.Column="2"
+                            Content="{DynamicResource AcceptCloud}" 
                             Appearance="Primary"
                             Padding="30,8" 
                             FontSize="14"
                             FontWeight="SemiBold" 
                             Cursor="Hand"
-                            HorizontalAlignment="Right"
-                            Click="BtnOk_Click" />
+                            Click="BtnAccept_Click" />
                 </Grid>
             </Border>
         </Grid>
     </Border>
 </Window>
+
+

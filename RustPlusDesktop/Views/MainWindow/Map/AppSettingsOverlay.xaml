@@ -120,9 +120,15 @@
 
                         <CheckBox x:Name="ChkHideConsole" 
                                   Content="{DynamicResource HideSystemConsole}" 
+                                  Margin="0,0,0,10" 
                                   Style="{StaticResource DotCheckBox}"
                                   Checked="OnSettingChanged" Unchecked="OnSettingChanged"
                                   ToolTip="{DynamicResource HideConsoleToolTip}"/>
+                        <CheckBox x:Name="ChkCloudSync" 
+                                  Content="{DynamicResource CloudSync}" 
+                                  Style="{StaticResource DotCheckBox}"
+                                  Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                                  ToolTip="{DynamicResource CloudSyncDesc}"/>
                     </StackPanel>
                 </Border>
 
@@ -182,6 +188,38 @@
                             <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=SliderMonumentOpacity, StringFormat={}{0:0%}}" 
                                        VerticalAlignment="Center" Margin="10,0,0,0" Foreground="{DynamicResource TextPrimary}" FontSize="12" Width="40"/>
                         </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Supporter Section -->
+                <TextBlock Text="{DynamicResource SupporterSettingsHeader}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                
+                <ui:Button x:Name="BtnDiscordConnect"
+                           Content="{DynamicResource ConnectDiscord}" 
+                           Icon="{ui:SymbolIcon Symbol=PlugConnected24}"
+                           HorizontalAlignment="Stretch"
+                           Height="36"
+                           Margin="0,0,0,10"
+                           Click="BtnDiscordConnect_Click"/>
+
+                <Border x:Name="BrdSupporterSettings" Style="{StaticResource Card}" Margin="0,0,0,16" Opacity="0.5" IsEnabled="False">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource SupporterDescription}" 
+                                   Foreground="{DynamicResource TextSubtle}" 
+                                   FontSize="11" 
+                                   FontStyle="Italic"
+                                   Margin="0,0,0,12" 
+                                   TextWrapping="Wrap"/>
+                        
+                        <CheckBox x:Name="ChkAdvancedDiscord" 
+                                  Content="{DynamicResource AdvancedDiscordIntegration}" 
+                                  Margin="0,0,0,10" 
+                                  Style="{StaticResource DotCheckBox}"/>
+                                  
+                        <CheckBox x:Name="ChkTelegramIntegration" 
+                                  Content="{DynamicResource TelegramIntegration}" 
+                                  Margin="0,0,0,10" 
+                                  Style="{StaticResource DotCheckBox}"/>
                     </StackPanel>
                 </Border>
 

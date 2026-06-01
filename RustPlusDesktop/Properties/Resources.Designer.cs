@@ -588,7 +588,7 @@ namespace RustPlusDesk.Properties {
         public static string TrackingGuideEnglishOnlyNotice => GetString("TrackingGuideEnglishOnlyNotice");
         
         /// <summary>
-        ///   Looks up a localized string similar to Close this window at any time — you can reopen it with the  ❓ How to Track  button..
+        ///   Looks up a localized string similar to Close this window at any time â€” you can reopen it with the  â“ How to Track  button..
         /// </summary>
         public static string HowToTrackCloseHint => GetString("HowToTrackCloseHint");
 
@@ -658,6 +658,9 @@ namespace RustPlusDesk.Properties {
         public static string DeleteDeathMarker => GetString("DeleteDeathMarker");
         public static string WipeDeathMarkers => GetString("WipeDeathMarkers");
         public static string Accept => GetString("Accept");
+        public static string PremiumFeatures => GetString("PremiumFeatures");
+        public static string PremiumInfoDevicesDesc => GetString("PremiumInfoDevicesDesc");
+        public static string PremiumInfoMapDesc => GetString("PremiumInfoMapDesc");
         public static string RenameDeathMarker => GetString("RenameDeathMarker");
         public static string Profile => GetString("Profile");
         public static string TimeOfDeath => GetString("TimeOfDeath");
@@ -675,3 +678,5 @@ namespace RustPlusDesk.Properties {
         public static string ChatCmdTimerMaxReached => GetString("ChatCmdTimerMaxReached");
     }
 }
+
+

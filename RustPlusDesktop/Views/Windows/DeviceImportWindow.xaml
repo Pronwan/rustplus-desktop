@@ -1,4 +1,4 @@
-﻿<Window x:Class="RustPlusDesk.Views.DeviceImportWindow"
+<Window x:Class="RustPlusDesk.Views.DeviceImportWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
@@ -161,14 +161,14 @@
                                         </Image>
 
                                         <!-- Device main info -->
-                                        <StackPanel Grid.Column="2">
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center">
                                             <TextBlock Text="{Binding DisplayName}"
-           FontWeight="SemiBold"
-           FontSize="13">
+                                           FontWeight="SemiBold"
+                                           FontSize="13">
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock">
                                                         <Setter Property="Foreground"
-                    Value="{DynamicResource TextPrimary}" />
+                                    Value="{DynamicResource TextPrimary}" />
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding ExistsState}" Value="missing">
                                                                 <Setter Property="Foreground" Value="Tomato" />
@@ -179,7 +179,10 @@
                                                 </TextBlock.Style>
                                             </TextBlock>
 
-                                            <!-- usw. wie gehabt -->
+                                            <TextBlock Text="{Binding Tagline}"
+                                                       Foreground="{DynamicResource TextSubtle}"
+                                                       FontSize="11"
+                                                       Margin="0,2,0,0"/>
                                         </StackPanel>
 
                                         <!-- Right side: extra details -->
