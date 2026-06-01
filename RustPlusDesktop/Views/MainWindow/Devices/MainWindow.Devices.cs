@@ -19,6 +19,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using RustPlusDesk.Services;
 using StorageSnap = RustPlusDesk.Models.StorageSnapshot;
 
 namespace RustPlusDesk.Views;
@@ -325,7 +326,7 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
         return null;
     }
 
-    private void BtnDeleteDevice_Click(object sender, RoutedEventArgs e)
+    private async void BtnDeleteDevice_Click(object sender, RoutedEventArgs e)
     {
         if (ListDevices.SelectedItem is SmartDevice dev)
         {
@@ -335,6 +336,23 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
                 _vm.NotifyDevicesChanged();
                 _vm.Save();
                 AppendLog($"Device #{dev.EntityId} removed.");
+
+                // Sync the local disk overlay JSON as well
+                SaveOwnOverlayToJson();
+
+                // Immediately upload new state to Cloud
+                if (TrackingService.CloudSyncEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.Client != null)
+                {
+                    try
+                    {
+                        await UploadDevicesSnapshotForCurrentServerAsync(explicitWipe: true);
+                        AppendLog("[dev/sync] Pushed updated device list to cloud.");
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog("[dev/sync] Error: " + ex.Message);
+                    }
+                }
             }
         }
     }
@@ -940,43 +958,71 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
 
 public List<ExportedDeviceDto> Devices { get; set; } = new();
 
-    private void BtnDevicesExport_Click(object sender, RoutedEventArgs e)
+    private async void BtnDevicesExport_Click(object sender, RoutedEventArgs e)
     {
-        ShowUploadConsent(async () =>
+        if (TrackingService.CloudSyncEnabled)
         {
-            if (_vm.Selected is null)
+            // Disable sync
+            TrackingService.CloudSyncEnabled = false;
+            TrackingService.UploadConsentGiven = false;
+            _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(false);
+        }
+        else
+        {
+            // Enable sync
+            if (!TrackingService.UploadConsentGiven)
             {
-                AppendLog("[dev/export] No server selected.");
-                return;
+                var dlg = new CloudDisclaimerWindow { Owner = this };
+                dlg.ShowDialog();
+                if (!dlg.CloudSyncAccepted)
+                {
+                    TrackingService.CloudSyncEnabled = false;
+                    TrackingService.UploadConsentGiven = false;
+                    _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(false);
+                    UpdateCloudSyncUI();
+                    return;
+                }
+                TrackingService.CloudSyncEnabled = true;
+                TrackingService.UploadConsentGiven = true;
+                _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(true);
+            }
+            else
+            {
+                TrackingService.CloudSyncEnabled = true;
+                _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(true);
             }
 
-            if (!await EnsureConnectedAsync())
-                return;
-
-            try
+            // Immediately sync current state
+            if (_vm.Selected != null && await EnsureConnectedAsync())
             {
-                var count = await UploadDevicesSnapshotForCurrentServerAsync();
-                AppendLog($"[dev/export] Exported {count} devices for server '{_vm.Selected.Name}'.");
-                MessageBox.Show($"Exported {count} devices to your team share.", "Device Export",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                try
+                {
+                    await UploadDevicesSnapshotForCurrentServerAsync();
+                    AppendLog("[dev/sync] Pushed devices to cloud.");
+                }
+                catch (Exception ex)
+                {
+                    AppendLog("[dev/sync] Error: " + ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                AppendLog("[dev/export] Error: " + ex.Message);
-                MessageBox.Show("Device export failed:\n" + ex.Message, "Device Export",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        });
+        }
+        UpdateCloudSyncUI();
     }
 
-    private async Task<int> UploadDevicesSnapshotForCurrentServerAsync()
+    private async Task<int> UploadDevicesSnapshotForCurrentServerAsync(bool explicitWipe = false)
     {
+        if (!explicitWipe && !_ownCloudRestoreReady)
+        {
+            AppendLog("[dev/cloud] Skipping device autosync until cloud restore is complete.");
+            return 0;
+        }
+
         var profile = _vm.Selected;
-        if (profile?.Devices == null || profile.Devices.Count == 0)
+        if (profile?.Devices == null)
             throw new InvalidOperationException("No devices in current profile.");
 
         var canvasOverlay = BuildCurrentOverlaySaveDataForMe();
-        return await DeviceDataModule.UploadDevicesSnapshotAsync(GetServerKey(), _mySteamId, profile.Devices, canvasOverlay);
+        return await DeviceDataModule.UploadDevicesSnapshotAsync(GetServerKey(), _mySteamId, profile.Devices, canvasOverlay, explicitWipe);
     }
 
     private ExportedDeviceDto MapDeviceToDto(SmartDevice d)
@@ -997,31 +1043,58 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
         try
         {
-            // 1) Von allen Team-Mitgliedern den Overlay-JSON aktualisieren
-            var fetchTasks = TeamMembers
+            // 1) Alle Team-Mitglieder + eigene SteamId inkludieren
+            var allSteamIds = TeamMembers
                 .Where(tm => tm.SteamId != 0)
-                .Select(tm => TryFetchAndUpdateOverlayAsync(tm.SteamId));
-            await Task.WhenAll(fetchTasks);
+                .Select(tm => tm.SteamId)
+                .ToHashSet();
 
-            // 2) Import-Kandidaten aus lokalen Overlay-Dateien sammeln
+            // Sicherstellen dass eigene SteamId immer dabei ist (für Neuinstallation / Cloud-Import eigener Devices)
+            if (_mySteamId != 0)
+                allSteamIds.Add(_mySteamId);
+
+            // 2) Cloud-Fetch (anon key genügt, kein Discord-Login nötig)
+            //    Parallel für alle IDs – Fehler einzelner IDs werden ignoriert
+            if (Services.Auth.SupabaseAuthManager.Client != null && TrackingService.CloudSyncEnabled)
+            {
+                var fetchTasks = allSteamIds.Select(sid => TryFetchAndUpdateOverlayAsync(sid));
+                await Task.WhenAll(fetchTasks);
+            }
+
+            // 3) Import-Kandidaten sammeln (Cloud zuerst, Fallback auf lokale Datei)
             var items = new List<DeviceImportItem>();
 
-            foreach (var tm in TeamMembers)
+            foreach (var sid in allSteamIds)
             {
-                if (tm.SteamId == 0) continue;
-                var path = GetOverlayJsonPathForPlayerServer(tm.SteamId);
-                if (!File.Exists(path)) continue;
+                // TeamMember-VM für diesen SteamId (oder Dummy für eigene ID ohne VM-Eintrag)
+                var tm = TeamMembers.FirstOrDefault(t => t.SteamId == sid)
+                      ?? new TeamMemberVM { SteamId = sid, Name = sid == _mySteamId ? "Me" : sid.ToString() };
 
                 OverlaySaveData? data = null;
-                try
+
+                // Zuerst Cloud versuchen
+                if (Services.Auth.SupabaseAuthManager.Client != null && TrackingService.CloudSyncEnabled)
                 {
-                    var json = File.ReadAllText(path);
-                    data = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(json);
+                    try { data = await OverlayDataModule.FetchOverlayFromServerAsync(GetServerKey(), sid); }
+                    catch { /* Cloud nicht erreichbar – lokale Datei als Fallback */ }
                 }
-                catch (Exception ex)
+
+                // Fallback: lokale Datei
+                if (data == null)
                 {
-                    AppendLog($"[dev/import] Can't parse overlay for {tm.SteamId}: {ex.Message}");
-                    continue;
+                    var path = GetOverlayJsonPathForPlayerServer(sid);
+                    if (File.Exists(path))
+                    {
+                        try
+                        {
+                            var json = File.ReadAllText(path);
+                            data = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(json);
+                        }
+                        catch (Exception ex)
+                        {
+                            AppendLog($"[dev/import] Can't parse local overlay for {sid}: {ex.Message}");
+                        }
+                    }
                 }
 
                 if (data?.Devices == null || data.Devices.Count == 0)
@@ -1035,10 +1108,13 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
             if (items.Count == 0)
             {
-                MessageBox.Show("No device exports found for your team / server.",
+                MessageBox.Show("No device exports found for your team / server.\n\n" +
+                                "Make sure Cloud Sync is enabled and at least one team member has synced their devices.",
                     "Device Import", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
+
+
 
             var dlg = new DeviceImportWindow(
     items,
@@ -1056,17 +1132,17 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             {
                 if (it.OriginalDto != null)
                 {
-                    // Rekursiver Import via DTO
-                    if (_vm.Selected.Devices.Any(d => d.EntityId == it.OriginalDto.EntityId))
+                    // Rekursiver Import via DTO - prüfen auf allen Ebenen
+                    if (!it.OriginalDto.IsGroup && FindDeviceById(_vm.Selected.Devices, it.OriginalDto.EntityId) != null)
                         continue;
 
-                    var dev = MapDtoToDevice(it.OriginalDto);
+                    var dev = MapDtoToDeviceFiltered(it.OriginalDto);
                     _vm.Selected.Devices.Add(dev);
                 }
                 else
                 {
-                    // Fallback (sollte nicht mehr passieren)
-                    if (_vm.Selected.Devices.Any(d => d.EntityId == it.EntityId))
+                    // Fallback
+                    if (FindDeviceById(_vm.Selected.Devices, it.EntityId) != null)
                         continue;
 
                     var dev = new SmartDevice
@@ -1126,7 +1202,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             try
             {
                 await RefreshDeviceRecursiveAsync(d, maxRetries);
-                await Task.Delay(100); // Small gap to be extra safe
+                await Task.Delay(250); // Increased gap to prevent API spam
             }
             catch (Exception ex)
             {
@@ -1149,7 +1225,14 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         {
             if (!d.IsGroup)
             {
+                if ((DateTime.UtcNow - d.LastPolledAt).TotalSeconds < 15)
+                {
+                    // Skip if recently polled
+                    return;
+                }
+                
                 await RefreshDeviceStateAsync(d, log: true, forcePull: true, maxRetries: maxRetries);
+                d.LastPolledAt = DateTime.UtcNow;
             }
             else
             {
@@ -1192,6 +1275,31 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             OriginalDto = d // <- Hier speichern wir das volle DTO inklusive Children!
         };
         items.Add(item);
+    }
+
+    private SmartDevice MapDtoToDeviceFiltered(ExportedDeviceDto dto)
+    {
+        var dev = DeviceDataModule.MapDtoToDevice(dto);
+        FilterExistingDevicesRecursively(dev);
+        return dev;
+    }
+
+    private void FilterExistingDevicesRecursively(SmartDevice parent)
+    {
+        if (parent.Children == null || parent.Children.Count == 0) return;
+        
+        for (int i = parent.Children.Count - 1; i >= 0; i--)
+        {
+            var child = parent.Children[i];
+            if (!child.IsGroup && FindDeviceById(_vm?.Selected?.Devices, child.EntityId) != null)
+            {
+                parent.Children.RemoveAt(i);
+            }
+            else if (child.IsGroup)
+            {
+                FilterExistingDevicesRecursively(child);
+            }
+        }
     }
 
     private SmartDevice MapDtoToDevice(ExportedDeviceDto dto)

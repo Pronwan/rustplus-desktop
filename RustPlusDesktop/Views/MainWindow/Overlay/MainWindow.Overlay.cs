@@ -15,6 +15,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using RustPlusDesk.Services;
+using RustPlusDesk.Services.Auth;
+using Supabase.Realtime;
 
 namespace RustPlusDesk.Views;
 
@@ -24,7 +27,7 @@ public partial class MainWindow
 
 private bool _overlayToolsVisible = false;
 
-    // wer ist aktuell ausgewählt als Zeichenwerkzeug?
+    // wer ist aktuell ausgewÃ¤hlt als Zeichenwerkzeug?
     private enum OverlayToolMode { None, Draw, Text, Icon, Erase }
     private OverlayToolMode _currentTool = OverlayToolMode.None;
 
@@ -36,7 +39,7 @@ private bool _overlayToolsVisible = false;
     private double _textSize = 16.0;
     private string _currentIconPath = "pack://application:,,,/Assets/icons/map-icons/base1.png";
 
-    // Für Draggen von platzierten Icons/Text
+    // FÃ¼r Draggen von platzierten Icons/Text
     private FrameworkElement? _draggingElement = null;
     private Point _dragOffset;
 
@@ -50,6 +53,9 @@ private bool _overlayToolsVisible = false;
 
     // pro Spieler: Liste ALLER FrameworkElements (Polylines, Icons, Text) aus seinem Overlay
     private readonly Dictionary<ulong, List<FrameworkElement>> _playerOverlayElements = new();
+
+    // Live-Polling Timer für sichtbare Teammate-Overlays
+    private System.Windows.Threading.DispatcherTimer? _overlayPollTimer;
 
 
 
@@ -89,7 +95,7 @@ private bool _overlayToolsVisible = false;
                 Width = 32,
                 Height = 32,
                 Stretch = Stretch.UniformToFill,
-                Source = tm.Avatar ?? GetPlaceholderAvatar(), // falls Avatar noch lädt
+                Source = tm.Avatar ?? GetPlaceholderAvatar(), // falls Avatar noch lÃ¤dt
                 SnapsToDevicePixels = true
             };
 
@@ -100,7 +106,7 @@ private bool _overlayToolsVisible = false;
 
     private ImageSource GetPlaceholderAvatar()
     {
-        // Kannst du schöner machen (graues Quadrat, Fragezeichen, etc.)
+        // Kannst du schÃ¶ner machen (graues Quadrat, Fragezeichen, etc.)
         var dv = new DrawingVisual();
         using (var dc = dv.RenderOpen())
         {
@@ -132,6 +138,11 @@ private bool _overlayToolsVisible = false;
                     fe.Visibility = Visibility.Collapsed;
             }
 
+            // Stop the poll timer if no more teammates are visible
+            bool anyTeammates = _visibleOverlayOwners.Any(id => id != _mySteamId);
+            if (!anyTeammates)
+                StopOverlayPollTimer();
+
             RebuildOverlayTeamBar();
             return;
         }
@@ -140,6 +151,10 @@ private bool _overlayToolsVisible = false;
         AppendLog($"[overlay/ui] {steamId} currently NOT visible -> showing / (re)loading if needed");
 
         _visibleOverlayOwners.Add(steamId);
+
+        // Start live-poll timer when a teammate (not ourselves) becomes visible
+        if (steamId != _mySteamId)
+            StartOverlayPollTimer();
 
         var localPath = GetOverlayJsonPathForPlayerServer(steamId);
         bool hadLocalBefore = File.Exists(localPath);
@@ -159,7 +174,7 @@ private bool _overlayToolsVisible = false;
         AppendLog($"[overlay/ui] alreadyBuiltInMemory={alreadyBuiltInMemory} " +
                   $"(count={(existingList?.Count ?? 0)})");
 
-        // 3. Müssen wir neu bauen?
+        // 3. MÃ¼ssen wir neu bauen?
         bool needRebuild = !alreadyBuiltInMemory || serverGaveNewData;
         AppendLog($"[overlay/ui] needRebuild={needRebuild}");
 
@@ -240,7 +255,7 @@ private bool _overlayToolsVisible = false;
 
         MaterializeOverlayForPlayer(steamId, data, editable);
 
-        // Nach MaterializeOverlayForPlayer weißt du,
+        // Nach MaterializeOverlayForPlayer weiÃŸt du,
         // wie viele Elemente der Spieler jetzt wirklich auf dem Canvas hat:
         if (_playerOverlayElements.TryGetValue(steamId, out var listBuilt))
         {
@@ -248,46 +263,50 @@ private bool _overlayToolsVisible = false;
         }
     }
 
-    private async Task<bool> TryFetchAndUpdateOverlayAsync(ulong steamId)
+
+    private async Task<bool> TryFetchAndUpdateOverlayAsync(ulong steamId, bool silent = false)
     {
         try
         {
             var remoteData = await OverlayDataModule.FetchOverlayFromServerAsync(GetServerKey(), steamId);
             if (remoteData == null)
             {
-                AppendLog($"[overlay/net] {steamId}: no remote overlay available");
+                // Only log when not in silent poll mode (i.e. explicit button click)
+                if (!silent)
+                    AppendLog($"[overlay/net] {steamId}: no remote overlay found.");
                 return false;
             }
 
             if (steamId == _mySteamId)
             {
                 var localData = OverlayDataModule.LoadLocalOverlay(GetServerKey(), steamId);
-                long localTs = localData?.LastUpdatedUnix ?? 0;
+                long localTs  = localData?.LastUpdatedUnix ?? 0;
                 long remoteTs = remoteData.LastUpdatedUnix;
-
-                AppendLog($"[overlay/net] self {steamId}: remoteTs={remoteTs}, localTs={localTs}");
 
                 if (remoteTs > localTs)
                 {
                     OverlayDataModule.SaveLocalOverlay(GetServerKey(), steamId, remoteData);
-                    AppendLog($"[overlay/net] self {steamId}: wrote NEWER remote overlay (remote newer)");
+                    if (!silent)
+                        AppendLog($"[overlay/net] self: pulled newer cloud overlay (remote={remoteTs} > local={localTs})");
                     return true;
                 }
                 else
                 {
-                    AppendLog($"[overlay/net] self {steamId}: kept LOCAL overlay (local newer or same)");
+                    if (!silent)
+                        AppendLog($"[overlay/net] self: local overlay is newer or same, kept local.");
                     return false;
                 }
             }
             else
             {
-                AppendLog($"[overlay/net] teammate {steamId}: wrote remote overlay (always trust remote)");
+                // For teammates, always trust remote (they painted it)
                 return true;
             }
         }
         catch (Exception ex)
         {
-            AppendLog("[overlay/net][err] fetch error for " + steamId + ": " + ex.Message);
+            if (!silent)
+                AppendLog("[overlay/net][err] fetch error for " + steamId + ": " + ex.Message);
             return false;
         }
     }
@@ -349,7 +368,7 @@ private bool _overlayToolsVisible = false;
     // Folgende Methode ersetzt durch LoadOverlayFromDiskForPlayer --
     private void LoadOwnOverlayFromJson()
     {
-        // Falls wir für mich (_mySteamId) schon Elemente gebaut haben, nicht nochmal
+        // Falls wir fÃ¼r mich (_mySteamId) schon Elemente gebaut haben, nicht nochmal
         if (_playerOverlayElements.ContainsKey(_mySteamId) &&
             _playerOverlayElements[_mySteamId].Count > 0)
         {
@@ -360,7 +379,7 @@ private bool _overlayToolsVisible = false;
         if (!File.Exists(path))
         {
             // Stelle sicher, dass wir zumindest einen leeren Eintrag haben,
-            // damit spätere Checks nicht glauben "muss noch laden".
+            // damit spÃ¤tere Checks nicht glauben "muss noch laden".
             _playerOverlayElements[_mySteamId] = new List<FrameworkElement>();
             return;
         }
@@ -373,7 +392,7 @@ private bool _overlayToolsVisible = false;
         }
         catch
         {
-            // kaputte Datei? -> wir tun so, als gäbe es keine
+            // kaputte Datei? -> wir tun so, als gÃ¤be es keine
             data = null;
         }
 
@@ -431,7 +450,7 @@ private bool _overlayToolsVisible = false;
                 Width = icon.Width,
                 Height = icon.Height,
                 RenderTransformOrigin = new Point(0.5, 0.5),
-                IsHitTestVisible = true, // meine Icons/Text darf ich draggen und löschen
+                IsHitTestVisible = true, // meine Icons/Text darf ich draggen und lÃ¶schen
                 Opacity = 1.0,
                 Tag = new OverlayTag
                 {
@@ -533,7 +552,7 @@ private bool _overlayToolsVisible = false;
         }
 
         // 5) Drag bestehender Elemente (wenn kein spezielles Tool aktiv ist,
-        //    oder wir explizit Drag erlauben bei Icon/Text in anderen Tools außer Draw/Text/Icon/Erase)
+        //    oder wir explizit Drag erlauben bei Icon/Text in anderen Tools auÃŸer Draw/Text/Icon/Erase)
         if (e.LeftButton == MouseButtonState.Pressed &&
             _currentTool == OverlayToolMode.None)
         {
@@ -541,7 +560,7 @@ private bool _overlayToolsVisible = false;
             return;
         }
 
-        // 6) Rechtsklick zum Löschen von Icons/Text-Blöcken
+        // 6) Rechtsklick zum LÃ¶schen von Icons/Text-BlÃ¶cken
         if (e.ChangedButton == MouseButton.Right)
         {
             TryDeleteElementAt(mapPos);
@@ -557,7 +576,7 @@ private bool _overlayToolsVisible = false;
         {
             if (Overlay.Children[i] is FrameworkElement fe)
             {
-                // nur wenn mir gehörend, sonst Finger weg
+                // nur wenn mir gehÃ¶rend, sonst Finger weg
                 if (fe.Tag is OverlayTag meta && meta.OwnerSteamId == _mySteamId && meta.IsUserEditable)
                 {
                     if (fe is Polyline line)
@@ -653,7 +672,7 @@ private bool _overlayToolsVisible = false;
         }
     }
 
-    private const double USER_ICON_BASE_SIZE = 24;   // hier stellst du “doppelt so groß” ein
+    private const double USER_ICON_BASE_SIZE = 24;   // hier stellst du â€œdoppelt so groÃŸâ€  ein
     private const double USER_ICON_MIN_SCALE = 0.2;  // nicht kleiner werden
     private const double USER_ICON_MAX_SCALE = 2.0;   // nicht riesig werden
 
@@ -663,10 +682,10 @@ private bool _overlayToolsVisible = false;
         // 1. aktuellen effektiven Zoom holen (das ist der gleiche wie bei Shops/Playern)
         double eff = GetEffectiveZoom();
 
-        // 2. “wünschte” Skalierung aus Zoom ableiten
+        // 2. â€œwÃ¼nschteâ€  Skalierung aus Zoom ableiten
         double scale = 1.0 / eff;
 
-        // 3. auf min / max clampen – GENAU wie im Refresh
+        // 3. auf min / max clampen â€“ GENAU wie im Refresh
         if (scale < USER_ICON_MIN_SCALE)
             scale = USER_ICON_MIN_SCALE;
         if (scale > USER_ICON_MAX_SCALE)
@@ -688,7 +707,7 @@ private bool _overlayToolsVisible = false;
             }
         };
 
-        // 5. Canvas-Position IMMER aus der Basisgröße ableiten
+        // 5. Canvas-Position IMMER aus der BasisgrÃ¶ÃŸe ableiten
         Canvas.SetLeft(img, mapPos.X - USER_ICON_BASE_SIZE / 2);
         Canvas.SetTop(img, mapPos.Y - USER_ICON_BASE_SIZE / 2);
 
@@ -696,7 +715,7 @@ private bool _overlayToolsVisible = false;
         Overlay.Children.Add(img);
         RegisterElementForOwner(_mySteamId, img);
 
-        // 7. speichern (nimmt BASIS-W/H, nicht die skalierten Pixel – das ist korrekt!)
+        // 7. speichern (nimmt BASIS-W/H, nicht die skalierten Pixel â€“ das ist korrekt!)
         SaveOwnOverlayToJson();
     }
 
@@ -718,7 +737,7 @@ private bool _overlayToolsVisible = false;
         if (scale < USER_ICON_MIN_SCALE)
             scale = USER_ICON_MIN_SCALE;
 
-        // OBERgrenze – hier kommt dein maxScale hin
+        // OBERgrenze â€“ hier kommt dein maxScale hin
         if (scale > USER_ICON_MAX_SCALE)
             scale = USER_ICON_MAX_SCALE;
 
@@ -726,7 +745,7 @@ private bool _overlayToolsVisible = false;
         {
             if (child is Image img && img.Tag is OverlayTag meta)
             {
-                // nur Icons anfassen – Strokes/Text bleiben wie sie sind
+                // nur Icons anfassen â€“ Strokes/Text bleiben wie sie sind
                 // wenn du GANZ sicher sein willst, dass es wirklich ein "Overlay-Icon" ist:
                 // if (meta.BaseSize is null) continue;
 
@@ -766,7 +785,7 @@ private bool _overlayToolsVisible = false;
         {
             if (Overlay.Children[i] is FrameworkElement fe)
             {
-                // nur meine editierbaren Elemente dürfen gezogen werden
+                // nur meine editierbaren Elemente dÃ¼rfen gezogen werden
                 if (fe.Tag is not OverlayTag meta) continue;
                 if (meta.OwnerSteamId != _mySteamId) continue;
                 if (!meta.IsUserEditable) continue;
@@ -792,7 +811,7 @@ private bool _overlayToolsVisible = false;
 
     private void TryDeleteElementAt(Point mapPos)
     {
-        // Lösche Icon/Text bei Rechtsklick, aber nur mein eigenes Zeug
+        // LÃ¶sche Icon/Text bei Rechtsklick, aber nur mein eigenes Zeug
         for (int i = Overlay.Children.Count - 1; i >= 0; i--)
         {
             if (Overlay.Children[i] is FrameworkElement fe)
@@ -800,7 +819,7 @@ private bool _overlayToolsVisible = false;
                 // Lines (Polyline) ignorieren wir hier weiter, die macht Eraser.
                 if (fe is Polyline) continue;
 
-                // Besitz prüfen
+                // Besitz prÃ¼fen
                 if (fe.Tag is not OverlayTag meta) continue;
                 if (meta.OwnerSteamId != _mySteamId) continue;
                 if (!meta.IsUserEditable) continue;
@@ -867,7 +886,7 @@ private bool _overlayToolsVisible = false;
         }
     }
 
-    // Rechtsklick -> löschen
+    // Rechtsklick -> lÃ¶schen
     private void Icon_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (sender is FrameworkElement fe)
@@ -958,7 +977,7 @@ private bool _overlayToolsVisible = false;
             mine.Clear();
         }
 
-        // 2. Sicherheits-Cleanup für evtl. übriggebliebene Ownerelemente
+        // 2. Sicherheits-Cleanup fÃ¼r evtl. Ã¼briggebliebene Ownerelemente
         var cleanup = new List<UIElement>();
         foreach (var child in Overlay.Children)
         {
@@ -972,22 +991,93 @@ private bool _overlayToolsVisible = false;
         foreach (var dead in cleanup)
             Overlay.Children.Remove(dead);
 
-        // 3. Neues Overlay (jetzt leer) speichern,
-        //    dabei Devices aus der bestehenden Datei beibehalten
+        // 3. Neues leeres Overlay lokal speichern (Devices beibehalten)
         SaveOwnOverlayToJson();
 
-        // 4. Leeres Overlay + Devices an Team hochladen
-        UploadOwnOverlayToTeam();
+        // 4. Expliziten Wipe in die Cloud pushen (explicitWipe=true umgeht den Wipe-Schutz)
+        if (TrackingService.CloudSyncEnabled && Services.Auth.SupabaseAuthManager.Client != null)
+        {
+            var sk  = GetServerKey();
+            var sid = _mySteamId;
+            var emptyWithDevices = BuildCurrentOverlaySaveDataForMe(); // Strokes/Icons/Texts=leer, Devices bleiben
+            emptyWithDevices.Devices.Clear();
+            if (_vm.Selected?.Devices != null)
+            {
+                foreach (var dev in _vm.Selected.Devices)
+                    emptyWithDevices.Devices.Add(MapDeviceToDto(dev));
+            }
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await OverlayDataModule.UploadOverlayAsync(sk, sid, emptyWithDevices, explicitWipe: true);
+                    Dispatcher.Invoke(() => AppendLog("[overlay/cloud] Cleared overlay synced to cloud."));
+                }
+                catch (Exception ex)
+                {
+                    Dispatcher.Invoke(() => AppendLog("[overlay/cloud] Clear-wipe failed: " + ex.Message));
+                }
+            });
+        }
     }
 
     private void ToolUploadButton_Click(object sender, RoutedEventArgs e)
     {
-        ShowUploadConsent(() => UploadOwnOverlayToTeam());
+        if (TrackingService.CloudSyncEnabled)
+        {
+            // Disable sync
+            TrackingService.CloudSyncEnabled = false;
+            TrackingService.UploadConsentGiven = false;
+            _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(false);
+        }
+        else
+        {
+            // Enable sync
+            if (!TrackingService.UploadConsentGiven)
+            {
+                var dlg = new CloudDisclaimerWindow { Owner = this };
+                dlg.ShowDialog();
+                if (!dlg.CloudSyncAccepted)
+                {
+                    TrackingService.CloudSyncEnabled = false;
+                    TrackingService.UploadConsentGiven = false;
+                    _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(false);
+                    UpdateCloudSyncUI();
+                    return;
+                }
+                TrackingService.CloudSyncEnabled = true;
+                TrackingService.UploadConsentGiven = true;
+                _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(true);
+            }
+            else
+            {
+                TrackingService.CloudSyncEnabled = true;
+                _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(true);
+            }
+
+            // Immediately sync current state
+            UploadOwnOverlayToTeam();
+        }
+        UpdateCloudSyncUI();
+    }
+
+    public void UpdateCloudSyncUI()
+    {
+        if (TrackingService.CloudSyncEnabled)
+        {
+            ToolUploadButton.Background = new SolidColorBrush(Colors.Green);
+            BtnDevicesExport.Background = new SolidColorBrush(Colors.Green);
+        }
+        else
+        {
+            ToolUploadButton.Background = new SolidColorBrush(Color.FromRgb(232, 97, 26)); // Red/Orange
+            BtnDevicesExport.Background = new SolidColorBrush(Color.FromRgb(232, 97, 26)); // Red/Orange
+        }
     }
 
     // private void SaveOwnOverlayToPng()
     // {
-    // 1. Zielgröße bestimmen
+    // 1. ZielgrÃ¶ÃŸe bestimmen
     //     int pixelW = (int)ImgMap.Source.Width;
     //int pixelH = (int)ImgMap.Source.Height;
 
@@ -1009,7 +1099,7 @@ private bool _overlayToolsVisible = false;
     //          continue;
     //     }
 
-    // ansonsten klonen wir "oberflächlich":
+    // ansonsten klonen wir "oberflÃ¤chlich":
     //    UIElement clone = CloneOverlayElementForExport(child);
     //          if (clone != null)
     //exportCanvas.Children.Add(clone);
@@ -1094,7 +1184,7 @@ private bool _overlayToolsVisible = false;
             Style = (Style)FindResource("DarkContextMenu")
         };
 
-        // Farbe ändern (nur ein Beispiel)
+        // Farbe Ã¤ndern (nur ein Beispiel)
         var miRed = new MenuItem { Header = "Red" };
         miRed.Click += (_, __) => { _drawColor = Colors.Red; };
         var miGreen = new MenuItem { Header = "Green" };
@@ -1188,6 +1278,12 @@ private bool _overlayToolsVisible = false;
     {
         try
         {
+            if (!_ownCloudRestoreReady)
+            {
+                AppendLog("[overlay/cloud] Upload skipped until cloud restore is complete.");
+                return;
+            }
+
             // optional, aber sinnvoll: sicherstellen, dass die lokale Datei "aktuell" ist
             try
             {
@@ -1195,18 +1291,18 @@ private bool _overlayToolsVisible = false;
             }
             catch { /* nicht kritisch */ }
 
-            // 0) vorhandene JSON (für Devices) einlesen
-            var existing = OverlayDataModule.LoadLocalOverlay(GetServerKey(), _mySteamId);
-
+            // 0) vorhandene JSON (fÃ¼r Devices) einlesen
             // 1) aktuelles Overlay aus dem Canvas bauen
             var data = BuildCurrentOverlaySaveDataForMe();
 
-            // 2) Devices aus bestehender Datei übernehmen (falls vorhanden)
-            if (existing?.Devices != null && existing.Devices.Count > 0)
+            // 2) Devices aus unserem aktuellen Profil (Authoritative List) uebernehmen!
+            data.Devices.Clear();
+            if (_vm.Selected?.Devices != null)
             {
-                data.Devices.Clear(); // falls BuildCurrentOverlaySaveDataForMe() eine leere Liste angelegt hat
-                foreach (var dev in existing.Devices)
-                    data.Devices.Add(dev);
+                foreach (var dev in _vm.Selected.Devices)
+                {
+                    data.Devices.Add(MapDeviceToDto(dev));
+                }
             }
 
             // 3) modularer Upload
@@ -1323,13 +1419,13 @@ private bool _overlayToolsVisible = false;
         double wx = p.X - a.X;
         double wy = p.Y - a.Y;
 
-        // Projektion t = (AP·AB)/|AB|² clamped [0..1]
+        // Projektion t = (APÂ·AB)/|AB|Â² clamped [0..1]
         double denom = (vx * vx + vy * vy);
         double t = denom <= 0.000001 ? 0.0 : ((wx * vx + wy * vy) / denom);
         if (t < 0.0) t = 0.0;
         else if (t > 1.0) t = 1.0;
 
-        // Nächster Punkt auf AB
+        // NÃ¤chster Punkt auf AB
         double cx = a.X + t * vx;
         double cy = a.Y + t * vy;
 
@@ -1363,7 +1459,7 @@ private bool _overlayToolsVisible = false;
     {
         if (_currentTool == modeFromButton)
         {
-            // toggle off -> zurück in Pan/Zoom Modus
+            // toggle off -> zurÃ¼ck in Pan/Zoom Modus
             _currentTool = OverlayToolMode.None;
         }
         else
@@ -1381,7 +1477,7 @@ private bool _overlayToolsVisible = false;
     }
     private void UpdateToolButtonHighlights()
     {
-        // Erstmal alle zurücksetzen
+        // Erstmal alle zurÃ¼cksetzen
         foreach (var kv in _toolButtons)
         {
             var btn = kv.Value;
@@ -1403,26 +1499,46 @@ private bool _overlayToolsVisible = false;
         }
     }
 
-private void SaveOwnOverlayToJson()
+    private void SaveOwnOverlayToJson()
     {
         try
         {
-            // 0) vorhandene Datei einlesen (falls vorhanden), um Devices zu retten
-            var existing = OverlayDataModule.LoadLocalOverlay(GetServerKey(), _mySteamId);
-
-            // 1) aktuelles Overlay aus dem Canvas bauen (ohne Devices)
+            AppendLog($"[overlay/diag] SaveOwnOverlayToJson triggered. CloudSyncEnabled: {TrackingService.CloudSyncEnabled}, IsAuthenticated: {RustPlusDesk.Services.Auth.SupabaseAuthManager.IsAuthenticated}");
+            // 1) aktuelles Overlay aus dem Canvas bauen
             var data = BuildCurrentOverlaySaveDataForMe();
 
-            // 2) Devices aus bestehender Datei übernehmen (falls vorhanden)
-            if (existing?.Devices != null && existing.Devices.Count > 0)
+            // 2) Devices aus der Authoritative List (Profile) uebernehmen
+            data.Devices.Clear();
+            if (_vm.Selected?.Devices != null)
             {
-                data.Devices.Clear();
-                foreach (var dev in existing.Devices)
-                    data.Devices.Add(dev);
+                foreach (var dev in _vm.Selected.Devices)
+                {
+                    data.Devices.Add(MapDeviceToDto(dev));
+                }
             }
 
             // 3) modularer Save
             OverlayDataModule.SaveLocalOverlay(GetServerKey(), _mySteamId, data);
+
+            // 4) Immediate Cloud upload if enabled (anon key works, no Discord needed)
+            if (TrackingService.CloudSyncEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.Client != null)
+            {
+                var sk = GetServerKey();
+                var sid = _mySteamId;
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await OverlayDataModule.UploadOverlayAsync(sk, sid, data);
+                        Dispatcher.Invoke(() => AppendLog("[overlay/cloud] Canvas successfully synced."));
+                    }
+                    catch (Exception ex)
+                    {
+                        Dispatcher.Invoke(() => AppendLog("[overlay/cloud] Sync failed: " + ex.Message));
+                    }
+                });
+            }
+
         }
         catch (Exception ex)
         {
@@ -1432,7 +1548,7 @@ private void SaveOwnOverlayToJson()
 
     private string GetServerKey()
     {
-        // simplest first pass: nimm Host-Port vom aktuell ausgewählten Server
+        // simplest first pass: nimm Host-Port vom aktuell ausgewÃ¤hlten Server
         var prof = _vm?.Selected;
         if (prof == null) return "unknown-server";
 
@@ -1448,7 +1564,7 @@ private void SaveOwnOverlayToJson()
 
     private void ClearUserOverlayElements()
     {
-        // 1) Sammeln, nicht während foreach löschen
+        // 1) Sammeln, nicht wÃ¤hrend foreach lÃ¶schen
         var toRemove = new List<UIElement>();
 
         foreach (var child in Overlay.Children)
@@ -1472,7 +1588,7 @@ private void SaveOwnOverlayToJson()
     {
         public ulong OwnerSteamId;
         public bool IsUserEditable;
-        public double? BaseSize;   // nur für Icons, wird NICHT gespeichert
+        public double? BaseSize;   // nur fÃ¼r Icons, wird NICHT gespeichert
     }
 
     // Liest lokales Overlay (mich) als OverlaySaveData
@@ -1558,11 +1674,11 @@ private void SaveOwnOverlayToJson()
         File.WriteAllText(path, json);
     }
 
-    // baut aus einem OverlaySaveData echte UI-Elemente auf der Canvas für einen Spieler
+    // baut aus einem OverlaySaveData echte UI-Elemente auf der Canvas fÃ¼r einen Spieler
     // und cached sie in _playerOverlayElements[steamId]
     private void MaterializeOverlayForPlayer(ulong steamId, OverlaySaveData data, bool editableIfMine)
     {
-        // falls schon Elemente für den Spieler existieren -> erstmal killen
+        // falls schon Elemente fÃ¼r den Spieler existieren -> erstmal killen
         if (_playerOverlayElements.TryGetValue(steamId, out var existing))
         {
             foreach (var el in existing)
@@ -1666,7 +1782,7 @@ private void SaveOwnOverlayToJson()
         }
     }
 
-    private async Task<bool> TryFetchOverlayForPlayerFromServerAsync(ulong steamId)
+    private async Task<bool> TryFetchOverlayForPlayerFromServerAsync(ulong steamId, bool silent = false)
     {
         try
         {
@@ -1677,12 +1793,14 @@ private void SaveOwnOverlayToJson()
             bool editable = (steamId == _mySteamId);
             MaterializeOverlayForPlayer(steamId, data, editable);
 
-            AppendLog("[overlay] Overlay loaded from " + steamId + ".");
+            if (!silent)
+                AppendLog("[overlay] Overlay loaded from " + steamId + ".");
             return true;
         }
         catch (Exception ex)
         {
-            AppendLog("[overlay] Fetch Error: " + ex.Message);
+            if (!silent)
+                AppendLog("[overlay] Fetch Error: " + ex.Message);
             return false;
         }
     }
@@ -1708,5 +1826,220 @@ private void SaveOwnOverlayToJson()
             if (!_playerOverlayElements.ContainsKey(steamId))
                 _playerOverlayElements[steamId] = new List<FrameworkElement>();
         }
+    }
+
+    /// <summary>
+    /// Smart init for own overlay on server connect:
+    /// 1) Load local JSON
+    /// 2) Fetch from Cloud (anon key works, no Discord needed)
+    /// 3) Cloud newer → use Cloud; Local newer → upload Local to Cloud; Both empty → nothing
+    /// </summary>
+    private async Task InitOwnOverlayAsync()
+    {
+        try
+        {
+            var serverKey = GetServerKey();
+            var localData = OverlayDataModule.LoadLocalOverlay(serverKey, _mySteamId);
+
+            bool localHasContent = localData != null
+                && ((localData.Strokes?.Count ?? 0) > 0
+                 || (localData.Icons?.Count   ?? 0) > 0
+                 || (localData.Texts?.Count   ?? 0) > 0
+                 || (localData.Devices?.Count ?? 0) > 0);
+
+            OverlaySaveData? cloudData = null;
+            if (TrackingService.CloudSyncEnabled && Services.Auth.SupabaseAuthManager.Client != null)
+            {
+                try { cloudData = await OverlayDataModule.FetchOverlayFromServerAsync(serverKey, _mySteamId); }
+                catch { /* offline or error – ignore */ }
+            }
+
+            if (cloudData?.Devices?.Count > 0 && localData != null)
+            {
+                var merged = MergeMissingCloudDevicesInto(localData, cloudData);
+                if (merged > 0)
+                {
+                    AppendLog($"[dev/init] Merged {merged} missing cloud devices into local cache before sync decisions.");
+                    OverlayDataModule.SaveLocalOverlay(serverKey, _mySteamId, localData);
+                    localHasContent = true;
+                }
+            }
+
+            if (cloudData == null
+                && OverlayDataModule.LastFetchHadError
+                && TrackingService.CloudSyncEnabled
+                && Services.Auth.SupabaseAuthManager.Client != null)
+            {
+                AppendLog("[overlay/init] Cloud fetch failed; device autosync stays paused to avoid overwriting cloud data.");
+                return;
+            }
+
+            bool cloudHasContent = cloudData != null
+                && ((cloudData.Strokes?.Count ?? 0) > 0
+                 || (cloudData.Icons?.Count   ?? 0) > 0
+                 || (cloudData.Texts?.Count   ?? 0) > 0
+                 || (cloudData.Devices?.Count ?? 0) > 0);
+
+            OverlaySaveData? toUse;
+
+            if (!localHasContent && cloudHasContent)
+            {
+                // Fresh install or cleared local → restore from Cloud
+                AppendLog("[overlay/init] Local empty, Cloud has content → restoring from Cloud.");
+                toUse = cloudData!;
+                OverlayDataModule.SaveLocalOverlay(serverKey, _mySteamId, toUse);
+            }
+            else if (localHasContent && cloudHasContent)
+            {
+                long localTs = localData!.LastUpdatedUnix;
+                long cloudTs = cloudData!.LastUpdatedUnix;
+
+                if (cloudTs > localTs)
+                {
+                    AppendLog($"[overlay/init] Cloud newer ({cloudTs} > {localTs}) → pulling Cloud.");
+                    toUse = cloudData;
+                    OverlayDataModule.SaveLocalOverlay(serverKey, _mySteamId, toUse);
+                }
+                else
+                {
+                    AppendLog($"[overlay/init] Local newer or same ({localTs} >= {cloudTs}) → pushing Local to Cloud.");
+                    toUse = localData!;
+                    // Push local to cloud (fire and forget, respects limits)
+                    _ = Task.Run(() => OverlayDataModule.UploadOverlayAsync(serverKey, _mySteamId, toUse));
+                }
+            }
+            else if (localHasContent)
+            {
+                // Local has content, cloud empty → push local up
+                AppendLog("[overlay/init] Local has content, Cloud empty → pushing to Cloud.");
+                toUse = localData!;
+                _ = Task.Run(() => OverlayDataModule.UploadOverlayAsync(serverKey, _mySteamId, toUse));
+            }
+            else
+            {
+                // Both empty → nothing to do
+                AppendLog("[overlay/init] Both local and cloud are empty. Starting fresh.");
+                _playerOverlayElements[_mySteamId] = new List<FrameworkElement>();
+                _ownCloudRestoreReady = true;
+                return;
+            }
+
+            Dispatcher.Invoke(() =>
+            {
+                RestoreOwnDevicesFromCloudIfMissing(toUse);
+                bool editable = true;
+                MaterializeOverlayForPlayer(_mySteamId, toUse, editable);
+            });
+            _ownCloudRestoreReady = true;
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[overlay/init] Error: " + ex.Message);
+            if (!_playerOverlayElements.ContainsKey(_mySteamId))
+                _playerOverlayElements[_mySteamId] = new List<FrameworkElement>();
+        }
+        finally
+        {
+            if (!TrackingService.CloudSyncEnabled || Services.Auth.SupabaseAuthManager.Client == null)
+                _ownCloudRestoreReady = true;
+        }
+    }
+
+    private void RestoreOwnDevicesFromCloudIfMissing(OverlaySaveData? data)
+    {
+        if (data?.Devices == null || data.Devices.Count == 0 || _vm.Selected?.Devices == null)
+            return;
+
+        int imported = 0;
+        foreach (var dto in data.Devices)
+        {
+            if (!dto.IsGroup && FindDeviceById(_vm.Selected.Devices, dto.EntityId) != null)
+                continue;
+
+            _vm.Selected.Devices.Add(MapDtoToDeviceFiltered(dto));
+            imported++;
+        }
+
+        if (imported <= 0) return;
+
+        _vm.NotifyDevicesChanged();
+        _vm.Save();
+        AppendLog($"[dev/init] Restored {imported} own devices from cloud.");
+    }
+
+    private int MergeMissingCloudDevicesInto(OverlaySaveData localData, OverlaySaveData cloudData)
+    {
+        if (cloudData.Devices == null || cloudData.Devices.Count == 0)
+            return 0;
+
+        localData.Devices ??= new List<ExportedDeviceDto>();
+        int added = 0;
+        foreach (var cloudDevice in cloudData.Devices)
+        {
+            if (ContainsExportedDevice(localData.Devices, cloudDevice))
+                continue;
+
+            localData.Devices.Add(cloudDevice);
+            added++;
+        }
+
+        if (added > 0 && cloudData.LastUpdatedUnix > localData.LastUpdatedUnix)
+            localData.LastUpdatedUnix = cloudData.LastUpdatedUnix;
+
+        return added;
+    }
+
+    private static bool ContainsExportedDevice(IEnumerable<ExportedDeviceDto> existing, ExportedDeviceDto candidate)
+    {
+        foreach (var item in existing)
+        {
+            if (!candidate.IsGroup && !item.IsGroup && item.EntityId == candidate.EntityId)
+                return true;
+
+            if (candidate.IsGroup && item.IsGroup &&
+                string.Equals(item.Name, candidate.Name, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(item.Alias, candidate.Alias, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            if (item.Children != null && ContainsExportedDevice(item.Children, candidate))
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>Starts the 3-second live-polling timer for visible teammate overlays.</summary>
+    private void StartOverlayPollTimer()
+    {
+        if (_overlayPollTimer != null) return; // already running
+
+        _overlayPollTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            // 3-second interval: frequent enough to feel live, not so fast it spams logs/API
+            Interval = TimeSpan.FromSeconds(3)
+        };
+        _overlayPollTimer.Tick += async (_, __) =>
+        {
+            // Only poll if Cloud Sync is active and there are visible teammates (not ourselves)
+            if (!TrackingService.CloudSyncEnabled) return;
+            var teammates = _visibleOverlayOwners.Where(id => id != _mySteamId).ToList();
+            foreach (var sid in teammates)
+            {
+                try { await TryFetchOverlayForPlayerFromServerAsync(sid, silent: true); }
+                catch { /* ignore individual errors */ }
+            }
+        };
+
+        _overlayPollTimer.Start();
+        AppendLog("[overlay/poll] Teammate overlay live-polling started (3s interval).");
+    }
+
+    /// <summary>Stops the teammate overlay poll timer (call on disconnect or all teammates hidden).</summary>
+    public void StopOverlayPollTimer()
+    {
+        if (_overlayPollTimer == null) return;
+        _overlayPollTimer.Stop();
+        _overlayPollTimer = null;
+        AppendLog("[overlay/poll] Teammate overlay live-polling stopped.");
     }
 }

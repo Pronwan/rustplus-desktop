@@ -1857,4 +1857,52 @@
   <data name="TranslateViaGoogle" xml:space="preserve">
     <value>ترجمة عبر جوجل</value>
   </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>مزايا الداعم (Supporter)</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>يتوفر نظريًا المزيد من الأجهزة للمزامنة، ولكن هذا يتطلب اشتراك داعم.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>تتوفر نظريًا المزيد من علامات الخريطة والقواعد للمزامنة، ولكن هذا يتطلب اشتراك داعم.</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>الخصوصية والمزامنة السحابية</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>لتمكين المزامنة الحية لتراكبات الخرائط والأجهزة الذكية، يجب إرسال البيانات إلى سحابتنا الآمنة. نجمع أيضًا بيانات استخدام مجهولة.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>قبول وتمكين السحابة</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>رفض السحابة</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>ربط ديسكورد لمزايا الداعمين</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>قطع اتصال ديسكورد</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>جاري الاتصال...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>المزامنة السحابية والتحميل المباشر</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>قم بالتحميل المباشر ومزامنة الأجهزة الذكية وتراكبات الخرائط بأمان في السحابة.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>إعدادات الداعم</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>هذه الميزات متاحة حصريًا للداعمين والمطورين لدينا عبر تسجيل الدخول إلى ديسكورد.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>تكامل ديسكورد المتقدم (ويب هوك، تنبيهات صوتية)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>تكامل تنبيهات تيليجرام</value>
+  </data>
 </root>

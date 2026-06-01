@@ -94,6 +94,24 @@ namespace RustPlusDesk.Views
             ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
             SliderMonumentScale.Value = TrackingService.MapMonumentScale;
             SliderMonumentOpacity.Value = TrackingService.MapMonumentOpacity;
+            
+            // Cloud Sync Setting load
+            ChkCloudSync.IsChecked = TrackingService.CloudSyncEnabled;
+
+            // Discord connection state checking
+            if (Services.Auth.SupabaseAuthManager.IsAuthenticated)
+            {
+                BtnDiscordConnect.Content = Properties.Resources.ResourceManager.GetString("DisconnectDiscord") ?? "Disconnect Discord";
+                bool isSupporter = Services.Auth.SupabaseAuthManager.IsPremium;
+                BrdSupporterSettings.IsEnabled = isSupporter;
+                BrdSupporterSettings.Opacity = isSupporter ? 1.0 : 0.5;
+            }
+            else
+            {
+                BtnDiscordConnect.Content = Properties.Resources.ResourceManager.GetString("ConnectDiscord") ?? "Connect Discord for Supporter Benefits";
+                BrdSupporterSettings.IsEnabled = false;
+                BrdSupporterSettings.Opacity = 0.5;
+            }
         }
 
         private void CmbLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -130,8 +148,53 @@ namespace RustPlusDesk.Views
             TrackingService.MapAbbreviateNames = ChkStreamerMode.IsChecked == true;
             TrackingService.MapMonumentScale = SliderMonumentScale.Value;
             TrackingService.MapMonumentOpacity = SliderMonumentOpacity.Value;
+            
+            // Save Cloud Sync setting
+            if (sender == ChkCloudSync)
+            {
+                if (ChkCloudSync.IsChecked == true)
+                {
+                    if (ParentWindow != null)
+                    {
+                        var dlg = new CloudDisclaimerWindow { Owner = ParentWindow };
+                        dlg.ShowDialog();
+                        if (dlg.CloudSyncAccepted)
+                        {
+                            TrackingService.CloudSyncEnabled = true;
+                            TrackingService.UploadConsentGiven = true;
+                            _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(true);
+                        }
+                        else
+                        {
+                            _isSettingsInitialized = false;
+                            ChkCloudSync.IsChecked = false;
+                            _isSettingsInitialized = true;
+                            TrackingService.CloudSyncEnabled = false;
+                            TrackingService.UploadConsentGiven = false;
+                            _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(false);
+                        }
+                    }
+                    else
+                    {
+                        TrackingService.CloudSyncEnabled = true;
+                        TrackingService.UploadConsentGiven = true;
+                        _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(true);
+                    }
+                }
+                else
+                {
+                    TrackingService.CloudSyncEnabled = false;
+                    TrackingService.UploadConsentGiven = false;
+                    _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(false);
+                }
+            }
+            else
+            {
+                TrackingService.CloudSyncEnabled = ChkCloudSync.IsChecked == true;
+            }
 
             ParentWindow?.ApplySettings();
+            ParentWindow?.UpdateCloudSyncUI();
         }
 
         private void BtnCloseSettings_Click(object sender, RoutedEventArgs e)
@@ -242,6 +305,48 @@ namespace RustPlusDesk.Views
                 {
                     ParentWindow.AppendLog(string.Format(Properties.Resources.RestoreErrorLog, ex.Message));
                     MessageBox.Show(string.Format(Properties.Resources.RestoreErrorMessage, ex.Message), Properties.Resources.RestoreFailedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private async void BtnDiscordConnect_Click(object sender, RoutedEventArgs e)
+        {
+            BtnDiscordConnect.IsEnabled = false;
+            
+            if (Services.Auth.SupabaseAuthManager.IsAuthenticated)
+            {
+                BtnDiscordConnect.Content = Properties.Resources.ResourceManager.GetString("DiscordConnecting") ?? "Connecting...";
+                await Services.Auth.SupabaseAuthManager.LogoutAsync();
+                ParentWindow?.AppendLog("[Cloud] Discord disconnected.");
+                BtnDiscordConnect.Content = Properties.Resources.ResourceManager.GetString("ConnectDiscord") ?? "Connect Discord for Supporter Benefits";
+                BtnDiscordConnect.IsEnabled = true;
+                BrdSupporterSettings.IsEnabled = false;
+                BrdSupporterSettings.Opacity = 0.5;
+            }
+            else
+            {
+                ParentWindow?.AppendLog("[Cloud] Launching Discord OAuth login via browser...");
+                BtnDiscordConnect.Content = Properties.Resources.ResourceManager.GetString("DiscordConnecting") ?? "Connecting...";
+                bool success = await Services.Auth.SupabaseAuthManager.LoginWithDiscordAsync();
+                
+                if (success)
+                {
+                    ParentWindow?.AppendLog("[Cloud] Discord connected successfully! Syncing Discord roles...");
+                    BtnDiscordConnect.Content = Properties.Resources.ResourceManager.GetString("DisconnectDiscord") ?? "Disconnect Discord";
+                    BtnDiscordConnect.IsEnabled = true;
+                    
+                    bool isSupporter = Services.Auth.SupabaseAuthManager.IsPremium;
+                    var tier = Services.Auth.SupabaseAuthManager.CurrentTier;
+                    ParentWindow?.AppendLog($"[Cloud] Discord role sync complete. User tier: {tier.ToUpper()} (IsPremium: {isSupporter})");
+                    
+                    BrdSupporterSettings.IsEnabled = isSupporter;
+                    BrdSupporterSettings.Opacity = isSupporter ? 1.0 : 0.5;
+                }
+                else
+                {
+                    ParentWindow?.AppendLog("[Cloud] Discord login failed or cancelled by user.");
+                    BtnDiscordConnect.Content = Properties.Resources.ResourceManager.GetString("ConnectDiscord") ?? "Connect Discord for Supporter Benefits";
+                    BtnDiscordConnect.IsEnabled = true;
                 }
             }
         }

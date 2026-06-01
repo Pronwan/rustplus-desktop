@@ -1884,4 +1884,52 @@ Are you sure you want to continue?</value>
   <data name="TranslateViaGoogle" xml:space="preserve">
     <value>Translate via Google</value>
   </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Privacy &amp; Cloud Sync</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>To enable live syncing for map overlays and smart devices, data must be sent to our secure cloud. We also collect anonymized usage telemetry to improve features.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Accept &amp; Enable Cloud</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Decline Cloud</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Supporter Benefits</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>More devices are theoretically available to sync, but this requires a Supporter subscription.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>More map markers and bases are theoretically available to sync, but this requires a Supporter subscription.</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Connect Discord for Supporter Benefits</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Disconnect Discord</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Connecting...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Cloud Sync &amp; Live Upload</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Live upload and synchronize smart devices and map overlays securely in the cloud.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Supporter Settings</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>These features are exclusively available to our Supporters and Developers via Discord login.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Advanced Discord Integration (Webhooks, Audio Alerts)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Telegram Alerts Integration</value>
+  </data>
 </root>

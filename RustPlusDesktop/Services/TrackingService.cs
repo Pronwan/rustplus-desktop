@@ -118,6 +118,7 @@ public class TrackingSettings
     public Dictionary<string, int> LearnedQueryPorts { get; set; } = new();
     public bool TranslationConsentGiven { get; set; } = false;
     public bool UploadConsentGiven { get; set; } = false;
+    public bool CloudSyncEnabled { get; set; } = false;
 }
 
 
@@ -628,6 +629,12 @@ public static class TrackingService
     {
         get => _settings.UploadConsentGiven;
         set { _settings.UploadConsentGiven = value; SaveDB(); }
+    }
+
+    public static bool CloudSyncEnabled
+    {
+        get => _settings.CloudSyncEnabled;
+        set { _settings.CloudSyncEnabled = value; SaveDB(); }
     }
 
     public static bool AnnounceCargoDocking

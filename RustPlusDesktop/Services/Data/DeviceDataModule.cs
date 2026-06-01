@@ -56,39 +56,84 @@ namespace RustPlusDesk.Services.Data
             return dev;
         }
 
-        public static async Task<int> UploadDevicesSnapshotAsync(string serverKey, ulong steamId, IEnumerable<SmartDevice> devices, OverlaySaveData canvasOverlay)
+        public static async Task<int> UploadDevicesSnapshotAsync(string serverKey, ulong steamId, IEnumerable<SmartDevice> devices, OverlaySaveData canvasOverlay, bool explicitWipe = false)
         {
-            // 1) Set up payload with canvas drawing details
-            var data = new OverlaySaveData
-            {
-                LastUpdatedUnix = DataManager.UnixNow(),
-                Strokes = canvasOverlay?.Strokes ?? new(),
-                Icons = canvasOverlay?.Icons ?? new(),
-                Texts = canvasOverlay?.Texts ?? new()
-            };
-
-            // 2) Add recursive mapped devices
-            data.Devices.Clear();
+            var dtoList = new List<ExportedDeviceDto>();
             foreach (var d in devices)
+                dtoList.Add(MapDeviceToDto(d));
+
+            // Wipe protection: never upload empty device list unless this is an intentional delete.
+            if (dtoList.Count == 0 && !explicitWipe)
             {
-                data.Devices.Add(MapDeviceToDto(d));
+                AppendLog("[dev/cloud] Skipping device upload: list is empty (wipe protection).");
+                return 0;
             }
 
-            // 3) Serialize, validate sizes, encode base64
-            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = false });
-            var rawBytes = Encoding.UTF8.GetBytes(json);
-            if (rawBytes.Length > DataManager.OVERLAY_MAX_BYTES)
-                throw new InvalidOperationException("Device export payload too big (>350KB).");
+            // Freemium check
+            if (Auth.SupabaseAuthManager.Client != null)
+            {
+                bool isPremium = Auth.SupabaseAuthManager.IsPremium;
+                if (!isPremium && dtoList.Count > 10)
+                {
+                    AppendLog($"[dev/cloud] Free tier limit: only 10 devices synced (you have {dtoList.Count}). Connect Discord for unlimited.");
+                    dtoList = dtoList.GetRange(0, 10);
+                }
 
-            var overlayB64 = Convert.ToBase64String(rawBytes);
+                try
+                {
+                    // Upsert directly using OnConflict – no pre-fetch needed.
+                    // Generates a new UUID on insert, keeps existing on conflict.
+                    var devJson = JsonSerializer.Serialize(dtoList, new JsonSerializerOptions { WriteIndented = false });
+                    var model = new SmartDeviceModel
+                    {
+                        Id         = Guid.NewGuid().ToString(),
+                        ServerKey  = serverKey,
+                        SteamId    = steamId.ToString(),
+                        DeviceData = devJson,
+                        UpdatedAt  = DateTime.UtcNow
+                    };
+                    await Auth.SupabaseAuthManager.Client.From<SmartDeviceModel>()
+                        .Upsert(model, new Postgrest.QueryOptions { OnConflict = "server_key, steam_id" });
 
-            // 4) Remote upload
-            await DataManager.UploadPayloadAsync(steamId, serverKey, overlayB64);
+                    AppendLog($"[Cloud] Successfully synced {dtoList.Count} smart devices to Supabase.");
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[Cloud/Error] Syncing devices to Supabase failed: {ex.Message}");
+                }
+            }
 
-            // 5) Local overlay JSON write
-            OverlayDataModule.SaveLocalOverlay(serverKey, steamId, data);
+            // Local JSON: merge devices into existing local overlay to preserve strokes/icons/texts.
+            // Do NOT overwrite drawing data with empty strokes from this sync path.
+            var localData = OverlayDataModule.LoadLocalOverlay(serverKey, steamId)
+                         ?? new OverlaySaveData
+                         {
+                             Strokes         = canvasOverlay?.Strokes ?? new(),
+                             Icons           = canvasOverlay?.Icons   ?? new(),
+                             Texts           = canvasOverlay?.Texts   ?? new(),
+                             LastUpdatedUnix = DataManager.UnixNow()
+                         };
 
-            return data.Devices.Count;
+            localData.Devices.Clear();
+            foreach (var d in dtoList)
+                localData.Devices.Add(d);
+
+            OverlayDataModule.SaveLocalOverlay(serverKey, steamId, localData);
+            return dtoList.Count;
+        }
+
+        private static void AppendLog(string msg)
+        {
+            if (System.Windows.Application.Current != null)
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    if (System.Windows.Application.Current.MainWindow is RustPlusDesk.Views.MainWindow mainWin)
+                    {
+                        mainWin.AppendLog(msg);
+                    }
+                });
+            }
         }
     }
 }

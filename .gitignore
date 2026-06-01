@@ -52,3 +52,4 @@ RustPlusDesktop/Setup.iss
 # Secrets config
 .env
 RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs
+RustPlusDesktop/supabase/.temp/

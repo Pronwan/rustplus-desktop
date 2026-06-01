@@ -1881,4 +1881,52 @@
   <data name="TranslateViaGoogle" xml:space="preserve">
     <value>通过 Google 翻译</value>
   </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Supporter 专属福利</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>理论上可以同步更多设备，但这需要 Supporter 订阅。</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>理论上可以同步更多地图标记和基地，但这需要 Supporter 订阅。</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>隐私与云同步</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>要启用地图覆盖和智能设备的实时同步，必须将数据发送到我们安全的云中。我们还会收集匿名的使用遥测数据。</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>接受并启用云</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>拒绝云</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>连接 Discord 以获得支持者权益</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>断开 Discord 连接</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>正在连接...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>云同步和实时上传</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>在云中安全地实时上传和同步智能设备及地图覆盖。</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>支持者设置</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>这些功能专供我们的支持者 and 开发人员通过 Discord 登录使用。</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>高级 Discord 集成（Webhook、音频警报）</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Telegram 警报集成</value>
+  </data>
 </root>
