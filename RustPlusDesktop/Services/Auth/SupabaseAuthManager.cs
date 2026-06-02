@@ -493,6 +493,25 @@ namespace RustPlusDesk.Services.Auth
             await update.Update();
         }
 
+        public static async Task<(bool IsAdmin, string? ErrorMessage)> CheckIsAdminDetailedAsync()
+        {
+            if (Client == null) return (false, "Supabase client not initialized.");
+            if (Client.Auth?.CurrentSession == null) return (false, "No active Supabase session (Discord login required).");
+            try
+            {
+                if (!await EnsureFreshSessionAsync()) return (false, "Session expired and could not be refreshed.");
+                var result = await Client.Rpc<bool>("is_admin", null);
+                return (result, null);
+            }
+            catch (Exception ex)
+            {
+                string errMsg = ex.Message;
+                if (ex.InnerException != null) errMsg += " -> " + ex.InnerException.Message;
+                AppendLog($"[Cloud/Error] Admin check RPC failed: {errMsg}");
+                return (false, errMsg);
+            }
+        }
+
         private static void AppendLog(string msg)
         {
             if (Application.Current != null)
