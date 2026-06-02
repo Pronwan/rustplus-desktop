@@ -20,6 +20,7 @@ namespace RustPlusDesk.Services.Auth
         public static bool IsPremium { get; private set; }
         public static string CurrentTier { get; private set; } = "free";
         public static string DiscordProviderToken { get; private set; }
+        public static bool IsGuestAuthenticated { get; private set; }
         private static readonly SemaphoreSlim SessionRefreshLock = new SemaphoreSlim(1, 1);
 
         public static async Task InitializeAsync()
@@ -83,8 +84,14 @@ namespace RustPlusDesk.Services.Auth
                     AppendLog($"[Supabase] Session restore error: {authEx.Message}. Cloud sync will run with anon key.");
                 }
 
+                // If no Discord session, try guest handshake auth
+                if (!IsDiscordAuthenticated)
+                {
+                    await TryInitializeGuestAuthAsync();
+                }
+
                 await RefreshUserProfileAsync();
-                AppendLog($"[Supabase] Init complete. IsDiscordAuthenticated={IsDiscordAuthenticated}, IsPremium={IsPremium}");
+                AppendLog($"[Supabase] Init complete. IsDiscordAuthenticated={IsDiscordAuthenticated}, IsGuestAuthenticated={IsGuestAuthenticated}, IsPremium={IsPremium}");
             }
             catch (Exception ex)
             {
@@ -92,14 +99,62 @@ namespace RustPlusDesk.Services.Auth
             }
         }
 
-        /// <summary>True if a Supabase JWT session exists (Discord OAuth). False = anon key mode.</summary>
-        public static bool IsAuthenticated => Client?.Auth?.CurrentSession != null;
+        /// <summary>True if any auth session exists (Discord OAuth or guest handshake).</summary>
+        public static bool IsAuthenticated => IsDiscordAuthenticated || IsGuestAuthenticated;
 
-        /// <summary>Synonym for IsAuthenticated – true only when Discord is connected.</summary>
-        public static bool IsDiscordAuthenticated => IsAuthenticated;
+        /// <summary>True only when Discord OAuth is connected.</summary>
+        public static bool IsDiscordAuthenticated => Client?.Auth?.CurrentSession != null;
 
         public static async Task<bool> EnsureFreshSessionAsync()
         {
+            // Guest JWT refresh — no refresh token, so call the handshake refresh flow
+            if (IsGuestAuthenticated)
+            {
+                try
+                {
+                    if (HandshakeService.HasValidJwt)
+                    {
+                        await SetGuestSessionAsync(HandshakeService.GuestJwt);
+                        return true;
+                    }
+
+                    if (HandshakeService.HasLocalKey)
+                    {
+                        var (success, error) = await HandshakeService.RefreshAsync();
+                        if (success && HandshakeService.GuestJwt != null)
+                        {
+                            await SetGuestSessionAsync(HandshakeService.GuestJwt);
+                            return true;
+                        }
+                        AppendLog($"[Cloud/Guest] Refresh failed: {error}. Re-registering.");
+                    }
+
+                    // Fall back to fresh registration
+                    string steamId = TrackingService.SteamId64;
+                    if (!string.IsNullOrEmpty(steamId) && steamId != "0")
+                    {
+                        var (regSuccess, regError, _) = await HandshakeService.RegisterAsync(steamId);
+                        if (regSuccess && HandshakeService.GuestJwt != null)
+                        {
+                            await SetGuestSessionAsync(HandshakeService.GuestJwt);
+                            return true;
+                        }
+                        AppendLog($"[Cloud/Guest] Re-registration failed: {regError}");
+                    }
+
+                    IsGuestAuthenticated = false;
+                    CurrentTier = "free";
+                    IsPremium = false;
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[Cloud/Guest] Session refresh error: {ex.Message}");
+                    return false;
+                }
+            }
+
+            // Discord session refresh
             var session = Client?.Auth?.CurrentSession;
             if (session == null) return true;
 
@@ -178,6 +233,9 @@ namespace RustPlusDesk.Services.Auth
                 bool success = await AwaitOAuthCallback(callbackUrl);
                 if (success)
                 {
+                    // Clear guest auth when Discord login succeeds
+                    IsGuestAuthenticated = false;
+                    HandshakeService.Clear();
                     await SyncDiscordRolesAsync();
                 }
                 return success;
@@ -191,7 +249,7 @@ namespace RustPlusDesk.Services.Auth
 
         public static async Task RefreshUserProfileAsync()
         {
-            if (Client?.Auth?.CurrentSession == null) return;
+            if (!IsDiscordAuthenticated) return;
             if (!await EnsureFreshSessionAsync()) return;
             string discordId = null;
             if (Client.Auth.CurrentUser?.UserMetadata != null)
@@ -413,13 +471,15 @@ namespace RustPlusDesk.Services.Auth
         {
             if (Client != null && IsAuthenticated)
             {
+                IsGuestAuthenticated = false;
+                HandshakeService.Clear();
                 await Client.Auth.SignOut();
             }
         }
 
         public static async Task UpdateCloudSyncConsentAsync(bool accepted)
         {
-            if (Client?.Auth?.CurrentSession == null) return;
+            if (!IsAuthenticated) return;
             if (!await EnsureFreshSessionAsync()) return;
             string steamId = TrackingService.SteamId64;
             if (string.IsNullOrEmpty(steamId) || steamId == "0") return;
@@ -451,7 +511,7 @@ namespace RustPlusDesk.Services.Auth
 
         public static async Task UpdatePresenceAsync(string? serverKey, string? serverName, System.Collections.Generic.IReadOnlyCollection<CloudTeamMemberDto> teamMembers)
         {
-            if (Client?.Auth?.CurrentSession == null) return;
+            if (!IsAuthenticated) return;
             if (!await EnsureFreshSessionAsync()) return;
             string steamId = TrackingService.SteamId64;
             if (string.IsNullOrEmpty(steamId) || steamId == "0") return;
@@ -477,8 +537,90 @@ namespace RustPlusDesk.Services.Auth
             }
         }
 
+        /// <summary>
+        /// Attempt guest handshake auth when no Discord session is available.
+        /// Uses stored JWT if valid, refreshes if expired, or registers a new keypair.
+        /// </summary>
+        private static async Task TryInitializeGuestAuthAsync()
+        {
+            try
+            {
+                string steamId = TrackingService.SteamId64;
+                if (string.IsNullOrEmpty(steamId) || steamId == "0")
+                {
+                    AppendLog("[Supabase/Guest] No SteamID yet — skipping guest handshake.");
+                    return;
+                }
+
+                // Check if we have a valid stored JWT
+                if (HandshakeService.HasValidJwt)
+                {
+                    AppendLog("[Supabase/Guest] Valid stored guest JWT found. Setting guest session.");
+                    await SetGuestSessionAsync(HandshakeService.GuestJwt);
+                    IsGuestAuthenticated = true;
+                    return;
+                }
+
+                // Check if we have a stored keypair for refresh
+                if (HandshakeService.HasLocalKey)
+                {
+                    AppendLog("[Supabase/Guest] Stored keypair found — attempting refresh handshake.");
+                    var (success, error) = await HandshakeService.RefreshAsync();
+                    if (success && HandshakeService.GuestJwt != null)
+                    {
+                        AppendLog("[Supabase/Guest] Refresh handshake succeeded.");
+                        await SetGuestSessionAsync(HandshakeService.GuestJwt);
+                        IsGuestAuthenticated = true;
+                        return;
+                    }
+                    AppendLog($"[Supabase/Guest] Refresh failed: {error}. Re-registering.");
+                }
+
+                // First-time registration
+                AppendLog("[Supabase/Guest] Performing first-time registration handshake.");
+                var (regSuccess, regError, recoveryCode) = await HandshakeService.RegisterAsync(steamId);
+                if (regSuccess && HandshakeService.GuestJwt != null)
+                {
+                    AppendLog("[Supabase/Guest] Registration handshake succeeded.");
+                    if (!string.IsNullOrEmpty(recoveryCode))
+                        AppendLog($"[Supabase/Guest] Recovery code saved. Keep this safe!");
+                    await SetGuestSessionAsync(HandshakeService.GuestJwt);
+                    IsGuestAuthenticated = true;
+                }
+                else
+                {
+                    AppendLog($"[Supabase/Guest] Registration failed: {regError}. Cloud sync disabled.");
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Supabase/Guest] Handshake error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Sets the guest JWT as the active Supabase session so subsequent
+        /// data operations (From / Rpc) authenticate with the guest identity.
+        /// </summary>
+        private static async Task<bool> SetGuestSessionAsync(string jwt)
+        {
+            try
+            {
+                if (Client?.Auth == null) return false;
+                var session = await Client.Auth.SetSession(jwt, "");
+                return session != null;
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Supabase/Guest] SetSession warning: {ex.Message}");
+                return false;
+            }
+        }
+
         private static async Task TouchProfileAsync(string steamId, string? discordId = null)
         {
+            if (Client?.Auth?.CurrentUser == null && !IsGuestAuthenticated) return;
+
             var update = Client.From<RustPlusDesk.Models.UserProfileModel>()
                 .Filter("steam_id", Postgrest.Constants.Operator.Equals, steamId)
                 .Set(x => x.LastActiveAt, DateTime.UtcNow)
@@ -496,7 +638,7 @@ namespace RustPlusDesk.Services.Auth
         public static async Task<(bool IsAdmin, string? ErrorMessage)> CheckIsAdminDetailedAsync()
         {
             if (Client == null) return (false, "Supabase client not initialized.");
-            if (Client.Auth?.CurrentSession == null) return (false, "No active Supabase session (Discord login required).");
+            if (!IsDiscordAuthenticated) return (false, "No active Supabase session (Discord login required).");
             try
             {
                 if (!await EnsureFreshSessionAsync()) return (false, "Session expired and could not be refreshed.");
