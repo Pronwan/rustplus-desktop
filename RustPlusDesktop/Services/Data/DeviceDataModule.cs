@@ -72,7 +72,7 @@ namespace RustPlusDesk.Services.Data
             var syncedCount = 0;
             if (Auth.SupabaseAuthManager.Client != null)
             {
-                await Auth.SupabaseAuthManager.EnsureFreshSessionAsync();
+                if (!await Auth.SupabaseAuthManager.EnsureFreshSessionAsync()) return 0;
                 bool isPremium = Auth.SupabaseAuthManager.IsPremium;
                 if (!isPremium && dtoList.Count > 10)
                 {

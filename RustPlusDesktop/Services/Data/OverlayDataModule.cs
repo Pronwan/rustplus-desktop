@@ -57,7 +57,7 @@ namespace RustPlusDesk.Services.Data
         public static async Task<bool> UploadOverlayAsync(string serverKey, ulong steamId, OverlaySaveData data, bool explicitWipe = false)
         {
             if (Auth.SupabaseAuthManager.Client == null) return false;
-            await Auth.SupabaseAuthManager.EnsureFreshSessionAsync();
+            if (!await Auth.SupabaseAuthManager.EnsureFreshSessionAsync()) return false;
 
             data.LastUpdatedUnix = DataManager.UnixNow();
 
@@ -140,7 +140,7 @@ namespace RustPlusDesk.Services.Data
         public static async Task<OverlaySaveData?> FetchOverlayFromServerAsync(string serverKey, ulong steamId)
         {
             if (Auth.SupabaseAuthManager.Client == null) return null;
-            await Auth.SupabaseAuthManager.EnsureFreshSessionAsync();
+            if (!await Auth.SupabaseAuthManager.EnsureFreshSessionAsync()) return null;
             LastFetchHadError = false;
 
             OverlaySaveData data = new OverlaySaveData();

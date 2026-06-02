@@ -4648,7 +4648,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         UpdateCloudSyncUI();
     }
 
-    private void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)
+    internal void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)
     {
         if (RootSnackbar == null) return;
         var snackbar = new WpfUi.Snackbar(RootSnackbar)
