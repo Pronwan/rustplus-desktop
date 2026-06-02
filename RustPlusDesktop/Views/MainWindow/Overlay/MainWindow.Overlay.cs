@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -58,6 +59,8 @@ private bool _overlayToolsVisible = false;
     private System.Windows.Threading.DispatcherTimer? _overlayPollTimer;
     private string? _lastDevicesCloudTooltip;
     private string? _lastOverlayCloudTooltip;
+    private CancellationTokenSource? _overlaySyncCts;
+    private const int OverlaySyncDebounceMs = 800;
 
 
 
@@ -1706,22 +1709,32 @@ private bool _overlayToolsVisible = false;
             var overlayByteSize = Encoding.UTF8.GetByteCount(
                 System.Text.Json.JsonSerializer.Serialize(data, new System.Text.Json.JsonSerializerOptions { WriteIndented = false }));
 
-            // 4) Immediate Cloud upload if enabled (anon key works, no Discord needed)
+            // 4) Debounced Cloud upload if enabled (anon key works, no Discord needed)
             if (TrackingService.CloudSyncEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.Client != null)
             {
                 if (IsOverlaySyncLimitExceeded(overlayByteSize))
                     return;
 
+                _overlaySyncCts?.Cancel();
+                _overlaySyncCts?.Dispose();
+                _overlaySyncCts = new CancellationTokenSource();
+                var token = _overlaySyncCts.Token;
                 var sk = GetServerKey();
                 var sid = _mySteamId;
+                var capturedData = data;
+                var capturedSize = overlayByteSize;
+
                 _ = Task.Run(async () =>
                 {
                     try
                     {
-                        var uploaded = await OverlayDataModule.UploadOverlayAsync(sk, sid, data);
+                        await Task.Delay(OverlaySyncDebounceMs, token).ConfigureAwait(false);
+                        if (token.IsCancellationRequested) return;
+                        var uploaded = await OverlayDataModule.UploadOverlayAsync(sk, sid, capturedData);
                         if (uploaded)
-                            Dispatcher.Invoke(() => MarkOverlayCloudSynced(overlayByteSize));
+                            Dispatcher.Invoke(() => MarkOverlayCloudSynced(capturedSize));
                     }
+                    catch (OperationCanceledException) { }
                     catch (Exception ex)
                     {
                         Dispatcher.Invoke(() => AppendLog("[overlay/cloud] Sync failed: " + ex.Message));
