@@ -65,17 +65,17 @@ namespace RustPlusDesk.Services.Data
             // Wipe protection: never upload empty device list unless this is an intentional delete.
             if (dtoList.Count == 0 && !explicitWipe)
             {
-                AppendLog("[dev/cloud] Skipping device upload: list is empty (wipe protection).");
                 return 0;
             }
 
             // Freemium check
+            var syncedCount = 0;
             if (Auth.SupabaseAuthManager.Client != null)
             {
+                await Auth.SupabaseAuthManager.EnsureFreshSessionAsync();
                 bool isPremium = Auth.SupabaseAuthManager.IsPremium;
                 if (!isPremium && dtoList.Count > 10)
                 {
-                    AppendLog($"[dev/cloud] Free tier limit: only 10 devices synced (you have {dtoList.Count}). Connect Discord for unlimited.");
                     dtoList = dtoList.GetRange(0, 10);
                 }
 
@@ -94,8 +94,7 @@ namespace RustPlusDesk.Services.Data
                     };
                     await Auth.SupabaseAuthManager.Client.From<SmartDeviceModel>()
                         .Upsert(model, new Postgrest.QueryOptions { OnConflict = "server_key, steam_id" });
-
-                    AppendLog($"[Cloud] Successfully synced {dtoList.Count} smart devices to Supabase.");
+                    syncedCount = dtoList.Count;
                 }
                 catch (Exception ex)
                 {
@@ -119,7 +118,7 @@ namespace RustPlusDesk.Services.Data
                 localData.Devices.Add(d);
 
             OverlayDataModule.SaveLocalOverlay(serverKey, steamId, localData);
-            return dtoList.Count;
+            return syncedCount;
         }
 
         private static void AppendLog(string msg)

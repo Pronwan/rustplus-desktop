@@ -1867,10 +1867,10 @@
     <value>Преимущества Supporter</value>
   </data>
   <data name="PremiumInfoDevicesDesc" xml:space="preserve">
-    <value>Теоретически для синхронизации доступно больше устройств, но для этого требуется подписка Supporter.</value>
+    <value>Локально или через импорт доступно более 10 устройств. Бесплатная синхронизация сохраняет первые 10 устройств; Supporter могут синхронизировать неограниченное число устройств.</value>
   </data>
   <data name="PremiumInfoMapDesc" xml:space="preserve">
-    <value>Теоретически для синхронизации доступно больше маркеров карты и баз, но для этого требуется подписка Supporter.</value>
+    <value>Этот оверлей превышает бесплатный лимит облачной синхронизации. Supporter получают оверлеи в 10 раз больше, больше маркеров карты и больше скриншотов.</value>
   </data>
   <data name="PrivacyDisclaimerTitle" xml:space="preserve">
     <value>Конфиденциальность и Облако</value>
@@ -1910,5 +1910,32 @@
   </data>
   <data name="TelegramIntegration" xml:space="preserve">
     <value>Интеграция оповещений Telegram</value>
+  </data>
+  <data name="PremiumStopSync">
+    <value>Остановить sync</value>
+  </data>
+  <data name="PremiumStayFree">
+    <value>Остаться бесплатно</value>
+  </data>
+  <data name="PremiumSupportNow">
+    <value>Поддержать</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Оверлей синхронизирован {0} KB {1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>Максимум 10 устройств в бесплатном тарифе</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>Синхронизировано устройств: {0} {1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Оверлей слишком большой для синхронизации ({0} KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Включить Cloud-Sync</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-Sync включен</value>
   </data>
 </root>

@@ -1861,10 +1861,10 @@
     <value>مزايا الداعم (Supporter)</value>
   </data>
   <data name="PremiumInfoDevicesDesc" xml:space="preserve">
-    <value>يتوفر نظريًا المزيد من الأجهزة للمزامنة، ولكن هذا يتطلب اشتراك داعم.</value>
+    <value>يتوفر أكثر من 10 أجهزة محليًا أو عبر الاستيراد. مزامنة السحابة المجانية تحتفظ بأول 10 أجهزة؛ يمكن للداعمين مزامنة عدد غير محدود من الأجهزة.</value>
   </data>
   <data name="PremiumInfoMapDesc" xml:space="preserve">
-    <value>تتوفر نظريًا المزيد من علامات الخريطة والقواعد للمزامنة، ولكن هذا يتطلب اشتراك داعم.</value>
+    <value>هذا التراكب أكبر من حد المزامنة السحابية المجاني. يحصل الداعمون على حجم تراكبات أكبر 10 مرات، ومزيد من علامات الخريطة ولقطات الشاشة.</value>
   </data>
   <data name="PrivacyDisclaimerTitle" xml:space="preserve">
     <value>الخصوصية والمزامنة السحابية</value>
@@ -1904,5 +1904,32 @@
   </data>
   <data name="TelegramIntegration" xml:space="preserve">
     <value>تكامل تنبيهات تيليجرام</value>
+  </data>
+  <data name="PremiumStopSync">
+    <value>إيقاف المزامنة</value>
+  </data>
+  <data name="PremiumStayFree">
+    <value>ابق مجانًا</value>
+  </data>
+  <data name="PremiumSupportNow">
+    <value>ادعم الآن</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>تمت مزامنة التراكب {0} كيلوبايت {1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>10 أجهزة كحد أقصى في الخطة المجانية</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>تمت مزامنة {0} أجهزة {1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>حجم التراكب كبير جدًا للمزامنة ({0} كيلوبايت)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>تفعيل مزامنة السحابة</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>مزامنة السحابة مفعّلة</value>
   </data>
 </root>

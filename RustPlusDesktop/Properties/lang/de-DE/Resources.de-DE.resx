@@ -1939,10 +1939,10 @@ Bist du sicher, dass du fortfahren möchtest?</value>
     <value>Supporter-Vorteile</value>
   </data>
   <data name="PremiumInfoDevicesDesc" xml:space="preserve">
-    <value>Es sind theoretisch weitere Geräte zum Synchronisieren verfügbar, dies erfordert jedoch ein Supporter-Abonnement.</value>
+    <value>Mehr als 10 Geräte sind lokal oder durch Importe verfügbar. Der kostenlose Cloud-Sync synchronisiert die ersten 10 Geräte; Supporter können unbegrenzt Geräte synchronisieren.</value>
   </data>
   <data name="PremiumInfoMapDesc" xml:space="preserve">
-    <value>Es sind theoretisch weitere Map-Marker und Bases zum Synchronisieren verfügbar, dies erfordert jedoch ein Supporter-Abonnement.</value>
+    <value>Dieses Overlay ist größer als das kostenlose Cloud-Sync-Limit. Supporter erhalten 10x größere Overlays, mehr Map-Marker und mehr Screenshots.</value>
   </data>
   <data name="PrivacyDisclaimerTitle" xml:space="preserve">
     <value>Datenschutz &amp; Cloud-Sync</value>
@@ -1982,5 +1982,32 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   </data>
   <data name="TelegramIntegration" xml:space="preserve">
     <value>Telegram-Alerts-Integration</value>
+  </data>
+  <data name="PremiumStopSync">
+    <value>Sync stoppen</value>
+  </data>
+  <data name="PremiumStayFree">
+    <value>Gratis bleiben</value>
+  </data>
+  <data name="PremiumSupportNow">
+    <value>Jetzt unterstützen</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Overlay synchronisiert {0} KB {1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>Maximal 10 Geräte im Free Tier</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>{0} Geräte synchronisiert {1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Overlay zu groß für den Sync ({0} KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Cloud-Sync aktivieren</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-Sync aktiv</value>
   </data>
 </root>

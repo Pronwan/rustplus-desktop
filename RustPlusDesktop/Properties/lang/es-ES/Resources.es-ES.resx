@@ -1870,10 +1870,10 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
     <value>Beneficios de Supporter</value>
   </data>
   <data name="PremiumInfoDevicesDesc" xml:space="preserve">
-    <value>Teóricamente hay más dispositivos disponibles para sincronizar, pero esto requiere una suscripción de Supporter.</value>
+    <value>Hay más de 10 dispositivos disponibles localmente o mediante importaciones. La sincronización gratuita en la nube mantiene los primeros 10 dispositivos; los Supporters pueden sincronizar dispositivos ilimitados.</value>
   </data>
   <data name="PremiumInfoMapDesc" xml:space="preserve">
-    <value>Teóricamente hay más marcadores de mapa y bases disponibles para sincronizar, pero esto requiere una suscripción de Supporter.</value>
+    <value>Este overlay supera el límite gratuito de sincronización en la nube. Los Supporters obtienen overlays 10 veces más grandes, más marcadores de mapa y más capturas.</value>
   </data>
   <data name="PrivacyDisclaimerTitle" xml:space="preserve">
     <value>Privacidad y Cloud Sync</value>
@@ -1913,5 +1913,32 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   </data>
   <data name="TelegramIntegration" xml:space="preserve">
     <value>Integracion de alertas de Telegram</value>
+  </data>
+  <data name="PremiumStopSync">
+    <value>Detener sync</value>
+  </data>
+  <data name="PremiumStayFree">
+    <value>Seguir gratis</value>
+  </data>
+  <data name="PremiumSupportNow">
+    <value>Apoyar ahora</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Overlay sincronizado {0} KB {1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>Máximo 10 dispositivos en el nivel gratuito</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>{0} dispositivos sincronizados {1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Overlay demasiado grande para sincronizar ({0} KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Activar Cloud-Sync</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-Sync activo</value>
   </data>
 </root>

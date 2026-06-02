@@ -27,7 +27,7 @@ public partial class MainWindow
 
 private bool _overlayToolsVisible = false;
 
-    // wer ist aktuell ausgewÃ¤hlt als Zeichenwerkzeug?
+    // wer ist aktuell ausgewaehlt als Zeichenwerkzeug?
     private enum OverlayToolMode { None, Draw, Text, Icon, Erase }
     private OverlayToolMode _currentTool = OverlayToolMode.None;
 
@@ -39,7 +39,7 @@ private bool _overlayToolsVisible = false;
     private double _textSize = 16.0;
     private string _currentIconPath = "pack://application:,,,/Assets/icons/map-icons/base1.png";
 
-    // FÃ¼r Draggen von platzierten Icons/Text
+    // Fuer Draggen von platzierten Icons/Text
     private FrameworkElement? _draggingElement = null;
     private Point _dragOffset;
 
@@ -56,6 +56,8 @@ private bool _overlayToolsVisible = false;
 
     // Live-Polling Timer für sichtbare Teammate-Overlays
     private System.Windows.Threading.DispatcherTimer? _overlayPollTimer;
+    private string? _lastDevicesCloudTooltip;
+    private string? _lastOverlayCloudTooltip;
 
 
 
@@ -95,7 +97,7 @@ private bool _overlayToolsVisible = false;
                 Width = 32,
                 Height = 32,
                 Stretch = Stretch.UniformToFill,
-                Source = tm.Avatar ?? GetPlaceholderAvatar(), // falls Avatar noch lÃ¤dt
+                Source = tm.Avatar ?? GetPlaceholderAvatar(),
                 SnapsToDevicePixels = true
             };
 
@@ -106,7 +108,6 @@ private bool _overlayToolsVisible = false;
 
     private ImageSource GetPlaceholderAvatar()
     {
-        // Kannst du schÃ¶ner machen (graues Quadrat, Fragezeichen, etc.)
         var dv = new DrawingVisual();
         using (var dc = dv.RenderOpen())
         {
@@ -174,7 +175,7 @@ private bool _overlayToolsVisible = false;
         AppendLog($"[overlay/ui] alreadyBuiltInMemory={alreadyBuiltInMemory} " +
                   $"(count={(existingList?.Count ?? 0)})");
 
-        // 3. MÃ¼ssen wir neu bauen?
+        // 3. Muessen wir neu bauen?
         bool needRebuild = !alreadyBuiltInMemory || serverGaveNewData;
         AppendLog($"[overlay/ui] needRebuild={needRebuild}");
 
@@ -255,7 +256,7 @@ private bool _overlayToolsVisible = false;
 
         MaterializeOverlayForPlayer(steamId, data, editable);
 
-        // Nach MaterializeOverlayForPlayer weiÃŸt du,
+        // Nach MaterializeOverlayForPlayer weisst du,
         // wie viele Elemente der Spieler jetzt wirklich auf dem Canvas hat:
         if (_playerOverlayElements.TryGetValue(steamId, out var listBuilt))
         {
@@ -368,7 +369,7 @@ private bool _overlayToolsVisible = false;
     // Folgende Methode ersetzt durch LoadOverlayFromDiskForPlayer --
     private void LoadOwnOverlayFromJson()
     {
-        // Falls wir fÃ¼r mich (_mySteamId) schon Elemente gebaut haben, nicht nochmal
+        // Falls wir fuer mich (_mySteamId) schon Elemente gebaut haben, nicht nochmal
         if (_playerOverlayElements.ContainsKey(_mySteamId) &&
             _playerOverlayElements[_mySteamId].Count > 0)
         {
@@ -379,7 +380,7 @@ private bool _overlayToolsVisible = false;
         if (!File.Exists(path))
         {
             // Stelle sicher, dass wir zumindest einen leeren Eintrag haben,
-            // damit spÃ¤tere Checks nicht glauben "muss noch laden".
+            // damit spaetere Checks nicht glauben "muss noch laden".
             _playerOverlayElements[_mySteamId] = new List<FrameworkElement>();
             return;
         }
@@ -392,7 +393,7 @@ private bool _overlayToolsVisible = false;
         }
         catch
         {
-            // kaputte Datei? -> wir tun so, als gÃ¤be es keine
+            // kaputte Datei? -> wir tun so, als gaebe es keine
             data = null;
         }
 
@@ -450,7 +451,7 @@ private bool _overlayToolsVisible = false;
                 Width = icon.Width,
                 Height = icon.Height,
                 RenderTransformOrigin = new Point(0.5, 0.5),
-                IsHitTestVisible = true, // meine Icons/Text darf ich draggen und lÃ¶schen
+                IsHitTestVisible = true, // meine Icons/Text darf ich draggen und loeschen
                 Opacity = 1.0,
                 Tag = new OverlayTag
                 {
@@ -552,7 +553,7 @@ private bool _overlayToolsVisible = false;
         }
 
         // 5) Drag bestehender Elemente (wenn kein spezielles Tool aktiv ist,
-        //    oder wir explizit Drag erlauben bei Icon/Text in anderen Tools auÃŸer Draw/Text/Icon/Erase)
+        //    oder wir explizit Drag erlauben bei Icon/Text in anderen Tools ausser Draw/Text/Icon/Erase)
         if (e.LeftButton == MouseButtonState.Pressed &&
             _currentTool == OverlayToolMode.None)
         {
@@ -560,7 +561,7 @@ private bool _overlayToolsVisible = false;
             return;
         }
 
-        // 6) Rechtsklick zum LÃ¶schen von Icons/Text-BlÃ¶cken
+        // 6) Rechtsklick zum Loeschen von Icons/Text-Bloecken
         if (e.ChangedButton == MouseButton.Right)
         {
             TryDeleteElementAt(mapPos);
@@ -576,7 +577,7 @@ private bool _overlayToolsVisible = false;
         {
             if (Overlay.Children[i] is FrameworkElement fe)
             {
-                // nur wenn mir gehÃ¶rend, sonst Finger weg
+                // nur wenn mir gehoerend, sonst Finger weg
                 if (fe.Tag is OverlayTag meta && meta.OwnerSteamId == _mySteamId && meta.IsUserEditable)
                 {
                     if (fe is Polyline line)
@@ -672,7 +673,7 @@ private bool _overlayToolsVisible = false;
         }
     }
 
-    private const double USER_ICON_BASE_SIZE = 24;   // hier stellst du â€œdoppelt so groÃŸâ€  ein
+    private const double USER_ICON_BASE_SIZE = 24;   // hier stellst du "doppelt so gross" ein
     private const double USER_ICON_MIN_SCALE = 0.2;  // nicht kleiner werden
     private const double USER_ICON_MAX_SCALE = 2.0;   // nicht riesig werden
 
@@ -682,10 +683,10 @@ private bool _overlayToolsVisible = false;
         // 1. aktuellen effektiven Zoom holen (das ist der gleiche wie bei Shops/Playern)
         double eff = GetEffectiveZoom();
 
-        // 2. â€œwÃ¼nschteâ€  Skalierung aus Zoom ableiten
+        // 2. "gewuenschte" Skalierung aus Zoom ableiten
         double scale = 1.0 / eff;
 
-        // 3. auf min / max clampen â€“ GENAU wie im Refresh
+        // 3. auf min / max clampen - GENAU wie im Refresh
         if (scale < USER_ICON_MIN_SCALE)
             scale = USER_ICON_MIN_SCALE;
         if (scale > USER_ICON_MAX_SCALE)
@@ -707,7 +708,7 @@ private bool _overlayToolsVisible = false;
             }
         };
 
-        // 5. Canvas-Position IMMER aus der BasisgrÃ¶ÃŸe ableiten
+        // 5. Canvas-Position IMMER aus der Basisgroesse ableiten
         Canvas.SetLeft(img, mapPos.X - USER_ICON_BASE_SIZE / 2);
         Canvas.SetTop(img, mapPos.Y - USER_ICON_BASE_SIZE / 2);
 
@@ -715,7 +716,7 @@ private bool _overlayToolsVisible = false;
         Overlay.Children.Add(img);
         RegisterElementForOwner(_mySteamId, img);
 
-        // 7. speichern (nimmt BASIS-W/H, nicht die skalierten Pixel â€“ das ist korrekt!)
+        // 7. speichern (nimmt BASIS-W/H, nicht die skalierten Pixel - das ist korrekt!)
         SaveOwnOverlayToJson();
     }
 
@@ -737,7 +738,7 @@ private bool _overlayToolsVisible = false;
         if (scale < USER_ICON_MIN_SCALE)
             scale = USER_ICON_MIN_SCALE;
 
-        // OBERgrenze â€“ hier kommt dein maxScale hin
+        // OBERgrenze - hier kommt dein maxScale hin
         if (scale > USER_ICON_MAX_SCALE)
             scale = USER_ICON_MAX_SCALE;
 
@@ -745,7 +746,7 @@ private bool _overlayToolsVisible = false;
         {
             if (child is Image img && img.Tag is OverlayTag meta)
             {
-                // nur Icons anfassen â€“ Strokes/Text bleiben wie sie sind
+                // nur Icons anfassen - Strokes/Text bleiben wie sie sind
                 // wenn du GANZ sicher sein willst, dass es wirklich ein "Overlay-Icon" ist:
                 // if (meta.BaseSize is null) continue;
 
@@ -785,7 +786,7 @@ private bool _overlayToolsVisible = false;
         {
             if (Overlay.Children[i] is FrameworkElement fe)
             {
-                // nur meine editierbaren Elemente dÃ¼rfen gezogen werden
+                // nur meine editierbaren Elemente duerfen gezogen werden
                 if (fe.Tag is not OverlayTag meta) continue;
                 if (meta.OwnerSteamId != _mySteamId) continue;
                 if (!meta.IsUserEditable) continue;
@@ -811,7 +812,7 @@ private bool _overlayToolsVisible = false;
 
     private void TryDeleteElementAt(Point mapPos)
     {
-        // LÃ¶sche Icon/Text bei Rechtsklick, aber nur mein eigenes Zeug
+        // Loesche Icon/Text bei Rechtsklick, aber nur mein eigenes Zeug
         for (int i = Overlay.Children.Count - 1; i >= 0; i--)
         {
             if (Overlay.Children[i] is FrameworkElement fe)
@@ -819,7 +820,7 @@ private bool _overlayToolsVisible = false;
                 // Lines (Polyline) ignorieren wir hier weiter, die macht Eraser.
                 if (fe is Polyline) continue;
 
-                // Besitz prÃ¼fen
+                // Besitz pruefen
                 if (fe.Tag is not OverlayTag meta) continue;
                 if (meta.OwnerSteamId != _mySteamId) continue;
                 if (!meta.IsUserEditable) continue;
@@ -886,7 +887,7 @@ private bool _overlayToolsVisible = false;
         }
     }
 
-    // Rechtsklick -> lÃ¶schen
+    // Rechtsklick -> loeschen
     private void Icon_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (sender is FrameworkElement fe)
@@ -977,7 +978,7 @@ private bool _overlayToolsVisible = false;
             mine.Clear();
         }
 
-        // 2. Sicherheits-Cleanup fÃ¼r evtl. Ã¼briggebliebene Ownerelemente
+        // 2. Sicherheits-Cleanup fuer evtl. uebriggebliebene Ownerelemente
         var cleanup = new List<UIElement>();
         foreach (var child in Overlay.Children)
         {
@@ -1011,7 +1012,6 @@ private bool _overlayToolsVisible = false;
                 try
                 {
                     await OverlayDataModule.UploadOverlayAsync(sk, sid, emptyWithDevices, explicitWipe: true);
-                    Dispatcher.Invoke(() => AppendLog("[overlay/cloud] Cleared overlay synced to cloud."));
                 }
                 catch (Exception ex)
                 {
@@ -1023,6 +1023,12 @@ private bool _overlayToolsVisible = false;
 
     private void ToolUploadButton_Click(object sender, RoutedEventArgs e)
     {
+        if (IsOverlaySyncLimitExceeded() && !Services.Auth.SupabaseAuthManager.IsPremium)
+        {
+            ShowPremiumLimitDialog(Properties.Resources.PremiumInfoMapDesc);
+            return;
+        }
+
         if (TrackingService.CloudSyncEnabled)
         {
             // Disable sync
@@ -1063,21 +1069,197 @@ private bool _overlayToolsVisible = false;
 
     public void UpdateCloudSyncUI()
     {
-        if (TrackingService.CloudSyncEnabled)
+        bool deviceLimitExceeded = IsFreeDeviceSyncLimitExceeded();
+        int overlaySizeBytes = GetCurrentOverlaySizeBytes();
+        bool overlayLimitExceeded = IsOverlaySyncLimitExceeded(overlaySizeBytes);
+
+        ApplyCloudButtonState(BtnDevicesExport, TrackingService.CloudSyncEnabled, deviceLimitExceeded);
+        ApplyCloudButtonState(ToolUploadButton, TrackingService.CloudSyncEnabled, overlayLimitExceeded);
+
+        if (BtnDevicesExport != null)
         {
-            ToolUploadButton.Background = new SolidColorBrush(Colors.Green);
-            BtnDevicesExport.Background = new SolidColorBrush(Colors.Green);
+            BtnDevicesExport.ToolTip = !TrackingService.CloudSyncEnabled
+                ? CloudText("CloudTooltipActivate", "Activate Cloud-Sync")
+                : deviceLimitExceeded
+                    ? CloudText("CloudTooltipDeviceFreeLimit", "10 Devices max in Free Tier")
+                    : _lastDevicesCloudTooltip ?? CloudText("CloudTooltipActive", "Cloud-Sync active");
         }
-        else
+
+        if (ToolUploadButton != null)
         {
-            ToolUploadButton.Background = new SolidColorBrush(Color.FromRgb(232, 97, 26)); // Red/Orange
-            BtnDevicesExport.Background = new SolidColorBrush(Color.FromRgb(232, 97, 26)); // Red/Orange
+            ToolUploadButton.ToolTip = !TrackingService.CloudSyncEnabled
+                ? CloudText("CloudTooltipActivate", "Activate Cloud-Sync")
+                : overlayLimitExceeded
+                    ? string.Format(
+                        CloudText("CloudTooltipOverlayTooBigFormat", "Overlay Size too big for sync ({0} KB)"),
+                        BytesToKb(overlaySizeBytes))
+                    : _lastOverlayCloudTooltip ?? CloudText("CloudTooltipActive", "Cloud-Sync active");
         }
+
+        if (BtnPremiumInfoDevices != null)
+            BtnPremiumInfoDevices.Visibility = Visibility.Collapsed;
+
+        if (BtnPremiumInfoMap != null)
+            BtnPremiumInfoMap.Visibility = Visibility.Collapsed;
+    }
+
+    private bool IsFreeDeviceSyncLimitExceeded()
+    {
+        return !Services.Auth.SupabaseAuthManager.IsPremium
+            && (_vm.Selected?.Devices?.Count ?? 0) > 10;
+    }
+
+    private bool IsFreeOverlaySyncLimitExceeded()
+    {
+        return !Services.Auth.SupabaseAuthManager.IsPremium
+            && IsOverlaySyncLimitExceeded();
+    }
+
+    private bool IsOverlaySyncLimitExceeded()
+    {
+        return IsOverlaySyncLimitExceeded(GetCurrentOverlaySizeBytes());
+    }
+
+    private bool IsOverlaySyncLimitExceeded(int byteSize)
+    {
+        var maxBytes = Services.Auth.SupabaseAuthManager.IsPremium ? 3_000_000 : 300_000;
+        return byteSize > maxBytes;
+    }
+
+    private int GetCurrentOverlaySizeBytes()
+    {
+        try
+        {
+            var data = BuildCurrentOverlaySaveDataForMe();
+            var json = System.Text.Json.JsonSerializer.Serialize(data, new System.Text.Json.JsonSerializerOptions { WriteIndented = false });
+            return Encoding.UTF8.GetByteCount(json);
+        }
+        catch
+        {
+            return 0;
+        }
+    }
+
+    private static int BytesToKb(int bytes)
+    {
+        return Math.Max(1, (int)Math.Ceiling(bytes / 1024.0));
+    }
+
+    private static string CloudText(string key, string fallback)
+    {
+        return RustPlusDesk.Properties.Resources.ResourceManager.GetString(key) ?? fallback;
+    }
+
+    private void ApplyCloudButtonState(Control button, bool syncEnabled, bool limitExceeded)
+    {
+        if (button == null) return;
+
+        if (!syncEnabled)
+        {
+            StopCloudPulse(button);
+            button.Background = new SolidColorBrush(Color.FromRgb(232, 97, 26));
+            return;
+        }
+
+        if (limitExceeded)
+        {
+            StartCloudPulse(button);
+            return;
+        }
+
+        StopCloudPulse(button);
+        button.Background = new SolidColorBrush(Colors.Green);
+    }
+
+    private void MarkDevicesCloudSynced(int count)
+    {
+        _lastDevicesCloudTooltip = string.Format(
+            CloudText("CloudTooltipDeviceSyncedFormat", "{0} devices synced {1}"),
+            count,
+            DateTime.Now.ToString("HH:mm:ss"));
+        UpdateCloudSyncUI();
+        if (!IsFreeDeviceSyncLimitExceeded())
+            FlashCloudButton(BtnDevicesExport);
+    }
+
+    private void MarkOverlayCloudSynced(int byteSize)
+    {
+        _lastOverlayCloudTooltip = string.Format(
+            CloudText("CloudTooltipOverlaySyncedFormat", "Overlay Synced {0} KB {1}"),
+            BytesToKb(byteSize),
+            DateTime.Now.ToString("HH:mm:ss"));
+        UpdateCloudSyncUI();
+        if (!IsOverlaySyncLimitExceeded(byteSize))
+            FlashCloudButton(ToolUploadButton);
+    }
+
+    private void FlashCloudButton(Control button)
+    {
+        if (button == null) return;
+
+        var brush = SetCloudButtonBrush(button, Colors.Green);
+
+        var animation = new System.Windows.Media.Animation.ColorAnimation
+        {
+            From = Color.FromRgb(82, 255, 124),
+            To = Colors.Green,
+            Duration = TimeSpan.FromMilliseconds(650),
+            FillBehavior = System.Windows.Media.Animation.FillBehavior.Stop
+        };
+
+        animation.Completed += (_, __) => button.Background = new SolidColorBrush(Colors.Green);
+        brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+    }
+
+    private void StartCloudPulse(Control button)
+    {
+        var brush = SetCloudButtonBrush(button, Colors.Green);
+
+        var animation = new System.Windows.Media.Animation.ColorAnimation
+        {
+            From = Colors.Green,
+            To = Color.FromRgb(224, 49, 49),
+            Duration = TimeSpan.FromMilliseconds(650),
+            AutoReverse = true,
+            RepeatBehavior = System.Windows.Media.Animation.RepeatBehavior.Forever
+        };
+
+        brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+    }
+
+    private void StopCloudPulse(Control button)
+    {
+        if (button.Background is SolidColorBrush brush && !brush.IsFrozen)
+            brush.BeginAnimation(SolidColorBrush.ColorProperty, null);
+    }
+
+    private SolidColorBrush SetCloudButtonBrush(Control button, Color color)
+    {
+        StopCloudPulse(button);
+
+        var brush = new SolidColorBrush(color);
+        button.Background = brush;
+        return brush;
+    }
+
+    private void ShowPremiumLimitDialog(string message)
+    {
+        var dlg = new Views.Windows.PremiumInfoWindow(message) { Owner = this };
+        dlg.ShowDialog();
+
+        if (dlg.Result == Views.Windows.PremiumInfoResult.StopSync)
+        {
+            TrackingService.CloudSyncEnabled = false;
+            TrackingService.UploadConsentGiven = false;
+            _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(false);
+        }
+
+        UpdateCloudSyncUI();
     }
 
     // private void SaveOwnOverlayToPng()
     // {
-    // 1. ZielgrÃ¶ÃŸe bestimmen
+    // 1. Zielgroesse bestimmen
     //     int pixelW = (int)ImgMap.Source.Width;
     //int pixelH = (int)ImgMap.Source.Height;
 
@@ -1099,7 +1281,7 @@ private bool _overlayToolsVisible = false;
     //          continue;
     //     }
 
-    // ansonsten klonen wir "oberflÃ¤chlich":
+    // ansonsten klonen wir "oberflaechlich":
     //    UIElement clone = CloneOverlayElementForExport(child);
     //          if (clone != null)
     //exportCanvas.Children.Add(clone);
@@ -1184,7 +1366,7 @@ private bool _overlayToolsVisible = false;
             Style = (Style)FindResource("DarkContextMenu")
         };
 
-        // Farbe Ã¤ndern (nur ein Beispiel)
+        // Farbe aendern (nur ein Beispiel)
         var miRed = new MenuItem { Header = "Red" };
         miRed.Click += (_, __) => { _drawColor = Colors.Red; };
         var miGreen = new MenuItem { Header = "Green" };
@@ -1291,7 +1473,7 @@ private bool _overlayToolsVisible = false;
             }
             catch { /* nicht kritisch */ }
 
-            // 0) vorhandene JSON (fÃ¼r Devices) einlesen
+            // 0) vorhandene JSON (fuer Devices) einlesen
             // 1) aktuelles Overlay aus dem Canvas bauen
             var data = BuildCurrentOverlaySaveDataForMe();
 
@@ -1306,9 +1488,11 @@ private bool _overlayToolsVisible = false;
             }
 
             // 3) modularer Upload
-            await OverlayDataModule.UploadOverlayAsync(GetServerKey(), _mySteamId, data);
-
-            AppendLog($"[overlay] Overlay uploaded (devices preserved: {data.Devices.Count}).");
+            var overlayByteSize = Encoding.UTF8.GetByteCount(
+                System.Text.Json.JsonSerializer.Serialize(data, new System.Text.Json.JsonSerializerOptions { WriteIndented = false }));
+            var uploaded = await OverlayDataModule.UploadOverlayAsync(GetServerKey(), _mySteamId, data);
+            if (uploaded)
+                MarkOverlayCloudSynced(overlayByteSize);
         }
         catch (Exception ex)
         {
@@ -1419,13 +1603,13 @@ private bool _overlayToolsVisible = false;
         double wx = p.X - a.X;
         double wy = p.Y - a.Y;
 
-        // Projektion t = (APÂ·AB)/|AB|Â² clamped [0..1]
+        // Projektion t = (AP*AB)/|AB|^2 clamped [0..1]
         double denom = (vx * vx + vy * vy);
         double t = denom <= 0.000001 ? 0.0 : ((wx * vx + wy * vy) / denom);
         if (t < 0.0) t = 0.0;
         else if (t > 1.0) t = 1.0;
 
-        // NÃ¤chster Punkt auf AB
+        // Naechster Punkt auf AB
         double cx = a.X + t * vx;
         double cy = a.Y + t * vy;
 
@@ -1459,7 +1643,7 @@ private bool _overlayToolsVisible = false;
     {
         if (_currentTool == modeFromButton)
         {
-            // toggle off -> zurÃ¼ck in Pan/Zoom Modus
+            // toggle off -> zurueck in Pan/Zoom Modus
             _currentTool = OverlayToolMode.None;
         }
         else
@@ -1477,7 +1661,7 @@ private bool _overlayToolsVisible = false;
     }
     private void UpdateToolButtonHighlights()
     {
-        // Erstmal alle zurÃ¼cksetzen
+        // Erstmal alle zuruecksetzen
         foreach (var kv in _toolButtons)
         {
             var btn = kv.Value;
@@ -1503,7 +1687,6 @@ private bool _overlayToolsVisible = false;
     {
         try
         {
-            AppendLog($"[overlay/diag] SaveOwnOverlayToJson triggered. CloudSyncEnabled: {TrackingService.CloudSyncEnabled}, IsAuthenticated: {RustPlusDesk.Services.Auth.SupabaseAuthManager.IsAuthenticated}");
             // 1) aktuelles Overlay aus dem Canvas bauen
             var data = BuildCurrentOverlaySaveDataForMe();
 
@@ -1519,18 +1702,25 @@ private bool _overlayToolsVisible = false;
 
             // 3) modularer Save
             OverlayDataModule.SaveLocalOverlay(GetServerKey(), _mySteamId, data);
+            UpdateCloudSyncUI();
+            var overlayByteSize = Encoding.UTF8.GetByteCount(
+                System.Text.Json.JsonSerializer.Serialize(data, new System.Text.Json.JsonSerializerOptions { WriteIndented = false }));
 
             // 4) Immediate Cloud upload if enabled (anon key works, no Discord needed)
             if (TrackingService.CloudSyncEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.Client != null)
             {
+                if (IsOverlaySyncLimitExceeded(overlayByteSize))
+                    return;
+
                 var sk = GetServerKey();
                 var sid = _mySteamId;
                 _ = Task.Run(async () =>
                 {
                     try
                     {
-                        await OverlayDataModule.UploadOverlayAsync(sk, sid, data);
-                        Dispatcher.Invoke(() => AppendLog("[overlay/cloud] Canvas successfully synced."));
+                        var uploaded = await OverlayDataModule.UploadOverlayAsync(sk, sid, data);
+                        if (uploaded)
+                            Dispatcher.Invoke(() => MarkOverlayCloudSynced(overlayByteSize));
                     }
                     catch (Exception ex)
                     {
@@ -1548,7 +1738,7 @@ private bool _overlayToolsVisible = false;
 
     private string GetServerKey()
     {
-        // simplest first pass: nimm Host-Port vom aktuell ausgewÃ¤hlten Server
+        // simplest first pass: nimm Host-Port vom aktuell ausgewaehlten Server
         var prof = _vm?.Selected;
         if (prof == null) return "unknown-server";
 
@@ -1564,7 +1754,7 @@ private bool _overlayToolsVisible = false;
 
     private void ClearUserOverlayElements()
     {
-        // 1) Sammeln, nicht wÃ¤hrend foreach lÃ¶schen
+        // 1) Sammeln, nicht waehrend foreach loeschen
         var toRemove = new List<UIElement>();
 
         foreach (var child in Overlay.Children)
@@ -1588,7 +1778,7 @@ private bool _overlayToolsVisible = false;
     {
         public ulong OwnerSteamId;
         public bool IsUserEditable;
-        public double? BaseSize;   // nur fÃ¼r Icons, wird NICHT gespeichert
+        public double? BaseSize;   // nur fuer Icons, wird NICHT gespeichert
     }
 
     // Liest lokales Overlay (mich) als OverlaySaveData
@@ -1674,11 +1864,11 @@ private bool _overlayToolsVisible = false;
         File.WriteAllText(path, json);
     }
 
-    // baut aus einem OverlaySaveData echte UI-Elemente auf der Canvas fÃ¼r einen Spieler
+    // baut aus einem OverlaySaveData echte UI-Elemente auf der Canvas fuer einen Spieler
     // und cached sie in _playerOverlayElements[steamId]
     private void MaterializeOverlayForPlayer(ulong steamId, OverlaySaveData data, bool editableIfMine)
     {
-        // falls schon Elemente fÃ¼r den Spieler existieren -> erstmal killen
+        // falls schon Elemente fuer den Spieler existieren -> erstmal killen
         if (_playerOverlayElements.TryGetValue(steamId, out var existing))
         {
             foreach (var el in existing)
