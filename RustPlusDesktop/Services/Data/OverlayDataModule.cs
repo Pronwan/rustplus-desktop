@@ -54,9 +54,10 @@ namespace RustPlusDesk.Services.Data
         /// Works with both Discord-authenticated sessions AND the anon key (no Discord needed up to free limits).
         /// </summary>
         /// <param name="explicitWipe">If true, an empty overlay is intentionally uploaded (e.g. trash button).</param>
-        public static async Task UploadOverlayAsync(string serverKey, ulong steamId, OverlaySaveData data, bool explicitWipe = false)
+        public static async Task<bool> UploadOverlayAsync(string serverKey, ulong steamId, OverlaySaveData data, bool explicitWipe = false)
         {
-            if (Auth.SupabaseAuthManager.Client == null) return;
+            if (Auth.SupabaseAuthManager.Client == null) return false;
+            await Auth.SupabaseAuthManager.EnsureFreshSessionAsync();
 
             data.LastUpdatedUnix = DataManager.UnixNow();
 
@@ -67,8 +68,7 @@ namespace RustPlusDesk.Services.Data
             // Wipe protection: never upload empty overlay unless it was intentional (trash button)
             if (isEmpty && !explicitWipe)
             {
-                AppendLog($"[overlay/cloud] Skipping upload for {steamId}: overlay is empty (wipe protection).");
-                return;
+                return false;
             }
 
             // Size limit check
@@ -83,7 +83,7 @@ namespace RustPlusDesk.Services.Data
                 int kbLimit = maxBytes / 1024;
                 AppendLog($"[overlay/cloud] Upload blocked: overlay is {kbSize} KB, limit is {kbLimit} KB " +
                           $"({(hasSupportBenefit ? "Supporter tier" : "Free tier")}).");
-                return;
+                return false;
             }
 
             try
@@ -102,8 +102,6 @@ namespace RustPlusDesk.Services.Data
                 await Auth.SupabaseAuthManager.Client
                     .From<MapOverlayModel>()
                     .Upsert(mapModel, new Postgrest.QueryOptions { OnConflict = "server_key, steam_id" });
-
-                AppendLog($"[overlay/cloud] Uploaded {byteSize / 1024} KB overlay for {steamId}.");
 
                 // Also keep smart_devices table in sync when overlay contains devices
                 var dtoList = data.Devices ?? new System.Collections.Generic.List<ExportedDeviceDto>();
@@ -125,10 +123,12 @@ namespace RustPlusDesk.Services.Data
 
                 // Always keep local cache updated
                 SaveLocalOverlay(serverKey, steamId, data);
+                return true;
             }
             catch (Exception ex)
             {
                 AppendLog($"[overlay/cloud/err] UploadOverlay failed for {steamId}: {ex.Message}");
+                return false;
             }
         }
 
@@ -140,6 +140,7 @@ namespace RustPlusDesk.Services.Data
         public static async Task<OverlaySaveData?> FetchOverlayFromServerAsync(string serverKey, ulong steamId)
         {
             if (Auth.SupabaseAuthManager.Client == null) return null;
+            await Auth.SupabaseAuthManager.EnsureFreshSessionAsync();
             LastFetchHadError = false;
 
             OverlaySaveData data = new OverlaySaveData();

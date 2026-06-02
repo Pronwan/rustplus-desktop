@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using RustPlusDesk.Services.Data;
@@ -19,6 +20,7 @@ namespace RustPlusDesk.Services.Auth
         public static bool IsPremium { get; private set; }
         public static string CurrentTier { get; private set; } = "free";
         public static string DiscordProviderToken { get; private set; }
+        private static readonly SemaphoreSlim SessionRefreshLock = new SemaphoreSlim(1, 1);
 
         public static async Task InitializeAsync()
         {
@@ -96,6 +98,63 @@ namespace RustPlusDesk.Services.Auth
         /// <summary>Synonym for IsAuthenticated – true only when Discord is connected.</summary>
         public static bool IsDiscordAuthenticated => IsAuthenticated;
 
+        public static async Task<bool> EnsureFreshSessionAsync()
+        {
+            var session = Client?.Auth?.CurrentSession;
+            if (session == null) return true;
+
+            var expiresAt = session.CreatedAt.ToUniversalTime().AddSeconds(session.ExpiresIn);
+            if (expiresAt > DateTime.UtcNow.AddMinutes(2))
+                return true;
+
+            await SessionRefreshLock.WaitAsync();
+            try
+            {
+                session = Client?.Auth?.CurrentSession;
+                if (session == null) return true;
+
+                expiresAt = session.CreatedAt.ToUniversalTime().AddSeconds(session.ExpiresIn);
+                if (expiresAt > DateTime.UtcNow.AddMinutes(2))
+                    return true;
+
+                AppendLog("[Cloud/Debug] Refreshing expired Supabase session...");
+                var refreshed = await Client.Auth.RefreshSession();
+                if (refreshed != null)
+                    return true;
+
+                AppendLog("[Cloud/Debug] Supabase session refresh returned no session.");
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Cloud/Debug] Supabase session refresh failed: {ex.Message}");
+            }
+            finally
+            {
+                SessionRefreshLock.Release();
+            }
+
+            try
+            {
+                var destroySession = Client?.Auth?.GetType().GetMethod(
+                    "DestroySession",
+                    System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+
+                if (destroySession != null)
+                    destroySession.Invoke(Client.Auth, null);
+                else if (Client?.Auth != null)
+                    await Client.Auth.SignOut();
+            }
+            catch
+            {
+                // Best effort: a broken local session should not keep poisoning anon requests.
+            }
+
+            CurrentTier = "free";
+            IsPremium = false;
+            AppendLog("[Cloud] Discord session expired. Cloud sync continues with anon/free limits until you log in again.");
+            return false;
+        }
+
         public static async Task<bool> LoginWithDiscordAsync()
         {
             if (Client == null) return false;
@@ -133,6 +192,7 @@ namespace RustPlusDesk.Services.Auth
         public static async Task RefreshUserProfileAsync()
         {
             if (Client?.Auth?.CurrentSession == null) return;
+            if (!await EnsureFreshSessionAsync()) return;
             string discordId = null;
             if (Client.Auth.CurrentUser?.UserMetadata != null)
             {
@@ -244,6 +304,7 @@ namespace RustPlusDesk.Services.Auth
         public static async Task SyncDiscordRolesAsync()
         {
             if (Client?.Auth?.CurrentSession == null) return;
+            if (!await EnsureFreshSessionAsync()) return;
 
             try
             {
@@ -359,6 +420,7 @@ namespace RustPlusDesk.Services.Auth
         public static async Task UpdateCloudSyncConsentAsync(bool accepted)
         {
             if (Client?.Auth?.CurrentSession == null) return;
+            if (!await EnsureFreshSessionAsync()) return;
             string steamId = TrackingService.SteamId64;
             if (string.IsNullOrEmpty(steamId) || steamId == "0") return;
 
@@ -390,6 +452,7 @@ namespace RustPlusDesk.Services.Auth
         public static async Task UpdatePresenceAsync(string? serverKey, string? serverName, System.Collections.Generic.IReadOnlyCollection<CloudTeamMemberDto> teamMembers)
         {
             if (Client?.Auth?.CurrentSession == null) return;
+            if (!await EnsureFreshSessionAsync()) return;
             string steamId = TrackingService.SteamId64;
             if (string.IsNullOrEmpty(steamId) || steamId == "0") return;
 

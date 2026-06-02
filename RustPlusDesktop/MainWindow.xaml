@@ -1002,6 +1002,7 @@
                                 Margin="0,0,10,0"
                                 Icon="{ui:SymbolIcon Symbol=Info24, Filled=True}"
                                 Foreground="#e03131"
+                                Visibility="Collapsed"
                                 Click="BtnPremiumInfoDevices_Click"
                                 ToolTip="{DynamicResource PremiumFeatures}" />
 
@@ -4402,14 +4403,14 @@
                                 </Button>
 
                                 <!--  Upload / Teilen  -->
-                                <Button
-                                    x:Name="ToolUploadButton"
-                                    Width="32"
-                                    Height="32"
-                                    Margin="2,0"
-                                    Click="ToolUploadButton_Click"
-                                    ToolTip="{DynamicResource UploadOverlayToolTip}">
-                                    <Image Source="pack://application:,,,/Assets/icons/cloud-upload.png" />
+                            <Button
+                                x:Name="ToolUploadButton"
+                                Width="32"
+                                Height="32"
+                                Margin="2,0"
+                                Click="ToolUploadButton_Click"
+                                ToolTip="{DynamicResource UploadOverlayToolTip}">
+                                    <ui:SymbolIcon Symbol="Cloud24" Foreground="White" FontSize="18" />
                                 </Button>
 
                                 <ui:Button
@@ -4418,10 +4419,11 @@
                                     Width="32"
                                     Height="32"
                                     Margin="2,0"
-                                    Icon="{ui:SymbolIcon Symbol=Info24, Filled=True}"
-                                    Foreground="#e03131"
-                                    Click="BtnPremiumInfoMap_Click"
-                                    ToolTip="{DynamicResource PremiumFeatures}" />
+                                Icon="{ui:SymbolIcon Symbol=Info24, Filled=True}"
+                                Foreground="#e03131"
+                                Visibility="Collapsed"
+                                Click="BtnPremiumInfoMap_Click"
+                                ToolTip="{DynamicResource PremiumFeatures}" />
 
                                 <ui:Button
                                     x:Name="BtnAdminPanel"

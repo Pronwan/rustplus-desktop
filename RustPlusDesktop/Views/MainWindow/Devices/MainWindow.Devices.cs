@@ -960,6 +960,12 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
     private async void BtnDevicesExport_Click(object sender, RoutedEventArgs e)
     {
+        if (IsFreeDeviceSyncLimitExceeded())
+        {
+            ShowPremiumLimitDialog(Properties.Resources.PremiumInfoDevicesDesc);
+            return;
+        }
+
         if (TrackingService.CloudSyncEnabled)
         {
             // Disable sync
@@ -998,7 +1004,6 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
                 try
                 {
                     await UploadDevicesSnapshotForCurrentServerAsync();
-                    AppendLog("[dev/sync] Pushed devices to cloud.");
                 }
                 catch (Exception ex)
                 {
@@ -1022,7 +1027,11 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             throw new InvalidOperationException("No devices in current profile.");
 
         var canvasOverlay = BuildCurrentOverlaySaveDataForMe();
-        return await DeviceDataModule.UploadDevicesSnapshotAsync(GetServerKey(), _mySteamId, profile.Devices, canvasOverlay, explicitWipe);
+        var synced = await DeviceDataModule.UploadDevicesSnapshotAsync(GetServerKey(), _mySteamId, profile.Devices, canvasOverlay, explicitWipe);
+        if (synced > 0)
+            MarkDevicesCloudSynced(synced);
+
+        return synced;
     }
 
     private ExportedDeviceDto MapDeviceToDto(SmartDevice d)
@@ -1161,6 +1170,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             _vm.Save();
 
             AppendLog($"[dev/import] Imported {toImport.Count} devices.");
+            UpdateCloudSyncUI();
 
             // 4) Direkt anschließender Status-Refresh
             await RefreshAllDevicesStatusAsync();

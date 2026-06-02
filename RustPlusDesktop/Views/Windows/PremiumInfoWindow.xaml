@@ -4,7 +4,7 @@
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="{x:Static p:Resources.PremiumFeatures}"
-        Width="400" Height="220"
+        Width="540" Height="260"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         Background="Transparent"
@@ -40,12 +40,30 @@
                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
                        LineHeight="22" />
 
-            <ui:Button Grid.Row="2" 
-                       Content="OK" 
-                       Appearance="Primary" 
-                       HorizontalAlignment="Right" 
-                       Width="100" 
-                       Click="BtnOk_Click" />
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <ui:Button x:Name="BtnStopSync"
+                           Content="Stop Sync"
+                           Appearance="Secondary"
+                           MinWidth="118"
+                           Padding="14,0"
+                           Margin="0,0,8,0"
+                           Click="BtnStopSync_Click" />
+                <ui:Button x:Name="BtnStayFree"
+                           Content="Stay Free"
+                           Appearance="Secondary"
+                           MinWidth="118"
+                           Padding="14,0"
+                           Margin="0,0,8,0"
+                           Click="BtnStayFree_Click" />
+                <ui:Button x:Name="BtnSupportNow"
+                           Content="Support Now"
+                           Appearance="Primary"
+                           MinWidth="138"
+                           Padding="14,0"
+                           Click="BtnSupportNow_Click" />
+            </StackPanel>
         </Grid>
     </Border>
 </Window>

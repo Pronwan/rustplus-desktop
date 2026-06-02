@@ -81,7 +81,6 @@ namespace RustPlusDesk.Services.Data
             // If offline / no Supabase keys / not logged in -> Skip cloud sync or fallback
             if (SupabaseAuthManager.Client == null || !SupabaseAuthManager.IsAuthenticated)
             {
-                Console.WriteLine("[DataManager] Supabase not initialized or user not logged in. Skipping cloud upload.");
                 return;
             }
 
@@ -98,7 +97,6 @@ namespace RustPlusDesk.Services.Data
 
                 // Perform an Upsert. Supabase handles 'ON CONFLICT' automatically
                 await SupabaseAuthManager.Client.From<MapOverlayModel>().Upsert(model);
-                Console.WriteLine($"[DataManager] Uploaded overlay for {steamId} to Supabase.");
             }
             catch (Exception ex)
             {

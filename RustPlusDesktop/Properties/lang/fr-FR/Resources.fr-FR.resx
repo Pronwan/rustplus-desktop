@@ -611,7 +611,7 @@ Télécharger et installer maintenant ?</value>
     <value>Navire cargo</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
-    <value>Œuf</value>
+    <value>Å’uf</value>
   </data>
   <data name="CargoDock" xml:space="preserve">
     <value>Ancrage du port</value>
@@ -1885,10 +1885,10 @@ Télécharger et installer maintenant ?</value>
     <value>Avantages Supporter</value>
   </data>
   <data name="PremiumInfoDevicesDesc" xml:space="preserve">
-    <value>Plus d'appareils sont théoriquement disponibles pour la synchronisation, mais cela nécessite un abonnement Supporter.</value>
+    <value>Plus de 10 appareils sont disponibles localement ou via des imports. La synchronisation cloud gratuite conserve les 10 premiers appareils; les Supporters peuvent synchroniser un nombre illimité d’appareils.</value>
   </data>
   <data name="PremiumInfoMapDesc" xml:space="preserve">
-    <value>Plus de marqueurs de carte et de bases sont théoriquement disponibles, mais cela nécessite un abonnement Supporter.</value>
+    <value>Cet overlay dépasse la limite gratuite de synchronisation cloud. Les Supporters obtiennent des overlays 10 fois plus grands, plus de marqueurs de carte et plus de captures.</value>
   </data>
   <data name="PrivacyDisclaimerTitle" xml:space="preserve">
     <value>Confidentialite &amp; Cloud Sync</value>
@@ -1928,5 +1928,32 @@ Télécharger et installer maintenant ?</value>
   </data>
   <data name="TelegramIntegration" xml:space="preserve">
     <value>Integration des alertes Telegram</value>
+  </data>
+  <data name="PremiumStopSync">
+    <value>Arrêter sync</value>
+  </data>
+  <data name="PremiumStayFree">
+    <value>Rester gratuit</value>
+  </data>
+  <data name="PremiumSupportNow">
+    <value>Soutenir maintenant</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Overlay synchronisé {0} KB {1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>10 appareils maximum avec l'offre gratuite</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>{0} appareils synchronisés {1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Overlay trop volumineux pour la synchronisation ({0} KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Activer Cloud-Sync</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-Sync actif</value>
   </data>
 </root>
