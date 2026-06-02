@@ -24,9 +24,15 @@ namespace RustPlusDesk.Views.Windows
 
         private async void AdminPanelWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!IsCurrentUserAdmin())
+            var (isAdmin, error) = await SupabaseAuthManager.CheckIsAdminDetailedAsync();
+            if (!isAdmin)
             {
-                MessageBox.Show("Admin access requires Discord auth and a developer/lead contributor role.", "Admin Panel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                string msg = "Admin access requires Discord auth and a developer/lead contributor role.";
+                if (!string.IsNullOrEmpty(error))
+                {
+                    msg += $"\n\nDetails: {error}";
+                }
+                MessageBox.Show(msg, "Admin Panel", MessageBoxButton.OK, MessageBoxImage.Warning);
                 Close();
                 return;
             }
