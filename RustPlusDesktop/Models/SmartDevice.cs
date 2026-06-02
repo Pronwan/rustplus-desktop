@@ -23,6 +23,8 @@ public class SmartDevice : INotifyPropertyChanged
         set { if (_isGroup != value) { _isGroup = value; OnProp(); OnProp(nameof(HasGroupSwitches)); } }
     }
 
+    public DateTime LastPolledAt { get; set; } = DateTime.MinValue;
+
     private System.Collections.ObjectModel.ObservableCollection<SmartDevice> _children = new();
     public System.Collections.ObjectModel.ObservableCollection<SmartDevice> Children
     {

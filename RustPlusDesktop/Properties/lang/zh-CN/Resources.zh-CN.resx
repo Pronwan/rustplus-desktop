@@ -1881,4 +1881,79 @@
   <data name="TranslateViaGoogle" xml:space="preserve">
     <value>通过 Google 翻译</value>
   </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Supporter 专属福利</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>本地或导入中有超过 10 个设备。免费云同步会保留前 10 个设备；Supporter 可同步无限数量的设备。</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>此地图覆盖已超过免费云同步限制。Supporter 可获得 10 倍更高的覆盖大小、更多地图标记和更多截图。</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>隐私与云同步</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>要启用地图覆盖和智能设备的实时同步，必须将数据发送到我们安全的云中。我们还会收集匿名的使用遥测数据。</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>接受并启用云</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>拒绝云</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>连接 Discord 以获得支持者权益</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>断开 Discord 连接</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>正在连接...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>云同步和实时上传</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>在云中安全地实时上传和同步智能设备及地图覆盖。</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>支持者设置</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>这些功能专供我们的支持者 and 开发人员通过 Discord 登录使用。</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>高级 Discord 集成（Webhook、音频警报）</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Telegram 警报集成</value>
+  </data>
+  <data name="PremiumStopSync">
+    <value>停止同步</value>
+  </data>
+  <data name="PremiumStayFree">
+    <value>继续免费</value>
+  </data>
+  <data name="PremiumSupportNow">
+    <value>立即支持</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>地图覆盖已同步 {0} KB {1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>免费层最多 10 个设备</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>已同步 {0} 个设备 {1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>地图覆盖过大，无法同步（{0} KB）</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>启用云同步</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>云同步已启用</value>
+  </data>
 </root>

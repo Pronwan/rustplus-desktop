@@ -611,7 +611,7 @@ Télécharger et installer maintenant ?</value>
     <value>Navire cargo</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
-    <value>Œuf</value>
+    <value>Å’uf</value>
   </data>
   <data name="CargoDock" xml:space="preserve">
     <value>Ancrage du port</value>
@@ -1880,5 +1880,80 @@ Télécharger et installer maintenant ?</value>
   </data>
   <data name="TranslateViaGoogle" xml:space="preserve">
     <value>Traduire via Google</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Avantages Supporter</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>Plus de 10 appareils sont disponibles localement ou via des imports. La synchronisation cloud gratuite conserve les 10 premiers appareils; les Supporters peuvent synchroniser un nombre illimité d’appareils.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>Cet overlay dépasse la limite gratuite de synchronisation cloud. Les Supporters obtiennent des overlays 10 fois plus grands, plus de marqueurs de carte et plus de captures.</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Confidentialite &amp; Cloud Sync</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>Pour activer la synchronisation en direct des superpositions de cartes et des appareils intelligents, les donnees doivent etre envoyees a notre cloud securise. Nous collectons egalement des donnees d'utilisation anonymisees.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Accepter et activer le cloud</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Refuser le cloud</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Connecter Discord pour les avantages supporter</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Deconnecter Discord</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Connexion...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Synchronisation Cloud &amp; Telechargement en direct</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Telecharger en direct et synchroniser les appareils intelligents et les superpositions de cartes en toute securite dans le cloud.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Parametres du supporter</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>Ces fonctionnalites sont exclusivement disponibles pour nos supporters et developpeurs via la connexion Discord.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Integration Discord avancee (Webhooks, alertes audio)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Integration des alertes Telegram</value>
+  </data>
+  <data name="PremiumStopSync">
+    <value>Arrêter sync</value>
+  </data>
+  <data name="PremiumStayFree">
+    <value>Rester gratuit</value>
+  </data>
+  <data name="PremiumSupportNow">
+    <value>Soutenir maintenant</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Overlay synchronisé {0} KB {1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>10 appareils maximum avec l'offre gratuite</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>{0} appareils synchronisés {1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Overlay trop volumineux pour la synchronisation ({0} KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Activer Cloud-Sync</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-Sync actif</value>
   </data>
 </root>

@@ -1866,4 +1866,79 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   <data name="TranslateViaGoogle" xml:space="preserve">
     <value>Traducir con Google</value>
   </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Beneficios de Supporter</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>Hay más de 10 dispositivos disponibles localmente o mediante importaciones. La sincronización gratuita en la nube mantiene los primeros 10 dispositivos; los Supporters pueden sincronizar dispositivos ilimitados.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>Este overlay supera el límite gratuito de sincronización en la nube. Los Supporters obtienen overlays 10 veces más grandes, más marcadores de mapa y más capturas.</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Privacidad y Cloud Sync</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>Para habilitar la sincronizacion en vivo de superposiciones de mapas y dispositivos inteligentes, los datos deben enviarse a nuestra nube segura. Tambien recopilamos telemetria de uso anonimizada.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Aceptar y habilitar nube</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Rechazar nube</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Conectar Discord para beneficios de supporter</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Desconectar Discord</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Conectando...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Sincronizacion en la nube y carga en vivo</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Cargue en vivo y sincronice dispositivos inteligentes y superposiciones de mapas de forma segura en la nube.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Ajustes de supporter</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>Estas funciones estan disponibles exclusivamente para nuestros Supporters y Desarrolladores a traves del inicio de sesion de Discord.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Integracion avanzada de Discord (Webhooks, alertas de audio)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Integracion de alertas de Telegram</value>
+  </data>
+  <data name="PremiumStopSync">
+    <value>Detener sync</value>
+  </data>
+  <data name="PremiumStayFree">
+    <value>Seguir gratis</value>
+  </data>
+  <data name="PremiumSupportNow">
+    <value>Apoyar ahora</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Overlay sincronizado {0} KB {1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>Máximo 10 dispositivos en el nivel gratuito</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>{0} dispositivos sincronizados {1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Overlay demasiado grande para sincronizar ({0} KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Activar Cloud-Sync</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-Sync activo</value>
+  </data>
 </root>

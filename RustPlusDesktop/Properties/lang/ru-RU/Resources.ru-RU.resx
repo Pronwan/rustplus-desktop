@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1830,10 +1830,10 @@
   <data name="Markers" xml:space="preserve">
     <value>Маркеры:</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Очистить все</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Принять</value>
   </data>
   <data name="CustomTimerCategory" xml:space="preserve">
@@ -1862,5 +1862,80 @@
   </data>
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
     <value>Максимум 5 таймеров.</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Преимущества Supporter</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>Локально или через импорт доступно более 10 устройств. Бесплатная синхронизация сохраняет первые 10 устройств; Supporter могут синхронизировать неограниченное число устройств.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>Этот оверлей превышает бесплатный лимит облачной синхронизации. Supporter получают оверлеи в 10 раз больше, больше маркеров карты и больше скриншотов.</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Конфиденциальность и Облако</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>Чтобы включить живую синхронизацию, данные должны быть отправлены в наше безопасное облако. Мы также собираем анонимную телеметрию.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Принять и включить облако</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Отклонить облако</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Подключить Discord для преимуществ сторонника</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Отключить Discord</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Подключение...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Облачная синхронизация и прямая загрузка</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Живая загрузка и безопасная синхронизация умных устройств и карт в облаке.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Настройки сторонника</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>Эти функции доступны исключительно нашим сторонникам и разработчикам через вход в Discord.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Расширенная интеграция Discord (вебхуки, звуковые оповещения)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Интеграция оповещений Telegram</value>
+  </data>
+  <data name="PremiumStopSync">
+    <value>Остановить sync</value>
+  </data>
+  <data name="PremiumStayFree">
+    <value>Остаться бесплатно</value>
+  </data>
+  <data name="PremiumSupportNow">
+    <value>Поддержать</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Оверлей синхронизирован {0} KB {1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>Максимум 10 устройств в бесплатном тарифе</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>Синхронизировано устройств: {0} {1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Оверлей слишком большой для синхронизации ({0} KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Включить Cloud-Sync</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-Sync включен</value>
   </data>
 </root>
