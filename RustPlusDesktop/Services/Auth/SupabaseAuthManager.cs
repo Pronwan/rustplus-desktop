@@ -361,7 +361,7 @@ namespace RustPlusDesk.Services.Auth
 
         public static async Task SyncDiscordRolesAsync()
         {
-            if (Client?.Auth?.CurrentSession == null) return;
+            if (!IsDiscordAuthenticated) return;
             if (!await EnsureFreshSessionAsync()) return;
 
             try
