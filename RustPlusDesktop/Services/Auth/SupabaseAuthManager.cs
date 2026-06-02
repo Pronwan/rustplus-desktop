@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using RustPlusDesk.Services.Data;
+using WpfUi = Wpf.Ui.Controls;
 using Supabase;
 using Supabase.Gotrue;
 using Supabase.Gotrue.Interfaces;
@@ -156,7 +157,12 @@ namespace RustPlusDesk.Services.Auth
 
             // Discord session refresh
             var session = Client?.Auth?.CurrentSession;
-            if (session == null) return true;
+            if (session == null)
+            {
+                if (!IsGuestAuthenticated)
+                    await TryInitializeGuestAuthAsync();
+                return IsGuestAuthenticated;
+            }
 
             var expiresAt = session.CreatedAt.ToUniversalTime().AddSeconds(session.ExpiresIn);
             if (expiresAt > DateTime.UtcNow.AddMinutes(2))
@@ -207,6 +213,16 @@ namespace RustPlusDesk.Services.Auth
             CurrentTier = "free";
             IsPremium = false;
             AppendLog("[Cloud] Discord session expired. Cloud sync continues with anon/free limits until you log in again.");
+            try
+            {
+                if (Application.Current?.Dispatcher != null)
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        if (Application.Current.MainWindow is Views.MainWindow mainWin)
+                            mainWin.ShowInfoSnackbar("Session Expired", "Discord session expired. Cloud sync may be limited.", WpfUi.ControlAppearance.Caution);
+                    });
+            }
+            catch { }
             return false;
         }
 
