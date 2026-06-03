@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
@@ -15,7 +17,9 @@ namespace RustPlusDesk.ViewModels
     {
         private readonly CheaterAnalyticsService _svc;
         private readonly SteamBanLookupService   _steamSvc;
+        private readonly CheaterReportService    _reportSvc;
         private readonly string _serverId;
+        private readonly string _serverName;
         private string _wipeId;
 
         public ObservableCollection<CheaterRecord> Records { get; } = new();
@@ -51,28 +55,100 @@ namespace RustPlusDesk.ViewModels
         public string NewNotes        { get; set; }
         public string NewEvidenceLink { get; set; }
 
+        // ── report/export properties ──────────────────────────────────────────
+
+        public string DiscordWebhookUrl { get; set; }
+
+        private string _reportStatus;
+        public string ReportStatus
+        {
+            get => _reportStatus;
+            set { _reportStatus = value; OnPropertyChanged(); }
+        }
+
         // ── commands ──────────────────────────────────────────────────────────
 
         public ICommand AddRecordCommand    { get; }
         public ICommand ConfirmBanCommand   { get; }
         public ICommand DeleteRecordCommand { get; }
+        public ICommand ExportCsvCommand    { get; }
+        public ICommand ExportTxtCommand    { get; }
+        public ICommand SendDiscordCommand  { get; }
 
         public CheaterAnalyticsViewModel(
             CheaterAnalyticsService svc,
             SteamBanLookupService steamSvc,
             string serverId,
-            string wipeId)
+            string wipeId,
+            string serverName = null)
         {
-            _svc      = svc;
-            _steamSvc = steamSvc;
-            _serverId = serverId;
-            _wipeId   = wipeId;
+            _svc        = svc;
+            _steamSvc   = steamSvc;
+            _serverId   = serverId;
+            _serverName = serverName ?? serverId;
+            _wipeId     = wipeId;
+            _reportSvc  = new CheaterReportService();
 
             AddRecordCommand    = new AsyncRelayCommand(AddRecordWithSteamLookupAsync);
             ConfirmBanCommand   = new RelayCommand<CheaterRecord>(ConfirmBan);
             DeleteRecordCommand = new RelayCommand<CheaterRecord>(DeleteRecord);
+            ExportCsvCommand    = new RelayCommand<object>(_ => ExportCsv());
+            ExportTxtCommand    = new RelayCommand<object>(_ => ExportTxt());
+            SendDiscordCommand  = new AsyncRelayCommand(SendDiscordAsync);
 
             Reload();
+        }
+
+        private void ExportCsv()
+        {
+            try
+            {
+                var desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                var date    = DateTime.UtcNow.ToString("yyyyMMdd");
+                var path    = Path.Combine(desktop, $"cheater_report_{_serverId}_{date}.csv");
+                _reportSvc.SaveCsv(Records, path);
+                ReportStatus = "✅ CSV saved to Desktop";
+            }
+            catch (Exception ex)
+            {
+                ReportStatus = $"❌ CSV error: {ex.Message}";
+            }
+        }
+
+        private void ExportTxt()
+        {
+            try
+            {
+                var text    = _reportSvc.BuildF7ReportText(Records);
+                var desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                var date    = DateTime.UtcNow.ToString("yyyyMMdd");
+                var path    = Path.Combine(desktop, $"cheater_report_{_serverId}_{date}.txt");
+                File.WriteAllText(path, text, System.Text.Encoding.UTF8);
+                System.Windows.Clipboard.SetText(text);
+                ReportStatus = "✅ TXT saved to Desktop";
+            }
+            catch (Exception ex)
+            {
+                ReportStatus = $"❌ TXT error: {ex.Message}";
+            }
+        }
+
+        private async Task SendDiscordAsync()
+        {
+            if (string.IsNullOrWhiteSpace(DiscordWebhookUrl))
+            {
+                ReportStatus = "⚠️ No webhook URL set";
+                return;
+            }
+            try
+            {
+                await _reportSvc.SendDiscordReportAsync(DiscordWebhookUrl, _serverName, Records);
+                ReportStatus = "✅ Sent to Discord";
+            }
+            catch (Exception ex)
+            {
+                ReportStatus = $"❌ Discord error: {ex.Message}";
+            }
         }
 
         public void Reload()

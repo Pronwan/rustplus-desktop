@@ -108,6 +108,34 @@
             </Setter>
         </Style>
 
+        <Style x:Key="DiscordButton" TargetType="Button">
+            <Setter Property="Background" Value="#1D3A6E"/>
+            <Setter Property="Foreground" Value="#93C5FD"/>
+            <Setter Property="BorderBrush" Value="#3B82F6"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2D4D8E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="AnalyticsCloseButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#8C96A8"/>
@@ -312,6 +340,68 @@
                         </Grid>
                     </Border>
                 </Expander>
+
+                <!-- ── Report & Export ── -->
+                <TextBlock Text="REPORT &amp; EXPORT"
+                           FontSize="10" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextCaption}"
+                           Margin="0,0,0,6"/>
+
+                <Border Background="{DynamicResource SurfaceAlt}"
+                        BorderBrush="{DynamicResource CardBorder}"
+                        BorderThickness="1" CornerRadius="6"
+                        Padding="10,8" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBox Text="{Binding DiscordWebhookUrl, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource AnalyticsTextBox}"
+                                 ToolTip="Discord Webhook URL"
+                                 Margin="0,0,0,6">
+                            <TextBox.Resources>
+                                <Style TargetType="TextBox" BasedOn="{StaticResource AnalyticsTextBox}">
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="Transparent"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Resources>
+                        </TextBox>
+
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="4"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="4"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0"
+                                    Content="📋 Copy F7 List"
+                                    Style="{StaticResource SmallGhost}"
+                                    Command="{Binding ExportTxtCommand}"
+                                    Padding="6,5"/>
+                            <Button Grid.Column="2"
+                                    Content="💾 Export CSV"
+                                    Style="{StaticResource AnalyticsPrimaryButton}"
+                                    Command="{Binding ExportCsvCommand}"
+                                    Padding="6,5"/>
+                            <Button Grid.Column="4"
+                                    Content="📨 Send Discord"
+                                    Style="{StaticResource DiscordButton}"
+                                    Command="{Binding SendDiscordCommand}"
+                                    Padding="6,5"/>
+                        </Grid>
+
+                        <TextBlock Text="{Binding ReportStatus, Mode=OneWay}"
+                                   FontSize="11"
+                                   Foreground="{DynamicResource TextSubtle}"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
 
                 <!-- ── Flagged records list ── -->
                 <TextBlock Text="FLAGGED PLAYERS"

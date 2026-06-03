@@ -4698,13 +4698,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     "RustPlusDesk");
                 System.IO.Directory.CreateDirectory(dataDir);
 
-                var serverId = _vm.Selected?.SteamId64 ?? "default";
-                var wipeId   = _vm.Selected?.RustMapsWipeTime?.ToString("yyyyMMdd") ?? "wipe0";
+                var serverId    = _vm.Selected?.SteamId64 ?? "default";
+                var wipeId      = _vm.Selected?.RustMapsWipeTime?.ToString("yyyyMMdd") ?? "wipe0";
+                var serverName  = _vm.Selected?.Name ?? serverId;
 
                 var analyticsSvc = new CheaterAnalyticsService(dataDir);
                 var steamSvc     = new SteamBanLookupService("");
 
-                _cheaterVm = new CheaterAnalyticsViewModel(analyticsSvc, steamSvc, serverId, wipeId);
+                _cheaterVm = new CheaterAnalyticsViewModel(analyticsSvc, steamSvc, serverId, wipeId, serverName);
             }
             else
             {
