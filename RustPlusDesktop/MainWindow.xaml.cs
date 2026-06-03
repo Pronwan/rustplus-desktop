@@ -4691,10 +4691,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // Lazy-init the ViewModel on first open
         if (_cheaterVm == null)
         {
-            var dataDir = Path.Combine(
+            var dataDir = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "RustPlusDesk");
-            Directory.CreateDirectory(dataDir);
+            System.IO.Directory.CreateDirectory(dataDir);
 
             var serverId = _vm.Selected?.SteamId64 ?? "default";
             var wipeId   = _vm.Selected?.RustMapsWipeTime?.ToString("yyyyMMdd") ?? "wipe0";
