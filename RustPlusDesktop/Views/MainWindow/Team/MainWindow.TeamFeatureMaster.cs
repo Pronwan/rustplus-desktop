@@ -14,6 +14,7 @@ namespace RustPlusDesk.Views;
 public partial class MainWindow
 {
     private bool _teamFeatureMasterBusy;
+    private bool _teamFeatureMasterSyncPending;
     private bool _chatFeaturesBlockedByMaster;
     private bool _isChatFeatureMaster;
     private string _chatFeatureMasterName = "";
@@ -22,7 +23,7 @@ public partial class MainWindow
     private string? _declinedMasterTeamKey;
     private DateTime _declinedMasterUntilUtc;
     private string? _lastTeamFeatureMasterSyncSignature;
-    private bool _playMasterOfferSound = true;
+    private bool _playMasterOfferSound = TrackingService.ChatMasterOfferSoundEnabled;
     private SoundPlayer? _masterOfferSoundPlayer;
     private System.Windows.Threading.DispatcherTimer? _teamFeatureMasterWatchTimer;
     private bool _teamFeatureMasterWatchBusy;
@@ -69,7 +70,12 @@ public partial class MainWindow
 
     private async Task SyncTeamFeatureMasterAsync()
     {
-        if (_teamFeatureMasterBusy) return;
+        if (_teamFeatureMasterBusy)
+        {
+            _teamFeatureMasterSyncPending = true;
+            return;
+        }
+
         if (_vm?.Selected == null || TeamMembers.Count == 0) return;
 
         var serverKey = GetServerKey();
@@ -119,6 +125,11 @@ public partial class MainWindow
         finally
         {
             _teamFeatureMasterBusy = false;
+            if (_teamFeatureMasterSyncPending)
+            {
+                _teamFeatureMasterSyncPending = false;
+                _ = SyncTeamFeatureMasterAsync();
+            }
         }
     }
 
@@ -275,6 +286,11 @@ public partial class MainWindow
         ApplyChatFeatureMasterUiState();
         UpdateTeamFeatureMasterWatch();
 
+        if (previousBlocked && !_chatFeaturesBlockedByMaster && HasLocalChatFeatureIntent())
+        {
+            RequestTeamFeatureMasterSync();
+        }
+
         if (_chatFeaturesBlockedByMaster && !previousBlocked)
         {
             ShowInfoSnackbar(
@@ -321,6 +337,11 @@ public partial class MainWindow
         ChatCommandsOverlay?.SetMasterBlocked(blocked, message);
     }
 
+    private bool HasLocalChatFeatureIntent()
+    {
+        return TrackingService.AnnounceSpawnsMaster || (_vm.Selected?.ChatCommandsEnabled ?? false);
+    }
+
     private bool CanSendAutomatedTeamChat()
     {
         if (!_chatFeaturesBlockedByMaster) return true;
@@ -349,7 +370,7 @@ public partial class MainWindow
             Title = TeamFeatureText("ChatFeatureMasterAssignedTitle", "You are Chat Master"),
             Appearance = WpfUi.ControlAppearance.Success,
             Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Info24),
-            Timeout = TimeSpan.FromSeconds(20),
+            Timeout = TimeSpan.FromSeconds(10),
             MaxWidth = 380,
             HorizontalAlignment = HorizontalAlignment.Right
         };
@@ -363,6 +384,16 @@ public partial class MainWindow
         });
 
         var footer = new DockPanel { LastChildFill = false };
+        var countdownText = new TextBlock
+        {
+            Text = string.Format(TeamFeatureText("ChatFeatureMasterAutoCloseCountdown", "Closes in {0}s"), 10),
+            VerticalAlignment = VerticalAlignment.Center,
+            Opacity = 0.72,
+            Margin = new Thickness(0, 0, 12, 0)
+        };
+        DockPanel.SetDock(countdownText, Dock.Left);
+        footer.Children.Add(countdownText);
+
         var soundToggle = new CheckBox
         {
             IsChecked = _playMasterOfferSound,
@@ -371,20 +402,40 @@ public partial class MainWindow
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 12, 0)
         };
-        soundToggle.Checked += (_, _) => _playMasterOfferSound = true;
-        soundToggle.Unchecked += (_, _) => _playMasterOfferSound = false;
+        soundToggle.Checked += (_, _) =>
+        {
+            _playMasterOfferSound = true;
+            TrackingService.ChatMasterOfferSoundEnabled = true;
+        };
+        soundToggle.Unchecked += (_, _) =>
+        {
+            _playMasterOfferSound = false;
+            TrackingService.ChatMasterOfferSoundEnabled = false;
+        };
         DockPanel.SetDock(soundToggle, Dock.Left);
         footer.Children.Add(soundToggle);
 
-        var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
-        var accept = new WpfUi.Button
+        var remainingSeconds = 10;
+        var countdownTimer = new System.Windows.Threading.DispatcherTimer
         {
-            Content = TeamFeatureText("ChatFeatureMasterAccept", "Accept"),
-            Appearance = WpfUi.ControlAppearance.Primary,
-            Margin = new Thickness(0, 0, 8, 0)
+            Interval = TimeSpan.FromSeconds(1)
         };
-        accept.Click += (_, _) => snackbar.Visibility = Visibility.Collapsed;
+        countdownTimer.Tick += (_, _) =>
+        {
+            remainingSeconds--;
+            if (remainingSeconds <= 0)
+            {
+                countdownTimer.Stop();
+                return;
+            }
 
+            countdownText.Text = string.Format(
+                TeamFeatureText("ChatFeatureMasterAutoCloseCountdown", "Closes in {0}s"),
+                remainingSeconds);
+        };
+        countdownTimer.Start();
+
+        var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
         var deny = new WpfUi.Button
         {
             Content = TeamFeatureText("ChatFeatureMasterDeny", "Deny"),
@@ -396,11 +447,11 @@ public partial class MainWindow
             _declinedMasterUntilUtc = DateTime.UtcNow.AddMinutes(5);
             _isChatFeatureMaster = false;
             ApplyChatFeatureMasterUiState();
+            countdownTimer.Stop();
             snackbar.Visibility = Visibility.Collapsed;
             _ = SyncTeamFeatureMasterAsync();
         };
 
-        buttons.Children.Add(accept);
         buttons.Children.Add(deny);
         DockPanel.SetDock(buttons, Dock.Right);
         footer.Children.Add(buttons);
