@@ -1,3 +1,5 @@
+using System;
+
 namespace RustPlusDesk.Models
 {
     public enum ConfidenceLevel { Low, Medium, High, Confirmed }
