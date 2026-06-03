@@ -53,9 +53,82 @@
             </Setter>
         </Style>
 
-        <Style x:Key="SmallGhost" TargetType="Button" BasedOn="{StaticResource GhostButton}">
+        <Style x:Key="SmallGhost" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#8C96A8"/>
+            <Setter Property="BorderBrush" Value="#28FFFFFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="6,3"/>
             <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1AFFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AnalyticsPrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#1A4D6B"/>
+            <Setter Property="Foreground" Value="#60CDFF"/>
+            <Setter Property="BorderBrush" Value="#60CDFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2A6D8B"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AnalyticsCloseButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#8C96A8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="4" Padding="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1AFFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </UserControl.Resources>
 
@@ -78,10 +151,9 @@
                            VerticalAlignment="Center"/>
                 <Button DockPanel.Dock="Right"
                         Content="✕"
-                        Style="{StaticResource GhostButton}"
-                        Width="26" Height="26" Padding="0"
+                        Style="{StaticResource AnalyticsCloseButton}"
+                        Width="26" Height="26"
                         FontSize="12"
-                        Foreground="{DynamicResource TextSubtle}"
                         Click="BtnClosePanel_Click"/>
             </DockPanel>
         </Border>
@@ -234,7 +306,7 @@
                                      ToolTip="Evidence link (optional)"/>
                             <Button Grid.Row="3" Grid.Column="1" Margin="4,0,0,0"
                                     Content="🔍 Flag + Steam Lookup"
-                                    Style="{StaticResource PrimaryButton}"
+                                    Style="{StaticResource AnalyticsPrimaryButton}"
                                     Command="{Binding AddRecordCommand}"
                                     FontSize="11"/>
                         </Grid>
