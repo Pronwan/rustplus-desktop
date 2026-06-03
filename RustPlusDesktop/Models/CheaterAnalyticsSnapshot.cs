@@ -1,4 +1,4 @@
-namespace RustPlusDesktop.Models
+namespace RustPlusDesk.Models
 {
     public class CheaterAnalyticsSnapshot
     {

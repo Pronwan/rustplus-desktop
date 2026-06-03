@@ -4673,6 +4673,46 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         BtnSettings_Click(sender, e);
     }
 
+    private CheaterAnalyticsViewModel _cheaterVm;
+
+    private void BtnCheaterAnalytics_Click(object sender, RoutedEventArgs e)
+    {
+        if (CheaterAnalyticsPanel.Visibility == Visibility.Visible)
+        {
+            CheaterAnalyticsPanel.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        // Collapse other overlays (same pattern as settings/profit panels)
+        ProfitTradesPanel.Visibility  = Visibility.Collapsed;
+        BuyXForYPanel.Visibility      = Visibility.Collapsed;
+        AppSettingsPanel.Visibility   = Visibility.Collapsed;
+
+        // Lazy-init the ViewModel on first open
+        if (_cheaterVm == null)
+        {
+            var dataDir = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "RustPlusDesk");
+            Directory.CreateDirectory(dataDir);
+
+            var serverId = _vm.Selected?.SteamId64 ?? "default";
+            var wipeId   = _vm.Selected?.RustMapsWipeTime?.ToString("yyyyMMdd") ?? "wipe0";
+
+            var analyticsSvc = new CheaterAnalyticsService(dataDir);
+            var steamSvc     = new SteamBanLookupService("");   // user can add key via Settings later
+
+            _cheaterVm = new CheaterAnalyticsViewModel(analyticsSvc, steamSvc, serverId, wipeId);
+        }
+        else
+        {
+            _cheaterVm.Reload();
+        }
+
+        CheaterAnalyticsPanel.DataContext = _cheaterVm;
+        CheaterAnalyticsPanel.Visibility  = Visibility.Visible;
+    }
+
     public void UpdateLanguageFlag()
     {
         if (ImgLanguageFlag == null) return;

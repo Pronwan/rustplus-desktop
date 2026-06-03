@@ -1,7 +1,7 @@
 using System.Net.Http;
 using System.Text.Json;
 
-namespace RustPlusDesktop.Services
+namespace RustPlusDesk.Services
 {
     /// <summary>
     /// Calls the public Steam Web API to retrieve VAC/game-ban status.

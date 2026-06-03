@@ -1,4 +1,4 @@
-namespace RustPlusDesktop.Models
+namespace RustPlusDesk.Models
 {
     public enum ConfidenceLevel { Low, Medium, High, Confirmed }
     public enum FlagSource { AdminManual, PlayerReport, VACBan, GameBan, BattleMetrics }

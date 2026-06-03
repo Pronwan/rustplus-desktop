@@ -1,7 +1,7 @@
 using System.Text.Json;
-using RustPlusDesktop.Models;
+using RustPlusDesk.Models;
 
-namespace RustPlusDesktop.Services
+namespace RustPlusDesk.Services
 {
     public class CheaterAnalyticsService
     {

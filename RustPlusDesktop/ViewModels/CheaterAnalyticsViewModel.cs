@@ -2,10 +2,10 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using RustPlusDesktop.Models;
-using RustPlusDesktop.Services;
+using RustPlusDesk.Models;
+using RustPlusDesk.Services;
 
-namespace RustPlusDesktop.ViewModels
+namespace RustPlusDesk.ViewModels
 {
     public class CheaterAnalyticsViewModel : INotifyPropertyChanged
     {
