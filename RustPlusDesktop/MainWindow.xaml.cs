@@ -237,18 +237,27 @@ public partial class MainWindow : WpfUi.FluentWindow
     private System.Windows.Threading.DispatcherTimer? _overlayHideTimer;
     private System.Windows.Threading.DispatcherTimer? _cloudSyncTimer;
     private volatile bool _ownCloudRestoreReady = false;
+    private bool _premiumProfileRefreshBusy = false;
 
     private void StartCloudSyncTimer()
     {
         if (_cloudSyncTimer == null)
         {
             int tickCount = 0;
+            int profileRefreshTickCount = 0;
             _cloudSyncTimer = new System.Windows.Threading.DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(2.5)
             };
             _cloudSyncTimer.Tick += async (s, e) =>
             {
+                profileRefreshTickCount++;
+                if (profileRefreshTickCount >= 360)
+                {
+                    profileRefreshTickCount = 0;
+                    await RefreshPremiumProfileSnapshotAsync();
+                }
+
                 if (!TrackingService.CloudSyncEnabled || _vm.Selected == null) return;
 
                 // Upload our own device snapshot every 10 seconds (4 ticks of 2.5s).
@@ -273,6 +282,34 @@ public partial class MainWindow : WpfUi.FluentWindow
             };
         }
         _cloudSyncTimer.Start();
+    }
+
+    private async Task RefreshPremiumProfileSnapshotAsync()
+    {
+        if (_premiumProfileRefreshBusy) return;
+        if (!Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated &&
+            !Services.Auth.SupabaseAuthManager.IsEmailAuthenticated)
+            return;
+
+        _premiumProfileRefreshBusy = true;
+        try
+        {
+            if (await Services.Auth.SupabaseAuthManager.EnsureFreshSessionAsync())
+            {
+                await Services.Auth.SupabaseAuthManager.RefreshUserProfileAsync();
+                UpdateAdminUi();
+                UpdateCloudSyncUI();
+                AppSettingsPanel?.LoadSettings();
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[Cloud/Debug] Premium status refresh failed: " + ex.Message);
+        }
+        finally
+        {
+            _premiumProfileRefreshBusy = false;
+        }
     }
 
     private Action? _pendingUploadAction;

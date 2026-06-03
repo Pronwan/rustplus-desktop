@@ -1,0 +1,226 @@
+<Window x:Class="RustPlusDesk.Views.Windows.EmailLoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Cloud Account Login"
+        Width="460" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#0F1215"
+        Foreground="White"
+        FontFamily="Segoe UI"
+        Closed="Window_Closed">
+
+    <Window.Resources>
+        <Style x:Key="TabToggle" TargetType="RadioButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#888"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0,0,0,2"/>
+            <Setter Property="Padding" Value="0,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Foreground" Value="#E8612C"/>
+                                <Setter Property="BorderBrush" Value="#E8612C"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AuthField" TargetType="TextBox">
+            <Setter Property="Background" Value="#1A1D21"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#333"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Height" Value="38"/>
+        </Style>
+
+        <Style x:Key="AuthPassword" TargetType="PasswordBox">
+            <Setter Property="Background" Value="#1A1D21"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#333"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Height" Value="38"/>
+        </Style>
+
+        <Style x:Key="PrimaryBtn" TargetType="Button">
+            <Setter Property="Background" Value="#E8612C"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF7840"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="#555"/>
+                                <Setter Property="Foreground" Value="#999"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="GhostBtn" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#888"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="8,4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="#0F1215" CornerRadius="10">
+        <StackPanel>
+            <!-- Header -->
+            <Border Background="#1A1D21" CornerRadius="10,10,0,0" Padding="20,16">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <ui:SymbolIcon Symbol="Person24" FontSize="18" Foreground="#E8612C" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtHeaderTitle" Text="Cloud Account" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Content="&#x00D7;" Style="{StaticResource GhostBtn}" HorizontalAlignment="Right"
+                            Width="28" Height="28" FontSize="16" FontWeight="Bold"
+                            Click="BtnClose_Click"/>
+                </Grid>
+            </Border>
+
+            <!-- Tab switcher -->
+            <Border Background="#16191D" Padding="20,0" BorderBrush="#222" BorderThickness="0,0,0,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <RadioButton x:Name="TabSignIn" Content="Sign in" Style="{StaticResource TabToggle}"
+                                 GroupName="AuthTab" IsChecked="True"
+                                 Checked="Tab_Checked"/>
+                    <RadioButton x:Name="TabSignUp" Grid.Column="1" Content="Create account" Style="{StaticResource TabToggle}"
+                                 GroupName="AuthTab"
+                                 Checked="Tab_Checked"/>
+                </Grid>
+            </Border>
+
+            <!-- Form area -->
+            <StackPanel Margin="20,20,20,8">
+
+                <!-- Sign In Panel -->
+                <StackPanel x:Name="PanelSignIn">
+                    <TextBlock x:Name="LblSignInEmail" Text="Email address" Foreground="#AAA" FontSize="11" Margin="0,0,0,4"/>
+                    <TextBox x:Name="TxtSignInEmail" Style="{StaticResource AuthField}" Margin="0,0,0,12"/>
+                    <TextBlock x:Name="LblSignInPassword" Text="Password" Foreground="#AAA" FontSize="11" Margin="0,0,0,4"/>
+                    <PasswordBox x:Name="PwdSignIn" Style="{StaticResource AuthPassword}" Margin="0,0,0,16"
+                                 KeyDown="PwdSignIn_KeyDown"/>
+                    <Button x:Name="BtnSignIn" Content="Sign in" Style="{StaticResource PrimaryBtn}"
+                            HorizontalAlignment="Stretch" Click="BtnSignIn_Click"/>
+                </StackPanel>
+
+                <!-- Sign Up Panel -->
+                <StackPanel x:Name="PanelSignUp" Visibility="Collapsed">
+                    <TextBlock x:Name="LblSignUpEmail" Text="Email address" Foreground="#AAA" FontSize="11" Margin="0,0,0,4"/>
+                    <TextBox x:Name="TxtSignUpEmail" Style="{StaticResource AuthField}" Margin="0,0,0,12"/>
+                    <TextBlock x:Name="LblSignUpPassword" Text="Password (min. 6 characters)" Foreground="#AAA" FontSize="11" Margin="0,0,0,4"/>
+                    <PasswordBox x:Name="PwdSignUp" Style="{StaticResource AuthPassword}" Margin="0,0,0,12"/>
+                    <TextBlock x:Name="LblConfirmPassword" Text="Confirm password" Foreground="#AAA" FontSize="11" Margin="0,0,0,4"/>
+                    <PasswordBox x:Name="PwdSignUpConfirm" Style="{StaticResource AuthPassword}" Margin="0,0,0,16"/>
+                    <Button x:Name="BtnSignUp" Content="Create account" Style="{StaticResource PrimaryBtn}"
+                            HorizontalAlignment="Stretch" Click="BtnSignUp_Click"/>
+                </StackPanel>
+
+                <!-- Status / Error area -->
+                <Border x:Name="PanelStatus" Visibility="Collapsed" Margin="0,14,0,0"
+                        Background="#1A1D21" CornerRadius="6" Padding="12,10">
+                    <StackPanel>
+                        <StackPanel x:Name="PanelLoading" Orientation="Horizontal" Visibility="Collapsed" Margin="0,0,0,8">
+                            <ui:ProgressRing Width="18" Height="18" IsIndeterminate="True" Margin="0,0,10,0"/>
+                            <TextBlock x:Name="TxtLoadingMsg" Text="Please wait..." Foreground="#CCC" FontSize="12" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock x:Name="TxtStatusMsg" Foreground="#CCC" FontSize="12" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Email confirmation waiting panel -->
+                <Border x:Name="PanelAwaitConfirm" Visibility="Collapsed" Margin="0,14,0,0"
+                        Background="#12251A" CornerRadius="8" Padding="14,12"
+                        BorderBrush="#2A6B3A" BorderThickness="1">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <ui:SymbolIcon Symbol="Mail24" FontSize="16" Foreground="#4CAF50" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtAwaitTitle" Text="Confirmation email sent!" FontSize="13" FontWeight="SemiBold" Foreground="#4CAF50" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock x:Name="TxtAwaitMsg" FontSize="12" Foreground="#CCC" TextWrapping="Wrap" Margin="0,0,0,10"
+                                   Text="Click the link in your email. The app checks automatically every few seconds..."/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <ui:ProgressRing Width="14" Height="14" IsIndeterminate="True" Margin="0,0,8,0"/>
+                            <TextBlock x:Name="TxtPollCount" Text="Waiting for confirmation..." Foreground="#888" FontSize="11" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <Button x:Name="BtnCancelPolling" Content="Cancel" Style="{StaticResource GhostBtn}"
+                                HorizontalAlignment="Left" Click="BtnCancelPolling_Click"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Footer -->
+            <Border Padding="20,12,20,20">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock x:Name="TxtProblems" Text="Problems? " Foreground="#666" FontSize="11"/>
+                    <TextBlock>
+                        <Hyperlink NavigateUri="https://rustplusdesktop.onrender.com/login"
+                                   RequestNavigate="Hyperlink_RequestNavigate"
+                                   Foreground="#E8612C">
+                            <Run x:Name="TxtOpenBrowser" Text="Open in browser"/>
+                        </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Border>
+</Window>

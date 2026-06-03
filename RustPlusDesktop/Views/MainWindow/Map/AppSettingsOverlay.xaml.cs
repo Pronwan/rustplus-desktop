@@ -27,6 +27,11 @@ namespace RustPlusDesk.Views
             Loaded += AppSettingsOverlay_Loaded;
         }
 
+        private static string T(string key, string fallback)
+        {
+            return Properties.Resources.ResourceManager.GetString(key) ?? fallback;
+        }
+
         private void AppSettingsOverlay_Loaded(object sender, RoutedEventArgs e)
         {
             if (_isSettingsInitialized) return;
@@ -98,20 +103,41 @@ namespace RustPlusDesk.Views
             // Cloud Sync Setting load
             ChkCloudSync.IsChecked = TrackingService.CloudSyncEnabled;
 
-            // Discord connection state checking
-            if (Services.Auth.SupabaseAuthManager.IsAuthenticated)
+            // Auth connection state
+            bool isDiscord = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated;
+            bool isEmail   = Services.Auth.SupabaseAuthManager.IsEmailAuthenticated;
+            bool connected = isDiscord || isEmail;
+            bool isPremium = Services.Auth.SupabaseAuthManager.IsPremium;
+
+            if (isDiscord)
             {
-                BtnDiscordConnect.Content = Properties.Resources.ResourceManager.GetString("DisconnectDiscord") ?? "Disconnect Discord";
-                bool isSupporter = Services.Auth.SupabaseAuthManager.IsPremium;
-                BrdSupporterSettings.IsEnabled = isSupporter;
-                BrdSupporterSettings.Opacity = isSupporter ? 1.0 : 0.5;
+                TxtDiscordBtnLabel.Text = T("AuthDiscordDisconnectButton", "Disconnect Discord");
+                BtnDiscordConnect.Appearance = Wpf.Ui.Controls.ControlAppearance.Caution;
+                TxtAuthStatus.Text = string.Format(T("AuthDiscordConnectedFormat", "Discord connected - Tier: {0}"), Services.Auth.SupabaseAuthManager.CurrentTier.ToUpper());
+                TxtAuthStatus.Foreground = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0x4C, 0xAF, 0x50));
+            }
+            else if (isEmail)
+            {
+                var email = Services.Auth.SupabaseAuthManager.Client?.Auth?.CurrentUser?.Email ?? "";
+                TxtDiscordBtnLabel.Text = "Discord";
+                BtnDiscordConnect.Appearance = Wpf.Ui.Controls.ControlAppearance.Secondary;
+                TxtAuthStatus.Text = string.Format(T("AuthEmailConnectedFormat", "Email connected: {0} - Tier: {1}"), email, Services.Auth.SupabaseAuthManager.CurrentTier.ToUpper());
+                TxtAuthStatus.Foreground = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0x4C, 0xAF, 0x50));
             }
             else
             {
-                BtnDiscordConnect.Content = Properties.Resources.ResourceManager.GetString("ConnectDiscord") ?? "Connect Discord for Supporter Benefits";
-                BrdSupporterSettings.IsEnabled = false;
-                BrdSupporterSettings.Opacity = 0.5;
+                TxtDiscordBtnLabel.Text = "Discord";
+                BtnDiscordConnect.Appearance = Wpf.Ui.Controls.ControlAppearance.Secondary;
+                TxtAuthStatus.Text = T("AuthNotConnectedStatus", "Not connected - sign in to use Cloud Sync and backups");
+                TxtAuthStatus.Foreground = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0x88, 0x88, 0x88));
             }
+
+            BrdSupporterSettings.IsEnabled = isPremium;
+            BrdSupporterSettings.Opacity = isPremium ? 1.0 : 0.5;
+            BtnEmailConnect.Content = T("EmailAccountButton", "Email / Account");
         }
 
         private void CmbLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -312,42 +338,68 @@ namespace RustPlusDesk.Views
         private async void BtnDiscordConnect_Click(object sender, RoutedEventArgs e)
         {
             BtnDiscordConnect.IsEnabled = false;
-            
-            if (Services.Auth.SupabaseAuthManager.IsAuthenticated)
+            BtnEmailConnect.IsEnabled = false;
+
+            if (Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated)
             {
-                BtnDiscordConnect.Content = Properties.Resources.ResourceManager.GetString("DiscordConnecting") ?? "Connecting...";
+                // Disconnect Discord
+                TxtDiscordBtnLabel.Text = T("AuthDisconnectingStatus", "Disconnecting...");
                 await Services.Auth.SupabaseAuthManager.LogoutAsync();
                 ParentWindow?.AppendLog("[Cloud] Discord disconnected.");
-                BtnDiscordConnect.Content = Properties.Resources.ResourceManager.GetString("ConnectDiscord") ?? "Connect Discord for Supporter Benefits";
-                BtnDiscordConnect.IsEnabled = true;
-                BrdSupporterSettings.IsEnabled = false;
-                BrdSupporterSettings.Opacity = 0.5;
             }
             else
             {
-                ParentWindow?.AppendLog("[Cloud] Launching Discord OAuth login via browser...");
-                BtnDiscordConnect.Content = Properties.Resources.ResourceManager.GetString("DiscordConnecting") ?? "Connecting...";
+                // Connect Discord
+                ParentWindow?.AppendLog("[Cloud] Starting Discord OAuth login...");
+                TxtDiscordBtnLabel.Text = T("AuthConnectingStatus", "Connecting...");
                 bool success = await Services.Auth.SupabaseAuthManager.LoginWithDiscordAsync();
-                
+
                 if (success)
                 {
-                    ParentWindow?.AppendLog("[Cloud] Discord connected successfully! Syncing Discord roles...");
-                    BtnDiscordConnect.Content = Properties.Resources.ResourceManager.GetString("DisconnectDiscord") ?? "Disconnect Discord";
-                    BtnDiscordConnect.IsEnabled = true;
-                    
-                    bool isSupporter = Services.Auth.SupabaseAuthManager.IsPremium;
+                    ParentWindow?.AppendLog("[Cloud] Discord connected. Syncing roles...");
                     var tier = Services.Auth.SupabaseAuthManager.CurrentTier;
-                    ParentWindow?.AppendLog($"[Cloud] Discord role sync complete. User tier: {tier.ToUpper()} (IsPremium: {isSupporter})");
-                    
-                    BrdSupporterSettings.IsEnabled = isSupporter;
-                    BrdSupporterSettings.Opacity = isSupporter ? 1.0 : 0.5;
+                    ParentWindow?.AppendLog($"[Cloud] Rollen-Sync abgeschlossen. Tier: {tier.ToUpper()}");
                 }
                 else
                 {
-                    ParentWindow?.AppendLog("[Cloud] Discord login failed or cancelled by user.");
-                    BtnDiscordConnect.Content = Properties.Resources.ResourceManager.GetString("ConnectDiscord") ?? "Connect Discord for Supporter Benefits";
-                    BtnDiscordConnect.IsEnabled = true;
+                    ParentWindow?.AppendLog("[Cloud] Discord login failed or canceled.");
                 }
+            }
+
+            BtnDiscordConnect.IsEnabled = true;
+            BtnEmailConnect.IsEnabled = true;
+            LoadSettings();
+            ParentWindow?.UpdateCloudSyncUI();
+        }
+
+        private void BtnEmailConnect_Click(object sender, RoutedEventArgs e)
+        {
+            // If email-authenticated, offer logout
+            if (Services.Auth.SupabaseAuthManager.IsEmailAuthenticated)
+            {
+                var result = System.Windows.MessageBox.Show(
+                    T("EmailLogoutConfirmMessage", "Sign out of the email account?"),
+                    T("CloudAccountTitle", "Cloud Account"),
+                    System.Windows.MessageBoxButton.YesNo,
+                    System.Windows.MessageBoxImage.Question);
+
+                if (result == System.Windows.MessageBoxResult.Yes)
+                {
+                    _ = Services.Auth.SupabaseAuthManager.LogoutAsync();
+                    ParentWindow?.AppendLog("[Cloud] Email account signed out.");
+                    LoadSettings();
+                    ParentWindow?.UpdateCloudSyncUI();
+                }
+                return;
+            }
+
+            // Open email login window
+            var win = new Views.Windows.EmailLoginWindow { Owner = ParentWindow };
+            if (win.ShowDialog() == true && win.LoginSuccessful)
+            {
+                ParentWindow?.AppendLog("[Cloud] Email login successful.");
+                LoadSettings();
+                ParentWindow?.UpdateCloudSyncUI();
             }
         }
 

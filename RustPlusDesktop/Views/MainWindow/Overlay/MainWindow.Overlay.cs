@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using RustPlusDesk.Services;
 using RustPlusDesk.Services.Auth;
 using Supabase.Realtime;
+using System.Windows.Threading;
 
 namespace RustPlusDesk.Views;
 
@@ -676,7 +677,7 @@ private bool _overlayToolsVisible = false;
         }
     }
 
-    private const double USER_ICON_BASE_SIZE = 24;   // hier stellst du "doppelt so gross" ein
+    private double _activeIconSize = 24;   // hier stellst du "doppelt so gross" ein
     private const double USER_ICON_MIN_SCALE = 0.2;  // nicht kleiner werden
     private const double USER_ICON_MAX_SCALE = 2.0;   // nicht riesig werden
 
@@ -699,21 +700,32 @@ private bool _overlayToolsVisible = false;
         var img = new Image
         {
             Source = new BitmapImage(new Uri(_currentIconPath, UriKind.RelativeOrAbsolute)),
-            Width = USER_ICON_BASE_SIZE,
-            Height = USER_ICON_BASE_SIZE,
+            Width = _activeIconSize,
+            Height = _activeIconSize,
             RenderTransformOrigin = new Point(0.5, 0.5),
             RenderTransform = new ScaleTransform(scale, scale),
             Tag = new OverlayTag
             {
                 OwnerSteamId = _mySteamId,
                 IsUserEditable = true,
-                BaseSize = USER_ICON_BASE_SIZE
+                BaseSize = _activeIconSize,
+                Note = null,
+                Screenshots = new List<string>()
             }
         };
 
+        bool isBase = _currentIconPath.Contains("base1.png") || _currentIconPath.Contains("base2.png");
+
+        if (isBase)
+        {
+            img.MouseEnter += BaseIcon_MouseEnter;
+            img.MouseLeave += BaseIcon_MouseLeave;
+            img.MouseLeftButtonUp += BaseIcon_MouseLeftButtonUp;
+        }
+
         // 5. Canvas-Position IMMER aus der Basisgroesse ableiten
-        Canvas.SetLeft(img, mapPos.X - USER_ICON_BASE_SIZE / 2);
-        Canvas.SetTop(img, mapPos.Y - USER_ICON_BASE_SIZE / 2);
+        Canvas.SetLeft(img, mapPos.X - _activeIconSize / 2);
+        Canvas.SetTop(img, mapPos.Y - _activeIconSize / 2);
 
         // 6. ins Overlay
         Overlay.Children.Add(img);
@@ -721,6 +733,23 @@ private bool _overlayToolsVisible = false;
 
         // 7. speichern (nimmt BASIS-W/H, nicht die skalierten Pixel - das ist korrekt!)
         SaveOwnOverlayToJson();
+
+        // 8. Bei Base-Icons: direkt Screenshot-Dialog oeffnen (keine Galerie auf Placement-Klick)
+        if (isBase && img.Tag is OverlayTag baseMeta)
+        {
+            bool isPremium = Services.Auth.SupabaseAuthManager.IsPremium;
+            int maxScreenshots = isPremium ? 5 : 1;
+            if (baseMeta.Screenshots.Count < maxScreenshots)
+            {
+                var dlg = new Views.Windows.BaseScreenshotWindow { Owner = this };
+                if (dlg.ShowDialog() == true && !string.IsNullOrEmpty(dlg.Base64Result))
+                {
+                    baseMeta.Screenshots.Add(dlg.Base64Result);
+                    SaveOwnOverlayToJson();
+                    UploadOwnOverlayToTeam();
+                }
+            }
+        }
     }
 
     private class UserIconTag
@@ -912,6 +941,7 @@ private bool _overlayToolsVisible = false;
             _currentTool = OverlayToolMode.None;
             _draggingElement = null;
             UpdateToolButtonHighlights();
+            UpdateOptionsPanelVisibility();
 
             BtnToggleOverlayTools.ClearValue(Control.BackgroundProperty);
             BtnToggleOverlayTools.ClearValue(Control.BorderBrushProperty);
@@ -920,6 +950,7 @@ private bool _overlayToolsVisible = false;
         {
             RebuildOverlayTeamBar();
             UpdateToolButtonHighlights();
+            UpdateOptionsPanelVisibility();
 
             BtnToggleOverlayTools.Background = new SolidColorBrush(Color.FromArgb(50, 0, 150, 255));
             BtnToggleOverlayTools.BorderBrush = new SolidColorBrush(Colors.DodgerBlue);
@@ -1075,16 +1106,19 @@ private bool _overlayToolsVisible = false;
         bool deviceLimitExceeded = IsFreeDeviceSyncLimitExceeded();
         int overlaySizeBytes = GetCurrentOverlaySizeBytes();
         bool overlayLimitExceeded = IsOverlaySyncLimitExceeded(overlaySizeBytes);
+        bool baseLimitExceeded = IsBaseLimitExceeded();
 
-        ApplyCloudButtonState(BtnDevicesExport, TrackingService.CloudSyncEnabled, deviceLimitExceeded);
-        ApplyCloudButtonState(ToolUploadButton, TrackingService.CloudSyncEnabled, overlayLimitExceeded);
+        bool totalLimitExceeded = deviceLimitExceeded || overlayLimitExceeded || baseLimitExceeded;
+
+        ApplyCloudButtonState(BtnDevicesExport, TrackingService.CloudSyncEnabled, totalLimitExceeded);
+        ApplyCloudButtonState(ToolUploadButton, TrackingService.CloudSyncEnabled, totalLimitExceeded);
 
         if (BtnDevicesExport != null)
         {
             BtnDevicesExport.ToolTip = !TrackingService.CloudSyncEnabled
                 ? CloudText("CloudTooltipActivate", "Activate Cloud-Sync")
-                : deviceLimitExceeded
-                    ? CloudText("CloudTooltipDeviceFreeLimit", "10 Devices max in Free Tier")
+                : totalLimitExceeded
+                    ? (deviceLimitExceeded ? CloudText("CloudTooltipDeviceFreeLimit", "10 Devices max in Free Tier") : CloudText("CloudTooltipSyncLimitReached", "Sync limit reached"))
                     : _lastDevicesCloudTooltip ?? CloudText("CloudTooltipActive", "Cloud-Sync active");
         }
 
@@ -1092,10 +1126,12 @@ private bool _overlayToolsVisible = false;
         {
             ToolUploadButton.ToolTip = !TrackingService.CloudSyncEnabled
                 ? CloudText("CloudTooltipActivate", "Activate Cloud-Sync")
-                : overlayLimitExceeded
-                    ? string.Format(
-                        CloudText("CloudTooltipOverlayTooBigFormat", "Overlay Size too big for sync ({0} KB)"),
-                        BytesToKb(overlaySizeBytes))
+                : totalLimitExceeded
+                    ? (baseLimitExceeded
+                        ? CloudText("CloudTooltipBaseLimit", "Base limit reached (Free: max 2 bases, Premium: max 10 bases)")
+                        : (overlayLimitExceeded
+                            ? string.Format(CloudText("CloudTooltipOverlayTooBigFormat", "Overlay Size too big for sync ({0} KB)"), BytesToKb(overlaySizeBytes))
+                            : CloudText("CloudTooltipSyncLimitReached", "Sync limit reached")))
                     : _lastOverlayCloudTooltip ?? CloudText("CloudTooltipActive", "Cloud-Sync active");
         }
 
@@ -1129,6 +1165,27 @@ private bool _overlayToolsVisible = false;
         return byteSize > maxBytes;
     }
 
+    private bool IsBaseLimitExceeded()
+    {
+        int baseCount = 0;
+        foreach (var child in Overlay.Children)
+        {
+            if (child is Image img && img.Source is BitmapImage bi)
+            {
+                string path = bi.UriSource?.ToString() ?? "";
+                if (path.Contains("base1.png") || path.Contains("base2.png"))
+                {
+                    if (img.Tag is OverlayTag meta && meta.OwnerSteamId == _mySteamId)
+                    {
+                        baseCount++;
+                    }
+                }
+            }
+        }
+        int maxBases = Services.Auth.SupabaseAuthManager.IsPremium ? 10 : 2;
+        return baseCount > maxBases;
+    }
+
     private int GetCurrentOverlaySizeBytes()
     {
         try
@@ -1160,18 +1217,19 @@ private bool _overlayToolsVisible = false;
         if (!syncEnabled)
         {
             StopCloudPulse(button);
-            button.Background = new SolidColorBrush(Color.FromRgb(232, 97, 26));
+            button.Background = new SolidColorBrush(Color.FromRgb(217, 119, 6)); // Solid desaturated orange
             return;
         }
 
         if (limitExceeded)
         {
-            StartCloudPulse(button);
+            StopCloudPulse(button);
+            button.Background = new SolidColorBrush(Color.FromRgb(232, 97, 26)); // Orange warning
             return;
         }
 
         StopCloudPulse(button);
-        button.Background = new SolidColorBrush(Colors.Green);
+        button.Background = new SolidColorBrush(Color.FromRgb(46, 125, 50)); // Desaturated Green (#2E7D32)
     }
 
     private void MarkDevicesCloudSynced(int count)
@@ -1192,7 +1250,7 @@ private bool _overlayToolsVisible = false;
             BytesToKb(byteSize),
             DateTime.Now.ToString("HH:mm:ss"));
         UpdateCloudSyncUI();
-        if (!IsOverlaySyncLimitExceeded(byteSize))
+        if (!IsOverlaySyncLimitExceeded(byteSize) && !IsBaseLimitExceeded())
             FlashCloudButton(ToolUploadButton);
     }
 
@@ -1200,27 +1258,27 @@ private bool _overlayToolsVisible = false;
     {
         if (button == null) return;
 
-        var brush = SetCloudButtonBrush(button, Colors.Green);
+        var brush = SetCloudButtonBrush(button, Color.FromRgb(46, 125, 50));
 
         var animation = new System.Windows.Media.Animation.ColorAnimation
         {
-            From = Color.FromRgb(82, 255, 124),
-            To = Colors.Green,
+            From = Color.FromRgb(76, 175, 80),
+            To = Color.FromRgb(46, 125, 50),
             Duration = TimeSpan.FromMilliseconds(650),
             FillBehavior = System.Windows.Media.Animation.FillBehavior.Stop
         };
 
-        animation.Completed += (_, __) => button.Background = new SolidColorBrush(Colors.Green);
+        animation.Completed += (_, __) => button.Background = new SolidColorBrush(Color.FromRgb(46, 125, 50));
         brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
     }
 
     private void StartCloudPulse(Control button)
     {
-        var brush = SetCloudButtonBrush(button, Colors.Green);
+        var brush = SetCloudButtonBrush(button, Color.FromRgb(46, 125, 50));
 
         var animation = new System.Windows.Media.Animation.ColorAnimation
         {
-            From = Colors.Green,
+            From = Color.FromRgb(46, 125, 50),
             To = Color.FromRgb(224, 49, 49),
             Duration = TimeSpan.FromMilliseconds(650),
             AutoReverse = true,
@@ -1469,6 +1527,13 @@ private bool _overlayToolsVisible = false;
                 return;
             }
 
+            if (IsBaseLimitExceeded())
+            {
+                AppendLog("[overlay/cloud] Upload skipped: base count limit reached.");
+                UpdateCloudSyncUI();
+                return;
+            }
+
             // optional, aber sinnvoll: sicherstellen, dass die lokale Datei "aktuell" ist
             try
             {
@@ -1661,6 +1726,150 @@ private bool _overlayToolsVisible = false;
         }
 
         UpdateToolButtonHighlights();
+        UpdateOptionsPanelVisibility();
+    }
+
+    private void UpdateOptionsPanelVisibility()
+    {
+        if (OverlayToolOptionsPanel == null) return;
+
+        DrawOptionsPanel.Visibility = Visibility.Collapsed;
+        TextOptionsPanel.Visibility = Visibility.Collapsed;
+        IconOptionsPanel.Visibility = Visibility.Collapsed;
+        EraserOptionsPanel.Visibility = Visibility.Collapsed;
+
+        if (_currentTool == OverlayToolMode.None)
+        {
+            OverlayToolOptionsPanel.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        OverlayToolOptionsPanel.Visibility = Visibility.Visible;
+
+        switch (_currentTool)
+        {
+            case OverlayToolMode.Draw:
+                DrawOptionsPanel.Visibility = Visibility.Visible;
+                if (SliderDrawThickness != null) SliderDrawThickness.Value = _drawThickness;
+                HighlightActiveColor(DrawOptionsPanel, _drawColor);
+                break;
+            case OverlayToolMode.Text:
+                TextOptionsPanel.Visibility = Visibility.Visible;
+                if (SliderTextSize != null) SliderTextSize.Value = _textSize;
+                HighlightActiveColor(TextOptionsPanel, _textColor);
+                break;
+            case OverlayToolMode.Icon:
+                IconOptionsPanel.Visibility = Visibility.Visible;
+                if (SliderIconSize != null) SliderIconSize.Value = _activeIconSize;
+                HighlightActiveIcon(_currentIconPath);
+                break;
+            case OverlayToolMode.Erase:
+                EraserOptionsPanel.Visibility = Visibility.Visible;
+                if (SliderEraserSize != null) SliderEraserSize.Value = _eraserSize;
+                break;
+        }
+    }
+
+    private void HighlightActiveColor(StackPanel panel, Color activeColor)
+    {
+        foreach (var child in panel.Children)
+        {
+            if (child is Button btn && btn.Tag is string hex)
+            {
+                try
+                {
+                    var c = (Color)ColorConverter.ConvertFromString(hex);
+                    if (c == activeColor)
+                    {
+                        btn.BorderBrush = Brushes.White;
+                        btn.BorderThickness = new Thickness(2);
+                    }
+                    else
+                    {
+                        btn.BorderBrush = new SolidColorBrush(Color.FromArgb(64, 255, 255, 255));
+                        btn.BorderThickness = new Thickness(1);
+                    }
+                }
+                catch {}
+            }
+        }
+    }
+
+    private void HighlightActiveIcon(string activePath)
+    {
+        var btns = new[] { BtnIconBase1, BtnIconBase2, BtnIconSam, BtnIconTurret };
+        foreach (var btn in btns)
+        {
+            if (btn == null) continue;
+            string tag = btn.Tag as string ?? "";
+            if (tag == activePath)
+            {
+                btn.Background = new SolidColorBrush(Color.FromArgb(48, 255, 255, 255));
+                btn.BorderBrush = Brushes.DodgerBlue;
+                btn.BorderThickness = new Thickness(2);
+            }
+            else
+            {
+                btn.Background = Brushes.Transparent;
+                btn.BorderBrush = new SolidColorBrush(Color.FromArgb(64, 255, 255, 255));
+                btn.BorderThickness = new Thickness(1);
+            }
+        }
+    }
+
+    private void SliderDrawThickness_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        _drawThickness = e.NewValue;
+    }
+
+    private void SliderTextSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        _textSize = e.NewValue;
+    }
+
+    private void SliderIconSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        _activeIconSize = e.NewValue;
+    }
+
+    private void SliderEraserSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        _eraserSize = e.NewValue;
+    }
+
+    private void DrawColorButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is string hex)
+        {
+            try
+            {
+                _drawColor = (Color)ColorConverter.ConvertFromString(hex);
+                HighlightActiveColor(DrawOptionsPanel, _drawColor);
+            }
+            catch {}
+        }
+    }
+
+    private void TextColorButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is string hex)
+        {
+            try
+            {
+                _textColor = (Color)ColorConverter.ConvertFromString(hex);
+                HighlightActiveColor(TextOptionsPanel, _textColor);
+            }
+            catch {}
+        }
+    }
+
+    private void IconSelection_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is string path)
+        {
+            _currentIconPath = path;
+            HighlightActiveIcon(_currentIconPath);
+        }
     }
     private void UpdateToolButtonHighlights()
     {
@@ -1792,6 +2001,8 @@ private bool _overlayToolsVisible = false;
         public ulong OwnerSteamId;
         public bool IsUserEditable;
         public double? BaseSize;   // nur fuer Icons, wird NICHT gespeichert
+        public string? Note;
+        public List<string> Screenshots = new();
     }
 
     // Liest lokales Overlay (mich) als OverlaySaveData
@@ -1836,7 +2047,9 @@ private bool _overlayToolsVisible = false;
                             X = x,
                             Y = y,
                             Width = img.Width,
-                            Height = img.Height
+                            Height = img.Height,
+                            Note = meta?.Note,
+                            Screenshots = meta?.Screenshots
                         };
                         data.Icons.Add(si);
                         break;
@@ -1941,12 +2154,21 @@ private bool _overlayToolsVisible = false;
                 Tag = new OverlayTag
                 {
                     OwnerSteamId = steamId,
-                    IsUserEditable = editableIfMine
+                    IsUserEditable = editableIfMine,
+                    Note = icon.Note,
+                    Screenshots = icon.Screenshots ?? new List<string>()
                 },
                 Visibility = _visibleOverlayOwners.Contains(steamId)
                              ? Visibility.Visible
                              : Visibility.Collapsed
             };
+
+            if (icon.IconPath.Contains("base1.png") || icon.IconPath.Contains("base2.png"))
+            {
+                img.MouseEnter += BaseIcon_MouseEnter;
+                img.MouseLeave += BaseIcon_MouseLeave;
+                img.MouseLeftButtonUp += BaseIcon_MouseLeftButtonUp;
+            }
 
             Canvas.SetLeft(img, icon.X);
             Canvas.SetTop(img, icon.Y);
@@ -2244,5 +2466,400 @@ private bool _overlayToolsVisible = false;
         _overlayPollTimer.Stop();
         _overlayPollTimer = null;
         AppendLog("[overlay/poll] Teammate overlay live-polling stopped.");
+    }
+
+    // --- BASE HOVER, GALLERY, LOUPE, & CONTEXT MENU LOGIC ---
+
+    private DispatcherTimer _baseDetailHideTimer;
+    private DispatcherTimer _baseDetailShowTimer;
+    private FrameworkElement? _activeBaseHoverAnchor;
+    private OverlayTag? _activeBaseHoverMeta;
+    private FrameworkElement? _activeGalleryAnchor;
+    private OverlayTag? _activeGalleryMeta;
+
+    private void BaseIcon_MouseEnter(object sender, MouseEventArgs e)
+    {
+        if (sender is FrameworkElement fe && fe.Tag is OverlayTag meta)
+        {
+            _baseDetailHideTimer?.Stop();
+            _baseDetailShowTimer?.Stop();
+
+            _activeBaseHoverAnchor = fe;
+            _activeBaseHoverMeta = meta;
+
+            _baseDetailShowTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
+            _baseDetailShowTimer.Tick += (s, ev) =>
+            {
+                _baseDetailShowTimer.Stop();
+                ShowBaseHoverDetails(_activeBaseHoverAnchor, _activeBaseHoverMeta);
+            };
+            _baseDetailShowTimer.Start();
+        }
+    }
+
+    private void BaseIcon_MouseLeave(object sender, MouseEventArgs e)
+    {
+        _baseDetailShowTimer?.Stop();
+        StartBaseDetailHideTimer();
+    }
+
+    private void BaseHoverPopup_MouseEnter(object sender, MouseEventArgs e)
+    {
+        _baseDetailHideTimer?.Stop();
+    }
+
+    private void BaseHoverPopup_MouseLeave(object sender, MouseEventArgs e)
+    {
+        StartBaseDetailHideTimer();
+    }
+
+    private void StartBaseDetailHideTimer()
+    {
+        _baseDetailHideTimer?.Stop();
+        _baseDetailHideTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
+        _baseDetailHideTimer.Tick += (s, e) =>
+        {
+            if (BaseHoverPopup != null && !BaseHoverPopup.IsMouseOver)
+            {
+                BaseHoverPopup.Visibility = Visibility.Collapsed;
+            }
+            _baseDetailHideTimer.Stop();
+        };
+        _baseDetailHideTimer.Start();
+    }
+
+    private void BtnCloseBaseHover_Click(object sender, RoutedEventArgs e)
+    {
+        if (BaseHoverPopup != null) BaseHoverPopup.Visibility = Visibility.Collapsed;
+    }
+
+    private void ShowBaseHoverDetails(FrameworkElement anchor, OverlayTag meta)
+    {
+        if (BaseHoverPopup == null || TxtBaseHoverNote == null || ImgBaseHoverScreenshot == null || BorderBaseHoverImage == null) return;
+
+        string noteText = meta.Note ?? "";
+        if (noteText.Length > 50)
+        {
+            noteText = noteText.Substring(0, 50) + " [...]";
+        }
+
+        TxtBaseHoverNote.Text = noteText;
+        TxtBaseHoverNote.Visibility = string.IsNullOrWhiteSpace(noteText) ? Visibility.Collapsed : Visibility.Visible;
+
+        if (meta.Screenshots != null && meta.Screenshots.Count > 0)
+        {
+            try
+            {
+                byte[] bytes = Convert.FromBase64String(meta.Screenshots[0]);
+                var bi = new BitmapImage();
+                bi.BeginInit();
+                bi.StreamSource = new MemoryStream(bytes);
+                bi.EndInit();
+                bi.Freeze();
+
+                ImgBaseHoverScreenshot.Source = bi;
+                BorderBaseHoverImage.Visibility = Visibility.Visible;
+            }
+            catch
+            {
+                BorderBaseHoverImage.Visibility = Visibility.Collapsed;
+            }
+        }
+        else
+        {
+            BorderBaseHoverImage.Visibility = Visibility.Collapsed;
+        }
+
+        if (string.IsNullOrWhiteSpace(noteText) && (meta.Screenshots == null || meta.Screenshots.Count == 0))
+        {
+            BaseHoverPopup.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        BaseHoverPopup.Visibility = Visibility.Visible;
+        BaseHoverPopup.UpdateLayout();
+
+        var pos = anchor.TranslatePoint(new Point(30, -20), WebViewHost);
+        double left = Math.Min(pos.X, WebViewHost.ActualWidth - BaseHoverPopup.ActualWidth - 20);
+        double top = Math.Min(pos.Y, WebViewHost.ActualHeight - BaseHoverPopup.ActualHeight - 20);
+        BaseHoverPopup.Margin = new Thickness(Math.Max(10, left), Math.Max(10, top), 0, 0);
+    }
+
+    private void BaseIcon_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is FrameworkElement fe && fe.Tag is OverlayTag meta)
+        {
+            if (BaseHoverPopup != null) BaseHoverPopup.Visibility = Visibility.Collapsed;
+            ShowBaseGallery(fe, meta);
+            e.Handled = true;
+        }
+    }
+
+    private void ShowBaseGallery(FrameworkElement anchor, OverlayTag meta)
+    {
+        if (BaseGalleryPopup == null || TxtBaseGalleryNote == null || ImgBaseGalleryMain == null || BaseGalleryThumbsPanel == null || BaseGalleryNoImagePlaceholder == null) return;
+
+        _activeGalleryAnchor = anchor;
+        _activeGalleryMeta = meta;
+
+        TxtBaseGalleryNote.Text = string.IsNullOrWhiteSpace(meta.Note)
+            ? CloudText("BaseNoNotesYet", "No notes added yet.")
+            : meta.Note;
+        BaseGalleryThumbsPanel.Children.Clear();
+
+        if (meta.Screenshots != null && meta.Screenshots.Count > 0)
+        {
+            BaseGalleryNoImagePlaceholder.Visibility = Visibility.Collapsed;
+            ImgBaseGalleryMain.Visibility = Visibility.Visible;
+
+            for (int i = 0; i < meta.Screenshots.Count; i++)
+            {
+                int index = i;
+                try
+                {
+                    byte[] bytes = Convert.FromBase64String(meta.Screenshots[i]);
+                    var bi = new BitmapImage();
+                    bi.BeginInit();
+                    bi.StreamSource = new MemoryStream(bytes);
+                    bi.EndInit();
+                    bi.Freeze();
+
+                    var border = new Border
+                    {
+                        Width = 56,
+                        Height = 44,
+                        Margin = new Thickness(0, 0, 0, 8),
+                        BorderThickness = new Thickness(1),
+                        BorderBrush = new SolidColorBrush(Color.FromArgb(64, 255, 255, 255)),
+                        CornerRadius = new CornerRadius(4),
+                        ClipToBounds = true,
+                        Background = Brushes.Black,
+                        Cursor = Cursors.Hand
+                    };
+
+                    var imgThumb = new Image { Source = bi, Stretch = Stretch.Uniform };
+                    border.Child = imgThumb;
+
+                    border.MouseLeftButtonDown += (s, ev) =>
+                    {
+                        SetActiveGalleryImage(index, meta);
+                    };
+
+                    BaseGalleryThumbsPanel.Children.Add(border);
+                }
+                catch {}
+            }
+
+            SetActiveGalleryImage(0, meta);
+        }
+        else
+        {
+            ImgBaseGalleryMain.Source = null;
+            ImgBaseGalleryMain.Visibility = Visibility.Collapsed;
+            BaseGalleryNoImagePlaceholder.Visibility = Visibility.Visible;
+        }
+
+        BaseGalleryPopup.Visibility = Visibility.Visible;
+    }
+
+    private void SetActiveGalleryImage(int index, OverlayTag meta)
+    {
+        if (meta.Screenshots == null || index < 0 || index >= meta.Screenshots.Count) return;
+
+        try
+        {
+            byte[] bytes = Convert.FromBase64String(meta.Screenshots[index]);
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.StreamSource = new MemoryStream(bytes);
+            bi.EndInit();
+            bi.Freeze();
+
+            ImgBaseGalleryMain.Source = bi;
+
+            for (int i = 0; i < BaseGalleryThumbsPanel.Children.Count; i++)
+            {
+                if (BaseGalleryThumbsPanel.Children[i] is Border b)
+                {
+                    b.BorderBrush = (i == index) ? Brushes.DodgerBlue : new SolidColorBrush(Color.FromArgb(64, 255, 255, 255));
+                    b.BorderThickness = (i == index) ? new Thickness(2) : new Thickness(1);
+                }
+            }
+        }
+        catch {}
+    }
+
+    private void BtnCloseBaseGallery_Click(object sender, RoutedEventArgs e)
+    {
+        if (BaseGalleryPopup != null) BaseGalleryPopup.Visibility = Visibility.Collapsed;
+    }
+
+    private void MainImage_MouseEnter(object sender, MouseEventArgs e)
+    {
+        if (ImgBaseGalleryMain == null || ImgBaseGalleryMain.Source == null || BaseGalleryMagnifierLens == null) return;
+        BaseGalleryMagnifierLens.Visibility = Visibility.Visible;
+    }
+
+    private void MainImage_MouseLeave(object sender, MouseEventArgs e)
+    {
+        if (BaseGalleryMagnifierLens != null)
+            BaseGalleryMagnifierLens.Visibility = Visibility.Collapsed;
+    }
+
+    private void MainImage_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (ImgBaseGalleryMain == null || ImgBaseGalleryMain.Source == null || BaseGalleryMagnifierLens == null || BaseGalleryMagnifierBrush == null) return;
+
+        var container = BaseGalleryMainImageArea;
+        var mousePos = e.GetPosition(container);
+
+        Canvas.SetLeft(BaseGalleryMagnifierLens, mousePos.X - 75);
+        Canvas.SetTop(BaseGalleryMagnifierLens, mousePos.Y - 75);
+
+        var imgMousePos = e.GetPosition(ImgBaseGalleryMain);
+
+        double viewWidth = 75;
+        double viewHeight = 75;
+        double viewX = imgMousePos.X - viewWidth / 2;
+        double viewY = imgMousePos.Y - viewHeight / 2;
+
+        BaseGalleryMagnifierBrush.Viewbox = new Rect(viewX, viewY, viewWidth, viewHeight);
+    }
+
+    public bool TryHandleBaseRightClick(Point mapPos)
+    {
+        if (Overlay == null) return false;
+
+        for (int i = Overlay.Children.Count - 1; i >= 0; i--)
+        {
+            if (Overlay.Children[i] is Image img && img.Tag is OverlayTag meta)
+            {
+                if (meta.OwnerSteamId != _mySteamId || !meta.IsUserEditable) continue;
+
+                var bi = img.Source as BitmapImage;
+                string path = bi?.UriSource?.ToString() ?? "";
+                if (!path.Contains("base1.png") && !path.Contains("base2.png")) continue;
+
+                double x = Canvas.GetLeft(img);
+                double y = Canvas.GetTop(img);
+                double w = img.Width > 0 ? img.Width : 32;
+                double h = img.Height > 0 ? img.Height : 32;
+
+                if (mapPos.X >= x && mapPos.X <= x + w &&
+                    mapPos.Y >= y && mapPos.Y <= y + h)
+                {
+                    ShowBaseContextMenu(img, meta);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void ShowBaseContextMenu(Image baseImg, OverlayTag meta)
+    {
+        var menu = new ContextMenu { Style = (Style)FindResource("DarkContextMenu") };
+
+        var miNote = new MenuItem { Header = string.IsNullOrEmpty(meta.Note) ? CloudText("BaseAddNote", "Add Note") : CloudText("BaseEditNote", "Edit Note") };
+        miNote.Click += (s, e) =>
+        {
+            var dlg = new Views.Windows.BaseNoteWindow(meta.Note) { Owner = this };
+            if (dlg.ShowDialog() == true)
+            {
+                meta.Note = dlg.NoteResult;
+                SaveOwnOverlayToJson();
+                UploadOwnOverlayToTeam();
+            }
+        };
+        menu.Items.Add(miNote);
+
+        if (!string.IsNullOrEmpty(meta.Note))
+        {
+            var miDelNote = new MenuItem { Header = CloudText("BaseDeleteNote", "Delete Note") };
+            miDelNote.Click += (s, e) =>
+            {
+                meta.Note = null;
+                SaveOwnOverlayToJson();
+                UploadOwnOverlayToTeam();
+            };
+            menu.Items.Add(miDelNote);
+        }
+
+        menu.Items.Add(new Separator());
+
+        bool isPremium = Services.Auth.SupabaseAuthManager.IsPremium;
+        int maxScreenshots = isPremium ? 5 : 1;
+
+        for (int i = 0; i < meta.Screenshots.Count; i++)
+        {
+            int index = i;
+            var miDelScreen = new MenuItem
+            {
+                Header = string.Format(CloudText("BaseDeleteScreenshotFormat", "Delete Screenshot {0}"), index + 1)
+            };
+            miDelScreen.Click += (s, e) =>
+            {
+                meta.Screenshots.RemoveAt(index);
+                if (_activeBaseHoverAnchor == baseImg && BaseHoverPopup != null)
+                    BaseHoverPopup.Visibility = Visibility.Collapsed;
+                if (_activeGalleryAnchor == baseImg && BaseGalleryPopup != null)
+                    BaseGalleryPopup.Visibility = Visibility.Collapsed;
+                SaveOwnOverlayToJson();
+                UploadOwnOverlayToTeam();
+            };
+            menu.Items.Add(miDelScreen);
+        }
+
+        if (meta.Screenshots.Count < maxScreenshots)
+        {
+            var miAddScreen = new MenuItem { Header = CloudText("BaseAddScreenshot", "Add Screenshot") };
+            miAddScreen.Click += (s, e) =>
+            {
+                var dlg = new Views.Windows.BaseScreenshotWindow { Owner = this };
+                if (dlg.ShowDialog() == true && !string.IsNullOrEmpty(dlg.Base64Result))
+                {
+                    meta.Screenshots.Add(dlg.Base64Result);
+                    SaveOwnOverlayToJson();
+                    UploadOwnOverlayToTeam();
+                }
+            };
+            menu.Items.Add(miAddScreen);
+        }
+        else if (!isPremium)
+        {
+            var miLockedScreen = new MenuItem
+            {
+                Header = string.Format(CloudText("BaseAddScreenshotLockedFormat", "Add Screenshot {0} (Premium required)"), 2),
+                IsEnabled = true
+            };
+            miLockedScreen.Foreground = Brushes.Gray;
+            miLockedScreen.Click += (s, e) =>
+            {
+                ShowPremiumLimitDialog(Properties.Resources.PremiumInfoMapDesc);
+            };
+            menu.Items.Add(miLockedScreen);
+        }
+
+        menu.Items.Add(new Separator());
+
+        var miDeleteBase = new MenuItem { Header = CloudText("Delete", "Delete") };
+        miDeleteBase.Click += (s, e) =>
+        {
+            Overlay.Children.Remove(baseImg);
+            if (_playerOverlayElements.TryGetValue(_mySteamId, out var mine))
+            {
+                mine.Remove(baseImg);
+            }
+            if (_activeBaseHoverAnchor == baseImg && BaseHoverPopup != null)
+                BaseHoverPopup.Visibility = Visibility.Collapsed;
+            if (_activeGalleryAnchor == baseImg && BaseGalleryPopup != null)
+                BaseGalleryPopup.Visibility = Visibility.Collapsed;
+            SaveOwnOverlayToJson();
+            UploadOwnOverlayToTeam();
+        };
+        menu.Items.Add(miDeleteBase);
+
+        baseImg.ContextMenu = menu;
+        menu.IsOpen = true;
     }
 }

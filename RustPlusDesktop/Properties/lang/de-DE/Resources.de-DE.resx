@@ -2010,4 +2010,69 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   <data name="CloudTooltipActive" xml:space="preserve">
     <value>Cloud-Sync aktiv</value>
   </data>
+  <data name="CloudAccountTitle" xml:space="preserve"><value>Cloud-Konto</value></data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve"><value>Cloud-Konto Login</value></data>
+  <data name="EmailSignInTab" xml:space="preserve"><value>Einloggen</value></data>
+  <data name="EmailSignUpTab" xml:space="preserve"><value>Konto erstellen</value></data>
+  <data name="EmailAddressLabel" xml:space="preserve"><value>E-Mail-Adresse</value></data>
+  <data name="PasswordLabel" xml:space="preserve"><value>Passwort</value></data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve"><value>Passwort (mind. 6 Zeichen)</value></data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve"><value>Passwort bestätigen</value></data>
+  <data name="EmailSignInButton" xml:space="preserve"><value>Einloggen</value></data>
+  <data name="EmailCreateAccountButton" xml:space="preserve"><value>Konto erstellen</value></data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve"><value>Bestätigungs-E-Mail gesendet!</value></data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve"><value>Klicke den Link in deiner E-Mail an. Die App prüft automatisch alle paar Sekunden...</value></data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve"><value>Warte auf Bestätigung...</value></data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve"><value>Warte auf Bestätigung... ({0}s)</value></data>
+  <data name="EmailProblemsPrefix" xml:space="preserve"><value>Probleme? </value></data>
+  <data name="EmailOpenInBrowser" xml:space="preserve"><value>Im Browser öffnen</value></data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve"><value>Bitte E-Mail und Passwort eingeben.</value></data>
+  <data name="EmailRequiredError" xml:space="preserve"><value>Bitte E-Mail-Adresse eingeben.</value></data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve"><value>Passwort muss mindestens 6 Zeichen lang sein.</value></data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve"><value>Die Passwörter stimmen nicht überein.</value></data>
+  <data name="EmailSigningInStatus" xml:space="preserve"><value>Einloggen...</value></data>
+  <data name="EmailSignedInSuccess" xml:space="preserve"><value>Erfolgreich eingeloggt!</value></data>
+  <data name="EmailSignInFailed" xml:space="preserve"><value>Anmeldung fehlgeschlagen.</value></data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve"><value>Registrierung läuft...</value></data>
+  <data name="EmailRegistrationFailed" xml:space="preserve"><value>Registrierung fehlgeschlagen.</value></data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve"><value>Timeout: Die E-Mail wurde nicht innerhalb von 5 Minuten bestätigt. Du kannst dich später einloggen.</value></data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve"><value>Ungültige Anmeldedaten. Bitte E-Mail und Passwort prüfen.</value></data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve"><value>Ungültige Anmeldedaten.</value></data>
+  <data name="EmailNotConfirmedError" xml:space="preserve"><value>E-Mail-Adresse noch nicht bestätigt. Bitte klicke den Bestätigungslink in deiner Inbox.</value></data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve"><value>Diese E-Mail-Adresse ist bereits registriert. Bitte einloggen.</value></data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve"><value>Discord trennen</value></data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve"><value>Discord verbunden - Tier: {0}</value></data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve"><value>E-Mail verbunden: {0} - Tier: {1}</value></data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve"><value>Nicht verbunden - melde dich für Cloud-Sync und Backups an</value></data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve"><value>Trennen...</value></data>
+  <data name="AuthConnectingStatus" xml:space="preserve"><value>Verbinde...</value></data>
+  <data name="EmailAccountButton" xml:space="preserve"><value>E-Mail / Konto</value></data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve"><value>Vom E-Mail-Account abmelden?</value></data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve"><value>Cloud-Sync</value></data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve"><value>Konto für Cloud-Sync erforderlich</value></data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve"><value>Cloud-Services wie Synchronisierung und Backup-Speicherung benötigen ein kostenloses Konto. Wähle E-Mail oder Discord, um Geräte, Overlays und Backups weiter zu synchronisieren.</value></data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve"><value>Per E-Mail syncen</value></data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve"><value>Per Discord syncen</value></data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve"><value>Nein danke</value></data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve"><value>Sync-Limit erreicht</value></data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve"><value>Base-Limit erreicht (Gratis: max. 2 Bases, Premium: max. 10 Bases)</value></data>
+  <data name="BaseAddScreenshot" xml:space="preserve"><value>Screenshot hinzufügen</value></data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve"><value>Bild hier per Drag &amp; Drop ablegen</value></data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve"><value>oder STRG+V drücken, um einen Screenshot einzufügen</value></data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve"><value>Kein Bild in der Zwischenablage gefunden.</value></data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve"><value>Fehler beim Einfügen</value></data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve"><value>Bild konnte nicht eingefügt werden: {0}</value></data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve"><value>Bilddatei konnte nicht geladen werden: {0}</value></data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve"><value>Komprimierungsfehler</value></data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve"><value>Fehler beim Komprimieren des Bildes: {0}</value></data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve"><value>Auflösung: {0}x{1} | Größe: {2} KB (Qualität 25%)</value></data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve"><value>Base-Notiz bearbeiten</value></data>
+  <data name="BaseNoteTitle" xml:space="preserve"><value>Base-Notiz</value></data>
+  <data name="BaseAddNote" xml:space="preserve"><value>Notiz hinzufügen</value></data>
+  <data name="BaseEditNote" xml:space="preserve"><value>Notiz bearbeiten</value></data>
+  <data name="BaseDeleteNote" xml:space="preserve"><value>Notiz löschen</value></data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve"><value>Screenshot {0} löschen</value></data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve"><value>Screenshot {0} hinzufügen (Premium erforderlich)</value></data>
+  <data name="BaseNoNotesYet" xml:space="preserve"><value>Noch keine Notizen hinzugefügt.</value></data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve"><value>Noch keine Screenshots hinzugefügt</value></data>
 </root>

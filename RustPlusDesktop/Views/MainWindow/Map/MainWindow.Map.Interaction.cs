@@ -167,11 +167,23 @@ public partial class MainWindow
         var hostPos = e.GetPosition(WebViewHost);
         var mapPos = HostToScenePreTransform(hostPos);
 
-        if (_overlayToolsVisible && _currentTool != OverlayToolMode.None)
+        if (_overlayToolsVisible)
         {
-            HandleOverlayMouseDown(e, mapPos);
-            e.Handled = true;
-            return;
+            if (e.ChangedButton == MouseButton.Right)
+            {
+                if (TryHandleBaseRightClick(mapPos))
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+
+            if (_currentTool != OverlayToolMode.None)
+            {
+                HandleOverlayMouseDown(e, mapPos);
+                e.Handled = true;
+                return;
+            }
         }
         if (e.ChangedButton == MouseButton.Middle || e.ChangedButton == MouseButton.Right)
         {

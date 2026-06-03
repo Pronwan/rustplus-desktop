@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -23,6 +24,21 @@ namespace RustPlusDesk.Services.Auth
         public static string DiscordProviderToken { get; private set; }
         public static bool IsGuestAuthenticated { get; private set; }
         private static readonly SemaphoreSlim SessionRefreshLock = new SemaphoreSlim(1, 1);
+        private static bool CloudAccountPromptShownThisSession;
+
+        /// <summary>True when the user is signed in via email+password (not Discord OAuth).</summary>
+        public static bool IsEmailAuthenticated
+        {
+            get
+            {
+                var user = Client?.Auth?.CurrentUser;
+                if (user == null) return false;
+                // Email provider: identities contain 'email' provider, not 'discord'
+                var identities = user.Identities;
+                if (identities == null || identities.Count == 0) return false;
+                return identities.Any(i => string.Equals(i.Provider, "email", StringComparison.OrdinalIgnoreCase));
+            }
+        }
 
         public static async Task InitializeAsync()
         {
@@ -100,11 +116,26 @@ namespace RustPlusDesk.Services.Auth
             }
         }
 
-        /// <summary>True if any auth session exists (Discord OAuth or guest handshake).</summary>
-        public static bool IsAuthenticated => IsDiscordAuthenticated || IsGuestAuthenticated;
+        /// <summary>True if any auth session exists (Discord OAuth, Email, or guest handshake).</summary>
+        public static bool IsAuthenticated => IsDiscordAuthenticated || IsEmailAuthenticated || IsGuestAuthenticated;
 
         /// <summary>True only when Discord OAuth is connected.</summary>
-        public static bool IsDiscordAuthenticated => Client?.Auth?.CurrentSession != null;
+        public static bool IsDiscordAuthenticated
+        {
+            get
+            {
+                var user = Client?.Auth?.CurrentUser;
+                if (user == null || Client?.Auth?.CurrentSession == null) return false;
+                var identities = user.Identities;
+                if (identities == null || identities.Count == 0) return false;
+                return identities.Any(i => string.Equals(i.Provider, "discord", StringComparison.OrdinalIgnoreCase));
+            }
+}
+
+        private static string T(string key, string fallback)
+        {
+            return RustPlusDesk.Properties.Resources.ResourceManager.GetString(key) ?? fallback;
+        }
 
         public static async Task<bool> EnsureFreshSessionAsync()
         {
@@ -245,7 +276,6 @@ namespace RustPlusDesk.Services.Auth
                 });
 
                 // Start local server to catch the redirect
-                
                 bool success = await AwaitOAuthCallback(callbackUrl);
                 if (success)
                 {
@@ -263,9 +293,109 @@ namespace RustPlusDesk.Services.Auth
             }
         }
 
+        /// <summary>
+        /// Sign in with email + password. On success the session is persisted via DesktopSessionHandler.
+        /// Steam ID linkage is handled by RefreshUserProfileAsync (same as Discord flow).
+        /// </summary>
+        public static async Task<(bool Success, string? Error)> LoginWithEmailAsync(string email, string password)
+        {
+            if (Client == null) return (false, "Supabase not initialized.");
+            try
+            {
+                var session = await Client.Auth.SignIn(email, password);
+                if (session?.User == null)
+                    return (false, T("EmailInvalidCredentialsError", "Invalid credentials. Please check your email and password."));
+
+                IsGuestAuthenticated = false;
+                HandshakeService.Clear();
+
+                await RefreshUserProfileAsync();
+                AppendLog($"[Cloud] Email login successful. User: {session.User.Email}");
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                var msg = ex.Message;
+                if (msg.Contains("Email not confirmed"))
+                    msg = T("EmailNotConfirmedError", "Email address not confirmed yet. Please click the confirmation link in your inbox.");
+                else if (msg.Contains("Invalid login"))
+                    msg = T("EmailInvalidCredentialsShortError", "Invalid credentials.");
+                AppendLog($"[Cloud/Email] Login error: {ex.Message}");
+                return (false, msg);
+            }
+        }
+
+        /// <summary>
+        /// Register a new account with email + password.
+        /// Supabase sends a confirmation email. Call PollEmailConfirmedAsync after signup to wait for it.
+        /// </summary>
+        public static async Task<(bool Success, string? Error)> SignUpWithEmailAsync(string email, string password)
+        {
+            if (Client == null) return (false, "Supabase not initialized.");
+            try
+            {
+                var result = await Client.Auth.SignUp(email, password);
+                if (result?.User == null)
+                    return (false, T("EmailRegistrationFailed", "Registration failed."));
+
+                AppendLog($"[Cloud] Email sign-up sent. Confirmation required for: {email}");
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                var msg = ex.Message;
+                if (msg.Contains("already registered") || msg.Contains("User already registered"))
+                    msg = T("EmailAlreadyRegisteredError", "This email address is already registered. Please sign in.");
+                AppendLog($"[Cloud/Email] Sign-up error: {ex.Message}");
+                return (false, msg);
+            }
+        }
+
+        /// <summary>
+        /// Polls Supabase every 4 seconds to check if the email has been confirmed.
+        /// Calls onVerified when confirmed, onProgress on each poll tick.
+        /// Max wait: ~5 minutes. Returns true when confirmed, false on timeout or cancellation.
+        /// </summary>
+        public static async Task<bool> PollEmailConfirmedAsync(
+            string email, string password,
+            Action? onProgress,
+            CancellationToken cancellationToken)
+        {
+            if (Client == null) return false;
+            var deadline = DateTime.UtcNow.AddMinutes(5);
+            AppendLog("[Cloud/Email] Waiting for email confirmation...");
+
+            while (DateTime.UtcNow < deadline && !cancellationToken.IsCancellationRequested)
+            {
+                try
+                {
+                    var session = await Client.Auth.SignIn(email, password);
+                    if (session?.User?.EmailConfirmedAt != null)
+                    {
+                        IsGuestAuthenticated = false;
+                        HandshakeService.Clear();
+                        await RefreshUserProfileAsync();
+                        AppendLog("[Cloud/Email] Email confirmed and session active!");
+                        return true;
+                    }
+                }
+                catch
+                {
+                    // Not confirmed yet → ignore and keep polling
+                }
+
+                onProgress?.Invoke();
+                await Task.Delay(4000, CancellationToken.None);
+            }
+
+            AppendLog("[Cloud/Email] Email confirmation polling timed out.");
+            return false;
+        }
+
         public static async Task RefreshUserProfileAsync()
         {
-            if (!IsDiscordAuthenticated) return;
+            // Run for Discord OR Email auth (not anon/guest — they use handshake)
+            if (!IsDiscordAuthenticated && !IsEmailAuthenticated) return;
             if (!await EnsureFreshSessionAsync()) return;
             string discordId = null;
             if (Client.Auth.CurrentUser?.UserMetadata != null)
@@ -606,11 +736,43 @@ namespace RustPlusDesk.Services.Auth
                 else
                 {
                     AppendLog($"[Supabase/Guest] Registration failed: {regError}. Cloud sync disabled.");
+                    ShowCloudAccountRequiredPromptOnce();
                 }
             }
             catch (Exception ex)
             {
                 AppendLog($"[Supabase/Guest] Handshake error: {ex.Message}");
+                ShowCloudAccountRequiredPromptOnce();
+            }
+        }
+
+        private static void ShowCloudAccountRequiredPromptOnce()
+        {
+            if (CloudAccountPromptShownThisSession || !TrackingService.CloudSyncEnabled)
+                return;
+
+            if (IsDiscordAuthenticated || IsEmailAuthenticated || IsGuestAuthenticated)
+                return;
+
+            CloudAccountPromptShownThisSession = true;
+
+            try
+            {
+                Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    if (Application.Current.MainWindow is RustPlusDesk.Views.MainWindow mainWin)
+                    {
+                        var prompt = new RustPlusDesk.Views.Windows.CloudLoginPromptWindow(mainWin)
+                        {
+                            Owner = mainWin
+                        };
+                        prompt.ShowDialog();
+                    }
+                }));
+            }
+            catch
+            {
+                // UI prompt is best effort; cloud sync remains disabled if auth is unavailable.
             }
         }
 

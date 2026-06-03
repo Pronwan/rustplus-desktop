@@ -1956,4 +1956,69 @@
   <data name="CloudTooltipActive" xml:space="preserve">
     <value>云同步已启用</value>
   </data>
+  <data name="CloudAccountTitle" xml:space="preserve"><value>云账户</value></data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve"><value>云账户登录</value></data>
+  <data name="EmailSignInTab" xml:space="preserve"><value>登录</value></data>
+  <data name="EmailSignUpTab" xml:space="preserve"><value>创建账户</value></data>
+  <data name="EmailAddressLabel" xml:space="preserve"><value>电子邮件地址</value></data>
+  <data name="PasswordLabel" xml:space="preserve"><value>密码</value></data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve"><value>密码（至少 6 个字符）</value></data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve"><value>确认密码</value></data>
+  <data name="EmailSignInButton" xml:space="preserve"><value>登录</value></data>
+  <data name="EmailCreateAccountButton" xml:space="preserve"><value>创建账户</value></data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve"><value>确认邮件已发送！</value></data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve"><value>请点击邮件中的链接。应用会每隔几秒自动检查一次...</value></data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve"><value>正在等待确认...</value></data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve"><value>正在等待确认...（{0}s）</value></data>
+  <data name="EmailProblemsPrefix" xml:space="preserve"><value>遇到问题？</value></data>
+  <data name="EmailOpenInBrowser" xml:space="preserve"><value>在浏览器中打开</value></data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve"><value>请输入电子邮件和密码。</value></data>
+  <data name="EmailRequiredError" xml:space="preserve"><value>请输入电子邮件地址。</value></data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve"><value>密码长度至少为 6 个字符。</value></data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve"><value>两次输入的密码不一致。</value></data>
+  <data name="EmailSigningInStatus" xml:space="preserve"><value>正在登录...</value></data>
+  <data name="EmailSignedInSuccess" xml:space="preserve"><value>登录成功！</value></data>
+  <data name="EmailSignInFailed" xml:space="preserve"><value>登录失败。</value></data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve"><value>正在注册...</value></data>
+  <data name="EmailRegistrationFailed" xml:space="preserve"><value>注册失败。</value></data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve"><value>超时：5 分钟内未确认电子邮件。你可以稍后再登录。</value></data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve"><value>凭据无效。请检查电子邮件和密码。</value></data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve"><value>凭据无效。</value></data>
+  <data name="EmailNotConfirmedError" xml:space="preserve"><value>电子邮件地址尚未确认。请点击收件箱中的确认链接。</value></data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve"><value>此电子邮件地址已注册。请登录。</value></data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve"><value>断开 Discord</value></data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve"><value>Discord 已连接 - 等级：{0}</value></data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve"><value>电子邮件已连接：{0} - 等级：{1}</value></data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve"><value>未连接 - 登录后可使用云同步和备份</value></data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve"><value>正在断开...</value></data>
+  <data name="AuthConnectingStatus" xml:space="preserve"><value>正在连接...</value></data>
+  <data name="EmailAccountButton" xml:space="preserve"><value>电子邮件 / 账户</value></data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve"><value>要退出电子邮件账户吗？</value></data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve"><value>云同步</value></data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve"><value>云同步需要账户</value></data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve"><value>同步和备份存储等云服务需要一个免费账户。请选择电子邮件或 Discord，以继续同步设备、覆盖层和备份。</value></data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve"><value>通过电子邮件同步</value></data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve"><value>通过 Discord 同步</value></data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve"><value>不用了</value></data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve"><value>已达到同步限制</value></data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve"><value>已达到基地限制（免费：最多 2 个基地，Premium：最多 10 个基地）</value></data>
+  <data name="BaseAddScreenshot" xml:space="preserve"><value>添加截图</value></data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve"><value>将图片拖放到这里</value></data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve"><value>或按 CTRL+V 粘贴截图</value></data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve"><value>剪贴板中没有找到图片。</value></data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve"><value>粘贴错误</value></data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve"><value>粘贴图片失败：{0}</value></data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve"><value>加载图片文件失败：{0}</value></data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve"><value>压缩错误</value></data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve"><value>压缩图片时出错：{0}</value></data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve"><value>分辨率：{0}x{1} | 大小：{2} KB（质量 25%）</value></data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve"><value>编辑基地备注</value></data>
+  <data name="BaseNoteTitle" xml:space="preserve"><value>基地备注</value></data>
+  <data name="BaseAddNote" xml:space="preserve"><value>添加备注</value></data>
+  <data name="BaseEditNote" xml:space="preserve"><value>编辑备注</value></data>
+  <data name="BaseDeleteNote" xml:space="preserve"><value>删除备注</value></data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve"><value>删除截图 {0}</value></data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve"><value>添加截图 {0}（需要 Premium）</value></data>
+  <data name="BaseNoNotesYet" xml:space="preserve"><value>尚未添加备注。</value></data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve"><value>尚未添加截图</value></data>
 </root>
