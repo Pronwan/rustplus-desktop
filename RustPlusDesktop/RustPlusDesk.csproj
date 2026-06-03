@@ -144,6 +144,10 @@
 
 	  <None Remove="Assets\Images\5.5.0\App-customTimer.png" />
 	  <None Remove="Assets\Images\5.5.0\APP-new-shop-system.png" />
+	  <None Remove="Assets\Images\5.5.0\Chat_Master-Slave.png" />
+	  <None Remove="Assets\Images\5.5.0\Chat_Master1.png" />
+	  <None Remove="Assets\Images\5.5.0\Cloud-Base-Screenshots.png" />
+	  <None Remove="Assets\Images\5.5.0\Device-Cloud-Sync.png" />
 	  <None Remove="Assets\Images\5.5.0\New-Custom-Death-Markers.png" />
 	  <None Remove="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
 	  <None Remove="Assets\rustplus-desktop-icon.ico" />
@@ -322,6 +326,10 @@
 
     <Resource Include="Assets\Images\5.5.0\App-customTimer.png" />
     <Resource Include="Assets\Images\5.5.0\APP-new-shop-system.png" />
+    <Resource Include="Assets\Images\5.5.0\Chat_Master-Slave.png" />
+    <Resource Include="Assets\Images\5.5.0\Chat_Master1.png" />
+    <Resource Include="Assets\Images\5.5.0\Cloud-Base-Screenshots.png" />
+    <Resource Include="Assets\Images\5.5.0\Device-Cloud-Sync.png" />
     <Resource Include="Assets\Images\5.5.0\New-Custom-Death-Markers.png" />
     <Resource Include="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
     <Resource Include="Assets\rustplus-desktop-icon.ico" />

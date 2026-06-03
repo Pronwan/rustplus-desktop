@@ -661,6 +661,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         try { ClearAllToggleBusy(); } catch { }
         try { ResetAllBusyStates(); } catch { }
         this.Closed += MainWindow_Closed;
+        ChatCommandsOverlay.CommandsEnabledChanged += ChatCommandsOverlay_CommandsEnabledChanged;
 
         _toolButtons = new Dictionary<OverlayToolMode, Button>
     {
@@ -2425,6 +2426,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.Save();
         }
         catch (Exception ex) { AppendLog("Saving failed: " + ex.Message); }
+
+        try
+        {
+            Task.Run(NotifyTeamFeatureAppClosingAsync).Wait(TimeSpan.FromSeconds(3));
+        }
+        catch { }
     }
 
     public void HandleRustPlusLink(string link)
@@ -3460,6 +3467,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         SyncAlertMenuItems();
         UpdateShopSearchConfig();
+        RequestTeamFeatureMasterSync();
     }
 
     private void SelectAllAlerts_Click(object sender, RoutedEventArgs e)
@@ -3469,6 +3477,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         UpdateMasterToggleState();
         SyncAlertMenuItems();
         UpdateShopSearchConfig();
+        RequestTeamFeatureMasterSync();
     }
 
     private void DeselectAllAlerts_Click(object sender, RoutedEventArgs e)
@@ -3482,6 +3491,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         UpdateMasterToggleState();
         SyncAlertMenuItems();
         UpdateShopSearchConfig();
+        RequestTeamFeatureMasterSync();
     }
 
     private void SetAllAlerts(bool val)
@@ -3546,6 +3556,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (sender is MenuItem mi && mi.Tag is string tag)
         {
+            bool wasMasterEnabled = TrackingService.AnnounceSpawnsMaster;
             bool val = mi.IsChecked;
             switch (tag)
             {
@@ -3588,6 +3599,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             UpdateMasterToggleState();
             UpdateShopSearchConfig();
             SyncAlertMenuItems();
+            if (wasMasterEnabled != TrackingService.AnnounceSpawnsMaster)
+            {
+                RequestTeamFeatureMasterSync();
+            }
         }
     }
 
@@ -3719,6 +3734,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (sender is MenuItem mi && mi.Tag is ShopAlertRule rule)
         {
+            bool wasMasterEnabled = TrackingService.AnnounceSpawnsMaster;
             rule.NotifyChat = mi.IsChecked;
             SavePersistentAlerts();
             
@@ -3734,6 +3750,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             UpdateMasterToggleState();
             UpdateShopSearchConfig();
             _ = PushAlertsToWebViewAsync();
+            if (wasMasterEnabled != TrackingService.AnnounceSpawnsMaster)
+            {
+                RequestTeamFeatureMasterSync();
+            }
         }
     }
 

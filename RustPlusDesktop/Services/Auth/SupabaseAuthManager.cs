@@ -708,6 +708,27 @@ namespace RustPlusDesk.Services.Auth
             }
         }
 
+        public static async Task MarkAppOfflineAsync()
+        {
+            if (!IsAuthenticated) return;
+            if (!await EnsureFreshSessionAsync()) return;
+            string steamId = TrackingService.SteamId64;
+            if (string.IsNullOrEmpty(steamId) || steamId == "0") return;
+
+            try
+            {
+                await Client.From<RustPlusDesk.Models.UserProfileModel>()
+                    .Filter("steam_id", Postgrest.Constants.Operator.Equals, steamId)
+                    .Set(x => x.LastActiveAt, DateTime.UtcNow)
+                    .Set(x => x.IsOnline, false)
+                    .Update();
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Cloud/Debug] App offline update failed: {ex.Message}");
+            }
+        }
+
         /// <summary>
         /// Attempt guest handshake auth when no Discord session is available.
         /// Uses stored JWT if valid, refreshes if expired, or registers a new keypair.

@@ -110,6 +110,7 @@ public class TrackingSettings
     public Dictionary<string, List<HarborInfo>> ServerHarbors { get; set; } = new();
     public Dictionary<string, Dictionary<string, CargoTriggerPoint>> ServerCargoTriggers { get; set; } = new();
     public bool AnnounceSpawnsMaster { get; set; } = false;
+    public bool ChatMasterOfferSoundEnabled { get; set; } = true;
     public bool SaveAlertSelection { get; set; } = true;
     public string LastSeenVersion { get; set; } = "";
     public DateTime? FcmIssuedAt { get; set; }
@@ -617,6 +618,12 @@ public static class TrackingService
     {
         get => _settings.AnnounceSpawnsMaster;
         set { _settings.AnnounceSpawnsMaster = value; SaveDB(); }
+    }
+
+    public static bool ChatMasterOfferSoundEnabled
+    {
+        get => _settings.ChatMasterOfferSoundEnabled;
+        set { _settings.ChatMasterOfferSoundEnabled = value; SaveDB(); }
     }
 
     public static bool TranslationConsentGiven

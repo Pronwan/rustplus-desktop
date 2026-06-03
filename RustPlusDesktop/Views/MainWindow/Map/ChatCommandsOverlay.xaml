@@ -37,7 +37,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <CheckBox x:Name="EnableChatCommandsCheckBox" Content="{DynamicResource EnableChatCommands}" IsChecked="{Binding ChatCommandsEnabled}" Style="{StaticResource DotCheckBox}" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0" />
+                        <CheckBox x:Name="EnableChatCommandsCheckBox" Content="{DynamicResource EnableChatCommands}" IsChecked="{Binding ChatCommandsEnabled}" Checked="EnableChatCommandsCheckBox_Changed" Unchecked="EnableChatCommandsCheckBox_Changed" Style="{StaticResource DotCheckBox}" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0" />
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Text="{DynamicResource Prefix}" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" Margin="0,0,5,0" />
                             <ComboBox SelectedValue="{Binding ChatCommandPrefix}" SelectedValuePath="Content" Width="60" HorizontalContentAlignment="Center" VerticalAlignment="Center">

@@ -14,6 +14,7 @@ namespace RustPlusDesk.Views;
 public partial class MainWindow
 {
     private bool _teamFeatureMasterBusy;
+    private bool _teamFeatureMasterSyncPending;
     private bool _chatFeaturesBlockedByMaster;
     private bool _isChatFeatureMaster;
     private string _chatFeatureMasterName = "";
@@ -22,8 +23,11 @@ public partial class MainWindow
     private string? _declinedMasterTeamKey;
     private DateTime _declinedMasterUntilUtc;
     private string? _lastTeamFeatureMasterSyncSignature;
-    private bool _playMasterOfferSound = true;
+    private bool _playMasterOfferSound = TrackingService.ChatMasterOfferSoundEnabled;
     private SoundPlayer? _masterOfferSoundPlayer;
+    private System.Windows.Threading.DispatcherTimer? _teamFeatureMasterWatchTimer;
+    private bool _teamFeatureMasterWatchBusy;
+    private bool _teamFeatureShutdownSent;
 
     private static string TeamFeatureText(string key, string fallback)
         => Properties.Resources.ResourceManager.GetString(key) ?? fallback;
@@ -33,6 +37,12 @@ public partial class MainWindow
     private void ResetTeamFeatureMasterSyncState()
     {
         _lastTeamFeatureMasterSyncSignature = null;
+    }
+
+    private void RequestTeamFeatureMasterSync()
+    {
+        ResetTeamFeatureMasterSyncState();
+        _ = SyncTeamFeatureMasterAsync();
     }
 
     private bool ShouldSyncTeamFeatureMasterForCurrentState(string cloudPresenceSignature)
@@ -60,7 +70,12 @@ public partial class MainWindow
 
     private async Task SyncTeamFeatureMasterAsync()
     {
-        if (_teamFeatureMasterBusy) return;
+        if (_teamFeatureMasterBusy)
+        {
+            _teamFeatureMasterSyncPending = true;
+            return;
+        }
+
         if (_vm?.Selected == null || TeamMembers.Count == 0) return;
 
         var serverKey = GetServerKey();
@@ -110,6 +125,108 @@ public partial class MainWindow
         finally
         {
             _teamFeatureMasterBusy = false;
+            if (_teamFeatureMasterSyncPending)
+            {
+                _teamFeatureMasterSyncPending = false;
+                _ = SyncTeamFeatureMasterAsync();
+            }
+        }
+    }
+
+    private async Task RefreshTeamFeatureMasterStateAsync()
+    {
+        if (_vm?.Selected == null || TeamMembers.Count == 0) return;
+
+        var serverKey = GetServerKey();
+        if (string.IsNullOrWhiteSpace(serverKey)) return;
+
+        var teamKey = BuildTeamFeatureKey();
+        if (string.IsNullOrWhiteSpace(teamKey)) return;
+
+        var state = await SupabaseAuthManager.GetTeamFeatureMasterStateAsync(serverKey, teamKey);
+        await Dispatcher.InvokeAsync(() => ApplyTeamFeatureMasterState(state, teamKey));
+    }
+
+    private void UpdateTeamFeatureMasterWatch()
+    {
+        if (_chatFeaturesBlockedByMaster)
+        {
+            if (_teamFeatureMasterWatchTimer != null) return;
+
+            _teamFeatureMasterWatchTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(5)
+            };
+            _teamFeatureMasterWatchTimer.Tick += TeamFeatureMasterWatchTimer_Tick;
+            _teamFeatureMasterWatchTimer.Start();
+        }
+        else
+        {
+            StopTeamFeatureMasterWatch();
+        }
+    }
+
+    private void StopTeamFeatureMasterWatch()
+    {
+        var timer = _teamFeatureMasterWatchTimer;
+        if (timer == null) return;
+
+        timer.Tick -= TeamFeatureMasterWatchTimer_Tick;
+        timer.Stop();
+        _teamFeatureMasterWatchTimer = null;
+        _teamFeatureMasterWatchBusy = false;
+    }
+
+    private async void TeamFeatureMasterWatchTimer_Tick(object? sender, EventArgs e)
+    {
+        if (_teamFeatureMasterWatchBusy) return;
+
+        _teamFeatureMasterWatchBusy = true;
+        try
+        {
+            await RefreshTeamFeatureMasterStateAsync();
+        }
+        finally
+        {
+            _teamFeatureMasterWatchBusy = false;
+        }
+    }
+
+    private async Task NotifyTeamFeatureAppClosingAsync()
+    {
+        if (_teamFeatureShutdownSent) return;
+        _teamFeatureShutdownSent = true;
+
+        try
+        {
+            StopTeamFeatureMasterWatch();
+            await SupabaseAuthManager.MarkAppOfflineAsync();
+
+            if (_vm?.Selected == null || TeamMembers.Count == 0) return;
+            if (!SupabaseAuthManager.IsDiscordAuthenticated && !SupabaseAuthManager.IsEmailAuthenticated) return;
+
+            var serverKey = GetServerKey();
+            var teamKey = BuildTeamFeatureKey();
+            if (string.IsNullOrWhiteSpace(serverKey) || string.IsNullOrWhiteSpace(teamKey)) return;
+
+            var mySteamId = _mySteamId.ToString();
+            var myName = TeamMembers.FirstOrDefault(t => t.SteamId == _mySteamId)?.Name
+                ?? _vm.Selected?.Name
+                ?? mySteamId;
+
+            await SupabaseAuthManager.HeartbeatTeamFeaturePresenceAsync(
+                mySteamId,
+                myName,
+                serverKey,
+                _vm.Selected?.Name ?? "",
+                teamKey,
+                GetMyTeamOrderIndex(),
+                wantsChatAlerts: false,
+                wantsChatCommands: false);
+        }
+        catch
+        {
+            // Best effort on shutdown.
         }
     }
 
@@ -167,6 +284,12 @@ public partial class MainWindow
 
         _lastKnownTeamFeatureMasterId = currentMasterId;
         ApplyChatFeatureMasterUiState();
+        UpdateTeamFeatureMasterWatch();
+
+        if (previousBlocked && !_chatFeaturesBlockedByMaster && HasLocalChatFeatureIntent())
+        {
+            RequestTeamFeatureMasterSync();
+        }
 
         if (_chatFeaturesBlockedByMaster && !previousBlocked)
         {
@@ -214,6 +337,11 @@ public partial class MainWindow
         ChatCommandsOverlay?.SetMasterBlocked(blocked, message);
     }
 
+    private bool HasLocalChatFeatureIntent()
+    {
+        return TrackingService.AnnounceSpawnsMaster || (_vm.Selected?.ChatCommandsEnabled ?? false);
+    }
+
     private bool CanSendAutomatedTeamChat()
     {
         if (!_chatFeaturesBlockedByMaster) return true;
@@ -242,7 +370,7 @@ public partial class MainWindow
             Title = TeamFeatureText("ChatFeatureMasterAssignedTitle", "You are Chat Master"),
             Appearance = WpfUi.ControlAppearance.Success,
             Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Info24),
-            Timeout = TimeSpan.FromSeconds(20),
+            Timeout = TimeSpan.FromSeconds(10),
             MaxWidth = 380,
             HorizontalAlignment = HorizontalAlignment.Right
         };
@@ -256,6 +384,16 @@ public partial class MainWindow
         });
 
         var footer = new DockPanel { LastChildFill = false };
+        var countdownText = new TextBlock
+        {
+            Text = string.Format(TeamFeatureText("ChatFeatureMasterAutoCloseCountdown", "Closes in {0}s"), 10),
+            VerticalAlignment = VerticalAlignment.Center,
+            Opacity = 0.72,
+            Margin = new Thickness(0, 0, 12, 0)
+        };
+        DockPanel.SetDock(countdownText, Dock.Left);
+        footer.Children.Add(countdownText);
+
         var soundToggle = new CheckBox
         {
             IsChecked = _playMasterOfferSound,
@@ -264,20 +402,40 @@ public partial class MainWindow
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 12, 0)
         };
-        soundToggle.Checked += (_, _) => _playMasterOfferSound = true;
-        soundToggle.Unchecked += (_, _) => _playMasterOfferSound = false;
+        soundToggle.Checked += (_, _) =>
+        {
+            _playMasterOfferSound = true;
+            TrackingService.ChatMasterOfferSoundEnabled = true;
+        };
+        soundToggle.Unchecked += (_, _) =>
+        {
+            _playMasterOfferSound = false;
+            TrackingService.ChatMasterOfferSoundEnabled = false;
+        };
         DockPanel.SetDock(soundToggle, Dock.Left);
         footer.Children.Add(soundToggle);
 
-        var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
-        var accept = new WpfUi.Button
+        var remainingSeconds = 10;
+        var countdownTimer = new System.Windows.Threading.DispatcherTimer
         {
-            Content = TeamFeatureText("ChatFeatureMasterAccept", "Accept"),
-            Appearance = WpfUi.ControlAppearance.Primary,
-            Margin = new Thickness(0, 0, 8, 0)
+            Interval = TimeSpan.FromSeconds(1)
         };
-        accept.Click += (_, _) => snackbar.Visibility = Visibility.Collapsed;
+        countdownTimer.Tick += (_, _) =>
+        {
+            remainingSeconds--;
+            if (remainingSeconds <= 0)
+            {
+                countdownTimer.Stop();
+                return;
+            }
 
+            countdownText.Text = string.Format(
+                TeamFeatureText("ChatFeatureMasterAutoCloseCountdown", "Closes in {0}s"),
+                remainingSeconds);
+        };
+        countdownTimer.Start();
+
+        var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
         var deny = new WpfUi.Button
         {
             Content = TeamFeatureText("ChatFeatureMasterDeny", "Deny"),
@@ -289,11 +447,11 @@ public partial class MainWindow
             _declinedMasterUntilUtc = DateTime.UtcNow.AddMinutes(5);
             _isChatFeatureMaster = false;
             ApplyChatFeatureMasterUiState();
+            countdownTimer.Stop();
             snackbar.Visibility = Visibility.Collapsed;
             _ = SyncTeamFeatureMasterAsync();
         };
 
-        buttons.Children.Add(accept);
         buttons.Children.Add(deny);
         DockPanel.SetDock(buttons, Dock.Right);
         footer.Children.Add(buttons);

@@ -27,6 +27,15 @@ public partial class MainWindow
         }
     }
 
+    private void ChatCommandsOverlay_CommandsEnabledChanged(object sender, System.Windows.RoutedEventArgs e)
+    {
+        _ = Dispatcher.InvokeAsync(() =>
+        {
+            try { _vm.Save(); } catch { }
+            RequestTeamFeatureMasterSync();
+        }, System.Windows.Threading.DispatcherPriority.Background);
+    }
+
     private DateTime _lastChatCommandTime = DateTime.MinValue;
     private const int ChatCommandCooldownSeconds = 2; // 2s cooldown for system stability
 
