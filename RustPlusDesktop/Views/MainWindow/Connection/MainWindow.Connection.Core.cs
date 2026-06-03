@@ -209,7 +209,7 @@ public partial class MainWindow
                     if (serverStatusFailCount >= 5)
                     {
                         serverStatusFailCount = 0;
-                        if (!_isReconnecting && !_isSoftConnecting && !(_vm?.IsBusy == true))
+                        if (!_isReconnecting && !(_vm?.IsBusy == true))
                         {
                             AppendLog("[status-poll] Connection seems dead (status failed 5 times). Refreshing connection silently...");
                             

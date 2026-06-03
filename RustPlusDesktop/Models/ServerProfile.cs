@@ -281,6 +281,34 @@ public class ServerProfile : INotifyPropertyChanged
         set { _alertCustomTimer = value; OnProp(); }
     }
 
+    private bool _timerAlarmEnabled = true;
+    public bool TimerAlarmEnabled
+    {
+        get => _timerAlarmEnabled;
+        set { _timerAlarmEnabled = value; OnProp(); }
+    }
+
+    private string? _timerAlarmAudioPath;
+    public string? TimerAlarmAudioPath
+    {
+        get => _timerAlarmAudioPath;
+        set { _timerAlarmAudioPath = value; OnProp(); }
+    }
+
+    private int _timerAlarmSnoozeMinutes = 5;
+    public int TimerAlarmSnoozeMinutes
+    {
+        get => _timerAlarmSnoozeMinutes;
+        set { _timerAlarmSnoozeMinutes = Math.Max(0, value); OnProp(); }
+    }
+
+    private int _timerAlarmBeepDurationSeconds = 5;
+    public int TimerAlarmBeepDurationSeconds
+    {
+        get => _timerAlarmBeepDurationSeconds;
+        set { _timerAlarmBeepDurationSeconds = Math.Max(1, value); OnProp(); }
+    }
+
     private ObservableCollection<CustomTimer> _customTimers = new();
     public ObservableCollection<CustomTimer> CustomTimers
     {
@@ -441,6 +469,10 @@ public class CustomTimer : INotifyPropertyChanged
     public bool Notified30 { get; set; }
     public bool Notified10 { get; set; }
     public bool Notified3 { get; set; }
+    [JsonIgnore]
+    public bool AlarmPlayed { get; set; }
+    [JsonIgnore]
+    public DateTime? SnoozedUntilUtc { get; set; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
     protected void OnProp([CallerMemberName] string? n = null)
