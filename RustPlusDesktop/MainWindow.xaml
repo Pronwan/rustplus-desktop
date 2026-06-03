@@ -1553,8 +1553,7 @@
                                         Appearance="Secondary"
                                         Click="BtnCheaterAnalytics_Click"
                                         Icon="{ui:SymbolIcon Symbol=ShieldError20}"
-                                        ToolTip="Cheater Analytics"
-                                        Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}}" />
+                                        ToolTip="Cheater Analytics" />
 
 
                                 </StackPanel>
