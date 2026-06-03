@@ -473,6 +473,8 @@ public class CustomTimer : INotifyPropertyChanged
     public bool AlarmPlayed { get; set; }
     [JsonIgnore]
     public DateTime? SnoozedUntilUtc { get; set; }
+    [JsonIgnore]
+    public DateTime? AutoDeleteAtUtc { get; set; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
     protected void OnProp([CallerMemberName] string? n = null)

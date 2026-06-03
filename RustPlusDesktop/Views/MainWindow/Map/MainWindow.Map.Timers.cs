@@ -126,16 +126,21 @@ public partial class MainWindow
             {
                 if (timer.SnoozedUntilUtc.HasValue)
                 {
-                    if (now >= timer.SnoozedUntilUtc.Value)
+                    if (timer.AutoDeleteAtUtc.HasValue && now >= timer.AutoDeleteAtUtc.Value)
+                    {
+                        toRemove.Add(timer);
+                    }
+                    else if (now >= timer.SnoozedUntilUtc.Value)
                     {
                         timer.SnoozedUntilUtc = now.AddMinutes(_vm.Selected.TimerAlarmSnoozeMinutes);
+                        timer.AutoDeleteAtUtc = now.AddMinutes(1);
                         PlayTimerAlarm();
                         ShowTimerExpiredSnackbar(timer.Name);
                     }
                     continue;
                 }
 
-                if (_vm.Selected.AlertCustomTimer && remaining.TotalSeconds >= -60)
+                if (_vm.Selected.AlertCustomTimer && remaining.TotalSeconds >= -60 && !timer.AlarmPlayed)
                 {
                     _ = SendTeamChatSafeAsync($"{timer.Name}: 00:00");
                 }
@@ -148,6 +153,7 @@ public partial class MainWindow
                     if (_vm.Selected.TimerAlarmSnoozeMinutes > 0)
                     {
                         timer.SnoozedUntilUtc = now.AddMinutes(_vm.Selected.TimerAlarmSnoozeMinutes);
+                        timer.AutoDeleteAtUtc = now.AddMinutes(1);
                     }
                     else
                     {
@@ -319,6 +325,7 @@ public partial class MainWindow
             foreach (var timer in _vm.Selected.CustomTimers)
             {
                 timer.SnoozedUntilUtc = null;
+                timer.AutoDeleteAtUtc = null;
             }
         }
     }
@@ -334,11 +341,13 @@ public partial class MainWindow
         StopTimerAlarm();
         int snoozeMins = _vm.Selected.TimerAlarmSnoozeMinutes;
         var snoozedUntil = DateTime.UtcNow.AddMinutes(snoozeMins);
+        var autoDeleteAt = DateTime.UtcNow.AddMinutes(1);
         foreach (var timer in _vm.Selected.CustomTimers)
         {
             if (timer.AlarmPlayed || timer.SnoozedUntilUtc.HasValue)
             {
                 timer.SnoozedUntilUtc = snoozedUntil;
+                timer.AutoDeleteAtUtc = autoDeleteAt;
             }
         }
         AppendLog($"[timer-alarm] Snoozed for {snoozeMins} min.");
