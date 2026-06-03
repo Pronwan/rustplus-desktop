@@ -1863,6 +1863,9 @@ Télécharger et installer maintenant ?</value>
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
     <value>Maximum 5 minuteries.</value>
   </data>
+    <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Veuillez entrer une durée de minuteur (heures, minutes ou secondes).</value>
+  </data>
   <data name="FeatureTimerAlerts" xml:space="preserve">
     <value>Timer Alerts</value>
   </data>

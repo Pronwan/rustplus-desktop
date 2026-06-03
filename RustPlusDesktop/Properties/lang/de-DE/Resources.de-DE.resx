@@ -1917,6 +1917,9 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
     <value>Maximal 5 Timer erlaubt.</value>
   </data>
+    <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Bitte geben Sie eine Timer-Dauer ein (Stunden, Minuten oder Sekunden).</value>
+  </data>
   <data name="FeatureTimerAlerts" xml:space="preserve">
     <value>Timer Alerts</value>
   </data>

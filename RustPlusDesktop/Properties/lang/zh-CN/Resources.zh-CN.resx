@@ -1863,6 +1863,9 @@
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
     <value>最多允许 5 个计时器。</value>
   </data>
+    <data name="TimerDurationRequired" xml:space="preserve">
+    <value>请输入计时器持续时间（小时、分钟或秒）。</value>
+  </data>
   <data name="FeatureTimerAlerts" xml:space="preserve">
     <value>Timer Alerts</value>
   </data>

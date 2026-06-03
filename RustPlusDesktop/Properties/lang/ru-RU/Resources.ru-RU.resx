@@ -1863,4 +1863,7 @@
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
     <value>Максимум 5 таймеров.</value>
   </data>
+    <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Пожалуйста, введите продолжительность таймера (часы, минуты или секунды).</value>
+  </data>
 </root>

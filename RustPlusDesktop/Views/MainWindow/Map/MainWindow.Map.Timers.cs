@@ -19,6 +19,7 @@ public partial class MainWindow
         if (_vm.Selected != null)
         {
             ListActiveTimers.ItemsSource = _vm.Selected.CustomTimers;
+            TxtTimerValidation.Text = "";
             PopupCustomTimer.IsOpen = true;
         }
     }
@@ -57,7 +58,12 @@ public partial class MainWindow
         int mins = int.TryParse(TxtTimerMinutes.Text, out int m) ? m : 0;
         int secs = int.TryParse(TxtTimerSeconds.Text, out int s) ? s : 0;
 
-        if (hours == 0 && mins == 0 && secs == 0) return;
+        if (hours == 0 && mins == 0 && secs == 0)
+        {
+            TxtTimerValidation.Text = Properties.Resources.TimerDurationRequired;
+            return;
+        }
+        TxtTimerValidation.Text = "";
 
         var cmd = TxtTimerCommandPreview.Text;
         if (string.IsNullOrWhiteSpace(cmd)) cmd = name.ToLower();

@@ -3693,13 +3693,14 @@
                                                     </Grid.ColumnDefinitions>
                                                     <ui:TextBox x:Name="TxtTimerName" PlaceholderText="{DynamicResource TimerName}" TextChanged="TxtTimerName_TextChanged" />
                                                     <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,0,0,0">
-                                                        <ui:TextBox x:Name="TxtTimerHours" PlaceholderText="hh" MaxLength="2" Width="50" Margin="0,0,3,0" TextAlignment="Center" />
+                                                        <ui:TextBox x:Name="TxtTimerHours" ClearButtonEnabled="False" PlaceholderText="hh" MaxLength="2" Width="50" Margin="0,0,3,0" TextAlignment="Center" />
                                                         <TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,3,0" />
-                                                        <ui:TextBox x:Name="TxtTimerMinutes" PlaceholderText="mm" MaxLength="2" Width="50" Margin="0,0,3,0" TextAlignment="Center" />
+                                                        <ui:TextBox x:Name="TxtTimerMinutes" ClearButtonEnabled="False" PlaceholderText="mm" MaxLength="2" Width="50" Margin="0,0,3,0" TextAlignment="Center" />
                                                         <TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,3,0" />
-                                                        <ui:TextBox x:Name="TxtTimerSeconds" PlaceholderText="ss" MaxLength="2" Width="50" TextAlignment="Center" />
+                                                        <ui:TextBox x:Name="TxtTimerSeconds" ClearButtonEnabled="False" PlaceholderText="ss" MaxLength="2" Width="50" TextAlignment="Center" />
                                                     </StackPanel>
                                                 </Grid>
+                                                <TextBlock x:Name="TxtTimerValidation" Foreground="IndianRed" FontSize="11" Margin="0,5,0,0" TextWrapping="Wrap" />
                                                 <Grid Margin="0,10,0,0">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>

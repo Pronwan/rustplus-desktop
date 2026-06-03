@@ -1827,6 +1827,9 @@
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
     <value>الحد الأقصى 5 مؤقتات.</value>
   </data>
+    <data name="TimerDurationRequired" xml:space="preserve">
+    <value>الرجاء إدخال مدة المؤقت (ساعات أو دقائق أو ثوانٍ).</value>
+  </data>
   <data name="FeatureAudioLoopTitle" xml:space="preserve">
     <value>علامة الموت</value>
   </data>

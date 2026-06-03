@@ -1836,6 +1836,9 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
     <value>Máximo 5 temporizadores permitidos.</value>
   </data>
+    <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Por favor, introduzca una duración del temporizador (horas, minutos o segundos).</value>
+  </data>
   <data name="FeatureAudioLoopTitle" xml:space="preserve">
     <value>Death Marker</value>
   </data>
