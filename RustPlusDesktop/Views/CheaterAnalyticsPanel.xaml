@@ -182,7 +182,7 @@
                         <StackPanel>
                             <TextBlock Text="Players" FontSize="10"
                                        Foreground="{DynamicResource TextSubtle}"/>
-                            <TextBlock Text="{Binding Current.ActivePlayerCount}"
+                            <TextBlock Text="{Binding Current.ActivePlayerCount, Mode=OneWay}"
                                        FontSize="20" FontWeight="Bold"/>
                         </StackPanel>
                     </Border>
@@ -192,7 +192,7 @@
                             CornerRadius="6" Margin="2,0" Padding="8">
                         <StackPanel>
                             <TextBlock Text="Confirmed" FontSize="10" Foreground="#FFAAAA"/>
-                            <TextBlock Text="{Binding Current.ConfirmedCheaterCount}"
+                            <TextBlock Text="{Binding Current.ConfirmedCheaterCount, Mode=OneWay}"
                                        FontSize="20" FontWeight="Bold"
                                        Foreground="{DynamicResource AccentRed}"/>
                         </StackPanel>
@@ -203,7 +203,7 @@
                             CornerRadius="6" Margin="2,0" Padding="8">
                         <StackPanel>
                             <TextBlock Text="Suspected" FontSize="10" Foreground="#FFDDAA"/>
-                            <TextBlock Text="{Binding Current.SuspectedFlaggedCount}"
+                            <TextBlock Text="{Binding Current.SuspectedFlaggedCount, Mode=OneWay}"
                                        FontSize="20" FontWeight="Bold" Foreground="#FFA040"/>
                         </StackPanel>
                     </Border>
@@ -218,7 +218,7 @@
                                        Foreground="{DynamicResource AccentGreen}">
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}{0:F1}%">
-                                        <Binding Path="Current.CheaterRatioPercent"/>
+                                        <Binding Path="Current.CheaterRatioPercent" Mode="OneWay"/>
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
@@ -247,7 +247,7 @@
                     </Border.Style>
                     <TextBlock FontSize="12">
                         <Run Text="Risk Level: " Foreground="{DynamicResource TextSubtle}"/>
-                        <Run Text="{Binding Current.RiskBand}" FontWeight="SemiBold"/>
+                        <Run Text="{Binding Current.RiskBand, Mode=OneWay}" FontWeight="SemiBold"/>
                     </TextBlock>
                 </Border>
 
