@@ -1840,7 +1840,7 @@
     <value>Таймер</value>
   </data>
   <data name="TimerCreated" xml:space="preserve">
-    <value>Таймер {0} создан на {1}ч {2}м</value>
+    <value>Timer {0} created for {1}h {2}m {3}s</value>
   </data>
   <data name="HoverCustomTimer" xml:space="preserve">
     <value>Таймер</value>

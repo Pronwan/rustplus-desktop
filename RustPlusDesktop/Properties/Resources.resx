@@ -1843,7 +1843,7 @@ Are you sure you want to continue?</value>
     <value>Custom Timer</value>
   </data>
   <data name="TimerCreated" xml:space="preserve">
-    <value>Timer {0} created for {1}h {2}m</value>
+    <value>Timer {0} created for {1}h {2}m {3}s</value>
   </data>
   <data name="HoverCustomTimer" xml:space="preserve">
     <value>Custom Timer</value>

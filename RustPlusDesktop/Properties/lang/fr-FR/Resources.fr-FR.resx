@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1840,7 +1840,7 @@ Télécharger et installer maintenant ?</value>
     <value>Minuterie</value>
   </data>
   <data name="TimerCreated" xml:space="preserve">
-    <value>Minuterie {0} créée pour {1}h {2}m</value>
+    <value>Timer {0} created for {1}h {2}m {3}s</value>
   </data>
   <data name="HoverCustomTimer" xml:space="preserve">
     <value>Minuterie</value>

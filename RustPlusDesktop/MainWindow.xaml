@@ -3693,9 +3693,11 @@
                                                     </Grid.ColumnDefinitions>
                                                     <ui:TextBox x:Name="TxtTimerName" PlaceholderText="{DynamicResource TimerName}" TextChanged="TxtTimerName_TextChanged" />
                                                     <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,0,0,0">
-                                                        <ui:TextBox x:Name="TxtTimerHours" PlaceholderText="hh" MaxLength="2" Width="60" Margin="0,0,5,0" TextAlignment="Center" />
-                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,5,0" />
-                                                        <ui:TextBox x:Name="TxtTimerMinutes" PlaceholderText="mm" MaxLength="2" Width="60" TextAlignment="Center" />
+                                                        <ui:TextBox x:Name="TxtTimerHours" PlaceholderText="hh" MaxLength="2" Width="50" Margin="0,0,3,0" TextAlignment="Center" />
+                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,3,0" />
+                                                        <ui:TextBox x:Name="TxtTimerMinutes" PlaceholderText="mm" MaxLength="2" Width="50" Margin="0,0,3,0" TextAlignment="Center" />
+                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,3,0" />
+                                                        <ui:TextBox x:Name="TxtTimerSeconds" PlaceholderText="ss" MaxLength="2" Width="50" TextAlignment="Center" />
                                                     </StackPanel>
                                                 </Grid>
                                                 <Grid Margin="0,10,0,0">

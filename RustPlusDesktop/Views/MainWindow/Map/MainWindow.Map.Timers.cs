@@ -53,20 +53,22 @@ public partial class MainWindow
         string name = TxtTimerName.Text.Trim();
         if (string.IsNullOrWhiteSpace(name)) return;
 
-        double hours = int.TryParse(TxtTimerHours.Text, out int h) ? h : 0;
-        double mins = int.TryParse(TxtTimerMinutes.Text, out int m) ? m : 0;
-        
-        if (hours == 0 && mins == 0) return;
+        int hours = int.TryParse(TxtTimerHours.Text, out int h) ? h : 0;
+        int mins = int.TryParse(TxtTimerMinutes.Text, out int m) ? m : 0;
+        int secs = int.TryParse(TxtTimerSeconds.Text, out int s) ? s : 0;
+
+        if (hours == 0 && mins == 0 && secs == 0) return;
 
         var cmd = TxtTimerCommandPreview.Text;
         if (string.IsNullOrWhiteSpace(cmd)) cmd = name.ToLower();
 
-        double totalMins = hours * 60 + mins;
+        int totalSecs = hours * 3600 + mins * 60 + secs;
+        double totalMins = totalSecs / 60.0;
         var timer = new CustomTimer
         {
             Name = name,
             Command = cmd,
-            EndTimeUtc = DateTime.UtcNow.AddMinutes(totalMins),
+            EndTimeUtc = DateTime.UtcNow.AddSeconds(totalSecs),
             CreatedNotified = false,
             Notified60 = totalMins <= 60,
             Notified30 = totalMins <= 30,
@@ -75,17 +77,17 @@ public partial class MainWindow
         };
 
         _vm.Selected.CustomTimers.Add(timer);
-        
+
         TxtTimerName.Text = "";
         TxtTimerHours.Text = "";
         TxtTimerMinutes.Text = "";
-        
+        TxtTimerSeconds.Text = "";
+
         PopupCustomTimer.IsOpen = false;
-        
-        // Output chat creation string
+
         if (_vm.Selected.AlertCustomTimer)
         {
-            var msg = string.Format(Properties.Resources.TimerCreated, _vm.Selected.ChatCommandPrefix + cmd, (int)hours, (int)mins);
+            var msg = string.Format(Properties.Resources.TimerCreated, _vm.Selected.ChatCommandPrefix + cmd, hours, mins, secs);
             _ = SendTeamChatSafeAsync(msg);
         }
     }
