@@ -149,7 +149,7 @@ public partial class MainWindow
 
     private void UpdateTeamFeatureMasterWatch()
     {
-        if (_chatFeaturesBlockedByMaster)
+        if (_chatFeaturesBlockedByMaster || HasLocalChatFeatureIntent())
         {
             if (_teamFeatureMasterWatchTimer != null) return;
 
