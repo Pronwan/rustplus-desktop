@@ -2003,4 +2003,11 @@
   <data name="BaseAddScreenshotLockedFormat" xml:space="preserve"><value>Добавить скриншот {0} (требуется Premium)</value></data>
   <data name="BaseNoNotesYet" xml:space="preserve"><value>Заметок пока нет.</value></data>
   <data name="BaseNoScreenshotsYet" xml:space="preserve"><value>Скриншоты пока не добавлены</value></data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve"><value>Chat Master онлайн</value></data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve"><value>{0} управляет чат-оповещениями и чат-командами этой команды.</value></data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve"><value>Chat Master {0} онлайн. Чат-оповещения и чат-команды на этом устройстве приостановлены.</value></data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve"><value>Вы Chat Master</value></data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve"><value>Это устройство теперь управляет чат-оповещениями и чат-командами вашей команды.</value></data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve"><value>Принять</value></data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve"><value>Отклонить</value></data>
 </root>

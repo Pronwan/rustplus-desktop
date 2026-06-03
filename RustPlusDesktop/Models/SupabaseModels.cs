@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using Postgrest.Attributes;
 using Postgrest.Models;
 using Newtonsoft.Json;
@@ -96,6 +97,57 @@ namespace RustPlusDesk.Models
 
         [Column("team_members_json")]
         public string TeamMembersJson { get; set; }
+    }
+
+    public class TeamFeatureMasterState
+    {
+        [JsonProperty("server_key")]
+        [JsonPropertyName("server_key")]
+        public string ServerKey { get; set; } = "";
+
+        [JsonProperty("server_name")]
+        [JsonPropertyName("server_name")]
+        public string ServerName { get; set; } = "";
+
+        [JsonProperty("team_key")]
+        [JsonPropertyName("team_key")]
+        public string TeamKey { get; set; } = "";
+
+        [JsonProperty("master_steam_id")]
+        [JsonPropertyName("master_steam_id")]
+        public string? MasterSteamId { get; set; }
+
+        [JsonProperty("master_name")]
+        [JsonPropertyName("master_name")]
+        public string MasterName { get; set; } = "";
+
+        [JsonProperty("master_is_premium")]
+        [JsonPropertyName("master_is_premium")]
+        public bool MasterIsPremium { get; set; }
+
+        [JsonProperty("premium_sponsor_steam_id")]
+        [JsonPropertyName("premium_sponsor_steam_id")]
+        public string? PremiumSponsorSteamId { get; set; }
+
+        [JsonProperty("controls_chat_alerts")]
+        [JsonPropertyName("controls_chat_alerts")]
+        public bool ControlsChatAlerts { get; set; }
+
+        [JsonProperty("controls_chat_commands")]
+        [JsonPropertyName("controls_chat_commands")]
+        public bool ControlsChatCommands { get; set; }
+
+        [JsonProperty("elected_at")]
+        [JsonPropertyName("elected_at")]
+        public DateTime? ElectedAt { get; set; }
+
+        [JsonProperty("updated_at")]
+        [JsonPropertyName("updated_at")]
+        public DateTime? UpdatedAt { get; set; }
+
+        [JsonProperty("expires_at")]
+        [JsonPropertyName("expires_at")]
+        public DateTime? ExpiresAt { get; set; }
     }
 }
 

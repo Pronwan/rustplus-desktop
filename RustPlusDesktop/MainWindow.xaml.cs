@@ -3470,6 +3470,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private void DeselectAllAlerts_Click(object sender, RoutedEventArgs e)
     {
         SetAllAlerts(false);
+        if (CheckIfAllOff())
+        {
+            TrackingService.AnnounceSpawnsMaster = false;
+        }
+
         UpdateMasterToggleState();
         SyncAlertMenuItems();
         UpdateShopSearchConfig();
@@ -3497,6 +3502,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TrackingService.AnnounceSuspiciousShops = val;
         TrackingService.AnnounceSmartAlerts = val;
         TrackingService.AnnounceTradeAlerts = val;
+        if (_vm.Selected != null) { _vm.Selected.AlertCustomTimer = val; }
     }
 
     private bool CheckIfAllOff()
@@ -3510,7 +3516,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                !TrackingService.AnnouncePlayerRespawnSelf && !TrackingService.AnnouncePlayerRespawnTeam &&
                !TrackingService.AnnounceTracking &&
                !TrackingService.AnnounceNewShops && !TrackingService.AnnounceSuspiciousShops &&
-               !TrackingService.AnnounceSmartAlerts && !TrackingService.AnnounceTradeAlerts;
+               !TrackingService.AnnounceSmartAlerts && !TrackingService.AnnounceTradeAlerts &&
+               (_vm.Selected == null || !_vm.Selected.AlertCustomTimer);
     }
 
     internal void UpdateMasterToggleState()
@@ -3547,6 +3554,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "NewShops": TrackingService.AnnounceNewShops = val; break;
                 case "SuspiciousShops": TrackingService.AnnounceSuspiciousShops = val; break;
                 case "CustomTimer": if (_vm.Selected != null) { _vm.Selected.AlertCustomTimer = val; } break;
+            }
+
+            if (CheckIfAllOff())
+            {
+                TrackingService.AnnounceSpawnsMaster = false;
             }
 
             UpdateMasterToggleState();
@@ -3678,7 +3690,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             rule.NotifyChat = mi.IsChecked;
             SavePersistentAlerts();
             
-            TrackingService.AnnounceSpawnsMaster = true;
+            if (mi.IsChecked)
+            {
+                TrackingService.AnnounceSpawnsMaster = true;
+            }
+            else if (CheckIfAllOff())
+            {
+                TrackingService.AnnounceSpawnsMaster = false;
+            }
+
             UpdateMasterToggleState();
             UpdateShopSearchConfig();
             _ = PushAlertsToWebViewAsync();

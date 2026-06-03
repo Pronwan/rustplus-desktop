@@ -1962,4 +1962,11 @@ Are you sure you want to continue?</value>
   <data name="BaseAddScreenshotLockedFormat" xml:space="preserve"><value>Add Screenshot {0} (Premium required)</value></data>
   <data name="BaseNoNotesYet" xml:space="preserve"><value>No notes added yet.</value></data>
   <data name="BaseNoScreenshotsYet" xml:space="preserve"><value>No screenshots added yet</value></data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve"><value>Chat Master online</value></data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve"><value>{0} is controlling Chat Alerts and Chat Commands for this team.</value></data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve"><value>Chat Master {0} online. Chat Alerts and Chat Commands are paused on this device.</value></data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve"><value>You are Chat Master</value></data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve"><value>This device is now controlling Chat Alerts and Chat Commands for your team.</value></data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve"><value>Accept</value></data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve"><value>Deny</value></data>
 </root>

@@ -30,6 +30,11 @@ public partial class MainWindow
     private DateTime _lastChatCommandTime = DateTime.MinValue;
     private const int ChatCommandCooldownSeconds = 2; // 2s cooldown for system stability
 
+    private Task SendChatCommandResponseAsync(string text)
+    {
+        return SendTeamChatSafeAsync(text, bypassChatAlertMasterBlock: true);
+    }
+
     private async Task ProcessChatCommands(TeamChatMessage m)
     {
         var profile = _vm.Selected;
@@ -49,6 +54,10 @@ public partial class MainWindow
         }
 
         cmd = cmd.Substring(prefix.Length); // Remove prefix for matching
+        var isPromoteCommand = !string.IsNullOrWhiteSpace(profile.CmdPromote)
+            && cmd == profile.CmdPromote.ToLowerInvariant();
+        if (!CanProcessLocalChatCommands(isPromoteCommand)) return;
+
         _lastChatCommandTime = DateTime.UtcNow;
 
         if (_rust is not RustPlusClientReal real) return;
@@ -72,7 +81,7 @@ public partial class MainWindow
 
             string standardMsg = string.Format(Properties.Resources.ChatCmdListHeader, string.Join(", ", standardCmds));
             if (standardMsg.Length > 128) standardMsg = standardMsg.Substring(0, 125) + "...";
-            _ = SendTeamChatSafeAsync(standardMsg);
+            _ = SendChatCommandResponseAsync(standardMsg);
 
             var deviceCmds = new List<string>();
             foreach (var mapping in profile.SwitchCommandMappings)
@@ -99,7 +108,7 @@ public partial class MainWindow
                     await Task.Delay(3000);
                     string devMsg = string.Join(" | ", deviceCmds);
                     if (devMsg.Length > 128) devMsg = devMsg.Substring(0, 125) + "...";
-                    await SendTeamChatSafeAsync(devMsg);
+                    await SendChatCommandResponseAsync(devMsg);
                 });
             }
 
@@ -112,7 +121,7 @@ public partial class MainWindow
         {
             string qText = _vm.ServerQueue != "0" && _vm.ServerQueue != "-" ? string.Format(Properties.Resources.ChatCmdPopQueue, _vm.ServerQueue) : "";
             string msg = string.Format(Properties.Resources.ChatCmdPopResponse, _vm.ServerPlayers, qText);
-            _ = SendTeamChatSafeAsync(msg);
+            _ = SendChatCommandResponseAsync(msg);
             AppendLog($"[ChatCommand] Pop executed by {m.Author}");
             return;
         }
@@ -125,7 +134,7 @@ public partial class MainWindow
             {
                 msg += $" ({_vm.TimeUntilNextPhase})";
             }
-            _ = SendTeamChatSafeAsync(msg.Trim());
+            _ = SendChatCommandResponseAsync(msg.Trim());
             AppendLog($"[ChatCommand] Time executed by {m.Author}");
             return;
         }
@@ -134,7 +143,7 @@ public partial class MainWindow
         if (cmd == profile.CmdPromote.ToLowerInvariant())
         {
             _ = real.PromoteToLeaderAsync(m.SteamId);
-            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdPromoteResponse, m.Author));
+            _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdPromoteResponse, m.Author));
             AppendLog($"[ChatCommand] Promote executed by {m.Author}");
             return;
         }
@@ -164,7 +173,7 @@ public partial class MainWindow
             {
                 msg = Properties.Resources.ChatCmdDeepSeaStatusUnknown;
             }
-            _ = SendTeamChatSafeAsync(msg);
+            _ = SendChatCommandResponseAsync(msg);
             AppendLog($"[ChatCommand] DeepSea executed by {m.Author}");
             return;
         }
@@ -221,7 +230,7 @@ public partial class MainWindow
                 var ago = DateTime.UtcNow - _cargoLastDespawnUtc.Value;
                 msg = string.Format(Properties.Resources.ChatCmdCargoDespawnedMinutesAgo, (int)ago.TotalMinutes);
             }
-            _ = SendTeamChatSafeAsync(msg);
+            _ = SendChatCommandResponseAsync(msg);
             AppendLog($"[ChatCommand] Cargo executed by {m.Author}");
             return;
         }
@@ -251,7 +260,7 @@ public partial class MainWindow
                     }
                 }
             }
-            _ = SendTeamChatSafeAsync(string.Join(" | ", parts));
+            _ = SendChatCommandResponseAsync(string.Join(" | ", parts));
             AppendLog($"[ChatCommand] OilRig executed by {m.Author}");
             return;
         }
@@ -283,7 +292,7 @@ public partial class MainWindow
             {
                 msg = Properties.Resources.ChatCmdHeliStatusUnknown;
             }
-            _ = SendTeamChatSafeAsync(msg);
+            _ = SendChatCommandResponseAsync(msg);
             AppendLog($"[ChatCommand] Heli executed by {m.Author}");
             return;
         }
@@ -314,7 +323,7 @@ public partial class MainWindow
             {
                 msg = Properties.Resources.ChatCmdVendorStatusUnknown;
             }
-            _ = SendTeamChatSafeAsync(msg);
+            _ = SendChatCommandResponseAsync(msg);
             AppendLog($"[ChatCommand] Vendor executed by {m.Author}");
             return;
         }
@@ -330,7 +339,7 @@ public partial class MainWindow
                     string timeStr = remaining.TotalHours >= 1.0 
                         ? $"{(int)remaining.TotalHours:D2}:{remaining.Minutes:D2}:{remaining.Seconds:D2}"
                         : $"{remaining.Minutes:D2}:{remaining.Seconds:D2}";
-                    _ = SendTeamChatSafeAsync($"{timer.Name}: {timeStr}");
+                    _ = SendChatCommandResponseAsync($"{timer.Name}: {timeStr}");
                     AppendLog($"[ChatCommand] Timer '{timer.Name}' checked by {m.Author}");
                 }
                 return;
@@ -343,13 +352,13 @@ public partial class MainWindow
         {
             if (profile.CustomTimers.Count == 0)
             {
-                _ = SendTeamChatSafeAsync("No active timers.");
+                _ = SendChatCommandResponseAsync("No active timers.");
             }
             else
             {
                 var timerStrings = profile.CustomTimers.Select(t => $"{profile.ChatCommandPrefix}{t.Command} : {t.RemainingTimeText}").ToList();
                 string output = string.Join(" | ", timerStrings);
-                _ = SendTeamChatSafeAsync(output);
+                _ = SendChatCommandResponseAsync(output);
             }
             return;
         }
@@ -357,7 +366,7 @@ public partial class MainWindow
         {
             if (profile.CustomTimers.Count >= 5)
             {
-                _ = SendTeamChatSafeAsync(Properties.Resources.ChatCmdTimerMaxReached ?? "Maximum of 5 timers allowed.");
+                _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdTimerMaxReached ?? "Maximum of 5 timers allowed.");
                 return;
             }
             
@@ -386,7 +395,7 @@ public partial class MainWindow
                         int h = mins / 60;
                         int remMins = mins % 60;
                         var msg = string.Format(Properties.Resources.TimerCreated, profile.ChatCommandPrefix + newCmd, h, remMins);
-                        _ = SendTeamChatSafeAsync(msg);
+                        _ = SendChatCommandResponseAsync(msg);
                     }
                     AppendLog($"[ChatCommand] Timer created by {m.Author}: {name} for {mins}m");
                 }
@@ -410,7 +419,7 @@ public partial class MainWindow
             var tcs = profile.UpkeepCommandMappings.Where(mapping => mapping.EntityId != 0).ToList();
             if (tcs.Count == 0)
             {
-                _ = SendTeamChatSafeAsync(Properties.Resources.ChatCmdUpkeepNoTcMapped);
+                _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdUpkeepNoTcMapped);
             }
             else
             {
@@ -429,7 +438,7 @@ public partial class MainWindow
                         var secs = dev.UpkeepSeconds ?? 0;
                         if (secs <= 0)
                         {
-                            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcEmptyExpired, dev.PureName));
+                            _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcEmptyExpired, dev.PureName));
                         }
                         else
                         {
@@ -451,7 +460,7 @@ public partial class MainWindow
                                 ? ""
                                 : string.Format(Properties.Resources.ChatCmdUpkeepNeed24h, dailyMaterials);
 
-                            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcTime, dev.PureName, timeStr) + materialsSuffix);
+                            _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcTime, dev.PureName, timeStr) + materialsSuffix);
                         }
                     }
                 }
@@ -494,11 +503,11 @@ public partial class MainWindow
             }
             if (parts.Count > 0)
             {
-                _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdUpkeepHeader, string.Join(" | ", parts)));
+                _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepHeader, string.Join(" | ", parts)));
             }
             else
             {
-                _ = SendTeamChatSafeAsync(Properties.Resources.ChatCmdUpkeepNotPaired);
+                _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdUpkeepNotPaired);
             }
             AppendLog($"[ChatCommand] Multi-Upkeep for cmd={cmd} executed by {m.Author}");
             return;
@@ -516,7 +525,7 @@ public partial class MainWindow
             var secs = dev.UpkeepSeconds ?? 0;
             if (secs <= 0)
             {
-                _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcEmptyExpired, dev.PureName));
+                _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcEmptyExpired, dev.PureName));
             }
             else
             {
@@ -533,13 +542,13 @@ public partial class MainWindow
 
                 string timeStr = string.Join(", ", timeParts);
 
-                _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcTime, dev.PureName, timeStr));
+                _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcTime, dev.PureName, timeStr));
             }
             AppendLog($"[ChatCommand] Upkeep for {dev.Name} executed by {author}");
         }
         else
         {
-            _ = SendTeamChatSafeAsync(Properties.Resources.ChatCmdUpkeepNotPairedSingle);
+            _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdUpkeepNotPairedSingle);
         }
     }
 
@@ -556,7 +565,7 @@ public partial class MainWindow
             {
                 await real.ToggleSmartSwitchAsync(entityId, newState);
                 string stateStr = newState ? Properties.Resources.ChatCmdSwitchStateOn : Properties.Resources.ChatCmdSwitchStateOff;
-                _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdSwitchToggled, dev.Name, stateStr));
+                _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdSwitchToggled, dev.Name, stateStr));
                 AppendLog($"[ChatCommand] {dev.Name} toggled to {newState} by {author}");
             }
             catch (Exception ex)
@@ -566,7 +575,7 @@ public partial class MainWindow
         }
         else
         {
-            _ = SendTeamChatSafeAsync(Properties.Resources.ChatCmdSwitchNotPaired);
+            _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdSwitchNotPaired);
         }
     }
 
