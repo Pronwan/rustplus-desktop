@@ -130,6 +130,7 @@ public partial class MainWindow
 
     private readonly Dictionary<ulong, string> _steamNames = new();
     private DateTime _lastTeamRefresh = DateTime.MinValue;
+    private string? _lastCloudPresenceSignature;
 
     private void StartTeamPolling()
     {
@@ -150,6 +151,8 @@ public partial class MainWindow
         t.Tick -= TeamTimer_Tick;
         t.Stop();
         _teamTimer = null;
+        _lastCloudPresenceSignature = null;
+        ResetTeamFeatureMasterSyncState();
     }
 
     private int _teamPollBusy = 0;
@@ -265,19 +268,29 @@ public partial class MainWindow
                 if (TeamMembers[i].MissingCount > 2)
                     TeamMembers.RemoveAt(i);
 
-            _ = RustPlusDesk.Services.Auth.SupabaseAuthManager.UpdatePresenceAsync(
-                GetServerKey(),
-                _vm.Selected?.Name,
-                TeamMembers.Select(t => new RustPlusDesk.Services.Auth.SupabaseAuthManager.CloudTeamMemberDto
+            var cloudTeamMembers = TeamMembers.Select(t => new RustPlusDesk.Services.Auth.SupabaseAuthManager.CloudTeamMemberDto
                 {
                     SteamId = t.SteamId.ToString(),
                     Name = t.Name,
                     IsOnline = t.IsOnline,
                     IsDead = t.IsDead,
                     IsLeader = t.IsLeader
-                }).ToList());
+                }).ToList();
 
-            _ = SyncTeamFeatureMasterAsync();
+            var serverKey = GetServerKey();
+            var serverName = _vm.Selected?.Name;
+            var cloudPresenceSignature = BuildCloudPresenceSignature(serverKey, serverName, cloudTeamMembers);
+            if (cloudPresenceSignature != _lastCloudPresenceSignature)
+            {
+                _lastCloudPresenceSignature = cloudPresenceSignature;
+                _ = RustPlusDesk.Services.Auth.SupabaseAuthManager.UpdatePresenceAsync(
+                    serverKey,
+                    serverName,
+                    cloudTeamMembers);
+            }
+
+            if (ShouldSyncTeamFeatureMasterForCurrentState(cloudPresenceSignature))
+                _ = SyncTeamFeatureMasterAsync();
         }
         catch (Exception ex)
         {
@@ -296,6 +309,24 @@ public partial class MainWindow
                 RebuildOverlayTeamBar();
             });
         }
+    }
+
+    private static string BuildCloudPresenceSignature(
+        string? serverKey,
+        string? serverName,
+        IReadOnlyCollection<RustPlusDesk.Services.Auth.SupabaseAuthManager.CloudTeamMemberDto> teamMembers)
+    {
+        var team = string.Join(";",
+            teamMembers
+                .OrderBy(t => t.SteamId, StringComparer.Ordinal)
+                .Select(t => string.Join("|",
+                    t.SteamId,
+                    t.Name ?? "",
+                    t.IsOnline ? "1" : "0",
+                    t.IsDead ? "1" : "0",
+                    t.IsLeader ? "1" : "0")));
+
+        return $"{serverKey ?? ""}#{serverName ?? ""}#{team}";
     }
 
     private async Task AnnouncePresenceChangeAsync(TeamMemberVM vm, (bool online, bool dead) prev, (bool online, bool dead) now)
