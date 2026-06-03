@@ -176,15 +176,19 @@ public partial class MainWindow
 
     private async Task PollServerStatusLoopAsync(CancellationToken ct)
     {
+        int serverStatusFailCount = 0;
         while (!ct.IsCancellationRequested)
         {
+            bool success = false;
             try
             {
-                if (_rust is RustPlusClientReal real)
+                if (_rust is RustPlusClientReal real && _vm.Selected != null && _vm.Selected.IsConnected)
                 {
                     var st = await real.GetServerStatusAsync(ct);
                     if (st != null && st.Players >= 0)
                     {
+                        success = true;
+                        serverStatusFailCount = 0;
                         _vm.ServerPlayers = $"{st.Players}/{st.MaxPlayers}";
                         _vm.ServerQueue = (st.Queue >= 0) ? st.Queue.ToString() : "0";
                         
@@ -195,11 +199,46 @@ public partial class MainWindow
             }
             catch { /* Keep last known values on error */ }
 
+            if (_vm.Selected != null && _vm.Selected.IsConnected)
+            {
+                if (!success)
+                {
+                    serverStatusFailCount++;
+                    AppendLog($"[status-poll] Failed to get server status ({serverStatusFailCount}/5).");
+
+                    if (serverStatusFailCount >= 5)
+                    {
+                        serverStatusFailCount = 0;
+                        if (!_isReconnecting && !_isSoftConnecting && !(_vm?.IsBusy == true))
+                        {
+                            AppendLog("[status-poll] Connection seems dead (status failed 5 times). Refreshing connection silently...");
+                            
+                            _ = Dispatcher.InvokeAsync(async () =>
+                            {
+                                try
+                                {
+                                    await PerformConnectAsync(true, showBusy: false);
+                                    AppendLog("[status-poll] Silent connection refresh complete.");
+                                }
+                                catch (Exception ex)
+                                {
+                                    AppendLog($"[status-poll] Silent connection refresh failed: {ex.Message}");
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+            else
+            {
+                serverStatusFailCount = 0;
+            }
+
             try { await Task.Delay(TimeSpan.FromSeconds(10), ct); } catch { }
         }
     }
 
-    private async Task<bool> PerformConnectAsync(bool silent)
+    private async Task<bool> PerformConnectAsync(bool silent, bool showBusy = true)
     {
         if (!silent)
         {
@@ -244,8 +283,11 @@ public partial class MainWindow
 
         try
         {
-            _vm.IsBusy = true;
-            _vm.BusyText = "Connecting …";
+            if (showBusy)
+            {
+                _vm.IsBusy = true;
+                _vm.BusyText = "Connecting …";
+            }
 
             AppendLog($"Connecting to ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
             await _rust.ConnectAsync(_vm.Selected);
@@ -280,9 +322,12 @@ public partial class MainWindow
                 catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
             }
 
-            _vm.IsBusy = false;
-            _vm.BusyText = "";
-            _vm.IsInitializing = true;
+            if (showBusy)
+            {
+                _vm.IsBusy = false;
+                _vm.BusyText = "";
+                _vm.IsInitializing = true;
+            }
 
             // Start atomic parallel loading block to prevent UI "stuttering" during sequential awaits
             var initTasks = new List<Task>();
@@ -315,7 +360,10 @@ public partial class MainWindow
                 Dispatcher.Invoke(() => ChkShops.IsChecked = true);
             }
             
-            _vm.IsInitializing = false;
+            if (showBusy)
+            {
+                _vm.IsInitializing = false;
+            }
             _vm.Selected.IsConnected = true;
             _vm.Selected.IsFullConnected = true;
 
@@ -358,9 +406,12 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            _vm.IsInitializing = false;
-            _vm.IsBusy = false;
-            _vm.BusyText = "";
+            if (showBusy)
+            {
+                _vm.IsInitializing = false;
+                _vm.IsBusy = false;
+                _vm.BusyText = "";
+            }
             AppendLog("Fehler: " + ex.Message);
             if (!silent) MessageBox.Show($"Connection failed: {ex.Message}");
             return false;
