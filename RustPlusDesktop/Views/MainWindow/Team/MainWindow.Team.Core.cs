@@ -146,6 +146,8 @@ public partial class MainWindow
 
     private void StopTeamPolling()
     {
+        NotifyTeamFeatureServerDisconnected();
+
         var t = _teamTimer;
         if (t == null) return;
         t.Tick -= TeamTimer_Tick;

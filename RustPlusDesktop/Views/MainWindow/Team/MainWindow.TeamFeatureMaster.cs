@@ -28,6 +28,7 @@ public partial class MainWindow
     private System.Windows.Threading.DispatcherTimer? _teamFeatureMasterWatchTimer;
     private bool _teamFeatureMasterWatchBusy;
     private bool _teamFeatureShutdownSent;
+    private string? _lastTeamFeatureDisconnectReleaseSignature;
 
     private static string TeamFeatureText(string key, string fallback)
         => Properties.Resources.ResourceManager.GetString(key) ?? fallback;
@@ -98,6 +99,10 @@ public partial class MainWindow
             {
                 wantsAlerts = false;
                 wantsCommands = false;
+            }
+            if (wantsAlerts || wantsCommands)
+            {
+                _lastTeamFeatureDisconnectReleaseSignature = null;
             }
 
             var orderIndex = GetMyTeamOrderIndex();
@@ -227,6 +232,49 @@ public partial class MainWindow
         catch
         {
             // Best effort on shutdown.
+        }
+    }
+
+    private void NotifyTeamFeatureServerDisconnected()
+    {
+        _ = NotifyTeamFeatureServerDisconnectedAsync();
+    }
+
+    private async Task NotifyTeamFeatureServerDisconnectedAsync()
+    {
+        try
+        {
+            StopTeamFeatureMasterWatch();
+
+            if (_vm?.Selected == null || TeamMembers.Count == 0) return;
+            if (!SupabaseAuthManager.IsDiscordAuthenticated && !SupabaseAuthManager.IsEmailAuthenticated) return;
+
+            var serverKey = GetServerKey();
+            var teamKey = BuildTeamFeatureKey();
+            if (string.IsNullOrWhiteSpace(serverKey) || string.IsNullOrWhiteSpace(teamKey)) return;
+
+            var mySteamId = _mySteamId.ToString();
+            var releaseSignature = $"{serverKey}#{teamKey}#{mySteamId}";
+            if (_lastTeamFeatureDisconnectReleaseSignature == releaseSignature) return;
+            _lastTeamFeatureDisconnectReleaseSignature = releaseSignature;
+
+            var myName = TeamMembers.FirstOrDefault(t => t.SteamId == _mySteamId)?.Name
+                ?? _vm.Selected?.Name
+                ?? mySteamId;
+
+            await SupabaseAuthManager.HeartbeatTeamFeaturePresenceAsync(
+                mySteamId,
+                myName,
+                serverKey,
+                _vm.Selected?.Name ?? "",
+                teamKey,
+                GetMyTeamOrderIndex(),
+                wantsChatAlerts: false,
+                wantsChatCommands: false);
+        }
+        catch
+        {
+            // Best effort on server disconnect.
         }
     }
 
