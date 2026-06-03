@@ -2957,8 +2957,8 @@
                                                  </ContextMenu>
                                              </ui:DropDownButton.Flyout>
                                          </ui:DropDownButton>
-                                     </Grid>
-                                 </Border>
+                                      </Grid>
+                                        </Border>
                                  <Border
                                      x:Name="ChatFeatureMasterWarningBadge"
                                      Visibility="Collapsed"
@@ -2976,7 +2976,7 @@
                                          FontWeight="SemiBold"
                                          TextWrapping="NoWrap" />
                                  </Border>
-                            </StackPanel>
+                                    </StackPanel>
 
                             <!-- Right Group: Map Actions (Right-Oriented) -->
                             <StackPanel
@@ -3763,11 +3763,14 @@
                                                     </Grid.ColumnDefinitions>
                                                     <ui:TextBox x:Name="TxtTimerName" PlaceholderText="{DynamicResource TimerName}" TextChanged="TxtTimerName_TextChanged" />
                                                     <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,0,0,0">
-                                                        <ui:TextBox x:Name="TxtTimerHours" PlaceholderText="hh" MaxLength="2" Width="60" Margin="0,0,5,0" TextAlignment="Center" />
-                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,5,0" />
-                                                        <ui:TextBox x:Name="TxtTimerMinutes" PlaceholderText="mm" MaxLength="2" Width="60" TextAlignment="Center" />
+                                                        <ui:TextBox x:Name="TxtTimerHours" ClearButtonEnabled="False" PlaceholderText="hh" MaxLength="2" Width="50" Margin="0,0,3,0" TextAlignment="Center" />
+                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,3,0" />
+                                                        <ui:TextBox x:Name="TxtTimerMinutes" ClearButtonEnabled="False" PlaceholderText="mm" MaxLength="2" Width="50" Margin="0,0,3,0" TextAlignment="Center" />
+                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,3,0" />
+                                                        <ui:TextBox x:Name="TxtTimerSeconds" ClearButtonEnabled="False" PlaceholderText="ss" MaxLength="2" Width="50" TextAlignment="Center" />
                                                     </StackPanel>
                                                 </Grid>
+                                                <TextBlock x:Name="TxtTimerValidation" Foreground="IndianRed" FontSize="11" Margin="0,5,0,0" TextWrapping="Wrap" />
                                                 <Grid Margin="0,10,0,0">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
@@ -3778,6 +3781,37 @@
                                                         <TextBlock x:Name="TxtTimerCommandPreview" Text="" Foreground="{DynamicResource TextSubtle}" />
                                                     </StackPanel>
                                                     <ui:Button Grid.Column="1" x:Name="BtnAddTimer" Content="{DynamicResource AddTimer}" Appearance="Primary" Click="BtnAddTimer_Click" />
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Timer Alarm Controls -->
+                                        <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ControlStrokeDefault}" Margin="0,5,0,0" Padding="0,10,0,0">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <ui:Button x:Name="BtnStopTimerAlarm" Visibility="Collapsed" Appearance="Transparent" Padding="6,4" Margin="0,0,4,0" Click="BtnStopTimerAlarm_Click" ToolTip="Stop alarm sound">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <ui:SymbolIcon Symbol="SpeakerMute24" Foreground="IndianRed" FontSize="16" />
+                                                            <TextBlock Text="Stop" Margin="4,0,0,0" VerticalAlignment="Center" Foreground="IndianRed" />
+                                                        </StackPanel>
+                                                    </ui:Button>
+                                                    <ui:Button x:Name="BtnSnoozeTimerAlarm" Grid.Column="1" Visibility="Collapsed" Appearance="Transparent" Padding="6,4" Click="BtnSnoozeTimerAlarm_Click" ToolTip="Snooze alarm">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <ui:SymbolIcon Symbol="ClockAlarm24" Foreground="#FFA500" FontSize="16" />
+                                                            <TextBlock Text="Snooze" Margin="4,0,0,0" VerticalAlignment="Center" Foreground="#FFA500" />
+                                                        </StackPanel>
+                                                    </ui:Button>
+                                                    <ui:Button Grid.Column="3" Appearance="Transparent" Padding="6,4" Click="BtnSelectTimerAlarmAudio_Click" ToolTip="Select custom alarm sound">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <ui:SymbolIcon Symbol="MusicNote224" FontSize="16" />
+                                                        </StackPanel>
+                                                    </ui:Button>
                                                 </Grid>
                                             </StackPanel>
                                         </Border>

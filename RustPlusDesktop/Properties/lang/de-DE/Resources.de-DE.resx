@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1894,7 +1894,7 @@ Bist du sicher, dass du fortfahren möchtest?</value>
     <value>Eigener Timer</value>
   </data>
   <data name="TimerCreated" xml:space="preserve">
-    <value>Timer {0} erstellt für {1}h {2}m</value>
+    <value>Timer {0} created for {1}h {2}m {3}s</value>
   </data>
   <data name="HoverCustomTimer" xml:space="preserve">
     <value>Eigener Timer</value>
@@ -1916,6 +1916,12 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   </data>
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
     <value>Maximal 5 Timer erlaubt.</value>
+  </data>
+    <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Bitte geben Sie eine Timer-Dauer ein (Stunden, Minuten oder Sekunden).</value>
+  </data>
+    <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Der Timer-Name muss mit einem Buchstaben beginnen.</value>
   </data>
   <data name="FeatureTimerAlerts" xml:space="preserve">
     <value>Timer Alerts</value>

@@ -369,35 +369,67 @@ public partial class MainWindow
                 _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdTimerMaxReached ?? "Maximum of 5 timers allowed.");
                 return;
             }
-            
+
             var args = cmd.Substring(createTimerCmd.Length + 1).Split(',');
-            if (args.Length == 2 && int.TryParse(args[1].Trim(), out int mins) && mins > 0)
+            if (args.Length == 2)
             {
                 string name = args[0].Trim();
+                string timePart = args[1].Trim();
+
+                int hours = 0, mins = 0, secs = 0;
+
+                if (timePart.Contains(':'))
+                {
+                    var parts = timePart.Split(':');
+                    if (parts.Length == 3)
+                    {
+                        int.TryParse(parts[0], out hours);
+                        int.TryParse(parts[1], out mins);
+                        int.TryParse(parts[2], out secs);
+                    }
+                    else if (parts.Length == 2)
+                    {
+                        int.TryParse(parts[0], out mins);
+                        int.TryParse(parts[1], out secs);
+                    }
+                }
+                else
+                {
+                    int.TryParse(timePart, out mins);
+                }
+
+                int totalSecs = hours * 3600 + mins * 60 + secs;
+                if (totalSecs <= 0) return;
+
+                if (string.IsNullOrWhiteSpace(name) || !char.IsLetter(name[0]))
+                {
+                    _ = SendTeamChatSafeAsync(Properties.Resources.TimerNameMustStartWithLetter);
+                    return;
+                }
+
                 if (!string.IsNullOrWhiteSpace(name))
                 {
                     var newCmd = new string(name.Where(c => !char.IsWhiteSpace(c)).ToArray()).ToLower();
+                    double totalMins = totalSecs / 60.0;
                     var timer = new CustomTimer
                     {
                         Name = name,
                         Command = newCmd,
-                        EndTimeUtc = DateTime.UtcNow.AddMinutes(mins),
+                        EndTimeUtc = DateTime.UtcNow.AddSeconds(totalSecs),
                         CreatedNotified = false,
-                        Notified60 = mins <= 60,
-                        Notified30 = mins <= 30,
-                        Notified10 = mins <= 10,
-                        Notified3 = mins <= 3
+                        Notified60 = totalMins <= 60,
+                        Notified30 = totalMins <= 30,
+                        Notified10 = totalMins <= 10,
+                        Notified3 = totalMins <= 3
                     };
                     Dispatcher.Invoke(() => profile.CustomTimers.Add(timer));
-                    
+
                     if (profile.AlertCustomTimer)
                     {
-                        int h = mins / 60;
-                        int remMins = mins % 60;
-                        var msg = string.Format(Properties.Resources.TimerCreated, profile.ChatCommandPrefix + newCmd, h, remMins);
+                        var msg = string.Format(Properties.Resources.TimerCreated, profile.ChatCommandPrefix + newCmd, hours, mins, secs);
                         _ = SendChatCommandResponseAsync(msg);
                     }
-                    AppendLog($"[ChatCommand] Timer created by {m.Author}: {name} for {mins}m");
+                    AppendLog($"[ChatCommand] Timer created by {m.Author}: {name} for {hours}h {mins}m {secs}s");
                 }
             }
             return;

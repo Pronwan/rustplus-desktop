@@ -676,6 +676,8 @@ namespace RustPlusDesk.Properties {
         public static string TimerCreateCmdLabel => GetString("TimerCreateCmdLabel");
         public static string CheckTimerStatusInfo => GetString("CheckTimerStatusInfo");
         public static string ChatCmdTimerMaxReached => GetString("ChatCmdTimerMaxReached");
+        public static string TimerDurationRequired => GetString("TimerDurationRequired");
+        public static string TimerNameMustStartWithLetter => GetString("TimerNameMustStartWithLetter");
     }
 }
 

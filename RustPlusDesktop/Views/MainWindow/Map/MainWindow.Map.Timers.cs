@@ -2,9 +2,11 @@ using RustPlusDesk.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using WpfUi = Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views;
 
@@ -17,6 +19,7 @@ public partial class MainWindow
         if (_vm.Selected != null)
         {
             ListActiveTimers.ItemsSource = _vm.Selected.CustomTimers;
+            TxtTimerValidation.Text = "";
             PopupCustomTimer.IsOpen = true;
         }
     }
@@ -49,22 +52,33 @@ public partial class MainWindow
         }
 
         string name = TxtTimerName.Text.Trim();
-        if (string.IsNullOrWhiteSpace(name)) return;
+        if (string.IsNullOrWhiteSpace(name) || !char.IsLetter(name[0]))
+        {
+            TxtTimerValidation.Text = Properties.Resources.TimerNameMustStartWithLetter;
+            return;
+        }
 
-        double hours = int.TryParse(TxtTimerHours.Text, out int h) ? h : 0;
-        double mins = int.TryParse(TxtTimerMinutes.Text, out int m) ? m : 0;
-        
-        if (hours == 0 && mins == 0) return;
+        int hours = int.TryParse(TxtTimerHours.Text, out int h) ? h : 0;
+        int mins = int.TryParse(TxtTimerMinutes.Text, out int m) ? m : 0;
+        int secs = int.TryParse(TxtTimerSeconds.Text, out int s) ? s : 0;
+
+        if (hours == 0 && mins == 0 && secs == 0)
+        {
+            TxtTimerValidation.Text = Properties.Resources.TimerDurationRequired;
+            return;
+        }
+        TxtTimerValidation.Text = "";
 
         var cmd = TxtTimerCommandPreview.Text;
         if (string.IsNullOrWhiteSpace(cmd)) cmd = name.ToLower();
 
-        double totalMins = hours * 60 + mins;
+        int totalSecs = hours * 3600 + mins * 60 + secs;
+        double totalMins = totalSecs / 60.0;
         var timer = new CustomTimer
         {
             Name = name,
             Command = cmd,
-            EndTimeUtc = DateTime.UtcNow.AddMinutes(totalMins),
+            EndTimeUtc = DateTime.UtcNow.AddSeconds(totalSecs),
             CreatedNotified = false,
             Notified60 = totalMins <= 60,
             Notified30 = totalMins <= 30,
@@ -73,17 +87,17 @@ public partial class MainWindow
         };
 
         _vm.Selected.CustomTimers.Add(timer);
-        
+
         TxtTimerName.Text = "";
         TxtTimerHours.Text = "";
         TxtTimerMinutes.Text = "";
-        
+        TxtTimerSeconds.Text = "";
+
         PopupCustomTimer.IsOpen = false;
-        
-        // Output chat creation string
+
         if (_vm.Selected.AlertCustomTimer)
         {
-            var msg = string.Format(Properties.Resources.TimerCreated, _vm.Selected.ChatCommandPrefix + cmd, (int)hours, (int)mins);
+            var msg = string.Format(Properties.Resources.TimerCreated, _vm.Selected.ChatCommandPrefix + cmd, hours, mins, secs);
             _ = SendTeamChatSafeAsync(msg);
         }
     }
@@ -96,6 +110,22 @@ public partial class MainWindow
         var toRemove = new List<CustomTimer>();
         var now = DateTime.UtcNow;
 
+        // First tick: silently purge any timers already expired from a previous session
+        if (!_timerStartupCleanupDone)
+        {
+            _timerStartupCleanupDone = true;
+            foreach (var t in _vm.Selected.CustomTimers.ToList())
+            {
+                if ((t.EndTimeUtc - now).TotalSeconds <= 0)
+                {
+                    toRemove.Add(t);
+                }
+            }
+            foreach (var r in toRemove) _vm.Selected.CustomTimers.Remove(r);
+            toRemove.Clear();
+            if (_vm.Selected.CustomTimers.Count == 0) return;
+        }
+
         foreach (var timer in _vm.Selected.CustomTimers.ToList())
         {
             var remaining = timer.EndTimeUtc - now;
@@ -106,10 +136,41 @@ public partial class MainWindow
 
             if (remaining.TotalSeconds <= 0)
             {
-                toRemove.Add(timer);
-                if (_vm.Selected.AlertCustomTimer && remaining.TotalSeconds >= -60)
+                if (timer.SnoozedUntilUtc.HasValue)
+                {
+                    if (timer.AutoDeleteAtUtc.HasValue && now >= timer.AutoDeleteAtUtc.Value)
+                    {
+                        toRemove.Add(timer);
+                    }
+                    else if (now >= timer.SnoozedUntilUtc.Value)
+                    {
+                        timer.SnoozedUntilUtc = now.AddMinutes(_vm.Selected.TimerAlarmSnoozeMinutes);
+                        timer.AutoDeleteAtUtc = now.AddMinutes(1);
+                        PlayTimerAlarm();
+                        ShowTimerExpiredSnackbar(timer.Name);
+                    }
+                    continue;
+                }
+
+                if (_vm.Selected.AlertCustomTimer && remaining.TotalSeconds >= -60 && !timer.AlarmPlayed)
                 {
                     _ = SendTeamChatSafeAsync($"{timer.Name}: 00:00");
+                }
+                if (!timer.AlarmPlayed)
+                {
+                    timer.AlarmPlayed = true;
+                    PlayTimerAlarm();
+                    ShowTimerExpiredSnackbar(timer.Name);
+
+                    if (_vm.Selected.TimerAlarmSnoozeMinutes > 0)
+                    {
+                        timer.SnoozedUntilUtc = now.AddMinutes(_vm.Selected.TimerAlarmSnoozeMinutes);
+                        timer.AutoDeleteAtUtc = now.AddMinutes(1);
+                    }
+                    else
+                    {
+                        toRemove.Add(timer);
+                    }
                 }
                 continue;
             }
@@ -191,5 +252,142 @@ public partial class MainWindow
                 IconCustomTimer.Foreground.BeginAnimation(SolidColorBrush.ColorProperty, null);
             IconCustomTimer.Foreground = (Brush)FindResource("TextPrimary");
         }
+    }
+
+    public void StopTimerAlarm()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            if (_timerAlarmPlayer != null)
+            {
+                _timerAlarmPlayer.Stop();
+                _timerAlarmPlayer.Close();
+                _timerAlarmPlayer = null;
+                _timerAlarmFilePath = null;
+                if (BtnStopTimerAlarm != null) BtnStopTimerAlarm.Visibility = Visibility.Collapsed;
+                if (BtnSnoozeTimerAlarm != null) BtnSnoozeTimerAlarm.Visibility = Visibility.Collapsed;
+                AppendLog("[timer-alarm] Stopped timer alarm audio.");
+            }
+        });
+    }
+
+    private async void PlayTimerAlarm()
+    {
+        if (_vm.Selected == null || !_vm.Selected.TimerAlarmEnabled) return;
+
+        try
+        {
+            string audioFile;
+
+            if (!string.IsNullOrWhiteSpace(_vm.Selected.TimerAlarmAudioPath))
+            {
+                audioFile = _vm.Selected.TimerAlarmAudioPath;
+            }
+            else
+            {
+                string baseDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
+                audioFile = System.IO.Path.Combine(baseDir, "Assets", "bell.mp3");
+            }
+
+            if (System.IO.File.Exists(audioFile))
+            {
+                var fullPath = System.IO.Path.GetFullPath(audioFile);
+                Dispatcher.Invoke(() =>
+                {
+                    StopTimerAlarm();
+                    _timerAlarmPlayer = new System.Windows.Media.MediaPlayer();
+                    _timerAlarmPlayer.MediaFailed += (s, e) => AppendLog($"[timer-alarm] Media Failed: {e.ErrorException?.Message}");
+                    _timerAlarmPlayer.MediaEnded += (s, e) => AppendLog("[timer-alarm] Playback ended.");
+                    _timerAlarmFilePath = fullPath;
+                    _timerAlarmPlayer.Open(new Uri(fullPath, UriKind.Absolute));
+                    _timerAlarmPlayer.Volume = 1.0;
+                    _timerAlarmPlayer.Play();
+                    if (BtnStopTimerAlarm != null) BtnStopTimerAlarm.Visibility = Visibility.Visible;
+                    if (BtnSnoozeTimerAlarm != null) BtnSnoozeTimerAlarm.Visibility = Visibility.Visible;
+                    AppendLog($"[timer-alarm] Playing: {fullPath}");
+                });
+            }
+            else
+            {
+                int duration = _vm.Selected.TimerAlarmBeepDurationSeconds;
+                for (int i = 0; i < duration; i++)
+                {
+                    System.Media.SystemSounds.Beep.Play();
+                    await Task.Delay(1000);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[timer-alarm] Error playing audio: {ex.Message}");
+            try { System.Media.SystemSounds.Beep.Play(); } catch { }
+        }
+    }
+
+    private void BtnStopTimerAlarm_Click(object sender, RoutedEventArgs e)
+    {
+        DismissAlarm();
+    }
+
+    public void DismissAlarm()
+    {
+        StopTimerAlarm();
+        if (_vm.Selected != null)
+        {
+            foreach (var timer in _vm.Selected.CustomTimers)
+            {
+                timer.SnoozedUntilUtc = null;
+                timer.AutoDeleteAtUtc = null;
+            }
+        }
+    }
+
+    private void BtnSnoozeTimerAlarm_Click(object sender, RoutedEventArgs e)
+    {
+        SnoozeAlarm();
+    }
+
+    public void SnoozeAlarm()
+    {
+        if (_vm.Selected == null) return;
+        StopTimerAlarm();
+        int snoozeMins = _vm.Selected.TimerAlarmSnoozeMinutes;
+        var snoozedUntil = DateTime.UtcNow.AddMinutes(snoozeMins);
+        var autoDeleteAt = DateTime.UtcNow.AddMinutes(1);
+        foreach (var timer in _vm.Selected.CustomTimers)
+        {
+            if (timer.AlarmPlayed || timer.SnoozedUntilUtc.HasValue)
+            {
+                timer.SnoozedUntilUtc = snoozedUntil;
+                timer.AutoDeleteAtUtc = autoDeleteAt;
+            }
+        }
+        AppendLog($"[timer-alarm] Snoozed for {snoozeMins} min.");
+    }
+
+    private void BtnSelectTimerAlarmAudio_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.Selected == null) return;
+
+        var dlg = new Microsoft.Win32.OpenFileDialog
+        {
+            Filter = "Audio Files|*.mp3;*.wav|All Files|*.*",
+            Title = "Select Timer Alarm Sound"
+        };
+
+        if (dlg.ShowDialog() == true)
+        {
+            _vm.Selected.TimerAlarmAudioPath = dlg.FileName;
+            _vm.Save();
+            AppendLog($"[timer-alarm] Selected audio: {dlg.SafeFileName}");
+        }
+    }
+
+    private void BtnResetTimerAlarmAudio_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.Selected == null) return;
+        _vm.Selected.TimerAlarmAudioPath = null;
+        _vm.Save();
+        AppendLog("[timer-alarm] Reset to default beep.");
     }
 }

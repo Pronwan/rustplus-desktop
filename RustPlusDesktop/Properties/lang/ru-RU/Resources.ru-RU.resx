@@ -1840,7 +1840,7 @@
     <value>Таймер</value>
   </data>
   <data name="TimerCreated" xml:space="preserve">
-    <value>Таймер {0} создан на {1}ч {2}м</value>
+    <value>Timer {0} created for {1}h {2}m {3}s</value>
   </data>
   <data name="HoverCustomTimer" xml:space="preserve">
     <value>Таймер</value>
@@ -2010,4 +2010,10 @@
   <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve"><value>Это устройство теперь управляет чат-оповещениями и чат-командами вашей команды.</value></data>
   <data name="ChatFeatureMasterAccept" xml:space="preserve"><value>Принять</value></data>
   <data name="ChatFeatureMasterDeny" xml:space="preserve"><value>Отклонить</value></data>
+    <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Пожалуйста, введите продолжительность таймера (часы, минуты или секунды).</value>
+  </data>
+    <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Имя таймера должно начинаться с буквы.</value>
+  </data>
 </root>

@@ -1843,7 +1843,7 @@ Are you sure you want to continue?</value>
     <value>Custom Timer</value>
   </data>
   <data name="TimerCreated" xml:space="preserve">
-    <value>Timer {0} created for {1}h {2}m</value>
+    <value>Timer {0} created for {1}h {2}m {3}s</value>
   </data>
   <data name="HoverCustomTimer" xml:space="preserve">
     <value>Custom Timer</value>
@@ -1865,6 +1865,12 @@ Are you sure you want to continue?</value>
   </data>
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
     <value>Maximum of 5 timers allowed.</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Please enter a timer duration (hours, minutes, or seconds).</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Timer name must start with a letter.</value>
   </data>
   <data name="FeatureTimerAlerts" xml:space="preserve">
     <value>Timer Alerts</value>

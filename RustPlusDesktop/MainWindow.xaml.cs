@@ -77,6 +77,10 @@ public partial class MainWindow : WpfUi.FluentWindow
     private readonly System.Windows.Threading.DispatcherTimer _customTimerTicker =
     new() { Interval = TimeSpan.FromSeconds(1) };
 
+    private System.Windows.Media.MediaPlayer? _timerAlarmPlayer;
+    private string? _timerAlarmFilePath;
+    private bool _timerStartupCleanupDone;
+
     private Viewbox? _mapView;
     private Grid? _scene;
     private bool _isPanning;
@@ -4744,6 +4748,56 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Info24),
             Timeout = TimeSpan.FromSeconds(5),
             MaxWidth = 350,
+            HorizontalAlignment = HorizontalAlignment.Right
+        };
+        snackbar.Show();
+    }
+
+    private void ShowTimerExpiredSnackbar(string timerName)
+    {
+        if (RootSnackbar == null) return;
+
+        var snoozeBtn = new WpfUi.Button
+        {
+            Content = "Snooze",
+            Appearance = WpfUi.ControlAppearance.Info,
+            FontSize = 12,
+            Padding = new Thickness(8, 2, 8, 2),
+            Margin = new Thickness(0, 0, 4, 0),
+            Tag = timerName
+        };
+        snoozeBtn.Click += (s, e) =>
+        {
+            var btn = (WpfUi.Button)s;
+            SnoozeAlarm();
+        };
+
+        var stopBtn = new WpfUi.Button
+        {
+            Content = "Stop",
+            Appearance = WpfUi.ControlAppearance.Danger,
+            FontSize = 12,
+            Padding = new Thickness(8, 2, 8, 2),
+            Tag = timerName
+        };
+        stopBtn.Click += (s, e) =>
+        {
+            DismissAlarm();
+        };
+
+        var panel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 4, 0, 0) };
+        panel.Children.Add(new TextBlock { Text = timerName, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 8, 0) });
+        panel.Children.Add(snoozeBtn);
+        panel.Children.Add(stopBtn);
+
+        var snackbar = new WpfUi.Snackbar(RootSnackbar)
+        {
+            Title = "Timer Expired",
+            Content = panel,
+            Appearance = WpfUi.ControlAppearance.Caution,
+            Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Timer24),
+            Timeout = TimeSpan.FromSeconds(8),
+            MaxWidth = 400,
             HorizontalAlignment = HorizontalAlignment.Right
         };
         snackbar.Show();
