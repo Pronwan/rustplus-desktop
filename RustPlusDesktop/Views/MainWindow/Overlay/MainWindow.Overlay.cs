@@ -1103,6 +1103,8 @@ private bool _overlayToolsVisible = false;
 
     public void UpdateCloudSyncUI()
     {
+        _vm.IsCloudConnected = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated || Services.Auth.SupabaseAuthManager.IsEmailAuthenticated;
+
         bool deviceLimitExceeded = IsFreeDeviceSyncLimitExceeded();
         int overlaySizeBytes = GetCurrentOverlaySizeBytes();
         bool overlayLimitExceeded = IsOverlaySyncLimitExceeded(overlaySizeBytes);
