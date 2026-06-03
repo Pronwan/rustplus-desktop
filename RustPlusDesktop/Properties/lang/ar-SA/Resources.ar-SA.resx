@@ -1997,4 +1997,11 @@
   <data name="BaseAddScreenshotLockedFormat" xml:space="preserve"><value>إضافة لقطة الشاشة {0} (يتطلب Premium)</value></data>
   <data name="BaseNoNotesYet" xml:space="preserve"><value>لم تتم إضافة أي ملاحظات بعد.</value></data>
   <data name="BaseNoScreenshotsYet" xml:space="preserve"><value>لم تتم إضافة أي لقطات شاشة بعد</value></data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve"><value>Chat Master متصل</value></data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve"><value>{0} يتحكم في تنبيهات الدردشة وأوامر الدردشة لهذا الفريق.</value></data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve"><value>Chat Master {0} متصل. تم إيقاف تنبيهات الدردشة وأوامر الدردشة على هذا الجهاز.</value></data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve"><value>أنت Chat Master</value></data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve"><value>هذا الجهاز يتحكم الآن في تنبيهات الدردشة وأوامر الدردشة لفريقك.</value></data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve"><value>قبول</value></data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve"><value>رفض</value></data>
 </root>

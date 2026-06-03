@@ -276,6 +276,8 @@ public partial class MainWindow
                     IsDead = t.IsDead,
                     IsLeader = t.IsLeader
                 }).ToList());
+
+            _ = SyncTeamFeatureMasterAsync();
         }
         catch (Exception ex)
         {

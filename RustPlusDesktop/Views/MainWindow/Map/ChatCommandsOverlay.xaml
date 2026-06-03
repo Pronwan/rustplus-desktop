@@ -37,7 +37,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <CheckBox Content="{DynamicResource EnableChatCommands}" IsChecked="{Binding ChatCommandsEnabled}" Style="{StaticResource DotCheckBox}" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0" />
+                        <CheckBox x:Name="EnableChatCommandsCheckBox" Content="{DynamicResource EnableChatCommands}" IsChecked="{Binding ChatCommandsEnabled}" Style="{StaticResource DotCheckBox}" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0" />
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Text="{DynamicResource Prefix}" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" Margin="0,0,5,0" />
                             <ComboBox SelectedValue="{Binding ChatCommandPrefix}" SelectedValuePath="Content" Width="60" HorizontalContentAlignment="Center" VerticalAlignment="Center">
@@ -48,6 +48,20 @@
                             </ComboBox>
                         </StackPanel>
                     </Grid>
+                    <Border x:Name="ChatCommandsMasterWarning"
+                            Visibility="Collapsed"
+                            Background="#26FF3B3B"
+                            BorderBrush="#66FF3B3B"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="10,8"
+                            Margin="0,0,0,12">
+                        <TextBlock x:Name="ChatCommandsMasterWarningText"
+                                   Foreground="#FFFFA3A3"
+                                   FontSize="12"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap" />
+                    </Border>
 
                     <TextBlock Text="{DynamicResource StandardCommands}" Foreground="{DynamicResource Accent}" Margin="0,0,0,5" FontWeight="SemiBold" />
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="12">

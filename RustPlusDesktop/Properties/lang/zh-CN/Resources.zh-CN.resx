@@ -2021,4 +2021,11 @@
   <data name="BaseAddScreenshotLockedFormat" xml:space="preserve"><value>添加截图 {0}（需要 Premium）</value></data>
   <data name="BaseNoNotesYet" xml:space="preserve"><value>尚未添加备注。</value></data>
   <data name="BaseNoScreenshotsYet" xml:space="preserve"><value>尚未添加截图</value></data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve"><value>Chat Master 在线</value></data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve"><value>{0} 正在控制此队伍的聊天提醒和聊天命令。</value></data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve"><value>Chat Master {0} 在线。此设备上的聊天提醒和聊天命令已暂停。</value></data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve"><value>你是 Chat Master</value></data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve"><value>此设备现在负责控制你队伍的聊天提醒和聊天命令。</value></data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve"><value>接受</value></data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve"><value>拒绝</value></data>
 </root>

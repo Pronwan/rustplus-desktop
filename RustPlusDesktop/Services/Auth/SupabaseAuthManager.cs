@@ -136,6 +136,31 @@ namespace RustPlusDesk.Services.Auth
         {
             return RustPlusDesk.Properties.Resources.ResourceManager.GetString(key) ?? fallback;
         }
+        private static DateTime GetJwtExpiration(string token)
+        {
+            if (string.IsNullOrEmpty(token)) return DateTime.MinValue;
+            try
+            {
+                var parts = token.Split('.');
+                if (parts.Length < 2) return DateTime.MinValue;
+                var payload = parts[1];
+                payload = payload.Replace('-', '+').Replace('_', '/');
+                switch (payload.Length % 4)
+                {
+                    case 2: payload += "=="; break;
+                    case 3: payload += "="; break;
+                }
+                var jsonBytes = Convert.FromBase64String(payload);
+                var json = Encoding.UTF8.GetString(jsonBytes);
+                using var doc = JsonDocument.Parse(json);
+                if (doc.RootElement.TryGetProperty("exp", out var expElement) && expElement.TryGetInt64(out var exp))
+                {
+                    return DateTimeOffset.FromUnixTimeSeconds(exp).UtcDateTime;
+                }
+            }
+            catch { }
+            return DateTime.MinValue;
+        }
 
         public static async Task<bool> EnsureFreshSessionAsync()
         {
@@ -195,7 +220,7 @@ namespace RustPlusDesk.Services.Auth
                 return IsGuestAuthenticated;
             }
 
-            var expiresAt = session.CreatedAt.ToUniversalTime().AddSeconds(session.ExpiresIn);
+            var expiresAt = GetJwtExpiration(session.AccessToken);
             if (expiresAt > DateTime.UtcNow.AddMinutes(2))
                 return true;
 
@@ -205,7 +230,7 @@ namespace RustPlusDesk.Services.Auth
                 session = Client?.Auth?.CurrentSession;
                 if (session == null) return true;
 
-                expiresAt = session.CreatedAt.ToUniversalTime().AddSeconds(session.ExpiresIn);
+                expiresAt = GetJwtExpiration(session.AccessToken);
                 if (expiresAt > DateTime.UtcNow.AddMinutes(2))
                     return true;
 
@@ -811,6 +836,75 @@ namespace RustPlusDesk.Services.Auth
                 update = update.Set(x => x.DiscordId, discordId);
 
             await update.Update();
+        }
+
+        public static async Task<RustPlusDesk.Models.TeamFeatureMasterState?> HeartbeatTeamFeaturePresenceAsync(
+            string steamId,
+            string displayName,
+            string serverKey,
+            string serverName,
+            string teamKey,
+            int teamOrderIndex,
+            bool wantsChatAlerts,
+            bool wantsChatCommands)
+        {
+            if (Client == null) return null;
+            if (!IsDiscordAuthenticated && !IsEmailAuthenticated) return null;
+            if (!await EnsureFreshSessionAsync()) return null;
+
+            try
+            {
+                var args = new System.Collections.Generic.Dictionary<string, object?>
+                {
+                    ["p_steam_id"] = steamId,
+                    ["p_display_name"] = displayName,
+                    ["p_server_key"] = serverKey,
+                    ["p_server_name"] = serverName,
+                    ["p_team_key"] = teamKey,
+                    ["p_team_order_index"] = teamOrderIndex,
+                    ["p_wants_chat_alerts"] = wantsChatAlerts,
+                    ["p_wants_chat_commands"] = wantsChatCommands
+                };
+
+                var result = await Client.Rpc<System.Collections.Generic.List<RustPlusDesk.Models.TeamFeatureMasterState>>(
+                    "heartbeat_team_feature_presence",
+                    args);
+
+                return result?.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Cloud/Debug] Team feature heartbeat failed: {ex.Message}");
+                return null;
+            }
+        }
+
+        public static async Task<RustPlusDesk.Models.TeamFeatureMasterState?> GetTeamFeatureMasterStateAsync(string serverKey, string teamKey)
+        {
+            if (Client == null) return null;
+
+            try
+            {
+                if (IsAuthenticated)
+                    await EnsureFreshSessionAsync();
+
+                var args = new System.Collections.Generic.Dictionary<string, object?>
+                {
+                    ["p_server_key"] = serverKey,
+                    ["p_team_key"] = teamKey
+                };
+
+                var result = await Client.Rpc<System.Collections.Generic.List<RustPlusDesk.Models.TeamFeatureMasterState>>(
+                    "get_team_feature_master_state",
+                    args);
+
+                return result?.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Cloud/Debug] Team feature state fetch failed: {ex.Message}");
+                return null;
+            }
         }
 
         public static async Task<(bool IsAdmin, string? ErrorMessage)> CheckIsAdminDetailedAsync()

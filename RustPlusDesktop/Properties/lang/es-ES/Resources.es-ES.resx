@@ -1941,4 +1941,11 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   <data name="CloudTooltipActive" xml:space="preserve">
     <value>Cloud-Sync activo</value>
   </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve"><value>Chat Master en línea</value></data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve"><value>{0} controla las alertas y los comandos de chat de este equipo.</value></data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve"><value>Chat Master {0} está en línea. Las alertas y los comandos de chat están pausados en este dispositivo.</value></data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve"><value>Eres Chat Master</value></data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve"><value>Este dispositivo ahora controla las alertas y los comandos de chat de tu equipo.</value></data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve"><value>Aceptar</value></data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve"><value>Rechazar</value></data>
 </root>

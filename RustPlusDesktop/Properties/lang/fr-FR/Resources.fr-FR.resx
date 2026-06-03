@@ -2021,4 +2021,11 @@ Télécharger et installer maintenant ?</value>
   <data name="BaseAddScreenshotLockedFormat" xml:space="preserve"><value>Ajouter la capture {0} (Premium requis)</value></data>
   <data name="BaseNoNotesYet" xml:space="preserve"><value>Aucune note ajoutée.</value></data>
   <data name="BaseNoScreenshotsYet" xml:space="preserve"><value>Aucune capture ajoutée</value></data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve"><value>Chat Master en ligne</value></data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve"><value>{0} contrôle les alertes et commandes de chat pour cette équipe.</value></data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve"><value>Chat Master {0} est en ligne. Les alertes et commandes de chat sont en pause sur cet appareil.</value></data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve"><value>Vous êtes Chat Master</value></data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve"><value>Cet appareil contrôle maintenant les alertes et commandes de chat de votre équipe.</value></data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve"><value>Accepter</value></data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve"><value>Refuser</value></data>
 </root>

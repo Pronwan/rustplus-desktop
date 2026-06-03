@@ -2920,6 +2920,23 @@
                                          </ui:DropDownButton>
                                      </Grid>
                                  </Border>
+                                 <Border
+                                     x:Name="ChatFeatureMasterWarningBadge"
+                                     Visibility="Collapsed"
+                                     Background="#26FF3B3B"
+                                     BorderBrush="#66FF3B3B"
+                                     BorderThickness="1"
+                                     CornerRadius="10"
+                                     Padding="8,5"
+                                     Margin="0,0,8,0"
+                                     VerticalAlignment="Center">
+                                     <TextBlock
+                                         x:Name="ChatFeatureMasterWarningText"
+                                         Foreground="#FFFFA3A3"
+                                         FontSize="11"
+                                         FontWeight="SemiBold"
+                                         TextWrapping="NoWrap" />
+                                 </Border>
                             </StackPanel>
 
                             <!-- Right Group: Map Actions (Right-Oriented) -->

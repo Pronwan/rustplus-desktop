@@ -95,8 +95,10 @@ public partial class MainWindow
 
     // ====== CORE SENDING ======
     
-    private async Task SendTeamChatSafeAsync(string text)
+    private async Task SendTeamChatSafeAsync(string text, bool bypassChatAlertMasterBlock = false)
     {
+        if (!bypassChatAlertMasterBlock && !CanSendAutomatedTeamChat()) return;
+
         // Thread-safe wrapper für Hintergrund-Alerts
         try
         {
