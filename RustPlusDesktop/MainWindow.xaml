@@ -2914,6 +2914,45 @@
                                                              Header="{DynamicResource TradeAlerts}"
                                                              StaysOpenOnClick="True"
                                                              Style="{StaticResource DarkMenuItem}" />
+                                                             
+                                                         <Separator Background="#20FFFFFF" Margin="8,4,8,4" />
+                                                         
+                                                         <MenuItem
+                                                             Click="Alert_MenuItem_Click"
+                                                             IsCheckable="True"
+                                                             StaysOpenOnClick="True"
+                                                             Style="{StaticResource DarkMenuItem}"
+                                                             Tag="DiscordWebhook"
+                                                             IsEnabled="{Binding IsCloudConnected}">
+                                                             <MenuItem.Header>
+                                                                 <StackPanel>
+                                                                     <TextBlock Text="Discord Webhook" />
+                                                                     <TextBlock Text="Chat Alerts -&gt; Discord" FontSize="10" FontStyle="Italic" Foreground="{DynamicResource TextSubtle}" Opacity="0.8" />
+                                                                 </StackPanel>
+                                                             </MenuItem.Header>
+                                                         </MenuItem>
+                                                         
+                                                         <Grid Margin="18,4,8,8" IsEnabled="{Binding IsCloudConnected}">
+                                                             <Grid.Resources>
+                                                                 <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
+                                                             </Grid.Resources>
+                                                             <Grid.ColumnDefinitions>
+                                                                 <ColumnDefinition Width="*" />
+                                                                 <ColumnDefinition Width="Auto" />
+                                                             </Grid.ColumnDefinitions>
+                                                             <TextBox
+                                                                 Grid.Column="0"
+                                                                 Height="24"
+                                                                 VerticalAlignment="Center"
+                                                                 Background="#1AFFFFFF"
+                                                                 BorderBrush="#33FFFFFF"
+                                                                 BorderThickness="1"
+                                                                 Foreground="White"
+                                                                 Padding="4,2"
+                                                                 IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
+                                                                 Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                             <ui:Button x:Name="BtnClearChatAlertsWebhook" Grid.Column="1" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" Margin="4,0,0,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" />
+                                                         </Grid>
                                                      </MenuItem>
                                                  </ContextMenu>
                                              </ui:DropDownButton.Flyout>

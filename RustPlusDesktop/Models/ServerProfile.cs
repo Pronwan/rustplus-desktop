@@ -281,6 +281,32 @@ public class ServerProfile : INotifyPropertyChanged
         set { _alertCustomTimer = value; OnProp(); }
     }
 
+    private string _discordWebhookChatAlertsUrl = "";
+    public string DiscordWebhookChatAlertsUrl
+    {
+        get => _discordWebhookChatAlertsUrl;
+        set 
+        { 
+            _discordWebhookChatAlertsUrl = value;
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                DiscordWebhookChatAlertsEnabled = false;
+            }
+            else if (!DiscordWebhookChatAlertsEnabled)
+            {
+                DiscordWebhookChatAlertsEnabled = true;
+            }
+            OnProp(); 
+        }
+    }
+
+    private bool _discordWebhookChatAlertsEnabled = false;
+    public bool DiscordWebhookChatAlertsEnabled
+    {
+        get => _discordWebhookChatAlertsEnabled;
+        set { _discordWebhookChatAlertsEnabled = value; OnProp(); }
+    }
+
     private ObservableCollection<CustomTimer> _customTimers = new();
     public ObservableCollection<CustomTimer> CustomTimers
     {

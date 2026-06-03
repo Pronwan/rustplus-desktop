@@ -135,8 +135,8 @@ namespace RustPlusDesk.Views
                     System.Windows.Media.Color.FromRgb(0x88, 0x88, 0x88));
             }
 
-            BrdSupporterSettings.IsEnabled = isPremium;
-            BrdSupporterSettings.Opacity = isPremium ? 1.0 : 0.5;
+            BrdSupporterSettings.IsEnabled = connected && isPremium;
+            BrdSupporterSettings.Opacity = (connected && isPremium) ? 1.0 : 0.5;
             BtnEmailConnect.Content = T("EmailAccountButton", "Email / Account");
         }
 
@@ -415,6 +415,51 @@ namespace RustPlusDesk.Views
             Visibility = Visibility.Collapsed;
             ParentWindow?.ApplySettings();
             ParentWindow?.OpenChatCommandsFromSettings();
+        }
+
+        private void PremiumFeature_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (!Services.Auth.SupabaseAuthManager.IsPremium)
+            {
+                e.Handled = true;
+                if (ParentWindow != null)
+                {
+                    var win = new Views.Windows.PremiumInfoWindow("") { Owner = ParentWindow };
+                    win.ShowDialog();
+                }
+            }
+        }
+
+        private void TxtSettingsDiscordWebhook_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            if (vm?.Selected != null)
+            {
+                ParentWindow.SyncAlertMenuItems();
+            }
+        }
+
+        private void BtnClearSettingsWebhook_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            if (vm?.Selected != null)
+            {
+                vm.Selected.DiscordWebhookChatAlertsUrl = string.Empty;
+                ParentWindow.SyncAlertMenuItems();
+            }
+        }
+
+        private void BtnDiscordWebhookHelp_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks",
+                    UseShellExecute = true
+                });
+            }
+            catch { }
         }
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)

@@ -4,12 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:conv="clr-namespace:RustPlusDesk.Converters"
              xmlns:p="clr-namespace:RustPlusDesk.Properties"
              mc:Ignorable="d" 
              Background="{DynamicResource Surface}"
              Foreground="{DynamicResource TextPrimary}">
 
     <Grid ClipToBounds="True">
+        <Grid.Resources>
+            <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="36" />
             <RowDefinition Height="*" />
@@ -191,8 +195,8 @@
                     </StackPanel>
                 </Border>
 
-                <!-- Supporter Section -->
-                <TextBlock Text="{DynamicResource SupporterSettingsHeader}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                <!-- Cloud Section -->
+                <TextBlock Text="Cloud Settings" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
                 
                 <!-- Cloud Account Buttons: Discord + Email side by side -->
                 <Grid Margin="0,0,0,4">
@@ -231,6 +235,20 @@
                            Margin="0,4,0,10"
                            Text="Not connected"/>
 
+                <Expander Header="Basic Discord Integration" Margin="0,0,0,10" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextPrimary}" Padding="0"
+                          IsEnabled="{Binding IsCloudConnected}">
+                    <StackPanel Margin="0,8,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <TextBlock Text="Discord Webhook (Chat Alerts)" Width="175" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <TextBox Width="130" Margin="0,0,4,0" Height="24" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="4,2" 
+                                     IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
+                                     Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     TextChanged="TxtSettingsDiscordWebhook_TextChanged" />
+                            <ui:Button x:Name="BtnClearSettingsWebhook" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearSettingsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" BorderThickness="0" Padding="4,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" />
+                            <ui:Button Icon="{ui:SymbolIcon Symbol=QuestionCircle24}" Click="BtnDiscordWebhookHelp_Click" Appearance="Transparent" Foreground="{DynamicResource Accent}" BorderThickness="0" Padding="4,0" Margin="2,0,0,0" ToolTip="Discord Webhooks Guide" />
+                        </StackPanel>
+                    </StackPanel>
+                </Expander>
 
                 <Border x:Name="BrdSupporterSettings" Style="{StaticResource Card}" Margin="0,0,0,16" Opacity="0.5" IsEnabled="False">
                     <StackPanel>
@@ -240,14 +258,16 @@
                                    FontStyle="Italic"
                                    Margin="0,0,0,12" 
                                    TextWrapping="Wrap"/>
-                        
-                        <CheckBox x:Name="ChkAdvancedDiscord" 
-                                  Content="{DynamicResource AdvancedDiscordIntegration}" 
-                                  Margin="0,0,0,10" 
-                                  Style="{StaticResource DotCheckBox}"/>
+
+                        <Expander Header="Advanced Discord Bot Integration" Margin="-4,0,0,10" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextPrimary}" Padding="0">
+                            <StackPanel Margin="0,8,0,0">
+                                <ui:Button Content="Invite Discord Bot to server" Icon="{ui:SymbolIcon Symbol=Add24}" Margin="0,0,0,8" PreviewMouseDown="PremiumFeature_PreviewMouseDown" />
+                                <TextBlock Text="Discord Bot Status: Offline" Foreground="{DynamicResource TextSubtle}" FontSize="12" />
+                            </StackPanel>
+                        </Expander>
                                   
                         <CheckBox x:Name="ChkTelegramIntegration" 
-                                  Content="{DynamicResource TelegramIntegration}" 
+                                  Content="Team Paths Tracking" 
                                   Margin="0,0,0,10" 
                                   Style="{StaticResource DotCheckBox}"/>
                     </StackPanel>

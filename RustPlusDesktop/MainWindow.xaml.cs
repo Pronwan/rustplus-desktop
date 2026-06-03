@@ -3502,7 +3502,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TrackingService.AnnounceSuspiciousShops = val;
         TrackingService.AnnounceSmartAlerts = val;
         TrackingService.AnnounceTradeAlerts = val;
-        if (_vm.Selected != null) { _vm.Selected.AlertCustomTimer = val; }
+        if (_vm.Selected != null) { _vm.Selected.AlertCustomTimer = val; _vm.Selected.DiscordWebhookChatAlertsEnabled = val; }
     }
 
     private bool CheckIfAllOff()
@@ -3517,13 +3517,25 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                !TrackingService.AnnounceTracking &&
                !TrackingService.AnnounceNewShops && !TrackingService.AnnounceSuspiciousShops &&
                !TrackingService.AnnounceSmartAlerts && !TrackingService.AnnounceTradeAlerts &&
-               (_vm.Selected == null || !_vm.Selected.AlertCustomTimer);
+               (_vm.Selected == null || !_vm.Selected.AlertCustomTimer) &&
+               (_vm.Selected == null || !_vm.Selected.DiscordWebhookChatAlertsEnabled);
     }
 
     internal void UpdateMasterToggleState()
     {
         _announceSpawns = TrackingService.AnnounceSpawnsMaster;
         ChatAnnounce.IsChecked = _announceSpawns;
+    }
+
+    private void BtnClearChatAlertsWebhook_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.Selected != null)
+        {
+            _vm.Selected.DiscordWebhookChatAlertsUrl = string.Empty;
+            _vm.Selected.DiscordWebhookChatAlertsEnabled = false;
+            SyncAlertMenuItems();
+            UpdateShopSearchConfig();
+        }
     }
 
     private void Alert_MenuItem_Click(object sender, RoutedEventArgs e)
@@ -3554,6 +3566,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "NewShops": TrackingService.AnnounceNewShops = val; break;
                 case "SuspiciousShops": TrackingService.AnnounceSuspiciousShops = val; break;
                 case "CustomTimer": if (_vm.Selected != null) { _vm.Selected.AlertCustomTimer = val; } break;
+                case "DiscordWebhook": 
+                    if (!_vm.IsCloudConnected)
+                    {
+                        mi.IsChecked = false;
+                        return;
+                    }
+                    if (_vm.Selected != null) { _vm.Selected.DiscordWebhookChatAlertsEnabled = val; } 
+                    break;
             }
 
             if (CheckIfAllOff())
@@ -3636,9 +3656,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "NewShops": isSelected = TrackingService.AnnounceNewShops; break;
                 case "SuspiciousShops": isSelected = TrackingService.AnnounceSuspiciousShops; break;
                 case "CustomTimer": isSelected = _vm.Selected?.AlertCustomTimer ?? false; break;
+                case "DiscordWebhook": isSelected = _vm.Selected?.DiscordWebhookChatAlertsEnabled ?? false; break;
             }
 
-            if (tag != "CargoArrival") mi.IsEnabled = masterOn;
+            if (tag == "DiscordWebhook")
+            {
+                mi.IsEnabled = masterOn && _vm.IsCloudConnected;
+            }
+            else if (tag != "CargoArrival")
+            {
+                mi.IsEnabled = masterOn;
+            }
             mi.IsChecked = masterOn && isSelected;
         }
 
