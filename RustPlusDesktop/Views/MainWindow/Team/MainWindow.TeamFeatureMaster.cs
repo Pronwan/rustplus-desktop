@@ -24,6 +24,9 @@ public partial class MainWindow
     private string? _lastTeamFeatureMasterSyncSignature;
     private bool _playMasterOfferSound = true;
     private SoundPlayer? _masterOfferSoundPlayer;
+    private System.Windows.Threading.DispatcherTimer? _teamFeatureMasterWatchTimer;
+    private bool _teamFeatureMasterWatchBusy;
+    private bool _teamFeatureShutdownSent;
 
     private static string TeamFeatureText(string key, string fallback)
         => Properties.Resources.ResourceManager.GetString(key) ?? fallback;
@@ -33,6 +36,12 @@ public partial class MainWindow
     private void ResetTeamFeatureMasterSyncState()
     {
         _lastTeamFeatureMasterSyncSignature = null;
+    }
+
+    private void RequestTeamFeatureMasterSync()
+    {
+        ResetTeamFeatureMasterSyncState();
+        _ = SyncTeamFeatureMasterAsync();
     }
 
     private bool ShouldSyncTeamFeatureMasterForCurrentState(string cloudPresenceSignature)
@@ -113,6 +122,103 @@ public partial class MainWindow
         }
     }
 
+    private async Task RefreshTeamFeatureMasterStateAsync()
+    {
+        if (_vm?.Selected == null || TeamMembers.Count == 0) return;
+
+        var serverKey = GetServerKey();
+        if (string.IsNullOrWhiteSpace(serverKey)) return;
+
+        var teamKey = BuildTeamFeatureKey();
+        if (string.IsNullOrWhiteSpace(teamKey)) return;
+
+        var state = await SupabaseAuthManager.GetTeamFeatureMasterStateAsync(serverKey, teamKey);
+        await Dispatcher.InvokeAsync(() => ApplyTeamFeatureMasterState(state, teamKey));
+    }
+
+    private void UpdateTeamFeatureMasterWatch()
+    {
+        if (_chatFeaturesBlockedByMaster)
+        {
+            if (_teamFeatureMasterWatchTimer != null) return;
+
+            _teamFeatureMasterWatchTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(5)
+            };
+            _teamFeatureMasterWatchTimer.Tick += TeamFeatureMasterWatchTimer_Tick;
+            _teamFeatureMasterWatchTimer.Start();
+        }
+        else
+        {
+            StopTeamFeatureMasterWatch();
+        }
+    }
+
+    private void StopTeamFeatureMasterWatch()
+    {
+        var timer = _teamFeatureMasterWatchTimer;
+        if (timer == null) return;
+
+        timer.Tick -= TeamFeatureMasterWatchTimer_Tick;
+        timer.Stop();
+        _teamFeatureMasterWatchTimer = null;
+        _teamFeatureMasterWatchBusy = false;
+    }
+
+    private async void TeamFeatureMasterWatchTimer_Tick(object? sender, EventArgs e)
+    {
+        if (_teamFeatureMasterWatchBusy) return;
+
+        _teamFeatureMasterWatchBusy = true;
+        try
+        {
+            await RefreshTeamFeatureMasterStateAsync();
+        }
+        finally
+        {
+            _teamFeatureMasterWatchBusy = false;
+        }
+    }
+
+    private async Task NotifyTeamFeatureAppClosingAsync()
+    {
+        if (_teamFeatureShutdownSent) return;
+        _teamFeatureShutdownSent = true;
+
+        try
+        {
+            StopTeamFeatureMasterWatch();
+            await SupabaseAuthManager.MarkAppOfflineAsync();
+
+            if (_vm?.Selected == null || TeamMembers.Count == 0) return;
+            if (!SupabaseAuthManager.IsDiscordAuthenticated && !SupabaseAuthManager.IsEmailAuthenticated) return;
+
+            var serverKey = GetServerKey();
+            var teamKey = BuildTeamFeatureKey();
+            if (string.IsNullOrWhiteSpace(serverKey) || string.IsNullOrWhiteSpace(teamKey)) return;
+
+            var mySteamId = _mySteamId.ToString();
+            var myName = TeamMembers.FirstOrDefault(t => t.SteamId == _mySteamId)?.Name
+                ?? _vm.Selected?.Name
+                ?? mySteamId;
+
+            await SupabaseAuthManager.HeartbeatTeamFeaturePresenceAsync(
+                mySteamId,
+                myName,
+                serverKey,
+                _vm.Selected?.Name ?? "",
+                teamKey,
+                GetMyTeamOrderIndex(),
+                wantsChatAlerts: false,
+                wantsChatCommands: false);
+        }
+        catch
+        {
+            // Best effort on shutdown.
+        }
+    }
+
     private string BuildTeamFeatureKey()
     {
         var ids = TeamMembers
@@ -167,6 +273,7 @@ public partial class MainWindow
 
         _lastKnownTeamFeatureMasterId = currentMasterId;
         ApplyChatFeatureMasterUiState();
+        UpdateTeamFeatureMasterWatch();
 
         if (_chatFeaturesBlockedByMaster && !previousBlocked)
         {
