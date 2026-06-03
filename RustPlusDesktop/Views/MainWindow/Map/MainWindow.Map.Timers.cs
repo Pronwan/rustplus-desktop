@@ -297,7 +297,15 @@ public partial class MainWindow
                     StopTimerAlarm();
                     _timerAlarmPlayer = new System.Windows.Media.MediaPlayer();
                     _timerAlarmPlayer.MediaFailed += (s, e) => AppendLog($"[timer-alarm] Media Failed: {e.ErrorException?.Message}");
-                    _timerAlarmPlayer.MediaEnded += (s, e) => AppendLog("[timer-alarm] Playback ended.");
+                    _timerAlarmPlayer.MediaEnded += (s, e) =>
+                    {
+                        AppendLog("[timer-alarm] Playback ended.");
+                        Dispatcher.Invoke(() =>
+                        {
+                            if (BtnStopTimerAlarm != null) BtnStopTimerAlarm.Visibility = Visibility.Collapsed;
+                            if (BtnSnoozeTimerAlarm != null) BtnSnoozeTimerAlarm.Visibility = Visibility.Collapsed;
+                        });
+                    };
                     _timerAlarmFilePath = fullPath;
                     _timerAlarmPlayer.Open(new Uri(fullPath, UriKind.Absolute));
                     _timerAlarmPlayer.Volume = 1.0;
@@ -315,11 +323,21 @@ public partial class MainWindow
                     System.Media.SystemSounds.Beep.Play();
                     await Task.Delay(1000);
                 }
+                Dispatcher.Invoke(() =>
+                {
+                    if (BtnStopTimerAlarm != null) BtnStopTimerAlarm.Visibility = Visibility.Collapsed;
+                    if (BtnSnoozeTimerAlarm != null) BtnSnoozeTimerAlarm.Visibility = Visibility.Collapsed;
+                });
             }
         }
         catch (Exception ex)
         {
             AppendLog($"[timer-alarm] Error playing audio: {ex.Message}");
+            Dispatcher.Invoke(() =>
+            {
+                if (BtnStopTimerAlarm != null) BtnStopTimerAlarm.Visibility = Visibility.Collapsed;
+                if (BtnSnoozeTimerAlarm != null) BtnSnoozeTimerAlarm.Visibility = Visibility.Collapsed;
+            });
             try { System.Media.SystemSounds.Beep.Play(); } catch { }
         }
     }
