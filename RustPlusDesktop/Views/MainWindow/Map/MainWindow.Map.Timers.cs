@@ -52,7 +52,11 @@ public partial class MainWindow
         }
 
         string name = TxtTimerName.Text.Trim();
-        if (string.IsNullOrWhiteSpace(name)) return;
+        if (string.IsNullOrWhiteSpace(name) || !char.IsLetter(name[0]))
+        {
+            TxtTimerValidation.Text = Properties.Resources.TimerNameMustStartWithLetter;
+            return;
+        }
 
         int hours = int.TryParse(TxtTimerHours.Text, out int h) ? h : 0;
         int mins = int.TryParse(TxtTimerMinutes.Text, out int m) ? m : 0;

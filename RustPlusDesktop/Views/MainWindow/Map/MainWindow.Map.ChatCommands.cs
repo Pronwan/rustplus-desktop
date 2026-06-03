@@ -392,6 +392,12 @@ public partial class MainWindow
                 int totalSecs = hours * 3600 + mins * 60 + secs;
                 if (totalSecs <= 0) return;
 
+                if (string.IsNullOrWhiteSpace(name) || !char.IsLetter(name[0]))
+                {
+                    _ = SendTeamChatSafeAsync(Properties.Resources.TimerNameMustStartWithLetter);
+                    return;
+                }
+
                 if (!string.IsNullOrWhiteSpace(name))
                 {
                     var newCmd = new string(name.Where(c => !char.IsWhiteSpace(c)).ToArray()).ToLower();

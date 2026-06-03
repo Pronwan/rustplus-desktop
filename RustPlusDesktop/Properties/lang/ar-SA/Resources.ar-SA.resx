@@ -1830,6 +1830,9 @@
     <data name="TimerDurationRequired" xml:space="preserve">
     <value>الرجاء إدخال مدة المؤقت (ساعات أو دقائق أو ثوانٍ).</value>
   </data>
+    <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>يجب أن يبدأ اسم المؤقت بحرف.</value>
+  </data>
   <data name="FeatureAudioLoopTitle" xml:space="preserve">
     <value>علامة الموت</value>
   </data>

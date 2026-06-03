@@ -1866,6 +1866,9 @@ Télécharger et installer maintenant ?</value>
     <data name="TimerDurationRequired" xml:space="preserve">
     <value>Veuillez entrer une durée de minuteur (heures, minutes ou secondes).</value>
   </data>
+    <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Le nom du minuteur doit commencer par une lettre.</value>
+  </data>
   <data name="FeatureTimerAlerts" xml:space="preserve">
     <value>Timer Alerts</value>
   </data>

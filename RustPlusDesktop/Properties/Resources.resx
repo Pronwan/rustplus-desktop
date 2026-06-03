@@ -1869,6 +1869,9 @@ Are you sure you want to continue?</value>
   <data name="TimerDurationRequired" xml:space="preserve">
     <value>Please enter a timer duration (hours, minutes, or seconds).</value>
   </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Timer name must start with a letter.</value>
+  </data>
   <data name="FeatureTimerAlerts" xml:space="preserve">
     <value>Timer Alerts</value>
   </data>

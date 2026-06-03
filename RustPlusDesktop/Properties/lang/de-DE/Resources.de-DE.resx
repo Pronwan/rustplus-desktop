@@ -1920,6 +1920,9 @@ Bist du sicher, dass du fortfahren möchtest?</value>
     <data name="TimerDurationRequired" xml:space="preserve">
     <value>Bitte geben Sie eine Timer-Dauer ein (Stunden, Minuten oder Sekunden).</value>
   </data>
+    <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Der Timer-Name muss mit einem Buchstaben beginnen.</value>
+  </data>
   <data name="FeatureTimerAlerts" xml:space="preserve">
     <value>Timer Alerts</value>
   </data>

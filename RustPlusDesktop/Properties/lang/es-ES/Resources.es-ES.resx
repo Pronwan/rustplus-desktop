@@ -1839,6 +1839,9 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
     <data name="TimerDurationRequired" xml:space="preserve">
     <value>Por favor, introduzca una duración del temporizador (horas, minutos o segundos).</value>
   </data>
+    <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>El nombre del temporizador debe comenzar con una letra.</value>
+  </data>
   <data name="FeatureAudioLoopTitle" xml:space="preserve">
     <value>Death Marker</value>
   </data>

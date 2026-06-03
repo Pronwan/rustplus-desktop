@@ -1866,6 +1866,9 @@
     <data name="TimerDurationRequired" xml:space="preserve">
     <value>请输入计时器持续时间（小时、分钟或秒）。</value>
   </data>
+    <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>计时器名称必须以字母开头。</value>
+  </data>
   <data name="FeatureTimerAlerts" xml:space="preserve">
     <value>Timer Alerts</value>
   </data>

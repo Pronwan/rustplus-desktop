@@ -1866,4 +1866,7 @@
     <data name="TimerDurationRequired" xml:space="preserve">
     <value>Пожалуйста, введите продолжительность таймера (часы, минуты или секунды).</value>
   </data>
+    <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Имя таймера должно начинаться с буквы.</value>
+  </data>
 </root>
