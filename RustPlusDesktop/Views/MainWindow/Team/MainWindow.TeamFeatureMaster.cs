@@ -21,6 +21,7 @@ public partial class MainWindow
     private string? _lastMasterOfferKey;
     private string? _declinedMasterTeamKey;
     private DateTime _declinedMasterUntilUtc;
+    private string? _lastTeamFeatureMasterSyncSignature;
     private bool _playMasterOfferSound = true;
     private SoundPlayer? _masterOfferSoundPlayer;
 
@@ -28,6 +29,34 @@ public partial class MainWindow
         => Properties.Resources.ResourceManager.GetString(key) ?? fallback;
 
     private bool ChatFeaturesBlockedByMaster => _chatFeaturesBlockedByMaster;
+
+    private void ResetTeamFeatureMasterSyncState()
+    {
+        _lastTeamFeatureMasterSyncSignature = null;
+    }
+
+    private bool ShouldSyncTeamFeatureMasterForCurrentState(string cloudPresenceSignature)
+    {
+        if (_vm?.Selected == null || TeamMembers.Count == 0) return false;
+
+        var teamKey = BuildTeamFeatureKey();
+        if (string.IsNullOrWhiteSpace(teamKey)) return false;
+
+        var declined = IsMasterOfferTemporarilyDeclined(teamKey);
+        var signature = string.Join("#",
+            cloudPresenceSignature,
+            teamKey,
+            GetMyTeamOrderIndex().ToString(System.Globalization.CultureInfo.InvariantCulture),
+            TrackingService.AnnounceSpawnsMaster ? "alerts:1" : "alerts:0",
+            _vm.Selected.ChatCommandsEnabled ? "commands:1" : "commands:0",
+            declined ? "declined:1" : "declined:0");
+
+        if (signature == _lastTeamFeatureMasterSyncSignature)
+            return false;
+
+        _lastTeamFeatureMasterSyncSignature = signature;
+        return true;
+    }
 
     private async Task SyncTeamFeatureMasterAsync()
     {
