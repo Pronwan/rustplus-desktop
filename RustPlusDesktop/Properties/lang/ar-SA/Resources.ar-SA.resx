@@ -1932,4 +1932,69 @@
   <data name="CloudTooltipActive" xml:space="preserve">
     <value>مزامنة السحابة مفعّلة</value>
   </data>
+  <data name="CloudAccountTitle" xml:space="preserve"><value>حساب السحابة</value></data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve"><value>تسجيل الدخول إلى حساب السحابة</value></data>
+  <data name="EmailSignInTab" xml:space="preserve"><value>تسجيل الدخول</value></data>
+  <data name="EmailSignUpTab" xml:space="preserve"><value>إنشاء حساب</value></data>
+  <data name="EmailAddressLabel" xml:space="preserve"><value>عنوان البريد الإلكتروني</value></data>
+  <data name="PasswordLabel" xml:space="preserve"><value>كلمة المرور</value></data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve"><value>كلمة المرور (6 أحرف على الأقل)</value></data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve"><value>تأكيد كلمة المرور</value></data>
+  <data name="EmailSignInButton" xml:space="preserve"><value>تسجيل الدخول</value></data>
+  <data name="EmailCreateAccountButton" xml:space="preserve"><value>إنشاء حساب</value></data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve"><value>تم إرسال رسالة التأكيد!</value></data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve"><value>اضغط على الرابط في بريدك الإلكتروني. يتحقق التطبيق تلقائيًا كل بضع ثوان...</value></data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve"><value>في انتظار التأكيد...</value></data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve"><value>في انتظار التأكيد... ({0}ث)</value></data>
+  <data name="EmailProblemsPrefix" xml:space="preserve"><value>هل توجد مشكلة؟ </value></data>
+  <data name="EmailOpenInBrowser" xml:space="preserve"><value>فتح في المتصفح</value></data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve"><value>يرجى إدخال البريد الإلكتروني وكلمة المرور.</value></data>
+  <data name="EmailRequiredError" xml:space="preserve"><value>يرجى إدخال عنوان بريد إلكتروني.</value></data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve"><value>يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.</value></data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve"><value>كلمتا المرور غير متطابقتين.</value></data>
+  <data name="EmailSigningInStatus" xml:space="preserve"><value>جارٍ تسجيل الدخول...</value></data>
+  <data name="EmailSignedInSuccess" xml:space="preserve"><value>تم تسجيل الدخول بنجاح!</value></data>
+  <data name="EmailSignInFailed" xml:space="preserve"><value>فشل تسجيل الدخول.</value></data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve"><value>جارٍ التسجيل...</value></data>
+  <data name="EmailRegistrationFailed" xml:space="preserve"><value>فشل التسجيل.</value></data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve"><value>انتهت المهلة: لم يتم تأكيد البريد الإلكتروني خلال 5 دقائق. يمكنك تسجيل الدخول لاحقًا.</value></data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve"><value>بيانات الدخول غير صالحة. تحقق من البريد الإلكتروني وكلمة المرور.</value></data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve"><value>بيانات الدخول غير صالحة.</value></data>
+  <data name="EmailNotConfirmedError" xml:space="preserve"><value>لم يتم تأكيد عنوان البريد الإلكتروني بعد. اضغط على رابط التأكيد في صندوق الوارد.</value></data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve"><value>عنوان البريد الإلكتروني هذا مسجل بالفعل. يرجى تسجيل الدخول.</value></data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve"><value>قطع اتصال Discord</value></data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve"><value>Discord متصل - الفئة: {0}</value></data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve"><value>البريد الإلكتروني متصل: {0} - الفئة: {1}</value></data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve"><value>غير متصل - سجّل الدخول لاستخدام المزامنة السحابية والنسخ الاحتياطية</value></data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve"><value>جارٍ قطع الاتصال...</value></data>
+  <data name="AuthConnectingStatus" xml:space="preserve"><value>جارٍ الاتصال...</value></data>
+  <data name="EmailAccountButton" xml:space="preserve"><value>البريد الإلكتروني / الحساب</value></data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve"><value>هل تريد تسجيل الخروج من حساب البريد الإلكتروني؟</value></data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve"><value>المزامنة السحابية</value></data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve"><value>يلزم حساب للمزامنة السحابية</value></data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve"><value>تتطلب خدمات السحابة مثل المزامنة وتخزين النسخ الاحتياطية حسابًا مجانيًا. اختر البريد الإلكتروني أو Discord لمتابعة مزامنة الأجهزة والتراكبات والنسخ الاحتياطية.</value></data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve"><value>المزامنة عبر البريد الإلكتروني</value></data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve"><value>المزامنة عبر Discord</value></data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve"><value>لا شكرًا</value></data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve"><value>تم الوصول إلى حد المزامنة</value></data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve"><value>تم الوصول إلى حد القواعد (مجاني: قاعدتان كحد أقصى، Premium: 10 قواعد كحد أقصى)</value></data>
+  <data name="BaseAddScreenshot" xml:space="preserve"><value>إضافة لقطة شاشة</value></data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve"><value>اسحب صورة وأفلتها هنا</value></data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve"><value>أو اضغط CTRL+V للصق لقطة شاشة</value></data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve"><value>لم يتم العثور على صورة في الحافظة.</value></data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve"><value>خطأ في اللصق</value></data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve"><value>فشل لصق الصورة: {0}</value></data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve"><value>فشل تحميل ملف الصورة: {0}</value></data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve"><value>خطأ في الضغط</value></data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve"><value>حدث خطأ أثناء ضغط الصورة: {0}</value></data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve"><value>الدقة: {0}x{1} | الحجم: {2} كيلوبايت (الجودة 25%)</value></data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve"><value>تعديل ملاحظة القاعدة</value></data>
+  <data name="BaseNoteTitle" xml:space="preserve"><value>ملاحظة القاعدة</value></data>
+  <data name="BaseAddNote" xml:space="preserve"><value>إضافة ملاحظة</value></data>
+  <data name="BaseEditNote" xml:space="preserve"><value>تعديل الملاحظة</value></data>
+  <data name="BaseDeleteNote" xml:space="preserve"><value>حذف الملاحظة</value></data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve"><value>حذف لقطة الشاشة {0}</value></data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve"><value>إضافة لقطة الشاشة {0} (يتطلب Premium)</value></data>
+  <data name="BaseNoNotesYet" xml:space="preserve"><value>لم تتم إضافة أي ملاحظات بعد.</value></data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve"><value>لم تتم إضافة أي لقطات شاشة بعد</value></data>
 </root>

@@ -38,6 +38,8 @@ namespace RustPlusDesk.Models
         public double Width { get; set; } = 32;
         public double Height { get; set; } = 32;
         public string? Label { get; set; }
+        public string? Note { get; set; }
+        public List<string>? Screenshots { get; set; } // List of Base64 compressed images
     }
 
     public class SavedText

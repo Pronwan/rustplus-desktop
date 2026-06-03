@@ -1,0 +1,132 @@
+<Window x:Class="RustPlusDesk.Views.Windows.CloudLoginPromptWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Cloud Sync"
+        Width="460" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#0F1215"
+        Foreground="White"
+        FontFamily="Segoe UI"
+        AllowsTransparency="True"
+        WindowStyle="None">
+
+    <Window.Resources>
+        <Style x:Key="CloudBtn" TargetType="Button">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                Padding="14,0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.88"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="#0F1215" CornerRadius="12"
+            BorderBrush="#2A2D32" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="30" Opacity="0.6" ShadowDepth="0" Color="Black"/>
+        </Border.Effect>
+
+        <StackPanel>
+            <!-- Drag handle -->
+            <Border x:Name="DragHandle" Background="Transparent" Height="8" MouseLeftButtonDown="DragHandle_MouseLeftButtonDown"/>
+
+            <!-- Icon + Title row -->
+            <Grid Margin="24,16,24,0">
+                <Button Content="&#x00D7;" HorizontalAlignment="Right" VerticalAlignment="Top"
+                        Width="28" Height="28" FontSize="16" FontWeight="Bold"
+                        Background="Transparent" Foreground="#666" BorderThickness="0"
+                        Cursor="Hand" Click="BtnClose_Click"/>
+            </Grid>
+
+            <!-- Cloud icon -->
+            <ui:SymbolIcon Symbol="CloudSync24" FontSize="44" Foreground="#E8612C"
+                           HorizontalAlignment="Center" Margin="0,8,0,14"/>
+
+            <!-- Title & Description -->
+            <TextBlock x:Name="TxtTitle"
+                       Text="Cloud Sync"
+                       FontSize="18" FontWeight="Bold" Foreground="White"
+                       HorizontalAlignment="Center" Margin="0,0,0,8"/>
+
+            <TextBlock x:Name="TxtDescription"
+                       TextWrapping="Wrap" TextAlignment="Center"
+                       FontSize="12" Foreground="#AAA"
+                       Margin="28,0,28,20" LineHeight="20"/>
+
+            <!-- Divider -->
+            <Border Background="#1E2126" Height="1" Margin="24,0"/>
+
+            <!-- Buttons -->
+            <StackPanel Margin="24,20,24,0" >
+
+                <!-- Discord Login -->
+                <Button x:Name="BtnDiscord" Style="{StaticResource CloudBtn}"
+                        Background="#5865F2" Foreground="White"
+                        HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                        Click="BtnDiscord_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="pack://application:,,,/Assets/icons/discord.png"
+                               Width="20" Height="20" Margin="0,0,10,0"/>
+                        <TextBlock x:Name="TxtDiscordLogin" Text="Sync via Discord" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Email Login -->
+                <Button x:Name="BtnEmail" Style="{StaticResource CloudBtn}"
+                        Background="#1A1D21" Foreground="White"
+                        HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                        Click="BtnEmail_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Mail24" FontSize="18" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtEmailLogin" Text="Sync via email" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+            </StackPanel>
+
+            <!-- No Thanks -->
+            <Button x:Name="BtnSkip" HorizontalAlignment="Center"
+                    Margin="0,8,0,20"
+                    Background="Transparent" Foreground="#555"
+                    BorderThickness="0" Cursor="Hand"
+                    FontSize="12"
+                    Content="No thanks"
+                    Click="BtnSkip_Click">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}"
+                                   FontSize="{TemplateBinding FontSize}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
+                                            <Setter Property="Foreground" Value="#888"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </StackPanel>
+    </Border>
+</Window>

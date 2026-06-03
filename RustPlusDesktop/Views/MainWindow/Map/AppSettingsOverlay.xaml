@@ -194,13 +194,43 @@
                 <!-- Supporter Section -->
                 <TextBlock Text="{DynamicResource SupporterSettingsHeader}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
                 
-                <ui:Button x:Name="BtnDiscordConnect"
-                           Content="{DynamicResource ConnectDiscord}" 
-                           Icon="{ui:SymbolIcon Symbol=PlugConnected24}"
-                           HorizontalAlignment="Stretch"
-                           Height="36"
-                           Margin="0,0,0,10"
-                           Click="BtnDiscordConnect_Click"/>
+                <!-- Cloud Account Buttons: Discord + Email side by side -->
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="8"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Discord Button -->
+                    <ui:Button x:Name="BtnDiscordConnect"
+                               Grid.Column="0"
+                               HorizontalAlignment="Stretch"
+                               Height="36"
+                               Click="BtnDiscordConnect_Click">
+                        <ui:Button.Icon>
+                            <ui:ImageIcon Source="pack://application:,,,/Assets/icons/discord.png"/>
+                        </ui:Button.Icon>
+                        <TextBlock x:Name="TxtDiscordBtnLabel" Text="Discord"/>
+                    </ui:Button>
+
+                    <!-- Email Button -->
+                    <ui:Button x:Name="BtnEmailConnect"
+                               Grid.Column="2"
+                               Icon="{ui:SymbolIcon Symbol=Mail24}"
+                               Content="Email / Account"
+                               HorizontalAlignment="Stretch"
+                               Height="36"
+                               Click="BtnEmailConnect_Click"/>
+                </Grid>
+
+                <!-- Auth status line -->
+                <TextBlock x:Name="TxtAuthStatus"
+                           FontSize="11" Foreground="#888"
+                           TextWrapping="Wrap"
+                           Margin="0,4,0,10"
+                           Text="Not connected"/>
+
 
                 <Border x:Name="BrdSupporterSettings" Style="{StaticResource Card}" Margin="0,0,0,16" Opacity="0.5" IsEnabled="False">
                     <StackPanel>
