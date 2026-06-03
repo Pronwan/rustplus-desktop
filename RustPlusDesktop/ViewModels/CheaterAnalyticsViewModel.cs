@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Input;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
+using RustPlusDesk.Services.Data;
 
 namespace RustPlusDesk.ViewModels
 {
@@ -57,7 +58,19 @@ namespace RustPlusDesk.ViewModels
 
         // ── report/export properties ──────────────────────────────────────────
 
-        public string DiscordWebhookUrl { get; set; }
+        private const string WebhookCacheKey = "cheater_discord_webhook";
+
+        private string _discordWebhookUrl;
+        public string DiscordWebhookUrl
+        {
+            get => _discordWebhookUrl;
+            set
+            {
+                _discordWebhookUrl = value;
+                OnPropertyChanged();
+                DataManager.SaveCache(WebhookCacheKey, value);
+            }
+        }
 
         private string _reportStatus;
         public string ReportStatus
@@ -88,6 +101,7 @@ namespace RustPlusDesk.ViewModels
             _serverName = serverName ?? serverId;
             _wipeId     = wipeId;
             _reportSvc  = new CheaterReportService();
+            _discordWebhookUrl  = DataManager.LoadCache<string>(WebhookCacheKey) ?? "";
 
             AddRecordCommand    = new AsyncRelayCommand(AddRecordWithSteamLookupAsync);
             ConfirmBanCommand   = new RelayCommand<CheaterRecord>(ConfirmBan);
