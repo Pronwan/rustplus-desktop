@@ -77,6 +77,9 @@ namespace RustPlusDesk.Models
         [Column("is_manual_supporter")]
         public bool IsManualSupporter { get; set; }
 
+        [Column("premium_until")]
+        public DateTime? PremiumUntil { get; set; }
+
         [Column("manual_premium_at")]
         public DateTime? ManualPremiumAt { get; set; }
 
@@ -171,6 +174,21 @@ namespace RustPlusDesk.Models
 
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; }
+    }
+
+    public class DiscordBotRegistrationResult
+    {
+        [JsonProperty("success")]
+        [JsonPropertyName("success")]
+        public bool Success { get; set; }
+
+        [JsonProperty("message")]
+        [JsonPropertyName("message")]
+        public string Message { get; set; } = "";
+
+        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
+        public string GuildId { get; set; } = "";
     }
 
     [Table("discord_channels_config")]

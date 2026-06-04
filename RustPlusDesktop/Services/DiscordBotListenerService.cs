@@ -330,7 +330,28 @@ public class DiscordBotListenerService
                 .Filter("owner_steam_id", Operator.In, _teamSteamIds)
                 .Get();
 
-            var guildIds = settingsRes.Models?.Select(s => s.GuildId).Where(id => !string.IsNullOrEmpty(id)).ToList();
+            var ownerIds = settingsRes.Models?
+                .Select(s => s.OwnerSteamId)
+                .Where(id => !string.IsNullOrWhiteSpace(id))
+                .Distinct()
+                .ToList();
+            if (ownerIds == null || ownerIds.Count == 0) return;
+
+            var ownerProfilesRes = await SupabaseAuthManager.Client
+                .From<UserProfileModel>()
+                .Filter("steam_id", Operator.In, ownerIds)
+                .Get();
+
+            var premiumOwnerIds = (ownerProfilesRes.Models ?? new List<UserProfileModel>())
+                .Where(IsPremiumBotOwner)
+                .Select(p => p.SteamId)
+                .ToHashSet();
+
+            var guildIds = settingsRes.Models?
+                .Where(s => premiumOwnerIds.Contains(s.OwnerSteamId))
+                .Select(s => s.GuildId)
+                .Where(id => !string.IsNullOrEmpty(id))
+                .ToList();
             if (guildIds == null || guildIds.Count == 0) return;
 
             var response = await SupabaseAuthManager.Client
@@ -381,6 +402,15 @@ public class DiscordBotListenerService
         {
             Log($"[DiscordBotListener] Failed to send notification: {ex.Message}");
         }
+    }
+
+    private static bool IsPremiumBotOwner(UserProfileModel profile)
+    {
+        if (profile.IsManualSupporter) return true;
+        if (profile.PremiumUntil.HasValue && profile.PremiumUntil.Value.ToUniversalTime() > DateTime.UtcNow) return true;
+
+        var tier = profile.SubscriptionTier?.ToLowerInvariant() ?? "free";
+        return tier is "supporter" or "developer" or "lead_contributor" or "lead_developer";
     }
 
     private static void Log(string message)

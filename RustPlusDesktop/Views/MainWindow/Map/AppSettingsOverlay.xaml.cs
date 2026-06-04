@@ -515,17 +515,26 @@ namespace RustPlusDesk.Views
             try
             {
                 BtnSaveDiscordGuild.IsEnabled = false;
-                var settings = new RustPlusDesk.Models.DiscordBotSettingsModel
+
+                var args = new Dictionary<string, object?>
                 {
-                    GuildId = guildId,
-                    OwnerSteamId = steamId,
-                    CommandsEnabled = ChkDiscordCommandsEnabled.IsChecked != false,
-                    AllowedCommandRoleIds = NormalizeDiscordRoleIds(TxtDiscordAllowedRoleIds.Text),
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
+                    ["p_guild_id"] = guildId,
+                    ["p_owner_steam_id"] = steamId,
+                    ["p_commands_enabled"] = ChkDiscordCommandsEnabled.IsChecked != false,
+                    ["p_allowed_command_role_ids"] = NormalizeDiscordRoleIds(TxtDiscordAllowedRoleIds.Text)
                 };
 
-                await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.DiscordBotSettingsModel>().Upsert(settings);
+                var result = await Services.Auth.SupabaseAuthManager.Client.Rpc<List<RustPlusDesk.Models.DiscordBotRegistrationResult>>(
+                    "register_discord_bot_settings",
+                    args);
+
+                var registration = result?.FirstOrDefault();
+                if (registration == null || !registration.Success)
+                {
+                    MessageBox.Show(registration?.Message ?? "Failed to link Discord Server.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 MessageBox.Show("Discord Server linked successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 _ = LoadDiscordBotSettingsAsync();
             }
