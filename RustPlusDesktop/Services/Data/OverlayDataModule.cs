@@ -111,7 +111,7 @@ namespace RustPlusDesk.Services.Data
             var mapJson = JsonSerializer.Serialize(overlayOnlyData, new JsonSerializerOptions { WriteIndented = false });
             int byteSize = Encoding.UTF8.GetByteCount(mapJson);
             int uncompressedSize = CalculateUncompressedSize(data);
-            AppendLog($"[overlay/cloud] Size check - Uncompressed: {uncompressedSize} B, Compressed (Polyline): {byteSize} B (Saved {(uncompressedSize - byteSize) * 100.0 / Math.Max(1, uncompressedSize):F1}%)");
+            //AppendLog($"[overlay/cloud] Size check - Uncompressed: {uncompressedSize} B, Compressed (Polyline): {byteSize} B (Saved {(uncompressedSize - byteSize) * 100.0 / Math.Max(1, uncompressedSize):F1}%)");
 
             int maxBytes = Auth.SupabaseAuthManager.GetMaxOverlayBytes();
 
