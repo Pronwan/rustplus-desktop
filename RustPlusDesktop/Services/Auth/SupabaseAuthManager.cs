@@ -255,7 +255,7 @@ namespace RustPlusDesk.Services.Auth
             {
                 try
                 {
-                    if (HandshakeService.HasValidJwt)
+                    if (HandshakeService.HasValidJwt && HandshakeService.GuestJwt != null)
                     {
                         await SetGuestSessionAsync(HandshakeService.GuestJwt);
                         return true;
@@ -832,7 +832,7 @@ namespace RustPlusDesk.Services.Auth
                 }
 
                 // Check if we have a valid stored JWT
-                if (HandshakeService.HasValidJwt)
+                if (HandshakeService.HasValidJwt && HandshakeService.GuestJwt != null)
                 {
                     AppendLog("[Supabase/Guest] Valid stored guest JWT found. Setting guest session.");
                     await SetGuestSessionAsync(HandshakeService.GuestJwt);
