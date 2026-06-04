@@ -331,6 +331,15 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
     )
 
+    // Private client to query client_keys and official_hashes in the private schema
+    const supabasePrivate = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      {
+        db: { schema: "private" }
+      }
+    )
+
     const body = await req.json().catch(() => ({}))
     const {
       steam_id,
@@ -342,10 +351,26 @@ serve(async (req) => {
       new_public_key,
       recovery_signature,
       mnemonic_token,
+      client_hash,
     } = body
 
     if (!steam_id || typeof steam_id !== "string") {
       return new Response(JSON.stringify({ error: "steam_id is required" }), { status: 400 })
+    }
+
+    // Verify client authenticity via client_hash check
+    if (!client_hash || typeof client_hash !== "string") {
+      return new Response(JSON.stringify({ error: "Client verification failed: missing or invalid client hash" }), { status: 400 })
+    }
+
+    const { data: allowedHash, error: hashErr } = await supabasePrivate
+      .from("official_hashes")
+      .select("hash")
+      .eq("hash", client_hash)
+      .maybeSingle()
+
+    if (hashErr || !allowedHash) {
+      return new Response(JSON.stringify({ error: "Client verification failed: unauthorized or outdated client version" }), { status: 403 })
     }
 
     // ── Flow 1: First-time / new key registration ──
@@ -360,13 +385,13 @@ serve(async (req) => {
         return new Response(JSON.stringify({ error: "Timestamp too far from server time" }), { status: 400 })
       }
 
-      const expectedHmac = await hmacSha256Hex(APP_SECRET, steam_id + timestamp + client_public_key)
+      const expectedHmac = await hmacSha256Hex(APP_SECRET, steam_id + timestamp + client_public_key + client_hash)
       if (hmac_signature !== expectedHmac) {
         return new Response(JSON.stringify({ error: "Untrusted client HMAC signature" }), { status: 403 })
       }
 
       // Check if steam_id already has a registered key
-      const { data: existing } = await supabase
+      const { data: existing } = await supabasePrivate
         .from("client_keys")
         .select("steam_id")
         .eq("steam_id", steam_id)
@@ -379,7 +404,7 @@ serve(async (req) => {
         )
       }
 
-      // Ensure user profile row exists
+      // Ensure user profile row exists in public schema
       await supabase
         .from("user_profiles")
         .upsert({ steam_id, subscription_tier: "free", sync_accepted: true }, { onConflict: "steam_id" })
@@ -389,7 +414,7 @@ serve(async (req) => {
       const recoveryHash = sha256Hex(mnemonic)
 
       // Save client key
-      await supabase
+      await supabasePrivate
         .from("client_keys")
         .insert({ steam_id, public_key: client_public_key, recovery_hash: recoveryHash })
 
@@ -413,7 +438,7 @@ serve(async (req) => {
 
     // ── Flow 2: Quick session refresh ──
     if (signature && timestamp && nonce) {
-      const { data: keyRow, error: fetchErr } = await supabase
+      const { data: keyRow, error: fetchErr } = await supabasePrivate
         .from("client_keys")
         .select("public_key")
         .eq("steam_id", steam_id)
@@ -423,7 +448,7 @@ serve(async (req) => {
         return new Response(JSON.stringify({ error: "No key registered for this steam_id" }), { status: 401 })
       }
 
-      const isValid = await verifyRsaSignature(keyRow.public_key, timestamp + nonce, signature)
+      const isValid = await verifyRsaSignature(keyRow.public_key, timestamp + nonce + client_hash, signature)
       if (!isValid) {
         return new Response(JSON.stringify({ error: "Signature verification failed" }), { status: 401 })
       }
@@ -447,7 +472,7 @@ serve(async (req) => {
 
     // ── Flow 3: Device recovery / migration ──
     if (recovery_signature && mnemonic_token && new_public_key) {
-      const { data: keyRow, error: fetchErr } = await supabase
+      const { data: keyRow, error: fetchErr } = await supabasePrivate
         .from("client_keys")
         .select("recovery_hash")
         .eq("steam_id", steam_id)
@@ -462,28 +487,19 @@ serve(async (req) => {
         return new Response(JSON.stringify({ error: "Invalid recovery mnemonic" }), { status: 401 })
       }
 
-      // Verify the recovery_signature: signed by old private key over steam_id + new_public_key
-      // The C# client will sign with the OLD private key (from backup) to authorize the key change
-      // We need the old public key. Let's fetch it.
-      const { data: oldKeyRow } = await supabase
-        .from("client_keys")
-        .select("public_key")
-        .eq("steam_id", steam_id)
-        .single()
-
-      if (oldKeyRow) {
-        const recoveryData = steam_id + new_public_key
-        const recoveryValid = await verifyRsaSignature(oldKeyRow.public_key, recoveryData, recovery_signature)
-        if (!recoveryValid) {
-          return new Response(JSON.stringify({ error: "Recovery signature verification failed" }), { status: 401 })
-        }
+      // Verify the recovery_signature: HMAC-SHA256 of steam_id + new_public_key + client_hash
+      // Keyed by the UTF-8 bytes of mnemonic_token.
+      const mnemonicHex = bytesToHex(new TextEncoder().encode(mnemonic_token))
+      const expectedSig = await hmacSha256Hex(mnemonicHex, steam_id + new_public_key + client_hash)
+      if (recovery_signature !== expectedSig) {
+        return new Response(JSON.stringify({ error: "Recovery signature verification failed" }), { status: 401 })
       }
 
       // Update public key + generate new recovery hash
       const newMnemonic = generateMnemonic()
       const newRecoveryHash = sha256Hex(newMnemonic)
 
-      await supabase
+      await supabasePrivate
         .from("client_keys")
         .update({ public_key: new_public_key, recovery_hash: newRecoveryHash })
         .eq("steam_id", steam_id)
