@@ -44,6 +44,13 @@ namespace RustPlusDesk.Views
             catch { }
         }
 
+        private void BtnCompareCloud_Click(object sender, RoutedEventArgs e)
+        {
+            var cloudWindow = new RustPlusDesk.Views.Windows.CloudFeaturesWindow();
+            cloudWindow.Owner = this;
+            cloudWindow.ShowDialog();
+        }
+
         private async void BtnTranslate_Click(object sender, RoutedEventArgs e)
         {
             if (BtnTranslate == null || TxtTranslate == null) return;

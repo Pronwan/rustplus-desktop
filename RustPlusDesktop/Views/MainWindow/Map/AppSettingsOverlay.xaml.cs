@@ -367,6 +367,13 @@ namespace RustPlusDesk.Views
             }
         }
 
+        private void BtnCompareCloud_Click(object sender, RoutedEventArgs e)
+        {
+            var cloudWindow = new RustPlusDesk.Views.Windows.CloudFeaturesWindow();
+            cloudWindow.Owner = ParentWindow ?? Window.GetWindow(this);
+            cloudWindow.ShowDialog();
+        }
+
         private async void BtnDiscordConnect_Click(object sender, RoutedEventArgs e)
         {
             BtnDiscordConnect.IsEnabled = false;

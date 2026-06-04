@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1836,10 +1836,10 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
     <value>Máximo 5 temporizadores permitidos.</value>
   </data>
-    <data name="TimerDurationRequired" xml:space="preserve">
+  <data name="TimerDurationRequired" xml:space="preserve">
     <value>Por favor, introduzca una duración del temporizador (horas, minutos o segundos).</value>
   </data>
-    <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
     <value>El nombre del temporizador debe comenzar con una letra.</value>
   </data>
   <data name="FeatureAudioLoopTitle" xml:space="preserve">
@@ -1947,11 +1947,112 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   <data name="CloudTooltipActive" xml:space="preserve">
     <value>Cloud-Sync activo</value>
   </data>
-  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve"><value>Chat Master en línea</value></data>
-  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve"><value>{0} controla las alertas y los comandos de chat de este equipo.</value></data>
-  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve"><value>Chat Master {0} está en línea. Las alertas y los comandos de chat están pausados en este dispositivo.</value></data>
-  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve"><value>Eres Chat Master</value></data>
-  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve"><value>Este dispositivo ahora controla las alertas y los comandos de chat de tu equipo.</value></data>
-  <data name="ChatFeatureMasterAccept" xml:space="preserve"><value>Aceptar</value></data>
-  <data name="ChatFeatureMasterDeny" xml:space="preserve"><value>Rechazar</value></data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>Chat Master en línea</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>{0} controla las alertas y los comandos de chat de este equipo.</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>Chat Master {0} está en línea. Las alertas y los comandos de chat están pausados en este dispositivo.</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>Eres Chat Master</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>Este dispositivo ahora controla las alertas y los comandos de chat de tu equipo.</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>Aceptar</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>Rechazar</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>Actualización v6.0.0</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>Comparar características de la nube</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>Comparación de características de la nube</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>Bienvenido a la Nube</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>Elige el nivel que mejor se adapte a tus necesidades.</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>Sin cuenta</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>Tus datos se mantienen 100% locales. Ideal para jugadores en solitario.</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>Sin sincronización ni copias de seguridad en la nube</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>Sin uso compartido de dispositivos</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>Sin acceso al portal web</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>Cuenta gratuita en la nube</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>Funciones básicas de la nube para empezar a compartir.</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>Alertas de Discord Webhook básicas</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>Comparte hasta 10 dispositivos</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>Uso compartido de mapas (300 KB, 2 bases, 1 captura de pantalla)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>Actuar como ayudante de Supporter</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>Acceso al portal web de la nube</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>Nube de Supporter</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>La experiencia Rust+ definitiva para clanes y usuarios avanzados.</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>Uso compartido de mapas Pro (3 MB, 10 bases, 5 capturas de pantalla)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>Sistema Chat Master</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>Bot de Discord bidireccional avanzado</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>Acceso anticipado a la Beta a través de Discord</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>Conviértete en un Supporter</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>Apóyanos en </value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value> - Vincula Patreon con Discord para la detección automática del rol.</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>Propina a través de </value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value> - Contacta con Jawad o Pronwan en Discord para la asignación manual.</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>Abrir el Portal Web de la Nube</value>
+  </data>
 </root>

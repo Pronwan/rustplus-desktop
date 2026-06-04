@@ -1,0 +1,137 @@
+<Window x:Class="RustPlusDesk.Views.Windows.CloudFeaturesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:p="clr-namespace:RustPlusDesk.Properties"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:views="clr-namespace:RustPlusDesk.Views"
+        Title="{DynamicResource CloudFeaturesTitle}"
+        Width="1100" Height="850"
+        Background="{DynamicResource AppBg}"
+        Foreground="{DynamicResource TextPrimary}"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="20">
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock Text="{DynamicResource CloudFeaturesMainHeader}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource Accent}" HorizontalAlignment="Center"/>
+                <TextBlock Text="{DynamicResource CloudFeaturesSubHeader}" FontSize="14" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content: 3 Columns -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- TIER 1: NO ACCOUNT -->
+                <Border Grid.Column="0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Margin="10" Padding="15" VerticalAlignment="Top">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource TierNoAccountTitle}" FontSize="20" FontWeight="SemiBold" Foreground="#8090A0" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                        
+                        <views:ImageGallery Margin="0,0,0,15">
+                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Account-needed.png" Description="Local Setup"/>
+                        </views:ImageGallery>
+
+                        <TextBlock Text="{DynamicResource TierNoAccountDesc}" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,15" TextAlignment="Center"/>
+
+                        <StackPanel Margin="0,10,0,0">
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8" Foreground="#EE6666"><Run Text="&#x274C; "/><Run Text="{DynamicResource FeatNoCloudSync}"/></TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8" Foreground="#EE6666"><Run Text="&#x274C; "/><Run Text="{DynamicResource FeatNoDeviceSharing}"/></TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8" Foreground="#EE6666"><Run Text="&#x274C; "/><Run Text="{DynamicResource FeatNoPortal}"/></TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- TIER 2: FREE ACCOUNT -->
+                <Border Grid.Column="1" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource Accent}" BorderThickness="2" CornerRadius="8" Margin="10" Padding="15" VerticalAlignment="Top">
+                    <StackPanel>
+                        <Border Background="{DynamicResource Accent}" CornerRadius="10" Padding="8,4" HorizontalAlignment="Center" Margin="0,0,0,10">
+                            <TextBlock Text="{DynamicResource TierFreeAccountTitle}" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                        </Border>
+                        
+                        <views:ImageGallery Margin="0,0,0,5">
+                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Device-Cloud-Sync.png" Description="Device Cloud Sync"/>
+                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Basic-Discord.png" Description="Basic Discord Webhooks"/>
+                        </views:ImageGallery>
+                        
+                        <TextBlock Text="{DynamicResource TierFreeAccountDesc}" TextWrapping="Wrap" Foreground="{DynamicResource TextPrimary}" Margin="0,0,0,15" TextAlignment="Center"/>
+
+                        <StackPanel Margin="0,0,0,15">
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8"><Run Text="&#x2714;&#xFE0F; "/><Run Text="{DynamicResource FeatBasicDiscord}"/></TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8"><Run Text="&#x2714;&#xFE0F; "/><Run Text="{DynamicResource FeatDeviceSharingFree}"/></TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8"><Run Text="&#x2714;&#xFE0F; "/><Run Text="{DynamicResource FeatMapSharingFree}"/></TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8"><Run Text="&#x2714;&#xFE0F; "/><Run Text="{DynamicResource FeatSupporterHelper}"/></TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8"><Run Text="&#x2714;&#xFE0F; "/><Run Text="{DynamicResource FeatPortalAccess}"/></TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- TIER 3: SUPPORTER -->
+                <Border Grid.Column="2" Background="#1A1810" BorderBrush="#FFD700" BorderThickness="2" CornerRadius="8" Margin="10" Padding="15" VerticalAlignment="Top">
+                    <StackPanel>
+                        <Border Background="#FFD700" CornerRadius="10" Padding="8,4" HorizontalAlignment="Center" Margin="0,0,0,10">
+                            <TextBlock Text="{DynamicResource TierSupporterTitle}" FontSize="18" FontWeight="Bold" Foreground="Black"/>
+                        </Border>
+
+                        <views:ImageGallery Margin="0,0,0,5">
+                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Chat_Master1.png" Description="Chat Master System"/>
+                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Cloud-Base-Screenshots.png" Description="Cloud Base Screenshots"/>
+                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Advanced-Discord-Settings.png" Description="Advanced Discord Bot Settings"/>
+                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Chat_Master-Slave.png" Description="Chat Master &amp; Slaves"/>
+                        </views:ImageGallery>
+                        
+                        <TextBlock Text="{DynamicResource TierSupporterDesc}" TextWrapping="Wrap" Foreground="#FFD700" FontWeight="SemiBold" Margin="0,0,0,15" TextAlignment="Center"/>
+
+                        <StackPanel Margin="0,0,0,15">
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8" Foreground="White"><Run Text="&#x2B50; "/><Run Text="{DynamicResource FeatMapSharingPro}"/></TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8" Foreground="White"><Run Text="&#x2B50; "/><Run Text="{DynamicResource FeatChatMaster}"/></TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8" Foreground="White"><Run Text="&#x2B50; "/><Run Text="{DynamicResource FeatAdvDiscord}"/></TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8" Foreground="White"><Run Text="&#x2B50; "/><Run Text="{DynamicResource FeatBetaAccess}"/></TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8" Foreground="White"><Run Text="&#x2B50; "/><Run Text="{DynamicResource FeatPortalAccess}"/></TextBlock>
+                        </StackPanel>
+
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Footer with Subscription Info -->
+        <Border Grid.Row="2" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,1,0,0" Padding="20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource BecomeSupporterTitle}" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource Accent}" Margin="0,0,0,5"/>
+                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,5">
+                            <Run Text="{DynamicResource SupportViaPatreon}"/>
+                            <Hyperlink NavigateUri="https://www.patreon.com/cw/Pronwan/membership" RequestNavigate="Hyperlink_RequestNavigate">Patreon</Hyperlink>
+                            <Run Text="{DynamicResource SupportViaPatreonDesc}"/>
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run Text="{DynamicResource SupportViaSE}"/>
+                            <Hyperlink NavigateUri="https://streamelements.com/pronwan/tip" RequestNavigate="Hyperlink_RequestNavigate">Stream Elements</Hyperlink>
+                            <Run Text="{DynamicResource SupportViaSEDesc}"/>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <ui:Button Grid.Column="1" Content="{DynamicResource OpenCloudWebPortal}" Appearance="Primary" Padding="20,10" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" Click="BtnOpenPortal_Click"/>
+                    <ui:Button Grid.Column="2" Content="{DynamicResource Close}" Appearance="Secondary" Padding="30,10" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Click="BtnClose_Click"/>
+                </Grid>
+        </Border>
+    </Grid>
+</Window>

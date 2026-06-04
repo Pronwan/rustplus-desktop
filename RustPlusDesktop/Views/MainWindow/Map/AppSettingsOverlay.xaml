@@ -198,6 +198,13 @@
                 <!-- Cloud Section -->
                 <TextBlock Text="Cloud Settings" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
                 
+                <ui:Button Content="{DynamicResource CompareCloudFeatures}" 
+                           Appearance="Secondary" 
+                           Icon="{ui:SymbolIcon Symbol=Info24}" 
+                           HorizontalAlignment="Stretch" 
+                           Margin="0,0,0,10" 
+                           Click="BtnCompareCloud_Click"/>
+
                 <!-- Cloud Account Buttons: Discord + Email side by side -->
                 <Grid Margin="0,0,0,4">
                     <Grid.ColumnDefinitions>

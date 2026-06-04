@@ -134,7 +134,12 @@ namespace RustPlusDesk.Views
                 var parentWindow = Window.GetWindow(this);
                 var zoomWin = new ImageZoomWindow(ImgPreview.Source)
                 {
-                    Owner = parentWindow
+                    Owner = parentWindow,
+                    ShowInTaskbar = false,
+                    Top = parentWindow.Top,
+                    Left = parentWindow.Left,
+                    Width = parentWindow.ActualWidth,
+                    Height = parentWindow.ActualHeight
                 };
                 zoomWin.ShowDialog();
             }

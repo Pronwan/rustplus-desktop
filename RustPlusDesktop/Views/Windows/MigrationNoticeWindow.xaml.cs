@@ -26,6 +26,13 @@ public partial class MigrationNoticeWindow : Window
         Close();
     }
 
+    private void BtnCompare_Click(object sender, RoutedEventArgs e)
+    {
+        var cloudWindow = new RustPlusDesk.Views.Windows.CloudFeaturesWindow();
+        cloudWindow.Owner = this;
+        cloudWindow.ShowDialog();
+    }
+
     private void Border_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         if (e.ButtonState == System.Windows.Input.MouseButtonState.Pressed)

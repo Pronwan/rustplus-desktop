@@ -469,7 +469,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }));
 
         // One-time migration notice for v5.2.0
-        const string AppVersion = "5.5.0";
+        const string AppVersion = "6.0.0";
 
         bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
         {
@@ -507,7 +507,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                 }
             }
 
-            if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "5.4.0"))
+            if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "5.5.0"))
             {
                 // Upgrade von 5.4.0 oder geringer: Popup zeigen
                 Dispatcher.InvokeAsync(() =>

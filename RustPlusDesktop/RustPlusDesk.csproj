@@ -19,12 +19,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>5.5.0</Version>
+		<Version>6.0.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>5.5.0</AssemblyVersion>
-		<FileVersion>5.5.0</FileVersion>
-		<InformationalVersion>5.5.0</InformationalVersion>
+		<AssemblyVersion>6.0.0</AssemblyVersion>
+		<FileVersion>6.0.0</FileVersion>
+		<InformationalVersion>6.0.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -141,14 +141,21 @@
 	  <None Remove="Assets\icons\discord.png" />
 	  <None Remove="Assets\icq-message.wav" />
 	  <None Remove="Assets\Images\5.3.0\LoopAudio_StopLogic.png" />
+	  <None Remove="Assets\Images\5.5.0\Account-needed.png" />
+	  <None Remove="Assets\Images\5.5.0\Advanced-Discord-Settings.png" />
+	  <None Remove="Assets\Images\5.5.0\Advanced-Discord.png" />
 
 	  <None Remove="Assets\Images\5.5.0\App-customTimer.png" />
 	  <None Remove="Assets\Images\5.5.0\APP-new-shop-system.png" />
+	  <None Remove="Assets\Images\5.5.0\Basic-Discord.png" />
 	  <None Remove="Assets\Images\5.5.0\Chat_Master-Slave.png" />
 	  <None Remove="Assets\Images\5.5.0\Chat_Master1.png" />
+	  <None Remove="Assets\Images\5.5.0\Cloud-Backend.png" />
 	  <None Remove="Assets\Images\5.5.0\Cloud-Base-Screenshots.png" />
 	  <None Remove="Assets\Images\5.5.0\Device-Cloud-Sync.png" />
+	  <None Remove="Assets\Images\5.5.0\discord-no-permission.png" />
 	  <None Remove="Assets\Images\5.5.0\New-Custom-Death-Markers.png" />
+	  <None Remove="Assets\Images\5.5.0\r+desktop-icon-bot.png" />
 	  <None Remove="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
 	  <None Remove="Assets\rustplus-desktop-icon.ico" />
 	  <None Remove="Assets\Data\rust_items.json" />
@@ -323,14 +330,21 @@
     <Resource Include="Assets\icons\discord.png" />
     <Resource Include="Assets\icq-message.wav" />
     <Resource Include="Assets\Images\5.3.0\LoopAudio_StopLogic.png" />
+    <Resource Include="Assets\Images\5.5.0\Account-needed.png" />
+    <Resource Include="Assets\Images\5.5.0\Advanced-Discord-Settings.png" />
+    <Resource Include="Assets\Images\5.5.0\Advanced-Discord.png" />
 
     <Resource Include="Assets\Images\5.5.0\App-customTimer.png" />
     <Resource Include="Assets\Images\5.5.0\APP-new-shop-system.png" />
+    <Resource Include="Assets\Images\5.5.0\Basic-Discord.png" />
     <Resource Include="Assets\Images\5.5.0\Chat_Master-Slave.png" />
     <Resource Include="Assets\Images\5.5.0\Chat_Master1.png" />
+    <Resource Include="Assets\Images\5.5.0\Cloud-Backend.png" />
     <Resource Include="Assets\Images\5.5.0\Cloud-Base-Screenshots.png" />
     <Resource Include="Assets\Images\5.5.0\Device-Cloud-Sync.png" />
+    <Resource Include="Assets\Images\5.5.0\discord-no-permission.png" />
     <Resource Include="Assets\Images\5.5.0\New-Custom-Death-Markers.png" />
+    <Resource Include="Assets\Images\5.5.0\r+desktop-icon-bot.png" />
     <Resource Include="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
     <Resource Include="Assets\rustplus-desktop-icon.ico" />
     <Resource Include="Assets\Screenshots\3.0_1.png" />

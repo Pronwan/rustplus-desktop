@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        Title="Rust+ Desktop &#x1F6E0;&#xFE0F; v5.5.0 Update"
+        Title="Rust+ Desktop &#x1F6E0;&#xFE0F; v6.0.0 Update"
         Width="500" Height="700"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
@@ -32,9 +32,9 @@
             <Border Grid.Row="0" Background="#161B22" CornerRadius="12,12,0,0" Padding="20,14">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Border Background="#E8611A" CornerRadius="5" Padding="6,3" Margin="0,0,10,0">
-                        <TextBlock Text="v5.5.0" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="v6.0.0" FontSize="11" FontWeight="Bold" Foreground="White"/>
                     </Border>
-                    <TextBlock Text="{DynamicResource Update530Title}" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock Text="{DynamicResource Update600Title}" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
                 </StackPanel>
             </Border>
 
@@ -100,6 +100,14 @@
                         <Run Text="{DynamicResource PrivacyDisclaimerDesc}"/>
                     </TextBlock>
                 </Border>
+                
+                <ui:Button Content="{DynamicResource CompareCloudFeatures}" 
+                           Appearance="Secondary"
+                           HorizontalAlignment="Center"
+                           Icon="Info24"
+                           Cursor="Hand"
+                           Click="BtnCompare_Click" 
+                           Margin="0,15,0,0"/>
             </StackPanel>
 
             <!-- Footer -->
