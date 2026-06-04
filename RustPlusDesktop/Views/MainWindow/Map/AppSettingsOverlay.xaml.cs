@@ -114,7 +114,20 @@ namespace RustPlusDesk.Views
             {
                 TxtDiscordBtnLabel.Text = T("AuthDiscordDisconnectButton", "Disconnect Discord");
                 BtnDiscordConnect.Appearance = Wpf.Ui.Controls.ControlAppearance.Caution;
-                TxtAuthStatus.Text = string.Format(T("AuthDiscordConnectedFormat", "Discord connected - Tier: {0}"), Services.Auth.SupabaseAuthManager.CurrentTier.ToUpper());
+
+                int maxBytes = Services.Auth.SupabaseAuthManager.GetMaxOverlayBytes();
+                string maxOverlay = maxBytes == int.MaxValue ? "unlimited" : $"{maxBytes / 1024} KB";
+                int maxDevices = Services.Auth.SupabaseAuthManager.GetMaxDevices();
+                string maxDevs = maxDevices == int.MaxValue ? "unlimited" : maxDevices.ToString();
+                int maxBases = Services.Auth.SupabaseAuthManager.GetMaxBases();
+                string maxBs = maxBases == int.MaxValue ? "unlimited" : maxBases.ToString();
+
+                int currentOverlayKb = ParentWindow != null ? Math.Max(1, (int)Math.Ceiling(ParentWindow.GetCurrentOverlaySizeBytes() / 1024.0)) : 0;
+                int currentDevices = ParentWindow != null ? ParentWindow.GetCurrentDevicesCount() : 0;
+                int currentBases = ParentWindow != null ? ParentWindow.GetCurrentBaseCount() : 0;
+
+                string baseText = string.Format(T("AuthDiscordConnectedFormat", "Discord connected - Tier: {0}"), Services.Auth.SupabaseAuthManager.CurrentTier.ToUpper());
+                TxtAuthStatus.Text = $"{baseText}\nLimits Usage:\n• Overlay size: {currentOverlayKb} KB / {maxOverlay}\n• Devices: {currentDevices} / {maxDevs}\n• Bases: {currentBases} / {maxBs}";
                 TxtAuthStatus.Foreground = new System.Windows.Media.SolidColorBrush(
                     System.Windows.Media.Color.FromRgb(0x4C, 0xAF, 0x50));
             }
@@ -123,7 +136,20 @@ namespace RustPlusDesk.Views
                 var email = Services.Auth.SupabaseAuthManager.Client?.Auth?.CurrentUser?.Email ?? "";
                 TxtDiscordBtnLabel.Text = "Discord";
                 BtnDiscordConnect.Appearance = Wpf.Ui.Controls.ControlAppearance.Secondary;
-                TxtAuthStatus.Text = string.Format(T("AuthEmailConnectedFormat", "Email connected: {0} - Tier: {1}"), email, Services.Auth.SupabaseAuthManager.CurrentTier.ToUpper());
+
+                int maxBytes = Services.Auth.SupabaseAuthManager.GetMaxOverlayBytes();
+                string maxOverlay = maxBytes == int.MaxValue ? "unlimited" : $"{maxBytes / 1024} KB";
+                int maxDevices = Services.Auth.SupabaseAuthManager.GetMaxDevices();
+                string maxDevs = maxDevices == int.MaxValue ? "unlimited" : maxDevices.ToString();
+                int maxBases = Services.Auth.SupabaseAuthManager.GetMaxBases();
+                string maxBs = maxBases == int.MaxValue ? "unlimited" : maxBases.ToString();
+
+                int currentOverlayKb = ParentWindow != null ? Math.Max(1, (int)Math.Ceiling(ParentWindow.GetCurrentOverlaySizeBytes() / 1024.0)) : 0;
+                int currentDevices = ParentWindow != null ? ParentWindow.GetCurrentDevicesCount() : 0;
+                int currentBases = ParentWindow != null ? ParentWindow.GetCurrentBaseCount() : 0;
+
+                string baseText = string.Format(T("AuthEmailConnectedFormat", "Email connected: {0} - Tier: {1}"), email, Services.Auth.SupabaseAuthManager.CurrentTier.ToUpper());
+                TxtAuthStatus.Text = $"{baseText}\nLimits Usage:\n• Overlay size: {currentOverlayKb} KB / {maxOverlay}\n• Devices: {currentDevices} / {maxDevs}\n• Bases: {currentBases} / {maxBs}";
                 TxtAuthStatus.Foreground = new System.Windows.Media.SolidColorBrush(
                     System.Windows.Media.Color.FromRgb(0x4C, 0xAF, 0x50));
             }

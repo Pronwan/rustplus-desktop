@@ -73,10 +73,10 @@ namespace RustPlusDesk.Services.Data
             if (Auth.SupabaseAuthManager.Client != null)
             {
                 if (!await Auth.SupabaseAuthManager.EnsureFreshSessionAsync()) return 0;
-                bool isPremium = Auth.SupabaseAuthManager.IsPremium;
-                if (!isPremium && dtoList.Count > 10)
+                int maxDevices = Auth.SupabaseAuthManager.GetMaxDevices();
+                if (dtoList.Count > maxDevices)
                 {
-                    dtoList = dtoList.GetRange(0, 10);
+                    dtoList = dtoList.GetRange(0, maxDevices);
                 }
 
                 try

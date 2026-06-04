@@ -248,6 +248,49 @@ namespace RustPlusDesk.Models
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; }
     }
+
+    [Table("tier_limits")]
+    public class TierLimitModel : BaseModel
+    {
+        [PrimaryKey("tier_code", false)]
+        [Column("tier_code")]
+        public string? TierCode { get; set; }
+
+        [Column("max_overlay_kb")]
+        public int? MaxOverlayKb { get; set; }
+
+        [Column("max_devices")]
+        public int? MaxDevices { get; set; }
+
+        [Column("max_bases")]
+        public int? MaxBases { get; set; }
+
+        [Column("max_screenshots_per_base")]
+        public int? MaxScreenshotsPerBase { get; set; }
+    }
+
+    [Table("base_markers")]
+    public class BaseMarkerModel : BaseModel
+    {
+        [PrimaryKey("id", true)]
+        [Column("id")]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
+        [Column("server_key")]
+        public string ServerKey { get; set; }
+
+        [Column("steam_id")]
+        public string SteamId { get; set; }
+
+        [Column("marker_data")]
+        public string MarkerData { get; set; }
+
+        [Column("created_at", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime? CreatedAt { get; set; }
+
+        [Column("updated_at")]
+        public DateTime UpdatedAt { get; set; }
+    }
 }
 
 

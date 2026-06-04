@@ -26,6 +26,91 @@ namespace RustPlusDesk.Services.Auth
         private static readonly SemaphoreSlim SessionRefreshLock = new SemaphoreSlim(1, 1);
         private static bool CloudAccountPromptShownThisSession;
 
+        public static System.Collections.Generic.Dictionary<string, RustPlusDesk.Models.TierLimitModel> TierLimits { get; private set; } = new(StringComparer.OrdinalIgnoreCase);
+
+        public static async Task FetchTierLimitsAsync()
+        {
+            if (Client == null) return;
+            try
+            {
+                var result = await Client.From<RustPlusDesk.Models.TierLimitModel>().Get();
+                if (result?.Models != null)
+                {
+                    var dict = new System.Collections.Generic.Dictionary<string, RustPlusDesk.Models.TierLimitModel>(StringComparer.OrdinalIgnoreCase);
+                    foreach (var limit in result.Models)
+                    {
+                        if (limit.TierCode != null)
+                        {
+                            dict[limit.TierCode] = limit;
+                        }
+                    }
+                    TierLimits = dict;
+                    AppendLog($"[Cloud] Loaded {TierLimits.Count} tier limits dynamically from database.");
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Cloud/Error] Failed to fetch tier limits: {ex.Message}. Using default limits.");
+            }
+        }
+
+        public static int GetMaxOverlayBytes()
+        {
+            if (TierLimits.TryGetValue(CurrentTier, out var limit))
+            {
+                return limit.MaxOverlayKb.HasValue ? limit.MaxOverlayKb.Value * 1024 : int.MaxValue;
+            }
+            
+            // Fallbacks
+            if (IsPremium)
+            {
+                return 3_000_000; // 3 MB default for premium
+            }
+            return 300_000; // 300 KB default for free
+        }
+
+        public static int GetMaxDevices()
+        {
+            if (TierLimits.TryGetValue(CurrentTier, out var limit))
+            {
+                return limit.MaxDevices.HasValue ? limit.MaxDevices.Value : int.MaxValue;
+            }
+            
+            if (IsPremium)
+            {
+                return int.MaxValue;
+            }
+            return 10;
+        }
+
+        public static int GetMaxBases()
+        {
+            if (TierLimits.TryGetValue(CurrentTier, out var limit))
+            {
+                return limit.MaxBases.HasValue ? limit.MaxBases.Value : int.MaxValue;
+            }
+            
+            if (IsPremium)
+            {
+                return 10;
+            }
+            return 2;
+        }
+
+        public static int GetMaxScreenshotsPerBase()
+        {
+            if (TierLimits.TryGetValue(CurrentTier, out var limit))
+            {
+                return limit.MaxScreenshotsPerBase.HasValue ? limit.MaxScreenshotsPerBase.Value : 1;
+            }
+            
+            if (IsPremium)
+            {
+                return 5;
+            }
+            return 1;
+        }
+
         /// <summary>True when the user is signed in via email+password (not Discord OAuth).</summary>
         public static bool IsEmailAuthenticated
         {
@@ -108,6 +193,7 @@ namespace RustPlusDesk.Services.Auth
                 }
 
                 await RefreshUserProfileAsync();
+                await FetchTierLimitsAsync();
                 AppendLog($"[Supabase] Init complete. IsDiscordAuthenticated={IsDiscordAuthenticated}, IsGuestAuthenticated={IsGuestAuthenticated}, IsPremium={IsPremium}");
             }
             catch (Exception ex)
@@ -478,8 +564,9 @@ namespace RustPlusDesk.Services.Auth
                 if (response != null)
                 {
                     CurrentTier = response.SubscriptionTier ?? "free";
-                    IsPremium = response.IsManualSupporter || CurrentTier == "supporter" || CurrentTier == "developer" || CurrentTier == "lead_contributor" || CurrentTier == "lead_developer";
+                    IsPremium = response.IsManualSupporter || (CurrentTier != "free" && !string.Equals(CurrentTier, "guest", StringComparison.OrdinalIgnoreCase));
                     AppendLog($"[Cloud/Debug] Found existing profile. Tier: {CurrentTier} (IsPremium: {IsPremium})");
+                    await FetchTierLimitsAsync();
                     await TouchProfileAsync(steamId, discordId);
                 }
                 else

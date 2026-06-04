@@ -737,8 +737,7 @@ private bool _overlayToolsVisible = false;
         // 8. Bei Base-Icons: direkt Screenshot-Dialog oeffnen (keine Galerie auf Placement-Klick)
         if (isBase && img.Tag is OverlayTag baseMeta)
         {
-            bool isPremium = Services.Auth.SupabaseAuthManager.IsPremium;
-            int maxScreenshots = isPremium ? 5 : 1;
+            int maxScreenshots = Services.Auth.SupabaseAuthManager.GetMaxScreenshotsPerBase();
             if (baseMeta.Screenshots.Count < maxScreenshots)
             {
                 var dlg = new Views.Windows.BaseScreenshotWindow { Owner = this };
@@ -1057,7 +1056,7 @@ private bool _overlayToolsVisible = false;
 
     private void ToolUploadButton_Click(object sender, RoutedEventArgs e)
     {
-        if (IsOverlaySyncLimitExceeded() && !Services.Auth.SupabaseAuthManager.IsPremium)
+        if (IsOverlaySyncLimitExceeded())
         {
             ShowPremiumLimitDialog(Properties.Resources.PremiumInfoMapDesc);
             return;
@@ -1109,8 +1108,9 @@ private bool _overlayToolsVisible = false;
         int overlaySizeBytes = GetCurrentOverlaySizeBytes();
         bool overlayLimitExceeded = IsOverlaySyncLimitExceeded(overlaySizeBytes);
         bool baseLimitExceeded = IsBaseLimitExceeded();
+        bool screenshotLimitExceeded = IsScreenshotLimitExceeded();
 
-        bool totalLimitExceeded = deviceLimitExceeded || overlayLimitExceeded || baseLimitExceeded;
+        bool totalLimitExceeded = deviceLimitExceeded || overlayLimitExceeded || baseLimitExceeded || screenshotLimitExceeded;
 
         ApplyCloudButtonState(BtnDevicesExport, TrackingService.CloudSyncEnabled, totalLimitExceeded);
         ApplyCloudButtonState(ToolUploadButton, TrackingService.CloudSyncEnabled, totalLimitExceeded);
@@ -1120,7 +1120,11 @@ private bool _overlayToolsVisible = false;
             BtnDevicesExport.ToolTip = !TrackingService.CloudSyncEnabled
                 ? CloudText("CloudTooltipActivate", "Activate Cloud-Sync")
                 : totalLimitExceeded
-                    ? (deviceLimitExceeded ? CloudText("CloudTooltipDeviceFreeLimit", "10 Devices max in Free Tier") : CloudText("CloudTooltipSyncLimitReached", "Sync limit reached"))
+                    ? (deviceLimitExceeded 
+                        ? (Services.Auth.SupabaseAuthManager.GetMaxDevices() == 10 && Services.Auth.SupabaseAuthManager.CurrentTier == "free"
+                            ? CloudText("CloudTooltipDeviceFreeLimit", "10 Devices max in Free Tier")
+                            : string.Format("{0} Devices max in {1} Tier", Services.Auth.SupabaseAuthManager.GetMaxDevices() == int.MaxValue ? "Unlimited" : Services.Auth.SupabaseAuthManager.GetMaxDevices().ToString(), Services.Auth.SupabaseAuthManager.CurrentTier.ToUpper()))
+                        : CloudText("CloudTooltipSyncLimitReached", "Sync limit reached"))
                     : _lastDevicesCloudTooltip ?? CloudText("CloudTooltipActive", "Cloud-Sync active");
         }
 
@@ -1130,10 +1134,14 @@ private bool _overlayToolsVisible = false;
                 ? CloudText("CloudTooltipActivate", "Activate Cloud-Sync")
                 : totalLimitExceeded
                     ? (baseLimitExceeded
-                        ? CloudText("CloudTooltipBaseLimit", "Base limit reached (Free: max 2 bases, Premium: max 10 bases)")
-                        : (overlayLimitExceeded
-                            ? string.Format(CloudText("CloudTooltipOverlayTooBigFormat", "Overlay Size too big for sync ({0} KB)"), BytesToKb(overlaySizeBytes))
-                            : CloudText("CloudTooltipSyncLimitReached", "Sync limit reached")))
+                        ? (Services.Auth.SupabaseAuthManager.GetMaxBases() == 2 && Services.Auth.SupabaseAuthManager.CurrentTier == "free"
+                            ? CloudText("CloudTooltipBaseLimit", "Base limit reached (Free: max 2 bases, Premium: max 10 bases)")
+                            : string.Format("Base limit reached ({0} bases max in {1} Tier)", Services.Auth.SupabaseAuthManager.GetMaxBases() == int.MaxValue ? "unlimited" : Services.Auth.SupabaseAuthManager.GetMaxBases().ToString(), Services.Auth.SupabaseAuthManager.CurrentTier.ToUpper()))
+                        : (screenshotLimitExceeded
+                            ? string.Format("Screenshot limit per base exceeded (Max {0} screenshots per base)", Services.Auth.SupabaseAuthManager.GetMaxScreenshotsPerBase())
+                            : (overlayLimitExceeded
+                                ? string.Format(CloudText("CloudTooltipOverlayTooBigFormat", "Overlay Size too big for sync ({0} KB)"), BytesToKb(overlaySizeBytes))
+                                : CloudText("CloudTooltipSyncLimitReached", "Sync limit reached"))))
                     : _lastOverlayCloudTooltip ?? CloudText("CloudTooltipActive", "Cloud-Sync active");
         }
 
@@ -1146,14 +1154,12 @@ private bool _overlayToolsVisible = false;
 
     private bool IsFreeDeviceSyncLimitExceeded()
     {
-        return !Services.Auth.SupabaseAuthManager.IsPremium
-            && (_vm.Selected?.Devices?.Count ?? 0) > 10;
+        return (_vm.Selected?.Devices?.Count ?? 0) > Services.Auth.SupabaseAuthManager.GetMaxDevices();
     }
 
     private bool IsFreeOverlaySyncLimitExceeded()
     {
-        return !Services.Auth.SupabaseAuthManager.IsPremium
-            && IsOverlaySyncLimitExceeded();
+        return IsOverlaySyncLimitExceeded();
     }
 
     private bool IsOverlaySyncLimitExceeded()
@@ -1163,11 +1169,15 @@ private bool _overlayToolsVisible = false;
 
     private bool IsOverlaySyncLimitExceeded(int byteSize)
     {
-        var maxBytes = Services.Auth.SupabaseAuthManager.IsPremium ? 3_000_000 : 300_000;
-        return byteSize > maxBytes;
+        return byteSize > Services.Auth.SupabaseAuthManager.GetMaxOverlayBytes();
     }
 
-    private bool IsBaseLimitExceeded()
+    public int GetCurrentDevicesCount()
+    {
+        return _vm?.Selected?.Devices?.Count ?? 0;
+    }
+
+    public int GetCurrentBaseCount()
     {
         int baseCount = 0;
         foreach (var child in Overlay.Children)
@@ -1184,17 +1194,43 @@ private bool _overlayToolsVisible = false;
                 }
             }
         }
-        int maxBases = Services.Auth.SupabaseAuthManager.IsPremium ? 10 : 2;
-        return baseCount > maxBases;
+        return baseCount;
     }
 
-    private int GetCurrentOverlaySizeBytes()
+    private bool IsBaseLimitExceeded()
+    {
+        return GetCurrentBaseCount() > Services.Auth.SupabaseAuthManager.GetMaxBases();
+    }
+
+    private bool IsScreenshotLimitExceeded()
+    {
+        int maxScreenshots = Services.Auth.SupabaseAuthManager.GetMaxScreenshotsPerBase();
+        foreach (var child in Overlay.Children)
+        {
+            if (child is Image img && img.Source is BitmapImage bi)
+            {
+                string path = bi.UriSource?.ToString() ?? "";
+                if (path.Contains("base1.png") || path.Contains("base2.png"))
+                {
+                    if (img.Tag is OverlayTag meta && meta.OwnerSteamId == _mySteamId)
+                    {
+                        if (meta.Screenshots != null && meta.Screenshots.Count > maxScreenshots)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public int GetCurrentOverlaySizeBytes()
     {
         try
         {
             var data = BuildCurrentOverlaySaveDataForMe();
-            var json = System.Text.Json.JsonSerializer.Serialize(data, new System.Text.Json.JsonSerializerOptions { WriteIndented = false });
-            return Encoding.UTF8.GetByteCount(json);
+            return OverlayDataModule.CalculateUncompressedSize(data);
         }
         catch
         {
@@ -1536,6 +1572,13 @@ private bool _overlayToolsVisible = false;
                 return;
             }
 
+            if (IsScreenshotLimitExceeded())
+            {
+                AppendLog("[overlay/cloud] Upload skipped: screenshot limit per base exceeded.");
+                UpdateCloudSyncUI();
+                return;
+            }
+
             // optional, aber sinnvoll: sicherstellen, dass die lokale Datei "aktuell" ist
             try
             {
@@ -1558,8 +1601,7 @@ private bool _overlayToolsVisible = false;
             }
 
             // 3) modularer Upload
-            var overlayByteSize = Encoding.UTF8.GetByteCount(
-                System.Text.Json.JsonSerializer.Serialize(data, new System.Text.Json.JsonSerializerOptions { WriteIndented = false }));
+            var overlayByteSize = OverlayDataModule.CalculateUncompressedSize(data);
             var uploaded = await OverlayDataModule.UploadOverlayAsync(GetServerKey(), _mySteamId, data);
             if (uploaded)
                 MarkOverlayCloudSynced(overlayByteSize);
@@ -1917,8 +1959,7 @@ private bool _overlayToolsVisible = false;
             // 3) modularer Save
             OverlayDataModule.SaveLocalOverlay(GetServerKey(), _mySteamId, data);
             UpdateCloudSyncUI();
-            var overlayByteSize = Encoding.UTF8.GetByteCount(
-                System.Text.Json.JsonSerializer.Serialize(data, new System.Text.Json.JsonSerializerOptions { WriteIndented = false }));
+            var overlayByteSize = OverlayDataModule.CalculateUncompressedSize(data);
 
             // 4) Debounced Cloud upload if enabled (anon key works, no Discord needed)
             if (TrackingService.CloudSyncEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.Client != null)
@@ -2789,8 +2830,7 @@ private bool _overlayToolsVisible = false;
 
         menu.Items.Add(new Separator());
 
-        bool isPremium = Services.Auth.SupabaseAuthManager.IsPremium;
-        int maxScreenshots = isPremium ? 5 : 1;
+        int maxScreenshots = Services.Auth.SupabaseAuthManager.GetMaxScreenshotsPerBase();
 
         for (int i = 0; i < meta.Screenshots.Count; i++)
         {
@@ -2827,11 +2867,11 @@ private bool _overlayToolsVisible = false;
             };
             menu.Items.Add(miAddScreen);
         }
-        else if (!isPremium)
+        else if (Services.Auth.SupabaseAuthManager.CurrentTier == "free")
         {
             var miLockedScreen = new MenuItem
             {
-                Header = string.Format(CloudText("BaseAddScreenshotLockedFormat", "Add Screenshot {0} (Premium required)"), 2),
+                Header = string.Format(CloudText("BaseAddScreenshotLockedFormat", "Add Screenshot {0} (Premium required)"), maxScreenshots + 1),
                 IsEnabled = true
             };
             miLockedScreen.Foreground = Brushes.Gray;

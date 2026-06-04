@@ -410,7 +410,7 @@ public class DiscordBotListenerService
         if (profile.PremiumUntil.HasValue && profile.PremiumUntil.Value.ToUniversalTime() > DateTime.UtcNow) return true;
 
         var tier = profile.SubscriptionTier?.ToLowerInvariant() ?? "free";
-        return tier is "supporter" or "developer" or "lead_contributor" or "lead_developer";
+        return tier != "free" && tier != "guest";
     }
 
     private static void Log(string message)

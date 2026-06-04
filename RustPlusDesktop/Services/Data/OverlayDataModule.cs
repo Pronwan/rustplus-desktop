@@ -71,21 +71,56 @@ namespace RustPlusDesk.Services.Data
                 return false;
             }
 
-            // Size limit check
-            var mapJson = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = false });
+            var baseIcons = data.Icons.Where(icon =>
+                icon.IconPath.Contains("base1.png") || icon.IconPath.Contains("base2.png")
+            ).ToList();
+
+            var nonBaseIcons = data.Icons.Where(icon =>
+                !(icon.IconPath.Contains("base1.png") || icon.IconPath.Contains("base2.png"))
+            ).ToList();
+
+            // Client-side validations before uploading
+            int baseCount = baseIcons.Count;
+            int maxBases = Auth.SupabaseAuthManager.GetMaxBases();
+            if (baseCount > maxBases)
+            {
+                AppendLog($"[overlay/cloud] Upload blocked: base limit exceeded ({baseCount}/{maxBases}).");
+                return false;
+            }
+
+            int maxScreenshots = Auth.SupabaseAuthManager.GetMaxScreenshotsPerBase();
+            foreach (var icon in baseIcons)
+            {
+                if (icon.Screenshots != null && icon.Screenshots.Count > maxScreenshots)
+                {
+                    AppendLog($"[overlay/cloud] Upload blocked: a base has {icon.Screenshots.Count} screenshots, limit is {maxScreenshots}.");
+                    return false;
+                }
+            }
+
+            var overlayOnlyData = new OverlaySaveData
+            {
+                LastUpdatedUnix = data.LastUpdatedUnix,
+                Strokes = data.Strokes,
+                Icons = nonBaseIcons,
+                Texts = data.Texts,
+                Devices = data.Devices
+            };
+
+            // Size limit check (excluding bases/screenshots)
+            var mapJson = JsonSerializer.Serialize(overlayOnlyData, new JsonSerializerOptions { WriteIndented = false });
             int byteSize = Encoding.UTF8.GetByteCount(mapJson);
             int uncompressedSize = CalculateUncompressedSize(data);
             AppendLog($"[overlay/cloud] Size check - Uncompressed: {uncompressedSize} B, Compressed (Polyline): {byteSize} B (Saved {(uncompressedSize - byteSize) * 100.0 / Math.Max(1, uncompressedSize):F1}%)");
 
-            bool hasSupportBenefit = Auth.SupabaseAuthManager.IsPremium;
-            int maxBytes = hasSupportBenefit ? SUPPORTER_MAX_BYTES : FREE_MAX_BYTES;
+            int maxBytes = Auth.SupabaseAuthManager.GetMaxOverlayBytes();
 
             if (uncompressedSize > maxBytes)
             {
                 int kbSize  = uncompressedSize / 1024;
                 int kbLimit = maxBytes / 1024;
                 AppendLog($"[overlay/cloud] Upload blocked: uncompressed overlay is {kbSize} KB, limit is {kbLimit} KB " +
-                          $"({(hasSupportBenefit ? "Supporter tier" : "Free tier")}).");
+                          $"({Auth.SupabaseAuthManager.CurrentTier} tier).");
                 return false;
             }
 
@@ -106,6 +141,21 @@ namespace RustPlusDesk.Services.Data
                 await Auth.SupabaseAuthManager.Client
                     .From<MapOverlayModel>()
                     .Upsert(mapModel, new Postgrest.QueryOptions { OnConflict = "server_key, steam_id" });
+
+                // Decoupled: Upsert base markers to base_markers table
+                var baseJson = JsonSerializer.Serialize(baseIcons, new JsonSerializerOptions { WriteIndented = false });
+                var baseModel = new BaseMarkerModel
+                {
+                    Id         = Guid.NewGuid().ToString(),
+                    ServerKey  = serverKey,
+                    SteamId    = steamId.ToString(),
+                    MarkerData = baseJson,
+                    UpdatedAt  = DateTime.UtcNow
+                };
+
+                await Auth.SupabaseAuthManager.Client
+                    .From<BaseMarkerModel>()
+                    .Upsert(baseModel, new Postgrest.QueryOptions { OnConflict = "server_key, steam_id" });
 
                 // Also keep smart_devices table in sync when overlay contains devices
                 var dtoList = data.Devices ?? new System.Collections.Generic.List<ExportedDeviceDto>();
@@ -136,7 +186,7 @@ namespace RustPlusDesk.Services.Data
             }
         }
 
-        private static int CalculateUncompressedSize(OverlaySaveData data)
+        public static int CalculateUncompressedSize(OverlaySaveData data)
         {
             var uncompressedStrokes = data.Strokes.Select(s => new
             {
@@ -145,11 +195,15 @@ namespace RustPlusDesk.Services.Data
                 Points = s.Points.Select(p => new { X = p.X, Y = p.Y }).ToList()
             }).ToList();
 
+            var nonBaseIcons = data.Icons.Where(icon =>
+                !(icon.IconPath.Contains("base1.png") || icon.IconPath.Contains("base2.png"))
+            ).ToList();
+
             var tempObj = new
             {
                 data.LastUpdatedUnix,
                 Strokes = uncompressedStrokes,
-                data.Icons,
+                Icons = nonBaseIcons,
                 data.Texts,
                 data.Devices
             };
@@ -203,6 +257,37 @@ namespace RustPlusDesk.Services.Data
             {
                 LastFetchHadError = true;
                 AppendLog($"[overlay/cloud/err] FetchOverlay map_overlays failed for {steamId}: {ex.Message}");
+            }
+
+            // --- base_markers (decoupled base markers) ---
+            try
+            {
+                var baseResult = await Auth.SupabaseAuthManager.Client
+                    .From<BaseMarkerModel>()
+                    .Filter("server_key", Postgrest.Constants.Operator.Equals, serverKey)
+                    .Filter("steam_id", Postgrest.Constants.Operator.Equals, steamId.ToString())
+                    .Get();
+
+                var baseRow = baseResult?.Models?.FirstOrDefault();
+                if (baseRow != null && !string.IsNullOrEmpty(baseRow.MarkerData))
+                {
+                    var baseIcons = JsonSerializer.Deserialize<System.Collections.Generic.List<SavedIcon>>(baseRow.MarkerData);
+                    if (baseIcons?.Count > 0)
+                    {
+                        if (data.Icons == null) data.Icons = new System.Collections.Generic.List<SavedIcon>();
+                        data.Icons.AddRange(baseIcons);
+                        
+                        var baseUpdatedUnix = new DateTimeOffset(baseRow.UpdatedAt).ToUnixTimeSeconds();
+                        if (baseUpdatedUnix > data.LastUpdatedUnix)
+                            data.LastUpdatedUnix = baseUpdatedUnix;
+                        foundData = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LastFetchHadError = true;
+                AppendLog($"[overlay/cloud/err] FetchOverlay base_markers failed for {steamId}: {ex.Message}");
             }
 
             // --- smart_devices (device list) ---

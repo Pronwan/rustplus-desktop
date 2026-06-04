@@ -40,11 +40,22 @@ CREATE TABLE IF NOT EXISTS public.smart_devices (
     UNIQUE(server_key, steam_id)
 );
 
+CREATE TABLE IF NOT EXISTS public.base_markers (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    server_key TEXT NOT NULL,
+    steam_id TEXT NOT NULL,
+    marker_data TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    UNIQUE(server_key, steam_id)
+);
+
 -- 2. Enable Row Level Security (RLS)
 
 ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.map_overlays ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.smart_devices ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.base_markers ENABLE ROW LEVEL SECURITY;
 
 -- 3. Define Policies
 
@@ -95,6 +106,23 @@ CREATE POLICY "Devices deletable by all"
     ON public.smart_devices FOR DELETE
     USING (true);
 
+-- base_markers: Open to anon key
+CREATE POLICY "Bases readable by all"
+    ON public.base_markers FOR SELECT
+    USING (true);
+
+CREATE POLICY "Bases writable by all"
+    ON public.base_markers FOR INSERT
+    WITH CHECK (true);
+
+CREATE POLICY "Bases updatable by all"
+    ON public.base_markers FOR UPDATE
+    USING (true);
+
+CREATE POLICY "Bases deletable by all"
+    ON public.base_markers FOR DELETE
+    USING (true);
+
 -- 4. Trigger for updated_at
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
@@ -110,6 +138,10 @@ FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 
 CREATE TRIGGER update_smart_devices_updated_at
 BEFORE UPDATE ON public.smart_devices
+FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+
+CREATE TRIGGER update_base_markers_updated_at
+BEFORE UPDATE ON public.base_markers
 FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 
 -- 5. Protect Admin Fields Trigger
