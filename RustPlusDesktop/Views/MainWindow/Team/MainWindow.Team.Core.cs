@@ -130,6 +130,7 @@ public partial class MainWindow
 
     private readonly Dictionary<ulong, string> _steamNames = new();
     private DateTime _lastTeamRefresh = DateTime.MinValue;
+    private string? _lastCloudPresenceSignature;
 
     private void StartTeamPolling()
     {
@@ -145,11 +146,15 @@ public partial class MainWindow
 
     private void StopTeamPolling()
     {
+        NotifyTeamFeatureServerDisconnected();
+
         var t = _teamTimer;
         if (t == null) return;
         t.Tick -= TeamTimer_Tick;
         t.Stop();
         _teamTimer = null;
+        _lastCloudPresenceSignature = null;
+        ResetTeamFeatureMasterSyncState();
     }
 
     private int _teamPollBusy = 0;
@@ -189,6 +194,7 @@ public partial class MainWindow
                     {
                         _vm.MyAvatar = vm.Avatar;
                     }
+                    RedrawDeathPins();
                 });
 
                 _avatarNextTry.Remove(vm.SteamId);
@@ -263,11 +269,40 @@ public partial class MainWindow
             for (int i = TeamMembers.Count - 1; i >= 0; i--)
                 if (TeamMembers[i].MissingCount > 2)
                     TeamMembers.RemoveAt(i);
+
+            var cloudTeamMembers = TeamMembers.Select(t => new RustPlusDesk.Services.Auth.SupabaseAuthManager.CloudTeamMemberDto
+                {
+                    SteamId = t.SteamId.ToString(),
+                    Name = t.Name,
+                    IsOnline = t.IsOnline,
+                    IsDead = t.IsDead,
+                    IsLeader = t.IsLeader
+                }).ToList();
+
+            var serverKey = GetServerKey();
+            var serverName = _vm.Selected?.Name;
+            var cloudPresenceSignature = BuildCloudPresenceSignature(serverKey, serverName, cloudTeamMembers);
+            if (cloudPresenceSignature != _lastCloudPresenceSignature)
+            {
+                _lastCloudPresenceSignature = cloudPresenceSignature;
+                _ = RustPlusDesk.Services.Auth.SupabaseAuthManager.UpdatePresenceAsync(
+                    serverKey,
+                    serverName,
+                    cloudTeamMembers);
+            }
+
+            if (ShouldSyncTeamFeatureMasterForCurrentState(cloudPresenceSignature))
+                _ = SyncTeamFeatureMasterAsync();
         }
         catch (Exception ex)
         {
             AppendLog("[team] " + ex.Message);
         }
+
+        await Dispatcher.InvokeAsync(() =>
+        {
+            RedrawDeathPins();
+        });
 
         if (_overlayToolsVisible)
         {
@@ -276,6 +311,24 @@ public partial class MainWindow
                 RebuildOverlayTeamBar();
             });
         }
+    }
+
+    private static string BuildCloudPresenceSignature(
+        string? serverKey,
+        string? serverName,
+        IReadOnlyCollection<RustPlusDesk.Services.Auth.SupabaseAuthManager.CloudTeamMemberDto> teamMembers)
+    {
+        var team = string.Join(";",
+            teamMembers
+                .OrderBy(t => t.SteamId, StringComparer.Ordinal)
+                .Select(t => string.Join("|",
+                    t.SteamId,
+                    t.Name ?? "",
+                    t.IsOnline ? "1" : "0",
+                    t.IsDead ? "1" : "0",
+                    t.IsLeader ? "1" : "0")));
+
+        return $"{serverKey ?? ""}#{serverName ?? ""}#{team}";
     }
 
     private async Task AnnouncePresenceChangeAsync(TeamMemberVM vm, (bool online, bool dead) prev, (bool online, bool dead) now)
@@ -325,9 +378,52 @@ public partial class MainWindow
                     }
                 }
 
-                if (_showDeathMarkers && now.dead && px.HasValue && py.HasValue)
+                if (now.dead && px.HasValue && py.HasValue)
                 {
-                    PlaceOrMoveDeathPin(vm.SteamId, px.Value, py.Value, vm.Name);
+                    if (_vm?.Selected != null)
+                    {
+                        var list = _vm.Selected.DeathMarkers;
+                        bool isSelf = vm.SteamId == _mySteamId;
+
+                        var newMarker = new Models.DeathMarkerData
+                        {
+                            Id = Guid.NewGuid(),
+                            SteamId = vm.SteamId,
+                            OriginalName = vm.Name,
+                            TimeOfDeath = DateTime.Now,
+                            X = px.Value,
+                            Y = py.Value
+                        };
+                        
+                        list.Add(newMarker);
+                        
+                        // Apply limits
+                        int selfMax = TrackingService.MaxSelfDeathMarkers;
+                        int teamMax = TrackingService.MaxTeamDeathMarkers;
+                        
+                        var myMarkers = list.Where(m => m.SteamId == _mySteamId).OrderByDescending(m => m.TimeOfDeath).ToList();
+                        while (myMarkers.Count > selfMax)
+                        {
+                            var oldest = myMarkers.Last();
+                            list.Remove(oldest);
+                            myMarkers.Remove(oldest);
+                        }
+
+                        var teamGroups = list.Where(m => m.SteamId != _mySteamId).GroupBy(m => m.SteamId);
+                        foreach (var group in teamGroups)
+                        {
+                            var teamMarkers = group.OrderByDescending(m => m.TimeOfDeath).ToList();
+                            while (teamMarkers.Count > teamMax)
+                            {
+                                var oldest = teamMarkers.Last();
+                                list.Remove(oldest);
+                                teamMarkers.Remove(oldest);
+                            }
+                        }
+
+                        _vm.Save();
+                        RedrawDeathPins();
+                    }
                 }
             }
         }

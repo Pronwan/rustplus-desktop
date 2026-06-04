@@ -1,0 +1,281 @@
+<UserControl
+    x:Class="RustPlusDesk.Views.PlayersTabContent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <TabControl
+        Margin="0,10,0,0"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Background="Transparent"
+        BorderThickness="0">
+        <TabControl.Template>
+            <ControlTemplate TargetType="{x:Type TabControl}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TabPanel
+                        Grid.Row="0" Grid.Column="0"
+                        Margin="0"
+                        Panel.ZIndex="1"
+                        IsItemsHost="True" />
+                    <ui:Button
+                        Grid.Row="0" Grid.Column="1"
+                        Margin="0,0,12,0"
+                        Padding="8,4"
+                        VerticalAlignment="Center"
+                        Appearance="Secondary"
+                        Click="BtnHowToTrack_Click"
+                        ToolTip="{DynamicResource LearnHowTrackingWorks}"
+                        Icon="{ui:SymbolIcon Symbol=QuestionCircle24}"
+                        Content="{DynamicResource HowToTrack}" />
+                    <ContentPresenter
+                        Grid.Row="1" Grid.ColumnSpan="2"
+                        Margin="0,8,0,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        ContentSource="SelectedContent" />
+                </Grid>
+            </ControlTemplate>
+        </TabControl.Template>
+        <TabItem Header="{DynamicResource OnlineTab}" Style="{StaticResource PrettyTabItem}">
+            <Border
+                Padding="12"
+                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            Text="{DynamicResource OnlinePlayers}" />
+                        <ui:Button
+                            Grid.Column="2"
+                            Padding="8,4"
+                            Appearance="Secondary"
+                            Click="BtnShowOnline_Click"
+                            Content="{DynamicResource Refresh}"
+                            Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" />
+                        <ui:Button
+                            x:Name="BtnPopoutPlayers"
+                            Grid.Column="3"
+                            Margin="4,0,0,0"
+                            Padding="8,4"
+                            Appearance="Secondary"
+                            Click="BtnPopoutPlayers_Click"
+                            ToolTip="{DynamicResource OpenPlayersSeparateWindow}"
+                            Content="{DynamicResource Popout}" />
+                    </Grid>
+                    <DockPanel x:Name="PnlManualTrack" x:FieldModifier="public" Grid.Row="1" Margin="0,0,0,8">
+                        <ui:Button
+                            x:Name="BtnAddManual"
+                            x:FieldModifier="public"
+                            Margin="4,0,0,0"
+                            Padding="8,4"
+                            Appearance="Primary"
+                            Click="BtnAddManual_Click"
+                            Content="{DynamicResource Track}"
+                            DockPanel.Dock="Right" />
+                        <ui:TextBox
+                            x:Name="TxtManualBMId"
+                            x:FieldModifier="public"
+                            PlaceholderText="{DynamicResource ManualTrackPlaceholder}" />
+                    </DockPanel>
+                    <ui:TextBox
+                        x:Name="TxtOnlineFilter"
+                        x:FieldModifier="public"
+                        Grid.Row="2"
+                        Margin="0,0,0,8"
+                        PlaceholderText="{DynamicResource FilterPlayersPlaceholder}"
+                        TextChanged="TxtOnlineFilter_TextChanged"
+                        Visibility="Collapsed" />
+                    <Grid
+                        x:Name="PnlOnlineStatus"
+                        x:FieldModifier="public"
+                        Grid.Row="3"
+                        Margin="20"
+                        VerticalAlignment="Center"
+                        Visibility="Collapsed"
+                        Background="Transparent">
+                        <Grid.ContextMenu>
+                            <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                <MenuItem Click="Server_Delete_Click" Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                    <MenuItem.Header>
+                                        <TextBlock>
+                                            <Run Text="🗑️ " /><Run Text="{DynamicResource DeleteServerEllipsis}" />
+                                        </TextBlock>
+                                    </MenuItem.Header>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Grid.ContextMenu>
+                        <StackPanel>
+                            <ui:ProgressRing
+                                x:Name="PbOnlineLoading"
+                                x:FieldModifier="public"
+                                Width="32"
+                                Height="32"
+                                Margin="0,0,0,12"
+                                IsIndeterminate="True" />
+                            <TextBlock
+                                x:Name="TxtOnlinePlayersStatus"
+                                x:FieldModifier="public"
+                                HorizontalAlignment="Center"
+                                FontSize="12"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="{DynamicResource LoadingPlayers}"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Grid>
+                    <ListBox
+                        x:Name="ListOnlinePlayers"
+                        x:FieldModifier="public"
+                        Grid.Row="3"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                        <Ellipse
+                                            x:Name="StatusDot"
+                                            Width="8"
+                                            Height="8"
+                                            Margin="0,0,8,0"
+                                            VerticalAlignment="Center"
+                                            Fill="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                                        <TextBlock
+                                            MaxWidth="160"
+                                            VerticalAlignment="Center"
+                                            FontSize="13"
+                                            FontWeight="SemiBold"
+                                            Text="{Binding Name}"
+                                            TextTrimming="CharacterEllipsis"
+                                            ToolTip="{Binding Name}" />
+                                    </StackPanel>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="0,0,8,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="11"
+                                        Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                        Text="{Binding PlayTimeStr}" />
+                                    <ui:Button
+                                        x:Name="BtnAction"
+                                        Grid.Column="3"
+                                        Width="60"
+                                        Margin="0"
+                                        Padding="6,2"
+                                        Appearance="Secondary"
+                                        Click="BtnTrackPlayer_Click"
+                                        Content="{DynamicResource Track}"
+                                        FontSize="11"
+                                        Tag="{Binding}" />
+                                </Grid>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsTracked}" Value="True">
+                                        <Setter TargetName="StatusDot" Property="Fill" Value="#FFD166" />
+                                        <Setter TargetName="BtnAction" Property="Content" Value="Details" />
+                                        <Setter TargetName="BtnAction" Property="Appearance" Value="Primary" />
+                                    </DataTrigger>
+                                    <Trigger Property="IsMouseOver" Value="False">
+                                        <Setter TargetName="BtnAction" Property="Opacity" Value="0.6" />
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="BtnAction" Property="Opacity" Value="1" />
+                                    </Trigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+        </TabItem>
+        <TabItem Header="{DynamicResource TrackedTab}" Style="{StaticResource PrettyTabItem}">
+            <Border
+                Padding="12"
+                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            Text="{DynamicResource TrackedPlayers}" />
+                        <ui:Button
+                            Grid.Column="1"
+                            Padding="8,4"
+                            Appearance="Secondary"
+                            Click="BtnManageGroups_Click"
+                            Content="{DynamicResource ManageGroups}"
+                            Icon="Group24" />
+                    </Grid>
+                    <ui:TextBox
+                        x:Name="TxtTrackedFilter"
+                        x:FieldModifier="public"
+                        Grid.Row="1"
+                        Margin="0,0,0,8"
+                        PlaceholderText="{DynamicResource FilterPlayersPlaceholder}"
+                        TextChanged="TxtTrackedFilter_TextChanged" />
+                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                        <StackPanel x:Name="ListTrackedPlayers" x:FieldModifier="public" />
+                    </ScrollViewer>
+                    <ui:Button
+                        x:Name="BtnViewTracking"
+                        Grid.Row="3"
+                        Margin="0,8,0,0"
+                        HorizontalAlignment="Stretch"
+                        Appearance="Primary"
+                        Click="BtnViewAllAnalysis_Click"
+                        Content="{DynamicResource ViewFullAnalysisReport}"
+                        Icon="DataHistogram24" />
+                </Grid>
+            </Border>
+        </TabItem>
+    </TabControl>
+</UserControl>

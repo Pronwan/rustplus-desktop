@@ -327,9 +327,66 @@ public partial class MainWindow
     {
         _showDeathMarkers = ChkDeathMarkers.IsChecked == true;
         if (_vm != null && !_vm.IsInitializing) TrackingService.MapShowDeathTags = _showDeathMarkers;
-        if (!_showDeathMarkers) ClearAllDeathPins();
+        
+        RedrawDeathPins();
     }
 
+    private void BtnWipeDeathMarkers_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm?.Selected != null)
+        {
+            _vm.Selected.DeathMarkers.Clear();
+            _vm.Save();
+            RedrawDeathPins();
+        }
+    }
+
+    private void BtnDeathMarkerSettings_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new Views.Windows.DeathMarkerSettingsDialog(TrackingService.MaxSelfDeathMarkers, TrackingService.MaxTeamDeathMarkers);
+        dlg.Owner = this;
+        if (dlg.ShowDialog() == true)
+        {
+            TrackingService.MaxSelfDeathMarkers = dlg.MaxSelf;
+            TrackingService.MaxTeamDeathMarkers = dlg.MaxTeam;
+            
+            if (_vm?.Selected != null)
+            {
+                var mySid = TrackingService.SteamId64;
+                var markers = _vm.Selected.DeathMarkers;
+                
+                if (dlg.WipeAll)
+                {
+                    markers.Clear();
+                }
+                else if (!string.IsNullOrEmpty(mySid) && ulong.TryParse(mySid, out var sidNum))
+                {
+                    var myMarkers = markers.Where(m => m.SteamId == sidNum).OrderByDescending(m => m.TimeOfDeath).ToList();
+                    while (myMarkers.Count > TrackingService.MaxSelfDeathMarkers)
+                    {
+                        var oldest = myMarkers.Last();
+                        markers.Remove(oldest);
+                        myMarkers.Remove(oldest);
+                    }
+                }
+                
+                var teamGroups = markers.Where(m => m.SteamId.ToString() != mySid).GroupBy(m => m.SteamId).ToList();
+                foreach (var group in teamGroups)
+                {
+                    var teamMarkers = group.OrderByDescending(m => m.TimeOfDeath).ToList();
+                    while (teamMarkers.Count > TrackingService.MaxTeamDeathMarkers)
+                    {
+                        var oldest = teamMarkers.Last();
+                        markers.Remove(oldest);
+                        teamMarkers.Remove(oldest);
+                    }
+                }
+                
+                _vm.Save();
+                RedrawDeathPins();
+            }
+        }
+    }
     private void RefreshAllOverlayScales()
     {
         foreach (var fe in _dynEls.Values)
@@ -341,19 +398,20 @@ public partial class MainWindow
         RefreshShopIconScales();
     }
 
-    private FrameworkElement BuildDeathPin(ulong sid, string name, ImageSource? avatarFromCaller = null)
+    private FrameworkElement BuildDeathPin(Guid id, ulong steamId, string label)
     {
-        var avatar = GetTeamAvatar(sid);
+        var avatar = GetTeamAvatar(steamId);
 
         var root = new Grid
         {
             Width = PinW,
             Height = PinH,
+            Background = Brushes.Transparent,
 
             Tag = new PlayerMarkerTag
             {
-                SteamId = sid,
-                Name = name,
+                SteamId = steamId,
+                Name = label,
                 IsDeathPin = true,
                 ScaleExp = 0.8,
                 ScaleBaseMult = 0.72,
@@ -410,55 +468,129 @@ public partial class MainWindow
         avatarEl.Margin = new Thickness((PinW - Circle) / 2.0, CircleTop, 0, 0);
         root.Children.Add(avatarEl);
 
-        ToolTipService.SetToolTip(root, $"{name} (death)");
+        ToolTipService.SetToolTip(root, label);
+        
+        var cm = new ContextMenu { Style = TryFindResource("DarkContextMenu") as Style };
+        var miRename = new MenuItem { Header = Properties.Resources.RenameDeathMarker ?? "Umbenennen", Tag = id };
+        miRename.Click += RenameDeathMarker_Click;
+        cm.Items.Add(miRename);
+
+        var miDelete = new MenuItem { Header = Properties.Resources.DeleteDeathMarker ?? "Löschen", Tag = id, Foreground = Brushes.Red };
+        miDelete.Click += DeleteDeathMarker_Click;
+        cm.Items.Add(miDelete);
+
+        root.ContextMenu = cm;
+        root.MouseRightButtonDown += (s, e) => 
+        {
+            cm.PlacementTarget = root;
+            cm.IsOpen = true;
+            e.Handled = true;
+        };
+        // MUST allow hit testing for context menu to work
+        root.IsHitTestVisible = true;
+
         ApplyCurrentOverlayScale(root);
         return root;
     }
 
-    private void PlaceDeathPin(TeamMemberVM vm)
+    private void RedrawDeathPins()
     {
-        if (!_showDeathMarkers) return;
-        if (!(vm.X.HasValue && vm.Y.HasValue)) return;
-
-        var px = WorldToImagePx(vm.X.Value, vm.Y.Value);
-        var el = BuildDeathPin(vm.SteamId, vm.Name, GetTeamAvatar(vm.SteamId));
-
-        if (_deathPins.TryGetValue(vm.SteamId, out var old))
+        ClearAllDeathPins();
+        
+        var hasMarkers = _vm?.Selected?.DeathMarkers?.Count > 0;
+        if (WipeDeathMarkersOverlay != null)
         {
-            Overlay.Children.Remove(old);
-            _deathPins.Remove(vm.SteamId);
+            WipeDeathMarkersOverlay.Visibility = _showDeathMarkers && hasMarkers ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        Overlay.Children.Add(el);
-        Panel.SetZIndex(el, 805);
-        ApplyCurrentOverlayScale(el);
+        if (!_showDeathMarkers || _vm?.Selected == null) return;
+        var groups = _vm.Selected.DeathMarkers.GroupBy(m => m.SteamId);
+        foreach (var group in groups)
+        {
+            var sorted = group.OrderBy(m => m.TimeOfDeath).ToList();
+            for (int i = 0; i < sorted.Count; i++)
+            {
+                var m = sorted[i];
+                var px = WorldToImagePx(m.X, m.Y);
+                int number = i + 1;
+                
+                string displayName = string.IsNullOrEmpty(m.CustomName) ? m.OriginalName : m.CustomName;
+                string label = $"{number}. {displayName} ({m.TimeOfDeath:HH:mm})";
+                
+                var el = BuildDeathPin(m.Id, m.SteamId, label);
+                _deathPins[m.Id] = el;
+                Overlay.Children.Add(el);
+                Panel.SetZIndex(el, 805);
+                ApplyCurrentOverlayScale(el);
+                var cx = px.X - (PinW / 2.0);
+                var cy = px.Y - PinH;
+                Canvas.SetLeft(el, cx);
+                Canvas.SetTop(el, cy);
+            }
+        }
+    }
 
-        var cx = px.X - PinW / 2.0;
-        var cy = px.Y - (CircleTop + Circle / 2.0);
-        Canvas.SetLeft(el, cx);
-        Canvas.SetTop(el, cy);
+    private void RenameDeathMarker_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is Guid id && _vm?.Selected != null)
+        {
+            var marker = _vm.Selected.DeathMarkers.FirstOrDefault(m => m.Id == id);
+            if (marker != null)
+            {
+                var prompt = new Views.Windows.PromptDialog(
+                    Properties.Resources.RenameDeathMarker ?? "Rename Death Marker", 
+                    string.IsNullOrEmpty(marker.CustomName) ? marker.OriginalName : marker.CustomName)
+                {
+                    Owner = this
+                };
+                if (prompt.ShowDialog() == true)
+                {
+                    marker.CustomName = string.IsNullOrWhiteSpace(prompt.InputText) ? null : prompt.InputText;
+                    _vm.Save();
+                    RedrawDeathPins();
+                }
+            }
+        }
+    }
 
-        _deathPins[vm.SteamId] = el;
+    private void DeleteDeathMarker_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is Guid id && _vm?.Selected != null)
+        {
+            var marker = _vm.Selected.DeathMarkers.FirstOrDefault(m => m.Id == id);
+            if (marker != null)
+            {
+                _vm.Selected.DeathMarkers.Remove(marker);
+                _vm.Save();
+                RedrawDeathPins();
+            }
+        }
+    }
+
+    private void PlaceDeathPin(TeamMemberVM vm)
+    {
+        // deprecated, unused
     }
 
     private void PlaceOrMoveDeathPin(ulong sid, double worldX, double worldY, string name)
     {
-        var px = WorldToImagePx(worldX, worldY);
-        var el = _deathPins.TryGetValue(sid, out var exist) ? exist : null;
-
-        if (el == null)
+        // This is called by legacy map code. We can convert it into a real marker.
+        if (_vm?.Selected != null)
         {
-            el = BuildDeathPin(sid, name);
-            _deathPins[sid] = el;
-            Overlay.Children.Add(el);
-            Panel.SetZIndex(el, 805);
-            ApplyCurrentOverlayScale(el);
+            var list = _vm.Selected.DeathMarkers;
+            var newMarker = new Models.DeathMarkerData
+            {
+                Id = Guid.NewGuid(),
+                SteamId = sid,
+                OriginalName = name,
+                TimeOfDeath = DateTime.Now,
+                X = worldX,
+                Y = worldY
+            };
+            list.Add(newMarker);
+            _vm.Save();
+            Dispatcher.InvokeAsync(() => RedrawDeathPins());
         }
-
-        var cx = px.X - (PinW / 2.0);
-        var cy = px.Y - PinH;
-        Canvas.SetLeft(el, cx);
-        Canvas.SetTop(el, cy);
     }
 
     private void ClearAllDeathPins()

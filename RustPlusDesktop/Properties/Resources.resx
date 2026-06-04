@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1559,22 +1559,22 @@ Download and install now?</value>
     <value>Localization, UI Modernization &amp; Storage</value>
   </data>
   <data name="FeatureLanguage" xml:space="preserve">
-    <value>Dynamic Locale Switching</value>
+    <value>Custom Alerts</value>
   </data>
   <data name="FeatureLanguageDesc" xml:space="preserve">
-    <value> — 30+ languages to pick</value>
+    <value> - !timer [name],[minutes]</value>
   </data>
   <data name="FeatureChatCommands" xml:space="preserve">
-    <value>Chat Commands UI</value>
+    <value>Mini Map</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> — Isolated view for clean look</value>
+    <value> - Works when minimized</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
-    <value>New Settings Overlay</value>
+    <value>Shop Overhaul</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
-    <value> — Clean sidebar for all settings</value>
+    <value> - New Shop UI</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
     <value>BattleMetrics Tracking Removed</value>
@@ -1804,15 +1804,325 @@ Are you sure you want to continue?</value>
     <value>Turn off now</value>
   </data>
   <data name="MigrationAlertCheckDesc" xml:space="preserve">
-    <value>Smart Alert behaviors have changed (including the new Audio Loop feature), and Chat Alerts have been updated. Please ensure your Smart Alert preferences (Audio/Popups) and Chat Alert configurations are still set correctly!</value>
+    <value>Check your Chat-Alert settings for the new custom timers. Also, death markers are now always saved locally. Minimap now also updates while minimized.</value>
   </data>
   <data name="MigrationAlertCheckTitle" xml:space="preserve">
-    <value>Please verify your Alert Settings</value>
+    <value>Please note</value>
   </data>
   <data name="FeatureAudioLoopTitle" xml:space="preserve">
-    <value>Audio Alert Loop: </value>
+    <value>Death Marker</value>
   </data>
   <data name="FeatureAudioLoopDesc" xml:space="preserve">
-    <value>Loop and Stop your Alerts.</value>
+    <value> - Custom markers for team</value>
   </data>
+  <data name="DeleteDeathMarker" xml:space="preserve">
+    <value>Delete Death Marker</value>
+  </data>
+  <data name="RenameDeathMarker" xml:space="preserve">
+    <value>Rename Death Marker</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Death" xml:space="preserve">
+    <value>Death</value>
+  </data>
+  <data name="Markers" xml:space="preserve">
+    <value>Markers:</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>Time of Death</value>
+  </data>
+  <data name="WipeDeathMarkers" xml:space="preserve">
+    <value>Wipe Death Markers</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Accept</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>Custom Timer</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>Timer {0} created for {1}h {2}m {3}s</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>Custom Timer</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>Active Timers</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>Add Timer</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>Timer Name</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>Chat Command:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>Use chat command below to check status.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>Maximum of 5 timers allowed.</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Please enter a timer duration (hours, minutes, or seconds).</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Timer name must start with a letter.</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Timer Alerts</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value> - 60,30,10,3 m before end</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Translation Consent</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>By clicking Accept, the contents of the patch notes will be sent to Google Translate (USA) for translation. Do you accept?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Google Translate API Terms</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Translate via Google</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Privacy &amp; Cloud Sync</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>To enable live syncing for map overlays and smart devices, data must be sent to our secure cloud. We also collect anonymized usage telemetry to improve features.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Accept &amp; Enable Cloud</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Decline Cloud</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Supporter Benefits</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>More than 10 devices are available locally or from imports. Free cloud sync keeps the first 10 devices; Supporters can sync unlimited devices.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>This overlay is larger than the free cloud sync limit. Supporters get 10x higher overlay sizes, more map markers and more screenshots.</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Connect Discord for Supporter Benefits</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Disconnect Discord</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Connecting...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Cloud Sync &amp; Live Upload</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Live upload and synchronize smart devices and map overlays securely in the cloud.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Supporter Settings</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>These features are exclusively available to our Supporters and Developers via Discord login.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Advanced Discord Integration (Webhooks, Audio Alerts)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Telegram Alerts Integration</value>
+  </data>
+  <data name="PremiumStopSync">
+    <value>Stop Sync</value>
+  </data>
+  <data name="PremiumStayFree">
+    <value>Stay Free</value>
+  </data>
+  <data name="PremiumSupportNow">
+    <value>Support Now</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Overlay Synced {0} KB {1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>10 Devices max in Free Tier</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>{0} devices synced {1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Overlay Size too big for sync ({0} KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Activate Cloud-Sync</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-Sync active</value>
+  </data>
+  <data name="CloudAccountTitle" xml:space="preserve">
+    <value>Cloud Account</value>
+  </data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve">
+    <value>Cloud Account Login</value>
+  </data>
+  <data name="EmailSignInTab" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="EmailSignUpTab" xml:space="preserve">
+    <value>Create account</value>
+  </data>
+  <data name="EmailAddressLabel" xml:space="preserve">
+    <value>Email address</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve">
+    <value>Password (min. 6 characters)</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="EmailSignInButton" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="EmailCreateAccountButton" xml:space="preserve">
+    <value>Create account</value>
+  </data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve">
+    <value>Confirmation email sent!</value>
+  </data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve">
+    <value>Click the link in your email. The app checks automatically every few seconds...</value>
+  </data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve">
+    <value>Waiting for confirmation...</value>
+  </data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
+    <value>Waiting for confirmation... ({0}s)</value>
+  </data>
+  <data name="EmailProblemsPrefix" xml:space="preserve">
+    <value>Problems? </value>
+  </data>
+  <data name="EmailOpenInBrowser" xml:space="preserve">
+    <value>Open in browser</value>
+  </data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve">
+    <value>Please enter email and password.</value>
+  </data>
+  <data name="EmailRequiredError" xml:space="preserve">
+    <value>Please enter an email address.</value>
+  </data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve">
+    <value>Password must be at least 6 characters long.</value>
+  </data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
+    <value>The passwords do not match.</value>
+  </data>
+  <data name="EmailSigningInStatus" xml:space="preserve">
+    <value>Signing in...</value>
+  </data>
+  <data name="EmailSignedInSuccess" xml:space="preserve">
+    <value>Successfully signed in!</value>
+  </data>
+  <data name="EmailSignInFailed" xml:space="preserve">
+    <value>Sign-in failed.</value>
+  </data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve">
+    <value>Registration running...</value>
+  </data>
+  <data name="EmailRegistrationFailed" xml:space="preserve">
+    <value>Registration failed.</value>
+  </data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve">
+    <value>Timeout: The email was not confirmed within 5 minutes. You can sign in later.</value>
+  </data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve">
+    <value>Invalid credentials. Please check your email and password.</value>
+  </data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
+    <value>Invalid credentials.</value>
+  </data>
+  <data name="EmailNotConfirmedError" xml:space="preserve">
+    <value>Email address not confirmed yet. Please click the confirmation link in your inbox.</value>
+  </data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve">
+    <value>This email address is already registered. Please sign in.</value>
+  </data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve">
+    <value>Disconnect Discord</value>
+  </data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve">
+    <value>Discord connected - Tier: {0}</value>
+  </data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve">
+    <value>Email connected: {0} - Tier: {1}</value>
+  </data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve">
+    <value>Not connected - sign in to use Cloud Sync and backups</value>
+  </data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve">
+    <value>Disconnecting...</value>
+  </data>
+  <data name="AuthConnectingStatus" xml:space="preserve">
+    <value>Connecting...</value>
+  </data>
+  <data name="EmailAccountButton" xml:space="preserve">
+    <value>Email / Account</value>
+  </data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve">
+    <value>Sign out of the email account?</value>
+  </data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve">
+    <value>Cloud Sync</value>
+  </data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve">
+    <value>Account required for Cloud Sync</value>
+  </data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve">
+    <value>Cloud services like synchronization and backup storage require a free account. Choose email or Discord to continue syncing your devices, overlays and backups.</value>
+  </data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve">
+    <value>Sync via email</value>
+  </data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
+    <value>Sync via Discord</value>
+  </data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
+    <value>No thanks</value>
+  </data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve"><value>Sync limit reached</value></data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve"><value>Base limit reached (Free: max 2 bases, Premium: max 10 bases)</value></data>
+  <data name="BaseAddScreenshot" xml:space="preserve"><value>Add Screenshot</value></data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve"><value>Drag &amp; Drop an image here</value></data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve"><value>or press CTRL+V to paste a screenshot</value></data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve"><value>No image found in clipboard.</value></data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve"><value>Paste Error</value></data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve"><value>Failed to paste image: {0}</value></data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve"><value>Failed to load image file: {0}</value></data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve"><value>Compression Error</value></data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve"><value>Error compressing image: {0}</value></data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve"><value>Resolution: {0}x{1} | Size: {2} KB (Quality 25%)</value></data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve"><value>Edit Base Note</value></data>
+  <data name="BaseNoteTitle" xml:space="preserve"><value>Base Note</value></data>
+  <data name="BaseAddNote" xml:space="preserve"><value>Add Note</value></data>
+  <data name="BaseEditNote" xml:space="preserve"><value>Edit Note</value></data>
+  <data name="BaseDeleteNote" xml:space="preserve"><value>Delete Note</value></data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve"><value>Delete Screenshot {0}</value></data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve"><value>Add Screenshot {0} (Premium required)</value></data>
+  <data name="BaseNoNotesYet" xml:space="preserve"><value>No notes added yet.</value></data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve"><value>No screenshots added yet</value></data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve"><value>Chat Master online</value></data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve"><value>{0} is controlling Chat Alerts and Chat Commands for this team.</value></data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve"><value>Chat Master {0} online. Chat Alerts and Chat Commands are paused on this device.</value></data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve"><value>You are Chat Master</value></data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve"><value>This device is now controlling Chat Alerts and Chat Commands for your team.</value></data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve"><value>Accept</value></data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve"><value>Deny</value></data>
 </root>

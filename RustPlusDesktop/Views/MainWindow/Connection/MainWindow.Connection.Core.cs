@@ -19,6 +19,8 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
+    private bool _isSoftConnecting = false;
+
     private async Task EnsureWebView2Async()
     {
         var dataFolder = Path.Combine(
@@ -129,6 +131,13 @@ public partial class MainWindow
     private async Task PerformConnectDevicesOnlyAsync(ServerProfile profile)
     {
         if (profile == null) return;
+        _isSoftConnecting = true;
+        Dispatcher.Invoke(() => {
+            UiBtnFullConnect.IsEnabled = false;
+            UiBtnConnect.IsEnabled = false;
+            MapUiBtnFullConnect.IsEnabled = false;
+            MapUiBtnConnect.IsEnabled = false;
+        });
         try
         {
             AppendLog($"Soft-connecting to {profile.Name} (Devices Only)...");
@@ -150,8 +159,8 @@ public partial class MainWindow
                     await real.PrimeSubscriptionsAsync(allIds);
                 }
                 
-                // Refresh device status in background
-                _ = RefreshAllDevicesStatusAsync(maxRetries: 1);
+                // Refresh device status and await it to prevent overlapping connections/requests
+                await RefreshAllDevicesStatusAsync(maxRetries: 1);
             }
             
             // Start the server status loop (players/time) even for soft connect
@@ -172,19 +181,33 @@ public partial class MainWindow
         {
             AppendLog($"Soft-connect failed: {ex.Message}");
         }
+        finally
+        {
+            _isSoftConnecting = false;
+            Dispatcher.Invoke(() => {
+                UiBtnFullConnect.IsEnabled = true;
+                UiBtnConnect.IsEnabled = true;
+                MapUiBtnFullConnect.IsEnabled = true;
+                MapUiBtnConnect.IsEnabled = true;
+            });
+        }
     }
 
     private async Task PollServerStatusLoopAsync(CancellationToken ct)
     {
+        int serverStatusFailCount = 0;
         while (!ct.IsCancellationRequested)
         {
+            bool success = false;
             try
             {
-                if (_rust is RustPlusClientReal real)
+                if (_rust is RustPlusClientReal real && _vm.Selected != null && _vm.Selected.IsConnected)
                 {
                     var st = await real.GetServerStatusAsync(ct);
                     if (st != null && st.Players >= 0)
                     {
+                        success = true;
+                        serverStatusFailCount = 0;
                         _vm.ServerPlayers = $"{st.Players}/{st.MaxPlayers}";
                         _vm.ServerQueue = (st.Queue >= 0) ? st.Queue.ToString() : "0";
                         
@@ -195,45 +218,133 @@ public partial class MainWindow
             }
             catch { /* Keep last known values on error */ }
 
+            if (_vm.Selected != null && _vm.Selected.IsConnected)
+            {
+                if (!success)
+                {
+                    serverStatusFailCount++;
+                    AppendLog($"[status-poll] Failed to get server status ({serverStatusFailCount}/5).");
+
+                    if (serverStatusFailCount >= 5)
+                    {
+                        serverStatusFailCount = 0;
+                        if (!_isReconnecting && !_isSoftConnecting && !(_vm?.IsBusy == true))
+                        {
+                            AppendLog("[status-poll] Connection seems dead (status failed 5 times). Refreshing connection silently...");
+                            
+                            _ = Dispatcher.InvokeAsync(async () =>
+                            {
+                                try
+                                {
+                                    await PerformConnectAsync(true, showBusy: false);
+                                    AppendLog("[status-poll] Silent connection refresh complete.");
+                                }
+                                catch (Exception ex)
+                                {
+                                    AppendLog($"[status-poll] Silent connection refresh failed: {ex.Message}");
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+            else
+            {
+                serverStatusFailCount = 0;
+            }
+
             try { await Task.Delay(TimeSpan.FromSeconds(10), ct); } catch { }
         }
     }
 
-    private async Task<bool> PerformConnectAsync(bool silent)
+    private async Task<bool> PerformConnectAsync(bool silent, bool showBusy = true)
     {
+        _ownCloudRestoreReady = false;
+
+        if (_isSoftConnecting)
+        {
+            AppendLog("[connect] Soft-connect in progress, waiting for completion to prevent socket conflict...");
+            int waitMs = 0;
+            while (_isSoftConnecting && waitMs < 8000)
+            {
+                await Task.Delay(250);
+                waitMs += 250;
+            }
+            if (_isSoftConnecting)
+            {
+                AppendLog("[connect] Soft-connect is taking too long. Continuing full connect anyway.");
+            }
+            else
+            {
+                AppendLog("[connect] Soft-connect finished. Proceeding with full connect.");
+            }
+        }
+
+        bool alreadySoftConnected = _vm.Selected != null && _vm.Selected.IsConnected && !_vm.Selected.IsFullConnected;
+
         if (!silent)
         {
-            await HardResetAsync(reconnect: false);
-            _shopTimer?.Stop();
-            _shopTimer = null;
-            StopDynPolling();
-            StopTeamPolling();
-            TeamMembers.Clear();
+            if (alreadySoftConnected)
+            {
+                // Soft connect exists: Reset UI/polling states but do NOT call HardResetAsync (which disconnects)
+                _shopTimer?.Stop();
+                _shopTimer = null;
+                StopDynPolling();
+                StopTeamPolling();
+                TeamMembers.Clear();
 
-            _avatarCache.Clear();
-            _lastPresence.Clear();
-            ClearAllDeathPins();
-            ClearAllToggleBusy();
-            _lastShops.Clear();
-            _shopLifetimes.Clear();
-            _knownShopIds.Clear();
-            _initialShopSnapshotTimeUtc = DateTime.MinValue;
-            _alertsNeedRebaseline = true;
-            _lastChatSendUtc = DateTime.MinValue;
+                _avatarCache.Clear();
+                _lastPresence.Clear();
+                ClearAllDeathPins();
+                ClearAllToggleBusy();
+                _lastShops.Clear();
+                _shopLifetimes.Clear();
+                _knownShopIds.Clear();
+                _initialShopSnapshotTimeUtc = DateTime.MinValue;
+                _alertsNeedRebaseline = true;
+                _lastChatSendUtc = DateTime.MinValue;
 
-            foreach (var el in _shopEls.Values)
-                Overlay.Children.Remove(el);
-            _shopEls.Clear();
+                foreach (var el in _shopEls.Values)
+                    Overlay.Children.Remove(el);
+                _shopEls.Clear();
+            }
+            else
+            {
+                await HardResetAsync(reconnect: false);
+                _shopTimer?.Stop();
+                _shopTimer = null;
+                StopDynPolling();
+                StopTeamPolling();
+                TeamMembers.Clear();
+
+                _avatarCache.Clear();
+                _lastPresence.Clear();
+                ClearAllDeathPins();
+                ClearAllToggleBusy();
+                _lastShops.Clear();
+                _shopLifetimes.Clear();
+                _knownShopIds.Clear();
+                _initialShopSnapshotTimeUtc = DateTime.MinValue;
+                _alertsNeedRebaseline = true;
+                _lastChatSendUtc = DateTime.MinValue;
+
+                foreach (var el in _shopEls.Values)
+                    Overlay.Children.Remove(el);
+                _shopEls.Clear();
+            }
         }
         else
         {
-            // Ensure the interface disconnects before recreating
-            try { await _rust.DisconnectAsync(); } catch { }
+            if (!alreadySoftConnected)
+            {
+                // Ensure the interface disconnects before recreating
+                try { await _rust.DisconnectAsync(); } catch { }
 
-            _shopTimer?.Stop();
-            StopDynPolling(clearKnown: false);
-            StopTeamPolling();
-            _alertsNeedRebaseline = true;
+                _shopTimer?.Stop();
+                StopDynPolling(clearKnown: false);
+                StopTeamPolling();
+                _alertsNeedRebaseline = true;
+            }
         }
 
         if (_vm.Selected is null)
@@ -244,12 +355,22 @@ public partial class MainWindow
 
         try
         {
-            _vm.IsBusy = true;
-            _vm.BusyText = "Connecting …";
+            if (showBusy)
+            {
+                _vm.IsBusy = true;
+                _vm.BusyText = "Connecting …";
+            }
 
-            AppendLog($"Connecting to ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
-            await _rust.ConnectAsync(_vm.Selected);
-            AppendLog("Connected.");
+            if (!alreadySoftConnected)
+            {
+                AppendLog($"Connecting to ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
+                await _rust.ConnectAsync(_vm.Selected);
+                AppendLog("Connected.");
+            }
+            else
+            {
+                AppendLog("Reusing existing soft-connection for full connect.");
+            }
             _connectedProfile = _vm.Selected;
 
             TrackingService.StartPolling(_vm.Selected.Host ?? "", _vm.Selected.Port, _vm.Selected.Name ?? "", _vm.Selected.BattleMetricsId);
@@ -280,9 +401,12 @@ public partial class MainWindow
                 catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
             }
 
-            _vm.IsBusy = false;
-            _vm.BusyText = "";
-            _vm.IsInitializing = true;
+            if (showBusy)
+            {
+                _vm.IsBusy = false;
+                _vm.BusyText = "";
+                _vm.IsInitializing = true;
+            }
 
             // Start atomic parallel loading block to prevent UI "stuttering" during sequential awaits
             var initTasks = new List<Task>();
@@ -304,7 +428,10 @@ public partial class MainWindow
 
             ClearUserOverlayElements();
             _visibleOverlayOwners.Add(_mySteamId);
-            LoadOverlayFromDiskForPlayer(_mySteamId);
+            // Async init: merge local + cloud overlays intelligently (no wipe risk)
+            _ownCloudRestoreReady = false;
+            _ = InitOwnOverlayAsync();
+
 
             // Wait for core initialization to complete
             await Task.WhenAll(initTasks);
@@ -315,7 +442,10 @@ public partial class MainWindow
                 Dispatcher.Invoke(() => ChkShops.IsChecked = true);
             }
             
-            _vm.IsInitializing = false;
+            if (showBusy)
+            {
+                _vm.IsInitializing = false;
+            }
             _vm.Selected.IsConnected = true;
             _vm.Selected.IsFullConnected = true;
 
@@ -358,9 +488,12 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            _vm.IsInitializing = false;
-            _vm.IsBusy = false;
-            _vm.BusyText = "";
+            if (showBusy)
+            {
+                _vm.IsInitializing = false;
+                _vm.IsBusy = false;
+                _vm.BusyText = "";
+            }
             AppendLog("Fehler: " + ex.Message);
             if (!silent) MessageBox.Show($"Connection failed: {ex.Message}");
             return false;

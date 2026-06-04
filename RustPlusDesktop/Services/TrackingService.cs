@@ -65,6 +65,8 @@ public class TrackingSettings
     public string? LastBMId { get; set; } = null;
     public bool MapShowSteamMarkers { get; set; } = true;
     public bool MapShowDeathTags { get; set; } = false;
+    public int MaxSelfDeathMarkers { get; set; } = 3;
+    public int MaxTeamDeathMarkers { get; set; } = 3;
     public bool MapAbbreviateNames { get; set; } = false;
     public double MapPlayerIconScale { get; set; } = 1.0;
     public bool MapUseMonumentText { get; set; } = false;
@@ -108,6 +110,7 @@ public class TrackingSettings
     public Dictionary<string, List<HarborInfo>> ServerHarbors { get; set; } = new();
     public Dictionary<string, Dictionary<string, CargoTriggerPoint>> ServerCargoTriggers { get; set; } = new();
     public bool AnnounceSpawnsMaster { get; set; } = false;
+    public bool ChatMasterOfferSoundEnabled { get; set; } = true;
     public bool SaveAlertSelection { get; set; } = true;
     public string LastSeenVersion { get; set; } = "";
     public DateTime? FcmIssuedAt { get; set; }
@@ -116,6 +119,7 @@ public class TrackingSettings
     public Dictionary<string, int> LearnedQueryPorts { get; set; } = new();
     public bool TranslationConsentGiven { get; set; } = false;
     public bool UploadConsentGiven { get; set; } = false;
+    public bool CloudSyncEnabled { get; set; } = false;
 }
 
 
@@ -616,6 +620,12 @@ public static class TrackingService
         set { _settings.AnnounceSpawnsMaster = value; SaveDB(); }
     }
 
+    public static bool ChatMasterOfferSoundEnabled
+    {
+        get => _settings.ChatMasterOfferSoundEnabled;
+        set { _settings.ChatMasterOfferSoundEnabled = value; SaveDB(); }
+    }
+
     public static bool TranslationConsentGiven
     {
         get => _settings.TranslationConsentGiven;
@@ -626,6 +636,12 @@ public static class TrackingService
     {
         get => _settings.UploadConsentGiven;
         set { _settings.UploadConsentGiven = value; SaveDB(); }
+    }
+
+    public static bool CloudSyncEnabled
+    {
+        get => _settings.CloudSyncEnabled;
+        set { _settings.CloudSyncEnabled = value; SaveDB(); }
     }
 
     public static bool AnnounceCargoDocking
@@ -674,6 +690,16 @@ public static class TrackingService
     {
         get => _settings.MapShowDeathTags;
         set { _settings.MapShowDeathTags = value; SaveDB(); }
+    }
+    public static int MaxSelfDeathMarkers
+    {
+        get => _settings.MaxSelfDeathMarkers;
+        set { _settings.MaxSelfDeathMarkers = value; SaveDB(); }
+    }
+    public static int MaxTeamDeathMarkers
+    {
+        get => _settings.MaxTeamDeathMarkers;
+        set { _settings.MaxTeamDeathMarkers = value; SaveDB(); }
     }
     public static bool MapAbbreviateNames
     {

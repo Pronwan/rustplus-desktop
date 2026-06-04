@@ -27,8 +27,22 @@ public partial class MainWindow
         }
     }
 
+    private void ChatCommandsOverlay_CommandsEnabledChanged(object sender, System.Windows.RoutedEventArgs e)
+    {
+        _ = Dispatcher.InvokeAsync(() =>
+        {
+            try { _vm.Save(); } catch { }
+            RequestTeamFeatureMasterSync();
+        }, System.Windows.Threading.DispatcherPriority.Background);
+    }
+
     private DateTime _lastChatCommandTime = DateTime.MinValue;
     private const int ChatCommandCooldownSeconds = 2; // 2s cooldown for system stability
+
+    private Task SendChatCommandResponseAsync(string text)
+    {
+        return SendTeamChatSafeAsync(text, bypassChatAlertMasterBlock: true);
+    }
 
     private async Task ProcessChatCommands(TeamChatMessage m)
     {
@@ -49,6 +63,10 @@ public partial class MainWindow
         }
 
         cmd = cmd.Substring(prefix.Length); // Remove prefix for matching
+        var isPromoteCommand = !string.IsNullOrWhiteSpace(profile.CmdPromote)
+            && cmd == profile.CmdPromote.ToLowerInvariant();
+        if (!CanProcessLocalChatCommands(isPromoteCommand)) return;
+
         _lastChatCommandTime = DateTime.UtcNow;
 
         if (_rust is not RustPlusClientReal real) return;
@@ -57,6 +75,9 @@ public partial class MainWindow
         if (cmd == profile.CmdList.ToLowerInvariant())
         {
             var standardCmds = new List<string>();
+            var firstTimer = profile.CustomTimers.FirstOrDefault();
+            if (firstTimer != null) standardCmds.Add(prefix + firstTimer.Command);
+            
             if (!string.IsNullOrWhiteSpace(profile.CmdPop)) standardCmds.Add(prefix + profile.CmdPop);
             if (!string.IsNullOrWhiteSpace(profile.CmdTime)) standardCmds.Add(prefix + profile.CmdTime);
             if (!string.IsNullOrWhiteSpace(profile.CmdPromote)) standardCmds.Add(prefix + profile.CmdPromote);
@@ -69,7 +90,7 @@ public partial class MainWindow
 
             string standardMsg = string.Format(Properties.Resources.ChatCmdListHeader, string.Join(", ", standardCmds));
             if (standardMsg.Length > 128) standardMsg = standardMsg.Substring(0, 125) + "...";
-            _ = SendTeamChatSafeAsync(standardMsg);
+            _ = SendChatCommandResponseAsync(standardMsg);
 
             var deviceCmds = new List<string>();
             foreach (var mapping in profile.SwitchCommandMappings)
@@ -96,7 +117,7 @@ public partial class MainWindow
                     await Task.Delay(3000);
                     string devMsg = string.Join(" | ", deviceCmds);
                     if (devMsg.Length > 128) devMsg = devMsg.Substring(0, 125) + "...";
-                    await SendTeamChatSafeAsync(devMsg);
+                    await SendChatCommandResponseAsync(devMsg);
                 });
             }
 
@@ -109,7 +130,7 @@ public partial class MainWindow
         {
             string qText = _vm.ServerQueue != "0" && _vm.ServerQueue != "-" ? string.Format(Properties.Resources.ChatCmdPopQueue, _vm.ServerQueue) : "";
             string msg = string.Format(Properties.Resources.ChatCmdPopResponse, _vm.ServerPlayers, qText);
-            _ = SendTeamChatSafeAsync(msg);
+            _ = SendChatCommandResponseAsync(msg);
             AppendLog($"[ChatCommand] Pop executed by {m.Author}");
             return;
         }
@@ -122,7 +143,7 @@ public partial class MainWindow
             {
                 msg += $" ({_vm.TimeUntilNextPhase})";
             }
-            _ = SendTeamChatSafeAsync(msg.Trim());
+            _ = SendChatCommandResponseAsync(msg.Trim());
             AppendLog($"[ChatCommand] Time executed by {m.Author}");
             return;
         }
@@ -131,7 +152,7 @@ public partial class MainWindow
         if (cmd == profile.CmdPromote.ToLowerInvariant())
         {
             _ = real.PromoteToLeaderAsync(m.SteamId);
-            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdPromoteResponse, m.Author));
+            _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdPromoteResponse, m.Author));
             AppendLog($"[ChatCommand] Promote executed by {m.Author}");
             return;
         }
@@ -161,7 +182,7 @@ public partial class MainWindow
             {
                 msg = Properties.Resources.ChatCmdDeepSeaStatusUnknown;
             }
-            _ = SendTeamChatSafeAsync(msg);
+            _ = SendChatCommandResponseAsync(msg);
             AppendLog($"[ChatCommand] DeepSea executed by {m.Author}");
             return;
         }
@@ -218,7 +239,7 @@ public partial class MainWindow
                 var ago = DateTime.UtcNow - _cargoLastDespawnUtc.Value;
                 msg = string.Format(Properties.Resources.ChatCmdCargoDespawnedMinutesAgo, (int)ago.TotalMinutes);
             }
-            _ = SendTeamChatSafeAsync(msg);
+            _ = SendChatCommandResponseAsync(msg);
             AppendLog($"[ChatCommand] Cargo executed by {m.Author}");
             return;
         }
@@ -248,7 +269,7 @@ public partial class MainWindow
                     }
                 }
             }
-            _ = SendTeamChatSafeAsync(string.Join(" | ", parts));
+            _ = SendChatCommandResponseAsync(string.Join(" | ", parts));
             AppendLog($"[ChatCommand] OilRig executed by {m.Author}");
             return;
         }
@@ -280,7 +301,7 @@ public partial class MainWindow
             {
                 msg = Properties.Resources.ChatCmdHeliStatusUnknown;
             }
-            _ = SendTeamChatSafeAsync(msg);
+            _ = SendChatCommandResponseAsync(msg);
             AppendLog($"[ChatCommand] Heli executed by {m.Author}");
             return;
         }
@@ -311,8 +332,115 @@ public partial class MainWindow
             {
                 msg = Properties.Resources.ChatCmdVendorStatusUnknown;
             }
-            _ = SendTeamChatSafeAsync(msg);
+            _ = SendChatCommandResponseAsync(msg);
             AppendLog($"[ChatCommand] Vendor executed by {m.Author}");
+            return;
+        }
+
+        // Check Custom Timers Check Commands
+        foreach (var timer in profile.CustomTimers)
+        {
+            if (cmd == timer.Command.ToLowerInvariant())
+            {
+                var remaining = timer.EndTimeUtc - DateTime.UtcNow;
+                if (remaining.TotalSeconds > 0)
+                {
+                    string timeStr = remaining.TotalHours >= 1.0 
+                        ? $"{(int)remaining.TotalHours:D2}:{remaining.Minutes:D2}:{remaining.Seconds:D2}"
+                        : $"{remaining.Minutes:D2}:{remaining.Seconds:D2}";
+                    _ = SendChatCommandResponseAsync($"{timer.Name}: {timeStr}");
+                    AppendLog($"[ChatCommand] Timer '{timer.Name}' checked by {m.Author}");
+                }
+                return;
+            }
+        }
+
+        // Create Custom Timer (e.g. !timer TEST,70) or List Timers (!timer)
+        var createTimerCmd = profile.CmdCustomTimer.ToLowerInvariant();
+        if (cmd == createTimerCmd)
+        {
+            if (profile.CustomTimers.Count == 0)
+            {
+                _ = SendChatCommandResponseAsync("No active timers.");
+            }
+            else
+            {
+                var timerStrings = profile.CustomTimers.Select(t => $"{profile.ChatCommandPrefix}{t.Command} : {t.RemainingTimeText}").ToList();
+                string output = string.Join(" | ", timerStrings);
+                _ = SendChatCommandResponseAsync(output);
+            }
+            return;
+        }
+        else if (cmd.StartsWith(createTimerCmd + " "))
+        {
+            if (profile.CustomTimers.Count >= 5)
+            {
+                _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdTimerMaxReached ?? "Maximum of 5 timers allowed.");
+                return;
+            }
+
+            var args = cmd.Substring(createTimerCmd.Length + 1).Split(',');
+            if (args.Length == 2)
+            {
+                string name = args[0].Trim();
+                string timePart = args[1].Trim();
+
+                int hours = 0, mins = 0, secs = 0;
+
+                if (timePart.Contains(':'))
+                {
+                    var parts = timePart.Split(':');
+                    if (parts.Length == 3)
+                    {
+                        int.TryParse(parts[0], out hours);
+                        int.TryParse(parts[1], out mins);
+                        int.TryParse(parts[2], out secs);
+                    }
+                    else if (parts.Length == 2)
+                    {
+                        int.TryParse(parts[0], out mins);
+                        int.TryParse(parts[1], out secs);
+                    }
+                }
+                else
+                {
+                    int.TryParse(timePart, out mins);
+                }
+
+                int totalSecs = hours * 3600 + mins * 60 + secs;
+                if (totalSecs <= 0) return;
+
+                if (string.IsNullOrWhiteSpace(name) || !char.IsLetter(name[0]))
+                {
+                    _ = SendTeamChatSafeAsync(Properties.Resources.TimerNameMustStartWithLetter);
+                    return;
+                }
+
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    var newCmd = new string(name.Where(c => !char.IsWhiteSpace(c)).ToArray()).ToLower();
+                    double totalMins = totalSecs / 60.0;
+                    var timer = new CustomTimer
+                    {
+                        Name = name,
+                        Command = newCmd,
+                        EndTimeUtc = DateTime.UtcNow.AddSeconds(totalSecs),
+                        CreatedNotified = false,
+                        Notified60 = totalMins <= 60,
+                        Notified30 = totalMins <= 30,
+                        Notified10 = totalMins <= 10,
+                        Notified3 = totalMins <= 3
+                    };
+                    Dispatcher.Invoke(() => profile.CustomTimers.Add(timer));
+
+                    if (profile.AlertCustomTimer)
+                    {
+                        var msg = string.Format(Properties.Resources.TimerCreated, profile.ChatCommandPrefix + newCmd, hours, mins, secs);
+                        _ = SendChatCommandResponseAsync(msg);
+                    }
+                    AppendLog($"[ChatCommand] Timer created by {m.Author}: {name} for {hours}h {mins}m {secs}s");
+                }
+            }
             return;
         }
 
@@ -332,7 +460,7 @@ public partial class MainWindow
             var tcs = profile.UpkeepCommandMappings.Where(mapping => mapping.EntityId != 0).ToList();
             if (tcs.Count == 0)
             {
-                _ = SendTeamChatSafeAsync(Properties.Resources.ChatCmdUpkeepNoTcMapped);
+                _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdUpkeepNoTcMapped);
             }
             else
             {
@@ -351,7 +479,7 @@ public partial class MainWindow
                         var secs = dev.UpkeepSeconds ?? 0;
                         if (secs <= 0)
                         {
-                            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcEmptyExpired, dev.PureName));
+                            _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcEmptyExpired, dev.PureName));
                         }
                         else
                         {
@@ -373,7 +501,7 @@ public partial class MainWindow
                                 ? ""
                                 : string.Format(Properties.Resources.ChatCmdUpkeepNeed24h, dailyMaterials);
 
-                            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcTime, dev.PureName, timeStr) + materialsSuffix);
+                            _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcTime, dev.PureName, timeStr) + materialsSuffix);
                         }
                     }
                 }
@@ -416,11 +544,11 @@ public partial class MainWindow
             }
             if (parts.Count > 0)
             {
-                _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdUpkeepHeader, string.Join(" | ", parts)));
+                _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepHeader, string.Join(" | ", parts)));
             }
             else
             {
-                _ = SendTeamChatSafeAsync(Properties.Resources.ChatCmdUpkeepNotPaired);
+                _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdUpkeepNotPaired);
             }
             AppendLog($"[ChatCommand] Multi-Upkeep for cmd={cmd} executed by {m.Author}");
             return;
@@ -438,7 +566,7 @@ public partial class MainWindow
             var secs = dev.UpkeepSeconds ?? 0;
             if (secs <= 0)
             {
-                _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcEmptyExpired, dev.PureName));
+                _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcEmptyExpired, dev.PureName));
             }
             else
             {
@@ -455,14 +583,260 @@ public partial class MainWindow
 
                 string timeStr = string.Join(", ", timeParts);
 
-                _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcTime, dev.PureName, timeStr));
+                _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcTime, dev.PureName, timeStr));
             }
             AppendLog($"[ChatCommand] Upkeep for {dev.Name} executed by {author}");
         }
         else
         {
-            _ = SendTeamChatSafeAsync(Properties.Resources.ChatCmdUpkeepNotPairedSingle);
+            _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdUpkeepNotPairedSingle);
         }
+    }
+
+    public async Task<bool> ToggleSmartSwitchFromDiscordAsync(uint entityId, bool state)
+    {
+        if (_rust == null) return false;
+        try
+        {
+            await _rust.ToggleSmartSwitchAsync(entityId, state);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[DiscordBotListener] Failed to toggle switch {entityId}: {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<(bool success, string message)> ToggleSmartSwitchFromDiscordAsync(string nameOrId)
+    {
+        if (_rust == null || _vm?.Selected == null) return (false, "Not connected to server.");
+        try
+        {
+            SmartDevice? dev = null;
+            if (uint.TryParse(nameOrId, out var id))
+            {
+                dev = _vm.Selected.AllDevices.FirstOrDefault(d =>
+                    (d.Kind ?? "").Equals("SmartSwitch", StringComparison.OrdinalIgnoreCase) &&
+                    d.EntityId == id);
+            }
+            else
+            {
+                // Search by name or alias (case-insensitive, partial match)
+                dev = _vm.Selected.AllDevices.FirstOrDefault(d =>
+                    (d.Kind ?? "").Equals("SmartSwitch", StringComparison.OrdinalIgnoreCase) &&
+                    ((d.Alias ?? d.Name ?? "").Contains(nameOrId, StringComparison.OrdinalIgnoreCase) ||
+                     (d.Name ?? "").Contains(nameOrId, StringComparison.OrdinalIgnoreCase)));
+            }
+
+            if (dev == null)
+            {
+                AppendLog($"[DiscordBotListener] No smart switch found matching: {nameOrId}");
+                return (false, $"❌ No switch found matching '{nameOrId}'. Use /devicelist to see available devices.");
+            }
+
+            // Toggle: invert current state
+            bool newState = !(dev.IsOn ?? false);
+            await _rust.ToggleSmartSwitchAsync(dev.EntityId, newState);
+            string label = dev.Alias ?? dev.Name ?? dev.EntityId.ToString();
+            AppendLog($"[DiscordBotListener] Toggled {label} → {(newState ? "ON" : "OFF")}");
+            return (true, $"{(newState ? "✅" : "⛔")} **{label}** turned **{(newState ? "ON" : "OFF")}**");
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[DiscordBotListener] Failed to toggle switch {nameOrId}: {ex.Message}");
+            return (false, $"❌ Error toggling switch: {ex.Message}");
+        }
+    }
+
+    public string GetSmartSwitchListForDiscord()
+    {
+        if (_vm?.Selected == null) return "❌ Not connected to server.";
+
+        var switches = _vm.Selected.AllDevices
+            .Where(d => (d.Kind ?? "").Equals("SmartSwitch", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        if (switches.Count == 0) return "📋 No smart switches paired.";
+
+        var lines = new System.Text.StringBuilder();
+        lines.AppendLine("📋 **Paired Smart Switches:**");
+        foreach (var sw in switches)
+        {
+            string label = sw.Alias ?? sw.Name ?? sw.EntityId.ToString();
+            string state = sw.IsMissing ? "❌ OFFLINE" : (sw.IsOn == true ? "🟢 ON" : "🔴 OFF");
+            lines.AppendLine($"• **{label}** `#{sw.EntityId}` — {state}");
+        }
+        return lines.ToString().TrimEnd();
+    }
+
+    public string GetDeepSeaStatusForDiscord()
+    {
+        if (_deepSeaActive)
+        {
+            if (_deepSeaSpawnTime.HasValue)
+            {
+                var elapsed = DateTime.UtcNow - _deepSeaSpawnTime.Value;
+                return $"🌊 **Deep Sea** is active (spawned {FormatAgo(elapsed)} ago)";
+            }
+            return "🌊 **Deep Sea** is currently active (spawn time unknown – connected mid-event)";
+        }
+        if (_deepSeaDespawnTime.HasValue)
+        {
+            var ago = DateTime.UtcNow - _deepSeaDespawnTime.Value;
+            return $"🌊 **Deep Sea** ended {(int)ago.TotalMinutes} minute(s) ago";
+        }
+        return "🌊 **Deep Sea**: No data yet – event may not have occurred this wipe";
+    }
+
+    public string GetCargoStatusForDiscord()
+    {
+        var activeCargo = _cargoDockStates.Values.FirstOrDefault();
+        if (activeCargo != null)
+        {
+            string harborName = activeCargo.HarborName ?? "harbor";
+            if (activeCargo.IsDocked && activeCargo.DockTime.HasValue)
+            {
+                int dockDuration = TrackingService.GetLearnedDockingDuration(_vm?.Selected?.Host ?? "");
+                if (dockDuration > 0 && !activeCargo.WasAlreadyDocked)
+                {
+                    var dockRemain = TimeSpan.FromMinutes(dockDuration) - (DateTime.UtcNow - activeCargo.DockTime.Value);
+                    if (dockRemain.TotalMinutes > 0)
+                        return $"🚢 **Cargo Ship** is docked at {harborName} – departs in ~{(int)dockRemain.TotalMinutes}m";
+                    return $"🚢 **Cargo Ship** is docked at {harborName} – preparing to depart";
+                }
+                return $"🚢 **Cargo Ship** is docked at {harborName}";
+            }
+            if (activeCargo.SeenAtEdge)
+            {
+                int fullLife = TrackingService.GetLearnedCargoFullLife(_vm?.Selected?.Host ?? "");
+                if (fullLife > 0 && activeCargo.FirstSeen.HasValue)
+                {
+                    var remain = TimeSpan.FromMinutes(fullLife) - (DateTime.UtcNow - activeCargo.FirstSeen.Value);
+                    if (remain.TotalMinutes > 0)
+                        return $"🚢 **Cargo Ship** is active – leaves in ~{(int)remain.TotalMinutes}m";
+                    return "🚢 **Cargo Ship** is active – preparing to leave";
+                }
+                return "🚢 **Cargo Ship** is active (total duration not yet learned)";
+            }
+            return "🚢 **Cargo Ship** is active (connected mid-route – time unknown)";
+        }
+        if (_cargoLastDespawnUtc.HasValue)
+        {
+            var ago = DateTime.UtcNow - _cargoLastDespawnUtc.Value;
+            return $"🚢 **Cargo Ship** left {(int)ago.TotalMinutes} minute(s) ago";
+        }
+        return "🚢 **Cargo Ship**: Not currently on the map";
+    }
+
+    public string GetOilRigStatusForDiscord()
+    {
+        var parts = new List<string>();
+        foreach (var rigName in new[] { "Small Oil Rig", "Large Oil Rig" })
+        {
+            string emoji = rigName.Contains("Small") ? "🛢️" : "🏭";
+            var timeLeft = _monumentWatcher.GetActiveEventTimeLeft(rigName);
+            if (timeLeft.HasValue)
+            {
+                parts.Add($"{emoji} **{rigName}**: Locked crate in {(int)timeLeft.Value.TotalMinutes}m {timeLeft.Value.Seconds}s");
+            }
+            else
+            {
+                var lastTrig = _monumentWatcher.GetLastTriggered(rigName);
+                if (lastTrig.HasValue)
+                {
+                    var ago = DateTime.UtcNow - lastTrig.Value;
+                    parts.Add($"{emoji} **{rigName}**: Last called {(int)ago.TotalMinutes}m ago");
+                }
+                else
+                {
+                    parts.Add($"{emoji} **{rigName}**: Not called this session");
+                }
+            }
+        }
+        return string.Join("\n", parts);
+    }
+
+    public string GetHeliStatusForDiscord()
+    {
+        bool isHeliActive = _dynStates.Values.Any(s => s.Type == 8);
+        if (isHeliActive)
+        {
+            if (_heliSpawnTime.HasValue)
+            {
+                var elapsed = DateTime.UtcNow - _heliSpawnTime.Value;
+                return $"🚁 **Patrol Heli** is active (spawned {FormatAgo(elapsed)} ago)";
+            }
+            return "🚁 **Patrol Heli** is active (spawn time unknown – connected mid-event)";
+        }
+        if (_heliLastEventUtc.HasValue)
+        {
+            var ago = DateTime.UtcNow - _heliLastEventUtc.Value;
+            string reason = _heliLastEventWasCrash ? "was shot down" : "left the map";
+            return $"🚁 **Patrol Heli** {reason} {FormatAgo(ago)} ago";
+        }
+        return "🚁 **Patrol Heli**: No sighting this session";
+    }
+
+    public string GetVendorStatusForDiscord()
+    {
+        bool isVendorActive = _dynStates.Values.Any(s => s.Type == 6);
+        if (isVendorActive)
+        {
+            if (_vendorSpawnTime.HasValue)
+            {
+                var elapsed = DateTime.UtcNow - _vendorSpawnTime.Value;
+                return $"🛒 **Travelling Vendor** is active (spawned {FormatAgo(elapsed)} ago)";
+            }
+            return "🛒 **Travelling Vendor** is active (spawn time unknown – connected mid-event)";
+        }
+        if (_vendorDespawnTime.HasValue)
+        {
+            var ago = DateTime.UtcNow - _vendorDespawnTime.Value;
+            return $"🛒 **Travelling Vendor** left {FormatAgo(ago)} ago";
+        }
+        return "🛒 **Travelling Vendor**: No sighting this session";
+    }
+
+    public string GetUpkeepDetailsForDiscord()
+    {
+        var profile = _vm?.Selected;
+        if (profile == null) return "❌ Not connected to server.";
+
+        var tcs = profile.AllDevices
+            .Where(d => (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor") && d.Storage?.IsToolCupboard == true)
+            .ToList();
+
+        if (tcs.Count == 0) return "🏠 No Tool Cupboards monitored.";
+
+        var lines = new System.Text.StringBuilder();
+        lines.AppendLine("🏠 **Upkeep Status:**");
+        foreach (var tc in tcs)
+        {
+            string label = tc.Alias ?? tc.Name ?? $"TC #{tc.EntityId}";
+            string upkeep = tc.StorageSummary;
+            string state = tc.IsMissing ? "❌ OFFLINE" : upkeep;
+            lines.AppendLine($"• **{label}**: {state}");
+        }
+        return lines.ToString().TrimEnd();
+    }
+
+    public string GetDiscordCommandListForDiscord()
+    {
+        var lines = new System.Text.StringBuilder();
+        lines.AppendLine("📋 **Available Bot Commands:**");
+        lines.AppendLine("• `/time` – Current server time");
+        lines.AppendLine("• `/pop` – Player count & queue");
+        lines.AppendLine("• `/heli` – Patrol Heli status");
+        lines.AppendLine("• `/cargo` – Cargo Ship status");
+        lines.AppendLine("• `/oilrig` – Oil Rig status");
+        lines.AppendLine("• `/deepsea` – Deep Sea event status");
+        lines.AppendLine("• `/vendor` – Travelling Vendor status");
+        lines.AppendLine("• `/upkeep` – Tool Cupboard upkeep details");
+        lines.AppendLine("• `/switch device:<name>` – Toggle a smart switch");
+        lines.AppendLine("• `/devicelist` – List all paired smart switches");
+        lines.AppendLine("• `/commands` – Show this list");
+        return lines.ToString().TrimEnd();
     }
 
     private async Task ToggleCommandSwitch(RustPlusClientReal real, uint entityId, string author)
@@ -478,7 +852,7 @@ public partial class MainWindow
             {
                 await real.ToggleSmartSwitchAsync(entityId, newState);
                 string stateStr = newState ? Properties.Resources.ChatCmdSwitchStateOn : Properties.Resources.ChatCmdSwitchStateOff;
-                _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.ChatCmdSwitchToggled, dev.Name, stateStr));
+                _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdSwitchToggled, dev.Name, stateStr));
                 AppendLog($"[ChatCommand] {dev.Name} toggled to {newState} by {author}");
             }
             catch (Exception ex)
@@ -488,7 +862,7 @@ public partial class MainWindow
         }
         else
         {
-            _ = SendTeamChatSafeAsync(Properties.Resources.ChatCmdSwitchNotPaired);
+            _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdSwitchNotPaired);
         }
     }
 

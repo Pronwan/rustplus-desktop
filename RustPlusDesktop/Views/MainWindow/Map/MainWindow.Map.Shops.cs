@@ -298,6 +298,34 @@ public partial class MainWindow
         }
     }
 
+    internal List<List<RustPlusClientReal.ShopMarker>> ClusterShops(IEnumerable<RustPlusClientReal.ShopMarker> shops)
+    {
+        var clusters = new List<List<RustPlusClientReal.ShopMarker>>();
+        const double CLUSTER_DIST = 50.0; // World units
+
+        foreach (var s in shops)
+        {
+            List<RustPlusClientReal.ShopMarker>? target = null;
+            foreach (var c in clusters)
+            {
+                // Compare against cluster average position
+                double avgX = c.Average(x => x.X);
+                double avgY = c.Average(x => x.Y);
+                double dx = avgX - s.X;
+                double dy = avgY - s.Y;
+                if (Math.Sqrt(dx * dx + dy * dy) < CLUSTER_DIST)
+                {
+                    target = c;
+                    break;
+                }
+            }
+
+            if (target != null) target.Add(s);
+            else clusters.Add(new List<RustPlusClientReal.ShopMarker> { s });
+        }
+        return clusters;
+    }
+
     private void UpdateShopLifetimes(IReadOnlyList<RustPlusClientReal.ShopMarker> shops)
     {
         foreach (var kv in _shopLifetimes)
@@ -387,30 +415,8 @@ public partial class MainWindow
     {
         if (Overlay == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0) return;
 
-        // 1) Cluster shops by proximity (e.g., within 50 world units to cover typical vending bases)
-        var clusters = new List<List<RustPlusClientReal.ShopMarker>>();
-        const double CLUSTER_DIST = 50.0; 
-
-        foreach (var s in shops)
-        {
-            List<RustPlusClientReal.ShopMarker>? target = null;
-            foreach (var c in clusters)
-            {
-                // Compare against cluster average position
-                double avgX = c.Average(x => x.X);
-                double avgY = c.Average(x => x.Y);
-                double dx = avgX - s.X;
-                double dy = avgY - s.Y;
-                if (Math.Sqrt(dx * dx + dy * dy) < CLUSTER_DIST)
-                {
-                    target = c;
-                    break;
-                }
-            }
-
-            if (target != null) target.Add(s);
-            else clusters.Add(new List<RustPlusClientReal.ShopMarker> { s });
-        }
+        // 1) Cluster shops by proximity
+        var clusters = ClusterShops(shops);
 
         var incoming = new HashSet<uint>();
         foreach (var cluster in clusters)

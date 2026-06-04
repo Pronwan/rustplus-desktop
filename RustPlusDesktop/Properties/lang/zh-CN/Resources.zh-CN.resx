@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1559,22 +1559,22 @@
     <value>本地化、用户界面现代化和存储</value>
   </data>
   <data name="FeatureLanguage" xml:space="preserve">
-    <value>动态地域切换</value>
+    <value>Custom Alerts</value>
   </data>
   <data name="FeatureLanguageDesc" xml:space="preserve">
-    <value> - 30 多种语言供选择</value>
+    <value> - !timer [name],[minutes]</value>
   </data>
   <data name="FeatureChatCommands" xml:space="preserve">
-    <value>聊天命令用户界面</value>
+    <value>Mini Map</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> - 隔离视图，外观简洁</value>
+    <value> - 最小化时工作</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
-    <value>新设置叠加</value>
+    <value>Shop Overhaul</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
-    <value> - 用于所有设置的整洁侧边栏</value>
+    <value> - 全新商店 UI</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
     <value>移除 BattleMetrics 跟踪</value>
@@ -1804,15 +1804,465 @@
     <value>现在关闭</value>
   </data>
   <data name="MigrationAlertCheckDesc" xml:space="preserve">
-    <value>智能警报行为已更改（包括新的音频循环功能），并且聊天警报已更新。请确保您的智能警报首选项（音频/弹出窗口）和聊天警报配置仍然设置正确！</value>
+    <value>请检查自定义计时器的Chat-Alert设置。死亡标记现在将始终保存在本地。迷你地图现在在最小化时也会更新。</value>
   </data>
   <data name="MigrationAlertCheckTitle" xml:space="preserve">
-    <value>请验证您的警报设置</value>
+    <value>请注意</value>
   </data>
   <data name="FeatureAudioLoopTitle" xml:space="preserve">
-    <value>音频警报循环：</value>
+    <value>Death Marker</value>
   </data>
   <data name="FeatureAudioLoopDesc" xml:space="preserve">
-    <value>循环播放并停止您的警报。</value>
+    <value> - 团队自定义标记</value>
+  </data>
+  <data name="DeleteDeathMarker" xml:space="preserve">
+    <value>清除死亡标记</value>
+  </data>
+  <data name="RenameDeathMarker" xml:space="preserve">
+    <value>重命名死亡标记</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>个人资料</value>
+  </data>
+  <data name="Death" xml:space="preserve">
+    <value>死亡</value>
+  </data>
+  <data name="Markers" xml:space="preserve">
+    <value>标记:</value>
+  </data>
+  <data name="WipeDeathMarkers" xml:space="preserve">
+    <value>清除所有</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>接受</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>自定义计时器</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>Timer {0} created for {1}h {2}m {3}s</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>自定义计时器</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>活动计时器</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>添加计时器</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>命令:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>使用下方命令查看状态。</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>最多允许 5 个计时器。</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>请输入计时器持续时间（小时、分钟或秒）。</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>计时器名称必须以字母开头。</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Timer Alerts</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value> - 结束前 60,30,10,3 分钟</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>翻译同意</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>点击接受，补丁说明的内容将被发送到Google Translate（美国）进行翻译。您是否接受？</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Google Translate API 条款</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>通过 Google 翻译</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Supporter 专属福利</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>本地或导入中有超过 10 个设备。免费云同步会保留前 10 个设备；Supporter 可同步无限数量的设备。</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>此地图覆盖已超过免费云同步限制。Supporter 可获得 10 倍更高的覆盖大小、更多地图标记和更多截图。</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>隐私与云同步</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>要启用地图覆盖和智能设备的实时同步，必须将数据发送到我们安全的云中。我们还会收集匿名的使用遥测数据。</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>接受并启用云</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>拒绝云</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>连接 Discord 以获得支持者权益</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>断开 Discord 连接</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>正在连接...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>云同步和实时上传</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>在云中安全地实时上传和同步智能设备及地图覆盖。</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>支持者设置</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>这些功能专供我们的支持者 and 开发人员通过 Discord 登录使用。</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>高级 Discord 集成（Webhook、音频警报）</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Telegram 警报集成</value>
+  </data>
+  <data name="PremiumStopSync">
+    <value>停止同步</value>
+  </data>
+  <data name="PremiumStayFree">
+    <value>继续免费</value>
+  </data>
+  <data name="PremiumSupportNow">
+    <value>立即支持</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>地图覆盖已同步 {0} KB {1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>免费层最多 10 个设备</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>已同步 {0} 个设备 {1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>地图覆盖过大，无法同步（{0} KB）</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>启用云同步</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>云同步已启用</value>
+  </data>
+  <data name="CloudAccountTitle" xml:space="preserve">
+    <value>云账户</value>
+  </data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve">
+    <value>云账户登录</value>
+  </data>
+  <data name="EmailSignInTab" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="EmailSignUpTab" xml:space="preserve">
+    <value>创建账户</value>
+  </data>
+  <data name="EmailAddressLabel" xml:space="preserve">
+    <value>电子邮件地址</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve">
+    <value>密码（至少 6 个字符）</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>确认密码</value>
+  </data>
+  <data name="EmailSignInButton" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="EmailCreateAccountButton" xml:space="preserve">
+    <value>创建账户</value>
+  </data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve">
+    <value>确认邮件已发送！</value>
+  </data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve">
+    <value>请点击邮件中的链接。应用会每隔几秒自动检查一次...</value>
+  </data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve">
+    <value>正在等待确认...</value>
+  </data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
+    <value>正在等待确认...（{0}s）</value>
+  </data>
+  <data name="EmailProblemsPrefix" xml:space="preserve">
+    <value>遇到问题？</value>
+  </data>
+  <data name="EmailOpenInBrowser" xml:space="preserve">
+    <value>在浏览器中打开</value>
+  </data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve">
+    <value>请输入电子邮件和密码。</value>
+  </data>
+  <data name="EmailRequiredError" xml:space="preserve">
+    <value>请输入电子邮件地址。</value>
+  </data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve">
+    <value>密码长度至少为 6 个字符。</value>
+  </data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
+    <value>两次输入的密码不一致。</value>
+  </data>
+  <data name="EmailSigningInStatus" xml:space="preserve">
+    <value>正在登录...</value>
+  </data>
+  <data name="EmailSignedInSuccess" xml:space="preserve">
+    <value>登录成功！</value>
+  </data>
+  <data name="EmailSignInFailed" xml:space="preserve">
+    <value>登录失败。</value>
+  </data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve">
+    <value>正在注册...</value>
+  </data>
+  <data name="EmailRegistrationFailed" xml:space="preserve">
+    <value>注册失败。</value>
+  </data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve">
+    <value>超时：5 分钟内未确认电子邮件。你可以稍后再登录。</value>
+  </data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve">
+    <value>凭据无效。请检查电子邮件和密码。</value>
+  </data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
+    <value>凭据无效。</value>
+  </data>
+  <data name="EmailNotConfirmedError" xml:space="preserve">
+    <value>电子邮件地址尚未确认。请点击收件箱中的确认链接。</value>
+  </data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve">
+    <value>此电子邮件地址已注册。请登录。</value>
+  </data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve">
+    <value>断开 Discord</value>
+  </data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve">
+    <value>Discord 已连接 - 等级：{0}</value>
+  </data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve">
+    <value>电子邮件已连接：{0} - 等级：{1}</value>
+  </data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve">
+    <value>未连接 - 登录后可使用云同步和备份</value>
+  </data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve">
+    <value>正在断开...</value>
+  </data>
+  <data name="AuthConnectingStatus" xml:space="preserve">
+    <value>正在连接...</value>
+  </data>
+  <data name="EmailAccountButton" xml:space="preserve">
+    <value>电子邮件 / 账户</value>
+  </data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve">
+    <value>要退出电子邮件账户吗？</value>
+  </data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve">
+    <value>云同步</value>
+  </data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve">
+    <value>云同步需要账户</value>
+  </data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve">
+    <value>同步和备份存储等云服务需要一个免费账户。请选择电子邮件或 Discord，以继续同步设备、覆盖层和备份。</value>
+  </data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve">
+    <value>通过电子邮件同步</value>
+  </data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
+    <value>通过 Discord 同步</value>
+  </data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
+    <value>不用了</value>
+  </data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
+    <value>已达到同步限制</value>
+  </data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve">
+    <value>已达到基地限制（免费：最多 2 个基地，Premium：最多 10 个基地）</value>
+  </data>
+  <data name="BaseAddScreenshot" xml:space="preserve">
+    <value>添加截图</value>
+  </data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve">
+    <value>将图片拖放到这里</value>
+  </data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve">
+    <value>或按 CTRL+V 粘贴截图</value>
+  </data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
+    <value>剪贴板中没有找到图片。</value>
+  </data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
+    <value>粘贴错误</value>
+  </data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
+    <value>粘贴图片失败：{0}</value>
+  </data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
+    <value>加载图片文件失败：{0}</value>
+  </data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
+    <value>压缩错误</value>
+  </data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
+    <value>压缩图片时出错：{0}</value>
+  </data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
+    <value>分辨率：{0}x{1} | 大小：{2} KB（质量 25%）</value>
+  </data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve">
+    <value>编辑基地备注</value>
+  </data>
+  <data name="BaseNoteTitle" xml:space="preserve">
+    <value>基地备注</value>
+  </data>
+  <data name="BaseAddNote" xml:space="preserve">
+    <value>添加备注</value>
+  </data>
+  <data name="BaseEditNote" xml:space="preserve">
+    <value>编辑备注</value>
+  </data>
+  <data name="BaseDeleteNote" xml:space="preserve">
+    <value>删除备注</value>
+  </data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
+    <value>删除截图 {0}</value>
+  </data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
+    <value>添加截图 {0}（需要 Premium）</value>
+  </data>
+  <data name="BaseNoNotesYet" xml:space="preserve">
+    <value>尚未添加备注。</value>
+  </data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve">
+    <value>尚未添加截图</value>
+  </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>Chat Master 在线</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>{0} 正在控制此队伍的聊天提醒和聊天命令。</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>Chat Master {0} 在线。此设备上的聊天提醒和聊天命令已暂停。</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>你是 Chat Master</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>此设备现在负责控制你队伍的聊天提醒和聊天命令。</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>接受</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>拒绝</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>v6.0.0 更新</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>比较云功能</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>云功能比较</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>欢迎来到云端</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>选择最适合您的层级。</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>无账户</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>您的数据100%保留在本地。最适合单人玩家。</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>无云同步或备份</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>无设备共享</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>无云门户访问权限</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>免费云账户</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>基本的云功能，让您开始共享。</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>基础 Discord Webhook 警报</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>最多共享 10 台设备</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>地图共享 (300 KB, 2 个基地, 1 张截图)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>作为支持者助手 (Supporter Helper)</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>访问云门户</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>支持者 (Supporter) 云</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>为部落和高级用户提供的终极 Rust+ 体验。</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>专业地图共享 (3 MB, 10 个基地, 5 张截图)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>Chat Master 系统</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>高级双向 Discord 机器人</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>通过 Discord 访问早期 Beta 和测试版本</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>成为支持者</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>在 </value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value> 上支持我们 - 将 Patreon 与 Discord 链接以实现自动角色检测。</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>通过 </value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value> 给小费 - 在 Discord 中联系 Jawad 或 Pronwan 以获得手动角色。</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>打开云门户</value>
   </data>
 </root>

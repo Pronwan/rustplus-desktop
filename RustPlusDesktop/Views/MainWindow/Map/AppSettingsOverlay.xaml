@@ -4,12 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:conv="clr-namespace:RustPlusDesk.Converters"
              xmlns:p="clr-namespace:RustPlusDesk.Properties"
              mc:Ignorable="d" 
              Background="{DynamicResource Surface}"
              Foreground="{DynamicResource TextPrimary}">
 
     <Grid ClipToBounds="True">
+        <Grid.Resources>
+            <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="36" />
             <RowDefinition Height="*" />
@@ -120,9 +124,15 @@
 
                         <CheckBox x:Name="ChkHideConsole" 
                                   Content="{DynamicResource HideSystemConsole}" 
+                                  Margin="0,0,0,10" 
                                   Style="{StaticResource DotCheckBox}"
                                   Checked="OnSettingChanged" Unchecked="OnSettingChanged"
                                   ToolTip="{DynamicResource HideConsoleToolTip}"/>
+                        <CheckBox x:Name="ChkCloudSync" 
+                                  Content="{DynamicResource CloudSync}" 
+                                  Style="{StaticResource DotCheckBox}"
+                                  Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                                  ToolTip="{DynamicResource CloudSyncDesc}"/>
                     </StackPanel>
                 </Border>
 
@@ -182,6 +192,159 @@
                             <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=SliderMonumentOpacity, StringFormat={}{0:0%}}" 
                                        VerticalAlignment="Center" Margin="10,0,0,0" Foreground="{DynamicResource TextPrimary}" FontSize="12" Width="40"/>
                         </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Cloud Section -->
+                <TextBlock Text="Cloud Settings" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                
+                <ui:Button Content="{DynamicResource CompareCloudFeatures}" 
+                           Appearance="Secondary" 
+                           Icon="{ui:SymbolIcon Symbol=Info24}" 
+                           HorizontalAlignment="Stretch" 
+                           Margin="0,0,0,10" 
+                           Click="BtnCompareCloud_Click"/>
+
+                <!-- Cloud Account Buttons: Discord + Email side by side -->
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="8"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Discord Button -->
+                    <ui:Button x:Name="BtnDiscordConnect"
+                               Grid.Column="0"
+                               HorizontalAlignment="Stretch"
+                               Height="36"
+                               Click="BtnDiscordConnect_Click">
+                        <ui:Button.Icon>
+                            <ui:ImageIcon Source="pack://application:,,,/Assets/icons/discord.png"/>
+                        </ui:Button.Icon>
+                        <TextBlock x:Name="TxtDiscordBtnLabel" Text="Discord"/>
+                    </ui:Button>
+
+                    <!-- Email Button -->
+                    <ui:Button x:Name="BtnEmailConnect"
+                               Grid.Column="2"
+                               Icon="{ui:SymbolIcon Symbol=Mail24}"
+                               Content="Email / Account"
+                               HorizontalAlignment="Stretch"
+                               Height="36"
+                               Click="BtnEmailConnect_Click"/>
+                </Grid>
+
+                <!-- Auth status line -->
+                <TextBlock x:Name="TxtAuthStatus"
+                           FontSize="11" Foreground="#888"
+                           TextWrapping="Wrap"
+                           Margin="0,4,0,10"
+                           Text="Not connected"/>
+
+                <Expander Header="Basic Discord Integration" Margin="0,0,0,10" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextPrimary}" Padding="0"
+                          IsEnabled="{Binding IsCloudConnected}">
+                    <StackPanel Margin="0,8,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <TextBlock Text="Discord Webhook (Chat Alerts)" Width="175" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <TextBox Width="130" Margin="0,0,4,0" Height="24" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="4,2" 
+                                     IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
+                                     Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     TextChanged="TxtSettingsDiscordWebhook_TextChanged" />
+                            <ui:Button x:Name="BtnClearSettingsWebhook" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearSettingsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" BorderThickness="0" Padding="4,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" />
+                            <ui:Button Icon="{ui:SymbolIcon Symbol=QuestionCircle24}" Click="BtnDiscordWebhookHelp_Click" Appearance="Transparent" Foreground="{DynamicResource Accent}" BorderThickness="0" Padding="4,0" Margin="2,0,0,0" ToolTip="Discord Webhooks Guide" />
+                        </StackPanel>
+                    </StackPanel>
+                </Expander>
+
+                <Border x:Name="BrdSupporterSettings" Style="{StaticResource Card}" Margin="0,0,0,16" Opacity="0.5" IsEnabled="False">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource SupporterDescription}" 
+                                   Foreground="{DynamicResource TextSubtle}" 
+                                   FontSize="11" 
+                                   FontStyle="Italic"
+                                   Margin="0,0,0,12" 
+                                   TextWrapping="Wrap"/>
+
+                        <Expander Header="Advanced Discord Bot Integration" Margin="-4,0,0,10" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextPrimary}" Padding="0">
+                            <StackPanel Margin="0,8,0,0">
+                                <ui:Button x:Name="BtnInviteDiscordBot" Content="Invite Discord Bot to server" Icon="{ui:SymbolIcon Symbol=Add24}" Margin="0,0,0,8" PreviewMouseDown="PremiumFeature_PreviewMouseDown" Click="BtnInviteDiscordBot_Click" />
+                                
+                                <TextBlock Text="Discord Server ID (Guild ID)" Foreground="{DynamicResource TextSubtle}" FontSize="12" Margin="0,4,0,2" />
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="TxtDiscordGuildId" Height="28" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,4" VerticalAlignment="Center"/>
+                                    <ui:Button x:Name="BtnSaveDiscordGuild" Grid.Column="1" Content="Save" Margin="8,0,0,0" Width="80" Height="28" Click="BtnSaveDiscordGuild_Click" />
+                                </Grid>
+
+                                <TextBlock Text="Command Permissions" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" Margin="0,4,0,4" />
+                                <CheckBox x:Name="ChkDiscordCommandsEnabled"
+                                          Content="Allow Discord commands"
+                                          IsChecked="True"
+                                          Margin="0,0,0,6" />
+                                <TextBlock Text="Allowed Command Role IDs" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,0,2" />
+                                <TextBox x:Name="TxtDiscordAllowedRoleIds"
+                                         Height="26"
+                                         Background="#1AFFFFFF"
+                                         BorderBrush="#33FFFFFF"
+                                         Foreground="White"
+                                         Padding="6,3"
+                                         ToolTip="Comma-separated Discord role IDs. Leave empty to allow everyone on the server." />
+
+                                <TextBlock Text="Channel Notifications Config" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" Margin="0,8,0,4" />
+                                
+                                <!-- Raid Alerts Channel -->
+                                <TextBlock Text="Raid Alerts Channel ID" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,4,0,2" />
+                                <Grid Margin="0,0,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="TxtChannelRaid" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
+                                    <CheckBox x:Name="ChkRaidTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                    <CheckBox x:Name="ChkRaidAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                </Grid>
+
+                                <!-- Events Channel -->
+                                <TextBlock Text="Events Alerts Channel ID" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,4,0,2" />
+                                <Grid Margin="0,0,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="TxtChannelEvents" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
+                                    <CheckBox x:Name="ChkEventsTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                    <CheckBox x:Name="ChkEventsAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                </Grid>
+
+                                <!-- Chat Alerts Channel -->
+                                <TextBlock Text="Chat Alerts Channel ID" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,4,0,2" />
+                                <Grid Margin="0,0,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="TxtChannelChat" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
+                                    <CheckBox x:Name="ChkChatTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                    <CheckBox x:Name="ChkChatAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                </Grid>
+
+                                <ui:Button x:Name="BtnSaveChannels" Content="Save Channels Config" Appearance="Primary" HorizontalAlignment="Stretch" Height="30" Click="BtnSaveChannels_Click" />
+                            </StackPanel>
+                        </Expander>
+                                  
+                        <CheckBox x:Name="ChkTelegramIntegration" 
+                                  Content="Team Paths Tracking" 
+                                  Margin="0,0,0,10" 
+                                  Opacity="0.45"
+                                  IsEnabled="False"
+                                  Style="{StaticResource DotCheckBox}"/>
                     </StackPanel>
                 </Border>
 

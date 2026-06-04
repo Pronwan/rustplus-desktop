@@ -26,817 +26,10 @@
     WindowCornerPreference="Round"
     mc:Ignorable="d">
     <ui:FluentWindow.Resources>
-        <conv:UpkeepBackgroundConverter x:Key="UpkeepBackgroundConverter" />
-        <conv:StorageChipConverter x:Key="StorageChipConverter" />
-        <conv:KindToStorageVisibilityConverter x:Key="KindToStorageVisibility" />
-        <conv:BoolToVisibilityConverter x:Key="BoolToVisibility" />
-        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityInv" Invert="True" />
-        <conv:LessThanConverter x:Key="LessThanConverter" />
-        <BitmapImage x:Key="IconStorageMonitor" UriSource="pack://application:,,,/Assets/icons/storagemonitor.png" />
-        <BitmapImage x:Key="IconSmartSwitch" UriSource="pack://application:,,,/Assets/icons/smartswitch.png" />
-        <BitmapImage x:Key="IconSmartAlarm" UriSource="pack://application:,,,/Assets/icons/smartalarm.png" />
-        <BitmapImage x:Key="IconGroup" UriSource="pack://application:,,,/Assets/icons/cabins.png" />
-        <!--  WinUI 3 Design Palette  -->
-        <SolidColorBrush x:Key="AppBg" Color="#0F1013" />
-        <SolidColorBrush x:Key="Surface" Color="#181B1F" />
-        <SolidColorBrush x:Key="SurfaceAlt" Color="#1F2229" />
-        <SolidColorBrush x:Key="SurfaceHover" Color="#252A33" />
-        <SolidColorBrush x:Key="CardBorder" Color="#28FFFFFF" />
-        <SolidColorBrush x:Key="Accent" Color="#60CDFF" />
-        <SolidColorBrush x:Key="AccentDark" Color="#1A4D6B" />
-        <SolidColorBrush x:Key="AccentGreen" Color="#4EB887" />
-        <SolidColorBrush x:Key="AccentRed" Color="#F04747" />
-
-        <SolidColorBrush x:Key="TextPrimary" Color="#F0F3F7" />
-        <SolidColorBrush x:Key="TextSubtle" Color="#8C96A8" />
-        <SolidColorBrush x:Key="TextCaption" Color="#5A6475" />
-        <CornerRadius x:Key="Radius">8</CornerRadius>
-
-        <!--  Card / Tab styles  -->
-        <SolidColorBrush x:Key="CardBrush" Color="#181B20" />
-        <SolidColorBrush x:Key="CardBorderBrush" Color="#1EFFFFFF" />
-        <SolidColorBrush x:Key="PrimaryBrush" Color="#3B82F6" />
-        <SolidColorBrush x:Key="PrimaryBrushMuted" Color="#1D4ED8" />
-        <SolidColorBrush x:Key="TextBrush" Color="#E8ECF4" />
-        <SolidColorBrush x:Key="TextBrushMuted" Color="#8C96A8" />
-
-        <Style x:Key="PrettyTabControl" TargetType="{x:Type TabControl}">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderBrush" Value="Transparent" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type TabControl}">
-                        <Grid KeyboardNavigation.TabNavigation="Local" SnapsToDevicePixels="True">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-
-                            <!--  Genau EIN ItemsHost (TabPanel), ohne Kinder  -->
-                            <TabPanel
-                                x:Name="HeaderPanel"
-                                Grid.Row="0"
-                                Margin="8,8,8,0"
-                                Panel.ZIndex="1"
-                                IsItemsHost="True" />
-
-                            <!--  Inhalt  -->
-                            <Border
-                                Grid.Row="1"
-                                Margin="8,0,8,8"
-                                Padding="12"
-                                Background="{StaticResource CardBrush}"
-                                BorderBrush="{StaticResource CardBorderBrush}"
-                                BorderThickness="1"
-                                CornerRadius="14">
-                                <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" />
-                            </Border>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <!--  HEADER-TEMPLATE: Border + Popup gemeinsam in einem Grid  -->
-        <ControlTemplate x:Key="DarkMenuItem_Header" TargetType="MenuItem">
-            <Grid>
-                <!--  <<< ein gemeinsames Root  -->
-                <Border
-                    x:Name="Bd"
-                    Padding="{TemplateBinding Padding}"
-                    Background="{TemplateBinding Background}"
-                    CornerRadius="6"
-                    SnapsToDevicePixels="True">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="18" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="16" />
-                        </Grid.ColumnDefinitions>
-
-                        <!--  Dot indicator for checkable headers  -->
-                        <ui:SymbolIcon
-                            x:Name="CheckIcon"
-                            Grid.Column="0"
-                            Symbol="Checkmark20"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Foreground="{DynamicResource Accent}"
-                            Visibility="Collapsed" />
-
-                        <ContentPresenter
-                            Grid.Column="0"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            ContentSource="Icon" />
-
-                        <ContentPresenter
-                            Grid.Column="1"
-                            Margin="4,0,6,0"
-                            VerticalAlignment="Center"
-                            ContentSource="Header"
-                            RecognizesAccessKey="True" />
-
-                        <Path
-                            Grid.Column="2"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Data="M 0 0 L 4 4 L 0 8"
-                            Stroke="{DynamicResource TextSubtle}"
-                            StrokeEndLineCap="Round"
-                            StrokeStartLineCap="Round"
-                            StrokeThickness="1.5" />
-                    </Grid>
-                </Border>
-
-                <!--  Submenu-Popup  -->
-                <Popup
-                    x:Name="PART_Popup"
-                    AllowsTransparency="True"
-                    Focusable="False"
-                    HorizontalOffset="0"
-                    IsOpen="{TemplateBinding IsSubmenuOpen}"
-                    Placement="Right"
-                    StaysOpen="False"
-                    VerticalOffset="0">
-                    <Border
-                        Padding="6"
-                        Background="{DynamicResource Surface}"
-                        BorderBrush="{DynamicResource CardBorder}"
-                        BorderThickness="1"
-                        CornerRadius="{DynamicResource Radius}"
-                        SnapsToDevicePixels="True">
-                        <ScrollViewer CanContentScroll="True">
-                            <StackPanel IsItemsHost="True" />
-                        </ScrollViewer>
-                    </Border>
-                </Popup>
-            </Grid>
-
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
-                    <Setter Property="Foreground" Value="{DynamicResource Accent}" />
-                </Trigger>
-                <Trigger Property="Tag" Value="Partial">
-                    <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
-                    <Setter TargetName="CheckIcon" Property="Opacity" Value="0.6" />
-                </Trigger>
-                <Trigger Property="IsHighlighted" Value="True">
-                    <Setter TargetName="Bd" Property="Background" Value="#141A22" />
-                </Trigger>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
-                    <Setter TargetName="Bd" Property="Opacity" Value="0.6" />
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
-
-        <!-- Pill-shaped Toggle Button for Map Filters -->
-        <Style x:Key="PillToggleButton" TargetType="CheckBox">
-            <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
-            <Setter Property="Background" Value="#1AFFFFFF" />
-            <Setter Property="Padding" Value="14,6" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="CheckBox">
-                        <Border
-                            x:Name="Bd"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="#2AFFFFFF"
-                            BorderThickness="1"
-                            CornerRadius="16"
-                            Padding="{TemplateBinding Padding}"
-                            SnapsToDevicePixels="True">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#3D4B5C" />
-                                <Setter Property="Foreground" Value="White" />
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}" />
-                                <Setter TargetName="Bd" Property="Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect BlurRadius="12" Color="#60CDFF" Opacity="0.5" ShadowDepth="0" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsChecked" Value="{x:Null}">
-                                <Setter TargetName="Bd" Property="Background" Value="#4B3D2B" />
-                                <Setter Property="Foreground" Value="#FFCA00" />
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="#FFB900" />
-                                <Setter TargetName="Bd" Property="Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect BlurRadius="12" Color="#FFB900" Opacity="0.5" ShadowDepth="0" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#2AFFFFFF" />
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="#40FFFFFF" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.5" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!--  ITEM-TEMPLATE (Leaf) with Standard Checkboxes  -->
-        <ControlTemplate x:Key="DarkMenuItem_Item" TargetType="MenuItem">
-            <Border
-                x:Name="Bd"
-                Padding="{TemplateBinding Padding}"
-                Background="{TemplateBinding Background}"
-                CornerRadius="6"
-                SnapsToDevicePixels="True">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="24" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <ui:SymbolIcon
-                        x:Name="CheckIcon"
-                        Grid.Column="0"
-                        Symbol="Checkmark20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Foreground="{DynamicResource Accent}"
-                        Visibility="Collapsed" />
-
-                    <ContentPresenter
-                        Grid.Column="0"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        ContentSource="Icon" />
-
-                    <ContentPresenter
-                        Grid.Column="1"
-                        Margin="6,0,6,0"
-                        VerticalAlignment="Center"
-                        ContentSource="Header"
-                        RecognizesAccessKey="True" />
-                </Grid>
-            </Border>
-
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
-                    <Setter Property="Foreground" Value="{DynamicResource Accent}" />
-                </Trigger>
-                <Trigger Property="IsHighlighted" Value="True">
-                    <Setter TargetName="Bd" Property="Background" Value="#1AFFFFFF" />
-                </Trigger>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
-                    <Setter TargetName="Bd" Property="Opacity" Value="0.6" />
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
-
-        <Style x:Key="DarkMenuItem" TargetType="MenuItem">
-            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Padding" Value="10,6" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template" Value="{StaticResource DarkMenuItem_Item}" />
-            <Style.Triggers>
-                <Trigger Property="HasItems" Value="True">
-                    <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <!--  dunkler Separator  -->
-        <Style x:Key="DarkSeparator" TargetType="Separator">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Separator">
-                        <Border
-                            Height="1"
-                            Margin="6,6,6,6"
-                            Background="#22FFFFFF" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!--  dunkles ContextMenu-GehÃ¤use  -->
-        <Style x:Key="DarkContextMenu" TargetType="ContextMenu">
-            <Setter Property="Background" Value="{DynamicResource Surface}" />
-            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
-            <Setter Property="HasDropShadow" Value="True" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ContextMenu">
-                        <Border
-                            Padding="6"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{DynamicResource CardBorder}"
-                            BorderThickness="1"
-                            CornerRadius="{DynamicResource Radius}"
-                            SnapsToDevicePixels="True">
-                            <StackPanel IsItemsHost="True" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!--  TabItem: echte &#x201E;Reiter&#x201C;-Optik mit eckigem FuÃŸ, bÃ¼ndig zur Card  -->
-        <Style x:Key="PrettyTabItem" TargetType="TabItem">
-            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
-            <Setter Property="Padding" Value="14,8" />
-            <Setter Property="Margin" Value="0" />
-            <!--  kein Abstand zwischen Reitern  -->
-            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TabItem">
-                        <Border
-                            x:Name="TabHeader"
-                            Padding="12,6"
-                            Background="#11151B"
-                            BorderBrush="{StaticResource CardBorderBrush}"
-                            BorderThickness="1,1,1,0"
-                            CornerRadius="10,10,0,0"
-                            SnapsToDevicePixels="True">
-                            <ContentPresenter
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                ContentSource="Header" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="TabHeader" Property="Background" Value="#151A22" />
-                            </Trigger>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Panel.ZIndex" Value="1" />
-
-                                <Setter TargetName="TabHeader" Property="Margin" Value="0,0,0,-1" />
-                                <Setter TargetName="TabHeader" Property="Background" Value="{StaticResource CardBrush}" />
-                                <Setter TargetName="TabHeader" Property="BorderBrush" Value="{StaticResource CardBorderBrush}" />
-                                <Setter Property="Foreground" Value="White" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.6" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!--  SekundÃ¤r-Button (unten im Tab)  -->
-        <Style x:Key="GhostButton" TargetType="Button">
-            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
-            <Setter Property="Background" Value="#141821" />
-            <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Padding" Value="12,6" />
-            <Setter Property="Margin" Value="8,0,0,0" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border
-                            x:Name="BtnBg"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
-                            CornerRadius="10">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="BtnBg" Property="Background" Value="#1A2130" />
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="BtnBg" Property="Background" Value="#0F1320" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.55" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!--  PrimÃ¤r-Button (CHAT)  -->
-        <Style
-            x:Key="PrimaryButton"
-            BasedOn="{StaticResource GhostButton}"
-            TargetType="Button">
-            <Setter Property="Background" Value="{StaticResource PrimaryBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrushMuted}" />
-            <Setter Property="Foreground" Value="White" />
-        </Style>
-
-        <!--  ========= Ultra-Slim Scrollbars =========  -->
-        <SolidColorBrush x:Key="ScrollbarTrackBrush" Color="#141820" />
-        <SolidColorBrush x:Key="ScrollbarThumbBrush" Color="#2C3548" />
-        <SolidColorBrush x:Key="ScrollbarThumbBrushHover" Color="#3A4663" />
-        <SolidColorBrush x:Key="ScrollbarThumbBrushActive" Color="#4C5A7A" />
-
-        <Style x:Key="SlimThumb" TargetType="{x:Type Thumb}">
-            <Setter Property="Background" Value="{StaticResource ScrollbarThumbBrush}" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Thumb}">
-                        <Border
-                            x:Name="B"
-                            Background="{TemplateBinding Background}"
-                            CornerRadius="2" />
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="B" Property="Background" Value="{StaticResource ScrollbarThumbBrushHover}" />
-                            </Trigger>
-                            <Trigger Property="IsDragging" Value="True">
-                                <Setter TargetName="B" Property="Background" Value="{StaticResource ScrollbarThumbBrushActive}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="{x:Type ScrollBar}">
-            <Setter Property="Background" Value="Transparent" />
-            <!--  wichtig, damit schmaler als Systembreite mÃ¶glich  -->
-            <Setter Property="MinWidth" Value="0" />
-            <Setter Property="MinHeight" Value="0" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ScrollBar}">
-                        <Grid SnapsToDevicePixels="True">
-                            <Border Background="{StaticResource ScrollbarTrackBrush}" CornerRadius="2" />
-                            <Track
-                                x:Name="PART_Track"
-                                Focusable="False"
-                                IsDirectionReversed="True"
-                                Orientation="{TemplateBinding Orientation}">
-                                <Track.DecreaseRepeatButton>
-                                    <RepeatButton IsHitTestVisible="False" Opacity="0" />
-                                </Track.DecreaseRepeatButton>
-                                <Track.IncreaseRepeatButton>
-                                    <RepeatButton IsHitTestVisible="False" Opacity="0" />
-                                </Track.IncreaseRepeatButton>
-                                <Track.Thumb>
-                                    <Thumb Style="{StaticResource SlimThumb}" />
-                                </Track.Thumb>
-                            </Track>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-
-            <!--  Breite/HÃ¶he hier anpassen: 4 => super schlank; 2 => &#x201E;hairline&#x201C;  -->
-            <Style.Triggers>
-                <Trigger Property="Orientation" Value="Vertical">
-                    <Setter Property="Width" Value="4" />
-                    <Setter Property="Margin" Value="0,2,2,2" />
-                </Trigger>
-                <Trigger Property="Orientation" Value="Horizontal">
-                    <Setter Property="Height" Value="4" />
-                    <Setter Property="Margin" Value="2,0,2,2" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-
-        <!--  Default-Text  -->
-        <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
-        </Style>
-        <SolidColorBrush x:Key="CbBg" Color="#202428" />
-        <SolidColorBrush x:Key="CbBorder" Color="#5A6672" />
-        <SolidColorBrush x:Key="CbHover" Color="#7F8A96" />
-        <SolidColorBrush x:Key="CbAccent" Color="#62D38B" />
-        <SolidColorBrush x:Key="CbDisabled" Color="#334049" />
-        <SolidColorBrush x:Key="CbText" Color="#EAEFF3" />
-
-        <SolidColorBrush x:Key="DonateYellow" Color="#FFD166" />
-        <SolidColorBrush x:Key="DonateYellowHover" Color="#FFDE89" />
-        <SolidColorBrush x:Key="DonateYellowPressed" Color="#FFBE4C" />
-        <SolidColorBrush x:Key="DonateTextDark" Color="#1A1E22" />
-
-        <!--  Runde gelbe Accent-Button  -->
-        <Style x:Key="DonateButton" TargetType="Button">
-            <Setter Property="Foreground" Value="{StaticResource DonateTextDark}" />
-            <Setter Property="Background" Value="{StaticResource DonateYellow}" />
-            <Setter Property="BorderBrush" Value="#26000000" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Padding" Value="10,6" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border
-                            x:Name="Bd"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="10"
-                            SnapsToDevicePixels="True">
-                            <ContentPresenter
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                RecognizesAccessKey="True" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource DonateYellowHover}" />
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource DonateYellowPressed}" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="Bd" Property="Opacity" Value="0.6" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!--  ðŸ”˜ Runde Checkbox mit Punkt  -->
-        <Style x:Key="DotCheckBox" TargetType="CheckBox">
-            <Setter Property="Foreground" Value="{StaticResource CbText}" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="CheckBox">
-                        <Grid SnapsToDevicePixels="True">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <!--  Bullet  -->
-                            <Grid
-                                Width="18"
-                                Height="18"
-                                Margin="0,0,8,0">
-                                <!--  Rahmen-Kreis  -->
-                                <Ellipse
-                                    x:Name="Circle"
-                                    Width="18"
-                                    Height="18"
-                                    Fill="Transparent"
-                                    Stroke="{StaticResource CbBorder}"
-                                    StrokeThickness="2" />
-                                <!--  Punkt  -->
-                                <Ellipse
-                                    x:Name="Dot"
-                                    Width="10"
-                                    Height="10"
-                                    Fill="{StaticResource CbAccent}">
-                                    <Ellipse.RenderTransform>
-                                        <ScaleTransform x:Name="DotScale" CenterX="5" CenterY="5" ScaleX="0" ScaleY="0" />
-                                    </Ellipse.RenderTransform>
-                                </Ellipse>
-                            </Grid>
-
-                            <!--  Text/Content  -->
-                            <ContentPresenter
-                                Grid.Column="1"
-                                VerticalAlignment="Center"
-                                RecognizesAccessKey="True" />
-
-                            <!--  Visual States  -->
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal" />
-                                    <VisualState x:Name="MouseOver">
-                                        <Storyboard>
-                                            <ColorAnimation
-                                                Storyboard.TargetName="Circle"
-                                                Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)"
-                                                To="#7F8A96"
-                                                Duration="0:0:0.08" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Disabled">
-                                        <Storyboard>
-                                            <ColorAnimation
-                                                Storyboard.TargetName="Circle"
-                                                Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)"
-                                                To="#334049"
-                                                Duration="0:0:0" />
-                                            <DoubleAnimation
-                                                Storyboard.TargetName="DotScale"
-                                                Storyboard.TargetProperty="ScaleX"
-                                                To="0"
-                                                Duration="0:0:0" />
-                                            <DoubleAnimation
-                                                Storyboard.TargetName="DotScale"
-                                                Storyboard.TargetProperty="ScaleY"
-                                                To="0"
-                                                Duration="0:0:0" />
-                                            <DoubleAnimation
-                                                Storyboard.TargetName="Circle"
-                                                Storyboard.TargetProperty="Opacity"
-                                                To="0.6"
-                                                Duration="0:0:0" />
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-
-                                <VisualStateGroup x:Name="CheckStates">
-                                    <VisualState x:Name="Unchecked" />
-                                    <VisualState x:Name="Checked">
-                                        <Storyboard>
-                                            <ColorAnimation
-                                                Storyboard.TargetName="Circle"
-                                                Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)"
-                                                To="#62D38B"
-                                                Duration="0:0:0.08" />
-                                            <DoubleAnimation
-                                                Storyboard.TargetName="DotScale"
-                                                Storyboard.TargetProperty="ScaleX"
-                                                To="1"
-                                                Duration="0:0:0.10" />
-                                            <DoubleAnimation
-                                                Storyboard.TargetName="DotScale"
-                                                Storyboard.TargetProperty="ScaleY"
-                                                To="1"
-                                                Duration="0:0:0.10" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Indeterminate">
-                                        <Storyboard>
-                                            <ColorAnimation
-                                                Storyboard.TargetName="Circle"
-                                                Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)"
-                                                To="#62D38B"
-                                                Duration="0:0:0.08" />
-                                            <DoubleAnimation
-                                                Storyboard.TargetName="DotScale"
-                                                Storyboard.TargetProperty="ScaleX"
-                                                To="0.5"
-                                                Duration="0:0:0.10" />
-                                            <DoubleAnimation
-                                                Storyboard.TargetName="DotScale"
-                                                Storyboard.TargetProperty="ScaleY"
-                                                To="0.5"
-                                                Duration="0:0:0.10" />
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <!--  Button: rund, dezent Hover/Pressed  -->
-        <Style TargetType="Button">
-            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
-            <Setter Property="Background" Value="{DynamicResource SurfaceAlt}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Padding" Value="8,6" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border
-                            x:Name="Bd"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{DynamicResource Radius}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Surface}" />
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentDark}" />
-                                <Setter Property="Foreground" Value="White" />
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource AccentDark}" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="Bd" Property="Opacity" Value="0.5" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!--  Icon-Button (z.B. Lupe)  -->
-        <Style
-            x:Key="IconButton"
-            BasedOn="{StaticResource {x:Type Button}}"
-            TargetType="Button">
-            <Setter Property="Padding" Value="6" />
-            <Setter Property="Width" Value="32" />
-            <Setter Property="Height" Value="32" />
-        </Style>
-
-        <!--  CheckBox dunkel  -->
-        <Style TargetType="CheckBox">
-            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
-        </Style>
-
-        <!--  TextBox dunkel  -->
-        <Style TargetType="TextBox">
-            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
-            <Setter Property="Background" Value="{DynamicResource SurfaceAlt}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Padding" Value="6,4" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TextBox">
-                        <Border
-                            x:Name="Bd"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{DynamicResource Radius}">
-                            <ScrollViewer x:Name="PART_ContentHost" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="Bd" Property="Opacity" Value="0.5" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!--  ListBox dunkel + dezente Auswahl  -->
-        <Style TargetType="ListBox">
-            <Setter Property="Background" Value="{DynamicResource SurfaceAlt}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}" />
-            <Setter Property="BorderThickness" Value="1" />
-        </Style>
-        <Style TargetType="ListBoxItem">
-            <Setter Property="Padding" Value="6,4" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListBoxItem">
-                        <Border
-                            x:Name="Bd"
-                            Background="{TemplateBinding Background}"
-                            CornerRadius="6">
-                            <ContentPresenter Margin="4,2" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#264FC3F7" />
-                                <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#1AFFFFFF" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!--  Log/TextBox Multiline  -->
-        <Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource {x:Type ScrollViewer}}">
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
-
-        <!--  Card-Container zum Wiederverwenden  -->
-        <Style x:Key="Card" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource Surface}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="{DynamicResource Radius}" />
-            <Setter Property="Padding" Value="12" />
-        </Style>
-
-        <!--  Abschnittstitel  -->
-        <Style
-            x:Key="SectionTitle"
-            BasedOn="{StaticResource {x:Type TextBlock}}"
-            TargetType="TextBlock">
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="Margin" Value="0,0,0,8" />
-        </Style>
-
-        <conv:NotNullToBoolConverter x:Key="NotNull" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Views/MainWindow/SharedResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
         <DataTemplate x:Key="TrackedPlayerTemplate" DataType="{x:Type services:TrackedPlayer}">
             <Grid
@@ -954,6 +147,7 @@
             </DataTemplate.Triggers>
         </DataTemplate>
 
+        </ResourceDictionary>
     </ui:FluentWindow.Resources>
 
     <Grid>
@@ -1796,10 +990,22 @@
                             <ui:Button
                                 x:Name="BtnHotkeys"
                                 Width="90"
-                                Margin="0,0,10,0"
+                                Margin="0,0,5,0"
                                 Appearance="Secondary"
                                 Click="BtnHotkeys_Click"
                                 Content="{DynamicResource Hotkeys}" />
+
+                            <ui:Button
+                                x:Name="BtnPremiumInfoDevices"
+                                Appearance="Transparent"
+                                Width="32"
+                                Margin="0,0,10,0"
+                                Icon="{ui:SymbolIcon Symbol=Info24, Filled=True}"
+                                Foreground="#e03131"
+                                Visibility="Collapsed"
+                                Click="BtnPremiumInfoDevices_Click"
+                                ToolTip="{DynamicResource PremiumFeatures}" />
+
                             <ui:Button
                                 x:Name="BtnDevicesImport"
                                 Width="36"
@@ -1818,7 +1024,7 @@
                                 Padding="4"
                                 Appearance="Secondary"
                                 Click="BtnDevicesExport_Click"
-                                Icon="{ui:SymbolIcon Symbol=ArrowUpload24}"
+                                Icon="{ui:SymbolIcon Symbol=Cloud24}"
                                 ToolTip="{DynamicResource ExportDevices}" />
                             <ui:Button
                                 Width="80"
@@ -2707,141 +1913,127 @@
                                         </ListBox.ItemTemplate>
                                     </ListBox>
 
-                                    <!--  Buttonleiste unten  -->
-                                    <Grid Grid.Row="1" Margin="0,10,0,0">
-                                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                            <!--  Profile marker toggle (default ON)  -->
-                                            <CheckBox
-                                                x:Name="ChkProfileMarkers"
-                                                Margin="0,0,12,0"
-                                                Checked="ChkProfileMarkers_Toggled"
-                                                IsChecked="True"
-                                                Style="{StaticResource DotCheckBox}"
-                                                Unchecked="ChkProfileMarkers_Toggled">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Grid
-                                                        Width="20"
-                                                        Height="20"
-                                                        Margin="0,0,6,0">
-                                                        <!--  Avatar Preview (Visible when checked)  -->
-                                                        <Ellipse
-                                                            Width="18"
-                                                            Height="18"
-                                                            Stroke="Black"
-                                                            StrokeThickness="1"
-                                                            Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibility}}">
-                                                            <Ellipse.Fill>
-                                                                <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
-                                                            </Ellipse.Fill>
-                                                        </Ellipse>
-                                                        <!--  Dot Preview (Visible when unchecked)  -->
-                                                        <Ellipse
-                                                            Width="10"
-                                                            Height="10"
-                                                            Fill="LimeGreen"
-                                                            Stroke="Black"
-                                                            StrokeThickness="1.5"
-                                                            Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
-                                                    </Grid>
-                                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource ProfileMarkers}" />
-                                                </StackPanel>
-                                            </CheckBox>
+                                    <!-- RESPONSIVE SETTINGS GRID -->
+                                    <Grid Grid.Row="1" Margin="8,4,8,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
 
-                                            <!--  Death markers toggle (default OFF)  -->
-                                            <CheckBox
-                                                x:Name="ChkDeathMarkers"
-                                                Margin="0,0,12,0"
-                                                Checked="ChkDeathMarkers_Toggled"
-                                                IsChecked="False"
-                                                Style="{StaticResource DotCheckBox}"
-                                                Unchecked="ChkDeathMarkers_Toggled">
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,12,0" VerticalAlignment="Center">
+                                            <TextBlock Text="{DynamicResource Markers}" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#AAA" FontSize="11" />
+                                            
+                                            <!-- Profile Markers -->
+                                            <CheckBox x:Name="ChkProfileMarkers" IsChecked="True" Checked="ChkProfileMarkers_Toggled" Unchecked="ChkProfileMarkers_Toggled" Margin="0,0,12,0" Style="{StaticResource DotCheckBox}">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <Grid
-                                                        Width="20"
-                                                        Height="20"
-                                                        Margin="0,0,6,0">
-                                                        <!--  Death Preview (Visible when checked)  -->
-                                                        <Grid Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibility}}">
-                                                            <Path
-                                                                Width="16"
-                                                                Height="20"
-                                                                Data="M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z"
-                                                                Fill="IndianRed"
-                                                                Stretch="Uniform"
-                                                                Stroke="Black"
-                                                                StrokeThickness="1" />
-                                                            <Ellipse
-                                                                Width="10"
-                                                                Height="10"
-                                                                Margin="0,0,0,5">
+                                                    <Viewbox Width="18" Height="18" Margin="0,0,6,0" Stretch="Uniform">
+                                                        <Grid Width="40" Height="40">
+                                                            <!-- Real profile marker preview (lime dot with avatar) -->
+                                                            <Ellipse Width="38" Height="38" Stroke="Black" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibility}}">
                                                                 <Ellipse.Fill>
                                                                     <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
                                                                 </Ellipse.Fill>
                                                             </Ellipse>
+                                                            <!-- Fallback if unchecked -->
+                                                            <Ellipse Width="18" Height="18" Fill="LimeGreen" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
                                                         </Grid>
-                                                        <!--  Grey dot (Visible when unchecked - indicates hidden/none)  -->
-                                                        <Ellipse
-                                                            Width="10"
-                                                            Height="10"
-                                                            Fill="#444"
-                                                            Stroke="#666"
-                                                            StrokeThickness="1.5"
-                                                            Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
-                                                    </Grid>
-                                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource DeathMarkers}" />
+                                                    </Viewbox>
+                                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource Profile}" TextTrimming="CharacterEllipsis" />
                                                 </StackPanel>
                                             </CheckBox>
 
-                                            <!-- Abbreviate Names Toggle -->
-                                            <ToggleButton x:Name="BtnAbbreviateNames"
-                                                          Margin="0,0,12,0"
-                                                          Width="24" Height="24"
-                                                          ToolTip="{DynamicResource StreamerMode}"                                                          Checked="BtnAbbreviateNames_Toggled"
-                                                          Unchecked="BtnAbbreviateNames_Toggled">
-                                                <ToggleButton.Style>
-                                                    <Style TargetType="ToggleButton">
-                                                        <Setter Property="Background" Value="Transparent"/>
-                                                        <Setter Property="BorderThickness" Value="1"/>
-                                                        <Setter Property="BorderBrush" Value="#444"/>
-                                                        <Setter Property="Foreground" Value="#CCC"/>
-                                                        <Setter Property="Template">
-                                                            <Setter.Value>
-                                                                <ControlTemplate TargetType="ToggleButton">
-                                                                    <Border Background="{TemplateBinding Background}"
-                                                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                                                            BorderThickness="{TemplateBinding BorderThickness}"
-                                                                            CornerRadius="3">
-                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                    </Border>
-                                                                </ControlTemplate>
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Background" Value="#222"/>
-                                                            </Trigger>
-                                                            <Trigger Property="IsChecked" Value="True">
-                                                                <Setter Property="Background" Value="#1C4B82"/>
-                                                                <Setter Property="BorderBrush" Value="#2A6CA6"/>
-                                                                <Setter Property="Foreground" Value="White"/>
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </ToggleButton.Style>
-                                                <TextBlock Text="A..." FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
-                                            </ToggleButton>
+                                            <!-- Death Markers -->
+                                            <Grid x:Name="DeathMarkerToggleContainer" Background="Transparent">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <CheckBox x:Name="ChkDeathMarkers" IsChecked="False" Checked="ChkDeathMarkers_Toggled" Unchecked="ChkDeathMarkers_Toggled" Style="{StaticResource DotCheckBox}" VerticalAlignment="Center">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Viewbox Width="18" Height="22" Margin="0,0,6,0" Stretch="Uniform">
+                                                                <Grid Width="40" Height="56">
+                                                                    <!-- Path matching BuildDeathPin -->
+                                                                    <Path Data="M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z" Fill="IndianRed" Stroke="Black" StrokeThickness="2" Stretch="Fill" Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibility}}" />
+                                                                    
+                                                                    <!-- Avatar Circle inside the pin -->
+                                                                    <Ellipse Width="26" Height="26" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,5,0,0" Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibility}}">
+                                                                        <Ellipse.Fill>
+                                                                            <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
+                                                                        </Ellipse.Fill>
+                                                                    </Ellipse>
 
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <TextBlock Text="{DynamicResource ScaleLabel}" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10"/>
-                                                <Slider x:Name="SliderPlayerIconSize" 
-                                                        Width="50" Minimum="0.5" Maximum="1.5" Value="1.0" 
-                                                        TickFrequency="0.05" IsSnapToTickEnabled="True" 
-                                                        ValueChanged="SliderPlayerIconSize_ValueChanged"
-                                                        VerticalAlignment="Center" />
-                                                <TextBlock Text="{Binding Value, ElementName=SliderPlayerIconSize, StringFormat={}{0:P0}}" 
-                                                           VerticalAlignment="Center" Margin="4,0,0,0" Foreground="#AAA" FontSize="10" Width="30"/>
-                                            </StackPanel>
+                                                                    <!-- Checkbox unchecked state (gray dot) -->
+                                                                    <Ellipse Width="16" Height="16" Fill="#444" Stroke="#666" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
+                                                                </Grid>
+                                                            </Viewbox>
+                                                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource Death}" TextTrimming="CharacterEllipsis" />
+                                                        </StackPanel>
+                                                    </CheckBox>
+                                                    
+                                                    <ui:Button x:Name="BtnDeathMarkerSettings"
+                                                               Appearance="Transparent"
+                                                               Padding="2"
+                                                               Margin="2,0,0,0"
+                                                               VerticalAlignment="Center"
+                                                               Click="BtnDeathMarkerSettings_Click">
+                                                        <ui:SymbolIcon Symbol="Settings24" FontSize="12" Foreground="#AAA" />
+                                                        <ui:Button.Style>
+                                                            <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                                                <Setter Property="Opacity" Value="0" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsMouseOver, ElementName=DeathMarkerToggleContainer}" Value="True">
+                                                                        <Setter Property="Opacity" Value="1" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </ui:Button.Style>
+                                                    </ui:Button>
+                                                </StackPanel>
+                                            </Grid>
                                         </StackPanel>
+
+                                        <!-- Abbreviate Names Toggle -->
+                                        <ToggleButton Grid.Column="1" x:Name="BtnAbbreviateNames" Margin="0,0,12,0" Width="24" Height="24" ToolTip="{DynamicResource StreamerMode}" Checked="BtnAbbreviateNames_Toggled" Unchecked="BtnAbbreviateNames_Toggled">
+                                            <ToggleButton.Style>
+                                                <Style TargetType="ToggleButton">
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Setter Property="BorderThickness" Value="1"/>
+                                                    <Setter Property="BorderBrush" Value="#444"/>
+                                                    <Setter Property="Foreground" Value="#CCC"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ToggleButton">
+                                                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3">
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#222"/></Trigger>
+                                                        <Trigger Property="IsChecked" Value="True">
+                                                            <Setter Property="Background" Value="#1C4B82"/>
+                                                            <Setter Property="BorderBrush" Value="#2A6CA6"/>
+                                                            <Setter Property="Foreground" Value="White"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ToggleButton.Style>
+                                            <TextBlock Text="A..." FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                        </ToggleButton>
+
+                                        <!-- Dynamic Slider -->
+                                        <Grid Grid.Column="2" VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="{DynamicResource ScaleLabel}" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10" />
+                                            <Slider Grid.Column="1" x:Name="SliderPlayerIconSize" Minimum="0.5" Maximum="1.5" Value="1.0" TickFrequency="0.05" IsSnapToTickEnabled="True" ValueChanged="SliderPlayerIconSize_ValueChanged" VerticalAlignment="Center" MinWidth="30" />
+                                            <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=SliderPlayerIconSize, StringFormat={}{0:P0}}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="#AAA" FontSize="10" Width="30" />
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -2919,294 +2111,7 @@
                                     <TextBlock VerticalAlignment="Center" Text="{DynamicResource PlayersTab}" />
                                 </StackPanel>
                             </TabItem.Header>
-                            <TabControl
-                                Margin="0,10,0,0"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                Background="Transparent"
-                                BorderThickness="0">
-                                <TabControl.Template>
-                                    <ControlTemplate TargetType="{x:Type TabControl}">
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="*" />
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-                                            
-                                            <TabPanel
-                                                Grid.Row="0" Grid.Column="0"
-                                                Margin="0"
-                                                Panel.ZIndex="1"
-                                                IsItemsHost="True" />
-                                                
-                                            <ui:Button
-                                                Grid.Row="0" Grid.Column="1"
-                                                Margin="0,0,12,0"
-                                                Padding="8,4"
-                                                VerticalAlignment="Center"
-                                                Appearance="Secondary"
-                                                Click="BtnHowToTrack_Click"
-                                                ToolTip="{DynamicResource LearnHowTrackingWorks}"
-                                                Icon="{ui:SymbolIcon Symbol=QuestionCircle24}"
-                                                Content="{DynamicResource HowToTrack}" />
-
-                                            <ContentPresenter
-                                                Grid.Row="1" Grid.ColumnSpan="2"
-                                                Margin="0,8,0,0"
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Stretch"
-                                                ContentSource="SelectedContent" />
-                                        </Grid>
-                                    </ControlTemplate>
-                                </TabControl.Template>
-
-                                <!--  Online Players Tab  -->
-                                <TabItem Header="{DynamicResource OnlineTab}" Style="{StaticResource PrettyTabItem}">
-                                    <Border
-                                        Padding="12"
-                                        Background="{DynamicResource ControlFillColorDefaultBrush}"
-                                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
-                                        BorderThickness="1"
-                                        CornerRadius="8"
-                                        TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="*" />
-                                            </Grid.RowDefinitions>
-
-                                            <Grid Grid.Row="0" Margin="0,0,0,12">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock
-                                                    VerticalAlignment="Center"
-                                                    FontSize="16"
-                                                    FontWeight="Bold"
-                                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                    Text="{DynamicResource OnlinePlayers}" />
-
-
-
-                                                <ui:Button
-                                                    Grid.Column="2"
-                                                    Padding="8,4"
-                                                    Appearance="Secondary"
-                                                    Click="BtnShowOnline_Click"
-                                                    Content="{DynamicResource Refresh}"
-                                                    Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" />
-
-                                                <ui:Button
-                                                    x:Name="BtnPopoutPlayers"
-                                                    Grid.Column="3"
-                                                    Margin="4,0,0,0"
-                                                    Padding="8,4"
-                                                    Appearance="Secondary"
-                                                    Click="BtnPopoutPlayers_Click"
-                                                    ToolTip="{DynamicResource OpenPlayersSeparateWindow}"
-                                                    Content="{DynamicResource Popout}" />
-                                            </Grid>
-
-                                            <DockPanel x:Name="PnlManualTrack" Grid.Row="1" Margin="0,0,0,8">
-                                                <ui:Button
-                                                    x:Name="BtnAddManual"
-                                                    Margin="4,0,0,0"
-                                                    Padding="8,4"
-                                                    Appearance="Primary"
-                                                    Click="BtnAddManual_Click"
-                                                    Content="{DynamicResource Track}"
-                                                    DockPanel.Dock="Right" />
-                                                <ui:TextBox
-                                                    x:Name="TxtManualBMId"
-                                                    PlaceholderText="{DynamicResource ManualTrackPlaceholder}" />
-                                            </DockPanel>
-
-                                            <ui:TextBox
-                                                x:Name="TxtOnlineFilter"
-                                                Grid.Row="2"
-                                                Margin="0,0,0,8"
-                                                PlaceholderText="{DynamicResource FilterPlayersPlaceholder}"
-                                                TextChanged="TxtOnlineFilter_TextChanged"
-                                                Visibility="Collapsed" />
-
-                                            <Grid
-                                                x:Name="PnlOnlineStatus"
-                                                Grid.Row="3"
-                                                Margin="20"
-                                                VerticalAlignment="Center"
-                                                Visibility="Collapsed"
-                                                Background="Transparent">
-                                                <Grid.ContextMenu>
-                                                    <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                                        <MenuItem Click="Server_Delete_Click" Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                            <MenuItem.Header>
-                                                                <TextBlock>
-                                                                    <Run Text="🗑️ " /><Run Text="{DynamicResource DeleteServerEllipsis}" />
-                                                                </TextBlock>
-                                                            </MenuItem.Header>
-                                                        </MenuItem>
-                                                    </ContextMenu>
-                                                </Grid.ContextMenu>
-                                                <StackPanel>
-                                                    <ui:ProgressRing
-                                                        x:Name="PbOnlineLoading"
-                                                        Width="32"
-                                                        Height="32"
-                                                        Margin="0,0,0,12"
-                                                        IsIndeterminate="True" />
-                                                    <TextBlock
-                                                        x:Name="TxtOnlinePlayersStatus"
-                                                        HorizontalAlignment="Center"
-                                                        FontSize="12"
-                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                        Text="{DynamicResource LoadingPlayers}"
-                                                        TextAlignment="Center"
-                                                        TextWrapping="Wrap" />
-                                                </StackPanel>
-                                            </Grid>
-
-                                            <ListBox
-                                                x:Name="ListOnlinePlayers"
-                                                Grid.Row="3"
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                                <ListBox.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Grid Margin="0,4">
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="*" />
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="Auto" />
-                                                            </Grid.ColumnDefinitions>
-                                                            <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                                                <Ellipse
-                                                                    x:Name="StatusDot"
-                                                                    Width="8"
-                                                                    Height="8"
-                                                                    Margin="0,0,8,0"
-                                                                    VerticalAlignment="Center"
-                                                                    Fill="{DynamicResource SystemAccentColorPrimaryBrush}" />
-                                                                <TextBlock
-                                                                    MaxWidth="160"
-                                                                    VerticalAlignment="Center"
-                                                                    FontSize="13"
-                                                                    FontWeight="SemiBold"
-                                                                    Text="{Binding Name}"
-                                                                    TextTrimming="CharacterEllipsis"
-                                                                    ToolTip="{Binding Name}" />
-                                                            </StackPanel>
-                                                            <TextBlock
-                                                                Grid.Column="1"
-                                                                Margin="0,0,8,0"
-                                                                VerticalAlignment="Center"
-                                                                FontSize="11"
-                                                                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                                                Text="{Binding PlayTimeStr}" />
-
-                                                            <ui:Button
-                                                                x:Name="BtnAction"
-                                                                Grid.Column="3"
-                                                                Width="60"
-                                                                Margin="0"
-                                                                Padding="6,2"
-                                                                Appearance="Secondary"
-                                                                Click="BtnTrackPlayer_Click"
-                                                                Content="{DynamicResource Track}"
-                                                                FontSize="11"
-                                                                Tag="{Binding}" />
-                                                        </Grid>
-                                                        <DataTemplate.Triggers>
-                                                            <DataTrigger Binding="{Binding IsTracked}" Value="True">
-                                                                <Setter TargetName="StatusDot" Property="Fill" Value="#FFD166" />
-                                                                <Setter TargetName="BtnAction" Property="Content" Value="Details" />
-                                                                <Setter TargetName="BtnAction" Property="Appearance" Value="Primary" />
-                                                            </DataTrigger>
-                                                            <Trigger Property="IsMouseOver" Value="False">
-                                                                <Setter TargetName="BtnAction" Property="Opacity" Value="0.6" />
-                                                            </Trigger>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter TargetName="BtnAction" Property="Opacity" Value="1" />
-                                                            </Trigger>
-                                                        </DataTemplate.Triggers>
-                                                    </DataTemplate>
-                                                </ListBox.ItemTemplate>
-                                            </ListBox>
-                                        </Grid>
-                                    </Border>
-                                </TabItem>
-
-                                <!--  Tracked Players Tab  -->
-                                <TabItem Header="{DynamicResource TrackedTab}" Style="{StaticResource PrettyTabItem}">
-                                    <Border
-                                        Padding="12"
-                                        Background="{DynamicResource ControlFillColorDefaultBrush}"
-                                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
-                                        BorderThickness="1"
-                                        CornerRadius="8"
-                                        TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="*" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-
-                                            <Grid Grid.Row="0" Margin="0,0,0,12">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock
-                                                    VerticalAlignment="Center"
-                                                    FontSize="16"
-                                                    FontWeight="Bold"
-                                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                    Text="{DynamicResource TrackedPlayers}" />
-                                                <ui:Button
-                                                    Grid.Column="1"
-                                                    Padding="8,4"
-                                                    Appearance="Secondary"
-                                                    Click="BtnManageGroups_Click"
-                                                    Content="{DynamicResource ManageGroups}"
-                                                    Icon="Group24" />
-                                            </Grid>
-
-                                            <ui:TextBox
-                                                x:Name="TxtTrackedFilter"
-                                                Grid.Row="1"
-                                                Margin="0,0,0,8"
-                                                PlaceholderText="{DynamicResource FilterPlayersPlaceholder}"
-                                                TextChanged="TxtTrackedFilter_TextChanged" />
-
-                                            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-                                                <StackPanel x:Name="ListTrackedPlayers" />
-                                            </ScrollViewer>
-
-                                            <ui:Button
-                                                x:Name="BtnViewTracking"
-                                                Grid.Row="3"
-                                                Margin="0,8,0,0"
-                                                HorizontalAlignment="Stretch"
-                                                Appearance="Primary"
-                                                Click="BtnViewAllAnalysis_Click"
-                                                Content="{DynamicResource ViewFullAnalysisReport}"
-                                                Icon="DataHistogram24" />
-                                        </Grid>
-                                    </Border>
-                                </TabItem>
-                            </TabControl>
+                            <views:PlayersTabContent x:Name="PlayersTab" x:FieldModifier="public" />
                         </TabItem>
                     </TabControl>
 
@@ -3216,32 +2121,93 @@
                     <Border
                         x:Name="ProfitTradesPanel"
                         Background="{DynamicResource Surface}"
-                        Visibility="Collapsed">
+                        Visibility="Collapsed"
+                        UseLayoutRounding="True"
+                        SnapsToDevicePixels="True"
+                        BorderBrush="{DynamicResource CardBorder}"
+                        BorderThickness="1,0,0,0">
                         <Grid ClipToBounds="True">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="36" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <Border Grid.Row="0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="12,0">
-                                <Grid>
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="💰" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                        <TextBlock Text="{DynamicResource ProfitTrades}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <!-- Glassy Capsule-like Premium Header -->
+                            <Border Grid.Row="0" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#1A2D3540" Offset="0.0"/>
+                                        <GradientStop Color="#002D3540" Offset="1.0"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Grid Margin="12,10,12,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="💰" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="{DynamicResource ProfitTrades}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
+                                            <TextBlock Text="{DynamicResource ArbitrageOpportunities}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" Margin="0,1,0,0" />
+                                        </StackPanel>
                                     </StackPanel>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <Button x:Name="BtnRefreshProfitTrades" Content="⟳" Style="{StaticResource GhostButton}" Width="26" Height="26" Padding="0" FontSize="15" Margin="0,0,6,0" ToolTip="{DynamicResource Refresh}" />
-                                        <Button x:Name="BtnCloseProfitTrades" Content="&#x2715;" Style="{StaticResource GhostButton}" Width="26" Height="26" Padding="0" FontSize="12" Foreground="{DynamicResource TextSubtle}" />
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <Button x:Name="BtnRefreshProfitTrades" Content="⟳" Style="{StaticResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="16" Margin="0,0,6,0" ToolTip="{DynamicResource Refresh}" />
+                                        <Button x:Name="BtnCloseProfitTrades" Content="&#x2715;" Style="{StaticResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="13" Foreground="{DynamicResource TextSubtle}" />
                                     </StackPanel>
                                 </Grid>
                             </Border>
 
-                            <Border Grid.Row="1" Padding="12,7" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="{DynamicResource ArbitrageOpportunities}" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
+                            <!-- Modern User-Friendly Filter Controls (Search + Min Profit) -->
+                            <Border Grid.Row="1" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="12,8">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="2*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Search input -->
+                                    <Border Grid.Column="0"
+                                            Background="#14171C"
+                                            BorderBrush="#25FFFFFF"
+                                            BorderThickness="1"
+                                            CornerRadius="6"
+                                            Height="32"
+                                            Margin="0,0,8,0"
+                                            VerticalAlignment="Center">
+                                        <ui:TextBox
+                                            x:Name="TxtProfitSearch"
+                                            PlaceholderText="Search items (e.g. sulfur)..."
+                                            TextChanged="TxtProfitSearch_TextChanged"
+                                            Icon="Search24"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Foreground="White"
+                                            FontSize="12"
+                                            VerticalAlignment="Stretch"
+                                            VerticalContentAlignment="Center"
+                                            Padding="6,0,6,0" />
+                                    </Border>
+
+                                    <!-- Min Profit ComboBox -->
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <TextBlock Text="Min profit:" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                        <ComboBox x:Name="CmbMinProfit" SelectionChanged="CmbMinProfit_SelectionChanged" Height="32" Width="100" FontSize="11.5">
+                                            <ComboBoxItem Content="Show All" Tag="0" IsSelected="True"/>
+                                            <ComboBoxItem Content="≥ 10" Tag="10"/>
+                                            <ComboBoxItem Content="≥ 50" Tag="50"/>
+                                            <ComboBoxItem Content="≥ 100" Tag="100"/>
+                                            <ComboBoxItem Content="≥ 500" Tag="500"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </Grid>
                             </Border>
 
-                            <ListBox x:Name="ProfitTradesList" Grid.Row="2" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Padding="10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
+                            <!-- Clean List container -->
+                            <ListBox x:Name="ProfitTradesList" Grid.Row="2" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Padding="12" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                         </Grid>
                     </Border>
 
@@ -3249,79 +2215,189 @@
                     <Border
                         x:Name="BuyXForYPanel"
                         Background="{DynamicResource Surface}"
-                        Visibility="Collapsed">
+                        Visibility="Collapsed"
+                        UseLayoutRounding="True"
+                        SnapsToDevicePixels="True"
+                        BorderBrush="{DynamicResource CardBorder}"
+                        BorderThickness="1,0,0,0">
                         <Grid ClipToBounds="True">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="36" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="130" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <Border Grid.Row="0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="12,0">
-                                <Grid>
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="🔁" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                        <TextBlock Text="{DynamicResource BuyXForY}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <!-- Glassy Capsule-like Premium Header -->
+                            <Border Grid.Row="0" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#1A2D3540" Offset="0.0"/>
+                                        <GradientStop Color="#002D3540" Offset="1.0"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Grid Margin="12,10,12,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="🔁" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="{DynamicResource BuyXForY}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
+                                            <TextBlock Text="Optimal multi-hop trade pathfinder" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" Margin="0,1,0,0" />
+                                        </StackPanel>
                                     </StackPanel>
-                                    <Button x:Name="BtnCloseBuyXForY" Content="&#x2715;" Style="{StaticResource GhostButton}" Width="26" Height="26" Padding="0" FontSize="12" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                    <ui:Button x:Name="BtnCloseBuyXForY" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="4" Appearance="Transparent" Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
                                 </Grid>
                             </Border>
 
-                            <Grid Grid.Row="1" Margin="12,8,12,6" HorizontalAlignment="Stretch">
+                            <!-- Glassy Form Input Controls -->
+                            <Grid Grid.Row="1" Margin="12,10,12,8" HorizontalAlignment="Stretch">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*" />
                                     <ColumnDefinition Width="2*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="6,3">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="🎯" Margin="0,0,4,0" VerticalAlignment="Center" FontSize="13" />
-                                        <TextBox x:Name="BuyXForY_WantTb" Grid.Column="1" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextPrimary}" CaretBrush="{DynamicResource TextPrimary}" Padding="2,3" VerticalContentAlignment="Center" ToolTip="{DynamicResource IWantToGetToolTip}" FontSize="12" />
-                                    </Grid>
-                                </Border>
+                                <!-- Target/Want TextBox Card -->
+                                <Grid Grid.Column="0" Margin="0,0,6,0" VerticalAlignment="Center">
+                                    <ui:TextBox
+                                        x:Name="BuyXForY_WantTb"
+                                        Height="34"
+                                        FontSize="12"
+                                        PlaceholderText="Want item (e.g. blue)..."
+                                        Icon="Target24"
+                                        VerticalAlignment="Stretch"
+                                        VerticalContentAlignment="Center"
+                                        ToolTip="{DynamicResource IWantToGetToolTip}" />
 
-                                <Border Grid.Column="1" Margin="4,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="6,3">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="💰" Margin="0,0,4,0" VerticalAlignment="Center" FontSize="13" />
-                                        <TextBox x:Name="BuyXForY_PayTb" Grid.Column="1" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextPrimary}" CaretBrush="{DynamicResource TextPrimary}" Padding="2,3" VerticalContentAlignment="Center" ToolTip="{DynamicResource ICanPayWithToolTip}" FontSize="12" />
-                                    </Grid>
-                                </Border>
+                                    <!-- Auto-complete Suggestions popup -->
+                                    <Popup
+                                        x:Name="PopupAutocomplete_Want"
+                                        PlacementTarget="{Binding ElementName=BuyXForY_WantTb}"
+                                        Placement="Bottom"
+                                        IsOpen="False"
+                                        StaysOpen="False"
+                                        MinWidth="200"
+                                        MaxHeight="200"
+                                        PopupAnimation="Fade">
+                                        <Border
+                                            Background="#16191E"
+                                            BorderBrush="#35FFFFFF"
+                                            BorderThickness="1"
+                                            CornerRadius="6">
+                                            <ListBox
+                                                x:Name="LstAutocomplete_Want"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                MaxHeight="190"
+                                                ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Padding="6,4" Background="Transparent">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Image Width="16" Height="16" Margin="0,0,8,0" Source="{Binding Icon}" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                <TextBlock Text="{Binding Display}" Foreground="White" FontSize="11" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </Border>
+                                    </Popup>
+                                </Grid>
 
-                                <Button x:Name="BuyXForY_AnalyzeBtn" Grid.Column="2" Content="{DynamicResource Analyze}" Style="{StaticResource PrimaryButton}" Margin="4,0,0,0" Padding="12,3" FontSize="12" />
+                                <!-- Payment/Pay TextBox Card -->
+                                <Grid Grid.Column="1" Margin="4,0" VerticalAlignment="Center">
+                                    <ui:TextBox
+                                        x:Name="BuyXForY_PayTb"
+                                        Height="34"
+                                        FontSize="12"
+                                        PlaceholderText="Pay item (e.g. cloth)..."
+                                        Icon="Money24"
+                                        VerticalAlignment="Stretch"
+                                        VerticalContentAlignment="Center"
+                                        ToolTip="{DynamicResource ICanPayWithToolTip}" />
+
+                                    <!-- Auto-complete Suggestions popup -->
+                                    <Popup
+                                        x:Name="PopupAutocomplete_Pay"
+                                        PlacementTarget="{Binding ElementName=BuyXForY_PayTb}"
+                                        Placement="Bottom"
+                                        IsOpen="False"
+                                        StaysOpen="False"
+                                        MinWidth="200"
+                                        MaxHeight="200"
+                                        PopupAnimation="Fade">
+                                        <Border
+                                            Background="#16191E"
+                                            BorderBrush="#35FFFFFF"
+                                            BorderThickness="1"
+                                            CornerRadius="6">
+                                            <ListBox
+                                                x:Name="LstAutocomplete_Pay"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                MaxHeight="190"
+                                                ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Padding="6,4" Background="Transparent">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Image Width="16" Height="16" Margin="0,0,8,0" Source="{Binding Icon}" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                <TextBlock Text="{Binding Display}" Foreground="White" FontSize="11" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </Border>
+                                    </Popup>
+                                </Grid>
+
+                                <!-- Analyze Primary Button -->
+                                <ui:Button
+                                    x:Name="BuyXForY_AnalyzeBtn"
+                                    Grid.Column="2"
+                                    Content="{DynamicResource Analyze}"
+                                    Appearance="Primary"
+                                    Margin="6,0,0,0"
+                                    Padding="14,0"
+                                    Height="34"
+                                    FontSize="12"
+                                    FontWeight="Bold"
+                                    Cursor="Hand"
+                                    VerticalAlignment="Center" />
                             </Grid>
 
+                            <!-- Visual Previews Sub-Cards Grid -->
                             <Grid Grid.Row="2" Margin="12,0,12,6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="5">
+                                <!-- Left Preview Box: Items to Get -->
+                                <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="6">
                                     <DockPanel>
-                                        <TextBlock DockPanel.Dock="Top" Text="{DynamicResource IWantToGet}" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="SemiBold" Margin="0,0,0,3" />
+                                        <TextBlock DockPanel.Dock="Top" Text="{DynamicResource IWantToGet}" Foreground="{DynamicResource Accent}" FontSize="9.5" FontWeight="Bold" Margin="4,0,0,4" />
                                         <ListBox x:Name="BuyXForY_WantPreview" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                                     </DockPanel>
                                 </Border>
 
-                                <Border Grid.Column="1" Margin="4,0,0,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Padding="5">
+                                <!-- Right Preview Box: Items to Pay -->
+                                <Border Grid.Column="1" Margin="4,0,0,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="6">
                                     <DockPanel>
-                                        <TextBlock DockPanel.Dock="Top" Text="{DynamicResource ICanPayWith}" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="SemiBold" Margin="0,0,0,3" />
+                                        <TextBlock DockPanel.Dock="Top" Text="{DynamicResource ICanPayWith}" Foreground="{DynamicResource Accent}" FontSize="9.5" FontWeight="Bold" Margin="4,0,0,4" />
                                         <ListBox x:Name="BuyXForY_PayPreview" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                                     </DockPanel>
                                 </Border>
                             </Grid>
 
-                            <ListBox x:Name="BuyXForY_ResultList" Grid.Row="3" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Margin="12,0,12,10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
+                            <!-- Results Scroller list -->
+                            <ListBox x:Name="BuyXForY_ResultList" Grid.Row="3" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" Margin="12,4,12,10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                         </Grid>
                     </Border>
 
@@ -3701,6 +2777,13 @@
                                                              StaysOpenOnClick="True"
                                                              Style="{StaticResource DarkMenuItem}"
                                                              Tag="SmartAlerts" />
+                                                         <MenuItem
+                                                             Click="Alert_MenuItem_Click"
+                                                             Header="{DynamicResource CustomTimerCategory}"
+                                                             IsCheckable="True"
+                                                             StaysOpenOnClick="True"
+                                                             Style="{StaticResource DarkMenuItem}"
+                                                             Tag="CustomTimer" />
                                                      </MenuItem>
 
                                                      <!-- Column 2: Players -->
@@ -3831,13 +2914,69 @@
                                                              Header="{DynamicResource TradeAlerts}"
                                                              StaysOpenOnClick="True"
                                                              Style="{StaticResource DarkMenuItem}" />
+                                                             
+                                                         <Separator Background="#20FFFFFF" Margin="8,4,8,4" />
+                                                         
+                                                         <MenuItem
+                                                             Click="Alert_MenuItem_Click"
+                                                             IsCheckable="True"
+                                                             StaysOpenOnClick="True"
+                                                             Style="{StaticResource DarkMenuItem}"
+                                                             Tag="DiscordWebhook"
+                                                             IsEnabled="{Binding IsCloudConnected}">
+                                                             <MenuItem.Header>
+                                                                 <StackPanel>
+                                                                     <TextBlock Text="Discord Webhook" />
+                                                                     <TextBlock Text="Chat Alerts -&gt; Discord" FontSize="10" FontStyle="Italic" Foreground="{DynamicResource TextSubtle}" Opacity="0.8" />
+                                                                 </StackPanel>
+                                                             </MenuItem.Header>
+                                                         </MenuItem>
+                                                         
+                                                         <Grid Margin="18,4,8,8" IsEnabled="{Binding IsCloudConnected}">
+                                                             <Grid.Resources>
+                                                                 <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
+                                                             </Grid.Resources>
+                                                             <Grid.ColumnDefinitions>
+                                                                 <ColumnDefinition Width="*" />
+                                                                 <ColumnDefinition Width="Auto" />
+                                                             </Grid.ColumnDefinitions>
+                                                             <TextBox
+                                                                 Grid.Column="0"
+                                                                 Height="24"
+                                                                 VerticalAlignment="Center"
+                                                                 Background="#1AFFFFFF"
+                                                                 BorderBrush="#33FFFFFF"
+                                                                 BorderThickness="1"
+                                                                 Foreground="White"
+                                                                 Padding="4,2"
+                                                                 IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
+                                                                 Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                             <ui:Button x:Name="BtnClearChatAlertsWebhook" Grid.Column="1" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" Margin="4,0,0,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" />
+                                                         </Grid>
                                                      </MenuItem>
                                                  </ContextMenu>
                                              </ui:DropDownButton.Flyout>
                                          </ui:DropDownButton>
-                                     </Grid>
+                                      </Grid>
+                                        </Border>
+                                 <Border
+                                     x:Name="ChatFeatureMasterWarningBadge"
+                                     Visibility="Collapsed"
+                                     Background="#26FF3B3B"
+                                     BorderBrush="#66FF3B3B"
+                                     BorderThickness="1"
+                                     CornerRadius="10"
+                                     Padding="8,5"
+                                     Margin="0,0,8,0"
+                                     VerticalAlignment="Center">
+                                     <TextBlock
+                                         x:Name="ChatFeatureMasterWarningText"
+                                         Foreground="#FFFFA3A3"
+                                         FontSize="11"
+                                         FontWeight="SemiBold"
+                                         TextWrapping="NoWrap" />
                                  </Border>
-                            </StackPanel>
+                                    </StackPanel>
 
                             <!-- Right Group: Map Actions (Right-Oriented) -->
                             <StackPanel
@@ -4133,6 +3272,7 @@
 
                                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                         <ui:Button
+                                            x:Name="MapUiBtnConnect"
                                             Padding="16,8"
                                             Appearance="Primary"
                                             Click="BtnConnect_Click"
@@ -4141,6 +3281,7 @@
                                             Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}" />
 
                                         <ui:Button
+                                            x:Name="MapUiBtnFullConnect"
                                             Padding="16,8"
                                             Appearance="Primary"
                                             Click="BtnConnect_Click"
@@ -4524,17 +3665,160 @@
                                     </ui:Button>
                                 </Grid>
                             </ui:Card>
+                            
+                            <ui:Card
+                                x:Name="WipeDeathMarkersOverlay"
+                                Margin="8,0,0,0"
+                                Padding="0"
+                                Background="#AA16181C"
+                                BorderBrush="#40FFFFFF"
+                                BorderThickness="1"
+                                VerticalAlignment="Top"
+                                Visibility="Collapsed">
+                                <Grid>
+                                    <ui:Button
+                                        x:Name="BtnWipeDeathMarkers"
+                                        Padding="4"
+                                        Appearance="Transparent"
+                                        Click="BtnWipeDeathMarkers_Click"
+                                        ToolTip="{DynamicResource WipeDeathMarkers}">
+                                        <StackPanel Orientation="Horizontal" Margin="4,2">
+                                            <Grid Width="14" Height="16" Margin="0,0,4,0">
+                                                <Path Width="14" Height="16" Data="M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z" Fill="IndianRed" Stretch="Uniform" Stroke="Black" StrokeThickness="1" />
+                                            </Grid>
+                                            <ui:SymbolIcon Symbol="Delete24" Foreground="IndianRed" FontSize="14" />
+                                        </StackPanel>
+                                    </ui:Button>
+                                </Grid>
+                            </ui:Card>
                         </StackPanel>
 
 
-                        <!--  LIVE EVENT DOCK (Top Right)  -->
+                        <!--  LIVE EVENT DOCK & TIMER DOCK (Top Right)  -->
                         <StackPanel
-                            x:Name="EventDock"
-                            Margin="15"
+                            Margin="15,45,15,15"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
                             Panel.ZIndex="100"
-                            Orientation="Vertical" />
+                            Orientation="Vertical">
+                            
+                            <StackPanel
+                                x:Name="EventDock"
+                                Orientation="Vertical" />
+                            
+                            <ui:Button
+                                x:Name="BtnCustomTimer"
+                                Margin="0,10,0,0"
+                                Padding="8"
+                                Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}"
+                                Background="#B414191E"
+                                BorderBrush="#3CFFFFFF"
+                                BorderThickness="1"
+                                CornerRadius="10"
+                                Appearance="Transparent"
+                                Click="BtnCustomTimer_Click"
+                                ToolTip="{DynamicResource HoverCustomTimer}">
+                                <ui:SymbolIcon x:Name="IconCustomTimer" Symbol="Timer24" FontSize="20" Foreground="{DynamicResource TextPrimary}" />
+                            </ui:Button>
+                            
+                            <Popup x:Name="PopupCustomTimer" AllowsTransparency="True" StaysOpen="False" PlacementTarget="{Binding ElementName=BtnCustomTimer}" Placement="Left" HorizontalOffset="-10">
+                                <ui:Card Margin="0,0,10,10" Padding="15" MinWidth="300" MaxWidth="350" Background="#E60F1215" BorderBrush="#334466" BorderThickness="1">
+                                    <StackPanel>
+                                        <TextBlock Text="{DynamicResource ActiveTimersCategory}" FontWeight="SemiBold" Margin="0,0,0,10" />
+                                        
+                                        <!-- List of active timers -->
+                                        <ItemsControl x:Name="ListActiveTimers">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="0,0,0,8">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock VerticalAlignment="Center" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}">
+                                                            <Run Text="{Binding Name}" />
+                                                            <Run Text=" (" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
+                                                            <Run Text="{Binding PlacementTarget.DataContext.Selected.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=Popup}}" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
+                                                            <Run Text="{Binding Command}" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
+                                                            <Run Text=")" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
+                                                        </TextBlock>
+                                                        <TextBlock Grid.Column="1" Text="{Binding RemainingTimeText}" VerticalAlignment="Center" Margin="10,0,10,0" FontFamily="Consolas" />
+                                                        <ui:Button Grid.Column="2" Appearance="Transparent" Padding="4" Tag="{Binding Id}" Click="BtnDeleteTimer_Click">
+                                                            <ui:SymbolIcon Symbol="Dismiss24" Foreground="IndianRed" FontSize="14" />
+                                                        </ui:Button>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        
+                                        <!-- Add Timer Section -->
+                                        <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ControlStrokeDefault}" Margin="0,5,0,10" Padding="0,10,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="{DynamicResource AddTimer}" FontWeight="SemiBold" Margin="0,0,0,10" />
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <ui:TextBox x:Name="TxtTimerName" PlaceholderText="{DynamicResource TimerName}" TextChanged="TxtTimerName_TextChanged" />
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,0,0,0">
+                                                        <ui:TextBox x:Name="TxtTimerHours" ClearButtonEnabled="False" PlaceholderText="hh" MaxLength="2" Width="50" Margin="0,0,3,0" TextAlignment="Center" />
+                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,3,0" />
+                                                        <ui:TextBox x:Name="TxtTimerMinutes" ClearButtonEnabled="False" PlaceholderText="mm" MaxLength="2" Width="50" Margin="0,0,3,0" TextAlignment="Center" />
+                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,3,0" />
+                                                        <ui:TextBox x:Name="TxtTimerSeconds" ClearButtonEnabled="False" PlaceholderText="ss" MaxLength="2" Width="50" TextAlignment="Center" />
+                                                    </StackPanel>
+                                                </Grid>
+                                                <TextBlock x:Name="TxtTimerValidation" Foreground="IndianRed" FontSize="11" Margin="0,5,0,0" TextWrapping="Wrap" />
+                                                <Grid Margin="0,10,0,0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding PlacementTarget.DataContext.Selected.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=Popup}}" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,2,0" />
+                                                        <TextBlock x:Name="TxtTimerCommandPreview" Text="" Foreground="{DynamicResource TextSubtle}" />
+                                                    </StackPanel>
+                                                    <ui:Button Grid.Column="1" x:Name="BtnAddTimer" Content="{DynamicResource AddTimer}" Appearance="Primary" Click="BtnAddTimer_Click" />
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Timer Alarm Controls -->
+                                        <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ControlStrokeDefault}" Margin="0,5,0,0" Padding="0,10,0,0">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <ui:Button x:Name="BtnStopTimerAlarm" Visibility="Collapsed" Appearance="Transparent" Padding="6,4" Margin="0,0,4,0" Click="BtnStopTimerAlarm_Click" ToolTip="Stop alarm sound">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <ui:SymbolIcon Symbol="SpeakerMute24" Foreground="IndianRed" FontSize="16" />
+                                                            <TextBlock Text="Stop" Margin="4,0,0,0" VerticalAlignment="Center" Foreground="IndianRed" />
+                                                        </StackPanel>
+                                                    </ui:Button>
+                                                    <ui:Button x:Name="BtnSnoozeTimerAlarm" Grid.Column="1" Visibility="Collapsed" Appearance="Transparent" Padding="6,4" Click="BtnSnoozeTimerAlarm_Click" ToolTip="Snooze alarm">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <ui:SymbolIcon Symbol="ClockAlarm24" Foreground="#FFA500" FontSize="16" />
+                                                            <TextBlock Text="Snooze" Margin="4,0,0,0" VerticalAlignment="Center" Foreground="#FFA500" />
+                                                        </StackPanel>
+                                                    </ui:Button>
+                                                    <ui:Button Grid.Column="3" Appearance="Transparent" Padding="6,4" Click="BtnSelectTimerAlarmAudio_Click" ToolTip="Select custom alarm sound">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <ui:SymbolIcon Symbol="MusicNote224" FontSize="16" />
+                                                        </StackPanel>
+                                                    </ui:Button>
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </ui:Card>
+                            </Popup>
+                        </StackPanel>
 
                         <Canvas x:Name="GridLayer" IsHitTestVisible="False" />
                         <Canvas x:Name="Overlay" IsHitTestVisible="True" />
@@ -4655,9 +3939,145 @@
                             </Grid>
                         </Border>
 
+                        <!-- Base Hover Preview Popup -->
+                        <Border
+                            x:Name="BaseHoverPopup"
+                            Width="260"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Panel.ZIndex="1100"
+                            Background="#1A1D21"
+                            BorderBrush="#40FFFFFF"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Visibility="Collapsed"
+                            MouseEnter="BaseHoverPopup_MouseEnter"
+                            MouseLeave="BaseHoverPopup_MouseLeave">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="12" Opacity="0.5" ShadowDepth="0" Color="Black"/>
+                            </Border.Effect>
+                            <Grid Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                
+                                <Button
+                                    x:Name="BtnCloseBaseHover"
+                                    Width="24"
+                                    Height="24"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Click="BtnCloseBaseHover_Click"
+                                    Content="&#x00D7;"
+                                    FontSize="13"
+                                    FontWeight="Bold"
+                                    Foreground="Gray"
+                                    Style="{StaticResource GhostButton}" />
+
+                                <StackPanel Grid.Row="0" Margin="0,0,24,0">
+                                    <TextBlock x:Name="TxtBaseHoverNote"
+                                               Foreground="White"
+                                               FontSize="12"
+                                               TextWrapping="Wrap"
+                                               MaxHeight="60"/>
+                                </StackPanel>
+
+                                <Border Grid.Row="1" x:Name="BorderBaseHoverImage" Margin="0,8,0,0" CornerRadius="6" ClipToBounds="True" Background="#10FFFFFF" Visibility="Collapsed">
+                                    <Image x:Name="ImgBaseHoverScreenshot" Stretch="Uniform" MaxHeight="150"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <!-- Base Detailed Gallery Popup -->
+                        <Border
+                            x:Name="BaseGalleryPopup"
+                            Width="540"
+                            Height="480"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Panel.ZIndex="1200"
+                            Background="#1A1D21"
+                            BorderBrush="#40FFFFFF"
+                            BorderThickness="1"
+                            CornerRadius="14"
+                            Visibility="Collapsed">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="20" Opacity="0.7" ShadowDepth="0" Color="Black"/>
+                            </Border.Effect>
+                            <Grid Margin="16">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Title / Close -->
+                                <DockPanel Grid.Row="0" Margin="0,0,0,10">
+                                    <TextBlock Text="Base Details" FontSize="16" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                                    <Button
+                                        Width="28"
+                                        Height="28"
+                                        HorizontalAlignment="Right"
+                                        Click="BtnCloseBaseGallery_Click"
+                                        Content="&#x00D7;"
+                                        FontSize="14"
+                                        FontWeight="Bold"
+                                        Foreground="Gray"
+                                        Style="{StaticResource GhostButton}" />
+                                </DockPanel>
+
+                                <!-- Mid Panel (Gallery & Active Image Zoom Container) -->
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <!-- Thumbnail Strip (left) -->
+                                        <ColumnDefinition Width="70"/>
+                                        <!-- Main Image View (right) -->
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Thumbnails List -->
+                                    <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,6,0">
+                                        <StackPanel x:Name="BaseGalleryThumbsPanel" Orientation="Vertical"/>
+                                    </ScrollViewer>
+
+                                    <!-- Main Image Zoom Area -->
+                                    <Grid Grid.Column="1" x:Name="BaseGalleryMainImageArea" Background="#0C0D0F" ClipToBounds="True"
+                                          MouseMove="MainImage_MouseMove" MouseLeave="MainImage_MouseLeave" MouseEnter="MainImage_MouseEnter">
+                                        <Image x:Name="ImgBaseGalleryMain" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        
+                                        <!-- Loupe Magnifying circular Border (lens) -->
+                                        <Canvas IsHitTestVisible="False">
+                                            <Border x:Name="BaseGalleryMagnifierLens" Width="150" Height="150" CornerRadius="75" BorderBrush="White" BorderThickness="2" Visibility="Collapsed" IsHitTestVisible="False">
+                                                <Border.Background>
+                                                    <VisualBrush x:Name="BaseGalleryMagnifierBrush" Visual="{Binding ElementName=ImgBaseGalleryMain}" ViewboxUnits="Absolute" ViewportUnits="RelativeToBoundingBox" Viewport="0,0,1,1"/>
+                                                </Border.Background>
+                                                <Border.Effect>
+                                                    <DropShadowEffect BlurRadius="8" Opacity="0.5" ShadowDepth="0" Color="Black"/>
+                                                </Border.Effect>
+                                            </Border>
+                                        </Canvas>
+
+                                        <!-- Placeholder when no screenshots exist -->
+                                        <StackPanel x:Name="BaseGalleryNoImagePlaceholder" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">
+                                            <ui:SymbolIcon Symbol="Camera24" FontSize="36" Foreground="Gray" Margin="0,0,0,8"/>
+                                            <TextBlock Text="{DynamicResource BaseNoScreenshotsYet}" Foreground="Gray" FontSize="12"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+
+                                <!-- Bottom Note Area -->
+                                <Border Grid.Row="2" Margin="0,12,0,0" Padding="10" Background="#121417" BorderBrush="#20FFFFFF" BorderThickness="1" CornerRadius="8">
+                                    <ScrollViewer MaxHeight="80" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                        <TextBlock x:Name="TxtBaseGalleryNote" Foreground="White" FontSize="13" TextWrapping="Wrap" LineHeight="18"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Grid>
+                        </Border>
+
                         <Border
                             x:Name="ShopSearchPanel"
-                            Width="400"
+                            Width="450"
                             Margin="0,0,12,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
@@ -4672,13 +4092,20 @@
                                 <Border
                                     x:Name="ShopSearchContent"
                                     Grid.Row="0"
+                                    Panel.ZIndex="5"
                                     Height="540"
-                                    Background="#16181C"
-                                    BorderBrush="#40FFFFFF"
+                                    Background="#D916181C"
+                                    BorderBrush="#25FFFFFF"
                                     BorderThickness="1"
                                     CornerRadius="12"
                                     RenderTransformOrigin="0.5,1"
-                                    Visibility="Collapsed">
+                                    Visibility="Collapsed"
+                                    UseLayoutRounding="True"
+                                    SnapsToDevicePixels="True"
+                                    RenderOptions.ClearTypeHint="Enabled">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="20" ShadowDepth="4" Opacity="0.55" Color="#000000" />
+                                    </Border.Effect>
                                     <Border.RenderTransform>
                                         <TransformGroup>
                                             <ScaleTransform x:Name="ShopSearchScale" ScaleY="1" />
@@ -4687,55 +4114,61 @@
                                     </Border.RenderTransform>
                                     <Grid>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="30" />
+                                            <RowDefinition Height="34" />
                                             <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
 
                                         <!--  Header / Drag / Close Area  -->
-                                        <Grid Grid.Row="0" Background="#1E2126">
-                                            <StackPanel Margin="12,0,0,0" Orientation="Horizontal">
-                                                <TextBlock
+                                        <Border Grid.Row="0" Background="#401E2126" CornerRadius="12,12,0,0" BorderThickness="0,0,0,1" BorderBrush="#15FFFFFF">
+                                            <Grid>
+                                                <StackPanel Margin="12,0,0,0" Orientation="Horizontal">
+                                                    <TextBlock
+                                                        VerticalAlignment="Center"
+                                                        FontSize="11"
+                                                        Text="🛒 " />
+                                                    <TextBlock
+                                                        HorizontalAlignment="Left"
+                                                        VerticalAlignment="Center"
+                                                        FontSize="11"
+                                                        FontWeight="Bold"
+                                                        Foreground="#80FFFFFF"
+                                                        Text="{DynamicResource ShopSearchTitle}" />
+                                                </StackPanel>
+                                                <Button
+                                                    x:Name="BtnCloseShopSearch"
+                                                    Width="26"
+                                                    Height="26"
+                                                    Margin="0,0,4,0"
+                                                    HorizontalAlignment="Right"
                                                     VerticalAlignment="Center"
-                                                    FontSize="10"
-                                                    Text="🛒 " />
-                                                <TextBlock
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center"
-                                                    FontSize="10"
-                                                    FontWeight="Bold"
-                                                    Foreground="#60FFFFFF"
-                                                    Text="{DynamicResource ShopSearchTitle}" />
-                                            </StackPanel>
-                                            <Button
-                                                x:Name="BtnCloseShopSearch"
-                                                Width="26"
-                                                Height="26"
-                                                Margin="0,0,4,0"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Center"
-                                                Click="BtnCloseShopSearch_Click"
-                                                Content="&#x2715;"
-                                                Cursor="Hand"
-                                                FontSize="12"
-                                                Foreground="#99FFFFFF"
-                                                Style="{StaticResource GhostButton}"
-                                                ToolTip="{DynamicResource CloseSearch}">
-                                                <Button.Resources>
-                                                    <Style BasedOn="{StaticResource GhostButton}" TargetType="Button">
-                                                        <Setter Property="Background" Value="Transparent" />
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Foreground" Value="White" />
-                                                                <Setter Property="Background" Value="#20FFFFFF" />
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Button.Resources>
-                                            </Button>
-                                        </Grid>
+                                                    Click="BtnCloseShopSearch_Click"
+                                                    Content="&#x2715;"
+                                                    Cursor="Hand"
+                                                    FontSize="12"
+                                                    Foreground="#99FFFFFF"
+                                                    Style="{StaticResource GhostButton}"
+                                                    ToolTip="{DynamicResource CloseSearch}">
+                                                    <Button.Resources>
+                                                        <Style BasedOn="{StaticResource GhostButton}" TargetType="Button">
+                                                            <Setter Property="Background" Value="Transparent" />
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Foreground" Value="White" />
+                                                                    <Setter Property="Background" Value="#20FFFFFF" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Resources>
+                                                </Button>
+                                            </Grid>
+                                        </Border>
 
                                         <Grid Grid.Row="1">
-                                            <wv2:WebView2 x:Name="EmbeddedShopSearch" />
+                                            <views:ShopSearchControl 
+                                                x:Name="EmbeddedShopSearch"
+                                                UseLayoutRounding="True"
+                                                SnapsToDevicePixels="True"
+                                                RenderOptions.ClearTypeHint="Enabled" />
 
                                             <Grid x:Name="ShopSearchWarning" Background="#F216181C" Visibility="Collapsed">
                                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -5121,91 +4554,201 @@
                             </Grid>
                         </Border>
 
-                        <Border
+                                                <Border
                             x:Name="OverlayToolbox"
                             Grid.Row="1"
                             Margin="8"
-                            Padding="6,4"
+                            Padding="8,6"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Top"
                             Panel.ZIndex="9000"
                             Background="#CC1E1E1E"
                             CornerRadius="8"
                             Visibility="Collapsed">
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <!--  Zeichnen  -->
+                                    <Button
+                                        x:Name="ToolDrawButton"
+                                        Width="32"
+                                        Height="32"
+                                        Margin="2,0"
+                                        Click="ToolDrawButton_Click"
+                                        ToolTip="{DynamicResource DrawToolTip}">
+                                        <Image Source="pack://application:,,,/Assets/icons/pen.png" />
+                                    </Button>
 
-                                <!--  Zeichnen  -->
-                                <Button
-                                    x:Name="ToolDrawButton"
-                                    Width="32"
-                                    Height="32"
-                                    Margin="2,0"
-                                    Click="ToolDrawButton_Click"
-                                    PreviewMouseRightButtonDown="ToolDrawButton_RightClick"
-                                    ToolTip="{DynamicResource DrawToolTip}">
-                                    <Image Source="pack://application:,,,/Assets/icons/pen.png" />
-                                </Button>
+                                    <!--  Text  -->
+                                    <Button
+                                        x:Name="ToolTextButton"
+                                        Width="32"
+                                        Height="32"
+                                        Margin="2,0"
+                                        Click="ToolTextButton_Click"
+                                        ToolTip="{DynamicResource PlaceTextToolTip}">
+                                        <Image Source="pack://application:,,,/Assets/icons/text.png" />
+                                    </Button>
 
-                                <!--  Text  -->
-                                <Button
-                                    x:Name="ToolTextButton"
-                                    Width="32"
-                                    Height="32"
-                                    Margin="2,0"
-                                    Click="ToolTextButton_Click"
-                                    PreviewMouseRightButtonDown="ToolTextButton_RightClick"
-                                    ToolTip="{DynamicResource PlaceTextToolTip}">
-                                    <Image Source="pack://application:,,,/Assets/icons/text.png" />
-                                </Button>
+                                    <!--  Icons  -->
+                                    <Button
+                                        x:Name="ToolIconButton"
+                                        Width="32"
+                                        Height="32"
+                                        Margin="2,0"
+                                        Click="ToolIconButton_Click"
+                                        ToolTip="{DynamicResource PlaceIconToolTip}">
+                                        <Image Source="pack://application:,,,/Assets/icons/pin.png" />
+                                    </Button>
 
-                                <!--  Icons  -->
-                                <Button
-                                    x:Name="ToolIconButton"
-                                    Width="32"
-                                    Height="32"
-                                    Margin="2,0"
-                                    Click="ToolIconButton_Click"
-                                    PreviewMouseRightButtonDown="ToolIconButton_RightClick"
-                                    ToolTip="{DynamicResource PlaceIconToolTip}">
-                                    <Image Source="pack://application:,,,/Assets/icons/pin.png" />
-                                </Button>
+                                    <!--  Radierer  -->
+                                    <Button
+                                        x:Name="ToolEraseButton"
+                                        Width="32"
+                                        Height="32"
+                                        Margin="2,0"
+                                        Click="ToolEraseButton_Click"
+                                        ToolTip="{DynamicResource EraserToolTip}">
+                                        <Image Source="pack://application:,,,/Assets/icons/eraser.png" />
+                                    </Button>
 
-                                <!--  Radierer  -->
-                                <Button
-                                    x:Name="ToolEraseButton"
-                                    Width="32"
-                                    Height="32"
-                                    Margin="2,0"
-                                    Click="ToolEraseButton_Click"
-                                    PreviewMouseRightButtonDown="ToolEraseButton_RightClick"
-                                    ToolTip="{DynamicResource EraserToolTip}">
-                                    <Image Source="pack://application:,,,/Assets/icons/eraser.png" />
-                                </Button>
+                                    <Rectangle Width="1" Height="20" Margin="6,0" Fill="#40FFFFFF" VerticalAlignment="Center" />
 
-                                <Rectangle Width="1" Height="20" Margin="6,0" Fill="#40FFFFFF" VerticalAlignment="Center" />
+                                    <!--  LÃ¶schen  -->
+                                    <Button
+                                        x:Name="ToolTrashButton"
+                                        Width="32"
+                                        Height="32"
+                                        Margin="2,0"
+                                        Click="ToolTrashButton_Click"
+                                        ToolTip="{DynamicResource DeleteOverlayToolTip}">
+                                        <Image Source="pack://application:,,,/Assets/icons/trash.png" />
+                                    </Button>
 
-                                <!--  Löschen  -->
-                                <Button
-                                    x:Name="ToolTrashButton"
-                                    Width="32"
-                                    Height="32"
-                                    Margin="2,0"
-                                    Click="ToolTrashButton_Click"
-                                    ToolTip="{DynamicResource DeleteOverlayToolTip}">
-                                    <Image Source="pack://application:,,,/Assets/icons/trash.png" />
-                                </Button>
+                                    <!--  Upload / Teilen  -->
+                                    <Button
+                                        x:Name="ToolUploadButton"
+                                        Width="32"
+                                        Height="32"
+                                        Margin="2,0"
+                                        Click="ToolUploadButton_Click"
+                                        ToolTip="{DynamicResource UploadOverlayToolTip}">
+                                        <ui:SymbolIcon Symbol="Cloud24" Foreground="White" FontSize="18" />
+                                    </Button>
 
-                                <!--  Upload / Teilen  -->
-                                <Button
-                                    x:Name="ToolUploadButton"
-                                    Width="32"
-                                    Height="32"
-                                    Margin="2,0"
-                                    Click="ToolUploadButton_Click"
-                                    ToolTip="{DynamicResource UploadOverlayToolTip}">
-                                    <Image Source="pack://application:,,,/Assets/icons/upload.png" />
-                                </Button>
+                                    <ui:Button
+                                        x:Name="BtnPremiumInfoMap"
+                                        Appearance="Transparent"
+                                        Width="32"
+                                        Height="32"
+                                        Margin="2,0"
+                                        Icon="{ui:SymbolIcon Symbol=Info24, Filled=True}"
+                                        Foreground="#e03131"
+                                        Visibility="Collapsed"
+                                        Click="BtnPremiumInfoMap_Click"
+                                        ToolTip="{DynamicResource PremiumFeatures}" />
 
+                                    <ui:Button
+                                        x:Name="BtnAdminPanel"
+                                        Appearance="Primary"
+                                        Width="32"
+                                        Height="32"
+                                        Margin="2,0"
+                                        Icon="{ui:SymbolIcon Symbol=Shield24, Filled=True}"
+                                        Visibility="Collapsed"
+                                        Click="BtnAdminPanel_Click"
+                                        ToolTip="Admin Panel" />
+                                </StackPanel>
+
+                                <!-- Options Panel (Inline below) -->
+                                <Grid x:Name="OverlayToolOptionsPanel" Visibility="Collapsed" Margin="0,8,0,0">
+                                    <Grid.Resources>
+                                        <!-- Shared circular color button style -->
+                                        <Style x:Key="ColorCircleButton" TargetType="Button">
+                                            <Setter Property="Width" Value="16"/>
+                                            <Setter Property="Height" Value="16"/>
+                                            <Setter Property="Margin" Value="2,0"/>
+                                            <Setter Property="BorderThickness" Value="1"/>
+                                            <Setter Property="BorderBrush" Value="#40FFFFFF"/>
+                                            <Setter Property="Cursor" Value="Hand"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="{TemplateBinding Background}" CornerRadius="8" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"/>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                        <!-- Shared square icon selector style -->
+                                        <Style x:Key="IconSelectorButton" TargetType="Button">
+                                            <Setter Property="Width" Value="24"/>
+                                            <Setter Property="Height" Value="24"/>
+                                            <Setter Property="Margin" Value="3,0"/>
+                                            <Setter Property="Padding" Value="2"/>
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="BorderThickness" Value="1"/>
+                                            <Setter Property="BorderBrush" Value="#40FFFFFF"/>
+                                            <Setter Property="Cursor" Value="Hand"/>
+                                        </Style>
+                                    </Grid.Resources>
+
+                                    <!-- Draw Options -->
+                                    <StackPanel x:Name="DrawOptionsPanel" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
+                                        <TextBlock Text="Thickness:" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
+                                        <Slider x:Name="SliderDrawThickness" Width="100" Minimum="1" Maximum="20" Value="3" VerticalAlignment="Center" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="SliderDrawThickness_ValueChanged"/>
+                                        <TextBlock Text="{Binding ElementName=SliderDrawThickness, Path=Value, StringFormat={}{0:F0}px}" Width="35" VerticalAlignment="Center" Foreground="White" FontSize="11" Margin="4,0,10,0"/>
+                                        <Rectangle Width="1" Height="14" Fill="#30FFFFFF" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                        
+                                        <Button Style="{StaticResource ColorCircleButton}" Background="#EF5350" Click="DrawColorButton_Click" Tag="#EF5350"/>
+                                        <Button Style="{StaticResource ColorCircleButton}" Background="#66BB6A" Click="DrawColorButton_Click" Tag="#66BB6A"/>
+                                        <Button Style="{StaticResource ColorCircleButton}" Background="#42A5F5" Click="DrawColorButton_Click" Tag="#42A5F5"/>
+                                        <Button Style="{StaticResource ColorCircleButton}" Background="#FFCA28" Click="DrawColorButton_Click" Tag="#FFCA28"/>
+                                        <Button Style="{StaticResource ColorCircleButton}" Background="#FFFFFF" Click="DrawColorButton_Click" Tag="#FFFFFF"/>
+                                        <Button Style="{StaticResource ColorCircleButton}" Background="#212121" Click="DrawColorButton_Click" Tag="#212121"/>
+                                    </StackPanel>
+
+                                    <!-- Text Options -->
+                                    <StackPanel x:Name="TextOptionsPanel" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
+                                        <TextBlock Text="Size:" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
+                                        <Slider x:Name="SliderTextSize" Width="100" Minimum="10" Maximum="60" Value="16" VerticalAlignment="Center" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="SliderTextSize_ValueChanged"/>
+                                        <TextBlock Text="{Binding ElementName=SliderTextSize, Path=Value, StringFormat={}{0:F0}pt}" Width="35" VerticalAlignment="Center" Foreground="White" FontSize="11" Margin="4,0,10,0"/>
+                                        <Rectangle Width="1" Height="14" Fill="#30FFFFFF" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                        
+                                        <Button Style="{StaticResource ColorCircleButton}" Background="#FFFFFF" Click="TextColorButton_Click" Tag="#FFFFFF"/>
+                                        <Button Style="{StaticResource ColorCircleButton}" Background="#EF5350" Click="TextColorButton_Click" Tag="#EF5350"/>
+                                        <Button Style="{StaticResource ColorCircleButton}" Background="#66BB6A" Click="TextColorButton_Click" Tag="#66BB6A"/>
+                                        <Button Style="{StaticResource ColorCircleButton}" Background="#42A5F5" Click="TextColorButton_Click" Tag="#42A5F5"/>
+                                        <Button Style="{StaticResource ColorCircleButton}" Background="#FFCA28" Click="TextColorButton_Click" Tag="#FFCA28"/>
+                                        <Button Style="{StaticResource ColorCircleButton}" Background="#212121" Click="TextColorButton_Click" Tag="#212121"/>
+                                    </StackPanel>
+
+                                    <!-- Icon Options -->
+                                    <StackPanel x:Name="IconOptionsPanel" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
+                                        <TextBlock Text="Size:" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
+                                        <Slider x:Name="SliderIconSize" Width="100" Minimum="12" Maximum="64" Value="24" VerticalAlignment="Center" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="SliderIconSize_ValueChanged"/>
+                                        <TextBlock Text="{Binding ElementName=SliderIconSize, Path=Value, StringFormat={}{0:F0}px}" Width="35" VerticalAlignment="Center" Foreground="White" FontSize="11" Margin="4,0,10,0"/>
+                                        <Rectangle Width="1" Height="14" Fill="#30FFFFFF" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                        
+                                        <Button x:Name="BtnIconBase1" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/base1.png" ToolTip="Own Base (Black)">
+                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/base1.png"/>
+                                        </Button>
+                                        <Button x:Name="BtnIconBase2" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/base2.png" ToolTip="Enemy Base (Red)">
+                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/base2.png"/>
+                                        </Button>
+                                        <Button x:Name="BtnIconSam" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/sam-site.png" ToolTip="SAM Site">
+                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/sam-site.png"/>
+                                        </Button>
+                                        <Button x:Name="BtnIconTurret" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/turret.png" ToolTip="Turret">
+                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/turret.png"/>
+                                        </Button>
+                                    </StackPanel>
+
+                                    <!-- Eraser Options -->
+                                    <StackPanel x:Name="EraserOptionsPanel" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
+                                        <TextBlock Text="Size:" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
+                                        <Slider x:Name="SliderEraserSize" Width="100" Minimum="5" Maximum="40" Value="20" VerticalAlignment="Center" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="SliderEraserSize_ValueChanged"/>
+                                        <TextBlock Text="{Binding ElementName=SliderEraserSize, Path=Value, StringFormat={}{0:F0}px}" Width="35" VerticalAlignment="Center" Foreground="White" FontSize="11" Margin="4,0,10,0"/>
+                                    </StackPanel>
+                                </Grid>
                             </StackPanel>
                         </Border>
 

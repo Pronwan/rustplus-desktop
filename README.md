@@ -48,6 +48,25 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
+# Rust+ Desktop v5.5.0: Custom Timers & Shop Overhaul 🚀
+Welcome to **v5.5.0**! This update introduces highly requested custom timers, a completely overhauled in-app shop, and several quality-of-life improvements for the mini map and death markers.
+
+## ✨ New Features & Improvements
+### ⏱️ Custom Timers & Chat Alerts
+- **Create your own Timers:** Easily set up custom timers directly via the UI or by using the new `!timer [name],[minutes]` chat command.
+- **Smart Chat Alerts:** Never miss a beat! Configure automated chat alerts that trigger at 60, 30, 10, or 3 minutes before a timer expires.
+- **Active Timer Overview:** Running timers are displayed directly in your chat command window and on the map overlay for quick access.
+### 🛒 Huge Shop Overhaul
+- **Brand New Shop UI:** The in-app shop interface has been completely redesigned from the ground up.
+- **Advanced Filtering:** You can now easily filter vending machine items by price and resource type.
+- **New Trade Designs:** Enjoy the brand new "Profit Trade" and "Buy X" visual layouts, making it easier than ever to spot the best deals on the server.
+### 🗺️ Map & Death Marker Upgrades
+- **Local Death Markers:** You can now customize the exact amount of death markers shown for yourself and your teammates. Death markers are now always saved locally.
+- **Background Mini Map:** The mini map will now continue to function and update perfectly even when the application is minimized to the background!
+## 🌍 General
+- All new UI elements and alerts are fully localized and available in most languages already.
+---
+*As always, thank you for your feedback and bug reports! Update directly in the app or download the latest release below.*
 
 ## 🚀 Patch 5.4.0 is live! 🌍 Global Localization & more
 **30+ Languages:** The app now supports over 30 languages with instant, on-the-fly switching.

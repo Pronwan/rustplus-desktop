@@ -1,0 +1,80 @@
+<Window x:Class="RustPlusDesk.Views.Windows.BaseScreenshotWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Add Screenshot"
+        Width="480" Height="460"
+        WindowStartupLocation="CenterOwner"
+        AllowsTransparency="True" 
+        WindowStyle="None"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        Topmost="True"
+        AllowDrop="True"
+        PreviewKeyDown="Window_PreviewKeyDown"
+        DragOver="Window_DragOver"
+        Drop="Window_Drop">
+    
+    <Border Background="{DynamicResource SurfaceAlt}" 
+            BorderBrush="{DynamicResource CardBorder}" 
+            BorderThickness="2" 
+            CornerRadius="12">
+        <DockPanel Margin="20">
+            <!-- Header -->
+            <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+                <DockPanel>
+                    <TextBlock x:Name="TxtTitle"
+                               Text="Add Screenshot" 
+                               FontSize="18" FontWeight="SemiBold" 
+                               Foreground="{DynamicResource TextPrimary}"
+                               VerticalAlignment="Center"/>
+                    
+                    <Button Content="✕" 
+                            HorizontalAlignment="Right" 
+                            Click="BtnCancel_Click"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="{DynamicResource TextSubtle}"
+                            FontSize="16"
+                            Cursor="Hand"
+                            VerticalAlignment="Center"/>
+                </DockPanel>
+                <Separator Background="{DynamicResource CardBorder}" Margin="0,8,0,0"/>
+            </StackPanel>
+ 
+            <!-- Bottom Buttons -->
+            <Grid DockPanel.Dock="Bottom" Margin="0,15,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="TxtImageInfo" Grid.Column="0" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontSize="11" FontStyle="Italic"/>
+                <ui:Button x:Name="BtnSave" Grid.Column="1" Content="Save" Appearance="Primary" Width="100" Height="32" Margin="0,0,8,0" Click="BtnSave_Click" IsEnabled="False"/>
+                <ui:Button x:Name="BtnCancel" Grid.Column="2" Content="Cancel" Appearance="Secondary" Width="100" Height="32" Click="BtnCancel_Click"/>
+            </Grid>
+ 
+            <!-- Main Content -->
+            <Grid>
+                <Border x:Name="DropZoneBorder" 
+                        Background="{DynamicResource Surface}" 
+                        BorderBrush="{DynamicResource CardBorder}" 
+                        BorderThickness="2" 
+                        CornerRadius="8" 
+                        Margin="0,0,0,5">
+                    <Grid>
+                        <!-- Instruction text / placeholder icon -->
+                        <StackPanel x:Name="PlaceholderPanel" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Camera24" FontSize="48" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,12"/>
+                            <TextBlock x:Name="TxtDropHint" Text="Drag &amp; Drop an image here" Foreground="{DynamicResource TextPrimary}" FontSize="14" FontWeight="SemiBold" TextAlignment="Center" Margin="0,0,0,4"/>
+                            <TextBlock x:Name="TxtPasteHint" Text="or press CTRL+V to paste a screenshot" Foreground="{DynamicResource TextSubtle}" FontSize="12" TextAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Loaded Image Preview -->
+                        <Image x:Name="ImgPreview" Margin="8" Stretch="Uniform" Visibility="Collapsed"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </DockPanel>
+    </Border>
+</Window>

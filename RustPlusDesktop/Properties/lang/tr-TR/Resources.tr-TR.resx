@@ -1788,4 +1788,25 @@ Devam etmek istediğinizden emin misiniz?</value>
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Seçici sıfırlama işlemi başarıyla tamamlandı.</value>
   </data>
+<data name="DeleteDeathMarker" xml:space="preserve">
+    <value>Ölüm İşaretlerini Sil</value>
+  </data>
+<data name="WipeDeathMarkers" xml:space="preserve">
+    <value>Tümünü Sil</value>
+  </data>
+<data name="Accept" xml:space="preserve">
+    <value>Kabul</value>
+  </data>
+<data name="RenameDeathMarker" xml:space="preserve">
+    <value>Ölüm İşaretini Yeniden Adlandır</value>
+  </data>
+<data name="Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+<data name="Death" xml:space="preserve">
+    <value>Ölüm</value>
+  </data>
+<data name="Markers" xml:space="preserve">
+    <value>İşaretler:</value>
+  </data>
 </root>

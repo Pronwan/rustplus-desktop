@@ -5,6 +5,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using RustPlusDesk.Models;
+using RustPlusDesk.Services.Auth;
+using System.Linq;
 
 namespace RustPlusDesk.Services.Data
 {
@@ -12,6 +15,8 @@ namespace RustPlusDesk.Services.Data
     {
         public static string OVERLAY_SYNC_SECRET_HEX => Decrypt(ObfuscatedSecrets.ObfuscatedSecret);
         public static string OVERLAY_SYNC_BASEURL => Decrypt(ObfuscatedSecrets.ObfuscatedUrl);
+        public static string SUPABASE_URL => Decrypt(ObfuscatedSecrets.ObfuscatedSupabaseUrl);
+        public static string SUPABASE_ANON_KEY => Decrypt(ObfuscatedSecrets.ObfuscatedSupabaseAnonKey);
         public const int OVERLAY_MAX_BYTES = 350_000;
 
         private static string Decrypt(byte[] encrypted)
@@ -73,59 +78,62 @@ namespace RustPlusDesk.Services.Data
 
         public static async Task UploadPayloadAsync(ulong steamId, string serverKey, string overlayB64)
         {
-            var ts = UnixNow().ToString(System.Globalization.CultureInfo.InvariantCulture);
-            var sigInput = steamId.ToString(System.Globalization.CultureInfo.InvariantCulture) + "|" + serverKey + "|" + ts + "|" + overlayB64;
-            var sig = HmacSha256Hex(OVERLAY_SYNC_SECRET_HEX, sigInput);
-
-            var payloadObj = new
+            // If offline / no Supabase keys / not logged in -> Skip cloud sync or fallback
+            if (SupabaseAuthManager.Client == null || !SupabaseAuthManager.IsAuthenticated)
             {
-                steamId = steamId.ToString(System.Globalization.CultureInfo.InvariantCulture),
-                serverKey = serverKey,
-                ts = ts,
-                overlayJsonB64 = overlayB64,
-                sig = sig
-            };
+                return;
+            }
 
-            var payloadJson = JsonSerializer.Serialize(payloadObj);
-            var content = new StringContent(payloadJson, Encoding.UTF8, "application/json");
-
-            using (var http = new HttpClient())
+            try
             {
-                var url = OVERLAY_SYNC_BASEURL + "/upload";
-                var resp = await http.PostAsync(url, content);
-                if (!resp.IsSuccessStatusCode)
-                    throw new InvalidOperationException("Upload failed: HTTP " + (int)resp.StatusCode);
+                int uncompressedSize = 0;
+                try
+                {
+                    var bytes = Convert.FromBase64String(overlayB64);
+                    uncompressedSize = bytes.Length;
+                }
+                catch { uncompressedSize = overlayB64.Length; }
+
+                var model = new MapOverlayModel
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ServerKey = serverKey,
+                    SteamId = steamId.ToString(),
+                    OverlayData = overlayB64,
+                    UncompressedSize = uncompressedSize,
+                    UpdatedAt = DateTime.UtcNow
+                };
+
+                // Perform an Upsert. Supabase handles 'ON CONFLICT' automatically
+                await SupabaseAuthManager.Client.From<MapOverlayModel>().Upsert(model);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[DataManager] Upload error: {ex.Message}");
+                // throw new InvalidOperationException("Upload failed: " + ex.Message);
             }
         }
 
         public static async Task<string?> FetchPayloadAsync(ulong steamId, string serverKey)
         {
-            var ts = UnixNow().ToString(System.Globalization.CultureInfo.InvariantCulture);
-            var sigInput = steamId.ToString(System.Globalization.CultureInfo.InvariantCulture) + "|" + serverKey + "|" + ts;
-            var sig = HmacSha256Hex(OVERLAY_SYNC_SECRET_HEX, sigInput);
-
-            var url = $"{OVERLAY_SYNC_BASEURL}/fetch" +
-                      $"?steamId={Uri.EscapeDataString(steamId.ToString(System.Globalization.CultureInfo.InvariantCulture))}" +
-                      $"&serverKey={Uri.EscapeDataString(serverKey)}" +
-                      $"&ts={Uri.EscapeDataString(ts)}" +
-                      $"&sig={Uri.EscapeDataString(sig)}";
-
-            using (var http = new HttpClient())
+            if (SupabaseAuthManager.Client == null)
             {
-                var resp = await http.GetAsync(url);
-                if (!resp.IsSuccessStatusCode)
-                {
-                    if ((int)resp.StatusCode == 404)
-                        return null; // Not found is standard for members who haven't uploaded
-                    throw new InvalidOperationException("Fetch failed: HTTP " + (int)resp.StatusCode);
-                }
+                return null;
+            }
 
-                var body = await resp.Content.ReadAsStringAsync();
-                using var doc = JsonDocument.Parse(body);
-                if (!doc.RootElement.TryGetProperty("overlayJsonB64", out var b64El))
-                    return null;
+            try
+            {
+                var response = await SupabaseAuthManager.Client.From<MapOverlayModel>()
+                    .Filter("server_key", Postgrest.Constants.Operator.Equals, serverKey)
+                    .Filter("steam_id", Postgrest.Constants.Operator.Equals, steamId.ToString())
+                    .Single();
 
-                return b64El.GetString();
+                return response?.OverlayData;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[DataManager] Fetch error: {ex.Message}");
+                return null;
             }
         }
 

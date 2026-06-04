@@ -1788,4 +1788,25 @@ Ladda ner och installera nu?</value>
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Den selektiva återställningen har slutförts framgångsrikt.</value>
   </data>
+<data name="DeleteDeathMarker" xml:space="preserve">
+    <value>Rensa dödsmarkörer</value>
+  </data>
+<data name="WipeDeathMarkers" xml:space="preserve">
+    <value>Rensa alla</value>
+  </data>
+<data name="Accept" xml:space="preserve">
+    <value>Acceptera</value>
+  </data>
+<data name="RenameDeathMarker" xml:space="preserve">
+    <value>Byt namn på dödsmarkör</value>
+  </data>
+<data name="Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+<data name="Death" xml:space="preserve">
+    <value>Död</value>
+  </data>
+<data name="Markers" xml:space="preserve">
+    <value>Markörer:</value>
+  </data>
 </root>

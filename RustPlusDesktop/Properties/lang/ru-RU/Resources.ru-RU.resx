@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1814,5 +1814,206 @@
   </data>
   <data name="FeatureAudioLoopDesc" xml:space="preserve">
     <value>Зацикливайте и останавливайте оповещения.</value>
+  </data>
+  <data name="DeleteDeathMarker" xml:space="preserve">
+    <value>Удалить маркеры смерти</value>
+  </data>
+  <data name="RenameDeathMarker" xml:space="preserve">
+    <value>Переименовать маркер смерти</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Профиль</value>
+  </data>
+  <data name="Death" xml:space="preserve">
+    <value>Смерть</value>
+  </data>
+  <data name="Markers" xml:space="preserve">
+    <value>Маркеры:</value>
+  </data>
+  <data name="WipeDeathMarkers" xml:space="preserve">
+    <value>Очистить все</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Принять</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>Таймер</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>Timer {0} created for {1}h {2}m {3}s</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>Таймер</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>Активные таймеры</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>Команда:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>Используйте команду для проверки.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>Максимум 5 таймеров.</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Преимущества Supporter</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>Локально или через импорт доступно более 10 устройств. Бесплатная синхронизация сохраняет первые 10 устройств; Supporter могут синхронизировать неограниченное число устройств.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>Этот оверлей превышает бесплатный лимит облачной синхронизации. Supporter получают оверлеи в 10 раз больше, больше маркеров карты и больше скриншотов.</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Конфиденциальность и Облако</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>Чтобы включить живую синхронизацию, данные должны быть отправлены в наше безопасное облако. Мы также собираем анонимную телеметрию.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Принять и включить облако</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Отклонить облако</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Подключить Discord для преимуществ сторонника</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Отключить Discord</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Подключение...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Облачная синхронизация и прямая загрузка</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Живая загрузка и безопасная синхронизация умных устройств и карт в облаке.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Настройки сторонника</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>Эти функции доступны исключительно нашим сторонникам и разработчикам через вход в Discord.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Расширенная интеграция Discord (вебхуки, звуковые оповещения)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Интеграция оповещений Telegram</value>
+  </data>
+  <data name="PremiumStopSync">
+    <value>Остановить sync</value>
+  </data>
+  <data name="PremiumStayFree">
+    <value>Остаться бесплатно</value>
+  </data>
+  <data name="PremiumSupportNow">
+    <value>Поддержать</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Оверлей синхронизирован {0} KB {1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>Максимум 10 устройств в бесплатном тарифе</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>Синхронизировано устройств: {0} {1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Оверлей слишком большой для синхронизации ({0} KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Включить Cloud-Sync</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-Sync включен</value>
+  </data>
+  <data name="CloudAccountTitle" xml:space="preserve"><value>Облачный аккаунт</value></data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve"><value>Вход в облачный аккаунт</value></data>
+  <data name="EmailSignInTab" xml:space="preserve"><value>Войти</value></data>
+  <data name="EmailSignUpTab" xml:space="preserve"><value>Создать аккаунт</value></data>
+  <data name="EmailAddressLabel" xml:space="preserve"><value>Адрес электронной почты</value></data>
+  <data name="PasswordLabel" xml:space="preserve"><value>Пароль</value></data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve"><value>Пароль (минимум 6 символов)</value></data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve"><value>Подтвердите пароль</value></data>
+  <data name="EmailSignInButton" xml:space="preserve"><value>Войти</value></data>
+  <data name="EmailCreateAccountButton" xml:space="preserve"><value>Создать аккаунт</value></data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve"><value>Письмо подтверждения отправлено!</value></data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve"><value>Нажмите ссылку в письме. Приложение автоматически проверяет статус каждые несколько секунд...</value></data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve"><value>Ожидание подтверждения...</value></data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve"><value>Ожидание подтверждения... ({0}с)</value></data>
+  <data name="EmailProblemsPrefix" xml:space="preserve"><value>Проблемы? </value></data>
+  <data name="EmailOpenInBrowser" xml:space="preserve"><value>Открыть в браузере</value></data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve"><value>Введите e-mail и пароль.</value></data>
+  <data name="EmailRequiredError" xml:space="preserve"><value>Введите адрес электронной почты.</value></data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve"><value>Пароль должен содержать минимум 6 символов.</value></data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve"><value>Пароли не совпадают.</value></data>
+  <data name="EmailSigningInStatus" xml:space="preserve"><value>Вход...</value></data>
+  <data name="EmailSignedInSuccess" xml:space="preserve"><value>Вход выполнен!</value></data>
+  <data name="EmailSignInFailed" xml:space="preserve"><value>Не удалось войти.</value></data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve"><value>Регистрация...</value></data>
+  <data name="EmailRegistrationFailed" xml:space="preserve"><value>Регистрация не удалась.</value></data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve"><value>Тайм-аут: e-mail не был подтвержден в течение 5 минут. Вы сможете войти позже.</value></data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve"><value>Неверные данные для входа. Проверьте e-mail и пароль.</value></data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve"><value>Неверные данные для входа.</value></data>
+  <data name="EmailNotConfirmedError" xml:space="preserve"><value>Адрес e-mail еще не подтвержден. Нажмите ссылку подтверждения во входящих.</value></data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve"><value>Этот адрес e-mail уже зарегистрирован. Войдите в аккаунт.</value></data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve"><value>Отключить Discord</value></data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve"><value>Discord подключен - Tier: {0}</value></data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve"><value>E-mail подключен: {0} - Tier: {1}</value></data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve"><value>Не подключено - войдите, чтобы использовать Cloud Sync и резервные копии</value></data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve"><value>Отключение...</value></data>
+  <data name="AuthConnectingStatus" xml:space="preserve"><value>Подключение...</value></data>
+  <data name="EmailAccountButton" xml:space="preserve"><value>E-mail / Аккаунт</value></data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve"><value>Выйти из e-mail аккаунта?</value></data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve"><value>Cloud Sync</value></data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve"><value>Для Cloud Sync нужен аккаунт</value></data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve"><value>Облачные сервисы, такие как синхронизация и хранение резервных копий, требуют бесплатный аккаунт. Выберите e-mail или Discord, чтобы продолжить синхронизацию устройств, оверлеев и резервных копий.</value></data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve"><value>Синхронизация через e-mail</value></data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve"><value>Синхронизация через Discord</value></data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve"><value>Нет, спасибо</value></data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve"><value>Достигнут лимит синхронизации</value></data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve"><value>Достигнут лимит баз (Free: максимум 2 базы, Premium: максимум 10 баз)</value></data>
+  <data name="BaseAddScreenshot" xml:space="preserve"><value>Добавить скриншот</value></data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve"><value>Перетащите изображение сюда</value></data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve"><value>или нажмите CTRL+V, чтобы вставить скриншот</value></data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve"><value>В буфере обмена не найдено изображение.</value></data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve"><value>Ошибка вставки</value></data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve"><value>Не удалось вставить изображение: {0}</value></data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve"><value>Не удалось загрузить файл изображения: {0}</value></data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve"><value>Ошибка сжатия</value></data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve"><value>Ошибка при сжатии изображения: {0}</value></data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve"><value>Разрешение: {0}x{1} | Размер: {2} KB (качество 25%)</value></data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve"><value>Редактировать заметку базы</value></data>
+  <data name="BaseNoteTitle" xml:space="preserve"><value>Заметка базы</value></data>
+  <data name="BaseAddNote" xml:space="preserve"><value>Добавить заметку</value></data>
+  <data name="BaseEditNote" xml:space="preserve"><value>Редактировать заметку</value></data>
+  <data name="BaseDeleteNote" xml:space="preserve"><value>Удалить заметку</value></data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve"><value>Удалить скриншот {0}</value></data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve"><value>Добавить скриншот {0} (требуется Premium)</value></data>
+  <data name="BaseNoNotesYet" xml:space="preserve"><value>Заметок пока нет.</value></data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve"><value>Скриншоты пока не добавлены</value></data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve"><value>Chat Master онлайн</value></data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve"><value>{0} управляет чат-оповещениями и чат-командами этой команды.</value></data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve"><value>Chat Master {0} онлайн. Чат-оповещения и чат-команды на этом устройстве приостановлены.</value></data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve"><value>Вы Chat Master</value></data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve"><value>Это устройство теперь управляет чат-оповещениями и чат-командами вашей команды.</value></data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve"><value>Принять</value></data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve"><value>Отклонить</value></data>
+    <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Пожалуйста, введите продолжительность таймера (часы, минуты или секунды).</value>
+  </data>
+    <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Имя таймера должно начинаться с буквы.</value>
   </data>
 </root>

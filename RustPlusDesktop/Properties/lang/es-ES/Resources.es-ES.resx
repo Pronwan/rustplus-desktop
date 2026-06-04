@@ -1,44 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1559,22 +1559,22 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
     <value>Localización, modernización de la interfaz de usuario y almacenamiento</value>
   </data>
   <data name="FeatureLanguage" xml:space="preserve">
-    <value>Cambio dinámico de configuración regional</value>
+    <value>Custom Alerts</value>
   </data>
   <data name="FeatureLanguageDesc" xml:space="preserve">
-    <value> - Más de 30 idiomas para elegir</value>
+    <value> - !timer [name],[minutes]</value>
   </data>
   <data name="FeatureChatCommands" xml:space="preserve">
-    <value>Interfaz de comandos de chat</value>
+    <value>Mini Map</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> - Vista aislada para un aspecto limpio</value>
+    <value> - Funciona cuando se minimiza</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
-    <value>Nueva superposición de ajustes</value>
+    <value>Shop Overhaul</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
-    <value> - Barra lateral limpia para todos los ajustes</value>
+    <value> - Nueva interfaz de usuario de la tienda</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
     <value>Eliminado el seguimiento de BattleMetrics</value>
@@ -1787,5 +1787,272 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   </data>
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Operación de reinicio selectivo completada con éxito.</value>
+  </data>
+  <data name="DeleteDeathMarker" xml:space="preserve">
+    <value>Borrar marcadores de muerte</value>
+  </data>
+  <data name="RenameDeathMarker" xml:space="preserve">
+    <value>Renombrar marcador de muerte</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="Death" xml:space="preserve">
+    <value>Muerte</value>
+  </data>
+  <data name="Markers" xml:space="preserve">
+    <value>Marcadores:</value>
+  </data>
+  <data name="WipeDeathMarkers" xml:space="preserve">
+    <value>Borrar todos</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Aceptar</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>Temporizador</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>Timer {0} created for {1}h {2}m {3}s</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>Temporizador</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>Temporizadores Activos</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>Añadir Temporizador</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>Comando:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>Usa el comando abajo para ver estado.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>Máximo 5 temporizadores permitidos.</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Por favor, introduzca una duración del temporizador (horas, minutos o segundos).</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>El nombre del temporizador debe comenzar con una letra.</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Death Marker</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value> - Marcadores personalizados para el equipo</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Timer Alerts</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value> - 60,30,10,3 m antes del final</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Consentimiento de traducción</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>Al hacer clic en Aceptar, el contenido de las notas del parche se enviará a Google Translate (EE. UU.) para su traducción. ¿Aceptas?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Términos de la API de Google Translate</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>Tenga en cuenta</value>
+  </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>Comprueba tus ajustes de Chat-Alert para los nuevos temporizadores personalizados. Los marcadores de muerte ahora siempre se guardan localmente. El minimapa también se actualiza al minimizarse.</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Traducir con Google</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Beneficios de Supporter</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>Hay más de 10 dispositivos disponibles localmente o mediante importaciones. La sincronización gratuita en la nube mantiene los primeros 10 dispositivos; los Supporters pueden sincronizar dispositivos ilimitados.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>Este overlay supera el límite gratuito de sincronización en la nube. Los Supporters obtienen overlays 10 veces más grandes, más marcadores de mapa y más capturas.</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Privacidad y Cloud Sync</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>Para habilitar la sincronizacion en vivo de superposiciones de mapas y dispositivos inteligentes, los datos deben enviarse a nuestra nube segura. Tambien recopilamos telemetria de uso anonimizada.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Aceptar y habilitar nube</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Rechazar nube</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Conectar Discord para beneficios de supporter</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Desconectar Discord</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Conectando...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Sincronizacion en la nube y carga en vivo</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Cargue en vivo y sincronice dispositivos inteligentes y superposiciones de mapas de forma segura en la nube.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Ajustes de supporter</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>Estas funciones estan disponibles exclusivamente para nuestros Supporters y Desarrolladores a traves del inicio de sesion de Discord.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Integracion avanzada de Discord (Webhooks, alertas de audio)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Integracion de alertas de Telegram</value>
+  </data>
+  <data name="PremiumStopSync">
+    <value>Detener sync</value>
+  </data>
+  <data name="PremiumStayFree">
+    <value>Seguir gratis</value>
+  </data>
+  <data name="PremiumSupportNow">
+    <value>Apoyar ahora</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Overlay sincronizado {0} KB {1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>Máximo 10 dispositivos en el nivel gratuito</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>{0} dispositivos sincronizados {1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Overlay demasiado grande para sincronizar ({0} KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Activar Cloud-Sync</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-Sync activo</value>
+  </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>Chat Master en línea</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>{0} controla las alertas y los comandos de chat de este equipo.</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>Chat Master {0} está en línea. Las alertas y los comandos de chat están pausados en este dispositivo.</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>Eres Chat Master</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>Este dispositivo ahora controla las alertas y los comandos de chat de tu equipo.</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>Aceptar</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>Rechazar</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>Actualización v6.0.0</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>Comparar características de la nube</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>Comparación de características de la nube</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>Bienvenido a la Nube</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>Elige el nivel que mejor se adapte a tus necesidades.</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>Sin cuenta</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>Tus datos se mantienen 100% locales. Ideal para jugadores en solitario.</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>Sin sincronización ni copias de seguridad en la nube</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>Sin uso compartido de dispositivos</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>Sin acceso al portal web</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>Cuenta gratuita en la nube</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>Funciones básicas de la nube para empezar a compartir.</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>Alertas de Discord Webhook básicas</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>Comparte hasta 10 dispositivos</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>Uso compartido de mapas (300 KB, 2 bases, 1 captura de pantalla)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>Actuar como ayudante de Supporter</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>Acceso al portal web de la nube</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>Nube de Supporter</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>La experiencia Rust+ definitiva para clanes y usuarios avanzados.</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>Uso compartido de mapas Pro (3 MB, 10 bases, 5 capturas de pantalla)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>Sistema Chat Master</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>Bot de Discord bidireccional avanzado</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>Acceso anticipado a la Beta a través de Discord</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>Conviértete en un Supporter</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>Apóyanos en </value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value> - Vincula Patreon con Discord para la detección automática del rol.</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>Propina a través de </value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value> - Contacta con Jawad o Pronwan en Discord para la asignación manual.</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>Abrir el Portal Web de la Nube</value>
   </data>
 </root>

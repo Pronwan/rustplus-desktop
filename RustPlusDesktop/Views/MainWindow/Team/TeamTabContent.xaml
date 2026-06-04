@@ -1,0 +1,245 @@
+<UserControl
+    x:Class="RustPlusDesk.Views.TeamTabContent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="clr-namespace:RustPlusDesk.Converters">
+    <Grid Background="#181A1E">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <conv:BoolToVisibilityConverter x:Key="Vis" />
+            <conv:BoolToVisibilityConverter x:Key="VisInv" Invert="True" />
+            <Style x:Key="Card" TargetType="Border">
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Background" Value="#FF141F2D" />
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="Margin" Value="6" />
+            </Style>
+        </Grid.Resources>
+        <ListBox
+            x:Name="TeamList"
+            Grid.Row="0"
+            HorizontalContentAlignment="Stretch"
+            ItemsSource="{Binding TeamMembers, RelativeSource={RelativeSource AncestorType=Window}}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.Resources>
+                <ContextMenu x:Key="TeamContextMenu" Style="{StaticResource DarkContextMenu}">
+                    <MenuItem Click="Team_Center_Click" Header="{DynamicResource CenterOnMap}" />
+                    <MenuItem Click="Team_Follow_Click" Header="{DynamicResource FollowOnMap}" />
+                    <MenuItem Click="Team_OpenProfile_Click" Header="{DynamicResource OpenSteamProfile}" />
+                    <Separator />
+                    <MenuItem Click="Team_Promote_Click" Header="{DynamicResource PromoteToLeader}" />
+                    <MenuItem Click="Team_Kick_Click" Header="{DynamicResource KickFromTeam}" />
+                </ContextMenu>
+            </ListBox.Resources>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Width" Value="210" />
+                    <Setter Property="Margin" Value="6" />
+                    <EventSetter Event="MouseLeftButtonUp" Handler="TeamItem_MouseLeftButtonUp" />
+                    <Setter Property="ContextMenu" Value="{StaticResource TeamContextMenu}" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="56" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid Width="44" Height="44">
+                                <Image
+                                    ClipToBounds="True"
+                                    RenderOptions.BitmapScalingMode="HighQuality"
+                                    Source="{Binding Avatar}"
+                                    Stretch="UniformToFill" />
+                                <Ellipse
+                                    Width="12"
+                                    Height="12"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Fill="#4CAF50"
+                                    Stroke="Black"
+                                    Visibility="{Binding IsOnline, Converter={StaticResource Vis}}" />
+                                <Ellipse
+                                    Width="12"
+                                    Height="12"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Fill="#666"
+                                    Stroke="Black"
+                                    Visibility="{Binding IsOnline, Converter={StaticResource VisInv}}" />
+                                <Path
+                                    Width="20"
+                                    Height="20"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Data="M 10,1 12,7 19,7 13,11 15,18 10,14 5,18 7,11 1,7 8,7 z"
+                                    Fill="Gold"
+                                    Stroke="Black"
+                                    Visibility="{Binding IsLeader, Converter={StaticResource Vis}}" />
+                            </Grid>
+                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                <TextBlock FontSize="14" FontWeight="SemiBold">
+                                    <TextBlock.Text>
+                                        <Binding Path="DisplayName" />
+                                    </TextBlock.Text>
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="White" />
+                                            <Setter Property="Opacity" Value="1" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDead}" Value="True">
+                                                    <Setter Property="Foreground" Value="#EF5350" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsOnline}" Value="False">
+                                                    <Setter Property="Opacity" Value="0.55" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock
+                                    FontSize="11"
+                                    Foreground="White"
+                                    Opacity="0.65"
+                                    Text="{Binding DisplaySteamId}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Grid Grid.Row="1" Margin="8,4,8,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Marker Toggles -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="{DynamicResource Markers}" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#AAA" FontSize="11" />
+                
+                <CheckBox x:Name="ChkProfileMarkers" IsChecked="True" Checked="ChkProfileMarkers_Toggled" Unchecked="ChkProfileMarkers_Toggled" Margin="0,0,12,0" Cursor="Hand">
+                    <CheckBox.Template>
+                        <ControlTemplate TargetType="CheckBox">
+                            <Border Background="Transparent">
+                                <ContentPresenter />
+                            </Border>
+                        </ControlTemplate>
+                    </CheckBox.Template>
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox Width="18" Height="18" Margin="0,0,6,0" Stretch="Uniform">
+                            <Grid Width="40" Height="40">
+                                <Ellipse Width="38" Height="38" Stroke="Black" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibility}}">
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <Ellipse Width="18" Height="18" Fill="LimeGreen" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
+                            </Grid>
+                        </Viewbox>
+                        <TextBlock VerticalAlignment="Center" Text="{DynamicResource Profile}" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </CheckBox>
+
+                <Grid x:Name="DeathMarkerToggleContainer" Background="Transparent" Margin="0,0,12,0">
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox x:Name="ChkDeathMarkers" IsChecked="False" Checked="ChkDeathMarkers_Toggled" Unchecked="ChkDeathMarkers_Toggled" VerticalAlignment="Center" Cursor="Hand">
+                            <CheckBox.Template>
+                                <ControlTemplate TargetType="CheckBox">
+                                    <Border Background="Transparent">
+                                        <ContentPresenter />
+                                    </Border>
+                                </ControlTemplate>
+                            </CheckBox.Template>
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox Width="18" Height="22" Margin="0,0,6,0" Stretch="Uniform">
+                                    <Grid Width="40" Height="56">
+                                        <Path Data="M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z" Fill="IndianRed" Stroke="Black" StrokeThickness="2" Stretch="Fill" Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibility}}" />
+                                        <Ellipse Width="26" Height="26" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,5,0,0" Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibility}}">
+                                            <Ellipse.Fill>
+                                                <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+                                        <Ellipse Width="16" Height="16" Fill="#444" Stroke="#666" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibilityInv}}" />
+                                    </Grid>
+                                </Viewbox>
+                                <TextBlock VerticalAlignment="Center" Text="{DynamicResource Death}" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </CheckBox>
+                        
+                        <Button x:Name="BtnDeathMarkerSettings"
+                                Padding="2"
+                                Margin="2,0,0,0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                VerticalAlignment="Center"
+                                Click="BtnDeathMarkerSettings_Click">
+                            <TextBlock Text="⚙" FontSize="12" Foreground="#AAA" />
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Opacity" Value="0" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsMouseOver, ElementName=DeathMarkerToggleContainer}" Value="True">
+                                            <Setter Property="Opacity" Value="1" />
+                                        </DataTrigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#333" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+            <!-- Abbreviate / Streamer Mode -->
+            <ToggleButton Grid.Column="1" x:Name="BtnAbbreviateNames" Margin="0,0,12,0" Width="24" Height="24" HorizontalAlignment="Left" ToolTip="{DynamicResource StreamerMode}" Checked="BtnAbbreviateNames_Toggled" Unchecked="BtnAbbreviateNames_Toggled">
+                <ToggleButton.Style>
+                    <Style TargetType="ToggleButton">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="BorderBrush" Value="#444"/>
+                        <Setter Property="Foreground" Value="#CCC"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#222"/></Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Background" Value="#1C4B82"/>
+                                <Setter Property="BorderBrush" Value="#2A6CA6"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ToggleButton.Style>
+                <TextBlock Text="A..." FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+            </ToggleButton>
+
+            <!-- Icon Size -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                <TextBlock Text="{DynamicResource ScaleLabel}" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10"/>
+                <Slider x:Name="SliderPlayerIconSize" Width="50" Minimum="0.5" Maximum="1.5" Value="1.0" TickFrequency="0.05" IsSnapToTickEnabled="True" ValueChanged="SliderPlayerIconSize_ValueChanged" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding Value, ElementName=SliderPlayerIconSize, StringFormat={}{0:P0}}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="#AAA" FontSize="10" Width="30"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

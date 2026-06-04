@@ -141,6 +141,13 @@ public class MainViewModel : INotifyPropertyChanged
         set { _isBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); OnPropertyChanged(nameof(ShowLoginOverlay)); }
     }
 
+    private bool _isCloudConnected;
+    public bool IsCloudConnected
+    {
+        get => _isCloudConnected;
+        set { _isCloudConnected = value; OnPropertyChanged(); }
+    }
+
     private bool _isInitializing;
     public bool IsInitializing
     {

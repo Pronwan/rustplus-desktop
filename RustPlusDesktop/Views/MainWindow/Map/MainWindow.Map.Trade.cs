@@ -189,121 +189,108 @@ public partial class MainWindow
 
     private FrameworkElement BuildFlipCard(TwoStepFlip f)
     {
-        // äußerer Rahmen des gesamten Flips
+        var defaultBorderBrush = new SolidColorBrush(Color.FromArgb(38, 255, 255, 255)); // rgba(255, 255, 255, 0.15)
+        var hoverBorderBrush = new SolidColorBrush(Color.FromRgb(255, 193, 7)); // Premium Amber/Gold
+
+        // 1. Outer glassy carbon-slate card
         var outerBorder = new Border
         {
-            CornerRadius = new CornerRadius(6),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(60, 255, 255, 255)),
+            CornerRadius = new CornerRadius(10),
+            BorderBrush = defaultBorderBrush,
             BorderThickness = new Thickness(1),
-            Background = new SolidColorBrush(Color.FromRgb(28, 30, 33)), // dunkler statt halbtransparent
-            Padding = new Thickness(10),
-            Margin = new Thickness(0, 0, 0, 8)
+            Background = new LinearGradientBrush
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(0, 1),
+                GradientStops =
+                {
+                    new GradientStop(Color.FromRgb(45, 50, 60), 0.0), // Slate
+                    new GradientStop(Color.FromRgb(29, 32, 38), 1.0)  // Charcoal
+                }
+            },
+            Padding = new Thickness(12),
+            Margin = new Thickness(0, 0, 0, 10),
+            Cursor = Cursors.Hand
         };
 
-        var outerStack = new StackPanel
-        {
-            Orientation = Orientation.Vertical
-        };
+        // Pointer highlight
+        outerBorder.MouseEnter += (sender, e) => { outerBorder.BorderBrush = hoverBorderBrush; outerBorder.BorderThickness = new Thickness(1.2); };
+        outerBorder.MouseLeave += (sender, e) => { outerBorder.BorderBrush = defaultBorderBrush; outerBorder.BorderThickness = new Thickness(1.0); };
+
+        var outerStack = new StackPanel { Orientation = Orientation.Vertical };
         outerBorder.Child = outerStack;
 
-        // === HEADER mit großem Icon + Profit-Text ===
+        // 2. Amber-hued dynamic header capsule
         var headerBorder = new Border
         {
-            Background = new SolidColorBrush(Color.FromRgb(40, 44, 48)), // dunkler Streifen
-            BorderBrush = new SolidColorBrush(Color.FromArgb(60, 255, 255, 255)),
+            Background = new SolidColorBrush(Color.FromArgb(20, 255, 193, 7)), // 8% amber fill
+            BorderBrush = new SolidColorBrush(Color.FromArgb(60, 255, 193, 7)),
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(6),
+            CornerRadius = new CornerRadius(8),
+            Padding = new Thickness(8),
             Margin = new Thickness(0, 0, 0, 8)
         };
 
-        var headerRow = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center
-        };
+        var headerRow = new Grid();
+        headerRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        headerRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         headerBorder.Child = headerRow;
 
-        // Großes Icon für die Start-Ressource (das, wo du am Ende mehr davon hast)
-        var bigIcon = new Image
-        {
-            Width = 32,
-            Height = 32,
-            Margin = new Thickness(0, 0, 8, 0),
-            VerticalAlignment = VerticalAlignment.Center
-        };
-        // OfferFirst.Currency = das Start-Item
-        BindIcon(
-            bigIcon,
-            f.OfferFirst.CurrencyShortName,
-            f.OfferFirst.CurrencyItemId
-        );
+        // Big currency icon
+        var bigIcon = new Image { Width = 36, Height = 36, Margin = new Thickness(0, 0, 10, 0), VerticalAlignment = VerticalAlignment.Center };
+        RenderOptions.SetBitmapScalingMode(bigIcon, BitmapScalingMode.HighQuality);
+        BindIcon(bigIcon, f.OfferFirst.CurrencyShortName, f.OfferFirst.CurrencyItemId);
+        Grid.SetColumn(bigIcon, 0);
         headerRow.Children.Add(bigIcon);
 
-        // Rechts daneben Textblock(e)
-        var headerTextStack = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            VerticalAlignment = VerticalAlignment.Center
-        };
+        var headerTextStack = new StackPanel { Orientation = Orientation.Vertical, VerticalAlignment = VerticalAlignment.Center };
+        Grid.SetColumn(headerTextStack, 1);
 
-        // fette Profit-Zeile
+        // Bold Gold profit amount
         headerTextStack.Children.Add(new TextBlock
         {
             Text = $"Profit: +{f.Profit} {f.StartCurrencyName}",
-            Foreground = new SolidColorBrush(Color.FromRgb(255, 220, 100)), // gold-ish
-            FontWeight = FontWeights.SemiBold,
+            Foreground = new SolidColorBrush(Color.FromRgb(255, 202, 40)), // Soft vibrant Amber
+            FontWeight = FontWeights.Bold,
             FontSize = 14
         });
 
-        // Kurze Zusammenfassung Start -> End
+        // Flow subtext: Start X -> End Y
         headerTextStack.Children.Add(new TextBlock
         {
-            Text =
-        $"Start with {f.StartSpent} {f.StartCurrencyName} → end with {f.StartBack} {f.StartCurrencyName} " +
-        $"(Step1 x{f.RunsFirst}, Step2 x{f.RunsSecond})",
+            Text = $"Spent {f.StartSpent} {f.StartCurrencyName} ➔ Returned {f.StartBack} {f.StartCurrencyName}",
             Foreground = Brushes.White,
             Margin = new Thickness(0, 2, 0, 0),
-            FontSize = 12,
-            TextWrapping = TextWrapping.WrapWithOverflow
+            FontSize = 11,
+            FontWeight = FontWeights.SemiBold
         });
-
         headerRow.Children.Add(headerTextStack);
-
         outerStack.Children.Add(headerBorder);
 
-        // === Info über die Zwischen-Ressource ===
-        // z.B. "Intermediate Crude Oil: made 100, used 15, leftover 85"
-        outerStack.Children.Add(new TextBlock
-        {
-            Text =
-                $"Intermediate {f.MidItemName}: made {f.MidProduced}, used {f.MidConsumed}, leftover {f.MidLeftover}",
-            Foreground = new SolidColorBrush(Color.FromArgb(200, 220, 220, 220)),
-            Margin = new Thickness(0, 0, 0, 8),
-            FontSize = 12,
-            TextWrapping = TextWrapping.WrapWithOverflow
-        });
+        // 3. Intermediate Resource Flow Pill Badges
+        var flowBadgeGrid = new UniformGrid { Columns = 3, Margin = new Thickness(0, 0, 0, 10) };
+        
+        flowBadgeGrid.Children.Add(CreateFlowBadge("📦 Produced", $"{f.MidProduced} {f.MidItemName}", new SolidColorBrush(Color.FromRgb(100, 181, 246)))); // Blue
+        flowBadgeGrid.Children.Add(CreateFlowBadge("🔥 Consumed", $"{f.MidConsumed} {f.MidItemName}", new SolidColorBrush(Color.FromRgb(229, 115, 115)))); // Red
+        flowBadgeGrid.Children.Add(CreateFlowBadge("✨ Leftover", $"+{f.MidLeftover} {f.MidItemName}", new SolidColorBrush(Color.FromRgb(120, 230, 135)))); // Green
 
-        // === Zwei Spalten: Step 1 links, Step 2 rechts ===
-        var stepsGrid = new Grid
-        {
-            Margin = new Thickness(0, 0, 0, 0)
-        };
+        outerStack.Children.Add(flowBadgeGrid);
+
+        // 4. Two Step Columns: Responsive Grid
+        var stepsGrid = new Grid();
         stepsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         stepsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
-        // Linke Spalte = Step1
         var step1Panel = BuildFlipStepPanel(
-            stepLabel: $"Step 1 x{f.RunsFirst}",
+            stepLabel: $"Step 1 (x{f.RunsFirst})",
             shop: f.ShopFirst,
             order: f.OfferFirst
         );
         Grid.SetColumn(step1Panel, 0);
         stepsGrid.Children.Add(step1Panel);
 
-        // Rechte Spalte = Step2
         var step2Panel = BuildFlipStepPanel(
-            stepLabel: $"Step 2 x{f.RunsSecond}",
+            stepLabel: $"Step 2 (x{f.RunsSecond})",
             shop: f.ShopSecond,
             order: f.OfferSecond
         );
@@ -312,63 +299,120 @@ public partial class MainWindow
 
         outerStack.Children.Add(stepsGrid);
 
+        // Navigation click on the card: direct zoom/pan on the intermediate map path between the shops!
+        outerBorder.MouseLeftButtonUp += (_, __) => { CenterMapOnWorldAnimated((f.ShopFirst.X + f.ShopSecond.X)/2, (f.ShopFirst.Y + f.ShopSecond.Y)/2, false, true); };
+
         return outerBorder;
     }
 
-    private FrameworkElement BuildFlipStepPanel(string stepLabel,
-    RustPlusClientReal.ShopMarker shop,
-    RustPlusClientReal.ShopOrder order)
+    private FrameworkElement CreateFlowBadge(string label, string value, Brush accentColor)
+    {
+        var badge = new Border
+        {
+            Background = new SolidColorBrush(Color.FromArgb(10, 255, 255, 255)),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255)),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(6),
+            Padding = new Thickness(6, 4, 6, 4),
+            Margin = new Thickness(2)
+        };
+
+        var stack = new StackPanel { Orientation = Orientation.Vertical, HorizontalAlignment = HorizontalAlignment.Center };
+        stack.Children.Add(new TextBlock
+        {
+            Text = label,
+            Foreground = new SolidColorBrush(Color.FromArgb(140, 255, 255, 255)),
+            FontSize = 8.5,
+            FontWeight = FontWeights.Bold,
+            HorizontalAlignment = HorizontalAlignment.Center
+        });
+        stack.Children.Add(new TextBlock
+        {
+            Text = value,
+            Foreground = accentColor,
+            FontSize = 10,
+            FontWeight = FontWeights.Bold,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Margin = new Thickness(0, 1, 0, 0)
+        });
+
+        badge.Child = stack;
+        return badge;
+    }
+
+    private FrameworkElement BuildFlipStepPanel(
+        string stepLabel,
+        RustPlusClientReal.ShopMarker shop,
+        RustPlusClientReal.ShopOrder order)
     {
         var panel = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Margin = new Thickness(0, 0, 8, 0)
+            Margin = new Thickness(4, 0, 4, 0)
         };
 
         // Step headline
         panel.Children.Add(new TextBlock
         {
             Text = stepLabel,
-            Foreground = SearchText,
-            FontWeight = FontWeights.SemiBold
+            Foreground = new SolidColorBrush(Color.FromRgb(0, 173, 239)), // Electric blue step indicator
+            FontWeight = FontWeights.Bold,
+            FontSize = 11,
+            Margin = new Thickness(2, 0, 0, 4)
         });
 
-        // Shop row with [Go] button
-        var shopRow = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 2, 0, 4),
-            VerticalAlignment = VerticalAlignment.Center
-        };
+        // Shop row
+        var shopRow = new Grid { Margin = new Thickness(2, 0, 0, 6) };
+        shopRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        shopRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-        shopRow.Children.Add(new TextBlock
+        // Clean shop title
+        var shopTitle = CleanLabel(shop.Label) ?? "Shop";
+        var shopTxt = new TextBlock
         {
-            Text = $"{(shop.Label ?? "Shop")} [{GetGridLabel(shop)}]",
-            Foreground = SearchText,
-            Margin = new Thickness(0, 0, 6, 0),
+            Text = $"{shopTitle} ({GetGridLabel(shop)})",
+            Foreground = Brushes.White,
+            FontSize = 10.5,
+            FontWeight = FontWeights.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
-            MaxWidth = 160
-        });
+            MaxWidth = 110,
+            ToolTip = $"{shopTitle} [{GetGridLabel(shop)}]"
+        };
+        Grid.SetColumn(shopTxt, 0);
+        shopRow.Children.Add(shopTxt);
 
+        // Sleek Map Pill Button
         var btnGo = new Button
         {
-            Content = "Go",
-            Margin = new Thickness(0, 0, 0, 0),
+            Content = "📍 Show",
+            Height = 20,
+            Padding = new Thickness(6, 1, 6, 1),
+            FontSize = 9.5,
+            FontWeight = FontWeights.Bold,
+            Background = new SolidColorBrush(Color.FromArgb(20, 0, 173, 239)),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(60, 0, 173, 239)),
+            Foreground = new SolidColorBrush(Color.FromRgb(0, 173, 239)),
+            Cursor = Cursors.Hand,
             VerticalAlignment = VerticalAlignment.Center
         };
-        btnGo.Click += (_, __) => CenterMapOnWorld(shop.X, shop.Y);
-
+        btnGo.Click += (s, e) => 
+        {
+            e.Handled = true; // Prevent triggering the card's outerBorder click
+            CenterMapOnWorldAnimated(shop.X, shop.Y, false, true); 
+        };
+        Grid.SetColumn(btnGo, 1);
         shopRow.Children.Add(btnGo);
 
         panel.Children.Add(shopRow);
 
-        // Offer card itself (re-use BuildOfferRowUI so wir kriegen Icons/Stock/→ usw.)
+        // Offer card itself (re-use BuildOfferRowUI)
         var offerCard = BuildOfferRowUI(order);
-        // BuildOfferRowUI gibt dir schon einen Border mit Grid drin.
-        // Wir wollen es nur etwas einrücken:
-        if (offerCard is FrameworkElement fe)
-            fe.Margin = new Thickness(0, 0, 8, 8);
+        if (offerCard is Border b)
+        {
+            b.Margin = new Thickness(0, 0, 0, 4);
+            b.Background = new SolidColorBrush(Color.FromArgb(12, 255, 255, 255)); // Slightly transparent item row inside step
+        }
 
         panel.Children.Add(offerCard);
 
@@ -398,7 +442,18 @@ public partial class MainWindow
     private ListBox? _wantPreviewList;
     private ListBox? _payPreviewList;
     private bool _pathFinderInitialized;
-    private void OpenPathFinderWindow()
+
+    private System.Threading.CancellationTokenSource? _wantCts;
+    private System.Threading.CancellationTokenSource? _payCts;
+
+    private class PathfinderAutocompleteItem
+    {
+        public int Id { get; set; }
+        public string Display { get; set; } = "";
+        public string ShortName { get; set; } = "";
+        public ImageSource? Icon { get; set; }
+    }
+    internal void OpenPathFinderWindow()
     {
         if (BuyXForYPanel.Visibility == Visibility.Visible)
         {
@@ -407,6 +462,12 @@ public partial class MainWindow
         }
 
         ProfitTradesPanel.Visibility = Visibility.Collapsed;
+
+        if (AppSettingsPanel.Visibility == Visibility.Visible)
+        {
+            AppSettingsPanel.Visibility = Visibility.Collapsed;
+            ApplySettings();
+        }
 
         if (!_pathFinderInitialized)
         {
@@ -418,8 +479,11 @@ public partial class MainWindow
             _wantPreviewList = BuyXForY_WantPreview;
             _payPreviewList = BuyXForY_PayPreview;
 
-            _wantTb.TextChanged += (_, __) => RefreshPathfinderPreviews();
-            _payTb.TextChanged += (_, __) => RefreshPathfinderPreviews();
+            _wantTb.TextChanged += TxtWant_TextChanged;
+            _payTb.TextChanged += TxtPay_TextChanged;
+            LstAutocomplete_Want.SelectionChanged += LstAutocomplete_Want_SelectionChanged;
+            LstAutocomplete_Pay.SelectionChanged += LstAutocomplete_Pay_SelectionChanged;
+
             _runPathBtn.Click += (_, __) => RunPathAnalysis();
             BtnCloseBuyXForY.Click += (_, __) => BuyXForYPanel.Visibility = Visibility.Collapsed;
         }
@@ -617,6 +681,152 @@ public partial class MainWindow
                 Foreground = SearchText,
                 Opacity = 0.4
             });
+        }
+    }
+
+    private void TxtWant_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        _wantCts?.Cancel();
+        _wantCts = new System.Threading.CancellationTokenSource();
+        var token = _wantCts.Token;
+
+        string query = _wantTb?.Text?.Trim() ?? "";
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            PopupAutocomplete_Want.IsOpen = false;
+            RefreshPathfinderPreviews();
+            return;
+        }
+
+        var dispatcher = Dispatcher;
+        dispatcher.InvokeAsync(async () =>
+        {
+            try
+            {
+                await System.Threading.Tasks.Task.Delay(200, token);
+                if (token.IsCancellationRequested) return;
+
+                var lowercaseQuery = query.ToLowerInvariant();
+                var matches = await System.Threading.Tasks.Task.Run(() =>
+                {
+                    return sItemsById.Values
+                        .Where(ii => !string.IsNullOrWhiteSpace(ii.Display) && 
+                                     (ii.Display.Contains(lowercaseQuery, StringComparison.OrdinalIgnoreCase) || 
+                                      (ii.ShortName != null && ii.ShortName.Contains(lowercaseQuery, StringComparison.OrdinalIgnoreCase))))
+                        .Take(12)
+                        .Select(ii => new PathfinderAutocompleteItem
+                        {
+                            Id = ii.Id,
+                            Display = ii.Display,
+                            ShortName = ii.ShortName ?? "",
+                            Icon = ResolveItemIcon(ii.Id, ii.ShortName, 32)
+                        })
+                        .ToList();
+                });
+
+                if (token.IsCancellationRequested) return;
+
+                if (matches.Count > 0)
+                {
+                    LstAutocomplete_Want.ItemsSource = matches;
+                    PopupAutocomplete_Want.IsOpen = true;
+                }
+                else
+                {
+                    PopupAutocomplete_Want.IsOpen = false;
+                }
+
+                RefreshPathfinderPreviews();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException) { }
+        });
+    }
+
+    private void LstAutocomplete_Want_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (LstAutocomplete_Want.SelectedItem is PathfinderAutocompleteItem selected)
+        {
+            if (_wantTb != null)
+            {
+                _wantTb.TextChanged -= TxtWant_TextChanged;
+                _wantTb.Text = selected.Display;
+                _wantTb.TextChanged += TxtWant_TextChanged;
+            }
+            PopupAutocomplete_Want.IsOpen = false;
+            RefreshPathfinderPreviews();
+        }
+    }
+
+    private void TxtPay_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        _payCts?.Cancel();
+        _payCts = new System.Threading.CancellationTokenSource();
+        var token = _payCts.Token;
+
+        string query = _payTb?.Text?.Trim() ?? "";
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            PopupAutocomplete_Pay.IsOpen = false;
+            RefreshPathfinderPreviews();
+            return;
+        }
+
+        var dispatcher = Dispatcher;
+        dispatcher.InvokeAsync(async () =>
+        {
+            try
+            {
+                await System.Threading.Tasks.Task.Delay(200, token);
+                if (token.IsCancellationRequested) return;
+
+                var lowercaseQuery = query.ToLowerInvariant();
+                var matches = await System.Threading.Tasks.Task.Run(() =>
+                {
+                    return sItemsById.Values
+                        .Where(ii => !string.IsNullOrWhiteSpace(ii.Display) && 
+                                     (ii.Display.Contains(lowercaseQuery, StringComparison.OrdinalIgnoreCase) || 
+                                      (ii.ShortName != null && ii.ShortName.Contains(lowercaseQuery, StringComparison.OrdinalIgnoreCase))))
+                        .Take(12)
+                        .Select(ii => new PathfinderAutocompleteItem
+                        {
+                            Id = ii.Id,
+                            Display = ii.Display,
+                            ShortName = ii.ShortName ?? "",
+                            Icon = ResolveItemIcon(ii.Id, ii.ShortName, 32)
+                        })
+                        .ToList();
+                });
+
+                if (token.IsCancellationRequested) return;
+
+                if (matches.Count > 0)
+                {
+                    LstAutocomplete_Pay.ItemsSource = matches;
+                    PopupAutocomplete_Pay.IsOpen = true;
+                }
+                else
+                {
+                    PopupAutocomplete_Pay.IsOpen = false;
+                }
+
+                RefreshPathfinderPreviews();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException) { }
+        });
+    }
+
+    private void LstAutocomplete_Pay_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (LstAutocomplete_Pay.SelectedItem is PathfinderAutocompleteItem selected)
+        {
+            if (_payTb != null)
+            {
+                _payTb.TextChanged -= TxtPay_TextChanged;
+                _payTb.Text = selected.Display;
+                _payTb.TextChanged += TxtPay_TextChanged;
+            }
+            PopupAutocomplete_Pay.IsOpen = false;
+            RefreshPathfinderPreviews();
         }
     }
 
@@ -1386,64 +1596,91 @@ public partial class MainWindow
 
     private FrameworkElement? BuildPathCard(TradePathResult path)
     {
-
         var summary = ComputePathRunSummaryStrict(path);
         if (summary == null) return null; // reject whole path (true bottleneck)
 
+        var defaultBorderBrush = new SolidColorBrush(Color.FromArgb(38, 255, 255, 255)); // rgba(255, 255, 255, 0.15)
+        var hoverBorderBrush = new SolidColorBrush(Color.FromRgb(0, 173, 239)); // Electric blue highlight on hover
+
         var outer = new Border
         {
-            Background = new SolidColorBrush(Color.FromRgb(24, 26, 28)),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+            CornerRadius = new CornerRadius(10),
+            BorderBrush = defaultBorderBrush,
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(6),
-            Padding = new Thickness(8),
-            Margin = new Thickness(0, 0, 0, 8)
+            Background = new LinearGradientBrush
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(0, 1),
+                GradientStops =
+                {
+                    new GradientStop(Color.FromRgb(45, 50, 60), 0.0), // Slate
+                    new GradientStop(Color.FromRgb(29, 32, 38), 1.0)  // Charcoal
+                }
+            },
+            Padding = new Thickness(12),
+            Margin = new Thickness(0, 0, 0, 10),
+            Cursor = Cursors.Hand
         };
 
-        var grid = new Grid();
-        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        outer.Child = grid;
+        // Pointer highlight
+        outer.MouseEnter += (sender, e) => { outer.BorderBrush = hoverBorderBrush; outer.BorderThickness = new Thickness(1.2); };
+        outer.MouseLeave += (sender, e) => { outer.BorderBrush = defaultBorderBrush; outer.BorderThickness = new Thickness(1.0); };
 
-        // LEFT
-        var left = new StackPanel { Orientation = Orientation.Vertical };
-        left.Children.Add(new TextBlock
+        var stack = new StackPanel { Orientation = Orientation.Vertical };
+        outer.Child = stack;
+
+        // Loop length and route overview header
+        stack.Children.Add(new TextBlock
         {
-            Text = $"Get {summary.FinalName} starting from {summary.StartName} in {path.Steps.Count} step(s)",
-            Foreground = SearchText,
+            Text = $"🔁 {path.Steps.Count}-Step Pathfinder Loop",
+            Foreground = new SolidColorBrush(Color.FromRgb(0, 173, 239)),
+            FontWeight = FontWeights.Bold,
+            FontSize = 12.5,
+            Margin = new Thickness(2, 0, 0, 8)
+        });
+
+        // Stats Summary Box at the top of the card!
+        var summaryBox = BuildSummaryBoxStrict(summary, path);
+        summaryBox.Margin = new Thickness(0, 0, 0, 10);
+        stack.Children.Add(summaryBox);
+
+        // Route Steps header
+        stack.Children.Add(new TextBlock
+        {
+            Text = "📍 Route Steps:",
+            Foreground = new SolidColorBrush(Color.FromArgb(170, 255, 255, 255)),
             FontWeight = FontWeights.SemiBold,
-            FontSize = 14,
-            Margin = new Thickness(0, 0, 0, 4),
-            TextWrapping = TextWrapping.WrapWithOverflow
+            FontSize = 10.5,
+            Margin = new Thickness(2, 0, 0, 6)
         });
 
         // Steps with "Current stock" and "Min to reach goal: xN"
         for (int i = 0; i < path.Steps.Count; i++)
-            left.Children.Add(BuildStepRowWithMin(i + 1, path.Steps[i], summary.MinRuns[i]));
+        {
+            stack.Children.Add(BuildStepRowWithMin(i + 1, path.Steps[i], summary.MinRuns[i]));
+        }
 
-        Grid.SetColumn(left, 0);
-        grid.Children.Add(left);
-
-
-        // RIGHT
-        var summaryBox = BuildSummaryBoxStrict(summary, path);
-        grid.Children.Add(summaryBox);
-        Grid.SetColumn(summaryBox, 1);
+        // Zoom to the path center on card click!
+        outer.MouseLeftButtonUp += (_, __) =>
+        {
+            double avgX = path.Steps.Average(s => s.Shop.X);
+            double avgY = path.Steps.Average(s => s.Shop.Y);
+            CenterMapOnWorldAnimated(avgX, avgY, false, true);
+        };
 
         return outer;
     }
 
-    // helper to keep earlier style
     private FrameworkElement BuildStepRowWithMin(int idx, PathStep step, double minRunsForStep)
     {
         var rowOuter = new Border
         {
-            Background = new SolidColorBrush(Color.FromArgb(32, 255, 255, 255)),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(64, 255, 255, 255)),
+            Background = new SolidColorBrush(Color.FromArgb(10, 255, 255, 255)),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255)),
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(8, 6, 8, 6),
-            Margin = new Thickness(0, 4, 0, 0)
+            CornerRadius = new CornerRadius(6),
+            Padding = new Thickness(8),
+            Margin = new Thickness(0, 0, 0, 6)
         };
 
         var row = new Grid();
@@ -1451,29 +1688,93 @@ public partial class MainWindow
         row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         rowOuter.Child = row;
 
-        var left = new StackPanel { Orientation = Orientation.Vertical};
+        var leftStack = new StackPanel { Orientation = Orientation.Vertical };
+        Grid.SetColumn(leftStack, 0);
+        row.Children.Add(leftStack);
 
-        // Zeile mit Icons „pay → get“
-        left.Children.Add(new TextBlock
+        // Step number title
+        leftStack.Children.Add(new TextBlock
         {
-            Text = $"Step {idx}:",
-            Foreground = SearchText,
-            FontWeight = FontWeights.SemiBold,
-            Margin = new Thickness(0, 0, 0, 2)
+            Text = $"Step {idx}",
+            Foreground = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255)),
+            FontWeight = FontWeights.Bold,
+            FontSize = 10,
+            Margin = new Thickness(0, 0, 0, 4)
         });
-        left.Children.Add(BuildPayGetRow(step));  // <- deine vorhandene Icon-Zeile
 
-        // Zusatzinfos
-        left.Children.Add(new TextBlock { Text = $"Current stock: {step.Order?.Stock ?? 0}", Foreground = SearchText, FontSize = 11, Opacity = 0.85 });
-        left.Children.Add(new TextBlock { Text = $"Min to reach goal: x{Math.Max(1, Math.Floor(minRunsForStep))}", Foreground = SearchText, FontSize = 11, Opacity = 0.85 });
-        left.Children.Add(new TextBlock { Text = $"{(step.Shop.Label ?? "Shop")} [{GetGridLabel(step.Shop)}]", Foreground = SearchText, FontSize = 11, Opacity = 0.8, TextTrimming = TextTrimming.CharacterEllipsis, MaxWidth = 200 });
+        // Pay -> Get Row
+        leftStack.Children.Add(BuildPayGetRow(step));
 
-        Grid.SetColumn(left, 0);
-        row.Children.Add(left);
+        // Badges grid (using WrapPanel to prevent narrow sidebar cutoffs)
+        var badgesRow = new WrapPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 4, 0, 0) };
+        
+        // Stock badge
+        badgesRow.Children.Add(new Border
+        {
+            Background = new SolidColorBrush(Color.FromArgb(12, 255, 255, 255)),
+            CornerRadius = new CornerRadius(4),
+            Padding = new Thickness(5, 1, 5, 1),
+            Margin = new Thickness(0, 0, 6, 4),
+            Child = new TextBlock
+            {
+                Text = $"📦 Stock: {step.Order?.Stock ?? 0}",
+                Foreground = (step.Order?.Stock ?? 0) <= 0 ? new SolidColorBrush(Color.FromRgb(239, 83, 80)) : new SolidColorBrush(Color.FromRgb(102, 187, 106)),
+                FontSize = 9.5,
+                FontWeight = FontWeights.Bold
+            }
+        });
 
-        var goBtn = MakeHeaderPillButton("Go");
-        goBtn.Margin = new Thickness(8, 0, 0, 0);
-        goBtn.Click += (_, __) => CenterMapOnWorld(step.Shop.X, step.Shop.Y);
+        // Runs badge
+        badgesRow.Children.Add(new Border
+        {
+            Background = new SolidColorBrush(Color.FromArgb(15, 0, 173, 239)),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(40, 0, 173, 239)),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(4),
+            Padding = new Thickness(5, 1, 5, 1),
+            Margin = new Thickness(0, 0, 6, 4),
+            Child = new TextBlock
+            {
+                Text = $"Runs: x{Math.Max(1, Math.Floor(minRunsForStep))}",
+                Foreground = new SolidColorBrush(Color.FromRgb(0, 173, 239)),
+                FontSize = 9.5,
+                FontWeight = FontWeights.Bold
+            }
+        });
+
+        // Shop label
+        var shopTitle = CleanLabel(step.Shop.Label) ?? "Shop";
+        leftStack.Children.Add(new TextBlock
+        {
+            Text = $"📍 {shopTitle} ({GetGridLabel(step.Shop)})",
+            Foreground = new SolidColorBrush(Color.FromArgb(140, 255, 255, 255)),
+            FontSize = 10,
+            FontWeight = FontWeights.SemiBold,
+            Margin = new Thickness(0, 4, 0, 0)
+        });
+
+        leftStack.Children.Add(badgesRow);
+
+        // RIGHT: Location Pill Go
+        var goBtn = new Button
+        {
+            Content = "📍 Show",
+            Height = 22,
+            Padding = new Thickness(8, 1, 8, 1),
+            FontSize = 9.5,
+            FontWeight = FontWeights.Bold,
+            Background = new SolidColorBrush(Color.FromArgb(20, 0, 173, 239)),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(60, 0, 173, 239)),
+            Foreground = new SolidColorBrush(Color.FromRgb(0, 173, 239)),
+            Cursor = Cursors.Hand,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(8, 0, 0, 0)
+        };
+        goBtn.Click += (s, e) =>
+        {
+            e.Handled = true;
+            CenterMapOnWorldAnimated(step.Shop.X, step.Shop.Y, false, true);
+        };
         Grid.SetColumn(goBtn, 1);
         row.Children.Add(goBtn);
 
@@ -1490,14 +1791,13 @@ public partial class MainWindow
         };
     }
 
-    // "Icon + xMenge" – nutzt DEIN bestehendes BindIcon.
     private FrameworkElement IconWithQty(string? shortName, int itemId, double qty,
                                      double iconSize = 24, double fontSize = 13, bool bold = true)
     {
         var row = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
 
         var img = new Image { Width = iconSize, Height = iconSize, Margin = new Thickness(0, 0, 6, 0) };
-        BindIcon(img, shortName, itemId); // <- deine vorhandene Funktion
+        BindIcon(img, shortName, itemId);
 
         var txt = new TextBlock
         {
@@ -1518,22 +1818,20 @@ public partial class MainWindow
         var first = path.Steps.First();
         var last = path.Steps.Last();
 
-        // Fallbacks falls Order null sein sollte
         string? startShort = first.Order?.CurrencyShortName ?? first.PayPrettyName;
         int startId = first.Order?.CurrencyItemId ?? 0;
-
         string? finalShort = last.Order?.ItemShortName ?? last.GetPrettyName;
         int finalId = last.Order?.ItemId ?? 0;
 
         var box = new Border
         {
-            Background = new SolidColorBrush(Color.FromRgb(40, 44, 48)),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+            Background = new SolidColorBrush(Color.FromArgb(18, 15, 20, 25)), // Very elegant dark glassy back
+            BorderBrush = new SolidColorBrush(Color.FromArgb(35, 255, 255, 255)), // Subtle glassy border
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(8),
-            Margin = new Thickness(8, 0, 0, 0),
-            MinWidth = 260
+            CornerRadius = new CornerRadius(8),
+            Padding = new Thickness(10),
+            Margin = new Thickness(0), // Full width in stacked card!
+            VerticalAlignment = VerticalAlignment.Top
         };
 
         var st = new StackPanel { Orientation = Orientation.Vertical };
@@ -1544,8 +1842,9 @@ public partial class MainWindow
         {
             Text = "Max @ current stock:",
             Foreground = SearchText,
-            FontWeight = FontWeights.SemiBold,
-            FontSize = 12
+            FontWeight = FontWeights.Bold,
+            FontSize = 11.5,
+            Margin = new Thickness(0, 0, 0, 4)
         });
 
         // Große Symbolzeile: [Pay xN] -> [Get xN]
@@ -1557,7 +1856,7 @@ public partial class MainWindow
         var payIcon = IconWithQty(startShort, startId, sum.MaxStartCost, 24, 13, true);
         Grid.SetColumn(payIcon, 0); big.Children.Add(payIcon);
 
-        var arrow = new TextBlock { Text = "  →  ", Foreground = SearchText, FontSize = 14, VerticalAlignment = VerticalAlignment.Center };
+        var arrow = new TextBlock { Text = "  →  ", Foreground = new SolidColorBrush(Color.FromRgb(0, 173, 239)), FontSize = 14, FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center };
         Grid.SetColumn(arrow, 1); big.Children.Add(arrow);
 
         var getIcon = IconWithQty(finalShort, finalId, sum.MaxFinalGain, 24, 13, true);
@@ -1570,7 +1869,20 @@ public partial class MainWindow
         {
             Text = $"Get {Math.Floor(sum.MaxFinalGain)} {sum.FinalName} for {Math.Floor(sum.MaxStartCost)} {sum.StartName}",
             Foreground = SearchText,
-            FontSize = 12
+            FontSize = 11.5,
+            TextWrapping = TextWrapping.Wrap,
+            Margin = new Thickness(0, 0, 0, 6)
+        });
+
+        // Drone costs – nimm DroneCostMax, sonst auf DroneCost/n*20 zurückfallen
+        double drone = sum.DroneCostMax > 0 ? sum.DroneCostMax : (sum.DroneCost > 0 ? sum.DroneCost : path.Steps.Count * 20);
+        st.Children.Add(new TextBlock
+        {
+            Text = $"🚀 Drone costs: {Math.Floor(drone)} Scrap",
+            Foreground = new SolidColorBrush(Color.FromRgb(244, 180, 26)), // Nice gold color for fee
+            FontSize = 11,
+            FontWeight = FontWeights.SemiBold,
+            Margin = new Thickness(0, 2, 0, 2)
         });
 
         // Leftovers
@@ -1579,24 +1891,15 @@ public partial class MainWindow
             var leftStr = string.Join(", ", sum.Leftovers.Select(k => $"{Math.Floor(k.Value)} {k.Key}"));
             st.Children.Add(new TextBlock
             {
-                Text = $"Leftovers: {leftStr}",
-                Foreground = SearchText,
-                FontSize = 11,
-                Margin = new Thickness(0, 2, 0, 0)
+                Text = $"📦 Leftovers: {leftStr}",
+                Foreground = new SolidColorBrush(Color.FromRgb(160, 170, 185)), // Soft grayish blue
+                FontSize = 10.5,
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(0, 2, 0, 4)
             });
         }
 
-        // Drone costs – nimm DroneCostMax, sonst auf DroneCost/n*20 zurückfallen
-        double drone = sum.DroneCostMax > 0 ? sum.DroneCostMax : (sum.DroneCost > 0 ? sum.DroneCost : path.Steps.Count * 20);
-        st.Children.Add(new TextBlock
-        {
-            Text = $"Drone costs: {Math.Floor(drone)} Scrap",
-            Foreground = SearchText,
-            FontSize = 11,
-            Margin = new Thickness(0, 2, 0, 2)
-        });
-
-        st.Children.Add(UiSeparator());
+        st.Children.Add(UiSeparator(4, 4));
 
         // Aggregierte Step-Totals für MAX-Plan
         for (int i = 0; i < path.Steps.Count; i++)
@@ -1610,144 +1913,41 @@ public partial class MainWindow
 
             st.Children.Add(new TextBlock
             {
-                Text = $"Step {i + 1}: Pay {Math.Floor(totalPay)} {step.PayPrettyName} → Get {Math.Floor(totalGet)} {step.GetPrettyName}",
-                Foreground = SearchText,
-                FontSize = 11
+                Text = $"• Step {i + 1}: Pay {Math.Floor(totalPay)} {step.PayPrettyName} → Get {Math.Floor(totalGet)} {step.GetPrettyName}",
+                Foreground = new SolidColorBrush(Color.FromArgb(190, 255, 255, 255)),
+                FontSize = 10.5,
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(0, 1, 0, 1)
             });
         }
 
-        st.Children.Add(UiSeparator());
+        st.Children.Add(UiSeparator(4, 4));
 
         // Min-Chain ganz unten
         var minLine = $"Min chain: Pay {Math.Floor(sum.MinStartCost)} {sum.StartName} → Get {Math.Floor(sum.MinFinalGain)} {sum.FinalName}";
         if (!sum.MinChainFeasible && (sum.Blockers?.Count > 0))
             minLine += "  (not feasible at current stock)";
 
-        st.Children.Add(new TextBlock { Text = minLine, Foreground = SearchText, FontSize = 11 });
+        st.Children.Add(new TextBlock 
+        { 
+            Text = minLine, 
+            Foreground = new SolidColorBrush(Color.FromArgb(170, 255, 255, 255)), 
+            FontSize = 10.5,
+            TextWrapping = TextWrapping.Wrap
+        });
 
         if (!sum.MinChainFeasible && (sum.Blockers?.Count > 0))
         {
             st.Children.Add(new TextBlock
             {
                 Text = "Bottleneck: " + sum.Blockers[0],
-                Foreground = SearchText,
-                FontSize = 11,
-                Opacity = 0.9
+                Foreground = new SolidColorBrush(Color.FromRgb(239, 83, 80)),
+                FontSize = 10.5,
+                Opacity = 0.9,
+                Margin = new Thickness(0, 2, 0, 0),
+                TextWrapping = TextWrapping.Wrap
             });
         }
-
-        return box;
-    }
-
-
-    private FrameworkElement BuildSummaryBox(PathRunSummary sum, TradePathResult path)
-    {
-        var box = new Border
-        {
-            Background = new SolidColorBrush(Color.FromRgb(40, 44, 48)),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(6),
-            Margin = new Thickness(8, 0, 0, 0),
-            MinWidth = 220
-        };
-
-        var st = new StackPanel { Orientation = Orientation.Vertical };
-        box.Child = st;
-
-        st.Children.Add(new TextBlock
-        {
-            Text = "Max @ current stock:",
-            Foreground = SearchText,
-            FontWeight = FontWeights.SemiBold,
-            FontSize = 12
-        });
-       
-
-        st.Children.Add(new TextBlock
-        {
-            Text = $"Get {Math.Floor(sum.MaxFinalGain)} {sum.FinalName} for {Math.Floor(sum.MaxStartCost)} {sum.StartName}",
-            Foreground = SearchText,
-            FontSize = 12,
-            Margin = new Thickness(0, 2, 0, 4)
-        });
-
-        st.Children.Add(new TextBlock
-        {
-            Text = $"Drone costs: {Math.Floor(sum.DroneCost)} Scrap",
-            Foreground = SearchText,
-            FontSize = 11
-        });
-
-        if (sum.Leftovers.Count > 0)
-        {
-            var leftoverStrs = sum.Leftovers
-                .Select(kvp => $"{Math.Floor(kvp.Value)} {kvp.Key}");
-
-            st.Children.Add(new TextBlock
-            {
-                Text = "Leftovers: " + string.Join(", ", leftoverStrs),
-                Foreground = SearchText,
-                FontSize = 11,
-                Margin = new Thickness(0, 2, 0, 4)
-            });
-        }
-        else
-        {
-            st.Children.Add(new TextBlock
-            {
-                Text = "",
-                FontSize = 4
-            });
-        }
-
-        // Detail-Zeilen pro Step mit aggregierten Mengen
-        var steps = path.Steps;
-        for (int i = 0; i < steps.Count; i++)
-        {
-            var step = steps[i];
-            var (idx, r) = sum.RunsByStep[i]; // idx == i, r == runs[i]
-
-            if (r <= 0) continue; // wenn wir den Step wirklich gar nicht fahren, skippen
-
-            double totalPay = r * step.PayAmount;
-            double totalGet = r * step.GetAmount;
-
-            st.Children.Add(new TextBlock
-            {
-                Text = $"Step {i + 1}: Pay {Math.Floor(totalPay)} {step.PayPrettyName} → Get {Math.Floor(totalGet)} {step.GetPrettyName}",
-                Foreground = SearchText,
-                FontSize = 11
-            });
-            if (sum.MinFinalGain > 0)
-            {
-                var minLine = $"Min chain: Pay {Math.Floor(sum.MinStartCost)} {sum.StartName} → Get {Math.Floor(sum.MinFinalGain)} {sum.FinalName}";
-                if (!sum.MinChainFeasible && sum.Blockers.Count > 0)
-                    minLine += "  (not feasible at current stock)";
-
-                
-
-                if (!sum.MinChainFeasible && sum.Blockers.Count > 0)
-                {
-                    st.Children.Add(new TextBlock
-                    {
-                        Text = "Bottleneck: " + sum.Blockers[0],
-                        Foreground = SearchText,
-                        FontSize = 11,
-                        Opacity = 0.9
-                    });
-                }
-            }
-        }
-        var minLine2 = $"Min chain: Pay {Math.Floor(sum.MinStartCost)} {sum.StartName} → Get {Math.Floor(sum.MinFinalGain)} {sum.FinalName}";
-        st.Children.Add(new TextBlock
-        {
-            Text = minLine2,
-            Foreground = SearchText,
-            FontSize = 11,
-            Margin = new Thickness(0, 2, 0, 2)
-        });
 
         return box;
     }
@@ -1821,51 +2021,53 @@ public partial class MainWindow
 
     private FrameworkElement BuildPayGetRow(PathStep st)
     {
-        var g = new Grid { Margin = new Thickness(0, 0, 0, 4) };
-        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        g.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        var stack = new StackPanel { Orientation = Orientation.Vertical, Margin = new Thickness(0, 0, 0, 4) };
 
-        var payIcon = new Image { Width = 18, Height = 18, Margin = new Thickness(0, 0, 6, 0) };
+        // 1) Pay Row
+        var payRow = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 2) };
+        var payIcon = new Image { Width = 16, Height = 16, Margin = new Thickness(0, 0, 6, 0), VerticalAlignment = VerticalAlignment.Center };
         BindIcon(payIcon, st.Order?.CurrencyShortName, st.Order?.CurrencyItemId ?? 0);
-        g.Children.Add(payIcon);
+        payRow.Children.Add(payIcon);
 
-        var payTxt = new TextBlock
+        payRow.Children.Add(new TextBlock
         {
             Text = $"Pay {st.PayAmount} {st.PayPrettyName}",
-            Foreground = SearchText,
-            VerticalAlignment = VerticalAlignment.Center
-        };
-        Grid.SetColumn(payTxt, 1);
-        g.Children.Add(payTxt);
+            Foreground = new SolidColorBrush(Color.FromRgb(239, 130, 120)), // Soft orange-red for spend
+            FontSize = 11,
+            FontWeight = FontWeights.Bold,
+            VerticalAlignment = VerticalAlignment.Center,
+            TextWrapping = TextWrapping.Wrap
+        });
+        stack.Children.Add(payRow);
 
-        var arrow = new TextBlock
+        // 2) Sleek down arrow indicator
+        stack.Children.Add(new TextBlock
         {
-            Text = "  →  ",
-            Margin = new Thickness(6, 0, 6, 0),
-            Foreground = SearchText,
-            VerticalAlignment = VerticalAlignment.Center
-        };
-        Grid.SetColumn(arrow, 2);
-        g.Children.Add(arrow);
+            Text = "   ↓",
+            Foreground = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255)),
+            FontSize = 10,
+            FontWeight = FontWeights.Bold,
+            Margin = new Thickness(4, 0, 0, 2)
+        });
 
-        var getIcon = new Image { Width = 18, Height = 18, Margin = new Thickness(0, 0, 6, 0) };
+        // 3) Get Row
+        var getRow = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 2) };
+        var getIcon = new Image { Width = 16, Height = 16, Margin = new Thickness(0, 0, 6, 0), VerticalAlignment = VerticalAlignment.Center };
         BindIcon(getIcon, st.Order?.ItemShortName, st.Order?.ItemId ?? 0);
-        Grid.SetColumn(getIcon, 3);
-        g.Children.Add(getIcon);
+        getRow.Children.Add(getIcon);
 
-        var getTxt = new TextBlock
+        getRow.Children.Add(new TextBlock
         {
             Text = $"Get {st.GetAmount} {st.GetPrettyName}",
-            Foreground = SearchText,
-            VerticalAlignment = VerticalAlignment.Center
-        };
-        Grid.SetColumn(getTxt, 4);
-        g.Children.Add(getTxt);
+            Foreground = new SolidColorBrush(Color.FromRgb(102, 187, 106)), // Soft green for gain
+            FontSize = 11,
+            FontWeight = FontWeights.Bold,
+            VerticalAlignment = VerticalAlignment.Center,
+            TextWrapping = TextWrapping.Wrap
+        });
+        stack.Children.Add(getRow);
 
-        return g;
+        return stack;
     }
 
     private void RunPathAnalysis()
@@ -1921,7 +2123,10 @@ public partial class MainWindow
 
     private ListBox? _analysisListBox;
     private bool _profitTradesInitialized;
-    private void OpenAnalysisWindow()
+    private string _profitSearchText = "";
+    private int _profitMinLimit = 0;
+
+    internal void OpenAnalysisWindow()
     {
         if (ProfitTradesPanel.Visibility == Visibility.Visible)
         {
@@ -1931,18 +2136,46 @@ public partial class MainWindow
 
         BuyXForYPanel.Visibility = Visibility.Collapsed;
 
+        if (AppSettingsPanel.Visibility == Visibility.Visible)
+        {
+            AppSettingsPanel.Visibility = Visibility.Collapsed;
+            ApplySettings();
+        }
+
         if (!_profitTradesInitialized)
         {
             _profitTradesInitialized = true;
             _analysisListBox = ProfitTradesList;
             BtnRefreshProfitTrades.Click += (_, __) => RefreshAnalysisWindow();
             BtnCloseProfitTrades.Click += (_, __) => ProfitTradesPanel.Visibility = Visibility.Collapsed;
+            
+            TxtProfitSearch.TextChanged += TxtProfitSearch_TextChanged;
+            CmbMinProfit.SelectionChanged += CmbMinProfit_SelectionChanged;
         }
 
         ProfitTradesPanel.Visibility = Visibility.Visible;
         RefreshAnalysisWindow();
         UpdateShopSearchToolHighlights();
     }
+
+    private void TxtProfitSearch_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (TxtProfitSearch == null) return;
+        _profitSearchText = TxtProfitSearch.Text.Trim().ToLowerInvariant();
+        RefreshAnalysisWindow();
+    }
+
+    private void CmbMinProfit_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (CmbMinProfit == null || CmbMinProfit.SelectedItem == null) return;
+        if (CmbMinProfit.SelectedItem is ComboBoxItem item)
+        {
+            string tag = item.Tag?.ToString() ?? "0";
+            int.TryParse(tag, out _profitMinLimit);
+            RefreshAnalysisWindow();
+        }
+    }
+
     private void RefreshAnalysisWindow()
     {
         if (_analysisListBox == null) return;
@@ -1954,26 +2187,40 @@ public partial class MainWindow
             _analysisListBox.Items.Add(new TextBlock
             {
                 Text = "No shop data yet.",
-                Foreground = SearchText
+                Foreground = SearchText,
+                FontSize = 12,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, 30, 0, 0)
             });
             return;
         }
 
         var flips = FindTwoStepFlips(_lastShops);
 
-        _analysisListBox.Items.Add(new TextBlock
+        // Apply filters
+        if (_profitMinLimit > 0)
         {
-            Text = "Possible 2-step profit loops",
-            Foreground = SearchText,
-            Margin = new Thickness(0, 0, 0, 8)
-        });
+            flips = flips.Where(f => f.Profit >= _profitMinLimit).ToList();
+        }
+        if (!string.IsNullOrWhiteSpace(_profitSearchText))
+        {
+            flips = flips.Where(f => 
+                f.StartCurrencyName.Contains(_profitSearchText, StringComparison.OrdinalIgnoreCase) ||
+                f.MidItemName.Contains(_profitSearchText, StringComparison.OrdinalIgnoreCase) ||
+                (f.ShopFirst.Label != null && f.ShopFirst.Label.Contains(_profitSearchText, StringComparison.OrdinalIgnoreCase)) ||
+                (f.ShopSecond.Label != null && f.ShopSecond.Label.Contains(_profitSearchText, StringComparison.OrdinalIgnoreCase))
+            ).ToList();
+        }
 
         if (flips.Count == 0)
         {
             _analysisListBox.Items.Add(new TextBlock
             {
-                Text = "No profitable flips found.",
-                Foreground = SearchText
+                Text = "No profitable loops match active filters.",
+                Foreground = new SolidColorBrush(Color.FromArgb(153, 236, 239, 241)),
+                FontSize = 12,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, 30, 0, 0)
             });
             return;
         }
@@ -1982,7 +2229,7 @@ public partial class MainWindow
         foreach (var flip in flips)
         {
             _analysisListBox.Items.Add(BuildFlipCard(flip));
-            if (++shown >= 20) break;
+            if (++shown >= 25) break;
         }
     }
 

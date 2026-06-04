@@ -1,0 +1,82 @@
+<Window x:Class="RustPlusDesk.Views.CloudDisclaimerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Cloud Sync &amp; Live-Upload"
+        Width="460" Height="410"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="#0F1215"
+        Foreground="White"
+        WindowStyle="None"
+        AllowsTransparency="True">
+
+    <Border Background="{DynamicResource Surface}" 
+            BorderBrush="{DynamicResource CardBorder}" 
+            BorderThickness="1" 
+            CornerRadius="16" 
+            Margin="10">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="25" Opacity="0.4" ShadowDepth="0" Color="#0066FF"/>
+        </Border.Effect>
+        
+        <Grid Margin="25">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0" Background="#161B22" CornerRadius="12,12,0,0" Padding="20,14" MouseLeftButtonDown="Border_MouseLeftButtonDown" Cursor="SizeAll">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:SymbolIcon Symbol="Cloud24" FontSize="18" Foreground="#3B82F6" Margin="0,0,10,0"/>
+                    <TextBlock Text="{DynamicResource PrivacyDisclaimerTitle}" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Content (Premium Blue Card) -->
+            <StackPanel Grid.Row="1" Margin="10,20,10,10" VerticalAlignment="Center">
+                <Border Background="#101F35" BorderBrush="#1D4ED8" BorderThickness="1" CornerRadius="10" Padding="18">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <ui:SymbolIcon Symbol="Info24" FontSize="16" Foreground="#3B82F6" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource PrivacyDisclaimerTitle}" FontWeight="Bold" Foreground="#3B82F6" FontSize="13" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock TextWrapping="Wrap" Foreground="#CCDDEE" FontSize="12.5" LineHeight="18" Text="{DynamicResource PrivacyDisclaimerDesc}"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Footer -->
+            <Border Grid.Row="2" Margin="0,15,0,0" Padding="0,15,0,0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource CardBorder}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ui:Button Grid.Column="1"
+                            Content="{DynamicResource DeclineCloud}" 
+                            Appearance="Secondary"
+                            Padding="20,8" 
+                            FontSize="13"
+                            FontWeight="SemiBold" 
+                            Cursor="Hand"
+                            Margin="0,0,10,0"
+                            Click="BtnDecline_Click" />
+
+                    <ui:Button Grid.Column="2"
+                            Content="{DynamicResource AcceptCloud}" 
+                            Appearance="Primary"
+                            Padding="30,8" 
+                            FontSize="14"
+                            FontWeight="SemiBold" 
+                            Cursor="Hand"
+                            Click="BtnAccept_Click" />
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

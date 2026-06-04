@@ -40,7 +40,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Resources; // für Application.GetResourceStream
+using System.Windows.Resources; // fÃƒÂ¼r Application.GetResourceStream
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Xml.Linq;
@@ -57,7 +57,6 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow : WpfUi.FluentWindow
 {
-
     private readonly MainViewModel _vm = new();
     private bool _chatOpenedForCommandsOnly = false;
     private readonly UpdateService _updateService = new();
@@ -74,6 +73,13 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private readonly System.Windows.Threading.DispatcherTimer _upkeepTimer =
     new() { Interval = TimeSpan.FromSeconds(60) };
+
+    private readonly System.Windows.Threading.DispatcherTimer _customTimerTicker =
+    new() { Interval = TimeSpan.FromSeconds(1) };
+
+    private System.Windows.Media.MediaPlayer? _timerAlarmPlayer;
+    private string? _timerAlarmFilePath;
+    private bool _timerStartupCleanupDone;
 
     private Viewbox? _mapView;
     private Grid? _scene;
@@ -97,7 +103,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     private readonly MonumentWatcher _monumentWatcher = new MonumentWatcher();
 
     private uint? _trackingEntityId; // NEU: ID des Objekts, dem die Kamera folgt
-    private IReadOnlyList<RustPlusClientReal.DynMarker>? _lastMarkers; // Cache für Interaktionen
+    private IReadOnlyList<RustPlusClientReal.DynMarker>? _lastMarkers; // Cache fÃƒÂ¼r Interaktionen
 
     public void StopTracking()
     {
@@ -139,7 +145,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         MenuFollowPlayer.IsOpen = true;
     }
 
-    // Camera thumbs: Throttling & "in-flight"-Wächter
+    // Camera thumbs: Throttling & "in-flight"-WÃƒÂ¤chter
     // Dumper Button
     private async void BtnDynCheck_Click(object sender, RoutedEventArgs e)
     {
@@ -156,13 +162,13 @@ public partial class MainWindow : WpfUi.FluentWindow
 
             // kleine Verteilung nach RawType
             var groups = list.GroupBy(m => m.RawType).OrderBy(g => g.Key)
-                             .Select(g => $"{g.Key}×{g.Count()}");
+                             .Select(g => $"{g.Key}Ãƒâ€”{g.Count()}");
             AppendLog("dyn2 types: " + string.Join(", ", groups));
 
-            // zeig die ersten 6 Marker „roh“
+            // zeig die ersten 6 Marker Ã¢â‚¬Å¾rohÃ¢â‚¬Å“
             foreach (var m in list.Take(6))
                 AppendLog("dyn2 sample: " + m.DebugLine);
-            // (optional) schnelle Heuristik für crate-verdächtige
+            // (optional) schnelle Heuristik fÃƒÂ¼r crate-verdÃƒÂ¤chtige
             var suspects = list.Where(m =>
                 (m.RawType == 7 || m.RawType == 0) &&
                 ((m.Label ?? "").IndexOf("crate", StringComparison.OrdinalIgnoreCase) >= 0
@@ -232,7 +238,83 @@ public partial class MainWindow : WpfUi.FluentWindow
     // --- Overlay State ---
     private readonly List<(SmartDevice? Device, AlarmNotification Notification)> _overlayAlarms = new();
     private int _overlayAlarmIndex = -1;
-    private DispatcherTimer? _overlayHideTimer;
+    private System.Windows.Threading.DispatcherTimer? _overlayHideTimer;
+    private System.Windows.Threading.DispatcherTimer? _cloudSyncTimer;
+    private volatile bool _ownCloudRestoreReady = false;
+    private bool _premiumProfileRefreshBusy = false;
+
+    private void StartCloudSyncTimer()
+    {
+        if (_cloudSyncTimer == null)
+        {
+            int tickCount = 0;
+            int profileRefreshTickCount = 0;
+            _cloudSyncTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(2.5)
+            };
+            _cloudSyncTimer.Tick += async (s, e) =>
+            {
+                profileRefreshTickCount++;
+                if (profileRefreshTickCount >= 360)
+                {
+                    profileRefreshTickCount = 0;
+                    await RefreshPremiumProfileSnapshotAsync();
+                }
+
+                if (!TrackingService.CloudSyncEnabled || _vm.Selected == null) return;
+
+                // Upload our own device snapshot every 10 seconds (4 ticks of 2.5s).
+                // Teammate overlays are pulled by the overlay poller only while selected/visible.
+                tickCount++;
+                if (tickCount >= 4)
+                {
+                    tickCount = 0;
+                    if (_mySteamId != 0 && _vm.Selected?.Devices != null)
+                    {
+                        try
+                        {
+                            if (_ownCloudRestoreReady)
+                                await UploadDevicesSnapshotForCurrentServerAsync();
+                        }
+                        catch (Exception)
+                        {
+                            // Silent ignore on background network noise
+                        }
+                    }
+                }
+            };
+        }
+        _cloudSyncTimer.Start();
+    }
+
+    private async Task RefreshPremiumProfileSnapshotAsync()
+    {
+        if (_premiumProfileRefreshBusy) return;
+        if (!Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated &&
+            !Services.Auth.SupabaseAuthManager.IsEmailAuthenticated)
+            return;
+
+        _premiumProfileRefreshBusy = true;
+        try
+        {
+            if (await Services.Auth.SupabaseAuthManager.EnsureFreshSessionAsync())
+            {
+                await Services.Auth.SupabaseAuthManager.RefreshUserProfileAsync();
+                UpdateAdminUi();
+                UpdateCloudSyncUI();
+                AppSettingsPanel?.LoadSettings();
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[Cloud/Debug] Premium status refresh failed: " + ex.Message);
+        }
+        finally
+        {
+            _premiumProfileRefreshBusy = false;
+        }
+    }
 
     private Action? _pendingUploadAction;
 
@@ -251,6 +333,8 @@ public partial class MainWindow : WpfUi.FluentWindow
     private void BtnAcceptUploadConsent_Click(object sender, RoutedEventArgs e)
     {
         TrackingService.UploadConsentGiven = true;
+        TrackingService.CloudSyncEnabled = true;
+        _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(true);
         UploadConsentOverlay.Visibility = Visibility.Collapsed;
         _pendingUploadAction?.Invoke();
         _pendingUploadAction = null;
@@ -258,6 +342,9 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private void BtnDeclineUploadConsent_Click(object sender, RoutedEventArgs e)
     {
+        TrackingService.UploadConsentGiven = false;
+        TrackingService.CloudSyncEnabled = false;
+        _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(false);
         UploadConsentOverlay.Visibility = Visibility.Collapsed;
         _pendingUploadAction = null;
     }
@@ -269,20 +356,24 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _vm.IsInitializing = true;
         InitializeComponent();
+        
+        PlayersTab?.SetMainWindow(this);
+        
         UpdateLanguageFlag();
         InitializeAppSettings();
         
-        // ── WinUI 3: Apply OS-level Mica backdrop via DWM ────────────────────
+        // Ã¢â€â‚¬Ã¢â€â‚¬ WinUI 3: Apply OS-level Mica backdrop via DWM Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
         WindowBackdropHelper.Apply(this, WindowBackdropHelper.BackdropType.Mica);
-        // ── Wpf.Ui: Apply Fluent dark theme to all controls ───────────────────
+        // Ã¢â€â‚¬Ã¢â€â‚¬ Wpf.Ui: Apply Fluent dark theme to all controls Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
         ApplicationThemeManager.Apply(ApplicationTheme.Dark, updateAccent: true);
         
         if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
         this.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
-        if (FindName("TxtVersion") is TextBlock txt)
+        if (FindName("TxtAppVersion") is TextBlock txt)
             txt.Text = $"v{_updateService.VersionRaw}";
         InitCameraUi();
         InitSmoothFollowLoop();
+        StartCloudSyncTimer();
         ApplySettings();
         _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
         AppendLog($"[items-new] baseDir={baseDir}");
@@ -308,7 +399,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         WebViewHost.SizeChanged += (_, __) =>
         {
             // FitMapToHost();
-            // <<< NEU: Basis an neue Hostgröße anpassen
+            // <<< NEU: Basis an neue HostgrÃƒÂ¶ÃƒÅ¸e anpassen
 
             // UpdateMarkerPositions();
         };
@@ -321,10 +412,10 @@ public partial class MainWindow : WpfUi.FluentWindow
         WebViewHost.Focusable = true;
         DataContext = _vm;
         _vm.Load();
-        // NEU: einmalig auf die aktuell ausgewählte Server-Instanz „umstecken“
+        // NEU: einmalig auf die aktuell ausgewÃƒÂ¤hlte Server-Instanz Ã¢â‚¬Å¾umsteckenÃ¢â‚¬Å“
         SwitchCameraSourceTo(_vm.Selected);
 
-        // NEU: bei jedem späteren Serverwechsel Kameraliste umhängen
+        // NEU: bei jedem spÃƒÂ¤teren Serverwechsel Kameraliste umhÃƒÂ¤ngen
         _vm.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(MainViewModel.Selected))
@@ -339,10 +430,12 @@ public partial class MainWindow : WpfUi.FluentWindow
         // Set version badge dynamically from assembly
         var ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
         if (ver != null)
-            TxtAppVersion.Text = $"v{ver.Major}.{ver.Minor}.{ver.Build}";
-        // _statusTimer.Tick += async (_, __) => await UpdateServerStatusAsync();
+             _statusTimer.Tick += async (_, __) => await UpdateServerStatusAsync();
         _upkeepTimer.Tick += (_, __) => RefreshUpkeepUI();
         _upkeepTimer.Start();
+        
+        _customTimerTicker.Tick += (_, __) => { CheckCustomTimers(); UpdateAdminUi(); };
+        _customTimerTicker.Start();
 
         ListServers.ItemsSource = _vm.Servers;
         _vm.Servers.CollectionChanged += (_, __) => Dispatcher.Invoke(() => UpdatePairingGuideSnackbar());
@@ -372,10 +465,11 @@ public partial class MainWindow : WpfUi.FluentWindow
             _ = Task.Run(async () => await AutoCheckUpdatesAsync());
 
             UpdatePairingGuideSnackbar();
+            UpdateCloudSyncUI();
         }));
 
         // One-time migration notice for v5.2.0
-        const string AppVersion = "5.3.0-beta";
+        const string AppVersion = "6.0.0";
 
         bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
         {
@@ -413,18 +507,20 @@ public partial class MainWindow : WpfUi.FluentWindow
                 }
             }
 
-            if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "5.2.0"))
+            if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "5.5.0"))
             {
-                // Upgrade von 5.2.0 oder geringer: Popup zeigen
+                // Upgrade von 5.4.0 oder geringer: Popup zeigen
                 Dispatcher.InvokeAsync(() =>
                 {
                     var dlg = new Views.MigrationNoticeWindow { Owner = this };
                     dlg.ShowDialog();
                     
-                    // Nur speichern, wenn der User "Don't show again" angehakt hat (Standard ist true)
-                    if (dlg.DontShowAgain)
+                    if (dlg.HasMadeChoice)
                     {
                         TrackingService.LastSeenVersion = AppVersion;
+                        TrackingService.CloudSyncEnabled = dlg.CloudSyncAccepted;
+                        TrackingService.UploadConsentGiven = dlg.CloudSyncAccepted;
+                        _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(dlg.CloudSyncAccepted);
                     }
                 }, System.Windows.Threading.DispatcherPriority.Loaded);
             }
@@ -445,19 +541,19 @@ public partial class MainWindow : WpfUi.FluentWindow
         OnOnlinePlayersUpdated();
         _vm.IsInitializing = false;
         
-        // Einmal erzeugen (falls du den Stub behalten willst: try/fallback – aber nur EINMAL zuweisen)
+        // Einmal erzeugen (falls du den Stub behalten willst: try/fallback Ã¢â‚¬â€œ aber nur EINMAL zuweisen)
 
         _pairing = new PairingListenerRealProcess(AppendLog);
 
         _pairing.Paired += Pairing_Paired;
 
-        // EINMALIG auf AlarmReceived hören:
+        // EINMALIG auf AlarmReceived hÃƒÂ¶ren:
         if (_pairing is PairingListenerRealProcess pr)
         {
             pr.AlarmReceived += (_, a) => Dispatcher.Invoke(() => ShowAlarmPopup(a));
         }
 
-        // Status → UI
+        // Status Ã¢â€ â€™ UI
         _pairing.Listening += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
         {
             _vm.IsPairingRunning = true;
@@ -495,24 +591,24 @@ public partial class MainWindow : WpfUi.FluentWindow
                     var dev = FindDeviceById(_vm.Selected?.Devices, id);
                     if (dev == null) return;
 
-                    // Kind nur setzen, wenn wir es NOCH NICHT kennen – nie ein SmartAlarm "wegschreiben"
+                    // Kind nur setzen, wenn wir es NOCH NICHT kennen Ã¢â‚¬â€œ nie ein SmartAlarm "wegschreiben"
                     if (string.IsNullOrWhiteSpace(dev.Kind) && !string.IsNullOrWhiteSpace(kindFromApi))
                         dev.Kind = kindFromApi;
 
-                    // ⬇️ SmartAlarm: NICHT proben, sondern den Eventwert verwenden (true = gerade ausgelöst)
+                    // Ã¢Â¬â€¡Ã¯Â¸Â SmartAlarm: NICHT proben, sondern den Eventwert verwenden (true = gerade ausgelÃƒÂ¶st)
                     if ((dev.Kind ?? kindFromApi)?.Equals("SmartAlarm", StringComparison.OrdinalIgnoreCase) == true)
                     {
                         _suppressToggleHandler = true;
-                        dev.IsOn = isOn;                  // zeigt in der Liste AKTIV nur während der Auslösung
+                        dev.IsOn = isOn;                  // zeigt in der Liste AKTIV nur wÃƒÂ¤hrend der AuslÃƒÂ¶sung
                         _suppressToggleHandler = false;
 
-                        // optional: nach kurzer Zeit automatisch auf INAKTIV zurücknehmen,
+                        // optional: nach kurzer Zeit automatisch auf INAKTIV zurÃƒÂ¼cknehmen,
                         // falls kein weiterer Alarm-Event kommt
                         // Trigger Alarm UI/Sound auch via WebSocket
                         if (isOn)
                         {
                             string srv = _vm.Selected?.Name ?? "Server";
-                            // Bereinigen für UI und Cache-Matching
+                            // Bereinigen fÃƒÂ¼r UI und Cache-Matching
                             srv = Regex.Replace(srv, @"\x1B\[[0-9;]*[A-Za-z]", "");
                             srv = Regex.Replace(srv, @"\[/?[a-zA-Z]+\]", "").Trim();
                             if (string.IsNullOrEmpty(srv)) srv = "Server";
@@ -534,7 +630,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                             await Task.Delay(7000);   // 7s Puls-Fenster
                             await Dispatcher.InvokeAsync(() =>
                             {
-                                // nur zurücksetzen, wenn seither kein neuer Alarm kam
+                                // nur zurÃƒÂ¼cksetzen, wenn seither kein neuer Alarm kam
                                 if (dev.IsOn == true)
                                 {
                                     _suppressToggleHandler = true;
@@ -546,7 +642,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                         return;
                     }
 
-                    // Standard-Geräte (Switch etc.): Eventwert reicht aus
+                    // Standard-GerÃƒÂ¤te (Switch etc.): Eventwert reicht aus
                     _suppressToggleHandler = true;
                     dev.IsOn = isOn;
                     _suppressToggleHandler = false;
@@ -565,6 +661,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         try { ClearAllToggleBusy(); } catch { }
         try { ResetAllBusyStates(); } catch { }
         this.Closed += MainWindow_Closed;
+        ChatCommandsOverlay.CommandsEnabledChanged += ChatCommandsOverlay_CommandsEnabledChanged;
 
         _toolButtons = new Dictionary<OverlayToolMode, Button>
     {
@@ -582,14 +679,22 @@ public partial class MainWindow : WpfUi.FluentWindow
                              data.Name == "Large Oil Rig" ? Properties.Resources.LargeOilRig :
                              data.Name;
             Dispatcher.InvokeAsync(async () =>
-                await SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertOilRigTriggered, rigName, timeStr)));
+            {
+                var msg = string.Format(Properties.Resources.AlertOilRigTriggered, rigName, timeStr);
+                await SendTeamChatSafeAsync(msg);
+                _ = DiscordBotListenerService.Instance.SendNotificationAsync("events", "\uD83D\uDEA2 **Event:** " + msg);
+            });
         };
 
         // NEU: Update Events (10m / 5m Warnungen)
         _monumentWatcher.OnOilRigChatUpdate += (s, message) =>
         {
             if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
-            Dispatcher.InvokeAsync(async () => await SendTeamChatSafeAsync(message));
+            Dispatcher.InvokeAsync(async () =>
+            {
+                await SendTeamChatSafeAsync(message);
+                _ = DiscordBotListenerService.Instance.SendNotificationAsync("events", "\uD83D\uDEA2 **Event Update:** " + message);
+            });
         };
         
         _monumentWatcher.OnDebug += (s, msg) => Dispatcher.BeginInvoke(new Action(() => AppendLog(msg)));
@@ -681,7 +786,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         w.Top = screenTopDip + (screenHeightDip - w.Height) / 2.0;
     }
 
-    // Kontextmenü: Rechtsklick abfangen, damit das Menü sicher aufgeht
+    // KontextmenÃ¼: Rechtsklick abfangen, damit das MenÃ¼ sicher aufgeht
     private void BtnCrosshair_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         e.Handled = true;
@@ -693,7 +798,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }
     }
 
-    // Menü beim Öffnen mit Monitoren füllen und Häkchen setzen
+    // MenÃ¼ beim Ã–ffnen mit Monitoren fÃ¼llen und HÃ¤kchen setzen
     private void CrosshairContextMenu_Opened(object sender, RoutedEventArgs e)
     {
         BuildMonitorMenu();
@@ -729,10 +834,10 @@ public partial class MainWindow : WpfUi.FluentWindow
                 var btnRename = new Button { Content = "Abc", ToolTip = "Rename", Width = 28, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Foreground = Brushes.LightGray, Tag = cc };
                 btnRename.Click += CustomCrosshairRename_Click;
 
-                var btnEdit = new Button { Content = "✏️", ToolTip = "Edit", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
+                var btnEdit = new Button { Content = "âœ  ï¸  ", ToolTip = "Edit", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
                 btnEdit.Click += CustomCrosshairEdit_Click;
                 
-                var btnDelete = new Button { Content = "🗑️", ToolTip = "Delete", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
+                var btnDelete = new Button { Content = "ðŸ—‘ï¸  ", ToolTip = "Delete", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
                 btnDelete.Click += CustomCrosshairDelete_Click;
 
                 sp.Children.Add(btnRename);
@@ -874,7 +979,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }
     }
 
-    // Menüaufbau
+    // MenÃ¼aufbau
     private void BuildMonitorMenu()
     {
         MonitorRoot.Items.Clear();
@@ -885,7 +990,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             var s = screens[i];
             var item = new MenuItem
             {
-                Header = $"{i + 1}: {(s.Primary ? "Hauptmonitor" : "Monitor")} {s.Width}×{s.Height} @ {s.Left},{s.Top}",
+                Header = $"{i + 1}: {(s.Primary ? "Hauptmonitor" : "Monitor")} {s.Width}Ã—{s.Height} @ {s.Left},{s.Top}",
                 IsCheckable = true,
                 IsChecked = _selectedMonitor != null &&
                             s.Left == _selectedMonitor.Left &&
@@ -957,7 +1062,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             else if (_overlay != null)
             {
                 _overlay.SetStyle(_currentStyle);
-                // nach Größenänderung neu zentrieren
+                // nach GrÃ¶ÃŸenÃ¤nderung neu zentrieren
                 if (_selectedMonitor != null)
                     PositionOverlayCentered(_overlay, _selectedMonitor);
             }
@@ -1003,22 +1108,22 @@ public partial class MainWindow : WpfUi.FluentWindow
         public double LastRealX, LastRealY; // last confirmed non-ghost position (for crash detection)
     }
     private readonly Dictionary<uint, DynMarkerState> _dynStates = new();
-    private readonly HashSet<uint> _dynKnown = new();                      // “already spawned” for chat announcements
+    private readonly HashSet<uint> _dynKnown = new();                      // â€œalready spawnedâ€  for chat announcements
     private DispatcherTimer? _dynTimer;
     private bool _showPlayers = true;                                      // controlled by ChkPlayers
-                                                                           // Wie stark Icons die Zoom-Stufe kompensieren (je kleiner der Exponent, desto GRÖSSER beim Rauszoomen)
-    private const double MON_SIZE_EXP = 0.5;  // Monumente: sehr präsent beim Rauszoomen
+                                                                           // Wie stark Icons die Zoom-Stufe kompensieren (je kleiner der Exponent, desto GRÃ–SSER beim Rauszoomen)
+    private const double MON_SIZE_EXP = 0.5;  // Monumente: sehr prÃ¤sent beim Rauszoomen
 
 
     // Globale Grenzen, damit es nicht ausufert
     private const double ICON_SCALE_MIN = 0.6;  // kleiner als 60% nie
-    private const double ICON_SCALE_MAX = 4.5;  // größer als 350% nie
+    private const double ICON_SCALE_MAX = 4.5;  // grÃ¶ÃŸer als 350% nie
 
-    // Optional: Baseline-Verstärker, um generell alles größer zu machen
-    private const double MON_BASE_MULT = 2.2;  // 20% größer als Basis
-    private const double SHOP_BASE_MULT = 1.3;  // 30% größer als Basis
+    // Optional: Baseline-VerstÃ¤rker, um generell alles grÃ¶ÃŸer zu machen
+    private const double MON_BASE_MULT = 2.2;  // 20% grÃ¶ÃŸer als Basis
+    private const double SHOP_BASE_MULT = 1.3;  // 30% grÃ¶ÃŸer als Basis
 
-    // tiny map from type → icon (pack URIs). Put your icons in /icons as Resource.
+    // tiny map from type â†’ icon (pack URIs). Put your icons in /icons as Resource.
     private static readonly Dictionary<int, string> sDynIconByType = new()
 {
     { 5, "pack://application:,,,/Assets/icons/cargo.png"  },
@@ -1031,7 +1136,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 };
     private static readonly Brush PopupBg = new SolidColorBrush(Color.FromRgb(32, 36, 40));   // dunkel
     private static readonly Brush PopupBrd = new SolidColorBrush(Color.FromArgb(40, 255, 255, 255));
-    private const int SHOPS_WRAP_COLUMNS = 3;   // 3 oder 4 – so viele Karten pro Zeile
+    private const int SHOPS_WRAP_COLUMNS = 3;   // 3 oder 4 â€œ so viele Karten pro Zeile
     private const double SHOP_CARD_WIDTH = 320; // feste Breite deiner Shop-Karte
     private const double SHOP_GAP = 8;   // Abstand zwischen Karten
 
@@ -1041,9 +1146,9 @@ public partial class MainWindow : WpfUi.FluentWindow
                                "RustPlusDesk", "icons");
 
     // === Layers ===
-    // Optional: externe Ergänzungen laden (Datei neben der EXE)
+    // Optional: externe ErgÃ¤nzungen laden (Datei neben der EXE)
     private static bool _itemMapLoaded;
-    /// <summary>lädt rust_items.json aus dem Programmordner oder eingebettet als WPF-Resource.</summary>
+    /// <summary>lÃ¤dt rust_items.json aus dem Programmordner oder eingebettet als WPF-Resource.</summary>
     /// 
 
     private void MainWindow_Closed(object? sender, EventArgs e)
@@ -1055,9 +1160,9 @@ public partial class MainWindow : WpfUi.FluentWindow
         {
             try
             {
-                // Überprüfe, ob der Prozess ein Hauptfenster hat.
+                // ÃœberprÃ¼fe, ob der Prozess ein Hauptfenster hat.
                 // Hintergrundprozesse (wie der Listener) haben in der Regel keins.
-                // Der von der "fcm-register"-Methode gestartete Prozess, der den Browser öffnet,
+                // Der von der "fcm-register"-Methode gestartete Prozess, der den Browser Ã¶ffnet,
                 // sollte eine Ausnahme sein und hat ein Fenster, daher wird er hier ignoriert.
                 if (p.MainWindowHandle == IntPtr.Zero)
                 {
@@ -1066,21 +1171,27 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
             catch (Exception ex)
             {
-                // Dies fängt Berechtigungsfehler oder Prozesse ab, die bereits beendet sind.
+                // Dies fÃ¤ngt Berechtigungsfehler oder Prozesse ab, die bereits beendet sind.
                 // Ignoriere die Ausnahme, da das erwartete Verhalten ist.
-                // Du kannst hier auch loggen, wenn du möchtest: Debug.WriteLine($"Konnte Prozess {p.Id} nicht beenden: {ex.Message}");
+                // Du kannst hier auch loggen, wenn du mÃ¶chtest: Debug.WriteLine($"Konnte Prozess {p.Id} nicht beenden: {ex.Message}");
             }
         }
         try
         {
-            // falls noch offen/hidden → hart schließen
+            // falls noch offen/hidden â†’ hart schlieÃŸen
             if (_overlay != null)
             {
                 _overlay.Close();
                 _overlay = null;
             }
 
-            // Kontextmenü sauber schließen (optional)
+            if (_miniMap != null)
+            {
+                _miniMap.Close();
+                _miniMap = null;
+            }
+
+            // KontextmenÃ¼ sauber schlieÃŸen (optional)
             BtnCrosshair.ContextMenu?.IsOpen.Equals(false);
 
             // Launch pending update installer if available
@@ -1218,16 +1329,16 @@ public partial class MainWindow : WpfUi.FluentWindow
         return $"{author}|{text}";
     }
 
-    private sealed class ItemInfo
+    public sealed class ItemInfo
     {
         public int Id { get; init; }
         public string ShortName { get; init; } = "";
-        public string Display { get; init; } = "";   // „pretty“ name
+        public string Display { get; init; } = "";   // â€žprettyâ€œ name
         public string? IconUrl { get; init; }
     }
 
-    private static readonly Dictionary<int, ItemInfo> sItemsById = new();
-    private static readonly Dictionary<string, ItemInfo> sItemsByShort = new(StringComparer.OrdinalIgnoreCase);
+    internal static readonly Dictionary<int, ItemInfo> sItemsById = new();
+    internal static readonly Dictionary<string, ItemInfo> sItemsByShort = new(StringComparer.OrdinalIgnoreCase);
     private static readonly Dictionary<string, ImageSource> sIconCache = new(StringComparer.OrdinalIgnoreCase);
     private static readonly HashSet<string> sPendingDownloads = new();
     private static bool sNewDbLoaded = false;
@@ -1253,7 +1364,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         System.IO.Path.Combine(baseDir, "rust-item-list.json"),
         System.IO.Path.Combine(currDir, "rust-item-list.json"),
         entryDir is null ? null : System.IO.Path.Combine(entryDir, "rust-item-list.json"),
-        // häufige Ordner:
+        // hÃ¤ufige Ordner:
         System.IO.Path.Combine(baseDir, "assets", "rust-item-list.json"),
         System.IO.Path.Combine(baseDir, "data",   "rust-item-list.json"),
         System.IO.Path.Combine(baseDir, "Assets", "Data", "rust-item-list.json"),
@@ -1328,10 +1439,10 @@ public partial class MainWindow : WpfUi.FluentWindow
         var src = ResolveItemIcon(itemId, shortName, decodePx);
         if (src != null) { img.Source = src; return; }
 
-        // 2) Download wurde von ResolveItemIcon bereits angestoßen → in Intervallen nochmal versuchen
+        // 2) Download wurde von ResolveItemIcon bereits angestoÃŸen â†’ in Intervallen nochmal versuchen
         _ = Task.Run(async () =>
         {
-            for (int i = 0; i < 10; i++)   // ~2.75s max (250+300+…)
+            for (int i = 0; i < 10; i++)   // ~2.75s max (250+300+â€¦)
             {
                 await Task.Delay(250 + i * 250);
                 var ready = ResolveItemIcon(itemId, shortName, decodePx);
@@ -1433,7 +1544,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     // Sichtbarkeit per Checkbox/Toggle
     private bool _showMonuments = true;
 
-    // Overlay-Elemente für Monumente
+    // Overlay-Elemente fÃ¼r Monumente
     private readonly Dictionary<string, FrameworkElement> _monEls = new();
 
     // Rohdaten (aus GetMapWithMonumentsAsync)
@@ -1443,7 +1554,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private static readonly Dictionary<string, string> sMonIconByKeyRaw = new(StringComparer.OrdinalIgnoreCase)
 {
-    // nur Beispiele – ergänze frei:
+    // nur Beispiele â€“ ergÃ¤nze frei:
     { "stone quarry",            "pack://application:,,,/Assets/icons/stonequarry.png" },
     { "hqm quarry",              "pack://application:,,,/Assets/icons/hqmquarry.png" },
     { "sulfur quarry",           "pack://application:,,,/Assets/icons/sulfurquarry.png" },
@@ -1505,7 +1616,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             var key = Canon(kv.Key);              // <- deine Canon(...) von oben
             if (string.IsNullOrEmpty(key)) continue;
 
-            // Bei Kollision gewinnt der „präzisere“ Eintrag: Priorisiere längere Keys
+            // Bei Kollision gewinnt der â€žprÃ¤zisereâ€œ Eintrag: Priorisiere lÃ¤ngere Keys
             if (!map.TryGetValue(key, out var existing) || kv.Key.Length > existing.Length)
                 map[key] = kv.Value;
         }
@@ -1539,7 +1650,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             return "underwater labs";
         }
 
-        // unerwünschte Suffixe/Teile robust entfernen (auch mehrfach, egal wo)
+        // unerwÃ¼nschte Suffixe/Teile robust entfernen (auch mehrfach, egal wo)
         s = System.Text.RegularExpressions.Regex.Replace(
                 s,
                 @"\b(display\s*name|monument\s*name)\b",
@@ -1634,7 +1745,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                     ToolTipService.SetToolTip(img, tooltip);
                     return img;
                 }
-                catch { /* fällt auf Dot zurück */ }
+                catch { /* fÃ¤llt auf Dot zurÃ¼ck */ }
             }
         }
 
@@ -1703,7 +1814,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             // Grobe Validierung: ist es ein JSON Array mit Items?
             if (!json.Contains("shortName") || !json.Contains("displayName")) return false;
 
-            // Pfad bestimmen: Wir speichern direkt ins Root-Verzeichnis, da dies die höchste Priorität beim Laden hat
+            // Pfad bestimmen: Wir speichern direkt ins Root-Verzeichnis, da dies die hÃ¶chste PrioritÃ¤t beim Laden hat
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             string targetPath = System.IO.Path.Combine(baseDir, "rust-item-list.json");
 
@@ -1760,7 +1871,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         bool loaded = false;
 
-        // 1) Disk – bevorzugt (Content + Copy if newer)
+        // 1) Disk â€“ bevorzugt (Content + Copy if newer)
         foreach (var path in new[] {
         System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "rust_items.json"),
         System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "items-map.json"),
@@ -1779,7 +1890,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
         }
 
-        // 2) WPF Resource – fallback (REBUILD nötig, wenn du die Datei änderst)
+        // 2) WPF Resource â€“ fallback (REBUILD nÃ¶tig, wenn du die Datei Ã¤nderst)
         if (!loaded)
         {
             foreach (var uri in new[] {
@@ -1815,7 +1926,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     }
 
 
-    // gibt true zurück, wenn mind. ein Mapping ankam (beide Dictionaries werden ergänzt)
+    // gibt true zurÃ¼ck, wenn mind. ein Mapping ankam (beide Dictionaries werden ergÃ¤nzt)
     private static bool TryLoadFromJson(string json)
     {
         try
@@ -1850,7 +1961,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     }
 
 
-    /// <summary>gibt einen schönen Anzeigenamen zurück (Shortname bevorzugt, sonst ID-Fallback)</summary>
+    /// <summary>gibt einen schÃ¶nen Anzeigenamen zurÃ¼ck (Shortname bevorzugt, sonst ID-Fallback)</summary>
     public static string ResolveItemName(int itemId, string? shortName)
     {
         // 1) neue DB bevorzugt
@@ -1880,7 +1991,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         var stock = o.Stock > 0 ? $" (stock {o.Stock})" : "";
         var bp = o.IsBlueprint ? " [BP]" : "";
 
-        return $"{left} → {right}{stock}{bp}";
+        return $"{left} â†’ {right}{stock}{bp}";
     }
 private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP, double V_DIP, double Radius);
     private readonly List<MarkerRef> _markers = new();
@@ -1888,14 +1999,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private AlarmWindow? _alarmWin; // nicht AlarmPopupWindow
     private readonly ObservableCollection<AlarmNotification> _alarmFeed = new();
     private readonly Dictionary<string, DateTime> _lastAlarmProcessed = new();
-    private DateTime _lastAnyAlarmTime = DateTime.MinValue; // Globaler Marker für Fuzzy-Dedup
+    private DateTime _lastAnyAlarmTime = DateTime.MinValue; // Globaler Marker fÃ¼r Fuzzy-Dedup
     private readonly Dictionary<uint, (string Title, string Message)> _alarmMetadataCache = new();
     private readonly Dictionary<string, (uint Id, DateTime Time)> _lastSeenIdPerServer = new();
     private readonly List<string> _alarmHistoryDedup = new();
 
     private void ShowAlarmPopup(AlarmNotification n, string source = "FCM")
     {
-        // 0) Backlog-Filter: Ignoriere Alarme, die älter als 5 Minuten sind
+        // 0) Backlog-Filter: Ignoriere Alarme, die Ã¤lter als 5 Minuten sind
         if ((DateTime.Now - n.Timestamp).TotalMinutes > 5) return;
 
         // 0.1) Exakter Duplikat-Check (Server + Msg + Zeitstempel)
@@ -1911,12 +2022,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         var now = DateTime.UtcNow;
 
-        // Servernamen bereinigen für stabiles Mapping
+        // Servernamen bereinigen fÃ¼r stabiles Mapping
         string cleanSrv = Regex.Replace(n.Server ?? "", @"\x1B\[[0-9;]*[A-Za-z]", "");
         cleanSrv = Regex.Replace(cleanSrv, @"\[/?[a-zA-Z]+\]", "").Trim();
         if (string.IsNullOrEmpty(cleanSrv)) cleanSrv = "-";
 
-        // Wenn die Meldung eine ID hat (WS), merken wir sie uns für diesen Server
+        // Wenn die Meldung eine ID hat (WS), merken wir sie uns fÃ¼r diesen Server
         if (n.EntityId.HasValue)
         {
             _lastSeenIdPerServer[cleanSrv] = (n.EntityId.Value, now);
@@ -1970,7 +2081,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (source == "FCM" && n.Message != "Alarm activated!")
         {
             uint? tid = n.EntityId;
-            // Falls FCM keine ID hat, versuchen wir sie über den letzten WS-Event dieses Servers zu finden
+            // Falls FCM keine ID hat, versuchen wir sie Ã¼ber den letzten WS-Event dieses Servers zu finden
             if (!tid.HasValue && _lastSeenIdPerServer.TryGetValue(cleanSrv, out var last) && (now - last.Time).TotalSeconds < 10)
             {
                 tid = last.Id;
@@ -1989,7 +2100,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
         }
         
-        // n.Server ebenfalls bereinigen für konsistentes UI/Matching
+        // n.Server ebenfalls bereinigen fÃ¼r konsistentes UI/Matching
         n = n with { Server = cleanSrv };
 
         // Override DeviceName with Custom Name / PureName if device is identified
@@ -2000,7 +2111,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (n.EntityId.HasValue)
         {
-            // Dedup primär über ID (ignoriere Server-Namensunterschiede wie ANSI-Farben)
+            // Dedup primÃ¤r Ã¼ber ID (ignoriere Server-Namensunterschiede wie ANSI-Farben)
             string key = $"ID:{n.EntityId.Value}";
             if (_lastAlarmProcessed.TryGetValue(key, out var last) && (now - last).TotalSeconds < 5)
             {
@@ -2039,6 +2150,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         // 4) Play Audio (Respects settings if device is identified, otherwise plays default)
         PlayAlarmAudio(dev);
+
+        // Send smart alert to Discord Bot
+        _ = DiscordBotListenerService.Instance.SendNotificationAsync("raid", $"\uD83D\uDEA8 **{dev?.PureName ?? n.DeviceName ?? "Smart Alarm"}**: {n.Message}");
 
         // Send smart alert to team chat if setting and master switch are enabled
         if (TrackingService.AnnounceSmartAlerts && _announceSpawns)
@@ -2284,7 +2398,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _overlayHideTimer.Start();
     }
 
-    // Hilfsfunktion: stabiler Schlüssel für eine Chat-Nachricht
+    // Hilfsfunktion: stabiler SchlÃƒÂ¼ssel fÃƒÂ¼r eine Chat-Nachricht
 
 
     // Liefert Viewbox-Skalierung s und Offsets (Letterboxing) relativ zum WebViewHost
@@ -2295,7 +2409,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         double hostW = Math.Max(1, WebViewHost.ActualWidth);
         double hostH = Math.Max(1, WebViewHost.ActualHeight);
 
-        // Inhalt: wir nehmen die "natürliche" Breite/Höhe der Szene
+        // Inhalt: wir nehmen die "natÃƒÂ¼rliche" Breite/HÃƒÂ¶he der Szene
         double contentW = _scene.ActualWidth > 0 ? _scene.ActualWidth : _scene.Width;
         double contentH = _scene.ActualHeight > 0 ? _scene.ActualHeight : _scene.Height;
         if (contentW <= 0 || contentH <= 0) return (1.0, 0.0, 0.0);
@@ -2319,10 +2433,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         try
         {
-            AppendLog($"Speichere Profile → {StorageService.GetProfilesPath()}");
+            AppendLog($"Speichere Profile Ã¢â€ â€™ {StorageService.GetProfilesPath()}");
             _vm.Save();
         }
         catch (Exception ex) { AppendLog("Saving failed: " + ex.Message); }
+
+        try
+        {
+            Task.Run(NotifyTeamFeatureAppClosingAsync).Wait(TimeSpan.FromSeconds(3));
+        }
+        catch { }
     }
 
     public void HandleRustPlusLink(string link)
@@ -2392,9 +2512,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private (string host, int port, ulong playerId, int playerToken, string? name) ParseRustPlusLink(string link)
     {
         // Beispiele tolerieren:
-        // rustplus://connect?ip=1.2.3.4&port=28082&playerId=7656…&playerToken=123456
-        // rustplus://?ip=…&port=…&playerid=…&playertoken=…
-        // rustplus://add?address=…&port=…&playerid=…&token=…
+        // rustplus://connect?ip=1.2.3.4&port=28082&playerId=7656Ã¢â‚¬Â¦&playerToken=123456
+        // rustplus://?ip=Ã¢â‚¬Â¦&port=Ã¢â‚¬Â¦&playerid=Ã¢â‚¬Â¦&playertoken=Ã¢â‚¬Â¦
+        // rustplus://add?address=Ã¢â‚¬Â¦&port=Ã¢â‚¬Â¦&playerid=Ã¢â‚¬Â¦&token=Ã¢â‚¬Â¦
         var l = link.Trim();
 
         // in normales Schema wandeln, damit Uri es versteht
@@ -2405,32 +2525,32 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var q = System.Web.HttpUtility.ParseQueryString(uri.Query);
 
         string host = q["ip"] ?? q["address"] ?? throw new ArgumentException("ip/address fehlt");
-        if (!int.TryParse(q["port"], NumberStyles.Integer, CultureInfo.InvariantCulture, out var port)) throw new ArgumentException("port fehlt/ungültig");
+        if (!int.TryParse(q["port"], NumberStyles.Integer, CultureInfo.InvariantCulture, out var port)) throw new ArgumentException("port fehlt/ungÃƒÂ¼ltig");
 
         var sidStr = q["playerId"] ?? q["playerid"] ?? throw new ArgumentException("playerId fehlt");
-        if (!ulong.TryParse(sidStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out var playerId)) throw new ArgumentException("playerId ungültig");
+        if (!ulong.TryParse(sidStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out var playerId)) throw new ArgumentException("playerId ungÃƒÂ¼ltig");
 
         var tokStr = q["playerToken"] ?? q["playertoken"] ?? q["token"] ?? throw new ArgumentException("playerToken fehlt");
-        if (!int.TryParse(tokStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out var token)) throw new ArgumentException("playerToken ungültig");
+        if (!int.TryParse(tokStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out var token)) throw new ArgumentException("playerToken ungÃƒÂ¼ltig");
 
         var name = q["name"];
         return (host, port, playerId, token, name);
     }
     private void Pairing_Paired(object? sender, PairingPayload e)
     {
-        // Key OHNE EntityId: dient nur für „Server-keepalive“-Erkennung
+        // Key OHNE EntityId: dient nur fÃƒÂ¼r Ã¢â‚¬Å¾Server-keepaliveÃ¢â‚¬Å“-Erkennung
         var sig = $"{e.Host}:{e.Port}|{e.SteamId64}|{e.PlayerToken}";
 
         // >>> NUR keepalives ohne EntityId ignorieren
         if (!e.EntityId.HasValue && string.Equals(sig, _lastPairSig, StringComparison.Ordinal))
         {
-            AppendLog("[pairing] keepalive for same server+token – ignored.");
+            AppendLog("[pairing] keepalive for same server+token Ã¢â‚¬â€œ ignored.");
             return;
         }
 
         _lastPairSig = sig;
 
-        // >>> Entity-Pairings NIE über server+token wegfiltern!
+        // >>> Entity-Pairings NIE ÃƒÂ¼ber server+token wegfiltern!
         if (e.EntityId.HasValue)
         {
             var id = e.EntityId.Value;
@@ -2506,7 +2626,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     Devices = new ObservableCollection<SmartDevice>()
                 };
                 _vm.AddServer(prof);
-                AppendLog($"Pairing received → {prof.Name} ({prof.Host}:{prof.Port})");
+                AppendLog($"Pairing received Ã¢â€ â€™ {prof.Name} ({prof.Host}:{prof.Port})");
             }
             else
             {
@@ -2514,10 +2634,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 prof.PlayerToken = e.PlayerToken;
                 prof.SteamId64 = keySteam;
                 prof.Devices ??= new ObservableCollection<SmartDevice>();
-                AppendLog($"Pairing updated → {prof.Name}");
+                AppendLog($"Pairing updated Ã¢â€ â€™ {prof.Name}");
             }
 
-            // >>> Geräte zuverlässig hinzufügen/aktualisieren (Switch + Alarm + StorageMonitor)
+            // >>> GerÃƒÂ¤te zuverlÃƒÂ¤ssig hinzufÃƒÂ¼gen/aktualisieren (Switch + Alarm + StorageMonitor)
 
 
             if (e.EntityId.HasValue)
@@ -2538,7 +2658,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 else if (TypeHas("Switch")) kind = "SmartSwitch";
                 else if (TypeHas("Storage")) kind = "StorageMonitor";
 
-                // 2) Falls Typ leer/„server“/„entity“/unklar → nach Name mappen
+                // 2) Falls Typ leer/Ã¢â‚¬Å¾serverÃ¢â‚¬Å“/Ã¢â‚¬Å¾entityÃ¢â‚¬Å“/unklar Ã¢â€ â€™ nach Name mappen
                 if (string.IsNullOrWhiteSpace(kind) ||
                     string.Equals(rawType, "server", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(rawType, "entity", StringComparison.OrdinalIgnoreCase))
@@ -2572,7 +2692,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         IsMissing = false,
                     };
                     prof.Devices.Add(dev);
-                    AppendLog($"Device added → {dev.Display}");
+                    AppendLog($"Device added Ã¢â€ â€™ {dev.Display}");
                 }
                 else
                 {
@@ -2587,14 +2707,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     }
 
                     dev.IsMissing = false;
-                    AppendLog($"Device updated → {dev.Display}");
+                    AppendLog($"Device updated Ã¢â€ â€™ {dev.Display}");
                 }
 
                 /* >>>>>>> HIER EINSETZEN (direkt nach dem add/update-Block) <<<<<<< */
                 // >>> Cache sofort ins UI + Einmal-Expand + Sub/Poke
                 if (string.Equals(dev.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
                 {
-                    // 1) Cache → UI (falls vorhanden), sonst Hülle
+                    // 1) Cache Ã¢â€ â€™ UI (falls vorhanden), sonst HÃƒÂ¼lle
                     if (_rust is RustPlusClientReal rpc && rpc.TryGetCachedStorage(dev.EntityId, out var cached))
                     {
                         dev.IsMissing = false;
@@ -2613,7 +2733,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     else
                     {
                         dev.Storage ??= new StorageSnapshot();
-                       // AppendLog($"[stor/refresh] (no cache) #{dev.EntityId} → awaiting event");
+                       // AppendLog($"[stor/refresh] (no cache) #{dev.EntityId} Ã¢â€ â€™ awaiting event");
                     }
 
                     // 2) Einmal automatisch aufklappen + abonnieren
@@ -2638,7 +2758,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         });
                     }
                 }
-                /* >>>>>>> /ENDE Einfügeblock <<<<<<< */
+                /* >>>>>>> /ENDE EinfÃƒÂ¼geblock <<<<<<< */
 
                 if (_vm.Selected != prof)
                     _vm.Selected = prof;
@@ -2651,7 +2771,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     }
 
 
-    /// <summary>Starts the FCM pairing listener silently — no busy overlay, no blocking.</summary>
+    /// <summary>Starts the FCM pairing listener silently Ã¢â‚¬â€ no busy overlay, no blocking.</summary>
     private void StartPairingSilent(bool autoStart = false)
     {
         if (_listenerStarting || _pairing.IsRunning) return;
@@ -2672,7 +2792,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         _listenerStarting = true;
         _vm.IsPairingBusy = true; // Tell UI we are trying to start
-        TxtPairingState.Text = "Pairing: starting…";
+        TxtPairingState.Text = "Pairing: startingÃ¢â‚¬Â¦";
         _ = Task.Run(async () =>
         {
             try { await _pairing.StartAsync(); }
@@ -2687,7 +2807,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private async Task StartPairingListenerUiAsync()
     {
-        // Delegate to silent start — no more busy overlay
+        // Delegate to silent start Ã¢â‚¬â€ no more busy overlay
         StartPairingSilent(false);
         await Task.CompletedTask;
     }
@@ -2696,7 +2816,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private async void BtnListenWithEdge_Click(object sender, RoutedEventArgs e)
     {
-        if (_listenerStarting || _pairing.IsRunning) { AppendLog("Listener läuft bereits."); return; }
+        if (_listenerStarting || _pairing.IsRunning) { AppendLog("Listener lÃƒÂ¤uft bereits."); return; }
         await StartPairingListenerUiWithEdgeAsync();
     }
 
@@ -2715,7 +2835,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _listenerStarting = true;
             _vm.IsPairingBusy = true;
-            _vm.BusyText = "Starting Pairing-Listener (Edge) …";
+            _vm.BusyText = "Starting Pairing-Listener (Edge) Ã¢â‚¬Â¦";
 
             var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
             EventHandler onListen = (_, __) => tcs.TrySetResult(true);
@@ -2724,7 +2844,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _pairing.Listening += onListen;
             _pairing.Failed += onFail;
 
-            await _pairing.StartAsyncUsingEdge();   // <— NEU: eigene Methode (siehe unten)
+            await _pairing.StartAsyncUsingEdge();   // <Ã¢â‚¬â€ NEU: eigene Methode (siehe unten)
 
             var completed = await Task.WhenAny(tcs.Task, Task.Delay(8000));
             bool ok = (completed == tcs.Task) && tcs.Task.Result;
@@ -2779,14 +2899,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void OnStatus(object? s, string st)
     {
-        if (st == "starting") _vm.BusyText = "Starting Pairing-Listener …";
+        if (st == "starting") _vm.BusyText = "Starting Pairing-Listener Ã¢â‚¬Â¦";
     }
 
     private ServerProfile? _serverToDelete;
 
 
 
-    private void Server_Delete_Click(object sender, RoutedEventArgs e)
+    public void Server_Delete_Click(object sender, RoutedEventArgs e)
     {
         if (((FrameworkElement)sender).Tag is not ServerProfile prof) return;
         
@@ -2914,7 +3034,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private bool _showDeathMarkers = false;
 
     // death pins per player
-    private readonly Dictionary<ulong, FrameworkElement> _deathPins = new();
+    private readonly Dictionary<Guid, FrameworkElement> _deathPins = new();
 
 
 
@@ -2944,6 +3064,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
 
 
+    private bool _isRefreshingProfile = false;
     private void HydrateSteamUiFromStorage()
     {
         // 1. First try global settings
@@ -2968,9 +3089,49 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // Update UI Elements
         var sidText = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Not Logged In" : _vm.SteamId64;
         TxtSteamId.Text = sidText;
-        TxtSteamName.Text = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Steam Account" : "Logged In";
+        
+        string statusText = "Logged In";
+        var tier = Services.Auth.SupabaseAuthManager.CurrentTier;
+        if (tier != "free")
+        {
+            statusText = $"Logged In ({char.ToUpper(tier[0]) + tier[1..].Replace("_", " ")})";
+        }
+        TxtSteamName.Text = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Steam Account" : statusText;
         ImgSteam.ToolTip = TxtSteamName.Text;
         RefreshStreamerModeUI();
+        UpdateAdminUi();
+
+        // Refresh User Profile from Supabase in the background
+        if (!string.IsNullOrWhiteSpace(_vm.SteamId64) && _vm.SteamId64 != "0" && !_isRefreshingProfile)
+        {
+            _isRefreshingProfile = true;
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await Services.Auth.SupabaseAuthManager.RefreshUserProfileAsync();
+                    Dispatcher.Invoke(() =>
+                    {
+                        var updatedTier = Services.Auth.SupabaseAuthManager.CurrentTier;
+                        if (updatedTier != "free")
+                        {
+                            TxtSteamName.Text = $"Logged In ({char.ToUpper(updatedTier[0]) + updatedTier[1..].Replace("_", " ")})";
+                        }
+                        else
+                        {
+                            TxtSteamName.Text = "Logged In";
+                        }
+                        ImgSteam.ToolTip = TxtSteamName.Text;
+                        UpdateAdminUi();
+                    });
+                }
+                catch { }
+                finally
+                {
+                    _isRefreshingProfile = false;
+                }
+            });
+        }
         
 
 
@@ -3062,7 +3223,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         catch
         {
-            // Avatar optional – bei Fehlern still
+            // Avatar optional Ã¢â‚¬â€œ bei Fehlern still
             _vm.MyAvatar = null;
         }
     }
@@ -3082,12 +3243,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (rusthelpUrl == null && !string.IsNullOrWhiteSpace(shortName) && sItemsByShort.TryGetValue(shortName!, out var ii2))
             rusthelpUrl = ii2.IconUrl;
 
-        // Primär-URL (rustclash)
+        // PrimÃƒÂ¤r-URL (rustclash)
         string? rustclashUrl = !string.IsNullOrWhiteSpace(shortName)
             ? $"https://wiki.rustclash.com/img/items40/{shortName}.png"
             : null;
 
-        // 1) Versuche RustClash (Primär)
+        // 1) Versuche RustClash (PrimÃƒÂ¤r)
         if (rustclashUrl != null)
         {
             if (sIconCache.TryGetValue(rustclashUrl, out var ready)) return ready;
@@ -3151,7 +3312,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (!sPendingDownloads.Add(url)) return;
         }
 
-        UpdateIconProgress(-1); // Total erhöhen
+        UpdateIconProgress(-1); // Total erhÃƒÂ¶hen
 
         _ = Task.Run(async () =>
         {
@@ -3160,7 +3321,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(targetPath)!);
                 using var http = new HttpClient() { Timeout = TimeSpan.FromSeconds(10) };
 
-                // 1) Primär versuchen
+                // 1) PrimÃƒÂ¤r versuchen
                 var resp = await http.GetAsync(url).ConfigureAwait(false);
                 if (resp.IsSuccessStatusCode)
                 {
@@ -3258,7 +3419,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (string.IsNullOrWhiteSpace(s)) return "";
         s = s.Trim();
         if (s.Length <= max) return s;
-        return s.Substring(0, Math.Max(1, max - 1)) + "…";
+        return s.Substring(0, Math.Max(1, max - 1)) + "Ã¢â‚¬Â¦";
     }
     private int _shopAutoSeq = 1; // Fallback-Sequenz, wenn ID fehlt
 
@@ -3300,7 +3461,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             Process.Start(new ProcessStartInfo
             {
                 FileName = "https://www.patreon.com/cw/Pronwan",
-                UseShellExecute = true   // öffnet im Standard-Browser
+                UseShellExecute = true   // ÃƒÂ¶ffnet im Standard-Browser
             });
         }
         catch (Exception ex)
@@ -3317,6 +3478,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         SyncAlertMenuItems();
         UpdateShopSearchConfig();
+        RequestTeamFeatureMasterSync();
     }
 
     private void SelectAllAlerts_Click(object sender, RoutedEventArgs e)
@@ -3326,14 +3488,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         UpdateMasterToggleState();
         SyncAlertMenuItems();
         UpdateShopSearchConfig();
+        RequestTeamFeatureMasterSync();
     }
 
     private void DeselectAllAlerts_Click(object sender, RoutedEventArgs e)
     {
         SetAllAlerts(false);
+        if (CheckIfAllOff())
+        {
+            TrackingService.AnnounceSpawnsMaster = false;
+        }
+
         UpdateMasterToggleState();
         SyncAlertMenuItems();
         UpdateShopSearchConfig();
+        RequestTeamFeatureMasterSync();
     }
 
     private void SetAllAlerts(bool val)
@@ -3358,6 +3527,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TrackingService.AnnounceSuspiciousShops = val;
         TrackingService.AnnounceSmartAlerts = val;
         TrackingService.AnnounceTradeAlerts = val;
+        if (_vm.Selected != null) { _vm.Selected.AlertCustomTimer = val; _vm.Selected.DiscordWebhookChatAlertsEnabled = val; }
     }
 
     private bool CheckIfAllOff()
@@ -3371,19 +3541,33 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                !TrackingService.AnnouncePlayerRespawnSelf && !TrackingService.AnnouncePlayerRespawnTeam &&
                !TrackingService.AnnounceTracking &&
                !TrackingService.AnnounceNewShops && !TrackingService.AnnounceSuspiciousShops &&
-               !TrackingService.AnnounceSmartAlerts && !TrackingService.AnnounceTradeAlerts;
+               !TrackingService.AnnounceSmartAlerts && !TrackingService.AnnounceTradeAlerts &&
+               (_vm.Selected == null || !_vm.Selected.AlertCustomTimer) &&
+               (_vm.Selected == null || !_vm.Selected.DiscordWebhookChatAlertsEnabled);
     }
 
-    private void UpdateMasterToggleState()
+    internal void UpdateMasterToggleState()
     {
         _announceSpawns = TrackingService.AnnounceSpawnsMaster;
         ChatAnnounce.IsChecked = _announceSpawns;
+    }
+
+    private void BtnClearChatAlertsWebhook_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.Selected != null)
+        {
+            _vm.Selected.DiscordWebhookChatAlertsUrl = string.Empty;
+            _vm.Selected.DiscordWebhookChatAlertsEnabled = false;
+            SyncAlertMenuItems();
+            UpdateShopSearchConfig();
+        }
     }
 
     private void Alert_MenuItem_Click(object sender, RoutedEventArgs e)
     {
         if (sender is MenuItem mi && mi.Tag is string tag)
         {
+            bool wasMasterEnabled = TrackingService.AnnounceSpawnsMaster;
             bool val = mi.IsChecked;
             switch (tag)
             {
@@ -3407,15 +3591,33 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "PlayerRespawnTeam": TrackingService.AnnouncePlayerRespawnTeam = val; break;
                 case "NewShops": TrackingService.AnnounceNewShops = val; break;
                 case "SuspiciousShops": TrackingService.AnnounceSuspiciousShops = val; break;
+                case "CustomTimer": if (_vm.Selected != null) { _vm.Selected.AlertCustomTimer = val; } break;
+                case "DiscordWebhook": 
+                    if (!_vm.IsCloudConnected)
+                    {
+                        mi.IsChecked = false;
+                        return;
+                    }
+                    if (_vm.Selected != null) { _vm.Selected.DiscordWebhookChatAlertsEnabled = val; } 
+                    break;
+            }
+
+            if (CheckIfAllOff())
+            {
+                TrackingService.AnnounceSpawnsMaster = false;
             }
 
             UpdateMasterToggleState();
             UpdateShopSearchConfig();
             SyncAlertMenuItems();
+            if (wasMasterEnabled != TrackingService.AnnounceSpawnsMaster)
+            {
+                RequestTeamFeatureMasterSync();
+            }
         }
     }
 
-    private void SyncAlertMenuItems()
+    internal void SyncAlertMenuItems()
     {
         bool masterOn = TrackingService.AnnounceSpawnsMaster;
         PopulateTradeAlertsSubMenu(masterOn);
@@ -3483,9 +3685,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "PlayerRespawnTeam": isSelected = TrackingService.AnnouncePlayerRespawnTeam; break;
                 case "NewShops": isSelected = TrackingService.AnnounceNewShops; break;
                 case "SuspiciousShops": isSelected = TrackingService.AnnounceSuspiciousShops; break;
+                case "CustomTimer": isSelected = _vm.Selected?.AlertCustomTimer ?? false; break;
+                case "DiscordWebhook": isSelected = _vm.Selected?.DiscordWebhookChatAlertsEnabled ?? false; break;
             }
 
-            if (tag != "CargoArrival") mi.IsEnabled = masterOn;
+            if (tag == "DiscordWebhook")
+            {
+                mi.IsEnabled = masterOn && _vm.IsCloudConnected;
+            }
+            else if (tag != "CargoArrival")
+            {
+                mi.IsEnabled = masterOn;
+            }
             mi.IsChecked = masterOn && isSelected;
         }
 
@@ -3534,33 +3745,35 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (sender is MenuItem mi && mi.Tag is ShopAlertRule rule)
         {
+            bool wasMasterEnabled = TrackingService.AnnounceSpawnsMaster;
             rule.NotifyChat = mi.IsChecked;
             SavePersistentAlerts();
             
-            TrackingService.AnnounceSpawnsMaster = true;
+            if (mi.IsChecked)
+            {
+                TrackingService.AnnounceSpawnsMaster = true;
+            }
+            else if (CheckIfAllOff())
+            {
+                TrackingService.AnnounceSpawnsMaster = false;
+            }
+
             UpdateMasterToggleState();
             UpdateShopSearchConfig();
             _ = PushAlertsToWebViewAsync();
+            if (wasMasterEnabled != TrackingService.AnnounceSpawnsMaster)
+            {
+                RequestTeamFeatureMasterSync();
+            }
         }
     }
 
-    private async void UpdateShopSearchConfig()
+    internal void UpdateShopSearchConfig()
     {
-        if (EmbeddedShopSearch?.CoreWebView2 != null)
+        Dispatcher.Invoke(() =>
         {
-            try
-            {
-                var config = new
-                {
-                    notifyNew = TrackingService.AnnounceNewShops,
-                    notifySuspicious = TrackingService.AnnounceSuspiciousShops,
-                    notifyTradeAlerts = _alertRules.Any(r => r.NotifyChat)
-                };
-                string json = JsonSerializer.Serialize(config);
-                await EmbeddedShopSearch.CoreWebView2.ExecuteScriptAsync($"if(window.updateConfig) window.updateConfig({json});");
-            }
-            catch { }
-        }
+            EmbeddedShopSearch?.UpdateFilterButtonsStyles();
+        });
     }
 
 
@@ -3578,7 +3791,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _ => Properties.Resources.EventGeneric
     };
 
-    private List<RustPlusClientReal.ShopMarker> _lastShops = new(); // füllen wir beim Polling
+    private List<RustPlusClientReal.ShopMarker> _lastShops = new(); // fÃƒÂ¼llen wir beim Polling
 
     // PATH FINDER WINDOW LOGIK
 
@@ -3617,18 +3830,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             content.Children.Add(BuildOfferRowUI(o));
             if (++shown >= 10)
             {
-                content.Children.Add(new TextBlock { Text = "…", Opacity = 0.7, Margin = new Thickness(0, 2, 0, 0) });
+                content.Children.Add(new TextBlock { Text = "Ã¢â‚¬Â¦", Opacity = 0.7, Margin = new Thickness(0, 2, 0, 0) });
                 break;
             }
         }
 
         border.Child = content;
 
-        // Optional: Klick auf Karte → Map auf Shop zentrieren
+        // Optional: Klick auf Karte Ã¢â€ â€™ Map auf Shop zentrieren
         border.Cursor = Cursors.Hand;
         border.MouseLeftButtonUp += (_, __) =>
         {
-            CenterMapOnWorld(shop.X, shop.Y);   // ← hier wird zentriert
+            CenterMapOnWorld(shop.X, shop.Y);   // Ã¢â€ Â hier wird zentriert
                                                 // __?.Handled = true;
         };
 
@@ -3639,7 +3852,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
    
 
-    private class ShopAlertRule
+    public class ShopAlertRule
     {
         public Guid Id { get; } = Guid.NewGuid();
 
@@ -3650,14 +3863,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         public bool NotifyChat { get; set; } = true;
         public bool NotifySound { get; set; } = true;
 
-        // vom User “gespeichert”? Dann über Neustart hinweg laden
+        // vom User Ã¢â‚¬Å“gespeichertÃ¢â‚¬Â? Dann ÃƒÂ¼ber Neustart hinweg laden
         public bool IsSaved { get; set; } = false;
 
         // Baseline der schon bekannten Orders beim Anlegen
         public List<AlertSeenOrder> Baseline { get; } = new();
 
         // NEU: Kennzeichnet, ob der erste Poll nach Erstellung/Laden durch ist.
-        // Falls false, unterdrücken wir Alerts für existierende Shops.
+        // Falls false, unterdrÃƒÂ¼cken wir Alerts fÃƒÂ¼r existierende Shops.
         public bool InitializationComplete { get; set; } = false;
 
         // Anti-Spam pro Order-Key
@@ -3732,8 +3945,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         pillButtonStyle.Setters.Add(new Setter(Control.PaddingProperty, new Thickness(6, 2, 6, 2)));
         pillButtonStyle.Setters.Add(new Setter(Control.FontSizeProperty, 11.0));
         pillButtonStyle.Setters.Add(new Setter(Control.CursorProperty, Cursors.Hand));
-        // CornerRadius geht nur über ControlTemplate hacky;
-        // Quick&dirty ohne Template: wir lassen’s rechteckig mit 4er Radius über Border below:
+        // CornerRadius geht nur ÃƒÂ¼ber ControlTemplate hacky;
+        // Quick&dirty ohne Template: wir lassenÃ¢â‚¬â„¢s rechteckig mit 4er Radius ÃƒÂ¼ber Border below:
 
         // Push to WebView2 shop search panel (replaces WPF _alertList when window is open)
         _ = PushAlertsToWebViewAsync();
@@ -3782,7 +3995,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 Content = new TextBlock
                 {
                     Style = null,
-                    Text = "💬",
+                    Text = "Ã°Å¸â€™Â¬",
                     FontSize = 14,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,
@@ -3807,7 +4020,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 Cursor = Cursors.Hand,
                 Content = new TextBlock
                 {Style = null,
-                    Text = "🔊",
+                    Text = "Ã°Å¸â€Å ",
                     FontSize = 14,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,
@@ -3817,7 +4030,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             chkSound.Checked += (_, __) => { rule.NotifySound = true; SavePersistentAlerts(); };
             chkSound.Unchecked += (_, __) => { rule.NotifySound = false; SavePersistentAlerts(); };
 
-            // Save-Button (💾) - optisch "ausgegraut", wenn schon gespeichert
+            // Save-Button (Ã°Å¸â€™Â¾) - optisch "ausgegraut", wenn schon gespeichert
             var btnSave = new Button
             {
                 Width = 28,
@@ -3834,9 +4047,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             // Farben je nach Saved-Status setzen:
             if (rule.IsSaved)
             {
-                // saved -> leicht grün getönt
-                btnSave.Background = new SolidColorBrush(Color.FromRgb(32, 48, 32));                // sehr dunkles Grün
-                btnSave.BorderBrush = new SolidColorBrush(Color.FromRgb(64, 160, 64));              // sattes Grün
+                // saved -> leicht grÃƒÂ¼n getÃƒÂ¶nt
+                btnSave.Background = new SolidColorBrush(Color.FromRgb(32, 48, 32));                // sehr dunkles GrÃƒÂ¼n
+                btnSave.BorderBrush = new SolidColorBrush(Color.FromRgb(64, 160, 64));              // sattes GrÃƒÂ¼n
                 btnSave.ToolTip = "Saved (click to unsave)";
             }
             else
@@ -3851,14 +4064,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             var saveIcon = new TextBlock
             {
                 Style = null,
-                Text = "💾",
+                Text = "Ã°Å¸â€™Â¾",
                 FontSize = 14,
                 FontWeight = FontWeights.SemiBold,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                // wenn saved -> grünliche Schrift, sonst weiß
+                // wenn saved -> grÃƒÂ¼nliche Schrift, sonst weiÃƒÅ¸
                 Foreground = rule.IsSaved
-                    ? new SolidColorBrush(Color.FromRgb(120, 255, 120)) // hellgrün
+                    ? new SolidColorBrush(Color.FromRgb(120, 255, 120)) // hellgrÃƒÂ¼n
                     : Brushes.White
             };
 
@@ -3869,7 +4082,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 rule.IsSaved = !rule.IsSaved;
                 SavePersistentAlerts();
-                RefreshAlertListUI(); // UI neu zeichnen für neue Farben
+                RefreshAlertListUI(); // UI neu zeichnen fÃƒÂ¼r neue Farben
             };
 
             var btnDel = new Button
@@ -3888,7 +4101,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 Content = new TextBlock
                 {
                    Style=null,
-                    Text = "🗑",
+                    Text = "Ã°Å¸â€”â€˜",
                     FontSize = 14,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center
@@ -3911,7 +4124,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         ApplyThinScrollbar(_alertList);
     }
 
-    private void SavePersistentAlerts()
+    internal void SavePersistentAlerts()
     {
         try
         {
@@ -3993,14 +4206,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         catch
         {
-            // wenn Laden fehlschlägt, egal – wir starten halt ohne gespeicherte Alerts
+            // wenn Laden fehlschlÃƒÂ¤gt, egal Ã¢â‚¬â€œ wir starten halt ohne gespeicherte Alerts
         }
     }
 
     private DateTime _lastChatSendUtc = DateTime.MinValue; // Rate-Limit (1/sec)
 
     // pro Alert merken wir, welche Angebote schon existierten beim Setzen
-    private class AlertSeenOrder
+    public class AlertSeenOrder
     {
         public uint ShopId;
         public string ItemShort;
@@ -4060,7 +4273,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (!matchesSide)
                     continue;
 
-                // 2) Baseline-Eintrag für diese Kombo suchen
+                // 2) Baseline-Eintrag fÃƒÂ¼r diese Kombo suchen
                 var baseline = rule.Baseline.FirstOrDefault(b =>
                     b.ShopId        == shop.Id &&
                     b.ItemShort     == order.ItemShortName &&
@@ -4072,7 +4285,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 int prevStock = baseline?.Stock ?? 0;
                 int curStock  = order.Stock;
 
-                // 3) Baseline updaten/erzeugen – wir wollen immer den letzten Stock dort haben
+                // 3) Baseline updaten/erzeugen Ã¢â‚¬â€œ wir wollen immer den letzten Stock dort haben
                 if (baseline == null)
                 {
                     baseline = new AlertSeenOrder
@@ -4091,14 +4304,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     baseline.Stock = curStock;
                 }
 
-                // 4) Wenn aktuell kein Stock → nie alerten, nur Zustand merken
+                // 4) Wenn aktuell kein Stock Ã¢â€ â€™ nie alerten, nur Zustand merken
                 if (curStock <= 0)
                     continue;
 
                 // 5) Wenn die Regel gerade erst initialisiert wird (erster Poll nach Anlage/Start),
-                // unterdrücken wir den Alert, um Massen-Spam beim Programmstart zu vermeiden.
-                // Aber: Ein NEUER Shop, der WÄHREND die Regel schon aktiv ist auftaucht,
-                // soll natürlich TROTZDEM alerten.
+                // unterdrÃƒÂ¼cken wir den Alert, um Massen-Spam beim Programmstart zu vermeiden.
+                // Aber: Ein NEUER Shop, der WÃƒâ€žHREND die Regel schon aktiv ist auftaucht,
+                // soll natÃƒÂ¼rlich TROTZDEM alerten.
                 if (!rule.InitializationComplete)
                     continue;
 
@@ -4109,7 +4322,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
                 if (!isNewDeal && !isRestock && alreadySeenWithStock)
                 {
-                    // hatten wir schon mit Stock > 0, und es ist kein neuer Preis/Menge → nichts tun
+                    // hatten wir schon mit Stock > 0, und es ist kein neuer Preis/Menge Ã¢â€ â€™ nichts tun
                     continue;
                 }
 
@@ -4153,7 +4366,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (rule.NotifySound)
                     PlayShopAlertSound();
 
-                // 9) Zeitstempel für diese Kombo updaten
+                // 9) Zeitstempel fÃƒÂ¼r diese Kombo updaten
                 rule.LastAnnouncements[sig] = DateTime.UtcNow;
             }           // end foreach order
             }           // end foreach shop
@@ -4162,7 +4375,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             rule.InitializationComplete = true;
         }
     }
-    // ─── ONLINE PLAYERS & TRACKING ───────────────────────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ ONLINE PLAYERS & TRACKING Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 
     private void RebaselineAllAlertRulesFromCurrentShops(IReadOnlyList<RustPlusClientReal.ShopMarker> shops)
     {
@@ -4207,7 +4420,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
 
     // ====== NEW SHOP TRACKING ======
-    // für "neue Shops" nach Initial-Poll:
+    // fÃƒÂ¼r "neue Shops" nach Initial-Poll:
     private HashSet<uint> _knownShopIds = new();
     private DateTime _initialShopSnapshotTimeUtc = DateTime.MinValue;
 
@@ -4237,7 +4450,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (System.IO.File.Exists(path))
             {
                 var fullPath = System.IO.Path.GetFullPath(path);
-                // SoundPlayer ist für WAV-Dateien effizienter und verhindert Knirschen
+                // SoundPlayer ist fÃƒÂ¼r WAV-Dateien effizienter und verhindert Knirschen
                 if (_shopSoundPlayer == null)
                 {
                     _shopSoundPlayer = new System.Media.SoundPlayer(fullPath);
@@ -4255,7 +4468,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private BitmapSource ComposeMapWithMarkers(BitmapSource baseBmp)
     {
-        // Mapgröße in DIPs
+        // MapgrÃƒÂ¶ÃƒÅ¸e in DIPs
         double wDip = baseBmp.PixelWidth * (96.0 / baseBmp.DpiX);
         double hDip = baseBmp.PixelHeight * (96.0 / baseBmp.DpiY);
 
@@ -4352,7 +4565,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // UpdateMarkerPositions();
     }
 
-    private void RescaleMarkersForCurrentZoom() // optional – nur für konstante Markergröße
+    private void RescaleMarkersForCurrentZoom() // optional Ã¢â‚¬â€œ nur fÃƒÂ¼r konstante MarkergrÃƒÂ¶ÃƒÅ¸e
     {
         double k = 1.0 / GetCurrentScale();
         foreach (var el in Overlay.Children.OfType<System.Windows.Shapes.Ellipse>())
@@ -4372,7 +4585,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             if (stopListenerFirst && _pairing.IsRunning)
             {
-                AppendLog("Stopping pairing listener …");
+                AppendLog("Stopping pairing listener Ã¢â‚¬Â¦");
                 await Task.Run(async () => await _pairing.StopAsync());
                 await Task.Delay(200); // kleine Atempause
             }
@@ -4380,11 +4593,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (File.Exists(PairingConfigPath))
             {
                 File.Delete(PairingConfigPath);
-                AppendLog($"🗑️ Deleted pairing config: {PairingConfigPath}");
+                AppendLog($"Ã°Å¸â€”â€˜Ã¯Â¸Â Deleted pairing config: {PairingConfigPath}");
             }
             else
             {
-                AppendLog("ℹ️ No pairing config found to delete on disk.");
+                AppendLog("Ã¢â€žÂ¹Ã¯Â¸Â No pairing config found to delete on disk.");
             }
 
             // Always clear tracking dates on reset
@@ -4397,7 +4610,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         catch (Exception ex)
         {
-            AppendLog("❌ Failed to delete pairing config: " + ex.Message);
+            AppendLog("Ã¢ÂÅ’ Failed to delete pairing config: " + ex.Message);
             return false;
         }
     }
@@ -4468,7 +4681,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 {
                     _vm.IsUpdateAvailable = true;
                     _vm.UpdateTag = tag;
-                    AppendLog($"✨ Update found: {tag}");
+                    AppendLog($"Ã¢Å“Â¨ Update found: {tag}");
                     ShowUpdateSnackbar(tag, dlUrl);
                 });
             }
@@ -4552,9 +4765,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (SliderPlayerIconSize != null) SliderPlayerIconSize.Value = _playerMarkerScale;
 
         BuildMonumentOverlays();
+        UpdateCloudSyncUI();
     }
 
-    private void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)
+    internal void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)
     {
         if (RootSnackbar == null) return;
         var snackbar = new WpfUi.Snackbar(RootSnackbar)
@@ -4565,6 +4779,56 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Info24),
             Timeout = TimeSpan.FromSeconds(5),
             MaxWidth = 350,
+            HorizontalAlignment = HorizontalAlignment.Right
+        };
+        snackbar.Show();
+    }
+
+    private void ShowTimerExpiredSnackbar(string timerName)
+    {
+        if (RootSnackbar == null) return;
+
+        var snoozeBtn = new WpfUi.Button
+        {
+            Content = "Snooze",
+            Appearance = WpfUi.ControlAppearance.Info,
+            FontSize = 12,
+            Padding = new Thickness(8, 2, 8, 2),
+            Margin = new Thickness(0, 0, 4, 0),
+            Tag = timerName
+        };
+        snoozeBtn.Click += (s, e) =>
+        {
+            var btn = (WpfUi.Button)s;
+            SnoozeAlarm();
+        };
+
+        var stopBtn = new WpfUi.Button
+        {
+            Content = "Stop",
+            Appearance = WpfUi.ControlAppearance.Danger,
+            FontSize = 12,
+            Padding = new Thickness(8, 2, 8, 2),
+            Tag = timerName
+        };
+        stopBtn.Click += (s, e) =>
+        {
+            DismissAlarm();
+        };
+
+        var panel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 4, 0, 0) };
+        panel.Children.Add(new TextBlock { Text = timerName, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 8, 0) });
+        panel.Children.Add(snoozeBtn);
+        panel.Children.Add(stopBtn);
+
+        var snackbar = new WpfUi.Snackbar(RootSnackbar)
+        {
+            Title = "Timer Expired",
+            Content = panel,
+            Appearance = WpfUi.ControlAppearance.Caution,
+            Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Timer24),
+            Timeout = TimeSpan.FromSeconds(8),
+            MaxWidth = 400,
             HorizontalAlignment = HorizontalAlignment.Right
         };
         snackbar.Show();
@@ -4635,7 +4899,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         catch (Exception ex)
         {
-            AppendLog("❌ Could not open Discord link: " + ex.Message);
+            AppendLog("Ã¢ÂÅ’ Could not open Discord link: " + ex.Message);
         }
     }
 
@@ -4648,7 +4912,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         catch (Exception ex)
         {
-            AppendLog("❌ Could not open Patch Notes window: " + ex.Message);
+            AppendLog("Ã¢ÂÅ’ Could not open Patch Notes window: " + ex.Message);
         }
     }
 
@@ -4754,7 +5018,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsDownloadingUpdate = true;
             var prog = new Progress<DownloadReport>(r =>
             {
-                _vm.BusyText = $"Downloading installer … {r.Percentage}";
+                _vm.BusyText = $"Downloading installer Ã¢â‚¬Â¦ {r.Percentage}";
                 _vm.UpdateDownloadProgress = r.Progress * 100;
                 _vm.UpdateDownloadSpeed = r.Speed;
                 _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
@@ -4776,7 +5040,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         catch (Exception ex)
         {
             _vm.IsDownloadingUpdate = false;
-            AppendLog("❌ Update download failed: " + ex.Message);
+            AppendLog("Ã¢ÂÅ’ Update download failed: " + ex.Message);
             ShowInfoSnackbar("Update", "Download failed: " + ex.Message, WpfUi.ControlAppearance.Danger);
         }
     }
@@ -4843,7 +5107,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsDownloadingUpdate = true;
             var prog = new Progress<DownloadReport>(r =>
             {
-                _vm.BusyText = $"Downloading installer … {r.Percentage}";
+                _vm.BusyText = $"Downloading installer Ã¢â‚¬Â¦ {r.Percentage}";
                 _vm.UpdateDownloadProgress = r.Progress * 100;
                 _vm.UpdateDownloadSpeed = r.Speed;
                 _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
@@ -4859,7 +5123,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 return;
             }
 
-            AppendLog("Starting installer …");
+            AppendLog("Starting installer Ã¢â‚¬Â¦");
             _updateService.StartInstaller(path);
             try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
             await Task.Delay(500);
@@ -4869,7 +5133,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _vm.IsUpdateAvailable = false;
             _vm.IsDownloadingUpdate = false;
-            AppendLog("❌ Update check failed: " + ex.Message);
+            AppendLog("Ã¢ÂÅ’ Update check failed: " + ex.Message);
             System.Windows.MessageBox.Show("Update check failed.\n" + ex.Message, "Update", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
@@ -4918,7 +5182,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         base.OnSourceInitialized(e);
 
-        // Spätestens hier sollte Windows den Titel im Rahmen akzeptieren
+        // SpÃƒÂ¤testens hier sollte Windows den Titel im Rahmen akzeptieren
         if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
         this.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
 
@@ -4977,7 +5241,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         try
         {
-            // ⬇︎ NEU
+            // Ã¢Â¬â€¡Ã¯Â¸Å½ NEU
             PruneEmptyGesturesAllServers();
 
             var json = JsonSerializer.Serialize(_hotkeysByServer,
@@ -5012,14 +5276,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (_hotkeyMgr == null) return;
 
-        // ⬇︎ NEU: leere Keys entfernen (verhindert „blockierte“ Gesten)
+        // Ã¢Â¬â€¡Ã¯Â¸Å½ NEU: leere Keys entfernen (verhindert Ã¢â‚¬Å¾blockierteÃ¢â‚¬Å“ Gesten)
         PruneEmptyGesturesForCurrentServer();
 
         _hotkeyMgr.UnregisterAll();
         foreach (var gesture in MapForCurrentServer().Keys)
         {
             if (!_hotkeyMgr.Register(gesture))
-                AppendLog($"⚠️ Cannot register hotkey '{gesture}'.");
+                AppendLog($"Ã¢Å¡Â Ã¯Â¸Â Cannot register hotkey '{gesture}'.");
         }
     }
 
@@ -5055,7 +5319,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (!await _hotkeySeqGate.WaitAsync(0)) // schon eine Sequenz aktiv?
         {
-            AppendLog("Hotkey sequence already running – ignored.");
+            AppendLog("Hotkey sequence already running Ã¢â‚¬â€œ ignored.");
             return;
         }
         try
@@ -5132,7 +5396,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             if (_toggleBusy.TryGetValue(id, out var ts))
             {
-                // Stale? -> übernehmen & weitermachen
+                // Stale? -> ÃƒÂ¼bernehmen & weitermachen
                 if (DateTime.UtcNow - ts > ToggleBusyTTL)
                 {
                     _toggleBusy[id] = DateTime.UtcNow;
@@ -5166,6 +5430,39 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         System.Threading.Interlocked.Exchange(ref _teamPollBusy, 0);
         System.Threading.Interlocked.Exchange(ref _camThumbBusy, 0);
         AppendLog("[reset] All busy flags cleared.");
+    }
+
+    private void UpdateAdminUi()
+    {
+        var tier = RustPlusDesk.Services.Auth.SupabaseAuthManager.CurrentTier;
+        if (BtnAdminPanel != null)
+        {
+            BtnAdminPanel.Visibility = (tier == "developer" || tier == "lead_contributor" || tier == "lead_developer") ? Visibility.Visible : Visibility.Collapsed;
+        }
+    }
+
+    private void BtnAdminPanel_Click(object sender, RoutedEventArgs e)
+    {
+        var tier = RustPlusDesk.Services.Auth.SupabaseAuthManager.CurrentTier;
+        if (!RustPlusDesk.Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated ||
+            (tier != "developer" && tier != "lead_contributor" && tier != "lead_developer"))
+        {
+            MessageBox.Show("Admin access requires Discord auth and a developer/lead contributor role.", "Admin Panel", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        var adminWin = new Views.Windows.AdminPanelWindow { Owner = this };
+        adminWin.Show();
+    }
+
+    private void BtnPremiumInfoDevices_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new Views.Windows.PremiumInfoWindow(Properties.Resources.PremiumInfoDevicesDesc) { Owner = this }; dlg.ShowDialog();
+    }
+
+    private void BtnPremiumInfoMap_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new Views.Windows.PremiumInfoWindow(Properties.Resources.PremiumInfoMapDesc) { Owner = this }; dlg.ShowDialog();
     }
 
     private void BtnHotkeys_Click(object sender, RoutedEventArgs e)
@@ -5250,7 +5547,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     // MAP DRAW OVERLAY
 
-    // DTOs moved to Models/SharingModels.cs
+
+
     public void ReloadApplicationData()
     {
         _vm.Load();
@@ -5309,4 +5607,8 @@ public class RenameDialog : Window
         Loaded += (s, e) => { tb.Focus(); tb.SelectAll(); };
     }
 }
+
+
+
+
 

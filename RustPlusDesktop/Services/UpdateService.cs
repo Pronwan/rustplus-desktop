@@ -24,7 +24,7 @@ namespace RustPlusDesk.Services
         {
             get
             {
-                var attr = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+                var attr = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
                 if (attr != null && !string.IsNullOrWhiteSpace(attr.InformationalVersion))
                     return attr.InformationalVersion;
 
@@ -40,7 +40,7 @@ namespace RustPlusDesk.Services
                     catch { }
                 }
 
-                return Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0";
+                return Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "0.0.0";
             }
         }
 

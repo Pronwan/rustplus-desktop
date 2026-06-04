@@ -167,11 +167,23 @@ public partial class MainWindow
         var hostPos = e.GetPosition(WebViewHost);
         var mapPos = HostToScenePreTransform(hostPos);
 
-        if (_overlayToolsVisible && _currentTool != OverlayToolMode.None)
+        if (_overlayToolsVisible)
         {
-            HandleOverlayMouseDown(e, mapPos);
-            e.Handled = true;
-            return;
+            if (e.ChangedButton == MouseButton.Right)
+            {
+                if (TryHandleBaseRightClick(mapPos))
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+
+            if (_currentTool != OverlayToolMode.None)
+            {
+                HandleOverlayMouseDown(e, mapPos);
+                e.Handled = true;
+                return;
+            }
         }
         if (e.ChangedButton == MouseButton.Middle || e.ChangedButton == MouseButton.Right)
         {
@@ -255,7 +267,7 @@ public partial class MainWindow
     private bool _isAnimatingMap = false;
 
     // Smoothly fly to a world coordinate (x,y) with a zoom dip
-    private async void CenterMapOnWorldAnimated(double targetX, double targetY, bool allowDip = true, bool fast = false, bool keepTracking = false, double? targetZoom = null)
+    internal async void CenterMapOnWorldAnimated(double targetX, double targetY, bool allowDip = true, bool fast = false, bool keepTracking = false, double? targetZoom = null)
     {
         if (_worldSizeS <= 0) return;
 

@@ -1,0 +1,89 @@
+<UserControl
+    x:Class="RustPlusDesk.Views.LoginOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <Grid
+        Panel.ZIndex="9998"
+        Background="#DD0F1115"
+        IsHitTestVisible="True"
+        Visibility="{Binding ShowLoginOverlay, Converter={StaticResource BoolToVisibility}}">
+        <Border
+            Width="450"
+            Padding="40"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Background="{DynamicResource Surface}"
+            BorderBrush="{DynamicResource CardBorder}"
+            BorderThickness="1"
+            CornerRadius="20">
+            <Border.Effect>
+                <DropShadowEffect
+                    BlurRadius="50"
+                    Opacity="0.5"
+                    ShadowDepth="0"
+                    Color="Black" />
+            </Border.Effect>
+            <StackPanel>
+                <Border
+                    Width="80"
+                    Height="80"
+                    Margin="0,0,0,24"
+                    Background="{DynamicResource AccentDark}"
+                    CornerRadius="40">
+                    <ui:SymbolIcon
+                        FontSize="40"
+                        Foreground="{DynamicResource Accent}"
+                        Symbol="ShieldLock24" />
+                </Border>
+                <TextBlock
+                    Margin="0,0,0,12"
+                    FontSize="28"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Text="{DynamicResource ReadyToDominate}"
+                    TextAlignment="Center" />
+                <TextBlock
+                    Margin="0,0,0,32"
+                    FontSize="14"
+                    Foreground="{DynamicResource TextSubtle}"
+                    LineHeight="20"
+                    Text="{DynamicResource PairAccountBenefits}"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap" />
+                <ui:Button
+                    x:Name="BtnOverlayPair"
+                    Height="50"
+                    HorizontalAlignment="Stretch"
+                    Appearance="Primary"
+                    Click="BtnPair_Click"
+                    FontSize="16"
+                    FontWeight="SemiBold"
+                    Icon="{ui:SymbolIcon Symbol=BluetoothConnected24}">
+                    <ui:Button.Content>
+                        <TextBlock Margin="8,0,0,0" Text="{DynamicResource LoginPairAccount}" />
+                    </ui:Button.Content>
+                </ui:Button>
+                <ui:Button
+                    x:Name="BtnOverlayRestore"
+                    Height="40"
+                    Margin="0,12,0,0"
+                    HorizontalAlignment="Stretch"
+                    Appearance="Secondary"
+                    Click="BtnRestore_Click"
+                    FontSize="14"
+                    Icon="{ui:SymbolIcon Symbol=ArrowDownload24}">
+                    <ui:Button.Content>
+                        <TextBlock Margin="8,0,0,0" Text="{DynamicResource RestoreData}" />
+                    </ui:Button.Content>
+                </ui:Button>
+                <TextBlock
+                    Margin="0,20,0,0"
+                    FontSize="11"
+                    Foreground="{DynamicResource TextCaption}"
+                    Text="{DynamicResource RequiresSteamLogin}"
+                    TextAlignment="Center" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

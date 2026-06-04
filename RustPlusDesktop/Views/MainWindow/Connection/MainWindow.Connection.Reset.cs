@@ -65,8 +65,10 @@ public partial class MainWindow
         try
         {
             ClearUserOverlayElements();   // du hast das im Connect schon – nutzen!
+            StopOverlayPollTimer();        // Live-Polling Timer stoppen
         }
         catch { }
+
 
         // 5) WIRKLICH vom Rust-Server trennen
         try
@@ -200,6 +202,10 @@ public partial class MainWindow
 
     private async void BtnConnect_Click(object sender, RoutedEventArgs e)
     {
+        if (_isSoftConnecting)
+        {
+            AppendLog("[connect] Soft-connect is currently active. Automatically waiting for it to finish before starting full connect...");
+        }
         await PerformConnectAsync(false);
     }
 

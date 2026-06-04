@@ -588,7 +588,7 @@ namespace RustPlusDesk.Properties {
         public static string TrackingGuideEnglishOnlyNotice => GetString("TrackingGuideEnglishOnlyNotice");
         
         /// <summary>
-        ///   Looks up a localized string similar to Close this window at any time — you can reopen it with the  ❓ How to Track  button..
+        ///   Looks up a localized string similar to Close this window at any time â€” you can reopen it with the  â“ How to Track  button..
         /// </summary>
         public static string HowToTrackCloseHint => GetString("HowToTrackCloseHint");
 
@@ -655,5 +655,30 @@ namespace RustPlusDesk.Properties {
         public static string LoopAudioGlobalPrompt => GetString("LoopAudioGlobalPrompt");
         public static string TurnOffNow => GetString("TurnOffNow");
         public static string KeepActive => GetString("KeepActive");
+        public static string DeleteDeathMarker => GetString("DeleteDeathMarker");
+        public static string WipeDeathMarkers => GetString("WipeDeathMarkers");
+        public static string Accept => GetString("Accept");
+        public static string PremiumFeatures => GetString("PremiumFeatures");
+        public static string PremiumInfoDevicesDesc => GetString("PremiumInfoDevicesDesc");
+        public static string PremiumInfoMapDesc => GetString("PremiumInfoMapDesc");
+        public static string RenameDeathMarker => GetString("RenameDeathMarker");
+        public static string Profile => GetString("Profile");
+        public static string TimeOfDeath => GetString("TimeOfDeath");
+        public static string Death => GetString("Death");
+        public static string Markers => GetString("Markers");
+
+        public static string CustomTimerCategory => GetString("CustomTimerCategory");
+        public static string TimerCreated => GetString("TimerCreated");
+        public static string HoverCustomTimer => GetString("HoverCustomTimer");
+        public static string ActiveTimersCategory => GetString("ActiveTimersCategory");
+        public static string AddTimer => GetString("AddTimer");
+        public static string TimerName => GetString("TimerName");
+        public static string TimerCreateCmdLabel => GetString("TimerCreateCmdLabel");
+        public static string CheckTimerStatusInfo => GetString("CheckTimerStatusInfo");
+        public static string ChatCmdTimerMaxReached => GetString("ChatCmdTimerMaxReached");
+        public static string TimerDurationRequired => GetString("TimerDurationRequired");
+        public static string TimerNameMustStartWithLetter => GetString("TimerNameMustStartWithLetter");
     }
 }
+
+

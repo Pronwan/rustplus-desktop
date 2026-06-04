@@ -21,12 +21,12 @@ public partial class MainWindow
     private Point _trackedGroupDragStartPoint;
     private Expander? _draggedTrackedGroup;
 
-    private void BtnHowToTrack_Click(object sender, RoutedEventArgs e)
+    public void BtnHowToTrack_Click(object sender, RoutedEventArgs e)
     {
         HowToTrackWindow.Show(this);
     }
 
-    private void BtnViewTracked_Click(object sender, RoutedEventArgs e)
+    public void BtnViewTracked_Click(object sender, RoutedEventArgs e)
     {
         var player = ((sender as FrameworkElement)?.DataContext as TrackedPlayer);
         var bmId = (sender as FrameworkElement)?.Tag as string ?? player?.BMId;
@@ -36,38 +36,38 @@ public partial class MainWindow
         }
     }
 
-    private void BtnGroupTracked_Click(object sender, RoutedEventArgs e)
+    public void BtnGroupTracked_Click(object sender, RoutedEventArgs e)
     {
         var player = (sender as FrameworkElement)?.DataContext as TrackedPlayer;
         if (player == null) return;
         var result = ShowGroupEditorDialog(player);
         if (result != null) {
             TrackingService.SetPlayerGroup(player.BMId, result.Value.name, result.Value.color);
-            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+            RefreshTrackedPlayersList(PlayersTab?.TxtTrackedFilter?.Text ?? "");
         }
     }
 
-    private void BtnRenameTracked_Click(object sender, RoutedEventArgs e)
+    public void BtnRenameTracked_Click(object sender, RoutedEventArgs e)
     {
         var player = (sender as FrameworkElement)?.DataContext as TrackedPlayer;
         if (player == null) return;
         var newName = ShowInputBox($"Enter new name for {player.BMId}:", "Rename Player", player.Name);
         if (!string.IsNullOrWhiteSpace(newName)) {
             TrackingService.RenameTrackedPlayer(player.BMId, newName);
-            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+            RefreshTrackedPlayersList(PlayersTab?.TxtTrackedFilter?.Text ?? "");
         }
     }
 
-    private void BtnRemoveTracked_Click(object sender, RoutedEventArgs e)
+    public void BtnRemoveTracked_Click(object sender, RoutedEventArgs e)
     {
         var bmId = ((sender as FrameworkElement)?.DataContext as TrackedPlayer)?.BMId;
         if (!string.IsNullOrEmpty(bmId)) {
             TrackingService.UntrackPlayer(bmId);
-            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+            RefreshTrackedPlayersList(PlayersTab?.TxtTrackedFilter?.Text ?? "");
         }
     }
 
-    private void BtnMore_Click(object sender, RoutedEventArgs e)
+    public void BtnMore_Click(object sender, RoutedEventArgs e)
     {
         var btn = sender as FrameworkElement;
         if (btn == null) return;
@@ -100,7 +100,7 @@ public partial class MainWindow
             Dispatcher.Invoke(() =>
             {
                 RefreshOnlinePlayersList();
-                RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+                RefreshTrackedPlayersList(PlayersTab?.TxtTrackedFilter?.Text ?? "");
                 // Update tracking status indicator
                 bool anyTracked = TrackingService.GetTrackedPlayers().Count > 0;
                 _vm.IsTrackingActive = TrackingService.IsTracking;
@@ -168,27 +168,27 @@ public partial class MainWindow
             var players = TrackingService.LastOnlinePlayers;
 
             // Show filter box when there are players, hide it when empty
-            if (TxtOnlineFilter != null)
-                TxtOnlineFilter.Visibility = players.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+            if (PlayersTab?.TxtOnlineFilter != null)
+                PlayersTab.TxtOnlineFilter.Visibility = players.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
 
-            var filterTxt = TxtOnlineFilter?.Text;
+            var filterTxt = PlayersTab?.TxtOnlineFilter?.Text;
             if (!string.IsNullOrWhiteSpace(filterTxt))
             {
                 players = players.Where(p => p.Name.Contains(filterTxt, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            if (ListOnlinePlayers != null)
+            if (PlayersTab?.ListOnlinePlayers != null)
             {
-                ListOnlinePlayers.ItemsSource = null;
-                ListOnlinePlayers.ItemsSource = players;
+                PlayersTab.ListOnlinePlayers.ItemsSource = null;
+                PlayersTab.ListOnlinePlayers.ItemsSource = players;
             }
 
             if (TrackingService.LastOnlinePlayers.Count == 0)
             {
-                if (ListOnlinePlayers != null) ListOnlinePlayers.Visibility = Visibility.Collapsed;
-                if (TxtOnlinePlayersStatus != null) TxtOnlinePlayersStatus.Text = TrackingService.StatusMessage;
-                if (PnlOnlineStatus != null) PnlOnlineStatus.Visibility = Visibility.Visible;
+                if (PlayersTab?.ListOnlinePlayers != null) PlayersTab.ListOnlinePlayers.Visibility = Visibility.Collapsed;
+                if (PlayersTab?.TxtOnlinePlayersStatus != null) PlayersTab.TxtOnlinePlayersStatus.Text = TrackingService.StatusMessage;
+                if (PlayersTab?.PnlOnlineStatus != null) PlayersTab.PnlOnlineStatus.Visibility = Visibility.Visible;
                 
                 // Only show the spinner when actively polling a server.
                 // An empty StatusMessage with no server means "not connected" — don't spin forever.
@@ -199,15 +199,15 @@ public partial class MainWindow
                                  TrackingService.StatusMessage.Contains("Looking") ||
                                  TrackingService.StatusMessage.Contains("Auto-Discovering"));
 
-                if (PbOnlineLoading != null) PbOnlineLoading.Visibility = isWorking ? Visibility.Visible : Visibility.Collapsed;
+                if (PlayersTab?.PbOnlineLoading != null) PlayersTab.PbOnlineLoading.Visibility = isWorking ? Visibility.Visible : Visibility.Collapsed;
                 
-                if (PnlManualTrack != null) PnlManualTrack.Visibility = Visibility.Visible;
+                if (PlayersTab?.PnlManualTrack != null) PlayersTab.PnlManualTrack.Visibility = Visibility.Visible;
             }
             else
             {
-                if (ListOnlinePlayers != null) ListOnlinePlayers.Visibility = Visibility.Visible;
-                if (PnlOnlineStatus != null) PnlOnlineStatus.Visibility = Visibility.Collapsed;
-                if (PnlManualTrack != null) PnlManualTrack.Visibility = Visibility.Visible;
+                if (PlayersTab?.ListOnlinePlayers != null) PlayersTab.ListOnlinePlayers.Visibility = Visibility.Visible;
+                if (PlayersTab?.PnlOnlineStatus != null) PlayersTab.PnlOnlineStatus.Visibility = Visibility.Collapsed;
+                if (PlayersTab?.PnlManualTrack != null) PlayersTab.PnlManualTrack.Visibility = Visibility.Visible;
             }
 
 
@@ -215,11 +215,11 @@ public partial class MainWindow
         catch { }
     }
 
-    private void TxtOnlineFilter_TextChanged(object sender, TextChangedEventArgs e) {
+    public void TxtOnlineFilter_TextChanged(object sender, TextChangedEventArgs e) {
         RefreshOnlinePlayersList();
     }
 
-    private async void BtnShowOnline_Click(object sender, RoutedEventArgs e)
+    public async void BtnShowOnline_Click(object sender, RoutedEventArgs e)
     {
         if (sender is Button b && b.Name == "BtnShowOnline")
         {
@@ -228,19 +228,21 @@ public partial class MainWindow
 
         if (_vm.Selected == null || string.IsNullOrEmpty(_vm.Selected.Host))
         {
-            TxtOnlinePlayersStatus.Text = Properties.Resources.ConnectToLoadPlayers;
-            PnlOnlineStatus.Visibility = Visibility.Visible;
-            PbOnlineLoading.Visibility = Visibility.Collapsed;
-            ListOnlinePlayers.ItemsSource = null;
+            if (PlayersTab == null) return;
+            PlayersTab.TxtOnlinePlayersStatus.Text = Properties.Resources.ConnectToLoadPlayers;
+            PlayersTab.PnlOnlineStatus.Visibility = Visibility.Visible;
+            PlayersTab.PbOnlineLoading.Visibility = Visibility.Collapsed;
+            PlayersTab.ListOnlinePlayers.ItemsSource = null;
             return;
         }
 
-        TxtOnlinePlayersStatus.Text = Properties.Resources.FetchingPlayersSteam;
-        PnlOnlineStatus.Visibility = Visibility.Visible;
-        PbOnlineLoading.Visibility = Visibility.Visible;
-        if (PnlManualTrack != null) PnlManualTrack.Visibility = Visibility.Visible;
-        ListOnlinePlayers.ItemsSource = null;
-        ListOnlinePlayers.Visibility = Visibility.Collapsed;
+        if (PlayersTab == null) return;
+        PlayersTab.TxtOnlinePlayersStatus.Text = Properties.Resources.FetchingPlayersSteam;
+        PlayersTab.PnlOnlineStatus.Visibility = Visibility.Visible;
+        PlayersTab.PbOnlineLoading.Visibility = Visibility.Visible;
+        if (PlayersTab.PnlManualTrack != null) PlayersTab.PnlManualTrack.Visibility = Visibility.Visible;
+        PlayersTab.ListOnlinePlayers.ItemsSource = null;
+        PlayersTab.ListOnlinePlayers.Visibility = Visibility.Collapsed;
 
         try
         {
@@ -248,16 +250,17 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            TxtOnlinePlayersStatus.Text = $"Error: {ex.Message}";
-            PnlOnlineStatus.Visibility = Visibility.Visible;
-            PbOnlineLoading.Visibility = Visibility.Collapsed;
-            if (PnlManualTrack != null) PnlManualTrack.Visibility = Visibility.Visible;
+            if (PlayersTab == null) return;
+            PlayersTab.TxtOnlinePlayersStatus.Text = $"Error: {ex.Message}";
+            PlayersTab.PnlOnlineStatus.Visibility = Visibility.Visible;
+            PlayersTab.PbOnlineLoading.Visibility = Visibility.Collapsed;
+            if (PlayersTab.PnlManualTrack != null) PlayersTab.PnlManualTrack.Visibility = Visibility.Visible;
         }
     }
 
 
 
-    private void BtnTrackPlayer_Click(object sender, RoutedEventArgs e)
+    public void BtnTrackPlayer_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as Button)?.Tag is not OnlinePlayerBM player) return;
 
@@ -276,20 +279,21 @@ public partial class MainWindow
         }
     }
 
-    private void BtnViewAllAnalysis_Click(object sender, RoutedEventArgs e)
+    public void BtnViewAllAnalysis_Click(object sender, RoutedEventArgs e)
     {
         ShowTrackingAnalysisWindow();
     }
 
 
 
-    private async void BtnAddManual_Click(object sender, RoutedEventArgs e)
+    public async void BtnAddManual_Click(object sender, RoutedEventArgs e)
     {
-        var bmId = TxtManualBMId.Text?.Trim();
+        if (PlayersTab == null) return;
+        var bmId = PlayersTab.TxtManualBMId.Text?.Trim();
         if (string.IsNullOrEmpty(bmId)) return;
 
-        TxtManualBMId.IsEnabled = false;
-        BtnAddManual.Content = "...";
+        PlayersTab.TxtManualBMId.IsEnabled = false;
+        PlayersTab.BtnAddManual.Content = "...";
         
         var name = await TrackingService.FetchPlayerNameAsync(bmId);
         var lastSession = await TrackingService.FetchPlayerLastSessionAsync(bmId);
@@ -299,9 +303,10 @@ public partial class MainWindow
 
         TrackingService.TrackPlayer(bmId, name, serverName, lastSession);
         
-        TxtManualBMId.Text = "";
-        TxtManualBMId.IsEnabled = true;
-        BtnAddManual.Content = Properties.Resources.TrackID;
+        if (PlayersTab == null) return;
+        PlayersTab.TxtManualBMId.Text = "";
+        PlayersTab.TxtManualBMId.IsEnabled = true;
+        PlayersTab.BtnAddManual.Content = Properties.Resources.TrackID;
         
         var sessionMsg = lastSession != null ? $" (found last session: {lastSession.ConnectTime.ToLocalTime():g})" : "";
         AppendLog($"[tracking] Manually added {name} ({bmId}) to tracking list on server: {serverName}{sessionMsg}");
@@ -312,8 +317,8 @@ public partial class MainWindow
     {
         try
         {
-            if (ListTrackedPlayers == null) return;
-            ListTrackedPlayers.Children.Clear();
+            if (PlayersTab?.ListTrackedPlayers == null) return;
+            PlayersTab.ListTrackedPlayers.Children.Clear();
             var players = TrackingService.GetTrackedPlayers();
             if (!string.IsNullOrEmpty(filter))
             {
@@ -339,7 +344,7 @@ public partial class MainWindow
                     TextTrimming = TextTrimming.CharacterEllipsis,
                     ToolTip = serverGrp.Key
                 };
-                ListTrackedPlayers.Children.Add(serverHeader);
+                PlayersTab?.ListTrackedPlayers.Children.Add(serverHeader);
 
                 var order = TrackingService.GetGroupOrder(serverGrp.Key);
                 var subgroups = serverGrp.GroupBy(p => string.IsNullOrEmpty(p.GroupName) ? "Ungrouped" : p.GroupName)
@@ -445,12 +450,12 @@ public partial class MainWindow
                         groupStack.Children.Add(contentControl);
                     }
                     expander.Content = groupStack;
-                    ListTrackedPlayers.Children.Add(expander);
+                    PlayersTab?.ListTrackedPlayers.Children.Add(expander);
                 }
             }
             if (players.Count == 0 && !string.IsNullOrEmpty(filter))
             {
-                ListTrackedPlayers.Children.Add(new TextBlock { Text = "No results found matching filter.", Margin = new Thickness(0, 20, 0, 0), Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center });
+                PlayersTab?.ListTrackedPlayers.Children.Add(new TextBlock { Text = "No results found matching filter.", Margin = new Thickness(0, 20, 0, 0), Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center });
             }
         }
         catch (Exception ex)
@@ -529,27 +534,27 @@ public partial class MainWindow
             order.RemoveAt(sourceIdx);
             order.Insert(targetIdx, sourceGroup);
             TrackingService.SetGroupOrder(sourceServer, order);
-            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+            RefreshTrackedPlayersList(PlayersTab?.TxtTrackedFilter?.Text ?? "");
         }
         else if (targetIdx >= 0)
         {
             // Source wasn't in order yet (maybe it was just created)
             order.Insert(targetIdx, sourceGroup);
             TrackingService.SetGroupOrder(sourceServer, order);
-            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+            RefreshTrackedPlayersList(PlayersTab?.TxtTrackedFilter?.Text ?? "");
         }
 
         _draggedTrackedGroup = null;
     }
 
-    private void TxtTrackedFilter_TextChanged(object sender, TextChangedEventArgs e) {
-        RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+    public void TxtTrackedFilter_TextChanged(object sender, TextChangedEventArgs e) {
+        RefreshTrackedPlayersList(PlayersTab?.TxtTrackedFilter?.Text ?? "");
     }
 
 
-    private void BtnManageGroups_Click(object sender, RoutedEventArgs e) {
+    public void BtnManageGroups_Click(object sender, RoutedEventArgs e) {
         if (ShowBulkGroupEditorDialog() == true) {
-            RefreshTrackedPlayersList(TxtTrackedFilter?.Text ?? "");
+            RefreshTrackedPlayersList(PlayersTab?.TxtTrackedFilter?.Text ?? "");
         }
     }
 
@@ -920,7 +925,7 @@ public partial class MainWindow
 
     private Window? _playersPopoutWin;
 
-    private void BtnPopoutPlayers_Click(object sender, RoutedEventArgs e)
+    public void BtnPopoutPlayers_Click(object sender, RoutedEventArgs e)
     {
         try
         {

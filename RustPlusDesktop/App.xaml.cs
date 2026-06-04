@@ -11,6 +11,7 @@ using RustPlusDesk.Services;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using RustPlusDesk.Services.Auth;
 using Application = System.Windows.Application;
 
 namespace RustPlusDesk;
@@ -49,6 +50,9 @@ public partial class App : Application
             Shutdown();
             return;
         }
+
+        // Initialize Supabase Client
+        _ = SupabaseAuthManager.InitializeAsync();
 
         SetupTrayIcon();
 

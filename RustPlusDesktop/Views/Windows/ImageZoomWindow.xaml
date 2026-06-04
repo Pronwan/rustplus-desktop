@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="Image Zoom View"
-        WindowState="Maximized"
+        WindowState="Normal"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"

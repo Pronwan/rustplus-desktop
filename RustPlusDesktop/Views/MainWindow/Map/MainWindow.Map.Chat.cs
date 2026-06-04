@@ -95,8 +95,31 @@ public partial class MainWindow
 
     // ====== CORE SENDING ======
     
-    private async Task SendTeamChatSafeAsync(string text)
+    private async Task SendTeamChatSafeAsync(string text, bool bypassChatAlertMasterBlock = false)
     {
+        if (!bypassChatAlertMasterBlock && !CanSendAutomatedTeamChat()) return;
+
+        // Discord Webhook Integration (Free Tier)
+        if (!bypassChatAlertMasterBlock && _vm?.Selected?.DiscordWebhookChatAlertsEnabled == true && _vm.IsCloudConnected && !string.IsNullOrWhiteSpace(_vm.Selected.DiscordWebhookChatAlertsUrl))
+        {
+            _ = Task.Run(async () => 
+            {
+                try
+                {
+                    string serverName = _vm.Selected.Name ?? "Rust Server";
+                    var payload = new { content = $"**[{serverName}]** {text}" };
+                    var json = System.Text.Json.JsonSerializer.Serialize(payload);
+                    using var content = new System.Net.Http.StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                    using var client = new System.Net.Http.HttpClient();
+                    await client.PostAsync(_vm.Selected.DiscordWebhookChatAlertsUrl, content);
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[Discord] Webhook send failed: {ex.Message}");
+                }
+            });
+        }
+
         // Thread-safe wrapper für Hintergrund-Alerts
         try
         {
@@ -246,6 +269,10 @@ public partial class MainWindow
         if (!isHistorical)
         {
             Dispatcher.InvokeAsync(() => AddIncomingChatMessage(m.Author, m.Text, m.Timestamp.ToLocalTime(), m.SteamId, autoScroll: true));
+            if (!isCommand)
+            {
+                _ = DiscordBotListenerService.Instance.SendNotificationAsync("chat", $"\uD83D\uDCAC **{m.Author}**: {m.Text}");
+            }
         }
         
         // Timestamp für History-Anfragen aktuell halten
