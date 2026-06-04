@@ -86,12 +86,21 @@ namespace RustPlusDesk.Services.Data
 
             try
             {
+                int uncompressedSize = 0;
+                try
+                {
+                    var bytes = Convert.FromBase64String(overlayB64);
+                    uncompressedSize = bytes.Length;
+                }
+                catch { uncompressedSize = overlayB64.Length; }
+
                 var model = new MapOverlayModel
                 {
                     Id = Guid.NewGuid().ToString(),
                     ServerKey = serverKey,
                     SteamId = steamId.ToString(),
                     OverlayData = overlayB64,
+                    UncompressedSize = uncompressedSize,
                     UpdatedAt = DateTime.UtcNow
                 };
 

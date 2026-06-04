@@ -25,6 +25,9 @@ namespace RustPlusDesk.Models
         [Column("created_at", NullValueHandling = NullValueHandling.Ignore)]
         public DateTime? CreatedAt { get; set; }
 
+        [Column("uncompressed_size")]
+        public int UncompressedSize { get; set; }
+
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; }
     }

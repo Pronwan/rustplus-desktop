@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS public.map_overlays (
     server_key TEXT NOT NULL,
     steam_id TEXT NOT NULL,
     overlay_data TEXT NOT NULL,
+    uncompressed_size INT DEFAULT 0 NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     UNIQUE(server_key, steam_id)

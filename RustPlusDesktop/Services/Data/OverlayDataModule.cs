@@ -74,14 +74,17 @@ namespace RustPlusDesk.Services.Data
             // Size limit check
             var mapJson = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = false });
             int byteSize = Encoding.UTF8.GetByteCount(mapJson);
+            int uncompressedSize = CalculateUncompressedSize(data);
+            AppendLog($"[overlay/cloud] Size check - Uncompressed: {uncompressedSize} B, Compressed (Polyline): {byteSize} B (Saved {(uncompressedSize - byteSize) * 100.0 / Math.Max(1, uncompressedSize):F1}%)");
+
             bool hasSupportBenefit = Auth.SupabaseAuthManager.IsPremium;
             int maxBytes = hasSupportBenefit ? SUPPORTER_MAX_BYTES : FREE_MAX_BYTES;
 
-            if (byteSize > maxBytes)
+            if (uncompressedSize > maxBytes)
             {
-                int kbSize  = byteSize / 1024;
+                int kbSize  = uncompressedSize / 1024;
                 int kbLimit = maxBytes / 1024;
-                AppendLog($"[overlay/cloud] Upload blocked: overlay is {kbSize} KB, limit is {kbLimit} KB " +
+                AppendLog($"[overlay/cloud] Upload blocked: uncompressed overlay is {kbSize} KB, limit is {kbLimit} KB " +
                           $"({(hasSupportBenefit ? "Supporter tier" : "Free tier")}).");
                 return false;
             }
@@ -92,11 +95,12 @@ namespace RustPlusDesk.Services.Data
                 // The unique constraint on (server_key, steam_id) handles duplicates.
                 var mapModel = new MapOverlayModel
                 {
-                    Id          = Guid.NewGuid().ToString(), // ignored on conflict – DB keeps existing PK
-                    ServerKey   = serverKey,
-                    SteamId     = steamId.ToString(),
-                    OverlayData = mapJson,
-                    UpdatedAt   = DateTime.UtcNow
+                    Id               = Guid.NewGuid().ToString(), // ignored on conflict – DB keeps existing PK
+                    ServerKey        = serverKey,
+                    SteamId          = steamId.ToString(),
+                    OverlayData      = mapJson,
+                    UncompressedSize = uncompressedSize,
+                    UpdatedAt        = DateTime.UtcNow
                 };
 
                 await Auth.SupabaseAuthManager.Client
@@ -130,6 +134,28 @@ namespace RustPlusDesk.Services.Data
                 AppendLog($"[overlay/cloud/err] UploadOverlay failed for {steamId}: {ex.Message}");
                 return false;
             }
+        }
+
+        private static int CalculateUncompressedSize(OverlaySaveData data)
+        {
+            var uncompressedStrokes = data.Strokes.Select(s => new
+            {
+                s.Color,
+                s.Thickness,
+                Points = s.Points.Select(p => new { X = p.X, Y = p.Y }).ToList()
+            }).ToList();
+
+            var tempObj = new
+            {
+                data.LastUpdatedUnix,
+                Strokes = uncompressedStrokes,
+                data.Icons,
+                data.Texts,
+                data.Devices
+            };
+
+            var json = JsonSerializer.Serialize(tempObj, new JsonSerializerOptions { WriteIndented = false });
+            return Encoding.UTF8.GetByteCount(json);
         }
 
         /// <summary>
