@@ -269,6 +269,10 @@ public partial class MainWindow
         if (!isHistorical)
         {
             Dispatcher.InvokeAsync(() => AddIncomingChatMessage(m.Author, m.Text, m.Timestamp.ToLocalTime(), m.SteamId, autoScroll: true));
+            if (!isCommand)
+            {
+                _ = DiscordBotListenerService.Instance.SendNotificationAsync("chat", $"\uD83D\uDCAC **{m.Author}**: {m.Text}");
+            }
         }
         
         // Timestamp für History-Anfragen aktuell halten

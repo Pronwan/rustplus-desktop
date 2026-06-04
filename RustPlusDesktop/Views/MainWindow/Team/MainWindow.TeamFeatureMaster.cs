@@ -205,6 +205,7 @@ public partial class MainWindow
         try
         {
             StopTeamFeatureMasterWatch();
+            DiscordBotListenerService.Instance.StopListening();
             await SupabaseAuthManager.MarkAppOfflineAsync();
 
             if (_vm?.Selected == null || TeamMembers.Count == 0) return;
@@ -338,6 +339,10 @@ public partial class MainWindow
         {
             RequestTeamFeatureMasterSync();
         }
+
+        // Update Discord Bot Listener subscription state
+        var teamSteamIds = TeamMembers.Select(tm => tm.SteamId.ToString()).ToList();
+        _ = DiscordBotListenerService.Instance.UpdateSubscriptionStateAsync(_isChatFeatureMaster, teamSteamIds);
 
         if (_chatFeaturesBlockedByMaster && !previousBlocked)
         {

@@ -679,14 +679,22 @@ public partial class MainWindow : WpfUi.FluentWindow
                              data.Name == "Large Oil Rig" ? Properties.Resources.LargeOilRig :
                              data.Name;
             Dispatcher.InvokeAsync(async () =>
-                await SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertOilRigTriggered, rigName, timeStr)));
+            {
+                var msg = string.Format(Properties.Resources.AlertOilRigTriggered, rigName, timeStr);
+                await SendTeamChatSafeAsync(msg);
+                _ = DiscordBotListenerService.Instance.SendNotificationAsync("events", "\uD83D\uDEA2 **Event:** " + msg);
+            });
         };
 
         // NEU: Update Events (10m / 5m Warnungen)
         _monumentWatcher.OnOilRigChatUpdate += (s, message) =>
         {
             if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
-            Dispatcher.InvokeAsync(async () => await SendTeamChatSafeAsync(message));
+            Dispatcher.InvokeAsync(async () =>
+            {
+                await SendTeamChatSafeAsync(message);
+                _ = DiscordBotListenerService.Instance.SendNotificationAsync("events", "\uD83D\uDEA2 **Event Update:** " + message);
+            });
         };
         
         _monumentWatcher.OnDebug += (s, msg) => Dispatcher.BeginInvoke(new Action(() => AppendLog(msg)));
@@ -778,7 +786,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         w.Top = screenTopDip + (screenHeightDip - w.Height) / 2.0;
     }
 
-    // KontextmenÃƒÂ¼: Rechtsklick abfangen, damit das MenÃƒÂ¼ sicher aufgeht
+    // KontextmenÃ¼: Rechtsklick abfangen, damit das MenÃ¼ sicher aufgeht
     private void BtnCrosshair_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         e.Handled = true;
@@ -790,7 +798,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }
     }
 
-    // MenÃƒÂ¼ beim Ãƒâ€“ffnen mit Monitoren fÃƒÂ¼llen und HÃƒÂ¤kchen setzen
+    // MenÃ¼ beim Ã–ffnen mit Monitoren fÃ¼llen und HÃ¤kchen setzen
     private void CrosshairContextMenu_Opened(object sender, RoutedEventArgs e)
     {
         BuildMonitorMenu();
@@ -826,10 +834,10 @@ public partial class MainWindow : WpfUi.FluentWindow
                 var btnRename = new Button { Content = "Abc", ToolTip = "Rename", Width = 28, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Foreground = Brushes.LightGray, Tag = cc };
                 btnRename.Click += CustomCrosshairRename_Click;
 
-                var btnEdit = new Button { Content = "Ã¢Å“ÂÃ¯Â¸Â", ToolTip = "Edit", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
+                var btnEdit = new Button { Content = "âœ  ï¸  ", ToolTip = "Edit", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
                 btnEdit.Click += CustomCrosshairEdit_Click;
                 
-                var btnDelete = new Button { Content = "Ã°Å¸â€”â€˜Ã¯Â¸Â", ToolTip = "Delete", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
+                var btnDelete = new Button { Content = "ðŸ—‘ï¸  ", ToolTip = "Delete", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
                 btnDelete.Click += CustomCrosshairDelete_Click;
 
                 sp.Children.Add(btnRename);
@@ -971,7 +979,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }
     }
 
-    // MenÃƒÂ¼aufbau
+    // MenÃ¼aufbau
     private void BuildMonitorMenu()
     {
         MonitorRoot.Items.Clear();
@@ -982,7 +990,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             var s = screens[i];
             var item = new MenuItem
             {
-                Header = $"{i + 1}: {(s.Primary ? "Hauptmonitor" : "Monitor")} {s.Width}Ãƒâ€”{s.Height} @ {s.Left},{s.Top}",
+                Header = $"{i + 1}: {(s.Primary ? "Hauptmonitor" : "Monitor")} {s.Width}Ã—{s.Height} @ {s.Left},{s.Top}",
                 IsCheckable = true,
                 IsChecked = _selectedMonitor != null &&
                             s.Left == _selectedMonitor.Left &&
@@ -1054,7 +1062,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             else if (_overlay != null)
             {
                 _overlay.SetStyle(_currentStyle);
-                // nach GrÃƒÂ¶ÃƒÅ¸enÃƒÂ¤nderung neu zentrieren
+                // nach GrÃ¶ÃŸenÃ¤nderung neu zentrieren
                 if (_selectedMonitor != null)
                     PositionOverlayCentered(_overlay, _selectedMonitor);
             }
@@ -1100,22 +1108,22 @@ public partial class MainWindow : WpfUi.FluentWindow
         public double LastRealX, LastRealY; // last confirmed non-ghost position (for crash detection)
     }
     private readonly Dictionary<uint, DynMarkerState> _dynStates = new();
-    private readonly HashSet<uint> _dynKnown = new();                      // Ã¢â‚¬Å“already spawnedÃ¢â‚¬Â for chat announcements
+    private readonly HashSet<uint> _dynKnown = new();                      // â€œalready spawnedâ€  for chat announcements
     private DispatcherTimer? _dynTimer;
     private bool _showPlayers = true;                                      // controlled by ChkPlayers
-                                                                           // Wie stark Icons die Zoom-Stufe kompensieren (je kleiner der Exponent, desto GRÃƒâ€“SSER beim Rauszoomen)
-    private const double MON_SIZE_EXP = 0.5;  // Monumente: sehr prÃƒÂ¤sent beim Rauszoomen
+                                                                           // Wie stark Icons die Zoom-Stufe kompensieren (je kleiner der Exponent, desto GRÃ–SSER beim Rauszoomen)
+    private const double MON_SIZE_EXP = 0.5;  // Monumente: sehr prÃ¤sent beim Rauszoomen
 
 
     // Globale Grenzen, damit es nicht ausufert
     private const double ICON_SCALE_MIN = 0.6;  // kleiner als 60% nie
-    private const double ICON_SCALE_MAX = 4.5;  // grÃƒÂ¶ÃƒÅ¸er als 350% nie
+    private const double ICON_SCALE_MAX = 4.5;  // grÃ¶ÃŸer als 350% nie
 
-    // Optional: Baseline-VerstÃƒÂ¤rker, um generell alles grÃƒÂ¶ÃƒÅ¸er zu machen
-    private const double MON_BASE_MULT = 2.2;  // 20% grÃƒÂ¶ÃƒÅ¸er als Basis
-    private const double SHOP_BASE_MULT = 1.3;  // 30% grÃƒÂ¶ÃƒÅ¸er als Basis
+    // Optional: Baseline-VerstÃ¤rker, um generell alles grÃ¶ÃŸer zu machen
+    private const double MON_BASE_MULT = 2.2;  // 20% grÃ¶ÃŸer als Basis
+    private const double SHOP_BASE_MULT = 1.3;  // 30% grÃ¶ÃŸer als Basis
 
-    // tiny map from type Ã¢â€ â€™ icon (pack URIs). Put your icons in /icons as Resource.
+    // tiny map from type â†’ icon (pack URIs). Put your icons in /icons as Resource.
     private static readonly Dictionary<int, string> sDynIconByType = new()
 {
     { 5, "pack://application:,,,/Assets/icons/cargo.png"  },
@@ -1128,7 +1136,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 };
     private static readonly Brush PopupBg = new SolidColorBrush(Color.FromRgb(32, 36, 40));   // dunkel
     private static readonly Brush PopupBrd = new SolidColorBrush(Color.FromArgb(40, 255, 255, 255));
-    private const int SHOPS_WRAP_COLUMNS = 3;   // 3 oder 4 Ã¢â‚¬â€œ so viele Karten pro Zeile
+    private const int SHOPS_WRAP_COLUMNS = 3;   // 3 oder 4 â€œ so viele Karten pro Zeile
     private const double SHOP_CARD_WIDTH = 320; // feste Breite deiner Shop-Karte
     private const double SHOP_GAP = 8;   // Abstand zwischen Karten
 
@@ -1138,9 +1146,9 @@ public partial class MainWindow : WpfUi.FluentWindow
                                "RustPlusDesk", "icons");
 
     // === Layers ===
-    // Optional: externe ErgÃƒÂ¤nzungen laden (Datei neben der EXE)
+    // Optional: externe ErgÃ¤nzungen laden (Datei neben der EXE)
     private static bool _itemMapLoaded;
-    /// <summary>lÃƒÂ¤dt rust_items.json aus dem Programmordner oder eingebettet als WPF-Resource.</summary>
+    /// <summary>lÃ¤dt rust_items.json aus dem Programmordner oder eingebettet als WPF-Resource.</summary>
     /// 
 
     private void MainWindow_Closed(object? sender, EventArgs e)
@@ -1152,9 +1160,9 @@ public partial class MainWindow : WpfUi.FluentWindow
         {
             try
             {
-                // ÃƒÅ“berprÃƒÂ¼fe, ob der Prozess ein Hauptfenster hat.
+                // ÃœberprÃ¼fe, ob der Prozess ein Hauptfenster hat.
                 // Hintergrundprozesse (wie der Listener) haben in der Regel keins.
-                // Der von der "fcm-register"-Methode gestartete Prozess, der den Browser ÃƒÂ¶ffnet,
+                // Der von der "fcm-register"-Methode gestartete Prozess, der den Browser Ã¶ffnet,
                 // sollte eine Ausnahme sein und hat ein Fenster, daher wird er hier ignoriert.
                 if (p.MainWindowHandle == IntPtr.Zero)
                 {
@@ -1163,14 +1171,14 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
             catch (Exception ex)
             {
-                // Dies fÃƒÂ¤ngt Berechtigungsfehler oder Prozesse ab, die bereits beendet sind.
+                // Dies fÃ¤ngt Berechtigungsfehler oder Prozesse ab, die bereits beendet sind.
                 // Ignoriere die Ausnahme, da das erwartete Verhalten ist.
-                // Du kannst hier auch loggen, wenn du mÃƒÂ¶chtest: Debug.WriteLine($"Konnte Prozess {p.Id} nicht beenden: {ex.Message}");
+                // Du kannst hier auch loggen, wenn du mÃ¶chtest: Debug.WriteLine($"Konnte Prozess {p.Id} nicht beenden: {ex.Message}");
             }
         }
         try
         {
-            // falls noch offen/hidden Ã¢â€ â€™ hart schlieÃƒÅ¸en
+            // falls noch offen/hidden â†’ hart schlieÃŸen
             if (_overlay != null)
             {
                 _overlay.Close();
@@ -1183,7 +1191,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                 _miniMap = null;
             }
 
-            // KontextmenÃƒÂ¼ sauber schlieÃƒÅ¸en (optional)
+            // KontextmenÃ¼ sauber schlieÃŸen (optional)
             BtnCrosshair.ContextMenu?.IsOpen.Equals(false);
 
             // Launch pending update installer if available
@@ -1325,7 +1333,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     {
         public int Id { get; init; }
         public string ShortName { get; init; } = "";
-        public string Display { get; init; } = "";   // Ã¢â‚¬Å¾prettyÃ¢â‚¬Å“ name
+        public string Display { get; init; } = "";   // â€žprettyâ€œ name
         public string? IconUrl { get; init; }
     }
 
@@ -1356,7 +1364,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         System.IO.Path.Combine(baseDir, "rust-item-list.json"),
         System.IO.Path.Combine(currDir, "rust-item-list.json"),
         entryDir is null ? null : System.IO.Path.Combine(entryDir, "rust-item-list.json"),
-        // hÃƒÂ¤ufige Ordner:
+        // hÃ¤ufige Ordner:
         System.IO.Path.Combine(baseDir, "assets", "rust-item-list.json"),
         System.IO.Path.Combine(baseDir, "data",   "rust-item-list.json"),
         System.IO.Path.Combine(baseDir, "Assets", "Data", "rust-item-list.json"),
@@ -1431,10 +1439,10 @@ public partial class MainWindow : WpfUi.FluentWindow
         var src = ResolveItemIcon(itemId, shortName, decodePx);
         if (src != null) { img.Source = src; return; }
 
-        // 2) Download wurde von ResolveItemIcon bereits angestoÃƒÅ¸en Ã¢â€ â€™ in Intervallen nochmal versuchen
+        // 2) Download wurde von ResolveItemIcon bereits angestoÃŸen â†’ in Intervallen nochmal versuchen
         _ = Task.Run(async () =>
         {
-            for (int i = 0; i < 10; i++)   // ~2.75s max (250+300+Ã¢â‚¬Â¦)
+            for (int i = 0; i < 10; i++)   // ~2.75s max (250+300+â€¦)
             {
                 await Task.Delay(250 + i * 250);
                 var ready = ResolveItemIcon(itemId, shortName, decodePx);
@@ -1536,7 +1544,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     // Sichtbarkeit per Checkbox/Toggle
     private bool _showMonuments = true;
 
-    // Overlay-Elemente fÃƒÂ¼r Monumente
+    // Overlay-Elemente fÃ¼r Monumente
     private readonly Dictionary<string, FrameworkElement> _monEls = new();
 
     // Rohdaten (aus GetMapWithMonumentsAsync)
@@ -1546,7 +1554,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private static readonly Dictionary<string, string> sMonIconByKeyRaw = new(StringComparer.OrdinalIgnoreCase)
 {
-    // nur Beispiele Ã¢â‚¬â€œ ergÃƒÂ¤nze frei:
+    // nur Beispiele â€“ ergÃ¤nze frei:
     { "stone quarry",            "pack://application:,,,/Assets/icons/stonequarry.png" },
     { "hqm quarry",              "pack://application:,,,/Assets/icons/hqmquarry.png" },
     { "sulfur quarry",           "pack://application:,,,/Assets/icons/sulfurquarry.png" },
@@ -1608,7 +1616,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             var key = Canon(kv.Key);              // <- deine Canon(...) von oben
             if (string.IsNullOrEmpty(key)) continue;
 
-            // Bei Kollision gewinnt der Ã¢â‚¬Å¾prÃƒÂ¤zisereÃ¢â‚¬Å“ Eintrag: Priorisiere lÃƒÂ¤ngere Keys
+            // Bei Kollision gewinnt der â€žprÃ¤zisereâ€œ Eintrag: Priorisiere lÃ¤ngere Keys
             if (!map.TryGetValue(key, out var existing) || kv.Key.Length > existing.Length)
                 map[key] = kv.Value;
         }
@@ -1642,7 +1650,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             return "underwater labs";
         }
 
-        // unerwÃƒÂ¼nschte Suffixe/Teile robust entfernen (auch mehrfach, egal wo)
+        // unerwÃ¼nschte Suffixe/Teile robust entfernen (auch mehrfach, egal wo)
         s = System.Text.RegularExpressions.Regex.Replace(
                 s,
                 @"\b(display\s*name|monument\s*name)\b",
@@ -1737,7 +1745,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                     ToolTipService.SetToolTip(img, tooltip);
                     return img;
                 }
-                catch { /* fÃƒÂ¤llt auf Dot zurÃƒÂ¼ck */ }
+                catch { /* fÃ¤llt auf Dot zurÃ¼ck */ }
             }
         }
 
@@ -1806,7 +1814,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             // Grobe Validierung: ist es ein JSON Array mit Items?
             if (!json.Contains("shortName") || !json.Contains("displayName")) return false;
 
-            // Pfad bestimmen: Wir speichern direkt ins Root-Verzeichnis, da dies die hÃƒÂ¶chste PrioritÃƒÂ¤t beim Laden hat
+            // Pfad bestimmen: Wir speichern direkt ins Root-Verzeichnis, da dies die hÃ¶chste PrioritÃ¤t beim Laden hat
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             string targetPath = System.IO.Path.Combine(baseDir, "rust-item-list.json");
 
@@ -1863,7 +1871,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         bool loaded = false;
 
-        // 1) Disk Ã¢â‚¬â€œ bevorzugt (Content + Copy if newer)
+        // 1) Disk â€“ bevorzugt (Content + Copy if newer)
         foreach (var path in new[] {
         System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "rust_items.json"),
         System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "items-map.json"),
@@ -1882,7 +1890,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
         }
 
-        // 2) WPF Resource Ã¢â‚¬â€œ fallback (REBUILD nÃƒÂ¶tig, wenn du die Datei ÃƒÂ¤nderst)
+        // 2) WPF Resource â€“ fallback (REBUILD nÃ¶tig, wenn du die Datei Ã¤nderst)
         if (!loaded)
         {
             foreach (var uri in new[] {
@@ -1918,7 +1926,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     }
 
 
-    // gibt true zurÃƒÂ¼ck, wenn mind. ein Mapping ankam (beide Dictionaries werden ergÃƒÂ¤nzt)
+    // gibt true zurÃ¼ck, wenn mind. ein Mapping ankam (beide Dictionaries werden ergÃ¤nzt)
     private static bool TryLoadFromJson(string json)
     {
         try
@@ -1953,7 +1961,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     }
 
 
-    /// <summary>gibt einen schÃƒÂ¶nen Anzeigenamen zurÃƒÂ¼ck (Shortname bevorzugt, sonst ID-Fallback)</summary>
+    /// <summary>gibt einen schÃ¶nen Anzeigenamen zurÃ¼ck (Shortname bevorzugt, sonst ID-Fallback)</summary>
     public static string ResolveItemName(int itemId, string? shortName)
     {
         // 1) neue DB bevorzugt
@@ -1983,7 +1991,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         var stock = o.Stock > 0 ? $" (stock {o.Stock})" : "";
         var bp = o.IsBlueprint ? " [BP]" : "";
 
-        return $"{left} Ã¢â€ â€™ {right}{stock}{bp}";
+        return $"{left} â†’ {right}{stock}{bp}";
     }
 private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP, double V_DIP, double Radius);
     private readonly List<MarkerRef> _markers = new();
@@ -1991,14 +1999,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private AlarmWindow? _alarmWin; // nicht AlarmPopupWindow
     private readonly ObservableCollection<AlarmNotification> _alarmFeed = new();
     private readonly Dictionary<string, DateTime> _lastAlarmProcessed = new();
-    private DateTime _lastAnyAlarmTime = DateTime.MinValue; // Globaler Marker fÃƒÂ¼r Fuzzy-Dedup
+    private DateTime _lastAnyAlarmTime = DateTime.MinValue; // Globaler Marker fÃ¼r Fuzzy-Dedup
     private readonly Dictionary<uint, (string Title, string Message)> _alarmMetadataCache = new();
     private readonly Dictionary<string, (uint Id, DateTime Time)> _lastSeenIdPerServer = new();
     private readonly List<string> _alarmHistoryDedup = new();
 
     private void ShowAlarmPopup(AlarmNotification n, string source = "FCM")
     {
-        // 0) Backlog-Filter: Ignoriere Alarme, die ÃƒÂ¤lter als 5 Minuten sind
+        // 0) Backlog-Filter: Ignoriere Alarme, die Ã¤lter als 5 Minuten sind
         if ((DateTime.Now - n.Timestamp).TotalMinutes > 5) return;
 
         // 0.1) Exakter Duplikat-Check (Server + Msg + Zeitstempel)
@@ -2014,12 +2022,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         var now = DateTime.UtcNow;
 
-        // Servernamen bereinigen fÃƒÂ¼r stabiles Mapping
+        // Servernamen bereinigen fÃ¼r stabiles Mapping
         string cleanSrv = Regex.Replace(n.Server ?? "", @"\x1B\[[0-9;]*[A-Za-z]", "");
         cleanSrv = Regex.Replace(cleanSrv, @"\[/?[a-zA-Z]+\]", "").Trim();
         if (string.IsNullOrEmpty(cleanSrv)) cleanSrv = "-";
 
-        // Wenn die Meldung eine ID hat (WS), merken wir sie uns fÃƒÂ¼r diesen Server
+        // Wenn die Meldung eine ID hat (WS), merken wir sie uns fÃ¼r diesen Server
         if (n.EntityId.HasValue)
         {
             _lastSeenIdPerServer[cleanSrv] = (n.EntityId.Value, now);
@@ -2073,7 +2081,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (source == "FCM" && n.Message != "Alarm activated!")
         {
             uint? tid = n.EntityId;
-            // Falls FCM keine ID hat, versuchen wir sie ÃƒÂ¼ber den letzten WS-Event dieses Servers zu finden
+            // Falls FCM keine ID hat, versuchen wir sie Ã¼ber den letzten WS-Event dieses Servers zu finden
             if (!tid.HasValue && _lastSeenIdPerServer.TryGetValue(cleanSrv, out var last) && (now - last.Time).TotalSeconds < 10)
             {
                 tid = last.Id;
@@ -2092,7 +2100,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
         }
         
-        // n.Server ebenfalls bereinigen fÃƒÂ¼r konsistentes UI/Matching
+        // n.Server ebenfalls bereinigen fÃ¼r konsistentes UI/Matching
         n = n with { Server = cleanSrv };
 
         // Override DeviceName with Custom Name / PureName if device is identified
@@ -2103,7 +2111,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (n.EntityId.HasValue)
         {
-            // Dedup primÃƒÂ¤r ÃƒÂ¼ber ID (ignoriere Server-Namensunterschiede wie ANSI-Farben)
+            // Dedup primÃ¤r Ã¼ber ID (ignoriere Server-Namensunterschiede wie ANSI-Farben)
             string key = $"ID:{n.EntityId.Value}";
             if (_lastAlarmProcessed.TryGetValue(key, out var last) && (now - last).TotalSeconds < 5)
             {
@@ -2142,6 +2150,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         // 4) Play Audio (Respects settings if device is identified, otherwise plays default)
         PlayAlarmAudio(dev);
+
+        // Send smart alert to Discord Bot
+        _ = DiscordBotListenerService.Instance.SendNotificationAsync("raid", $"\uD83D\uDEA8 **{dev?.PureName ?? n.DeviceName ?? "Smart Alarm"}**: {n.Message}");
 
         // Send smart alert to team chat if setting and master switch are enabled
         if (TrackingService.AnnounceSmartAlerts && _announceSpawns)

@@ -149,5 +149,84 @@ namespace RustPlusDesk.Models
         [JsonPropertyName("expires_at")]
         public DateTime? ExpiresAt { get; set; }
     }
+
+    [Table("discord_bot_settings")]
+    public class DiscordBotSettingsModel : BaseModel
+    {
+        [PrimaryKey("guild_id", false)]
+        [Column("guild_id")]
+        public string GuildId { get; set; }
+
+        [Column("owner_steam_id")]
+        public string OwnerSteamId { get; set; }
+
+        [Column("commands_enabled")]
+        public bool CommandsEnabled { get; set; } = true;
+
+        [Column("allowed_command_role_ids")]
+        public string AllowedCommandRoleIds { get; set; } = "";
+
+        [Column("created_at")]
+        public DateTime CreatedAt { get; set; }
+
+        [Column("updated_at")]
+        public DateTime UpdatedAt { get; set; }
+    }
+
+    [Table("discord_channels_config")]
+    public class DiscordChannelsConfigModel : BaseModel
+    {
+        [PrimaryKey("id", true)]
+        [Column("id")]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
+        [Column("guild_id")]
+        public string GuildId { get; set; }
+
+        [Column("notification_type")]
+        public string NotificationType { get; set; }
+
+        [Column("channel_id")]
+        public string ChannelId { get; set; }
+
+        [Column("tts_enabled")]
+        public bool TtsEnabled { get; set; }
+
+        [Column("audio_alert_enabled")]
+        public bool AudioAlertEnabled { get; set; }
+
+        [Column("created_at")]
+        public DateTime CreatedAt { get; set; }
+    }
+
+    [Table("bot_commands_queue")]
+    public class BotCommandsQueueModel : BaseModel
+    {
+        [PrimaryKey("id", true)]
+        [Column("id")]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
+        [Column("guild_id")]
+        public string GuildId { get; set; }
+
+        [Column("command_type")]
+        public string CommandType { get; set; }
+
+        [Column("payload")]
+        public Newtonsoft.Json.Linq.JObject? Payload { get; set; } // JSONB column
+
+        [Column("status")]
+        public string Status { get; set; } = "pending";
+
+        [Column("response_payload")]
+        public Newtonsoft.Json.Linq.JObject? ResponsePayload { get; set; } // JSONB column
+
+        [Column("created_at")]
+        public DateTime CreatedAt { get; set; }
+
+        [Column("updated_at")]
+        public DateTime UpdatedAt { get; set; }
+    }
 }
+
 

@@ -593,6 +593,252 @@ public partial class MainWindow
         }
     }
 
+    public async Task<bool> ToggleSmartSwitchFromDiscordAsync(uint entityId, bool state)
+    {
+        if (_rust == null) return false;
+        try
+        {
+            await _rust.ToggleSmartSwitchAsync(entityId, state);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[DiscordBotListener] Failed to toggle switch {entityId}: {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<(bool success, string message)> ToggleSmartSwitchFromDiscordAsync(string nameOrId)
+    {
+        if (_rust == null || _vm?.Selected == null) return (false, "Not connected to server.");
+        try
+        {
+            SmartDevice? dev = null;
+            if (uint.TryParse(nameOrId, out var id))
+            {
+                dev = _vm.Selected.AllDevices.FirstOrDefault(d =>
+                    (d.Kind ?? "").Equals("SmartSwitch", StringComparison.OrdinalIgnoreCase) &&
+                    d.EntityId == id);
+            }
+            else
+            {
+                // Search by name or alias (case-insensitive, partial match)
+                dev = _vm.Selected.AllDevices.FirstOrDefault(d =>
+                    (d.Kind ?? "").Equals("SmartSwitch", StringComparison.OrdinalIgnoreCase) &&
+                    ((d.Alias ?? d.Name ?? "").Contains(nameOrId, StringComparison.OrdinalIgnoreCase) ||
+                     (d.Name ?? "").Contains(nameOrId, StringComparison.OrdinalIgnoreCase)));
+            }
+
+            if (dev == null)
+            {
+                AppendLog($"[DiscordBotListener] No smart switch found matching: {nameOrId}");
+                return (false, $"❌ No switch found matching '{nameOrId}'. Use /devicelist to see available devices.");
+            }
+
+            // Toggle: invert current state
+            bool newState = !(dev.IsOn ?? false);
+            await _rust.ToggleSmartSwitchAsync(dev.EntityId, newState);
+            string label = dev.Alias ?? dev.Name ?? dev.EntityId.ToString();
+            AppendLog($"[DiscordBotListener] Toggled {label} → {(newState ? "ON" : "OFF")}");
+            return (true, $"{(newState ? "✅" : "⛔")} **{label}** turned **{(newState ? "ON" : "OFF")}**");
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[DiscordBotListener] Failed to toggle switch {nameOrId}: {ex.Message}");
+            return (false, $"❌ Error toggling switch: {ex.Message}");
+        }
+    }
+
+    public string GetSmartSwitchListForDiscord()
+    {
+        if (_vm?.Selected == null) return "❌ Not connected to server.";
+
+        var switches = _vm.Selected.AllDevices
+            .Where(d => (d.Kind ?? "").Equals("SmartSwitch", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        if (switches.Count == 0) return "📋 No smart switches paired.";
+
+        var lines = new System.Text.StringBuilder();
+        lines.AppendLine("📋 **Paired Smart Switches:**");
+        foreach (var sw in switches)
+        {
+            string label = sw.Alias ?? sw.Name ?? sw.EntityId.ToString();
+            string state = sw.IsMissing ? "❌ OFFLINE" : (sw.IsOn == true ? "🟢 ON" : "🔴 OFF");
+            lines.AppendLine($"• **{label}** `#{sw.EntityId}` — {state}");
+        }
+        return lines.ToString().TrimEnd();
+    }
+
+    public string GetDeepSeaStatusForDiscord()
+    {
+        if (_deepSeaActive)
+        {
+            if (_deepSeaSpawnTime.HasValue)
+            {
+                var elapsed = DateTime.UtcNow - _deepSeaSpawnTime.Value;
+                return $"🌊 **Deep Sea** is active (spawned {FormatAgo(elapsed)} ago)";
+            }
+            return "🌊 **Deep Sea** is currently active (spawn time unknown – connected mid-event)";
+        }
+        if (_deepSeaDespawnTime.HasValue)
+        {
+            var ago = DateTime.UtcNow - _deepSeaDespawnTime.Value;
+            return $"🌊 **Deep Sea** ended {(int)ago.TotalMinutes} minute(s) ago";
+        }
+        return "🌊 **Deep Sea**: No data yet – event may not have occurred this wipe";
+    }
+
+    public string GetCargoStatusForDiscord()
+    {
+        var activeCargo = _cargoDockStates.Values.FirstOrDefault();
+        if (activeCargo != null)
+        {
+            string harborName = activeCargo.HarborName ?? "harbor";
+            if (activeCargo.IsDocked && activeCargo.DockTime.HasValue)
+            {
+                int dockDuration = TrackingService.GetLearnedDockingDuration(_vm?.Selected?.Host ?? "");
+                if (dockDuration > 0 && !activeCargo.WasAlreadyDocked)
+                {
+                    var dockRemain = TimeSpan.FromMinutes(dockDuration) - (DateTime.UtcNow - activeCargo.DockTime.Value);
+                    if (dockRemain.TotalMinutes > 0)
+                        return $"🚢 **Cargo Ship** is docked at {harborName} – departs in ~{(int)dockRemain.TotalMinutes}m";
+                    return $"🚢 **Cargo Ship** is docked at {harborName} – preparing to depart";
+                }
+                return $"🚢 **Cargo Ship** is docked at {harborName}";
+            }
+            if (activeCargo.SeenAtEdge)
+            {
+                int fullLife = TrackingService.GetLearnedCargoFullLife(_vm?.Selected?.Host ?? "");
+                if (fullLife > 0 && activeCargo.FirstSeen.HasValue)
+                {
+                    var remain = TimeSpan.FromMinutes(fullLife) - (DateTime.UtcNow - activeCargo.FirstSeen.Value);
+                    if (remain.TotalMinutes > 0)
+                        return $"🚢 **Cargo Ship** is active – leaves in ~{(int)remain.TotalMinutes}m";
+                    return "🚢 **Cargo Ship** is active – preparing to leave";
+                }
+                return "🚢 **Cargo Ship** is active (total duration not yet learned)";
+            }
+            return "🚢 **Cargo Ship** is active (connected mid-route – time unknown)";
+        }
+        if (_cargoLastDespawnUtc.HasValue)
+        {
+            var ago = DateTime.UtcNow - _cargoLastDespawnUtc.Value;
+            return $"🚢 **Cargo Ship** left {(int)ago.TotalMinutes} minute(s) ago";
+        }
+        return "🚢 **Cargo Ship**: Not currently on the map";
+    }
+
+    public string GetOilRigStatusForDiscord()
+    {
+        var parts = new List<string>();
+        foreach (var rigName in new[] { "Small Oil Rig", "Large Oil Rig" })
+        {
+            string emoji = rigName.Contains("Small") ? "🛢️" : "🏭";
+            var timeLeft = _monumentWatcher.GetActiveEventTimeLeft(rigName);
+            if (timeLeft.HasValue)
+            {
+                parts.Add($"{emoji} **{rigName}**: Locked crate in {(int)timeLeft.Value.TotalMinutes}m {timeLeft.Value.Seconds}s");
+            }
+            else
+            {
+                var lastTrig = _monumentWatcher.GetLastTriggered(rigName);
+                if (lastTrig.HasValue)
+                {
+                    var ago = DateTime.UtcNow - lastTrig.Value;
+                    parts.Add($"{emoji} **{rigName}**: Last called {(int)ago.TotalMinutes}m ago");
+                }
+                else
+                {
+                    parts.Add($"{emoji} **{rigName}**: Not called this session");
+                }
+            }
+        }
+        return string.Join("\n", parts);
+    }
+
+    public string GetHeliStatusForDiscord()
+    {
+        bool isHeliActive = _dynStates.Values.Any(s => s.Type == 8);
+        if (isHeliActive)
+        {
+            if (_heliSpawnTime.HasValue)
+            {
+                var elapsed = DateTime.UtcNow - _heliSpawnTime.Value;
+                return $"🚁 **Patrol Heli** is active (spawned {FormatAgo(elapsed)} ago)";
+            }
+            return "🚁 **Patrol Heli** is active (spawn time unknown – connected mid-event)";
+        }
+        if (_heliLastEventUtc.HasValue)
+        {
+            var ago = DateTime.UtcNow - _heliLastEventUtc.Value;
+            string reason = _heliLastEventWasCrash ? "was shot down" : "left the map";
+            return $"🚁 **Patrol Heli** {reason} {FormatAgo(ago)} ago";
+        }
+        return "🚁 **Patrol Heli**: No sighting this session";
+    }
+
+    public string GetVendorStatusForDiscord()
+    {
+        bool isVendorActive = _dynStates.Values.Any(s => s.Type == 6);
+        if (isVendorActive)
+        {
+            if (_vendorSpawnTime.HasValue)
+            {
+                var elapsed = DateTime.UtcNow - _vendorSpawnTime.Value;
+                return $"🛒 **Travelling Vendor** is active (spawned {FormatAgo(elapsed)} ago)";
+            }
+            return "🛒 **Travelling Vendor** is active (spawn time unknown – connected mid-event)";
+        }
+        if (_vendorDespawnTime.HasValue)
+        {
+            var ago = DateTime.UtcNow - _vendorDespawnTime.Value;
+            return $"🛒 **Travelling Vendor** left {FormatAgo(ago)} ago";
+        }
+        return "🛒 **Travelling Vendor**: No sighting this session";
+    }
+
+    public string GetUpkeepDetailsForDiscord()
+    {
+        var profile = _vm?.Selected;
+        if (profile == null) return "❌ Not connected to server.";
+
+        var tcs = profile.AllDevices
+            .Where(d => (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor") && d.Storage?.IsToolCupboard == true)
+            .ToList();
+
+        if (tcs.Count == 0) return "🏠 No Tool Cupboards monitored.";
+
+        var lines = new System.Text.StringBuilder();
+        lines.AppendLine("🏠 **Upkeep Status:**");
+        foreach (var tc in tcs)
+        {
+            string label = tc.Alias ?? tc.Name ?? $"TC #{tc.EntityId}";
+            string upkeep = tc.StorageSummary;
+            string state = tc.IsMissing ? "❌ OFFLINE" : upkeep;
+            lines.AppendLine($"• **{label}**: {state}");
+        }
+        return lines.ToString().TrimEnd();
+    }
+
+    public string GetDiscordCommandListForDiscord()
+    {
+        var lines = new System.Text.StringBuilder();
+        lines.AppendLine("📋 **Available Bot Commands:**");
+        lines.AppendLine("• `/time` – Current server time");
+        lines.AppendLine("• `/pop` – Player count & queue");
+        lines.AppendLine("• `/heli` – Patrol Heli status");
+        lines.AppendLine("• `/cargo` – Cargo Ship status");
+        lines.AppendLine("• `/oilrig` – Oil Rig status");
+        lines.AppendLine("• `/deepsea` – Deep Sea event status");
+        lines.AppendLine("• `/vendor` – Travelling Vendor status");
+        lines.AppendLine("• `/upkeep` – Tool Cupboard upkeep details");
+        lines.AppendLine("• `/switch device:<name>` – Toggle a smart switch");
+        lines.AppendLine("• `/devicelist` – List all paired smart switches");
+        lines.AppendLine("• `/commands` – Show this list");
+        return lines.ToString().TrimEnd();
+    }
+
     private async Task ToggleCommandSwitch(RustPlusClientReal real, uint entityId, string author)
     {
         var profile = _vm.Selected;

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -138,6 +139,11 @@ namespace RustPlusDesk.Views
             BrdSupporterSettings.IsEnabled = connected && isPremium;
             BrdSupporterSettings.Opacity = (connected && isPremium) ? 1.0 : 0.5;
             BtnEmailConnect.Content = T("EmailAccountButton", "Email / Account");
+
+            if (connected && isPremium)
+            {
+                _ = LoadDiscordBotSettingsAsync();
+            }
         }
 
         private void CmbLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -474,6 +480,227 @@ namespace RustPlusDesk.Views
             }
             catch { }
             e.Handled = true;
+        }
+
+        private void BtnInviteDiscordBot_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "https://discord.com/oauth2/authorize?client_id=1511865399971545199&permissions=39584569300992&integration_type=0&scope=bot+applications.commands",
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                ParentWindow?.AppendLog($"[DiscordBot] Failed to open invite link: {ex.Message}");
+            }
+        }
+
+        private async void BtnSaveDiscordGuild_Click(object sender, RoutedEventArgs e)
+        {
+            if (Services.Auth.SupabaseAuthManager.Client == null) return;
+            var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            var steamId = vm?.SteamId64;
+            if (string.IsNullOrEmpty(steamId)) return;
+
+            var guildId = TxtDiscordGuildId.Text?.Trim();
+            if (string.IsNullOrEmpty(guildId))
+            {
+                MessageBox.Show("Please enter a valid Guild ID.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                BtnSaveDiscordGuild.IsEnabled = false;
+                var settings = new RustPlusDesk.Models.DiscordBotSettingsModel
+                {
+                    GuildId = guildId,
+                    OwnerSteamId = steamId,
+                    CommandsEnabled = ChkDiscordCommandsEnabled.IsChecked != false,
+                    AllowedCommandRoleIds = NormalizeDiscordRoleIds(TxtDiscordAllowedRoleIds.Text),
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+
+                await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.DiscordBotSettingsModel>().Upsert(settings);
+                MessageBox.Show("Discord Server linked successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                _ = LoadDiscordBotSettingsAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to link Discord Server: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnSaveDiscordGuild.IsEnabled = true;
+            }
+        }
+
+        private async void BtnSaveChannels_Click(object sender, RoutedEventArgs e)
+        {
+            if (Services.Auth.SupabaseAuthManager.Client == null) return;
+            var guildId = TxtDiscordGuildId.Text?.Trim();
+            if (string.IsNullOrEmpty(guildId))
+            {
+                MessageBox.Show("Please save a Discord Server ID first.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                BtnSaveChannels.IsEnabled = false;
+
+                await SaveDiscordCommandPermissionsAsync(guildId);
+
+                var existingRes = await Services.Auth.SupabaseAuthManager.Client
+                    .From<RustPlusDesk.Models.DiscordChannelsConfigModel>()
+                    .Filter("guild_id", Postgrest.Constants.Operator.Equals, guildId)
+                    .Get();
+
+                var existingList = existingRes.Models ?? new System.Collections.Generic.List<RustPlusDesk.Models.DiscordChannelsConfigModel>();
+
+                async Task SaveChannelAsync(string type, string channelId, bool tts, bool audio)
+                {
+                    if (string.IsNullOrWhiteSpace(channelId)) return;
+
+                    var model = existingList.FirstOrDefault(c => c.NotificationType == type) ?? new RustPlusDesk.Models.DiscordChannelsConfigModel
+                    {
+                        GuildId = guildId,
+                        NotificationType = type,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    model.ChannelId = channelId.Trim();
+                    model.TtsEnabled = tts;
+                    model.AudioAlertEnabled = audio;
+
+                    await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.DiscordChannelsConfigModel>().Upsert(model);
+                }
+
+                await SaveChannelAsync("raid", TxtChannelRaid.Text, ChkRaidTTS.IsChecked == true, ChkRaidAudio.IsChecked == true);
+                await SaveChannelAsync("events", TxtChannelEvents.Text, ChkEventsTTS.IsChecked == true, ChkEventsAudio.IsChecked == true);
+                await SaveChannelAsync("chat", TxtChannelChat.Text, ChkChatTTS.IsChecked == true, ChkChatAudio.IsChecked == true);
+
+                MessageBox.Show("Channels configuration saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to save channels: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnSaveChannels.IsEnabled = true;
+            }
+        }
+
+        private async Task LoadDiscordBotSettingsAsync()
+        {
+            if (Services.Auth.SupabaseAuthManager.Client == null || !Services.Auth.SupabaseAuthManager.IsPremium) return;
+
+            try
+            {
+                var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+                var steamId = vm?.SteamId64;
+                if (string.IsNullOrEmpty(steamId)) return;
+
+                var guildRes = await Services.Auth.SupabaseAuthManager.Client
+                    .From<RustPlusDesk.Models.DiscordBotSettingsModel>()
+                    .Filter("owner_steam_id", Postgrest.Constants.Operator.Equals, steamId)
+                    .Get();
+
+                var guildSetting = guildRes.Models?.FirstOrDefault();
+                if (guildSetting != null)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        TxtDiscordGuildId.Text = guildSetting.GuildId;
+                        ChkDiscordCommandsEnabled.IsChecked = guildSetting.CommandsEnabled;
+                        TxtDiscordAllowedRoleIds.Text = guildSetting.AllowedCommandRoleIds ?? string.Empty;
+                    });
+
+                    var channelsRes = await Services.Auth.SupabaseAuthManager.Client
+                        .From<RustPlusDesk.Models.DiscordChannelsConfigModel>()
+                        .Filter("guild_id", Postgrest.Constants.Operator.Equals, guildSetting.GuildId)
+                        .Get();
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        TxtChannelRaid.Text = string.Empty;
+                        ChkRaidTTS.IsChecked = ChkRaidAudio.IsChecked = false;
+                        TxtChannelEvents.Text = string.Empty;
+                        ChkEventsTTS.IsChecked = ChkEventsAudio.IsChecked = false;
+                        TxtChannelChat.Text = string.Empty;
+                        ChkChatTTS.IsChecked = ChkChatAudio.IsChecked = false;
+
+                        if (channelsRes.Models != null)
+                        {
+                            foreach (var ch in channelsRes.Models)
+                            {
+                                switch (ch.NotificationType)
+                                {
+                                    case "raid":
+                                        TxtChannelRaid.Text = ch.ChannelId;
+                                        ChkRaidTTS.IsChecked = ch.TtsEnabled;
+                                        ChkRaidAudio.IsChecked = ch.AudioAlertEnabled;
+                                        break;
+                                    case "events":
+                                        TxtChannelEvents.Text = ch.ChannelId;
+                                        ChkEventsTTS.IsChecked = ch.TtsEnabled;
+                                        ChkEventsAudio.IsChecked = ch.AudioAlertEnabled;
+                                        break;
+                                    case "chat":
+                                        TxtChannelChat.Text = ch.ChannelId;
+                                        ChkChatTTS.IsChecked = ch.TtsEnabled;
+                                        ChkChatAudio.IsChecked = ch.AudioAlertEnabled;
+                                        break;
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                ParentWindow?.AppendLog($"[DiscordBot] Error loading settings: {ex.Message}");
+            }
+        }
+
+        private static string NormalizeDiscordRoleIds(string? raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return string.Empty;
+
+            var ids = raw
+                .Split(new[] { ',', ';', ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(id => id.Trim())
+                .Where(id => id.All(char.IsDigit))
+                .Distinct()
+                .ToArray();
+
+            return string.Join(",", ids);
+        }
+
+        private async Task SaveDiscordCommandPermissionsAsync(string guildId)
+        {
+            var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            var steamId = vm?.SteamId64;
+            if (string.IsNullOrWhiteSpace(steamId)) return;
+
+            var settings = new RustPlusDesk.Models.DiscordBotSettingsModel
+            {
+                GuildId = guildId,
+                OwnerSteamId = steamId,
+                CommandsEnabled = ChkDiscordCommandsEnabled.IsChecked != false,
+                AllowedCommandRoleIds = NormalizeDiscordRoleIds(TxtDiscordAllowedRoleIds.Text),
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            await Services.Auth.SupabaseAuthManager.Client
+                .From<RustPlusDesk.Models.DiscordBotSettingsModel>()
+                .Upsert(settings);
         }
     }
 }
