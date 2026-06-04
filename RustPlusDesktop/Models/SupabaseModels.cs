@@ -22,8 +22,8 @@ namespace RustPlusDesk.Models
         [Column("overlay_data")]
         public string OverlayData { get; set; } // We can store the JSON string directly
 
-        [Column("created_at")]
-        public DateTime CreatedAt { get; set; }
+        [Column("created_at", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime? CreatedAt { get; set; }
 
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; }
@@ -45,8 +45,8 @@ namespace RustPlusDesk.Models
         [Column("device_data")]
         public string DeviceData { get; set; }
 
-        [Column("created_at")]
-        public DateTime CreatedAt { get; set; }
+        [Column("created_at", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime? CreatedAt { get; set; }
 
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; }
