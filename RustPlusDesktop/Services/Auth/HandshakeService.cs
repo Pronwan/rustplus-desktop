@@ -59,6 +59,30 @@ namespace RustPlusDesk.Services.Auth
             return (publicKeyB64, privateKeyPem);
         }
 
+        public static string GetClientHash()
+        {
+            try
+            {
+                var path = typeof(HandshakeService).Assembly.Location;
+                if (string.IsNullOrEmpty(path) || !System.IO.File.Exists(path))
+                {
+                    path = Environment.ProcessPath;
+                }
+
+                if (string.IsNullOrEmpty(path) || !System.IO.File.Exists(path))
+                    return "";
+
+                using var stream = new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite);
+                using var sha256 = SHA256.Create();
+                var hashBytes = sha256.ComputeHash(stream);
+                return Convert.ToHexString(hashBytes).ToLowerInvariant();
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
         public static string SignData(string privateKeyPem, string data)
         {
             using var rsa = RSA.Create();
@@ -77,14 +101,16 @@ namespace RustPlusDesk.Services.Auth
                 var (publicKeyB64, privateKeyPem) = GenerateKeyPair();
                 var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
                 var secretHex = DataManager.OVERLAY_SYNC_SECRET_HEX;
-                var hmacSig = DataManager.HmacSha256Hex(secretHex, $"{steamId}{timestamp}{publicKeyB64}");
+                var clientHash = GetClientHash();
+                var hmacSig = DataManager.HmacSha256Hex(secretHex, $"{steamId}{timestamp}{publicKeyB64}{clientHash}");
 
                 var payload = new
                 {
                     steam_id = steamId,
                     client_public_key = publicKeyB64,
                     hmac_signature = hmacSig,
-                    timestamp
+                    timestamp,
+                    client_hash = clientHash
                 };
 
                 var response = await CallEdgeFunctionAsync(payload);
@@ -130,14 +156,16 @@ namespace RustPlusDesk.Services.Auth
 
                 var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
                 var nonce = Guid.NewGuid().ToString("N");
-                var signature = SignData(keyStore.PrivateKeyPem, timestamp + nonce);
+                var clientHash = GetClientHash();
+                var signature = SignData(keyStore.PrivateKeyPem, timestamp + nonce + clientHash);
 
                 var payload = new
                 {
                     steam_id = keyStore.SteamId,
                     signature,
                     timestamp,
-                    nonce
+                    nonce,
+                    client_hash = clientHash
                 };
 
                 var response = await CallEdgeFunctionAsync(payload);
@@ -170,14 +198,16 @@ namespace RustPlusDesk.Services.Auth
             {
                 var (newPublicKeyB64, newPrivateKeyPem) = GenerateKeyPair();
                 var mnemonicBytes = Encoding.UTF8.GetBytes(mnemonic);
-                var recoverySig = HmacSha256Bytes(mnemonicBytes, steamId + newPublicKeyB64);
+                var clientHash = GetClientHash();
+                var recoverySig = HmacSha256Bytes(mnemonicBytes, steamId + newPublicKeyB64 + clientHash);
 
                 var payload = new
                 {
                     steam_id = steamId,
                     new_public_key = newPublicKeyB64,
                     recovery_signature = recoverySig,
-                    mnemonic_token = mnemonic
+                    mnemonic_token = mnemonic,
+                    client_hash = clientHash
                 };
 
                 var response = await CallEdgeFunctionAsync(payload);
