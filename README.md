@@ -48,6 +48,40 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
+
+# 🚀 Rust+ Desktop v6.0.0 - The Cloud & Intelligence Update!
+
+We are incredibly excited to announce our maybe biggest update ever! Version 6.0.0 (which includes all the great changes from our unreleased 5.5 update) brings a completely new Cloud Backend and Advanced Discord Integration to Rust+ Desktop.
+
+IMPORTANT: Rust+ Desktop remains completely FREE! We want to assure everyone that the app and its core features, including the new basic cloud features, are entirely free to use. We have simply restructured how data is synced to open the path for all the amazing new team features to come.
+
+Here is a quick breakdown of how the new tiers work:
+
+**🏠 1. Local Setup (No Account - FREE)**
+Your data stays 100% local on your PC. This is exactly how the app used to work if you were playing solo.
+
+❌ No Cloud Sync or Backups
+❌ No Device Sharing with teammates
+❌ No Web Portal Access
+
+**☁️ 2. Free Cloud Account (FREE)**
+By simply creating a free account via Email or Discord, you unlock our new cloud synchronization! This replaces the old "Free Version" and gives you:
+
+✔️ Device Sharing: Sync and share up to 10 smart devices across your team.
+✔️ Map Sharing: Share your map overlay (300 KB, 2 Bases, 1 Base-Screenshot).
+✔️ Basic Discord: Get basic webhook alerts sent straight to your Discord server.
+✔️ Web Portal Access: Manage your account via our new dashboard at rustplusdesktop.onrender.com/dashboard.
+
+**⭐ 3. Supporter Cloud**
+For clans, large groups, and power users, the Supporter Tier unlocks the ultimate Rust+ experience!
+
+🌟 Pro Map Sharing: Up to 3 MB of overlay data, 10 Bases, limitless devices and 5 Screenshots per base.
+🌟 Chat Master System: One person's client acts as the "Master" to prevent duplicate chat commands and raid alerts for the whole team. It intelligently hands off master status to another team member when the app is closed!
+🌟 Advanced Discord Bot: A bidirectional Discord Bot with custom command permissions, raid alerts, and event queries directly from your Discord server.
+🌟 Early Beta Access: Get early access to test versions via our Discord.
+
+Here's our new [Rust+ Cloud Dashboard](https://rustplusdesktop.onrender.com/) for free and Supporter Roles (you can also create an account or link discord through the app)
+
 # Rust+ Desktop v5.5.0: Custom Timers & Shop Overhaul 🚀
 Welcome to **v5.5.0**! This update introduces highly requested custom timers, a completely overhauled in-app shop, and several quality-of-life improvements for the mini map and death markers.
 
