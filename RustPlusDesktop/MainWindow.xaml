@@ -2925,7 +2925,7 @@
                                                              Tag="DiscordWebhook"
                                                              IsEnabled="{Binding IsCloudConnected}">
                                                              <MenuItem.Header>
-                                                                 <Grid Width="170">
+                                                                 <Grid HorizontalAlignment="Stretch" Margin="0,0,-10,0">
                                                                      <Grid.Resources>
                                                                          <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
                                                                      </Grid.Resources>
@@ -2933,7 +2933,7 @@
                                                                          <ColumnDefinition Width="*" />
                                                                          <ColumnDefinition Width="Auto" />
                                                                      </Grid.ColumnDefinitions>
-                                                                     <StackPanel Grid.Column="0">
+                                                                     <StackPanel Grid.Column="0" Margin="0,0,10,0">
                                                                          <TextBlock Text="Discord Webhook" />
                                                                          <TextBlock Text="Chat Alerts -&gt; Discord" FontSize="10" FontStyle="Italic" Foreground="{DynamicResource TextSubtle}" Opacity="0.8" />
                                                                      </StackPanel>
@@ -2942,13 +2942,13 @@
                                                              </MenuItem.Header>
                                                          </MenuItem>
                                                          
-                                                         <StackPanel Margin="18,4,8,8" IsEnabled="{Binding IsCloudConnected}">
+                                                         <StackPanel Margin="-28,4,0,8" IsEnabled="{Binding IsCloudConnected}">
                                                              <StackPanel.Resources>
                                                                  <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
                                                              </StackPanel.Resources>
                                                              <TextBox
                                                                  Height="24"
-                                                                 Width="170"
+                                                                 Width="195"
                                                                  HorizontalAlignment="Left"
                                                                  VerticalAlignment="Center"
                                                                  Background="#1AFFFFFF"
@@ -2958,7 +2958,7 @@
                                                                  Padding="4,2"
                                                                  IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
                                                                  Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                             <ui:ToggleSwitch Content="TTS (Text-To-Speech)" IsChecked="{Binding Selected.DiscordWebhookChatAlertsTts, Mode=TwoWay}" Margin="0,6,0,0" Foreground="{DynamicResource TextPrimary}" ToolTip="Read alerts aloud via Discord TTS" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
+                                                             <ui:ToggleSwitch Content="TTS" IsChecked="{Binding Selected.DiscordWebhookChatAlertsTts, Mode=TwoWay}" Margin="0,6,0,0" Foreground="{DynamicResource TextPrimary}" ToolTip="Read alerts aloud via Discord TTS" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
                                                          </StackPanel>
                                                      </MenuItem>
                                                  </ContextMenu>
