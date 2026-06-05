@@ -531,7 +531,6 @@ namespace RustPlusDesk.Services.Auth
                 {
                     if (Application.Current.MainWindow is RustPlusDesk.Views.MainWindow mainWin)
                     {
-                        // Access the _vm or SteamId64 directly from MainWindow
                         var prop = mainWin.GetType().GetField("_vm", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
                         if (prop != null)
                         {
@@ -553,69 +552,102 @@ namespace RustPlusDesk.Services.Auth
                 AppendLog("[Cloud/Debug] No valid SteamID64 available yet to sync user profile.");
                 return;
             }
-            
+
+            // ── Step 1: Direct read (works when user_id already matches the caller) ──
+            AppendLog($"[Cloud/Debug] Querying user profile for SteamID: {steamId}");
+            RustPlusDesk.Models.UserProfileModel existingProfile = null;
             try
             {
-                AppendLog($"[Cloud/Debug] Querying user profile for SteamID: {steamId}");
-                var response = await Client.From<RustPlusDesk.Models.UserProfileModel>()
+                existingProfile = await Client.From<RustPlusDesk.Models.UserProfileModel>()
                     .Filter("steam_id", Postgrest.Constants.Operator.Equals, steamId)
                     .Single();
-                
-                if (response != null)
-                {
-                    CurrentTier = response.SubscriptionTier ?? "free";
-                    IsPremium = response.IsManualSupporter || (CurrentTier != "free" && !string.Equals(CurrentTier, "guest", StringComparison.OrdinalIgnoreCase));
-                    AppendLog($"[Cloud/Debug] Found existing profile. Tier: {CurrentTier} (IsPremium: {IsPremium})");
-                    await FetchTierLimitsAsync();
-                    await TouchProfileAsync(steamId, discordId);
-                }
-                else
-                {
-                    var newProfile = new RustPlusDesk.Models.UserProfileModel
-                    {
-                        SteamId = steamId,
-                        UserId = Client.Auth.CurrentUser?.Id,
-                        DiscordId = discordId,
-                        DiscordName = Client.Auth.CurrentUser?.UserMetadata?.ContainsKey("full_name") == true ? Client.Auth.CurrentUser.UserMetadata["full_name"]?.ToString() : null,
-                        SubscriptionTier = "free",
-                        SyncAccepted = TrackingService.CloudSyncEnabled,
-                        LastActiveAt = DateTime.UtcNow,
-                        IsOnline = true
-                    };
-                    AppendLog($"[Cloud/Debug] No profile found. Creating new user profile for SteamId={steamId}, DiscordId={discordId}");
-                    await Client.From<RustPlusDesk.Models.UserProfileModel>().Insert(newProfile);
-                    CurrentTier = "free";
-                    IsPremium = false;
-                    AppendLog("[Cloud] Created new user profile row in database successfully.");
-                }
             }
-            catch (Exception ex)
+            catch
             {
-                AppendLog($"[Cloud/Debug] Profile query error, attempting to insert new profile: {ex.Message}");
-                try
+                // Single() throws when RLS hides the row (profile owned by a ghost guest user_id).
+                // existingProfile stays null — handled below.
+            }
+
+            if (existingProfile != null)
+            {
+                CurrentTier = existingProfile.SubscriptionTier ?? "free";
+                IsPremium = existingProfile.IsManualSupporter || (CurrentTier != "free" && !string.Equals(CurrentTier, "guest", StringComparison.OrdinalIgnoreCase));
+                AppendLog($"[Cloud/Debug] Found existing profile. Tier: {CurrentTier} (IsPremium: {IsPremium})");
+                await FetchTierLimitsAsync();
+                await TouchProfileAsync(steamId, discordId);
+                return;
+            }
+
+            // ── Step 2: Profile hidden by RLS — claim via secure SECURITY DEFINER RPC ──
+            // A previous guest handshake linked the profile to a ghost auth user (steamId@rustplus.local).
+            // The RPC re-links user_id + discord_id to this real Discord/Email session.
+            AppendLog($"[Cloud/Debug] Profile not visible via RLS. Attempting claim_user_profile RPC for SteamId={steamId}");
+            try
+            {
+                var rpcArgs = new System.Collections.Generic.Dictionary<string, object?>
                 {
-                    var newProfile = new RustPlusDesk.Models.UserProfileModel
+                    ["p_steam_id"] = steamId
+                };
+                var claimResult = await Client.Rpc("claim_user_profile", rpcArgs);
+
+                if (!string.IsNullOrWhiteSpace(claimResult?.Content)
+                    && claimResult.Content != "[]"
+                    && claimResult.Content != "null")
+                {
+                    using var doc = JsonDocument.Parse(claimResult.Content);
+                    var root = doc.RootElement;
+                    JsonElement row = default;
+                    bool hasRow = false;
+
+                    if (root.ValueKind == JsonValueKind.Array && root.GetArrayLength() > 0)
+                    { row = root[0]; hasRow = true; }
+                    else if (root.ValueKind == JsonValueKind.Object)
+                    { row = root; hasRow = true; }
+
+                    if (hasRow)
                     {
-                        SteamId = steamId,
-                        UserId = Client.Auth.CurrentUser?.Id,
-                        DiscordId = discordId,
-                        DiscordName = Client.Auth.CurrentUser?.UserMetadata?.ContainsKey("full_name") == true ? Client.Auth.CurrentUser.UserMetadata["full_name"]?.ToString() : null,
-                        SubscriptionTier = "free",
-                        SyncAccepted = TrackingService.CloudSyncEnabled,
-                        LastActiveAt = DateTime.UtcNow,
-                        IsOnline = true
-                    };
-                    await Client.From<RustPlusDesk.Models.UserProfileModel>().Insert(newProfile);
-                    CurrentTier = "free";
-                    IsPremium = false;
-                    AppendLog("[Cloud] Inserted new user profile row successfully.");
+                        CurrentTier = row.TryGetProperty("subscription_tier", out var tierEl) ? tierEl.GetString() ?? "free" : "free";
+                        var isManual = row.TryGetProperty("is_manual_supporter", out var manualEl) && manualEl.GetBoolean();
+                        IsPremium = isManual || (CurrentTier != "free" && !string.Equals(CurrentTier, "guest", StringComparison.OrdinalIgnoreCase));
+                        AppendLog($"[Cloud] Claimed guest profile — linked to Discord/Email. Tier: {CurrentTier} (IsPremium: {IsPremium})");
+                        await FetchTierLimitsAsync();
+                        await TouchProfileAsync(steamId, discordId);
+                        return;
+                    }
                 }
-                catch (Exception insertEx)
+                AppendLog("[Cloud/Debug] claim_user_profile returned empty — profile does not exist. Will create.");
+            }
+            catch (Exception claimEx)
+            {
+                AppendLog($"[Cloud/Debug] claim_user_profile RPC error: {claimEx.Message}. Will attempt fresh insert.");
+            }
+
+            // ── Step 3: Profile genuinely does not exist — insert fresh ──
+            try
+            {
+                var newProfile = new RustPlusDesk.Models.UserProfileModel
                 {
-                    AppendLog($"[Cloud/Error] Failed to create new user profile: {insertEx.Message}");
-                }
+                    SteamId = steamId,
+                    UserId = Client.Auth.CurrentUser?.Id,
+                    DiscordId = discordId,
+                    DiscordName = Client.Auth.CurrentUser?.UserMetadata?.ContainsKey("full_name") == true ? Client.Auth.CurrentUser.UserMetadata["full_name"]?.ToString() : null,
+                    SubscriptionTier = "free",
+                    SyncAccepted = TrackingService.CloudSyncEnabled,
+                    LastActiveAt = DateTime.UtcNow,
+                    IsOnline = true
+                };
+                AppendLog($"[Cloud/Debug] No profile found. Creating new user profile for SteamId={steamId}, DiscordId={discordId}");
+                await Client.From<RustPlusDesk.Models.UserProfileModel>().Insert(newProfile);
+                CurrentTier = "free";
+                IsPremium = false;
+                AppendLog("[Cloud] Created new user profile row in database successfully.");
+            }
+            catch (Exception insertEx)
+            {
+                AppendLog($"[Cloud/Error] Failed to create new user profile: {insertEx.Message}");
             }
         }
+
 
         public static async Task SyncDiscordRolesAsync()
         {
