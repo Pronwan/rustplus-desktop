@@ -820,7 +820,7 @@ namespace RustPlusDesk.Services.Auth
         /// Attempt guest handshake auth when no Discord session is available.
         /// Uses stored JWT if valid, refreshes if expired, or registers a new keypair.
         /// </summary>
-        private static async Task TryInitializeGuestAuthAsync()
+        public static async Task TryInitializeGuestAuthAsync()
         {
             try
             {

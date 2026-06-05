@@ -2583,6 +2583,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 // Persist SteamId into the FCM config file so future launches read it
                 TrackingService.PatchFcmConfigSteamId(e.SteamId64);
                 HydrateSteamUiFromStorage();
+                
+                // Immediately attempt guest registration if not logged in
+                _ = RustPlusDesk.Services.Auth.SupabaseAuthManager.TryInitializeGuestAuthAsync();
             }
 
             bool datesChanged = false;
