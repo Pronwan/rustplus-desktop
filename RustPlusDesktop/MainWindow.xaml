@@ -2925,7 +2925,7 @@
                                                              Tag="DiscordWebhook"
                                                              IsEnabled="{Binding IsCloudConnected}">
                                                              <MenuItem.Header>
-                                                                 <Grid HorizontalAlignment="Stretch" Margin="0,0,-10,0">
+                                                                 <Grid HorizontalAlignment="Stretch" Margin="0,0,-10,0" MinWidth="180">
                                                                      <Grid.Resources>
                                                                          <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
                                                                      </Grid.Resources>
@@ -2948,7 +2948,7 @@
                                                              </StackPanel.Resources>
                                                              <TextBox
                                                                  Height="24"
-                                                                 Width="195"
+                                                                 Width="175"
                                                                  HorizontalAlignment="Left"
                                                                  VerticalAlignment="Center"
                                                                  Background="#1AFFFFFF"
