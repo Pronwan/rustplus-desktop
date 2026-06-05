@@ -246,7 +246,7 @@
                           IsEnabled="{Binding IsCloudConnected}">
                     <StackPanel Margin="0,8,0,0">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                            <TextBlock Text="Discord Webhook (Chat Alerts)" Width="175" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Text="Discord Webhook (Chat Alerts)" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Margin="0,0,8,0" />
                             <ui:Button x:Name="BtnClearSettingsWebhook" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearSettingsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" BorderThickness="0" Padding="4,0" Margin="0,0,4,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" />
                             <TextBox Width="130" Margin="0,0,4,0" Height="24" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="4,2" 
                                      IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
