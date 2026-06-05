@@ -776,15 +776,17 @@ namespace RustPlusDesk.Services.Auth
 
             try
             {
-                var teamJson = JsonSerializer.Serialize(teamMembers);
-                var teamCount = teamMembers.Count;
+                var teamJson = TrackingService.CloudSyncEnabled ? JsonSerializer.Serialize(teamMembers) : "[]";
+                var teamCount = TrackingService.CloudSyncEnabled ? teamMembers.Count : 0;
+                var srvKey = TrackingService.CloudSyncEnabled ? (serverKey ?? "") : "";
+                var srvName = TrackingService.CloudSyncEnabled ? (serverName ?? "") : "";
 
                 await Client.From<RustPlusDesk.Models.UserProfileModel>()
                     .Filter("steam_id", Postgrest.Constants.Operator.Equals, steamId)
                     .Set(x => x.LastActiveAt, DateTime.UtcNow)
                     .Set(x => x.IsOnline, true)
-                    .Set(x => x.CurrentServerKey, serverKey ?? "")
-                    .Set(x => x.CurrentServerName, serverName ?? "")
+                    .Set(x => x.CurrentServerKey, srvKey)
+                    .Set(x => x.CurrentServerName, srvName)
                     .Set(x => x.TeamMemberCount, teamCount)
                     .Set(x => x.TeamMembersJson, teamJson)
                     .Update();
