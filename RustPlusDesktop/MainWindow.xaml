@@ -2924,6 +2924,9 @@
                                                              Style="{StaticResource DarkMenuItem}"
                                                              Tag="DiscordWebhook"
                                                              IsEnabled="{Binding IsCloudConnected}">
+                                                             <MenuItem.Resources>
+                                                                 <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
+                                                             </MenuItem.Resources>
                                                              <MenuItem.Header>
                                                                  <Grid Width="170">
                                                                      <Grid.ColumnDefinitions>
@@ -2940,9 +2943,6 @@
                                                          </MenuItem>
                                                          
                                                          <StackPanel Margin="18,4,8,8" IsEnabled="{Binding IsCloudConnected}">
-                                                             <StackPanel.Resources>
-                                                                 <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
-                                                             </StackPanel.Resources>
                                                              <TextBox
                                                                  Height="24"
                                                                  Width="170"
