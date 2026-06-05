@@ -606,7 +606,18 @@ namespace RustPlusDesk.Views
 
                 async Task SaveChannelAsync(string type, string channelId, bool tts, bool audio)
                 {
-                    if (string.IsNullOrWhiteSpace(channelId)) return;
+                    if (string.IsNullOrWhiteSpace(channelId))
+                    {
+                        var modelToDelete = existingList.FirstOrDefault(c => c.NotificationType == type);
+                        if (modelToDelete != null)
+                        {
+                            await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.DiscordChannelsConfigModel>()
+                                .Filter("guild_id", Postgrest.Constants.Operator.Equals, guildId)
+                                .Filter("notification_type", Postgrest.Constants.Operator.Equals, type)
+                                .Delete();
+                        }
+                        return;
+                    }
 
                     var model = existingList.FirstOrDefault(c => c.NotificationType == type) ?? new RustPlusDesk.Models.DiscordChannelsConfigModel
                     {
