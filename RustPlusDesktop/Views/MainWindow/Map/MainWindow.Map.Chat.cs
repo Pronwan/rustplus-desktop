@@ -107,7 +107,7 @@ public partial class MainWindow
                 try
                 {
                     string serverName = _vm.Selected.Name ?? "Rust Server";
-                    var payload = new { content = $"**[{serverName}]** {text}" };
+                    var payload = new { content = $"**[{serverName}]** {text}", tts = _vm.Selected.DiscordWebhookChatAlertsTts };
                     var json = System.Text.Json.JsonSerializer.Serialize(payload);
                     using var content = new System.Net.Http.StringContent(json, System.Text.Encoding.UTF8, "application/json");
                     using var client = new System.Net.Http.HttpClient();

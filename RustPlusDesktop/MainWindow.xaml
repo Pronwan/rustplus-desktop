@@ -2951,7 +2951,8 @@
                                                                  Padding="4,2"
                                                                  IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
                                                                  Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                             <ui:Button x:Name="BtnClearChatAlertsWebhook" Grid.Column="1" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" Margin="4,0,0,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" />
+                                                             <CheckBox Grid.Column="1" Content="TTS" IsChecked="{Binding Selected.DiscordWebhookChatAlertsTts, Mode=TwoWay}" Margin="6,0,0,0" Foreground="{DynamicResource TextPrimary}" ToolTip="Text-To-Speech for Webhook" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
+                                                             <ui:Button x:Name="BtnClearChatAlertsWebhook" Grid.Column="2" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" Margin="4,0,0,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" />
                                                          </Grid>
                                                      </MenuItem>
                                                  </ContextMenu>
