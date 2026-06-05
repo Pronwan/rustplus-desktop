@@ -541,7 +541,24 @@ namespace RustPlusDesk.Views
             var guildId = TxtDiscordGuildId.Text?.Trim();
             if (string.IsNullOrEmpty(guildId))
             {
-                MessageBox.Show("Please enter a valid Guild ID.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                try
+                {
+                    BtnSaveDiscordGuild.IsEnabled = false;
+                    await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.DiscordBotSettingsModel>()
+                        .Filter("owner_steam_id", Postgrest.Constants.Operator.Equals, steamId)
+                        .Delete();
+                    
+                    MessageBox.Show("Discord Server unlinked successfully. The bot will no longer interact with your server.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _ = LoadDiscordBotSettingsAsync();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to unlink Discord Server: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    BtnSaveDiscordGuild.IsEnabled = true;
+                }
                 return;
             }
 
