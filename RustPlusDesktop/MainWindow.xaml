@@ -2925,20 +2925,16 @@
                                                              Tag="DiscordWebhook"
                                                              IsEnabled="{Binding IsCloudConnected}">
                                                              <MenuItem.Header>
-                                                                 <Grid HorizontalAlignment="Stretch" Margin="0,0,-10,0" MinWidth="180">
-                                                                     <Grid.Resources>
+                                                                 <DockPanel Width="195">
+                                                                     <DockPanel.Resources>
                                                                          <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
-                                                                     </Grid.Resources>
-                                                                     <Grid.ColumnDefinitions>
-                                                                         <ColumnDefinition Width="*" />
-                                                                         <ColumnDefinition Width="Auto" />
-                                                                     </Grid.ColumnDefinitions>
-                                                                     <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                                                     </DockPanel.Resources>
+                                                                     <ui:Button x:Name="BtnClearChatAlertsWebhook" DockPanel.Dock="Right" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" Margin="10,0,0,0" />
+                                                                     <StackPanel VerticalAlignment="Center">
                                                                          <TextBlock Text="Discord Webhook" />
                                                                          <TextBlock Text="Chat Alerts -&gt; Discord" FontSize="10" FontStyle="Italic" Foreground="{DynamicResource TextSubtle}" Opacity="0.8" />
                                                                      </StackPanel>
-                                                                     <ui:Button x:Name="BtnClearChatAlertsWebhook" Grid.Column="1" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
-                                                                 </Grid>
+                                                                 </DockPanel>
                                                              </MenuItem.Header>
                                                          </MenuItem>
                                                          

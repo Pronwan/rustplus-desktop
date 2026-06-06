@@ -336,6 +336,19 @@
                                     <CheckBox x:Name="ChkChatAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" />
                                 </Grid>
 
+                                <!-- Shop Alerts Channel -->
+                                <TextBlock Text="Shop Alerts Channel ID" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,4,0,2" />
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="TxtChannelShop" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
+                                    <CheckBox x:Name="ChkShopTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                    <CheckBox x:Name="ChkShopAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                </Grid>
+
                                 <ui:Button x:Name="BtnSaveChannels" Content="Save Channels Config" Appearance="Primary" HorizontalAlignment="Stretch" Height="30" Click="BtnSaveChannels_Click" />
                             </StackPanel>
                         </Expander>

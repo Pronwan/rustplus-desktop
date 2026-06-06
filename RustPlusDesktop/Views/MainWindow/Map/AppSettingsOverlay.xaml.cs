@@ -653,6 +653,7 @@ namespace RustPlusDesk.Views
                 await SaveChannelAsync("raid", TxtChannelRaid.Text, ChkRaidTTS.IsChecked == true, ChkRaidAudio.IsChecked == true);
                 await SaveChannelAsync("events", TxtChannelEvents.Text, ChkEventsTTS.IsChecked == true, ChkEventsAudio.IsChecked == true);
                 await SaveChannelAsync("chat", TxtChannelChat.Text, ChkChatTTS.IsChecked == true, ChkChatAudio.IsChecked == true);
+                await SaveChannelAsync("shop", TxtChannelShop.Text, ChkShopTTS.IsChecked == true, ChkShopAudio.IsChecked == true);
 
                 MessageBox.Show("Channels configuration saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -725,6 +726,11 @@ namespace RustPlusDesk.Views
                                         TxtChannelChat.Text = ch.ChannelId;
                                         ChkChatTTS.IsChecked = ch.TtsEnabled;
                                         ChkChatAudio.IsChecked = ch.AudioAlertEnabled;
+                                        break;
+                                    case "shop":
+                                        TxtChannelShop.Text = ch.ChannelId;
+                                        ChkShopTTS.IsChecked = ch.TtsEnabled;
+                                        ChkShopAudio.IsChecked = ch.AudioAlertEnabled;
                                         break;
                                 }
                             }

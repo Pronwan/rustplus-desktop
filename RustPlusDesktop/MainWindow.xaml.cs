@@ -681,7 +681,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             Dispatcher.InvokeAsync(async () =>
             {
                 var msg = string.Format(Properties.Resources.AlertOilRigTriggered, rigName, timeStr);
-                await SendTeamChatSafeAsync(msg);
+                await SendTeamChatSafeAsync(msg, false, true);
                 _ = DiscordBotListenerService.Instance.SendNotificationAsync("events", "\uD83D\uDEA2 **Event:** " + msg);
             });
         };
@@ -692,7 +692,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
             Dispatcher.InvokeAsync(async () =>
             {
-                await SendTeamChatSafeAsync(message);
+                await SendTeamChatSafeAsync(message, false, true);
                 _ = DiscordBotListenerService.Instance.SendNotificationAsync("events", "\uD83D\uDEA2 **Event Update:** " + message);
             });
         };
@@ -2158,7 +2158,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (TrackingService.AnnounceSmartAlerts && _announceSpawns)
         {
             string alarmName = dev?.PureName ?? (!string.IsNullOrEmpty(n.DeviceName) ? n.DeviceName : "Smart Alarm");
-            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertAlarmTriggered, alarmName));
+            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertAlarmTriggered, alarmName), false, true);
         }
 
         if (dev != null)
@@ -4364,7 +4364,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert: {msg}");
 
                 if (rule.NotifyChat)
-                    await SendTeamChatSafeAsync(msg);
+                    await SendTeamChatSafeAsync(msg, false, true);
+                
+                _ = DiscordBotListenerService.Instance.SendNotificationAsync("shop", $"🛒 **Trade Alert:** {msg}");
 
                 if (rule.NotifySound)
                     PlayShopAlertSound();

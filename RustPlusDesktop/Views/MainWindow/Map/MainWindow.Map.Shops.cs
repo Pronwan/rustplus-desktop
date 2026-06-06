@@ -50,7 +50,7 @@ public partial class MainWindow
                     _deepSeaMidEvent = false;
                     string dir = GetDeepSeaDirection(deepSeaShop.X, deepSeaShop.Y);
                     if (_announceSpawns && TrackingService.AnnounceDeepSea)
-                        _ = SendTeamChatSafeAsync(Properties.Resources.AlertDeepSeaUp);
+                        _ = SendTeamChatSafeAsync(Properties.Resources.AlertDeepSeaUp, false, true);
                     AppendLog($"[DEEPSEA] Spawn detected at {deepSeaShop.X:F0},{deepSeaShop.Y:F0} (Direction: {dir})");
                 }
                 else
@@ -294,7 +294,8 @@ public partial class MainWindow
             string shopName = s.Label ?? Properties.Resources.ShopWord;
             string msg = string.Format(Properties.Resources.AlertNewShop, shopName, GetGridLabel(s), offersShort);
             AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert [new shop] {shopName} [{GetGridLabel(s)}]: {offersShort}");
-            await SendTeamChatSafeAsync(msg);
+            await SendTeamChatSafeAsync(msg, false, true);
+            _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("shop", $"🛒 **New Shop:** {msg}");
         }
     }
 
@@ -386,7 +387,8 @@ public partial class MainWindow
                             string msg = string.Format(Properties.Resources.AlertSuspiciousShop, snapShopName, GetGridLabel(snap), Math.Round(lived.TotalSeconds), firstFew);
 
                             life.AnnouncedSuspicious = true; // Set BEFORE sending to prevent race condition spam
-                            _ = SendTeamChatSafeAsync(msg);
+                            _ = SendTeamChatSafeAsync(msg, false, true);
+                            _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("shop", $"🚨 **Suspicious Shop Offline:** {msg}");
                         }
                     }
                 }
