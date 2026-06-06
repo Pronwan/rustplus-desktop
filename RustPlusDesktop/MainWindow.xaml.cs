@@ -2034,13 +2034,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
 
         SmartDevice? dev = null;
+        ServerProfile? alarmProfile = null;
         if (n.EntityId.HasValue)
         {
             uint eid = n.EntityId.Value;
             foreach (var profile in _vm.Servers)
             {
                 dev = FindDeviceById(profile.Devices, eid);
-                if (dev != null) break;
+                if (dev != null)
+                {
+                    alarmProfile = profile;
+                    break;
+                }
             }
         }
 
@@ -2055,6 +2060,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (profile != null)
             {
+                alarmProfile = profile;
                 var serverAlarms = profile.Devices.Where(d => d.Kind == "SmartAlarm").ToList();
                 if (serverAlarms.Count == 1)
                 {
@@ -2071,6 +2077,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (allAlarms.Count == 1)
                 {
                     dev = allAlarms[0];
+                    alarmProfile = _vm.Servers.FirstOrDefault(p => FindDeviceById(p.Devices, dev.EntityId) != null);
                     n = n with { EntityId = dev.EntityId };
                     AppendLog($"[alarm/debug] ({source}) Fuzzy matched single global alarm device: {dev.Name} (ID: {dev.EntityId})");
                 }
@@ -2094,7 +2101,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _alarmMetadataCache[tid.Value] = (n.DeviceName, n.Message);
                 if (dev == null)
                 {
-                    foreach (var profile in _vm.Servers) { dev = FindDeviceById(profile.Devices, tid.Value); if (dev != null) break; }
+                    foreach (var profile in _vm.Servers)
+                    {
+                        dev = FindDeviceById(profile.Devices, tid.Value);
+                        if (dev != null)
+                        {
+                            alarmProfile = profile;
+                            break;
+                        }
+                    }
                 }
                 if (dev != null) dev.LastAlarmMessage = n.Message;
             }
@@ -2152,10 +2167,22 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         PlayAlarmAudio(dev);
 
         // Send smart alert to Discord Bot
-        _ = DiscordBotListenerService.Instance.SendNotificationAsync("raid", $"\uD83D\uDEA8 **{dev?.PureName ?? n.DeviceName ?? "Smart Alarm"}**: {n.Message}");
+        alarmProfile ??= _vm.Servers.FirstOrDefault(p =>
+            string.Equals(CleanServerName(p.Name), cleanSrv, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(p.Host, cleanSrv, StringComparison.OrdinalIgnoreCase));
+        var raidServerKey = alarmProfile == null ? "" : $"{alarmProfile.Host}-{alarmProfile.Port}";
+        var raidOwnerSteamId = !string.IsNullOrWhiteSpace(_vm.SteamId64)
+            ? _vm.SteamId64
+            : alarmProfile?.SteamId64 ?? "";
+        _ = DiscordBotListenerService.Instance.SendRaidNotificationAsync(
+            raidServerKey,
+            raidOwnerSteamId,
+            $"\uD83D\uDEA8 **{dev?.PureName ?? n.DeviceName ?? "Smart Alarm"}**: {n.Message}");
 
         // Send smart alert to team chat if setting and master switch are enabled
-        if (TrackingService.AnnounceSmartAlerts && _announceSpawns)
+        if (_vm.Selected?.IsFullConnected == true
+            && TrackingService.AnnounceSmartAlerts
+            && _announceSpawns)
         {
             string alarmName = dev?.PureName ?? (!string.IsNullOrEmpty(n.DeviceName) ? n.DeviceName : "Smart Alarm");
             _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertAlarmTriggered, alarmName), false, true);
@@ -2265,6 +2292,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             UpdateAlarmOverlayUi();
             if (AlarmOverlayAutoHideChk.IsChecked == true) RestartAlarmOverlayTimer();
         }
+    }
+
+    private static string CleanServerName(string? serverName)
+    {
+        var clean = Regex.Replace(serverName ?? "", @"\x1B\[[0-9;]*[A-Za-z]", "");
+        return Regex.Replace(clean, @"\[/?[a-zA-Z]+\]", "").Trim();
     }
 
     private void AlarmOverlayNext_Click(object sender, RoutedEventArgs e)
