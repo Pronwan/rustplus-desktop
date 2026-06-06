@@ -328,6 +328,13 @@ public class ServerProfile : INotifyPropertyChanged
         set { _timerAlarmAudioPath = value; OnProp(); }
     }
 
+    private string? _timerCountdownAudioPath;
+    public string? TimerCountdownAudioPath
+    {
+        get => _timerCountdownAudioPath;
+        set { _timerCountdownAudioPath = value; OnProp(); }
+    }
+
     private int _timerAlarmSnoozeMinutes = 5;
     public int TimerAlarmSnoozeMinutes
     {
@@ -480,6 +487,12 @@ public class CustomTimer : INotifyPropertyChanged
     private DateTime _endTimeUtc;
     public DateTime EndTimeUtc { get => _endTimeUtc; set { _endTimeUtc = value; OnProp(); } }
 
+    private bool _enableCountdownAudio = true;
+    public bool EnableCountdownAudio { get => _enableCountdownAudio; set { _enableCountdownAudio = value; OnProp(); } }
+
+    private bool _enableAlarmAudio = false;
+    public bool EnableAlarmAudio { get => _enableAlarmAudio; set { _enableAlarmAudio = value; OnProp(); } }
+
     [JsonIgnore]
     public string RemainingTimeText 
     {
@@ -502,6 +515,8 @@ public class CustomTimer : INotifyPropertyChanged
     public bool Notified30 { get; set; }
     public bool Notified10 { get; set; }
     public bool Notified3 { get; set; }
+    [JsonIgnore]
+    public bool CountdownAudioPlayed { get; set; }
     [JsonIgnore]
     public bool AlarmPlayed { get; set; }
     [JsonIgnore]

@@ -83,7 +83,9 @@ public partial class MainWindow
             Notified60 = totalMins <= 60,
             Notified30 = totalMins <= 30,
             Notified10 = totalMins <= 10,
-            Notified3 = totalMins <= 3
+            Notified3 = totalMins <= 3,
+            EnableCountdownAudio = TglAddTimerCountdown.IsChecked == true,
+            EnableAlarmAudio = TglAddTimerAlarm.IsChecked == true
         };
 
         _vm.Selected.CustomTimers.Add(timer);
@@ -135,24 +137,26 @@ public partial class MainWindow
             timer.EndTimeUtc = timer.EndTimeUtc;
             timer.RefreshRemainingTime(); 
 
-            if (remaining.TotalSeconds <= 0)
+            if (remaining.TotalSeconds <= -60)
             {
-                if (timer.SnoozedUntilUtc.HasValue)
+                toRemove.Add(timer);
+                continue;
+            }
+
+            if (remaining.TotalSeconds <= 60 && remaining.TotalSeconds > 0)
+            {
+                if (!timer.CountdownAudioPlayed)
                 {
-                    if (timer.AutoDeleteAtUtc.HasValue && now >= timer.AutoDeleteAtUtc.Value)
+                    timer.CountdownAudioPlayed = true;
+                    if (timer.EnableCountdownAudio)
                     {
-                        toRemove.Add(timer);
-                    }
-                    else if (now >= timer.SnoozedUntilUtc.Value)
-                    {
-                        timer.SnoozedUntilUtc = now.AddMinutes(_vm.Selected.TimerAlarmSnoozeMinutes);
-                        timer.AutoDeleteAtUtc = now.AddMinutes(1);
-                        PlayTimerAlarm();
+                        PlayTimerAudio(true);
                         ShowTimerExpiredSnackbar(timer.Name);
                     }
-                    continue;
                 }
-
+            }
+            else if (remaining.TotalSeconds <= 0)
+            {
                 if (_vm.Selected.AlertCustomTimer && remaining.TotalSeconds >= -60 && !timer.AlarmPlayed)
                 {
                     string msg = $"{timer.Name}: 00:00";
@@ -162,20 +166,12 @@ public partial class MainWindow
                 if (!timer.AlarmPlayed)
                 {
                     timer.AlarmPlayed = true;
-                    PlayTimerAlarm();
-                    ShowTimerExpiredSnackbar(timer.Name);
-
-                    if (_vm.Selected.TimerAlarmSnoozeMinutes > 0)
+                    if (timer.EnableAlarmAudio)
                     {
-                        timer.SnoozedUntilUtc = now.AddMinutes(_vm.Selected.TimerAlarmSnoozeMinutes);
-                        timer.AutoDeleteAtUtc = now.AddMinutes(1);
-                    }
-                    else
-                    {
-                        toRemove.Add(timer);
+                        PlayTimerAudio(false);
+                        ShowTimerExpiredSnackbar(timer.Name);
                     }
                 }
-                continue;
             }
 
             if (remaining.TotalMinutes < 5)
@@ -265,7 +261,7 @@ public partial class MainWindow
         }
     }
 
-    public void StopTimerAlarm()
+    public void StopTimerAudio()
     {
         Dispatcher.Invoke(() =>
         {
@@ -282,22 +278,33 @@ public partial class MainWindow
         });
     }
 
-    private async void PlayTimerAlarm()
+    private async void PlayTimerAudio(bool isCountdown)
     {
-        if (_vm.Selected == null || !_vm.Selected.TimerAlarmEnabled) return;
+        if (_vm.Selected == null) return;
 
         try
         {
             string audioFile;
 
-            if (!string.IsNullOrWhiteSpace(_vm.Selected.TimerAlarmAudioPath))
+            if (isCountdown)
             {
-                audioFile = _vm.Selected.TimerAlarmAudioPath;
+                if (!string.IsNullOrWhiteSpace(_vm.Selected.TimerCountdownAudioPath))
+                    audioFile = _vm.Selected.TimerCountdownAudioPath;
+                else
+                {
+                    string baseDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
+                    audioFile = System.IO.Path.Combine(baseDir, "Assets", "1min.mp3");
+                }
             }
             else
             {
-                string baseDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
-                audioFile = System.IO.Path.Combine(baseDir, "Assets", "bell.mp3");
+                if (!string.IsNullOrWhiteSpace(_vm.Selected.TimerAlarmAudioPath))
+                    audioFile = _vm.Selected.TimerAlarmAudioPath;
+                else
+                {
+                    string baseDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
+                    audioFile = System.IO.Path.Combine(baseDir, "Assets", "bell.mp3");
+                }
             }
 
             if (System.IO.File.Exists(audioFile))
@@ -305,7 +312,7 @@ public partial class MainWindow
                 var fullPath = System.IO.Path.GetFullPath(audioFile);
                 Dispatcher.Invoke(() =>
                 {
-                    StopTimerAlarm();
+                    StopTimerAudio();
                     _timerAlarmPlayer = new System.Windows.Media.MediaPlayer();
                     _timerAlarmPlayer.MediaFailed += (s, e) => AppendLog($"[timer-alarm] Media Failed: {e.ErrorException?.Message}");
                     _timerAlarmPlayer.MediaEnded += (s, e) =>
@@ -360,13 +367,13 @@ public partial class MainWindow
 
     public void DismissAlarm()
     {
-        StopTimerAlarm();
+        StopTimerAudio();
         if (_vm.Selected != null)
         {
-            foreach (var timer in _vm.Selected.CustomTimers)
+            var toDelete = _vm.Selected.CustomTimers.Where(t => t.CountdownAudioPlayed || t.AlarmPlayed).ToList();
+            foreach (var t in toDelete)
             {
-                timer.SnoozedUntilUtc = null;
-                timer.AutoDeleteAtUtc = null;
+                _vm.Selected.CustomTimers.Remove(t);
             }
         }
     }
@@ -379,19 +386,29 @@ public partial class MainWindow
     public void SnoozeAlarm()
     {
         if (_vm.Selected == null) return;
-        StopTimerAlarm();
+        StopTimerAudio();
+        
         int snoozeMins = _vm.Selected.TimerAlarmSnoozeMinutes;
-        var snoozedUntil = DateTime.UtcNow.AddMinutes(snoozeMins);
-        var autoDeleteAt = DateTime.UtcNow.AddMinutes(1);
+        var now = DateTime.UtcNow;
+        
         foreach (var timer in _vm.Selected.CustomTimers)
         {
-            if (timer.AlarmPlayed || timer.SnoozedUntilUtc.HasValue)
+            var remaining = timer.EndTimeUtc - now;
+            if (timer.CountdownAudioPlayed || timer.AlarmPlayed)
             {
-                timer.SnoozedUntilUtc = snoozedUntil;
-                timer.AutoDeleteAtUtc = autoDeleteAt;
+                if (remaining.TotalSeconds <= 0)
+                {
+                    timer.EndTimeUtc = now.AddMinutes(snoozeMins);
+                    timer.CountdownAudioPlayed = false;
+                    timer.AlarmPlayed = false;
+                    timer.Notified60 = false;
+                    timer.Notified30 = false;
+                    timer.Notified10 = false;
+                    timer.Notified3 = false;
+                }
             }
         }
-        AppendLog($"[timer-alarm] Snoozed for {snoozeMins} min.");
+        AppendLog($"[timer-alarm] Snoozed.");
     }
 
     private void BtnSelectTimerAlarmAudio_Click(object sender, RoutedEventArgs e)
@@ -412,11 +429,30 @@ public partial class MainWindow
         }
     }
 
+    private void BtnSelectTimerCountdownAudio_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.Selected == null) return;
+
+        var dlg = new Microsoft.Win32.OpenFileDialog
+        {
+            Filter = "Audio Files|*.mp3;*.wav|All Files|*.*",
+            Title = "Select Timer 1min Countdown Sound"
+        };
+
+        if (dlg.ShowDialog() == true)
+        {
+            _vm.Selected.TimerCountdownAudioPath = dlg.FileName;
+            _vm.Save();
+            AppendLog($"[timer-countdown] Selected audio: {dlg.SafeFileName}");
+        }
+    }
+
     private void BtnResetTimerAlarmAudio_Click(object sender, RoutedEventArgs e)
     {
         if (_vm.Selected == null) return;
         _vm.Selected.TimerAlarmAudioPath = null;
+        _vm.Selected.TimerCountdownAudioPath = null;
         _vm.Save();
-        AppendLog("[timer-alarm] Reset to default beep.");
+        AppendLog("[timer-audio] Reset to default embedded sounds.");
     }
 }

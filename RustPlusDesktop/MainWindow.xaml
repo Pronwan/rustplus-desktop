@@ -3745,9 +3745,17 @@
                                                             <Run Text=")" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
                                                         </TextBlock>
                                                         <TextBlock Grid.Column="1" Text="{Binding RemainingTimeText}" VerticalAlignment="Center" Margin="10,0,10,0" FontFamily="Consolas" />
-                                                        <ui:Button Grid.Column="2" Appearance="Transparent" Padding="4" Tag="{Binding Id}" Click="BtnDeleteTimer_Click">
-                                                            <ui:SymbolIcon Symbol="Dismiss24" Foreground="IndianRed" FontSize="14" />
-                                                        </ui:Button>
+                                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                            <ToggleButton IsChecked="{Binding EnableCountdownAudio}" Padding="4" Margin="0,0,4,0" ToolTip="Play 1min countdown audio" Background="Transparent" BorderThickness="0">
+                                                                <ui:SymbolIcon Symbol="Hourglass24" FontSize="14" Foreground="{Binding EnableCountdownAudio, Converter={StaticResource BoolToColorConverter}, ConverterParameter=#FF88AAFF|#40FFFFFF}" />
+                                                            </ToggleButton>
+                                                            <ToggleButton IsChecked="{Binding EnableAlarmAudio}" Padding="4" Margin="0,0,4,0" ToolTip="Play loud alarm at 00:00" Background="Transparent" BorderThickness="0">
+                                                                <ui:SymbolIcon Symbol="Alert24" FontSize="14" Foreground="{Binding EnableAlarmAudio, Converter={StaticResource BoolToColorConverter}, ConverterParameter=#FFFF5555|#40FFFFFF}" />
+                                                            </ToggleButton>
+                                                            <ui:Button Appearance="Transparent" Padding="4" Tag="{Binding Id}" Click="BtnDeleteTimer_Click">
+                                                                <ui:SymbolIcon Symbol="Dismiss24" Foreground="IndianRed" FontSize="14" />
+                                                            </ui:Button>
+                                                        </StackPanel>
                                                     </Grid>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
@@ -3776,12 +3784,22 @@
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                         <TextBlock Text="{Binding PlacementTarget.DataContext.Selected.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=Popup}}" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,2,0" />
                                                         <TextBlock x:Name="TxtTimerCommandPreview" Text="" Foreground="{DynamicResource TextSubtle}" />
                                                     </StackPanel>
-                                                    <ui:Button Grid.Column="1" x:Name="BtnAddTimer" Content="{DynamicResource AddTimer}" Appearance="Primary" Click="BtnAddTimer_Click" />
+                                                    
+                                                    <ToggleButton x:Name="TglAddTimerCountdown" Grid.Column="1" IsChecked="True" Padding="4" Margin="0,0,4,0" ToolTip="Play 1min countdown audio" Background="Transparent" BorderThickness="0">
+                                                        <ui:SymbolIcon Symbol="Hourglass24" FontSize="14" Foreground="{Binding IsChecked, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource BoolToColorConverter}, ConverterParameter=#FF88AAFF|#40FFFFFF}" />
+                                                    </ToggleButton>
+                                                    <ToggleButton x:Name="TglAddTimerAlarm" Grid.Column="2" IsChecked="False" Padding="4" Margin="0,0,10,0" ToolTip="Play loud alarm at 00:00" Background="Transparent" BorderThickness="0">
+                                                        <ui:SymbolIcon Symbol="Alert24" FontSize="14" Foreground="{Binding IsChecked, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource BoolToColorConverter}, ConverterParameter=#FFFF5555|#40FFFFFF}" />
+                                                    </ToggleButton>
+
+                                                    <ui:Button Grid.Column="3" x:Name="BtnAddTimer" Content="{DynamicResource AddTimer}" Appearance="Primary" Click="BtnAddTimer_Click" />
                                                 </Grid>
                                             </StackPanel>
                                         </Border>
@@ -3808,10 +3826,19 @@
                                                             <TextBlock Text="Snooze" Margin="4,0,0,0" VerticalAlignment="Center" Foreground="#FFA500" />
                                                         </StackPanel>
                                                     </ui:Button>
-                                                    <ui:Button Grid.Column="3" Appearance="Transparent" Padding="6,4" Click="BtnSelectTimerAlarmAudio_Click" ToolTip="Select custom alarm sound">
+                                                    <ui:Button Grid.Column="2" Appearance="Transparent" Padding="6,4" Click="BtnSelectTimerCountdownAudio_Click" ToolTip="Select custom 1-minute countdown sound">
+                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                            <ui:SymbolIcon Symbol="Hourglass24" FontSize="16" />
+                                                            <TextBlock Text="1min" Foreground="IndianRed" FontSize="10" Margin="2,4,0,0" />
+                                                        </StackPanel>
+                                                    </ui:Button>
+                                                    <ui:Button Grid.Column="3" Appearance="Transparent" Padding="6,4" Click="BtnSelectTimerAlarmAudio_Click" ToolTip="Select custom alarm sound (00:00)">
                                                         <StackPanel Orientation="Horizontal">
                                                             <ui:SymbolIcon Symbol="MusicNote224" FontSize="16" />
                                                         </StackPanel>
+                                                    </ui:Button>
+                                                    <ui:Button Grid.Column="4" Appearance="Transparent" Padding="6,4" Click="BtnResetTimerAlarmAudio_Click" ToolTip="Reset sounds to default">
+                                                        <ui:SymbolIcon Symbol="ArrowReset24" FontSize="16" />
                                                     </ui:Button>
                                                 </Grid>
                                             </StackPanel>
