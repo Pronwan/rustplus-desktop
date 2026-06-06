@@ -186,6 +186,7 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
         }
 
         CleanupEmptyGroups(_vm.Selected.Devices);
+        _vm.Selected.NotifySmartSwitchesChanged();
         _vm.Save();
         _draggedDevice = null;
         _draggedItemContainer = null;

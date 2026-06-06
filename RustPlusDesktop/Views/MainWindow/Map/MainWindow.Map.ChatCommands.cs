@@ -488,13 +488,13 @@ public partial class MainWindow
                         {
                             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                             await real.ToggleSmartSwitchAsync(dev.EntityId, targetOn, cts.Token);
-                            toggledNames.Add(dev.Name ?? dev.EntityId.ToString());
+                            toggledNames.Add(dev.PureName ?? dev.EntityId.ToString());
                             dev.IsOn = targetOn;
                             await Task.Delay(800);
                         }
                         catch (Exception ex)
                         {
-                            AppendLog($"[ChatCommand] Failed to toggle {dev.Name}: {ex.Message}");
+                            AppendLog($"[ChatCommand] Failed to toggle {dev.PureName}: {ex.Message}");
                         }
                     }
 

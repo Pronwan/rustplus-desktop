@@ -87,6 +87,23 @@ public class ServerProfile : INotifyPropertyChanged
     {
         NotifySmartSwitchesChanged();
     }
+
+    public void GroupDevices(System.Collections.Generic.IEnumerable<SmartDevice> toRemove, SmartDevice newGroup)
+    {
+        if (_devices != null) _devices.CollectionChanged -= Devices_CollectionChanged;
+        
+        foreach (var d in toRemove)
+        {
+            _devices!.Remove(d);
+            if (newGroup.Children == null) newGroup.Children = new System.Collections.ObjectModel.ObservableCollection<SmartDevice>();
+            newGroup.Children.Add(d);
+        }
+        _devices!.Insert(0, newGroup);
+        
+        if (_devices != null) _devices.CollectionChanged += Devices_CollectionChanged;
+        NotifySmartSwitchesChanged();
+        OnProp(nameof(Devices));
+    }
     public ObservableCollection<string> CameraIds { get; set; } = new();
 
     [JsonPropertyName("deathMarkers")]
@@ -106,7 +123,7 @@ public class ServerProfile : INotifyPropertyChanged
             {
                 foreach (var d in source)
                 {
-                    list.Add(d);
+                    if (!d.IsGroup) list.Add(d);
                     if (d.Children != null) Flatten(d.Children);
                 }
             }
@@ -129,7 +146,7 @@ public class ServerProfile : INotifyPropertyChanged
         {
             var list = new System.Collections.Generic.List<SmartDevice>();
             list.Add(new SmartDevice { Name = "(None)", EntityId = 0 });
-            list.AddRange(System.Linq.Enumerable.Where(AllDevices, d => d.Kind == "SmartSwitch" && !d.IsGroup));
+            list.AddRange(System.Linq.Enumerable.Where(AllDevices, d => d.Kind == "SmartSwitch"));
             return list;
         }
     }
@@ -373,8 +390,8 @@ public class ServerProfile : INotifyPropertyChanged
 
     public void SyncChatCommands()
     {
-        // Sync Switches and Groups
-        var switches = AllDevices.Where(d => d.Kind == "SmartSwitch" || d.IsGroup).ToList();
+        // Sync Switches
+        var switches = AllDevices.Where(d => d.Kind == "SmartSwitch").ToList();
         var validSwitchIds = new HashSet<uint>(switches.Select(s => s.EntityId));
         
         for (int i = SwitchCommandMappings.Count - 1; i >= 0; i--)
