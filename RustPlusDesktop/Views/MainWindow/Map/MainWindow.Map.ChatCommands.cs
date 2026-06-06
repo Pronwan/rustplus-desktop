@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
+using System.Threading;
 
 
 namespace RustPlusDesk.Views;
@@ -451,15 +452,53 @@ public partial class MainWindow
 
         if (matchedSwitches.Count > 0)
         {
-            bool first = true;
-            foreach (var mapping in matchedSwitches)
+            var devsToToggle = matchedSwitches
+                .Select(m => profile.AllDevices.FirstOrDefault(d => d.EntityId == m.EntityId && d.Kind == "SmartSwitch"))
+                .Where(d => d != null)
+                .ToList();
+
+            if (devsToToggle.Count > 0)
             {
-                if (!first)
+                bool targetOn = !(devsToToggle.First()!.IsOn ?? false);
+                var toggledNames = new List<string>();
+
+                foreach (var dev in devsToToggle)
                 {
-                    await Task.Delay(profile.ChatCommandDelaySeconds * 1000);
+                    if (dev!.IsOn == targetOn) continue;
+
+                    try
+                    {
+                        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                        await real.ToggleSmartSwitchAsync(dev.EntityId, targetOn, cts.Token);
+                        toggledNames.Add(dev.Name ?? dev.EntityId.ToString());
+                        dev.IsOn = targetOn;
+                        await Task.Delay(800);
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog($"[ChatCommand] Failed to toggle {dev.Name}: {ex.Message}");
+                    }
                 }
-                first = false;
-                await ToggleCommandSwitch(real, mapping.EntityId, m.Author);
+
+                if (toggledNames.Count > 0)
+                {
+                    string stateStr = targetOn ? Properties.Resources.ChatCmdSwitchStateOn : Properties.Resources.ChatCmdSwitchStateOff;
+                    if (toggledNames.Count == 1)
+                    {
+                        _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdSwitchToggled, toggledNames[0], stateStr));
+                    }
+                    else
+                    {
+                        string names = string.Join(", ", toggledNames);
+                        if (names.Length > 80) names = names.Substring(0, 77) + "...";
+                        _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdSwitchToggled, names, stateStr));
+                    }
+                    AppendLog($"[ChatCommand] Toggled {toggledNames.Count} switches to {targetOn} by {m.Author}");
+                }
+            }
+            else
+            {
+                _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdSwitchNotPaired);
             }
             return;
         }
@@ -849,32 +888,6 @@ public partial class MainWindow
         return lines.ToString().TrimEnd();
     }
 
-    private async Task ToggleCommandSwitch(RustPlusClientReal real, uint entityId, string author)
-    {
-        var profile = _vm.Selected;
-        if (profile == null) return;
-        
-        var dev = profile.AllDevices.FirstOrDefault(d => d.EntityId == entityId && d.Kind == "SmartSwitch");
-        if (dev != null)
-        {
-            bool newState = !(dev.IsOn ?? false);
-            try
-            {
-                await real.ToggleSmartSwitchAsync(entityId, newState);
-                string stateStr = newState ? Properties.Resources.ChatCmdSwitchStateOn : Properties.Resources.ChatCmdSwitchStateOff;
-                _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdSwitchToggled, dev.Name, stateStr));
-                AppendLog($"[ChatCommand] {dev.Name} toggled to {newState} by {author}");
-            }
-            catch (Exception ex)
-            {
-                AppendLog($"[ChatCommand] Failed to toggle {dev.Name}: {ex.Message}");
-            }
-        }
-        else
-        {
-            _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdSwitchNotPaired);
-        }
-    }
 
     private static string FormatUpkeepMaterialsPer24h(SmartDevice dev, int upkeepSeconds)
     {
