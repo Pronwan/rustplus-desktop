@@ -2932,28 +2932,32 @@
                                                              </MenuItem.Header>
                                                          </MenuItem>
                                                          
-                                                         <StackPanel Margin="-28,4,0,8" IsEnabled="{Binding IsCloudConnected}">
-                                                             <StackPanel.Resources>
-                                                                 <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
-                                                             </StackPanel.Resources>
-                                                             <Grid Margin="0,0,0,8">
-                                                                 <Grid.ColumnDefinitions>
-                                                                     <ColumnDefinition Width="*" />
-                                                                     <ColumnDefinition Width="Auto" />
-                                                                 </Grid.ColumnDefinitions>
-                                                                 <TextBox
-                                                                     x:Name="TxtChatAlertWebhook"
-                                                                     Height="26"
-                                                                     Padding="6,3"
-                                                                     Background="#1AFFFFFF"
-                                                                     BorderBrush="#33FFFFFF"
-                                                                     Foreground="White"
-                                                                     IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
-                                                                     Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                                 <ui:Button Grid.Column="1" x:Name="BtnClearChatAlertsWebhook" Margin="4,0,0,0" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
-                                                             </Grid>
-                                                             <ui:ToggleSwitch Content="TTS" IsChecked="{Binding Selected.DiscordWebhookChatAlertsTts, Mode=TwoWay}" Margin="0,6,0,0" Foreground="{DynamicResource TextPrimary}" ToolTip="Read alerts aloud via Discord TTS" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
-                                                         </StackPanel>
+                                                         <MenuItem StaysOpenOnClick="True" Focusable="False" Style="{StaticResource DarkMenuItem}" IsEnabled="{Binding IsCloudConnected}">
+                                                             <MenuItem.Header>
+                                                                 <StackPanel Margin="0,0,0,8">
+                                                                     <StackPanel.Resources>
+                                                                         <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
+                                                                     </StackPanel.Resources>
+                                                                     <Grid Margin="0,0,0,8">
+                                                                         <Grid.ColumnDefinitions>
+                                                                             <ColumnDefinition Width="*" />
+                                                                             <ColumnDefinition Width="Auto" />
+                                                                         </Grid.ColumnDefinitions>
+                                                                         <TextBox
+                                                                             x:Name="TxtChatAlertWebhook"
+                                                                             Height="26"
+                                                                             Padding="6,3"
+                                                                             Background="#1AFFFFFF"
+                                                                             BorderBrush="#33FFFFFF"
+                                                                             Foreground="White"
+                                                                             IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
+                                                                             Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                         <ui:Button Grid.Column="1" x:Name="BtnClearChatAlertsWebhook" Margin="4,0,0,0" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
+                                                                     </Grid>
+                                                                     <ui:ToggleSwitch Content="TTS" IsChecked="{Binding Selected.DiscordWebhookChatAlertsTts, Mode=TwoWay}" Margin="0,6,0,0" Foreground="{DynamicResource TextPrimary}" ToolTip="Read alerts aloud via Discord TTS" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
+                                                                 </StackPanel>
+                                                             </MenuItem.Header>
+                                                         </MenuItem>
                                                      </MenuItem>
                                                  </ContextMenu>
                                              </ui:DropDownButton.Flyout>
