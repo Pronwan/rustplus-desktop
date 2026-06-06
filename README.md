@@ -49,6 +49,15 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# 🔥 Rust+ Desktop v6.0.1 Hotfix
+- Added TTS support for Discord webhooks
+- Reworked custom timers with configurable 1-minute countdown and time-up alerts
+- Added a separate Advanced Bot channel for shop alerts
+- Fixed stale Advanced Bot channel database entries
+- Discord Raid Alerts now work during Soft Connect
+- One !switch command can now trigger multiple devices
+- Improved the Discord webhook setup window to prevent accidental closing
+
 # 🚀 Rust+ Desktop v6.0.0 - The Cloud & Intelligence Update!
 
 We are incredibly excited to announce our maybe biggest update ever! Version 6.0.0 (which includes all the great changes from our unreleased 5.5 update) brings a completely new Cloud Backend and Advanced Discord Integration to Rust+ Desktop.
@@ -560,9 +569,9 @@ GPL-3.0-or-later
 
 ## Release Checksum:
 
-SHA256-Hash for current RustPlusDesk-Setup.exe 5.4.0:
+SHA256-Hash for current RustPlusDesk-Setup.exe 6.0.1:
 
-sha256:82a08dc8fa4e9375c204d2fcd021bc40aeaa35900efe2ac94df1f2b898d2a9d7
+sha256:8ff1cb89ec0d794575e679bf28d9653f3f9420d6f56f2a92bbf649c74561ca54
 
 ---
 
