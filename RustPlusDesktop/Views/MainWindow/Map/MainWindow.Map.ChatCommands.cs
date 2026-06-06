@@ -447,58 +447,77 @@ public partial class MainWindow
 
         // Command: Switches (Dynamic List)
         var matchedSwitches = profile.SwitchCommandMappings
-            .Where(mapping => cmd == mapping.Command.ToLowerInvariant() && mapping.EntityId != 0)
+            .Where(mapping => cmd == mapping.Command?.ToLowerInvariant() && mapping.EntityId != 0)
             .ToList();
 
         if (matchedSwitches.Count > 0)
         {
             var devsToToggle = matchedSwitches
-                .Select(m => profile.AllDevices.FirstOrDefault(d => d.EntityId == m.EntityId && d.Kind == "SmartSwitch"))
+                .Select(m => profile.AllDevices.FirstOrDefault(d => d.EntityId == m.EntityId && (d.Kind == "SmartSwitch" || d.IsGroup)))
                 .Where(d => d != null)
                 .ToList();
 
             if (devsToToggle.Count > 0)
             {
-                bool targetOn = !(devsToToggle.First()!.IsOn ?? false);
-                var toggledNames = new List<string>();
-
-                foreach (var dev in devsToToggle)
+                var finalSwitches = new List<SmartDevice>();
+                void AddSwitches(SmartDevice d)
                 {
-                    if (dev!.IsOn == targetOn) continue;
-
-                    try
+                    if (d.IsGroup && d.Children != null)
                     {
-                        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-                        await real.ToggleSmartSwitchAsync(dev.EntityId, targetOn, cts.Token);
-                        toggledNames.Add(dev.Name ?? dev.EntityId.ToString());
-                        dev.IsOn = targetOn;
-                        await Task.Delay(800);
+                        foreach (var c in d.Children) AddSwitches(c);
                     }
-                    catch (Exception ex)
+                    else if (d.Kind == "SmartSwitch" || d.Kind == "Smart Switch")
                     {
-                        AppendLog($"[ChatCommand] Failed to toggle {dev.Name}: {ex.Message}");
+                        finalSwitches.Add(d);
                     }
                 }
+                foreach (var dev in devsToToggle) AddSwitches(dev!);
 
-                if (toggledNames.Count > 0)
+                finalSwitches = finalSwitches.Distinct().ToList();
+
+                if (finalSwitches.Count > 0)
                 {
-                    string stateStr = targetOn ? Properties.Resources.ChatCmdSwitchStateOn : Properties.Resources.ChatCmdSwitchStateOff;
-                    if (toggledNames.Count == 1)
+                    bool targetOn = !(finalSwitches.First().IsOn ?? false);
+                    var toggledNames = new List<string>();
+
+                    foreach (var dev in finalSwitches)
                     {
-                        _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdSwitchToggled, toggledNames[0], stateStr));
+                        if (dev.IsOn == targetOn) continue;
+
+                        try
+                        {
+                            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                            await real.ToggleSmartSwitchAsync(dev.EntityId, targetOn, cts.Token);
+                            toggledNames.Add(dev.Name ?? dev.EntityId.ToString());
+                            dev.IsOn = targetOn;
+                            await Task.Delay(800);
+                        }
+                        catch (Exception ex)
+                        {
+                            AppendLog($"[ChatCommand] Failed to toggle {dev.Name}: {ex.Message}");
+                        }
                     }
-                    else
+
+                    if (toggledNames.Count > 0)
                     {
-                        string names = string.Join(", ", toggledNames);
-                        if (names.Length > 80) names = names.Substring(0, 77) + "...";
-                        _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdSwitchToggled, names, stateStr));
+                        string stateStr = targetOn ? Properties.Resources.ChatCmdSwitchStateOn : Properties.Resources.ChatCmdSwitchStateOff;
+                        if (toggledNames.Count == 1)
+                        {
+                            _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdSwitchToggled, toggledNames[0], stateStr));
+                        }
+                        else
+                        {
+                            string names = string.Join(", ", toggledNames);
+                            if (names.Length > 80) names = names.Substring(0, 77) + "...";
+                            _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdSwitchToggled, names, stateStr));
+                        }
+                        AppendLog($"[ChatCommand] Toggled {toggledNames.Count} switches to {targetOn} by {m.Author}");
                     }
-                    AppendLog($"[ChatCommand] Toggled {toggledNames.Count} switches to {targetOn} by {m.Author}");
                 }
-            }
-            else
-            {
-                _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdSwitchNotPaired);
+                else
+                {
+                    _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdSwitchNotPaired);
+                }
             }
             return;
         }
@@ -561,7 +580,7 @@ public partial class MainWindow
 
         // Command: Upkeep (Dynamic List)
         var matchedMappings = profile.UpkeepCommandMappings
-            .Where(mapping => cmd == mapping.Command.ToLowerInvariant() && mapping.EntityId != 0)
+            .Where(mapping => cmd == mapping.Command?.ToLowerInvariant() && mapping.EntityId != 0)
             .ToList();
 
         if (matchedMappings.Count == 1)

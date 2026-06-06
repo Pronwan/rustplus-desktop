@@ -106,7 +106,7 @@ public class ServerProfile : INotifyPropertyChanged
             {
                 foreach (var d in source)
                 {
-                    if (!d.IsGroup) list.Add(d);
+                    list.Add(d);
                     if (d.Children != null) Flatten(d.Children);
                 }
             }
@@ -129,7 +129,7 @@ public class ServerProfile : INotifyPropertyChanged
         {
             var list = new System.Collections.Generic.List<SmartDevice>();
             list.Add(new SmartDevice { Name = "(None)", EntityId = 0 });
-            list.AddRange(System.Linq.Enumerable.Where(AllDevices, d => d.Kind == "SmartSwitch"));
+            list.AddRange(System.Linq.Enumerable.Where(AllDevices, d => d.Kind == "SmartSwitch" && !d.IsGroup));
             return list;
         }
     }
@@ -373,8 +373,8 @@ public class ServerProfile : INotifyPropertyChanged
 
     public void SyncChatCommands()
     {
-        // Sync Switches
-        var switches = AllDevices.Where(d => d.Kind == "SmartSwitch").ToList();
+        // Sync Switches and Groups
+        var switches = AllDevices.Where(d => d.Kind == "SmartSwitch" || d.IsGroup).ToList();
         var validSwitchIds = new HashSet<uint>(switches.Select(s => s.EntityId));
         
         for (int i = SwitchCommandMappings.Count - 1; i >= 0; i--)
