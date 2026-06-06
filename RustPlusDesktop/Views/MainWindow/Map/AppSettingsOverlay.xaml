@@ -285,7 +285,8 @@
                                 <CheckBox x:Name="ChkDiscordCommandsEnabled"
                                           Content="Allow Discord commands"
                                           IsChecked="True"
-                                          Margin="0,0,0,6" />
+                                          Margin="0,0,0,6"
+                                          Style="{StaticResource DotCheckBox}" />
                                 <TextBlock Text="Allowed Command Role IDs" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,0,2" />
                                 <TextBox x:Name="TxtDiscordAllowedRoleIds"
                                          Height="26"
@@ -306,8 +307,8 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="TxtChannelRaid" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
-                                    <CheckBox x:Name="ChkRaidTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" />
-                                    <CheckBox x:Name="ChkRaidAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                    <CheckBox x:Name="ChkRaidTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
+                                    <CheckBox x:Name="ChkRaidAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
                                 </Grid>
 
                                 <!-- Events Channel -->
@@ -319,8 +320,8 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="TxtChannelEvents" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
-                                    <CheckBox x:Name="ChkEventsTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" />
-                                    <CheckBox x:Name="ChkEventsAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                    <CheckBox x:Name="ChkEventsTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
+                                    <CheckBox x:Name="ChkEventsAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
                                 </Grid>
 
                                 <!-- Chat Alerts Channel -->
@@ -332,8 +333,8 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="TxtChannelChat" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
-                                    <CheckBox x:Name="ChkChatTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" />
-                                    <CheckBox x:Name="ChkChatAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                    <CheckBox x:Name="ChkChatTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
+                                    <CheckBox x:Name="ChkChatAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
                                 </Grid>
 
                                 <!-- Shop Alerts Channel -->
@@ -345,8 +346,8 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="TxtChannelShop" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
-                                    <CheckBox x:Name="ChkShopTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" />
-                                    <CheckBox x:Name="ChkShopAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                    <CheckBox x:Name="ChkShopTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
+                                    <CheckBox x:Name="ChkShopAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
                                 </Grid>
 
                                 <ui:Button x:Name="BtnSaveChannels" Content="Save Channels Config" Appearance="Primary" HorizontalAlignment="Stretch" Height="30" Click="BtnSaveChannels_Click" />
