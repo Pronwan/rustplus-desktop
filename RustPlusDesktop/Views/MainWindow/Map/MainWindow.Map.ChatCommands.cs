@@ -445,13 +445,23 @@ public partial class MainWindow
         }
 
         // Command: Switches (Dynamic List)
-        foreach (var mapping in profile.SwitchCommandMappings)
+        var matchedSwitches = profile.SwitchCommandMappings
+            .Where(mapping => cmd == mapping.Command.ToLowerInvariant() && mapping.EntityId != 0)
+            .ToList();
+
+        if (matchedSwitches.Count > 0)
         {
-            if (cmd == mapping.Command.ToLowerInvariant() && mapping.EntityId != 0)
+            bool first = true;
+            foreach (var mapping in matchedSwitches)
             {
+                if (!first)
+                {
+                    await Task.Delay(profile.ChatCommandDelaySeconds * 1000);
+                }
+                first = false;
                 await ToggleCommandSwitch(real, mapping.EntityId, m.Author);
-                return;
             }
+            return;
         }
 
         // Command: Detailed Upkeep (Global)
