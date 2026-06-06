@@ -4789,7 +4789,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         snackbar.Show();
     }
 
-    private void ShowTimerExpiredSnackbar(string timerName)
+    private void ShowTimerSnackbar(string title, string timerName, int timeoutSeconds = 8)
     {
         if (RootSnackbar == null) return;
 
@@ -4828,11 +4828,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         var snackbar = new WpfUi.Snackbar(RootSnackbar)
         {
-            Title = "Timer Expired",
+            Title = title,
             Content = panel,
             Appearance = WpfUi.ControlAppearance.Caution,
             Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Timer24),
-            Timeout = TimeSpan.FromSeconds(8),
+            Timeout = TimeSpan.FromSeconds(timeoutSeconds),
             MaxWidth = 400,
             HorizontalAlignment = HorizontalAlignment.Right
         };

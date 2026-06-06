@@ -3747,10 +3747,32 @@
                                                         <TextBlock Grid.Column="1" Text="{Binding RemainingTimeText}" VerticalAlignment="Center" Margin="10,0,10,0" FontFamily="Consolas" />
                                                         <StackPanel Grid.Column="2" Orientation="Horizontal">
                                                             <ToggleButton IsChecked="{Binding EnableCountdownAudio}" Padding="4" Margin="0,0,4,0" ToolTip="Play 1min countdown audio" Background="Transparent" BorderThickness="0">
-                                                                <ui:SymbolIcon Symbol="Hourglass24" FontSize="14" Foreground="{Binding EnableCountdownAudio, Converter={StaticResource BoolToColorConverter}, ConverterParameter=#FF88AAFF|#40FFFFFF}" />
+                                                                <ui:SymbolIcon Symbol="Hourglass24" FontSize="14">
+                                                                    <ui:SymbolIcon.Style>
+                                                                        <Style TargetType="ui:SymbolIcon">
+                                                                            <Setter Property="Foreground" Value="#40FFFFFF" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding EnableCountdownAudio}" Value="True">
+                                                                                    <Setter Property="Foreground" Value="Black" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </ui:SymbolIcon.Style>
+                                                                </ui:SymbolIcon>
                                                             </ToggleButton>
                                                             <ToggleButton IsChecked="{Binding EnableAlarmAudio}" Padding="4" Margin="0,0,4,0" ToolTip="Play loud alarm at 00:00" Background="Transparent" BorderThickness="0">
-                                                                <ui:SymbolIcon Symbol="Alert24" FontSize="14" Foreground="{Binding EnableAlarmAudio, Converter={StaticResource BoolToColorConverter}, ConverterParameter=#FFFF5555|#40FFFFFF}" />
+                                                                <ui:SymbolIcon Symbol="Alert24" FontSize="14">
+                                                                    <ui:SymbolIcon.Style>
+                                                                        <Style TargetType="ui:SymbolIcon">
+                                                                            <Setter Property="Foreground" Value="#40FFFFFF" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding EnableAlarmAudio}" Value="True">
+                                                                                    <Setter Property="Foreground" Value="Black" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </ui:SymbolIcon.Style>
+                                                                </ui:SymbolIcon>
                                                             </ToggleButton>
                                                             <ui:Button Appearance="Transparent" Padding="4" Tag="{Binding Id}" Click="BtnDeleteTimer_Click">
                                                                 <ui:SymbolIcon Symbol="Dismiss24" Foreground="IndianRed" FontSize="14" />
@@ -3793,10 +3815,32 @@
                                                     </StackPanel>
                                                     
                                                     <ToggleButton x:Name="TglAddTimerCountdown" Grid.Column="1" IsChecked="True" Padding="4" Margin="0,0,4,0" ToolTip="Play 1min countdown audio" Background="Transparent" BorderThickness="0">
-                                                        <ui:SymbolIcon Symbol="Hourglass24" FontSize="14" Foreground="{Binding IsChecked, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource BoolToColorConverter}, ConverterParameter=#FF88AAFF|#40FFFFFF}" />
+                                                        <ui:SymbolIcon Symbol="Hourglass24" FontSize="14">
+                                                            <ui:SymbolIcon.Style>
+                                                                <Style TargetType="ui:SymbolIcon">
+                                                                    <Setter Property="Foreground" Value="#40FFFFFF" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsChecked, ElementName=TglAddTimerCountdown}" Value="True">
+                                                                            <Setter Property="Foreground" Value="Black" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ui:SymbolIcon.Style>
+                                                        </ui:SymbolIcon>
                                                     </ToggleButton>
                                                     <ToggleButton x:Name="TglAddTimerAlarm" Grid.Column="2" IsChecked="False" Padding="4" Margin="0,0,10,0" ToolTip="Play loud alarm at 00:00" Background="Transparent" BorderThickness="0">
-                                                        <ui:SymbolIcon Symbol="Alert24" FontSize="14" Foreground="{Binding IsChecked, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource BoolToColorConverter}, ConverterParameter=#FFFF5555|#40FFFFFF}" />
+                                                        <ui:SymbolIcon Symbol="Alert24" FontSize="14">
+                                                            <ui:SymbolIcon.Style>
+                                                                <Style TargetType="ui:SymbolIcon">
+                                                                    <Setter Property="Foreground" Value="#40FFFFFF" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsChecked, ElementName=TglAddTimerAlarm}" Value="True">
+                                                                            <Setter Property="Foreground" Value="Black" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ui:SymbolIcon.Style>
+                                                        </ui:SymbolIcon>
                                                     </ToggleButton>
 
                                                     <ui:Button Grid.Column="3" x:Name="BtnAddTimer" Content="{DynamicResource AddTimer}" Appearance="Primary" Click="BtnAddTimer_Click" />

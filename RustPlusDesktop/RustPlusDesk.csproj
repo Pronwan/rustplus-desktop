@@ -60,6 +60,7 @@
 	
 	<ItemGroup>
 	  <None Remove="Assets\1-76fc6c7e.ico" />
+	  <None Remove="Assets\1min.mp3" />
 	  <None Remove="Assets\bell.mp3" />
 	  <None Remove="Assets\cash.wav" />
 	  <None Remove="Assets\icons\airfield.png" />
@@ -200,6 +201,10 @@
 	  <Resource Include="Assets\icons\pin.png">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>
+	  <Content Include="Assets\1min.mp3">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	  </Content>
 	  <Content Include="Assets\bell.mp3">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>

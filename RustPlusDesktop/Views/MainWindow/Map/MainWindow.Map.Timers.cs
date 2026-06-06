@@ -151,7 +151,7 @@ public partial class MainWindow
                     if (timer.EnableCountdownAudio)
                     {
                         PlayTimerAudio(true);
-                        ShowTimerExpiredSnackbar(timer.Name);
+                        ShowTimerSnackbar("1 min countdown...", timer.Name, 60);
                     }
                 }
             }
@@ -169,7 +169,7 @@ public partial class MainWindow
                     if (timer.EnableAlarmAudio)
                     {
                         PlayTimerAudio(false);
-                        ShowTimerExpiredSnackbar(timer.Name);
+                        ShowTimerSnackbar("Timer Expired", timer.Name, 15);
                     }
                 }
             }
@@ -314,10 +314,10 @@ public partial class MainWindow
                 {
                     StopTimerAudio();
                     _timerAlarmPlayer = new System.Windows.Media.MediaPlayer();
-                    _timerAlarmPlayer.MediaFailed += (s, e) => AppendLog($"[timer-alarm] Media Failed: {e.ErrorException?.Message}");
+                    _timerAlarmPlayer.MediaFailed += (s, e) => AppendLog($"[timer-audio] Media Failed: {e.ErrorException?.Message}");
                     _timerAlarmPlayer.MediaEnded += (s, e) =>
                     {
-                        AppendLog("[timer-alarm] Playback ended.");
+                        AppendLog("[timer-audio] Playback ended.");
                         Dispatcher.Invoke(() =>
                         {
                             if (BtnStopTimerAlarm != null) BtnStopTimerAlarm.Visibility = Visibility.Collapsed;
@@ -330,22 +330,34 @@ public partial class MainWindow
                     _timerAlarmPlayer.Play();
                     if (BtnStopTimerAlarm != null) BtnStopTimerAlarm.Visibility = Visibility.Visible;
                     if (BtnSnoozeTimerAlarm != null) BtnSnoozeTimerAlarm.Visibility = Visibility.Visible;
-                    AppendLog($"[timer-alarm] Playing: {fullPath}");
+                    AppendLog($"[timer-audio] Playing: {fullPath}");
                 });
             }
             else
             {
-                int duration = _vm.Selected.TimerAlarmBeepDurationSeconds;
-                for (int i = 0; i < duration; i++)
+                if (!isCountdown)
                 {
-                    System.Media.SystemSounds.Beep.Play();
-                    await Task.Delay(1000);
+                    int duration = _vm.Selected.TimerAlarmBeepDurationSeconds;
+                    for (int i = 0; i < duration; i++)
+                    {
+                        System.Media.SystemSounds.Beep.Play();
+                        await Task.Delay(1000);
+                    }
+                    Dispatcher.Invoke(() =>
+                    {
+                        if (BtnStopTimerAlarm != null) BtnStopTimerAlarm.Visibility = Visibility.Collapsed;
+                        if (BtnSnoozeTimerAlarm != null) BtnSnoozeTimerAlarm.Visibility = Visibility.Collapsed;
+                    });
                 }
-                Dispatcher.Invoke(() =>
+                else
                 {
-                    if (BtnStopTimerAlarm != null) BtnStopTimerAlarm.Visibility = Visibility.Collapsed;
-                    if (BtnSnoozeTimerAlarm != null) BtnSnoozeTimerAlarm.Visibility = Visibility.Collapsed;
-                });
+                    // Fallback for countdown if file doesn't exist: still show the buttons!
+                    Dispatcher.Invoke(() =>
+                    {
+                        if (BtnStopTimerAlarm != null) BtnStopTimerAlarm.Visibility = Visibility.Visible;
+                        if (BtnSnoozeTimerAlarm != null) BtnSnoozeTimerAlarm.Visibility = Visibility.Visible;
+                    });
+                }
             }
         }
         catch (Exception ex)
