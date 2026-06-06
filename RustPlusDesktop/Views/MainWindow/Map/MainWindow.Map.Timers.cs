@@ -98,7 +98,8 @@ public partial class MainWindow
         if (_vm.Selected.AlertCustomTimer)
         {
             var msg = string.Format(Properties.Resources.TimerCreated, _vm.Selected.ChatCommandPrefix + cmd, hours, mins, secs);
-            _ = SendTeamChatSafeAsync(msg);
+            _ = SendTeamChatSafeAsync(msg, false, true);
+            _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"⏱️ **Timer:** {msg}");
         }
     }
 
@@ -154,7 +155,9 @@ public partial class MainWindow
 
                 if (_vm.Selected.AlertCustomTimer && remaining.TotalSeconds >= -60 && !timer.AlarmPlayed)
                 {
-                    _ = SendTeamChatSafeAsync($"{timer.Name}: 00:00");
+                    string msg = $"{timer.Name}: 00:00";
+                    _ = SendTeamChatSafeAsync(msg, false, true);
+                    _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"⏱️ **Timer:** {msg}");
                 }
                 if (!timer.AlarmPlayed)
                 {
@@ -187,7 +190,9 @@ public partial class MainWindow
                     timer.Notified60 = true;
                     if (remaining.TotalMinutes >= 59)
                     {
-                        _ = SendTeamChatSafeAsync($"{timer.Name}: 60:00");
+                        string msg = $"{timer.Name}: 60:00";
+                        _ = SendTeamChatSafeAsync(msg, false, true);
+                        _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"⏱️ **Timer:** {msg}");
                     }
                 }
                 if (remaining.TotalMinutes <= 30 && !timer.Notified30)
@@ -195,7 +200,9 @@ public partial class MainWindow
                     timer.Notified30 = true;
                     if (remaining.TotalMinutes >= 29)
                     {
-                        _ = SendTeamChatSafeAsync($"{timer.Name}: 30:00");
+                        string msg = $"{timer.Name}: 30:00";
+                        _ = SendTeamChatSafeAsync(msg, false, true);
+                        _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"⏱️ **Timer:** {msg}");
                     }
                 }
                 if (remaining.TotalMinutes <= 10 && !timer.Notified10)
@@ -203,7 +210,9 @@ public partial class MainWindow
                     timer.Notified10 = true;
                     if (remaining.TotalMinutes >= 9)
                     {
-                        _ = SendTeamChatSafeAsync($"{timer.Name}: 10:00");
+                        string msg = $"{timer.Name}: 10:00";
+                        _ = SendTeamChatSafeAsync(msg, false, true);
+                        _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"⏱️ **Timer:** {msg}");
                     }
                 }
                 if (remaining.TotalMinutes <= 3 && !timer.Notified3)
@@ -211,7 +220,9 @@ public partial class MainWindow
                     timer.Notified3 = true;
                     if (remaining.TotalMinutes >= 2)
                     {
-                        _ = SendTeamChatSafeAsync($"{timer.Name}: 03:00");
+                        string msg = $"{timer.Name}: 03:00";
+                        _ = SendTeamChatSafeAsync(msg, false, true);
+                        _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"⏱️ **Timer:** {msg}");
                     }
                 }
             }
