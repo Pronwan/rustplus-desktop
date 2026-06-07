@@ -218,8 +218,16 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private BitmapSource? _mapBaseBmp; // Original-Map ohne Marker
     private readonly List<(double uPx, double vPx, string? label)> _staticMarkers = new();
+    private bool _isShuttingDown = false;
+
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
+        if (_isShuttingDown)
+        {
+            base.OnClosing(e);
+            return;
+        }
+
         if (TrackingService.CloseToTrayEnabled)
         {
             e.Cancel = true;
@@ -2455,6 +2463,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
+        if (_isShuttingDown) return;
+
         if (TrackingService.CloseToTrayEnabled)
         {
             e.Cancel = true;
@@ -2464,18 +2474,32 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         }
 
+        e.Cancel = true;
+        this.Hide();
+
         try
         {
-            AppendLog($"Speichere Profile Ã¢â€ â€™ {StorageService.GetProfilesPath()}");
+            AppendLog($"Speichere Profile → {StorageService.GetProfilesPath()}");
             _vm.Save();
         }
         catch (Exception ex) { AppendLog("Saving failed: " + ex.Message); }
 
-        try
+        Task.Run(async () =>
         {
-            Task.Run(NotifyTeamFeatureAppClosingAsync).Wait(TimeSpan.FromSeconds(3));
-        }
-        catch { }
+            try
+            {
+                await NotifyTeamFeatureAppClosingAsync();
+            }
+            catch { }
+            finally
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    _isShuttingDown = true;
+                    this.Close();
+                });
+            }
+        });
     }
 
     public void HandleRustPlusLink(string link)
