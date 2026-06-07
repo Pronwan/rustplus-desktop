@@ -1882,7 +1882,7 @@ Bist du sicher, dass du fortfahren möchtest?</value>
     <value>Todesmarker umbenennen</value>
   </data>
   <data name="PlayerDirectionArrow" xml:space="preserve">
-    <value>Spieler-Richtungspfeil</value>
+    <value>Richtung</value>
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Profil</value>

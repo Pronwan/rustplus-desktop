@@ -1800,6 +1800,9 @@
 <data name="RenameDeathMarker" xml:space="preserve">
     <value>Перейменувати маркер смерті</value>
   </data>
+<data name="PlayerDirectionArrow" xml:space="preserve">
+  <value>Напрямок</value>
+</data>
 <data name="Profile" xml:space="preserve">
     <value>Профіль</value>
   </data>

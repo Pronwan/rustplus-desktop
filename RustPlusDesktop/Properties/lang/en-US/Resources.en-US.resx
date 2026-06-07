@@ -1800,6 +1800,9 @@ Are you sure you want to continue?</value>
   <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
+  <data name="PlayerDirectionArrow" xml:space="preserve">
+    <value>Direction</value>
+  </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>

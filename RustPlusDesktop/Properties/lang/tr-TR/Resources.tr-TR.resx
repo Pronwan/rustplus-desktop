@@ -1800,6 +1800,9 @@ Devam etmek istediğinizden emin misiniz?</value>
 <data name="RenameDeathMarker" xml:space="preserve">
     <value>Ölüm İşaretini Yeniden Adlandır</value>
   </data>
+<data name="PlayerDirectionArrow" xml:space="preserve">
+  <value>Yön</value>
+</data>
 <data name="Profile" xml:space="preserve">
     <value>Profil</value>
   </data>

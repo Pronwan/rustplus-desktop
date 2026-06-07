@@ -1821,6 +1821,9 @@
   <data name="RenameDeathMarker" xml:space="preserve">
     <value>重命名死亡标记</value>
   </data>
+  <data name="PlayerDirectionArrow" xml:space="preserve">
+    <value>方向</value>
+  </data>
   <data name="Profile" xml:space="preserve">
     <value>个人资料</value>
   </data>

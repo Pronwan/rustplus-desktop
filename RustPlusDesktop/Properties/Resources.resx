@@ -1825,7 +1825,7 @@ Are you sure you want to continue?</value>
     <value>Rename Death Marker</value>
   </data>
   <data name="PlayerDirectionArrow" xml:space="preserve">
-    <value>Player direction arrow</value>
+    <value>Direction</value>
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
