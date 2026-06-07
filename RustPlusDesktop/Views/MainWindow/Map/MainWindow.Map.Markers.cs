@@ -1808,7 +1808,7 @@ public partial class MainWindow
         if (m.Label != null) ToolTipService.SetToolTip(grid, m.Label);
 
         bool isChinook = m.Type == 4;
-        var bodyUri = isChinook ? "pack://application:,,,/Assets/icons/animat-Icons/chinook_animate.png" : "pack://application:,,,/Assets/icons/animat-Icons/patrol_helicopter.png";
+        var bodyUri = isChinook ? "pack://application:,,,/Assets/icons/animat-Icons/chinook_map_body.png" : "pack://application:,,,/Assets/icons/animat-Icons/patrol_helicopter.png";
         var bladesUri = "pack://application:,,,/Assets/icons/animat-Icons/chinook_map_blades.png";
 
         var body = MakeIcon(bodyUri, isChinook ? 64 : 48);
