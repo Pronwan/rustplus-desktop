@@ -888,8 +888,8 @@ public partial class MainWindow
                  mainBorder = new Border
                  {
                      Tag = "MainDock",
-                     Background = new SolidColorBrush(Color.FromArgb(200, 15, 18, 21)), // Glassmorphism dark background (#C80F1215)
-                     BorderBrush = new SolidColorBrush(Color.FromRgb(51, 68, 102)),      // Accent border (#334466)
+                     Background = new SolidColorBrush(Color.FromArgb(170, 22, 24, 28)), // Match in-game time overlay background (#AA16181C)
+                     BorderBrush = new SolidColorBrush(Color.FromArgb(64, 255, 255, 255)), // Match in-game time overlay border (#40FFFFFF)
                      BorderThickness = new Thickness(1),
                      CornerRadius = new CornerRadius(12),
                      Padding = new Thickness(6, 8, 6, 8),
