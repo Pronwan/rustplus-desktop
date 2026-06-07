@@ -3849,7 +3849,6 @@
                                 HorizontalAlignment="Right"
                                 Margin="0,10,0,0"
                                 Padding="8"
-                                Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}"
                                 Background="#C80F1215"
                                 BorderBrush="#334466"
                                 BorderThickness="1"

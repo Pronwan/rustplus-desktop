@@ -383,6 +383,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         InitSmoothFollowLoop();
         StartCloudSyncTimer();
         ApplySettings();
+        RefreshEventDock();
         _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
         AppendLog($"[items-new] baseDir={baseDir}");
         EnsureNewItemDbLoaded();
