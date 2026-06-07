@@ -31,6 +31,123 @@
                 <ResourceDictionary Source="Views/MainWindow/SharedResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <Style TargetType="ui:Snackbar">
+                <Setter Property="Background" Value="#E6101418"/>
+                <Setter Property="BorderBrush" Value="#25FFFFFF"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ui:Snackbar">
+                            <!-- Glassmorphic card container with shadow -->
+                            <Border x:Name="SnackbarBorder"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="8"
+                                    Margin="0,0,0,10"
+                                    MaxWidth="380"
+                                    SnapsToDevicePixels="True">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="15" Color="Black" Opacity="0.4" ShadowDepth="3"/>
+                                </Border.Effect>
+                                
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/> <!-- Colored Accent Bar -->
+                                        <ColumnDefinition Width="*"/>    <!-- Main Content Area -->
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <!-- Left accent indicator bar -->
+                                    <Border x:Name="AccentBar" 
+                                            Grid.Column="0" 
+                                            Width="5" 
+                                            CornerRadius="8,0,0,8" 
+                                            Background="{DynamicResource Accent}" 
+                                            VerticalAlignment="Stretch"/>
+                                    
+                                    <Border Grid.Column="1" Padding="14,16,14,16">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/> <!-- Icon -->
+                                                <ColumnDefinition Width="*"/>    <!-- Text & Content -->
+                                                <ColumnDefinition Width="Auto"/> <!-- Close Button -->
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <!-- Icon on the Left -->
+                                            <ContentPresenter Grid.Column="0" 
+                                                              Content="{TemplateBinding Icon}" 
+                                                              VerticalAlignment="Top" 
+                                                              Margin="0,2,12,0" />
+                                            
+                                            <!-- Center Content -->
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                <TextBlock Text="{TemplateBinding Title}" 
+                                                           FontWeight="Bold" 
+                                                           FontSize="14" 
+                                                           Margin="0,0,0,6" 
+                                                           Foreground="{DynamicResource TextPrimary}">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Style.Triggers>
+                                                                <Trigger Property="Text" Value="">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                </Trigger>
+                                                                <Trigger Property="Text" Value="{x:Null}">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                                           
+                                                <ContentPresenter Content="{TemplateBinding Content}"/>
+                                            </StackPanel>
+                                            
+                                            <!-- Close Button -->
+                                            <ui:Button Grid.Column="2" 
+                                                       x:Name="PART_CloseButton" 
+                                                       Appearance="Transparent" 
+                                                       Width="28" 
+                                                       Height="28" 
+                                                       Padding="0" 
+                                                       VerticalAlignment="Top" 
+                                                       Margin="8,-4,-4,0" 
+                                                       ToolTip="Dismiss">
+                                                <ui:SymbolIcon Symbol="Dismiss24" FontSize="14" Foreground="{DynamicResource TextSubtle}" />
+                                            </ui:Button>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            
+                            <ControlTemplate.Triggers>
+                                <!-- Appearance=Success: Green indicator -->
+                                <Trigger Property="Appearance" Value="Success">
+                                    <Setter TargetName="AccentBar" Property="Background" Value="#4CAF50"/>
+                                </Trigger>
+                                <!-- Appearance=Caution: Orange/Yellow indicator -->
+                                <Trigger Property="Appearance" Value="Caution">
+                                    <Setter TargetName="AccentBar" Property="Background" Value="#FFA500"/>
+                                </Trigger>
+                                <!-- Appearance=Danger: Red indicator -->
+                                <Trigger Property="Appearance" Value="Danger">
+                                    <Setter TargetName="AccentBar" Property="Background" Value="#F44336"/>
+                                </Trigger>
+                                <!-- Appearance=Info: Blue indicator -->
+                                <Trigger Property="Appearance" Value="Info">
+                                    <Setter TargetName="AccentBar" Property="Background" Value="{DynamicResource Accent}"/>
+                                </Trigger>
+                                <!-- Appearance=Primary: System Accent indicator -->
+                                <Trigger Property="Appearance" Value="Primary">
+                                    <Setter TargetName="AccentBar" Property="Background" Value="{DynamicResource Accent}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
         <DataTemplate x:Key="TrackedPlayerTemplate" DataType="{x:Type services:TrackedPlayer}">
             <Grid
                 x:Name="PlayerRow"
