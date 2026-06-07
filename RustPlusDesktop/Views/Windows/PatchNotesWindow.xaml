@@ -32,18 +32,46 @@
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
-                    <Border Background="#331414" BorderBrush="#8A2323" BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,10">
+                    <!-- ============================================== -->
+                    <!-- NEW v6.0.1 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock FontWeight="Bold" Foreground="#FF5555" FontSize="14" Margin="0,0,0,4">
-                                <Run Text="⚠️ " /><Run Text="{DynamicResource PlayerTrackingOverhaulTitle}" />
+                            <TextBlock Text="v6.0.1 | Discord, Timer &amp; Raid Alert Hotfix" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Discord TTS Support:</Run>
+                                Webhook notifications can now use text-to-speech.
                             </TextBlock>
-                            <TextBlock TextWrapping="Wrap" Foreground="#FFCCCC" Margin="0,0,0,6">
-                                The player tracking system has been changed completely. Please review the changes before continuing.
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Custom Timer Rework:</Run>
+                                Added customizable 1-minute countdown and time-up alarms, each individually configurable and toggleable per timer.
                             </TextBlock>
-                            <TextBlock>
-                                <Hyperlink Click="TrackingLink_Click" Foreground="#90C8FF" FontWeight="Bold">
-                                    <Run Text="{DynamicResource HowPlayerTrackingWorks}"/>
-                                </Hyperlink>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Separate Shop Alert Channel:</Run>
+                                Advanced Discord Bot users can now route shop alerts to their own channel.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Advanced Bot Database Fix:</Run>
+                                Saving an empty channel now correctly removes the previous database entry.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Soft Connect Raid Alerts:</Run>
+                                FCM Raid Alerts can now be delivered to Discord while the client is connected using Soft Connect.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Multi-Device !switch Commands:</Run>
+                                The same chat command can now be assigned to multiple switches and trigger them together.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap">
+                                <Run FontWeight="Bold">&#x2022; Safer Discord Webhook Setup:</Run>
+                                Improved the Chat Alerts integration to help prevent accidentally closing the setup window.
                             </TextBlock>
                         </StackPanel>
                     </Border>

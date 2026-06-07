@@ -2925,34 +2925,39 @@
                                                              Tag="DiscordWebhook"
                                                              IsEnabled="{Binding IsCloudConnected}">
                                                              <MenuItem.Header>
-                                                                 <StackPanel>
+                                                                 <StackPanel VerticalAlignment="Center">
                                                                      <TextBlock Text="Discord Webhook" />
                                                                      <TextBlock Text="Chat Alerts -&gt; Discord" FontSize="10" FontStyle="Italic" Foreground="{DynamicResource TextSubtle}" Opacity="0.8" />
                                                                  </StackPanel>
                                                              </MenuItem.Header>
                                                          </MenuItem>
                                                          
-                                                         <Grid Margin="18,4,8,8" IsEnabled="{Binding IsCloudConnected}">
-                                                             <Grid.Resources>
-                                                                 <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
-                                                             </Grid.Resources>
-                                                             <Grid.ColumnDefinitions>
-                                                                 <ColumnDefinition Width="*" />
-                                                                 <ColumnDefinition Width="Auto" />
-                                                             </Grid.ColumnDefinitions>
-                                                             <TextBox
-                                                                 Grid.Column="0"
-                                                                 Height="24"
-                                                                 VerticalAlignment="Center"
-                                                                 Background="#1AFFFFFF"
-                                                                 BorderBrush="#33FFFFFF"
-                                                                 BorderThickness="1"
-                                                                 Foreground="White"
-                                                                 Padding="4,2"
-                                                                 IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
-                                                                 Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                             <ui:Button x:Name="BtnClearChatAlertsWebhook" Grid.Column="1" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" Margin="4,0,0,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" />
-                                                         </Grid>
+                                                         <MenuItem StaysOpenOnClick="True" Focusable="False" Style="{StaticResource DarkMenuItem}" IsEnabled="{Binding IsCloudConnected}">
+                                                             <MenuItem.Header>
+                                                                 <StackPanel Margin="0,0,0,8">
+                                                                     <StackPanel.Resources>
+                                                                         <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
+                                                                     </StackPanel.Resources>
+                                                                     <Grid Margin="0,0,0,8">
+                                                                         <Grid.ColumnDefinitions>
+                                                                             <ColumnDefinition Width="*" />
+                                                                             <ColumnDefinition Width="Auto" />
+                                                                         </Grid.ColumnDefinitions>
+                                                                         <TextBox
+                                                                             x:Name="TxtChatAlertWebhook"
+                                                                             Height="26"
+                                                                             Padding="6,3"
+                                                                             Background="#1AFFFFFF"
+                                                                             BorderBrush="#33FFFFFF"
+                                                                             Foreground="White"
+                                                                             IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
+                                                                             Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                         <ui:Button Grid.Column="1" x:Name="BtnClearChatAlertsWebhook" Margin="4,0,0,0" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
+                                                                     </Grid>
+                                                                     <ui:ToggleSwitch Content="TTS" IsChecked="{Binding Selected.DiscordWebhookChatAlertsTts, Mode=TwoWay}" Margin="0,6,0,0" Foreground="{DynamicResource TextPrimary}" ToolTip="Read alerts aloud via Discord TTS" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
+                                                                 </StackPanel>
+                                                             </MenuItem.Header>
+                                                         </MenuItem>
                                                      </MenuItem>
                                                  </ContextMenu>
                                              </ui:DropDownButton.Flyout>
@@ -3744,9 +3749,39 @@
                                                             <Run Text=")" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
                                                         </TextBlock>
                                                         <TextBlock Grid.Column="1" Text="{Binding RemainingTimeText}" VerticalAlignment="Center" Margin="10,0,10,0" FontFamily="Consolas" />
-                                                        <ui:Button Grid.Column="2" Appearance="Transparent" Padding="4" Tag="{Binding Id}" Click="BtnDeleteTimer_Click">
-                                                            <ui:SymbolIcon Symbol="Dismiss24" Foreground="IndianRed" FontSize="14" />
-                                                        </ui:Button>
+                                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                            <ToggleButton IsChecked="{Binding EnableCountdownAudio}" Padding="4" Margin="0,0,4,0" ToolTip="Play 1min countdown audio" Background="Transparent" BorderThickness="0">
+                                                                <ui:SymbolIcon Symbol="Hourglass24" FontSize="14">
+                                                                    <ui:SymbolIcon.Style>
+                                                                        <Style TargetType="ui:SymbolIcon">
+                                                                            <Setter Property="Foreground" Value="#40FFFFFF" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding EnableCountdownAudio}" Value="True">
+                                                                                    <Setter Property="Foreground" Value="Black" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </ui:SymbolIcon.Style>
+                                                                </ui:SymbolIcon>
+                                                            </ToggleButton>
+                                                            <ToggleButton IsChecked="{Binding EnableAlarmAudio}" Padding="4" Margin="0,0,4,0" ToolTip="Play loud alarm at 00:00" Background="Transparent" BorderThickness="0">
+                                                                <ui:SymbolIcon Symbol="Alert24" FontSize="14">
+                                                                    <ui:SymbolIcon.Style>
+                                                                        <Style TargetType="ui:SymbolIcon">
+                                                                            <Setter Property="Foreground" Value="#40FFFFFF" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding EnableAlarmAudio}" Value="True">
+                                                                                    <Setter Property="Foreground" Value="Black" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </ui:SymbolIcon.Style>
+                                                                </ui:SymbolIcon>
+                                                            </ToggleButton>
+                                                            <ui:Button Appearance="Transparent" Padding="4" Tag="{Binding Id}" Click="BtnDeleteTimer_Click">
+                                                                <ui:SymbolIcon Symbol="Dismiss24" Foreground="IndianRed" FontSize="14" />
+                                                            </ui:Button>
+                                                        </StackPanel>
                                                     </Grid>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
@@ -3775,12 +3810,44 @@
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                         <TextBlock Text="{Binding PlacementTarget.DataContext.Selected.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=Popup}}" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,2,0" />
                                                         <TextBlock x:Name="TxtTimerCommandPreview" Text="" Foreground="{DynamicResource TextSubtle}" />
                                                     </StackPanel>
-                                                    <ui:Button Grid.Column="1" x:Name="BtnAddTimer" Content="{DynamicResource AddTimer}" Appearance="Primary" Click="BtnAddTimer_Click" />
+                                                    
+                                                    <ToggleButton x:Name="TglAddTimerCountdown" Grid.Column="1" IsChecked="True" Padding="4" Margin="0,0,4,0" ToolTip="Play 1min countdown audio" Background="Transparent" BorderThickness="0">
+                                                        <ui:SymbolIcon Symbol="Hourglass24" FontSize="14">
+                                                            <ui:SymbolIcon.Style>
+                                                                <Style TargetType="ui:SymbolIcon">
+                                                                    <Setter Property="Foreground" Value="#40FFFFFF" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsChecked, ElementName=TglAddTimerCountdown}" Value="True">
+                                                                            <Setter Property="Foreground" Value="Black" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ui:SymbolIcon.Style>
+                                                        </ui:SymbolIcon>
+                                                    </ToggleButton>
+                                                    <ToggleButton x:Name="TglAddTimerAlarm" Grid.Column="2" IsChecked="False" Padding="4" Margin="0,0,10,0" ToolTip="Play loud alarm at 00:00" Background="Transparent" BorderThickness="0">
+                                                        <ui:SymbolIcon Symbol="Alert24" FontSize="14">
+                                                            <ui:SymbolIcon.Style>
+                                                                <Style TargetType="ui:SymbolIcon">
+                                                                    <Setter Property="Foreground" Value="#40FFFFFF" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsChecked, ElementName=TglAddTimerAlarm}" Value="True">
+                                                                            <Setter Property="Foreground" Value="Black" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ui:SymbolIcon.Style>
+                                                        </ui:SymbolIcon>
+                                                    </ToggleButton>
+
+                                                    <ui:Button Grid.Column="3" x:Name="BtnAddTimer" Content="{DynamicResource AddTimer}" Appearance="Primary" Click="BtnAddTimer_Click" />
                                                 </Grid>
                                             </StackPanel>
                                         </Border>
@@ -3807,10 +3874,19 @@
                                                             <TextBlock Text="Snooze" Margin="4,0,0,0" VerticalAlignment="Center" Foreground="#FFA500" />
                                                         </StackPanel>
                                                     </ui:Button>
-                                                    <ui:Button Grid.Column="3" Appearance="Transparent" Padding="6,4" Click="BtnSelectTimerAlarmAudio_Click" ToolTip="Select custom alarm sound">
+                                                    <ui:Button Grid.Column="2" Appearance="Transparent" Padding="6,4" Click="BtnSelectTimerCountdownAudio_Click" ToolTip="Select custom 1-minute countdown sound">
+                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                            <ui:SymbolIcon Symbol="Hourglass24" FontSize="16" />
+                                                            <TextBlock Text="1min" Foreground="IndianRed" FontSize="10" Margin="2,4,0,0" />
+                                                        </StackPanel>
+                                                    </ui:Button>
+                                                    <ui:Button Grid.Column="3" Appearance="Transparent" Padding="6,4" Click="BtnSelectTimerAlarmAudio_Click" ToolTip="Select custom alarm sound (00:00)">
                                                         <StackPanel Orientation="Horizontal">
                                                             <ui:SymbolIcon Symbol="MusicNote224" FontSize="16" />
                                                         </StackPanel>
+                                                    </ui:Button>
+                                                    <ui:Button Grid.Column="4" Appearance="Transparent" Padding="6,4" Click="BtnResetTimerAlarmAudio_Click" ToolTip="Reset sounds to default">
+                                                        <ui:SymbolIcon Symbol="ArrowReset24" FontSize="16" />
                                                     </ui:Button>
                                                 </Grid>
                                             </StackPanel>

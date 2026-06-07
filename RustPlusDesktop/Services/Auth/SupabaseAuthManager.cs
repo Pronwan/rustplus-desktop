@@ -1049,6 +1049,33 @@ namespace RustPlusDesk.Services.Auth
             }
         }
 
+        public static async Task<bool> HasActiveTeamFeatureMasterForMemberAsync(string serverKey, string steamId)
+        {
+            if (Client == null) return false;
+            if (string.IsNullOrWhiteSpace(serverKey) || string.IsNullOrWhiteSpace(steamId)) return false;
+
+            try
+            {
+                if (IsAuthenticated)
+                    await EnsureFreshSessionAsync();
+
+                var args = new System.Collections.Generic.Dictionary<string, object?>
+                {
+                    ["p_server_key"] = serverKey,
+                    ["p_steam_id"] = steamId
+                };
+
+                return await Client.Rpc<bool>(
+                    "has_active_team_feature_master_for_member",
+                    args);
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Cloud/Debug] Active team feature master check failed: {ex.Message}");
+                return false;
+            }
+        }
+
         public static async Task<(bool IsAdmin, string? ErrorMessage)> CheckIsAdminDetailedAsync()
         {
             if (Client == null) return (false, "Supabase client not initialized.");

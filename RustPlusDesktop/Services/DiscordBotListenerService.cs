@@ -323,11 +323,58 @@ public class DiscordBotListenerService
     {
         if (!_isListening || _teamSteamIds.Count == 0) return;
 
+        await SendNotificationToOwnersAsync(notificationType, message, _teamSteamIds);
+    }
+
+    public async Task SendRaidNotificationAsync(string serverKey, string ownerSteamId, string message)
+    {
+        Log(
+            $"[DiscordBotListener] Raid notification requested: serverKey='{serverKey}', "
+            + $"ownerSteamId='{ownerSteamId}', isListening={_isListening}, "
+            + $"teamCount={_teamSteamIds.Count}, IsPremium={SupabaseAuthManager.IsPremium}.");
+
+        if (_isListening && _teamSteamIds.Count > 0)
+        {
+            await SendNotificationToOwnersAsync("raid", message, _teamSteamIds);
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(serverKey)
+            || string.IsNullOrWhiteSpace(ownerSteamId)
+            || ownerSteamId == "0")
+        {
+            Log("[DiscordBotListener] Raid fallback skipped: server key or owner Steam ID is missing.");
+            return;
+        }
+
+        var hasActiveMaster = await SupabaseAuthManager
+            .HasActiveTeamFeatureMasterForMemberAsync(serverKey, ownerSteamId);
+        if (hasActiveMaster)
+        {
+            Log($"[DiscordBotListener] Raid notification skipped: another active team master found for {serverKey}.");
+            return;
+        }
+
+        Log($"[DiscordBotListener] Sending raid notification via local fallback for {serverKey}.");
+        await SendNotificationToOwnersAsync("raid", message, new List<string> { ownerSteamId });
+    }
+
+    private static async Task SendNotificationToOwnersAsync(
+        string notificationType,
+        string message,
+        List<string> ownerSteamIds)
+    {
+        if (ownerSteamIds.Count == 0)
+        {
+            Log($"[DiscordBotListener] {notificationType} notification skipped: no owner Steam IDs.");
+            return;
+        }
+
         try
         {
             var settingsRes = await SupabaseAuthManager.Client
                 .From<DiscordBotSettingsModel>()
-                .Filter("owner_steam_id", Operator.In, _teamSteamIds)
+                .Filter("owner_steam_id", Operator.In, ownerSteamIds)
                 .Get();
 
             var ownerIds = settingsRes.Models?
@@ -335,7 +382,13 @@ public class DiscordBotListenerService
                 .Where(id => !string.IsNullOrWhiteSpace(id))
                 .Distinct()
                 .ToList();
-            if (ownerIds == null || ownerIds.Count == 0) return;
+            if (ownerIds == null || ownerIds.Count == 0)
+            {
+                Log(
+                    $"[DiscordBotListener] {notificationType} notification skipped: "
+                    + $"no Discord bot settings found for owners [{string.Join(", ", ownerSteamIds)}].");
+                return;
+            }
 
             var ownerProfilesRes = await SupabaseAuthManager.Client
                 .From<UserProfileModel>()
@@ -351,8 +404,15 @@ public class DiscordBotListenerService
                 .Where(s => premiumOwnerIds.Contains(s.OwnerSteamId))
                 .Select(s => s.GuildId)
                 .Where(id => !string.IsNullOrEmpty(id))
+                .Distinct()
                 .ToList();
-            if (guildIds == null || guildIds.Count == 0) return;
+            if (guildIds == null || guildIds.Count == 0)
+            {
+                Log(
+                    $"[DiscordBotListener] {notificationType} notification skipped: "
+                    + $"no premium Discord bot owner found for [{string.Join(", ", ownerIds)}].");
+                return;
+            }
 
             var response = await SupabaseAuthManager.Client
                 .From<RustPlusDesk.Models.DiscordChannelsConfigModel>()
@@ -361,7 +421,13 @@ public class DiscordBotListenerService
                 .Get();
 
             var configs = response.Models;
-            if (configs == null || configs.Count == 0) return;
+            if (configs == null || configs.Count == 0)
+            {
+                Log(
+                    $"[DiscordBotListener] {notificationType} notification skipped: "
+                    + $"no channel configuration found for guilds [{string.Join(", ", guildIds)}].");
+                return;
+            }
 
             foreach (var config in configs)
             {
@@ -397,6 +463,10 @@ public class DiscordBotListenerService
                     }
                 }
             }
+
+            Log(
+                $"[DiscordBotListener] Sent {notificationType} notification to "
+                + $"{configs.Count(c => !string.IsNullOrEmpty(c.ChannelId))} configured channel(s).");
         }
         catch (Exception ex)
         {

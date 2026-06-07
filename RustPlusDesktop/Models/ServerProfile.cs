@@ -87,6 +87,23 @@ public class ServerProfile : INotifyPropertyChanged
     {
         NotifySmartSwitchesChanged();
     }
+
+    public void GroupDevices(System.Collections.Generic.IEnumerable<SmartDevice> toRemove, SmartDevice newGroup)
+    {
+        if (_devices != null) _devices.CollectionChanged -= Devices_CollectionChanged;
+        
+        foreach (var d in toRemove)
+        {
+            _devices!.Remove(d);
+            if (newGroup.Children == null) newGroup.Children = new System.Collections.ObjectModel.ObservableCollection<SmartDevice>();
+            newGroup.Children.Add(d);
+        }
+        _devices!.Insert(0, newGroup);
+        
+        if (_devices != null) _devices.CollectionChanged += Devices_CollectionChanged;
+        NotifySmartSwitchesChanged();
+        OnProp(nameof(Devices));
+    }
     public ObservableCollection<string> CameraIds { get; set; } = new();
 
     [JsonPropertyName("deathMarkers")]
@@ -307,6 +324,13 @@ public class ServerProfile : INotifyPropertyChanged
         set { _discordWebhookChatAlertsEnabled = value; OnProp(); }
     }
 
+    private bool _discordWebhookChatAlertsTts = false;
+    public bool DiscordWebhookChatAlertsTts
+    {
+        get => _discordWebhookChatAlertsTts;
+        set { _discordWebhookChatAlertsTts = value; OnProp(); }
+    }
+
     private bool _timerAlarmEnabled = true;
     public bool TimerAlarmEnabled
     {
@@ -319,6 +343,13 @@ public class ServerProfile : INotifyPropertyChanged
     {
         get => _timerAlarmAudioPath;
         set { _timerAlarmAudioPath = value; OnProp(); }
+    }
+
+    private string? _timerCountdownAudioPath;
+    public string? TimerCountdownAudioPath
+    {
+        get => _timerCountdownAudioPath;
+        set { _timerCountdownAudioPath = value; OnProp(); }
     }
 
     private int _timerAlarmSnoozeMinutes = 5;
@@ -361,42 +392,53 @@ public class ServerProfile : INotifyPropertyChanged
     {
         // Sync Switches
         var switches = AllDevices.Where(d => d.Kind == "SmartSwitch").ToList();
-        while (SwitchCommandMappings.Count < switches.Count)
+        var validSwitchIds = new HashSet<uint>(switches.Select(s => s.EntityId));
+        
+        for (int i = SwitchCommandMappings.Count - 1; i >= 0; i--)
         {
-            int next = SwitchCommandMappings.Count + 1;
-            SwitchCommandMappings.Add(new ChatCommandMapping 
-            { 
-                Label = $"Switch {next}", 
-                Command = $"switch{next}", 
-                EntityId = switches[next-1].EntityId 
-            });
+            var m = SwitchCommandMappings[i];
+            if (m.EntityId != 0 && !validSwitchIds.Contains(m.EntityId))
+                SwitchCommandMappings.RemoveAt(i);
         }
-        // Remove mappings for switches that no longer exist? 
-        // Better not to remove, just leave them or mark as invalid, but user said "extends the list accordingly".
-        // I'll update the EntityId of existing ones if they are 0
-        for (int i = 0; i < SwitchCommandMappings.Count; i++)
+
+        foreach (var sw in switches)
         {
-            if (SwitchCommandMappings[i].EntityId == 0 && i < switches.Count)
-                SwitchCommandMappings[i].EntityId = switches[i].EntityId;
+            if (!SwitchCommandMappings.Any(m => m.EntityId == sw.EntityId))
+            {
+                int next = SwitchCommandMappings.Count + 1;
+                SwitchCommandMappings.Add(new ChatCommandMapping 
+                { 
+                    Label = $"Switch {next}", 
+                    Command = $"switch{next}", 
+                    EntityId = sw.EntityId 
+                });
+            }
         }
 
         // Sync Upkeep (Storage Monitors on TCs)
         var tcs = AllDevices.Where(d => (d.Kind == "StorageMonitor" || d.Kind == "Storage Monitor") && (d.Storage == null || d.Storage.IsToolCupboard || d.Storage.ItemsCount == 0)).ToList();
-        while (UpkeepCommandMappings.Count < tcs.Count)
+        var validTcIds = new HashSet<uint>(tcs.Select(s => s.EntityId));
+        
+        for (int i = UpkeepCommandMappings.Count - 1; i >= 0; i--)
         {
-            int next = UpkeepCommandMappings.Count + 1;
-            string cmd = next == 1 ? "upkeep" : $"upkeep{next}";
-            UpkeepCommandMappings.Add(new ChatCommandMapping 
-            { 
-                Label = next == 1 ? "Upkeep" : $"Upkeep {next}", 
-                Command = cmd, 
-                EntityId = tcs[next-1].EntityId 
-            });
+            var m = UpkeepCommandMappings[i];
+            if (m.EntityId != 0 && !validTcIds.Contains(m.EntityId))
+                UpkeepCommandMappings.RemoveAt(i);
         }
-        for (int i = 0; i < UpkeepCommandMappings.Count; i++)
+
+        foreach (var tc in tcs)
         {
-            if (UpkeepCommandMappings[i].EntityId == 0 && i < tcs.Count)
-                UpkeepCommandMappings[i].EntityId = tcs[i].EntityId;
+            if (!UpkeepCommandMappings.Any(m => m.EntityId == tc.EntityId))
+            {
+                int next = UpkeepCommandMappings.Count + 1;
+                string cmd = next == 1 ? "upkeep" : $"upkeep{next}";
+                UpkeepCommandMappings.Add(new ChatCommandMapping 
+                { 
+                    Label = next == 1 ? "Upkeep" : $"Upkeep {next}", 
+                    Command = cmd, 
+                    EntityId = tc.EntityId 
+                });
+            }
         }
         
         OnProp(nameof(SwitchCommandMappings));
@@ -473,6 +515,12 @@ public class CustomTimer : INotifyPropertyChanged
     private DateTime _endTimeUtc;
     public DateTime EndTimeUtc { get => _endTimeUtc; set { _endTimeUtc = value; OnProp(); } }
 
+    private bool _enableCountdownAudio = true;
+    public bool EnableCountdownAudio { get => _enableCountdownAudio; set { _enableCountdownAudio = value; OnProp(); } }
+
+    private bool _enableAlarmAudio = false;
+    public bool EnableAlarmAudio { get => _enableAlarmAudio; set { _enableAlarmAudio = value; OnProp(); } }
+
     [JsonIgnore]
     public string RemainingTimeText 
     {
@@ -495,6 +543,8 @@ public class CustomTimer : INotifyPropertyChanged
     public bool Notified30 { get; set; }
     public bool Notified10 { get; set; }
     public bool Notified3 { get; set; }
+    [JsonIgnore]
+    public bool CountdownAudioPlayed { get; set; }
     [JsonIgnore]
     public bool AlarmPlayed { get; set; }
     [JsonIgnore]

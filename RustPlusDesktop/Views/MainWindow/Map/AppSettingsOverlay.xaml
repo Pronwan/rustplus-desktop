@@ -246,12 +246,13 @@
                           IsEnabled="{Binding IsCloudConnected}">
                     <StackPanel Margin="0,8,0,0">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                            <TextBlock Text="Discord Webhook (Chat Alerts)" Width="175" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Text="Discord Webhook (Chat Alerts)" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Margin="0,0,8,0" />
+                            <ui:Button x:Name="BtnClearSettingsWebhook" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearSettingsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" BorderThickness="0" Padding="4,0" Margin="0,0,4,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" />
                             <TextBox Width="130" Margin="0,0,4,0" Height="24" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="4,2" 
                                      IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
                                      Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      TextChanged="TxtSettingsDiscordWebhook_TextChanged" />
-                            <ui:Button x:Name="BtnClearSettingsWebhook" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearSettingsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" BorderThickness="0" Padding="4,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" />
+                            <ui:ToggleSwitch Content="TTS" IsChecked="{Binding Selected.DiscordWebhookChatAlertsTts, Mode=TwoWay}" Margin="4,0,0,0" Foreground="{DynamicResource TextPrimary}" ToolTip="Text-To-Speech for Webhook" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
                             <ui:Button Icon="{ui:SymbolIcon Symbol=QuestionCircle24}" Click="BtnDiscordWebhookHelp_Click" Appearance="Transparent" Foreground="{DynamicResource Accent}" BorderThickness="0" Padding="4,0" Margin="2,0,0,0" ToolTip="Discord Webhooks Guide" />
                         </StackPanel>
                     </StackPanel>
@@ -284,7 +285,8 @@
                                 <CheckBox x:Name="ChkDiscordCommandsEnabled"
                                           Content="Allow Discord commands"
                                           IsChecked="True"
-                                          Margin="0,0,0,6" />
+                                          Margin="0,0,0,6"
+                                          Style="{StaticResource DotCheckBox}" />
                                 <TextBlock Text="Allowed Command Role IDs" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,0,2" />
                                 <TextBox x:Name="TxtDiscordAllowedRoleIds"
                                          Height="26"
@@ -305,8 +307,8 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="TxtChannelRaid" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
-                                    <CheckBox x:Name="ChkRaidTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" />
-                                    <CheckBox x:Name="ChkRaidAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                    <CheckBox x:Name="ChkRaidTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
+                                    <CheckBox x:Name="ChkRaidAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
                                 </Grid>
 
                                 <!-- Events Channel -->
@@ -318,8 +320,8 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="TxtChannelEvents" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
-                                    <CheckBox x:Name="ChkEventsTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" />
-                                    <CheckBox x:Name="ChkEventsAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                    <CheckBox x:Name="ChkEventsTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
+                                    <CheckBox x:Name="ChkEventsAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
                                 </Grid>
 
                                 <!-- Chat Alerts Channel -->
@@ -331,8 +333,21 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="TxtChannelChat" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
-                                    <CheckBox x:Name="ChkChatTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" />
-                                    <CheckBox x:Name="ChkChatAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                    <CheckBox x:Name="ChkChatTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
+                                    <CheckBox x:Name="ChkChatAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
+                                </Grid>
+
+                                <!-- Shop Alerts Channel -->
+                                <TextBlock Text="Shop Alerts Channel ID" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,4,0,2" />
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="TxtChannelShop" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
+                                    <CheckBox x:Name="ChkShopTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
+                                    <CheckBox x:Name="ChkShopAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
                                 </Grid>
 
                                 <ui:Button x:Name="BtnSaveChannels" Content="Save Channels Config" Appearance="Primary" HorizontalAlignment="Stretch" Height="30" Click="BtnSaveChannels_Click" />

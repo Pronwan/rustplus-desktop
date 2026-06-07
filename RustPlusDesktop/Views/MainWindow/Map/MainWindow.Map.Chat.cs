@@ -95,8 +95,17 @@ public partial class MainWindow
 
     // ====== CORE SENDING ======
     
-    private async Task SendTeamChatSafeAsync(string text, bool bypassChatAlertMasterBlock = false)
+    private readonly HashSet<string> _recentAutomatedMessages = new();
+
+    private async Task SendTeamChatSafeAsync(string text, bool bypassChatAlertMasterBlock = false, bool skipDiscordChatForwarding = false)
     {
+        if (skipDiscordChatForwarding)
+        {
+            lock (_recentAutomatedMessages)
+            {
+                _recentAutomatedMessages.Add(text);
+            }
+        }
         if (!bypassChatAlertMasterBlock && !CanSendAutomatedTeamChat()) return;
 
         // Discord Webhook Integration (Free Tier)
@@ -107,7 +116,7 @@ public partial class MainWindow
                 try
                 {
                     string serverName = _vm.Selected.Name ?? "Rust Server";
-                    var payload = new { content = $"**[{serverName}]** {text}" };
+                    var payload = new { content = $"**[{serverName}]** {text}", tts = _vm.Selected.DiscordWebhookChatAlertsTts };
                     var json = System.Text.Json.JsonSerializer.Serialize(payload);
                     using var content = new System.Net.Http.StringContent(json, System.Text.Encoding.UTF8, "application/json");
                     using var client = new System.Net.Http.HttpClient();
@@ -271,7 +280,16 @@ public partial class MainWindow
             Dispatcher.InvokeAsync(() => AddIncomingChatMessage(m.Author, m.Text, m.Timestamp.ToLocalTime(), m.SteamId, autoScroll: true));
             if (!isCommand)
             {
-                _ = DiscordBotListenerService.Instance.SendNotificationAsync("chat", $"\uD83D\uDCAC **{m.Author}**: {m.Text}");
+                bool isAutomated;
+                lock (_recentAutomatedMessages)
+                {
+                    isAutomated = _recentAutomatedMessages.Remove(m.Text);
+                }
+
+                if (!isAutomated)
+                {
+                    _ = DiscordBotListenerService.Instance.SendNotificationAsync("chat", $"\uD83D\uDCAC **{m.Author}**: {m.Text}");
+                }
             }
         }
         

@@ -541,7 +541,24 @@ namespace RustPlusDesk.Views
             var guildId = TxtDiscordGuildId.Text?.Trim();
             if (string.IsNullOrEmpty(guildId))
             {
-                MessageBox.Show("Please enter a valid Guild ID.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                try
+                {
+                    BtnSaveDiscordGuild.IsEnabled = false;
+                    await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.DiscordBotSettingsModel>()
+                        .Filter("owner_steam_id", Postgrest.Constants.Operator.Equals, steamId)
+                        .Delete();
+                    
+                    MessageBox.Show("Discord Server unlinked successfully. The bot will no longer interact with your server.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _ = LoadDiscordBotSettingsAsync();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to unlink Discord Server: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    BtnSaveDiscordGuild.IsEnabled = true;
+                }
                 return;
             }
 
@@ -606,7 +623,18 @@ namespace RustPlusDesk.Views
 
                 async Task SaveChannelAsync(string type, string channelId, bool tts, bool audio)
                 {
-                    if (string.IsNullOrWhiteSpace(channelId)) return;
+                    if (string.IsNullOrWhiteSpace(channelId))
+                    {
+                        var modelToDelete = existingList.FirstOrDefault(c => c.NotificationType == type);
+                        if (modelToDelete != null)
+                        {
+                            await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.DiscordChannelsConfigModel>()
+                                .Filter("guild_id", Postgrest.Constants.Operator.Equals, guildId)
+                                .Filter("notification_type", Postgrest.Constants.Operator.Equals, type)
+                                .Delete();
+                        }
+                        return;
+                    }
 
                     var model = existingList.FirstOrDefault(c => c.NotificationType == type) ?? new RustPlusDesk.Models.DiscordChannelsConfigModel
                     {
@@ -625,6 +653,7 @@ namespace RustPlusDesk.Views
                 await SaveChannelAsync("raid", TxtChannelRaid.Text, ChkRaidTTS.IsChecked == true, ChkRaidAudio.IsChecked == true);
                 await SaveChannelAsync("events", TxtChannelEvents.Text, ChkEventsTTS.IsChecked == true, ChkEventsAudio.IsChecked == true);
                 await SaveChannelAsync("chat", TxtChannelChat.Text, ChkChatTTS.IsChecked == true, ChkChatAudio.IsChecked == true);
+                await SaveChannelAsync("shop", TxtChannelShop.Text, ChkShopTTS.IsChecked == true, ChkShopAudio.IsChecked == true);
 
                 MessageBox.Show("Channels configuration saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -697,6 +726,11 @@ namespace RustPlusDesk.Views
                                         TxtChannelChat.Text = ch.ChannelId;
                                         ChkChatTTS.IsChecked = ch.TtsEnabled;
                                         ChkChatAudio.IsChecked = ch.AudioAlertEnabled;
+                                        break;
+                                    case "shop":
+                                        TxtChannelShop.Text = ch.ChannelId;
+                                        ChkShopTTS.IsChecked = ch.TtsEnabled;
+                                        ChkShopAudio.IsChecked = ch.AudioAlertEnabled;
                                         break;
                                 }
                             }
