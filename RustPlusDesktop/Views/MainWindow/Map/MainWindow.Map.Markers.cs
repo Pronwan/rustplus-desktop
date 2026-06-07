@@ -1063,6 +1063,13 @@ public partial class MainWindow
                 {
                     int rotorCount = ev.Type == 4 ? 2 : 1;
                     double bladeSize = ev.Type == 4 ? 16 : 18;
+
+                    // Remove extra blades if they exist
+                    while (uiIconHost.Children.Count - 1 > rotorCount)
+                    {
+                        uiIconHost.Children.RemoveAt(uiIconHost.Children.Count - 1);
+                    }
+
                     while (uiIconHost.Children.Count - 1 < rotorCount)
                     {
                         var blades = new Image
