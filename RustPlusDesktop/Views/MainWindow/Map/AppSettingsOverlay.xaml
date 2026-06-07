@@ -195,6 +195,82 @@
                     </StackPanel>
                 </Border>
 
+                <!-- Team Markers Section -->
+                <TextBlock Text="{DynamicResource TeamMarkersSettings}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <!-- Profile Markers -->
+                        <CheckBox x:Name="ChkShowProfileMarkers"
+                                  Margin="0,0,0,10"
+                                  Style="{StaticResource DotCheckBox}"
+                                  Checked="OnMarkerSettingChanged" Unchecked="OnMarkerSettingChanged">
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox Width="16" Height="16" Margin="0,0,8,0" Stretch="Uniform">
+                                    <Grid Width="40" Height="40">
+                                        <Ellipse Width="38" Height="38" Fill="LimeGreen" Stroke="Black" StrokeThickness="2" />
+                                    </Grid>
+                                </Viewbox>
+                                <TextBlock VerticalAlignment="Center" Text="{DynamicResource Profile}" />
+                            </StackPanel>
+                        </CheckBox>
+
+                        <!-- Player Direction Arrows -->
+                        <CheckBox x:Name="ChkShowPlayerArrows"
+                                  Margin="0,0,0,10"
+                                  Style="{StaticResource DotCheckBox}"
+                                  Checked="OnMarkerSettingChanged" Unchecked="OnMarkerSettingChanged">
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox Width="16" Height="16" Margin="0,0,8,0" Stretch="Uniform">
+                                    <Grid Width="40" Height="40">
+                                        <Path Data="M 20,4 L 32,32 L 8,32 Z" Fill="LimeGreen" Stroke="Black" StrokeThickness="2" />
+                                    </Grid>
+                                </Viewbox>
+                                <TextBlock VerticalAlignment="Center" Text="{DynamicResource PlayerDirectionArrow}" />
+                            </StackPanel>
+                        </CheckBox>
+
+                        <!-- Death Markers -->
+                        <CheckBox x:Name="ChkShowDeathMarkers"
+                                  Margin="0,0,0,10"
+                                  Style="{StaticResource DotCheckBox}"
+                                  Checked="OnMarkerSettingChanged" Unchecked="OnMarkerSettingChanged">
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox Width="14" Height="18" Margin="0,0,8,0" Stretch="Uniform">
+                                    <Grid Width="40" Height="56">
+                                        <Path Data="M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z" Fill="IndianRed" Stroke="Black" StrokeThickness="2" Stretch="Fill" />
+                                    </Grid>
+                                </Viewbox>
+                                <TextBlock VerticalAlignment="Center" Text="{DynamicResource Death}" />
+                            </StackPanel>
+                        </CheckBox>
+
+                        <!-- Streamer Mode -->
+                        <CheckBox x:Name="ChkStreamerModeMarkers"
+                                  Margin="0,0,0,10"
+                                  Style="{StaticResource DotCheckBox}"
+                                  Checked="OnMarkerSettingChanged" Unchecked="OnMarkerSettingChanged">
+                            <TextBlock Text="{DynamicResource StreamerMode}" />
+                        </CheckBox>
+
+                        <!-- Player Icon Scale -->
+                        <Grid Margin="0,4,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{DynamicResource ScaleLabel}" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="{DynamicResource TextPrimary}" FontSize="12" />
+                            <Slider Grid.Column="1" x:Name="SliderPlayerIconScaleOverlay"
+                                    Minimum="0.5" Maximum="1.5" Value="1.0"
+                                    TickFrequency="0.05" IsSnapToTickEnabled="True"
+                                    ValueChanged="OnMarkerSettingChanged"
+                                    VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=SliderPlayerIconScaleOverlay, StringFormat={}{0:P0}}"
+                                       VerticalAlignment="Center" Margin="10,0,0,0" Foreground="{DynamicResource TextPrimary}" FontSize="12" Width="40" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
                 <!-- Cloud Section -->
                 <TextBlock Text="Cloud Settings" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
                 

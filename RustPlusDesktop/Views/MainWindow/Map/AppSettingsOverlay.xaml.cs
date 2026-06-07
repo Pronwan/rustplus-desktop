@@ -104,6 +104,14 @@ namespace RustPlusDesk.Views
             // Cloud Sync Setting load
             ChkCloudSync.IsChecked = TrackingService.CloudSyncEnabled;
 
+            // Team marker settings
+            ChkShowProfileMarkers.IsChecked  = TrackingService.MapShowSteamMarkers;
+            ChkShowPlayerArrows.IsChecked    = TrackingService.MapShowPlayerArrows;
+            ChkShowDeathMarkers.IsChecked    = TrackingService.MapShowDeathTags;
+            ChkStreamerModeMarkers.IsChecked  = TrackingService.MapAbbreviateNames;
+            SliderPlayerIconScaleOverlay.Value = TrackingService.MapPlayerIconScale;
+
+
             // Auth connection state
             bool isDiscord = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated;
             bool isEmail   = Services.Auth.SupabaseAuthManager.IsEmailAuthenticated;
@@ -260,6 +268,20 @@ namespace RustPlusDesk.Views
             Visibility = Visibility.Collapsed;
             ParentWindow?.ApplySettings();
         }
+
+        private void OnMarkerSettingChanged(object sender, RoutedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+
+            TrackingService.MapShowSteamMarkers  = ChkShowProfileMarkers.IsChecked == true;
+            TrackingService.MapShowPlayerArrows  = ChkShowPlayerArrows.IsChecked == true;
+            TrackingService.MapShowDeathTags     = ChkShowDeathMarkers.IsChecked == true;
+            TrackingService.MapAbbreviateNames   = ChkStreamerModeMarkers.IsChecked == true;
+            TrackingService.MapPlayerIconScale   = SliderPlayerIconScaleOverlay.Value;
+
+            ParentWindow?.SyncPlayerSettingsFromTrackingService();
+        }
+
 
         private void BtnShowResetDialog_Click(object sender, RoutedEventArgs e)
         {

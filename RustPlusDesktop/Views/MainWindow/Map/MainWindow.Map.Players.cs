@@ -923,4 +923,36 @@ public partial class MainWindow
             }
         }
     }
+
+    /// <summary>
+    /// Reads all player marker settings from TrackingService and syncs them into
+    /// the toolbar controls and internal state. Called by AppSettingsOverlay after
+    /// the user changes marker settings there.
+    /// </summary>
+    public void SyncPlayerSettingsFromTrackingService()
+    {
+        // Profile markers
+        _showProfileMarkers = TrackingService.MapShowSteamMarkers;
+        if (ChkProfileMarkers != null) ChkProfileMarkers.IsChecked = _showProfileMarkers;
+        ChkProfileMarkers_Toggled(null, null!);
+
+        // Player arrows
+        _showPlayerArrows = TrackingService.MapShowPlayerArrows;
+        if (ChkPlayerArrows != null) ChkPlayerArrows.IsChecked = _showPlayerArrows;
+        ChkPlayerArrows_Toggled(null, null!);
+
+        // Death markers
+        _showDeathMarkers = TrackingService.MapShowDeathTags;
+        if (ChkDeathMarkers != null) ChkDeathMarkers.IsChecked = _showDeathMarkers;
+        RedrawDeathPins();
+
+        // Streamer / abbreviate names
+        _abbreviateNames = TrackingService.MapAbbreviateNames;
+        if (BtnAbbreviateNames != null) BtnAbbreviateNames.IsChecked = _abbreviateNames;
+
+        // Player icon scale
+        _playerMarkerScale = TrackingService.MapPlayerIconScale;
+        if (SliderPlayerIconSize != null) SliderPlayerIconSize.Value = _playerMarkerScale;
+        RefreshAllOverlayScales();
+    }
 }

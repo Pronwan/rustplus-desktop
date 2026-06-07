@@ -2031,17 +2031,14 @@
                                     </ListBox>
 
                                     <!-- RESPONSIVE SETTINGS GRID -->
-                                    <Grid Grid.Row="1" Margin="8,4,8,8">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
+                                    <Grid Grid.Row="1" Margin="8,4,8,4">
                                         <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
 
-                                        <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,12,0" VerticalAlignment="Center">
+                                        <!-- ROW 0: Marker Toggles -->
+                                        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,4">
                                             <TextBlock Text="{DynamicResource Markers}" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#AAA" FontSize="11" />
                                             
                                             <!-- Profile Markers -->
@@ -2126,46 +2123,54 @@
                                             </Grid>
                                         </StackPanel>
 
-                                        <!-- Abbreviate Names Toggle -->
-                                        <ToggleButton Grid.Column="1" x:Name="BtnAbbreviateNames" Margin="0,0,12,0" Width="24" Height="24" ToolTip="{DynamicResource StreamerMode}" Checked="BtnAbbreviateNames_Toggled" Unchecked="BtnAbbreviateNames_Toggled">
-                                            <ToggleButton.Style>
-                                                <Style TargetType="ToggleButton">
-                                                    <Setter Property="Background" Value="Transparent"/>
-                                                    <Setter Property="BorderThickness" Value="1"/>
-                                                    <Setter Property="BorderBrush" Value="#444"/>
-                                                    <Setter Property="Foreground" Value="#CCC"/>
-                                                    <Setter Property="Template">
-                                                        <Setter.Value>
-                                                            <ControlTemplate TargetType="ToggleButton">
-                                                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3">
-                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                </Border>
-                                                            </ControlTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                    <Style.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#222"/></Trigger>
-                                                        <Trigger Property="IsChecked" Value="True">
-                                                            <Setter Property="Background" Value="#1C4B82"/>
-                                                            <Setter Property="BorderBrush" Value="#2A6CA6"/>
-                                                            <Setter Property="Foreground" Value="White"/>
-                                                        </Trigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </ToggleButton.Style>
-                                            <TextBlock Text="A..." FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
-                                        </ToggleButton>
-
-                                        <!-- Dynamic Slider -->
-                                        <Grid Grid.Column="2" VerticalAlignment="Center">
+                                        <!-- ROW 1: Streamer Mode + Icon Scale -->
+                                        <Grid Grid.Row="1" VerticalAlignment="Center">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="{DynamicResource ScaleLabel}" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10" />
-                                            <Slider Grid.Column="1" x:Name="SliderPlayerIconSize" Minimum="0.5" Maximum="1.5" Value="1.0" TickFrequency="0.05" IsSnapToTickEnabled="True" ValueChanged="SliderPlayerIconSize_ValueChanged" VerticalAlignment="Center" MinWidth="30" />
-                                            <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=SliderPlayerIconSize, StringFormat={}{0:P0}}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="#AAA" FontSize="10" Width="30" />
+
+                                            <!-- Abbreviate Names Toggle -->
+                                            <ToggleButton Grid.Column="0" x:Name="BtnAbbreviateNames" Margin="0,0,10,0" Width="24" Height="24" ToolTip="{DynamicResource StreamerMode}" Checked="BtnAbbreviateNames_Toggled" Unchecked="BtnAbbreviateNames_Toggled">
+                                                <ToggleButton.Style>
+                                                    <Style TargetType="ToggleButton">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Setter Property="BorderThickness" Value="1"/>
+                                                        <Setter Property="BorderBrush" Value="#444"/>
+                                                        <Setter Property="Foreground" Value="#CCC"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3">
+                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#222"/></Trigger>
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Setter Property="Background" Value="#1C4B82"/>
+                                                                <Setter Property="BorderBrush" Value="#2A6CA6"/>
+                                                                <Setter Property="Foreground" Value="White"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ToggleButton.Style>
+                                                <TextBlock Text="A..." FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                            </ToggleButton>
+
+                                            <!-- Dynamic Slider -->
+                                            <Grid Grid.Column="1" VerticalAlignment="Center">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{DynamicResource ScaleLabel}" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10" />
+                                                <Slider Grid.Column="1" x:Name="SliderPlayerIconSize" Minimum="0.5" Maximum="1.5" Value="1.0" TickFrequency="0.05" IsSnapToTickEnabled="True" ValueChanged="SliderPlayerIconSize_ValueChanged" VerticalAlignment="Center" MinWidth="30" />
+                                                <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=SliderPlayerIconSize, StringFormat={}{0:P0}}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="#AAA" FontSize="10" Width="30" />
+                                            </Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>

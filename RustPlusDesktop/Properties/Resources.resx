@@ -874,6 +874,9 @@ Download and install now?</value>
   <data name="MapSettings" xml:space="preserve">
     <value>Map Settings</value>
   </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>Team Markers</value>
+  </data>
   <data name="AutoLoadShops" xml:space="preserve">
     <value>Auto load shops on connection</value>
   </data>
