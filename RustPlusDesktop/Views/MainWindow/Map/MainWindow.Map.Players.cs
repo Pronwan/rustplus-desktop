@@ -193,8 +193,8 @@ public partial class MainWindow
                 Fill = brush,
                 Stroke = Brushes.Black,
                 StrokeThickness = 1,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
                 Visibility = _showPlayerArrows ? Visibility.Visible : Visibility.Collapsed
             };
 
@@ -271,8 +271,8 @@ public partial class MainWindow
                 Fill = brush,
                 Stroke = Brushes.Black,
                 StrokeThickness = 1,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
                 Visibility = _showPlayerArrows ? Visibility.Visible : Visibility.Collapsed
             };
 
