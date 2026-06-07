@@ -1062,12 +1062,15 @@ public partial class MainWindow
                 if (ev.Type == 8 || ev.Type == 4)
                 {
                     int rotorCount = ev.Type == 4 ? 2 : 1;
+                    double bladeSize = ev.Type == 4 ? 16 : 18;
                     while (uiIconHost.Children.Count - 1 < rotorCount)
                     {
                         var blades = new Image
                         {
-                            Width = 24,
-                            Height = 24,
+                            Width = bladeSize,
+                            Height = bladeSize,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Center,
                             Source = new BitmapImage(new Uri("pack://application:,,,/Assets/icons/animat-Icons/chinook_map_blades.png")),
                             RenderTransformOrigin = new Point(0.5, 0.5),
                             RenderTransform = new RotateTransform(0),
@@ -1080,6 +1083,11 @@ public partial class MainWindow
                     for (int r = 0; r < rotorCount; r++)
                     {
                         var uiBlades = (Image)uiIconHost.Children[r + 1];
+                        uiBlades.Width = bladeSize;
+                        uiBlades.Height = bladeSize;
+                        uiBlades.HorizontalAlignment = HorizontalAlignment.Center;
+                        uiBlades.VerticalAlignment = VerticalAlignment.Center;
+
                         var rt = (RotateTransform)uiBlades.RenderTransform;
 
                         if (ev.Active)
@@ -1100,7 +1108,7 @@ public partial class MainWindow
                         // Offsets for rotors
                         if (ev.Type == 4) // Chinook
                         {
-                            uiBlades.Margin = r == 0 ? new Thickness(0, 0, 0, 16) : new Thickness(0, 16, 0, 0);
+                            uiBlades.Margin = r == 0 ? new Thickness(0, 0, 0, 12) : new Thickness(0, 12, 0, 0);
                         }
                         else
                         {
@@ -1109,7 +1117,7 @@ public partial class MainWindow
                     }
 
                     // Nudge body icon for Heli (Type 8) to align with centered rotor
-                    if (ev.Type == 8) uiImg.Margin = new Thickness(0, 8, 0, 0);
+                    if (ev.Type == 8) uiImg.Margin = new Thickness(0, 6, 0, 0);
                     else uiImg.Margin = new Thickness(0);
                 }
                 else
