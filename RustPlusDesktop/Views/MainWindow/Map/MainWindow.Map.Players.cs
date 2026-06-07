@@ -28,6 +28,7 @@ public partial class MainWindow
         public TextBlock NameText = null!;
         public string? Name { get; set; }
         public Ellipse? AvatarCircle;
+        public Path? ArrowPath;
         public double Radius;
         public bool IsDeathPin { get; set; }
         public bool IsPlayer { get; set; }
@@ -156,9 +157,19 @@ public partial class MainWindow
             host.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             host.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-            var markerContainer = new Grid { Width = PlayerAvatarSize, Height = PlayerAvatarSize, Margin = new Thickness(0, 0, 4, 0) };
-            markerContainer.Children.Add(circle);
-            markerContainer.Children.Add(arrow);
+            var markerContainer = new Grid { Width = 28, Height = 28, Margin = new Thickness(0, 0, 4, 0) };
+            
+            var circleHost = new Grid
+            {
+                Width = PlayerAvatarSize,
+                Height = PlayerAvatarSize,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            circleHost.Children.Add(circle);
+            circleHost.Children.Add(arrow);
+
+            markerContainer.Children.Add(circleHost);
 
             host.Children.Add(markerContainer);
             Grid.SetColumn(markerContainer, 0);
@@ -170,16 +181,16 @@ public partial class MainWindow
                 SteamId = sid,
                 NameText = tb,
                 AvatarCircle = circle,
-                Radius = PlayerAvatarSize * 0.5,
+                Radius = 14.0,
                 IsPlayer = true,
                 IsDot = false,
                 HasAvatar = false,
                 ScaleExp = 0.85,
                 ScaleBaseMult = 1.0,
                 ScaleTarget = host,
-                RotationTarget = markerContainer,
-                ScaleCenterX = PlayerAvatarSize * 0.5,
-                ScaleCenterY = PlayerAvatarSize * 0.5,
+                RotationTarget = circleHost,
+                ScaleCenterX = 14.0,
+                ScaleCenterY = 14.0,
             };
             Panel.SetZIndex(host, 905);
             ToolTipService.SetToolTip(host, name);
@@ -199,15 +210,45 @@ public partial class MainWindow
                 Fill = new ImageBrush(avatar) { Stretch = Stretch.UniformToFill }
             };
 
+            var arrow = new Path
+            {
+                Data = Geometry.Parse("M 14,0 L 17,5 L 11,5 Z"),
+                Fill = brush,
+                Stroke = Brushes.Black,
+                StrokeThickness = 1,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top
+            };
+
             var host = new Grid();
             host.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             host.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-            var avatarHost = new Grid { Width = PlayerAvatarSize, Height = PlayerAvatarSize, Margin = new Thickness(0, 0, 4, 0) };
+            var markerContainer = new Grid { Width = 28, Height = 28, Margin = new Thickness(0, 0, 4, 0) };
+
+            var avatarHost = new Grid
+            {
+                Width = PlayerAvatarSize,
+                Height = PlayerAvatarSize,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
             avatarHost.Children.Add(circle);
 
-            host.Children.Add(avatarHost);
-            Grid.SetColumn(avatarHost, 0);
+            var arrowContainer = new Grid
+            {
+                Width = 28,
+                Height = 28,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            arrowContainer.Children.Add(arrow);
+
+            markerContainer.Children.Add(avatarHost);
+            markerContainer.Children.Add(arrowContainer);
+
+            host.Children.Add(markerContainer);
+            Grid.SetColumn(markerContainer, 0);
             host.Children.Add(tb);
             Grid.SetColumn(tb, 1);
 
@@ -216,15 +257,17 @@ public partial class MainWindow
                 SteamId = sid,
                 NameText = tb,
                 AvatarCircle = circle,
-                Radius = PlayerAvatarSize * 0.5,
+                ArrowPath = arrow,
+                Radius = 14.0,
                 IsPlayer = true,
                 IsDot = false,
                 HasAvatar = true,
                 ScaleExp = 0.85,
                 ScaleBaseMult = 1.0,
                 ScaleTarget = host,
-                ScaleCenterX = PlayerAvatarSize * 0.5,
-                ScaleCenterY = PlayerAvatarSize * 0.5,
+                RotationTarget = arrowContainer,
+                ScaleCenterX = 14.0,
+                ScaleCenterY = 14.0,
             };
             Panel.SetZIndex(host, 905);
             ToolTipService.SetToolTip(host, name);
