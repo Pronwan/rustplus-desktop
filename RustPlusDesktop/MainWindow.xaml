@@ -3746,15 +3746,52 @@
                             <Popup x:Name="PopupCustomTimer" AllowsTransparency="True" StaysOpen="False" PlacementTarget="{Binding ElementName=BtnCustomTimer}" Placement="Left" HorizontalOffset="-10">
                                 <ui:Card Margin="0,0,10,10" Padding="16" MinWidth="320" MaxWidth="360" Background="#E60F1215" BorderBrush="#334466" BorderThickness="1">
                                     <ui:Card.Resources>
-                                        <Style x:Key="TimerToggleButtonStyle" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
+                                        <Style x:Key="WpfUiToggleButtonStyle" TargetType="ToggleButton">
+                                            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                                            <Setter Property="Background" Value="#12FFFFFF"/>
+                                            <Setter Property="BorderBrush" Value="#16FFFFFF"/>
+                                            <Setter Property="BorderThickness" Value="1"/>
                                             <Setter Property="Width" Value="32"/>
                                             <Setter Property="Height" Value="32"/>
                                             <Setter Property="Padding" Value="0"/>
                                             <Setter Property="Margin" Value="0,0,6,0"/>
-                                            <Setter Property="Foreground" Value="{DynamicResource TextSubtle}"/>
-                                            <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
-                                            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
-                                            <Setter Property="BorderThickness" Value="1"/>
+                                            <Setter Property="Cursor" Value="Hand"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ToggleButton">
+                                                        <Border x:Name="Bd"
+                                                                Background="{TemplateBinding Background}"
+                                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                                CornerRadius="5">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="Bd" Property="Background" Value="#22FFFFFF"/>
+                                                                <Setter TargetName="Bd" Property="BorderBrush" Value="#40FFFFFF"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Accent}"/>
+                                                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                                                <Setter Property="Foreground" Value="Black"/>
+                                                            </Trigger>
+                                                            <MultiTrigger>
+                                                                <MultiTrigger.Conditions>
+                                                                    <Condition Property="IsChecked" Value="True"/>
+                                                                    <Condition Property="IsMouseOver" Value="True"/>
+                                                                </MultiTrigger.Conditions>
+                                                                <Setter TargetName="Bd" Property="Background" Value="#80CDFF"/>
+                                                                <Setter TargetName="Bd" Property="BorderBrush" Value="#80CDFF"/>
+                                                                <Setter Property="Foreground" Value="Black"/>
+                                                            </MultiTrigger>
+                                                            <Trigger Property="IsEnabled" Value="False">
+                                                                <Setter TargetName="Bd" Property="Opacity" Value="0.4"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
                                         </Style>
                                     </ui:Card.Resources>
                                     <StackPanel>
@@ -3779,15 +3816,15 @@
                                                         </TextBlock>
                                                         <TextBlock Grid.Column="1" Text="{Binding RemainingTimeText}" VerticalAlignment="Center" Margin="0,0,12,0" FontFamily="Consolas" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource Accent}" />
                                                         <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                                            <ToggleButton IsChecked="{Binding EnableCountdownAudio}" Style="{StaticResource TimerToggleButtonStyle}" ToolTip="Play 1min countdown audio">
+                                                            <ToggleButton IsChecked="{Binding EnableCountdownAudio}" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="Play 1min countdown audio">
                                                                 <ui:SymbolIcon Symbol="Hourglass24" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}" />
                                                             </ToggleButton>
-                                                            <ToggleButton IsChecked="{Binding EnableAlarmAudio}" Style="{StaticResource TimerToggleButtonStyle}" ToolTip="Play loud alarm at 00:00">
+                                                            <ToggleButton IsChecked="{Binding EnableAlarmAudio}" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="Play loud alarm at 00:00">
                                                                 <ui:SymbolIcon Symbol="Alert24" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}" />
                                                             </ToggleButton>
-                                                            <Button Width="32" Height="32" Tag="{Binding Id}" Click="BtnDeleteTimer_Click" ToolTip="Delete Timer">
+                                                            <ui:Button Appearance="Transparent" Width="32" Height="32" Padding="0" Tag="{Binding Id}" Click="BtnDeleteTimer_Click" ToolTip="Delete Timer">
                                                                 <ui:SymbolIcon Symbol="Dismiss24" Foreground="IndianRed" FontSize="14" />
-                                                            </Button>
+                                                            </ui:Button>
                                                         </StackPanel>
                                                     </Grid>
                                                 </DataTemplate>
@@ -3803,13 +3840,13 @@
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <ui:TextBox x:Name="TxtTimerName" PlaceholderText="{DynamicResource TimerName}" TextChanged="TxtTimerName_TextChanged" Height="36" Padding="8,6" VerticalContentAlignment="Center" />
+                                                    <ui:TextBox x:Name="TxtTimerName" PlaceholderText="{DynamicResource TimerName}" TextChanged="TxtTimerName_TextChanged" Height="32" Padding="8,4" VerticalContentAlignment="Center" />
                                                     <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
-                                                        <ui:TextBox x:Name="TxtTimerHours" ClearButtonEnabled="False" PlaceholderText="hh" MaxLength="2" Width="44" Height="36" Padding="0,6" TextAlignment="Center" VerticalContentAlignment="Center" />
-                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="3,0,3,0" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" />
-                                                        <ui:TextBox x:Name="TxtTimerMinutes" ClearButtonEnabled="False" PlaceholderText="mm" MaxLength="2" Width="44" Height="36" Padding="0,6" TextAlignment="Center" VerticalContentAlignment="Center" />
-                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="3,0,3,0" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" />
-                                                        <ui:TextBox x:Name="TxtTimerSeconds" ClearButtonEnabled="False" PlaceholderText="ss" MaxLength="2" Width="44" Height="36" Padding="0,6" TextAlignment="Center" VerticalContentAlignment="Center" />
+                                                        <ui:TextBox x:Name="TxtTimerHours" ClearButtonEnabled="False" PlaceholderText="hh" MaxLength="2" Width="42" Height="32" Padding="0,4" TextAlignment="Center" VerticalContentAlignment="Center" />
+                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="2,0,2,0" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" />
+                                                        <ui:TextBox x:Name="TxtTimerMinutes" ClearButtonEnabled="False" PlaceholderText="mm" MaxLength="2" Width="42" Height="32" Padding="0,4" TextAlignment="Center" VerticalContentAlignment="Center" />
+                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="2,0,2,0" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" />
+                                                        <ui:TextBox x:Name="TxtTimerSeconds" ClearButtonEnabled="False" PlaceholderText="ss" MaxLength="2" Width="42" Height="32" Padding="0,4" TextAlignment="Center" VerticalContentAlignment="Center" />
                                                     </StackPanel>
                                                 </Grid>
                                                 
@@ -3840,14 +3877,14 @@
                                                         <TextBlock x:Name="TxtTimerCommandPreview" Text="" Foreground="{DynamicResource TextSubtle}" />
                                                     </StackPanel>
                                                     
-                                                    <ToggleButton x:Name="TglAddTimerCountdown" Grid.Column="1" IsChecked="True" Style="{StaticResource TimerToggleButtonStyle}" ToolTip="Play 1min countdown audio">
+                                                    <ToggleButton x:Name="TglAddTimerCountdown" Grid.Column="1" IsChecked="True" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="Play 1min countdown audio">
                                                         <ui:SymbolIcon Symbol="Hourglass24" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}" />
                                                     </ToggleButton>
-                                                    <ToggleButton x:Name="TglAddTimerAlarm" Grid.Column="2" IsChecked="False" Style="{StaticResource TimerToggleButtonStyle}" ToolTip="Play loud alarm at 00:00" Margin="0,0,10,0">
+                                                    <ToggleButton x:Name="TglAddTimerAlarm" Grid.Column="2" IsChecked="False" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="Play loud alarm at 00:00" Margin="0,0,10,0">
                                                         <ui:SymbolIcon Symbol="Alert24" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}" />
                                                     </ToggleButton>
 
-                                                    <Button Grid.Column="3" x:Name="BtnAddTimer" Content="{DynamicResource AddTimer}" Style="{StaticResource PrimaryButton}" Padding="12,6" Click="BtnAddTimer_Click" />
+                                                    <ui:Button Grid.Column="3" x:Name="BtnAddTimer" Content="{DynamicResource AddTimer}" Appearance="Primary" Padding="14,6" Height="32" CornerRadius="5" Click="BtnAddTimer_Click" />
                                                 </Grid>
                                             </StackPanel>
                                         </Border>
@@ -3864,33 +3901,33 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <Button x:Name="BtnStopTimerAlarm" Visibility="Collapsed" Style="{StaticResource {x:Type Button}}" Padding="10,6" Margin="0,0,6,0" Click="BtnStopTimerAlarm_Click" ToolTip="Stop alarm sound">
+                                                    <ui:Button x:Name="BtnStopTimerAlarm" Visibility="Collapsed" Appearance="Secondary" Padding="12,6" Margin="0,0,6,0" Height="32" CornerRadius="5" Click="BtnStopTimerAlarm_Click" ToolTip="Stop alarm sound">
                                                         <StackPanel Orientation="Horizontal">
                                                             <ui:SymbolIcon Symbol="SpeakerMute24" Foreground="IndianRed" FontSize="16" />
                                                             <TextBlock Text="Stop" Margin="6,0,0,0" VerticalAlignment="Center" Foreground="IndianRed" FontWeight="SemiBold" />
                                                         </StackPanel>
-                                                    </Button>
-                                                    <Button x:Name="BtnSnoozeTimerAlarm" Grid.Column="1" Visibility="Collapsed" Style="{StaticResource {x:Type Button}}" Padding="10,6" Margin="0,0,6,0" Click="BtnSnoozeTimerAlarm_Click" ToolTip="Snooze alarm">
+                                                    </ui:Button>
+                                                    <ui:Button x:Name="BtnSnoozeTimerAlarm" Grid.Column="1" Visibility="Collapsed" Appearance="Secondary" Padding="12,6" Margin="0,0,6,0" Height="32" CornerRadius="5" Click="BtnSnoozeTimerAlarm_Click" ToolTip="Snooze alarm">
                                                         <StackPanel Orientation="Horizontal">
                                                             <ui:SymbolIcon Symbol="ClockAlarm24" Foreground="#FFA500" FontSize="16" />
                                                             <TextBlock Text="Snooze" Margin="6,0,0,0" VerticalAlignment="Center" Foreground="#FFA500" FontWeight="SemiBold" />
                                                         </StackPanel>
-                                                    </Button>
+                                                    </ui:Button>
                                                     
                                                     <!-- Spacer Column (Column 2) -->
                                                     
-                                                    <Button Grid.Column="3" Style="{StaticResource {x:Type Button}}" Padding="8,6" Margin="0,0,6,0" Click="BtnSelectTimerCountdownAudio_Click" ToolTip="Select custom 1-minute countdown sound">
+                                                    <ui:Button Grid.Column="3" Appearance="Secondary" Padding="8,6" Margin="0,0,6,0" Height="32" CornerRadius="5" Click="BtnSelectTimerCountdownAudio_Click" ToolTip="Select custom 1-minute countdown sound">
                                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                             <ui:SymbolIcon Symbol="Hourglass24" FontSize="16" />
                                                             <TextBlock Text="1min" FontSize="11" Margin="4,0,0,0" VerticalAlignment="Center" />
                                                         </StackPanel>
-                                                    </Button>
-                                                    <Button Grid.Column="4" Style="{StaticResource {x:Type Button}}" Padding="8,6" Margin="0,0,6,0" Click="BtnSelectTimerAlarmAudio_Click" ToolTip="Select custom alarm sound (00:00)">
+                                                    </ui:Button>
+                                                    <ui:Button Grid.Column="4" Appearance="Secondary" Padding="8,6" Margin="0,0,6,0" Height="32" Width="32" CornerRadius="5" Click="BtnSelectTimerAlarmAudio_Click" ToolTip="Select custom alarm sound (00:00)">
                                                         <ui:SymbolIcon Symbol="MusicNote224" FontSize="16" />
-                                                    </Button>
-                                                    <Button Grid.Column="5" Style="{StaticResource {x:Type Button}}" Padding="8,6" Click="BtnResetTimerAlarmAudio_Click" ToolTip="Reset sounds to default">
+                                                    </ui:Button>
+                                                    <ui:Button Grid.Column="5" Appearance="Secondary" Padding="8,6" Height="32" Width="32" CornerRadius="5" Click="BtnResetTimerAlarmAudio_Click" ToolTip="Reset sounds to default">
                                                         <ui:SymbolIcon Symbol="ArrowReset24" FontSize="16" />
-                                                    </Button>
+                                                    </ui:Button>
                                                 </Grid>
                                             </StackPanel>
                                         </Border>
