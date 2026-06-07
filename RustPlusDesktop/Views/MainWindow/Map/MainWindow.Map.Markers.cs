@@ -1827,28 +1827,41 @@ public partial class MainWindow
     private void AnimateMarkerRotation(FrameworkElement el, double targetAngle)
     {
         if (el == null) return;
-        ApplyCurrentOverlayScale(el); // Ensure TransformGroup exists
+        ApplyCurrentOverlayScale(el); // Ensure TransformGroup or RotateTransform exists
         
-        if (el.Tag is PlayerMarkerTag pt && pt.ScaleTarget != null)
+        if (el.Tag is PlayerMarkerTag pt)
         {
-            var group = pt.ScaleTarget.RenderTransform as TransformGroup;
-            if (group != null && group.Children.Count >= 2 && group.Children[1] is RotateTransform rt)
+            var rotEl = pt.RotationTarget ?? pt.ScaleTarget;
+            if (rotEl != null)
             {
-                // Use the last logical rotation as the start point
-                double current = pt.Rotation;
-                
-                // Calculate shortest path for rotation
-                double diff = (targetAngle - current) % 360;
-                if (diff > 180) diff -= 360;
-                if (diff < -180) diff += 360;
-                
-                double normalizedTarget = current + diff;
+                RotateTransform? rt = null;
+                if (rotEl.RenderTransform is TransformGroup group)
+                {
+                    rt = group.Children.OfType<RotateTransform>().FirstOrDefault();
+                }
+                else if (rotEl.RenderTransform is RotateTransform r)
+                {
+                    rt = r;
+                }
 
-                var anim = new DoubleAnimation(normalizedTarget, TimeSpan.FromMilliseconds(1000));
-                rt.BeginAnimation(RotateTransform.AngleProperty, anim);
-                
-                // Store the logical target so the next poll (and scaling updates) stay in sync
-                pt.Rotation = normalizedTarget;
+                if (rt != null)
+                {
+                    // Use the last logical rotation as the start point
+                    double current = pt.Rotation;
+                    
+                    // Calculate shortest path for rotation
+                    double diff = (targetAngle - current) % 360;
+                    if (diff > 180) diff -= 360;
+                    if (diff < -180) diff += 360;
+                    
+                    double normalizedTarget = current + diff;
+
+                    var anim = new DoubleAnimation(normalizedTarget, TimeSpan.FromMilliseconds(1000));
+                    rt.BeginAnimation(RotateTransform.AngleProperty, anim);
+                    
+                    // Store the logical target so the next poll (and scaling updates) stay in sync
+                    pt.Rotation = normalizedTarget;
+                }
             }
         }
     }
