@@ -1403,7 +1403,20 @@ public partial class MainWindow
                 if (el.Tag is PlayerMarkerTag pmt)
                 {
                     double targetRot;
-                    if (m.Type == 5 || m.Type == 8 || m.Type == 4)
+                    if (isPlayer)
+                    {
+                        double distSq = state.LastVX * state.LastVX + state.LastVY * state.LastVY;
+                        if (state.History.Count > 1 && distSq > 0.0025)
+                        {
+                            double angleRad = Math.Atan2(state.LastVX, state.LastVY);
+                            targetRot = angleRad * (180.0 / Math.PI);
+                        }
+                        else
+                        {
+                            targetRot = isNew ? 0 : pmt.Rotation;
+                        }
+                    }
+                    else if (m.Type == 5 || m.Type == 8 || m.Type == 4)
                     {
                         targetRot = -m.Rotation;
                     }
@@ -1831,7 +1844,11 @@ public partial class MainWindow
         
         if (el.Tag is PlayerMarkerTag pt)
         {
-            var rotEl = pt.RotationTarget ?? pt.ScaleTarget;
+            var rotEl = pt.RotationTarget;
+            if (rotEl == null && !pt.IsPlayer && !pt.IsDeathPin)
+            {
+                rotEl = pt.ScaleTarget;
+            }
             if (rotEl != null)
             {
                 RotateTransform? rt = null;

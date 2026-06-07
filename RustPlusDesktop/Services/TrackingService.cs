@@ -64,6 +64,7 @@ public class TrackingSettings
     public string LastServerName { get; set; } = string.Empty;
     public string? LastBMId { get; set; } = null;
     public bool MapShowSteamMarkers { get; set; } = true;
+    public bool MapShowPlayerArrows { get; set; } = true;
     public bool MapShowDeathTags { get; set; } = false;
     public int MaxSelfDeathMarkers { get; set; } = 3;
     public int MaxTeamDeathMarkers { get; set; } = 3;
@@ -685,6 +686,11 @@ public static class TrackingService
     {
         get => _settings.MapShowSteamMarkers;
         set { _settings.MapShowSteamMarkers = value; SaveDB(); }
+    }
+    public static bool MapShowPlayerArrows
+    {
+        get => _settings.MapShowPlayerArrows;
+        set { _settings.MapShowPlayerArrows = value; SaveDB(); }
     }
     public static bool MapShowDeathTags
     {

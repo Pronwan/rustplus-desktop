@@ -1946,6 +1946,22 @@
                                                 </StackPanel>
                                             </CheckBox>
 
+                                            <!-- Player direction arrow -->
+                                            <CheckBox x:Name="ChkPlayerArrows" IsChecked="True" Checked="ChkPlayerArrows_Toggled" Unchecked="ChkPlayerArrows_Toggled" Margin="0,0,12,0" Style="{StaticResource DotCheckBox}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Viewbox Width="18" Height="18" Margin="0,0,6,0" Stretch="Uniform">
+                                                        <Grid Width="40" Height="40">
+                                                            <!-- Arrow preview -->
+                                                            <Path Data="M 20,4 L 32,32 L 8,32 Z" Fill="LimeGreen" Stroke="Black" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkPlayerArrows, Converter={StaticResource BoolToVisibility}}" />
+                                                            <!-- Fallback if unchecked -->
+                                                            <Path Data="M 20,4 L 32,32 L 8,32 Z" Fill="#444" Stroke="#666" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkPlayerArrows, Converter={StaticResource BoolToVisibilityInv}}" />
+                                                        </Grid>
+                                                    </Viewbox>
+                                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource PlayerDirectionArrow}" TextTrimming="CharacterEllipsis" />
+                                                </StackPanel>
+                                            </CheckBox>
+
+
                                             <!-- Death Markers -->
                                             <Grid x:Name="DeathMarkerToggleContainer" Background="Transparent">
                                                 <StackPanel Orientation="Horizontal">

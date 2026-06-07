@@ -662,6 +662,7 @@ namespace RustPlusDesk.Properties {
         public static string PremiumInfoDevicesDesc => GetString("PremiumInfoDevicesDesc");
         public static string PremiumInfoMapDesc => GetString("PremiumInfoMapDesc");
         public static string RenameDeathMarker => GetString("RenameDeathMarker");
+        public static string PlayerDirectionArrow => GetString("PlayerDirectionArrow");
         public static string Profile => GetString("Profile");
         public static string TimeOfDeath => GetString("TimeOfDeath");
         public static string Death => GetString("Death");

@@ -145,12 +145,13 @@ public partial class MainWindow
 
             var arrow = new Path
             {
-                Data = Geometry.Parse("M 12,5 L 17,17 L 12,14 L 7,17 Z"),
-                Fill = Brushes.White,
+                Data = Geometry.Parse("M 14,0 L 17,5 L 11,5 Z"),
+                Fill = brush,
                 Stroke = Brushes.Black,
                 StrokeThickness = 1,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Visibility = _showPlayerArrows ? Visibility.Visible : Visibility.Collapsed
             };
 
             var host = new Grid();
@@ -167,9 +168,18 @@ public partial class MainWindow
                 VerticalAlignment = VerticalAlignment.Center
             };
             circleHost.Children.Add(circle);
-            circleHost.Children.Add(arrow);
+
+            var arrowContainer = new Grid
+            {
+                Width = 28,
+                Height = 28,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            arrowContainer.Children.Add(arrow);
 
             markerContainer.Children.Add(circleHost);
+            markerContainer.Children.Add(arrowContainer);
 
             host.Children.Add(markerContainer);
             Grid.SetColumn(markerContainer, 0);
@@ -181,6 +191,7 @@ public partial class MainWindow
                 SteamId = sid,
                 NameText = tb,
                 AvatarCircle = circle,
+                ArrowPath = arrow,
                 Radius = 14.0,
                 IsPlayer = true,
                 IsDot = false,
@@ -188,7 +199,7 @@ public partial class MainWindow
                 ScaleExp = 0.85,
                 ScaleBaseMult = 1.0,
                 ScaleTarget = host,
-                RotationTarget = circleHost,
+                RotationTarget = arrowContainer,
                 ScaleCenterX = 14.0,
                 ScaleCenterY = 14.0,
             };
@@ -217,7 +228,8 @@ public partial class MainWindow
                 Stroke = Brushes.Black,
                 StrokeThickness = 1,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top
+                VerticalAlignment = VerticalAlignment.Top,
+                Visibility = _showPlayerArrows ? Visibility.Visible : Visibility.Collapsed
             };
 
             var host = new Grid();
@@ -344,6 +356,11 @@ public partial class MainWindow
             if (tag.NameText != null) tag.NameText.Text = displayName;
             if (tag.NameText != null) tag.NameText.Foreground = brush2;
 
+            if (tag.ArrowPath != null)
+            {
+                tag.ArrowPath.Visibility = _showPlayerArrows ? Visibility.Visible : Visibility.Collapsed;
+            }
+
             bool needsRebuild = false;
             if (tag.IsDot)
             {
@@ -409,6 +426,25 @@ public partial class MainWindow
                 else
                 {
                     UpdatePlayerMarker(ref el, kv.Key, sid, name, online: false, dead: false);
+                }
+            }
+        }
+    }
+
+    private void ChkPlayerArrows_Toggled(object? sender, RoutedEventArgs e)
+    {
+        _showPlayerArrows = ChkPlayerArrows.IsChecked == true;
+        if (_vm != null && !_vm.IsInitializing) TrackingService.MapShowPlayerArrows = _showPlayerArrows;
+
+        foreach (var kv in _dynEls.ToList())
+        {
+            if (kv.Value is FrameworkElement el && el.Tag is PlayerMarkerTag tag)
+            {
+                if (tag.SteamId == 0 || tag.IsDeathPin) continue;
+                
+                if (tag.ArrowPath != null)
+                {
+                    tag.ArrowPath.Visibility = _showPlayerArrows ? Visibility.Visible : Visibility.Collapsed;
                 }
             }
         }
@@ -757,6 +793,12 @@ public partial class MainWindow
             target.RenderTransformOrigin = new Point(0.5, 0.5);
         }
 
+        bool shouldRotateParent = (rotationTarget == null);
+        if (el.Tag is PlayerMarkerTag pmtCheck && (pmtCheck.IsPlayer || pmtCheck.IsDeathPin))
+        {
+            shouldRotateParent = false;
+        }
+
         if (rotationTarget != null)
         {
             var st = target.RenderTransform as ScaleTransform;
@@ -785,7 +827,7 @@ public partial class MainWindow
                 }
             }
         }
-        else
+        else if (shouldRotateParent)
         {
             var group = target.RenderTransform as TransformGroup;
             if (group == null || group.Children.Count < 2 || !(group.Children[0] is ScaleTransform) || !(group.Children[1] is RotateTransform))
@@ -807,6 +849,19 @@ public partial class MainWindow
                 {
                     rt.Angle = rotation;
                 }
+            }
+        }
+        else
+        {
+            var st = target.RenderTransform as ScaleTransform;
+            if (st == null)
+            {
+                target.RenderTransform = new ScaleTransform(scale, scale);
+            }
+            else
+            {
+                st.ScaleX = scale;
+                st.ScaleY = scale;
             }
         }
 

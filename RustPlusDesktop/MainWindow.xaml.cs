@@ -3068,6 +3068,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private bool _showProfileMarkers = true;
     private bool _showDeathMarkers = false;
+    private bool _showPlayerArrows = true;
 
     // death pins per player
     private readonly Dictionary<Guid, FrameworkElement> _deathPins = new();
@@ -4792,6 +4793,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         _showProfileMarkers = TrackingService.MapShowSteamMarkers;
         if (ChkProfileMarkers != null) ChkProfileMarkers.IsChecked = _showProfileMarkers;
+
+        _showPlayerArrows = TrackingService.MapShowPlayerArrows;
+        if (ChkPlayerArrows != null) ChkPlayerArrows.IsChecked = _showPlayerArrows;
 
         _showDeathMarkers = TrackingService.MapShowDeathTags;
         if (ChkDeathMarkers != null) ChkDeathMarkers.IsChecked = _showDeathMarkers;

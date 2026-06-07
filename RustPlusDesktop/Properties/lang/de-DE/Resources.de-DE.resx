@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1880,6 +1880,9 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   </data>
   <data name="RenameDeathMarker" xml:space="preserve">
     <value>Todesmarker umbenennen</value>
+  </data>
+  <data name="PlayerDirectionArrow" xml:space="preserve">
+    <value>Spieler-Richtungspfeil</value>
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Profil</value>
