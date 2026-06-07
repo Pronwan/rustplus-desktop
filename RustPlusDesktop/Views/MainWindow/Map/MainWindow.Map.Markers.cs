@@ -951,9 +951,10 @@ public partial class MainWindow
                 {
                     itemRow = new Border
                     {
+                        Height = 34,
                         CornerRadius = new CornerRadius(8),
                         Background = Brushes.Transparent,
-                        Padding = new Thickness(4, 3, 4, 3),
+                        Padding = new Thickness(4, 1, 4, 1),
                         Margin = new Thickness(0, 1, 0, 1),
                         UseLayoutRounding = true,
                         SnapsToDevicePixels = true
