@@ -813,8 +813,8 @@ public partial class MainWindow
         // Scale stroke thickness proportionally for player markers
         if (el.Tag is PlayerMarkerTag pmt && pmt.AvatarCircle != null)
         {
-            double baseStroke = pmt.IsDot ? 2.0 : 2.0;
-            pmt.AvatarCircle.StrokeThickness = Math.Max(0.5, baseStroke * _playerMarkerScale);
+            double baseStroke = pmt.IsDot ? 1.0 : 1.0;
+            pmt.AvatarCircle.StrokeThickness = Math.Max(0.5, baseStroke / _playerMarkerScale);
         }
     }
 
