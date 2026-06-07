@@ -883,25 +883,25 @@ public partial class MainWindow
             var mainBorder = EventDock.Children.OfType<Border>().FirstOrDefault(b => b.Tag as string == "MainDock");
             StackPanel stack;
 
-            if (mainBorder == null)
-            {
-                mainBorder = new Border
-                {
-                    Tag = "MainDock",
-                    Background = new SolidColorBrush(Color.FromArgb(230, 15, 18, 21)), // Glassmorphism dark background (#E60F1215)
-                    BorderBrush = new SolidColorBrush(Color.FromRgb(51, 68, 102)),      // Accent border (#334466)
-                    BorderThickness = new Thickness(1),
-                    CornerRadius = new CornerRadius(12),
-                    Padding = new Thickness(8, 10, 8, 10),
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    Effect = new System.Windows.Media.Effects.DropShadowEffect
-                    {
-                        BlurRadius = 15,
-                        Color = Colors.Black,
-                        Opacity = 0.3,
-                        ShadowDepth = 2
-                    }
-                };
+             if (mainBorder == null)
+             {
+                 mainBorder = new Border
+                 {
+                     Tag = "MainDock",
+                     Background = new SolidColorBrush(Color.FromArgb(200, 15, 18, 21)), // Glassmorphism dark background (#C80F1215)
+                     BorderBrush = new SolidColorBrush(Color.FromRgb(51, 68, 102)),      // Accent border (#334466)
+                     BorderThickness = new Thickness(1),
+                     CornerRadius = new CornerRadius(12),
+                     Padding = new Thickness(6, 8, 6, 8),
+                     HorizontalAlignment = HorizontalAlignment.Right,
+                     Effect = new System.Windows.Media.Effects.DropShadowEffect
+                     {
+                         BlurRadius = 15,
+                         Color = Colors.Black,
+                         Opacity = 0.3,
+                         ShadowDepth = 2
+                     }
+                 };
                 stack = new StackPanel { Orientation = Orientation.Vertical };
                 mainBorder.Child = stack;
                 EventDock.Children.Add(mainBorder);
@@ -953,8 +953,8 @@ public partial class MainWindow
                     {
                         CornerRadius = new CornerRadius(8),
                         Background = Brushes.Transparent,
-                        Padding = new Thickness(6, 4, 6, 4),
-                        Margin = new Thickness(0, 2, 0, 2),
+                        Padding = new Thickness(4, 3, 4, 3),
+                        Margin = new Thickness(0, 1, 0, 1),
                         UseLayoutRounding = true,
                         SnapsToDevicePixels = true
                     };

@@ -3850,7 +3850,7 @@
                                 Margin="0,10,0,0"
                                 Padding="8"
                                 Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}"
-                                Background="#E60F1215"
+                                Background="#C80F1215"
                                 BorderBrush="#334466"
                                 BorderThickness="1"
                                 CornerRadius="12"
@@ -3861,7 +3861,7 @@
                             </ui:Button>
                             
                             <Popup x:Name="PopupCustomTimer" AllowsTransparency="True" StaysOpen="False" PlacementTarget="{Binding ElementName=BtnCustomTimer}" Placement="Left" HorizontalOffset="-10">
-                                <ui:Card Margin="0,0,10,10" Padding="16" MinWidth="320" MaxWidth="360" Background="#E60F1215" BorderBrush="#334466" BorderThickness="1">
+                                <ui:Card Margin="0,0,10,10" Padding="16" MinWidth="320" MaxWidth="360" Background="#C80F1215" BorderBrush="#334466" BorderThickness="1">
                                     <ui:Card.Resources>
                                         <Style x:Key="WpfUiToggleButtonStyle" TargetType="ToggleButton">
                                             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
