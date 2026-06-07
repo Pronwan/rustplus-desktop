@@ -85,7 +85,19 @@ public partial class MainWindow
             Fill = brush,
             Stroke = Brushes.Black,
             StrokeThickness = 2,
-            Margin = new Thickness(0, 0, 4, 0),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        var arrow = new Path
+        {
+            Data = Geometry.Parse("M 14,0 L 17,5 L 11,5 Z"),
+            Fill = brush,
+            Stroke = Brushes.Black,
+            StrokeThickness = 1,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+            Visibility = _showPlayerArrows ? Visibility.Visible : Visibility.Collapsed
         };
 
         var displayName = GetDisplayPlayerName(name);
@@ -94,33 +106,65 @@ public partial class MainWindow
             Text = displayName,
             Foreground = brush,
             FontSize = 12,
-            Margin = new Thickness(6, -2, 0, 0)
+            Margin = new Thickness(6, -2, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center
         };
 
-        var sp = new StackPanel { Orientation = Orientation.Horizontal };
-        sp.Children.Add(dot);
-        sp.Children.Add(tb);
-        ToolTipService.SetToolTip(sp, name);
+        // Dot + arrow stacked in a small 28x28 grid (same layout as BuildPlayerMarker)
+        var dotContainer = new Grid
+        {
+            Width = 14,
+            Height = 14,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        dotContainer.Children.Add(dot);
 
-        sp.Tag = new PlayerMarkerTag
+        var arrowContainer = new Grid
+        {
+            Width = 28,
+            Height = 28,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        arrowContainer.Children.Add(arrow);
+
+        var markerContainer = new Grid { Width = 28, Height = 28, Margin = new Thickness(0, 0, 4, 0) };
+        markerContainer.Children.Add(dotContainer);
+        markerContainer.Children.Add(arrowContainer);
+
+        var host = new Grid();
+        host.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        host.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        host.Children.Add(markerContainer);
+        Grid.SetColumn(markerContainer, 0);
+        host.Children.Add(tb);
+        Grid.SetColumn(tb, 1);
+
+        ToolTipService.SetToolTip(host, name);
+
+        host.Tag = new PlayerMarkerTag
         {
             SteamId = sid,
             Name = name,
             NameText = tb,
             AvatarCircle = dot,
-            Radius = 5,
+            ArrowPath = arrow,
+            RotationTarget = arrowContainer,
+            Radius = 14,
             IsDeathPin = false,
             IsPlayer = true,
             IsDot = true,
-            ScaleExp = 1.05,
+            ScaleExp = 0.85,
             ScaleBaseMult = 1.0,
-            ScaleTarget = sp,
-            ScaleCenterX = 5.0,
-            ScaleCenterY = 5.0
+            ScaleTarget = host,
+            ScaleCenterX = 14.0,
+            ScaleCenterY = 14.0
         };
 
-        ApplyCurrentOverlayScale(sp);
-        return sp;
+        Panel.SetZIndex(host, 905);
+        ApplyCurrentOverlayScale(host);
+        return host;
     }
 
     private FrameworkElement BuildPlayerMarker(ulong sid, string name, bool online, bool dead)
@@ -334,12 +378,11 @@ public partial class MainWindow
             {
                 t.NameText.Text = displayName;
                 t.NameText.Foreground = brush;
-
-                if (t.NameText.Parent is Panel sp)
+                if (t.AvatarCircle != null) t.AvatarCircle.Fill = brush;
+                if (t.ArrowPath != null)
                 {
-                    var dot = sp.Children.OfType<Ellipse>().FirstOrDefault();
-                    Panel.SetZIndex(dot, 905);
-                    if (dot != null) dot.Fill = brush;
+                    t.ArrowPath.Fill = brush;
+                    t.ArrowPath.Visibility = _showPlayerArrows ? Visibility.Visible : Visibility.Collapsed;
                 }
             }
 
