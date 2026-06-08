@@ -50,7 +50,11 @@ public partial class MainWindow
                     _deepSeaMidEvent = false;
                     string dir = GetDeepSeaDirection(deepSeaShop.X, deepSeaShop.Y);
                     if (_announceSpawns && TrackingService.AnnounceDeepSea)
-                        _ = SendTeamChatSafeAsync(Properties.Resources.AlertDeepSeaUp, false, true);
+                    {
+                        var msg = Properties.Resources.AlertDeepSeaUp;
+                        _ = SendTeamChatSafeAsync(msg, false, true);
+                        _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event:** {msg}");
+                    }
                     AppendLog($"[DEEPSEA] Spawn detected at {deepSeaShop.X:F0},{deepSeaShop.Y:F0} (Direction: {dir})");
                 }
                 else

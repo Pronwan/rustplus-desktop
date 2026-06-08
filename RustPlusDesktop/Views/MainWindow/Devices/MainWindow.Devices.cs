@@ -333,6 +333,7 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
         {
             if (_vm.Selected?.Devices != null)
             {
+                RemoveDeviceAndChildrenFromHotkeys(dev);
                 RemoveDeviceFromHierarchy(_vm.Selected.Devices, dev);
                 _vm.NotifyDevicesChanged();
                 _vm.Save();
@@ -356,6 +357,29 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
                 }
             }
         }
+    }
+
+    private void RemoveDeviceAndChildrenFromHotkeys(SmartDevice dev)
+    {
+        var map = MapForCurrentServer();
+        if (map == null) return;
+        
+        bool changed = false;
+
+        void RemoveRecursive(SmartDevice d)
+        {
+            foreach (var list in map.Values)
+            {
+                if (list.Remove(d.EntityId)) changed = true;
+            }
+            if (d.Children != null)
+            {
+                foreach (var child in d.Children) RemoveRecursive(child);
+            }
+        }
+
+        RemoveRecursive(dev);
+        if (changed) SaveHotkeys();
     }
 
     private void OnSelectAlarmAudioFileClick(object sender, RoutedEventArgs e)

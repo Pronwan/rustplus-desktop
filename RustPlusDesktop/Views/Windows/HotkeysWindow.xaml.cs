@@ -31,7 +31,8 @@ namespace RustPlusDesk.Views
             InitializeComponent();
             _map = hotkeyMap;
 
-            _rows = devices
+            var existingIds = devices.Select(d => d.EntityId).ToHashSet();
+            var tempList = devices
                 .Where(d => string.Equals(d.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase))
                 .Select(d => new RowVM
                 {
@@ -39,8 +40,25 @@ namespace RustPlusDesk.Views
                     Display = d.Display,
                     Hotkey = FindGestureFor(d.EntityId)
                 })
-                .OrderBy(r => r.Display)
                 .ToList();
+
+            foreach (var kv in _map)
+            {
+                foreach (var id in kv.Value)
+                {
+                    if (!existingIds.Contains((uint)id) && !tempList.Any(r => r.EntityId == id))
+                    {
+                        tempList.Add(new RowVM
+                        {
+                            EntityId = id,
+                            Display = $"Unknown Device (Deleted) - ID {id}",
+                            Hotkey = kv.Key
+                        });
+                    }
+                }
+            }
+
+            _rows = tempList.OrderBy(r => r.Display).ToList();
 
             DataContext = _rows;
         }
