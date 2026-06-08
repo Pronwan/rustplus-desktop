@@ -39,6 +39,15 @@ namespace RustPlusDesk.Views
                 TxtRustMapsStatus.Text = "No Map Found";
                 BtnOpenRustMaps.IsEnabled = false;
             }
+
+            if (RustPlusDesk.Services.Auth.SupabaseAuthManager.IsPremium)
+            {
+                BtnSendMapToDiscord.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                BtnSendMapToDiscord.Visibility = Visibility.Collapsed;
+            }
         }
 
         public async Task SearchRustMapsAsync(bool forceRefetch = false)

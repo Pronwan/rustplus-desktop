@@ -543,7 +543,7 @@ namespace RustPlusDesk.Views
             {
                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                 {
-                    FileName = "https://discord.com/oauth2/authorize?client_id=1511865399971545199&permissions=39584569300992&integration_type=0&scope=bot+applications.commands",
+                    FileName = "https://discord.com/oauth2/authorize?client_id=1511865399971545199&permissions=39584569350144&integration_type=0&scope=bot+applications.commands",
                     UseShellExecute = true
                 });
             }
