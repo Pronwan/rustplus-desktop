@@ -3603,7 +3603,8 @@
                                     BorderThickness="1"
                                     HorizontalAlignment="Left"
                                     Visibility="Collapsed">
-                                    <Grid>
+                                    <StackPanel>
+                                        <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
@@ -3655,7 +3656,23 @@
                                             VerticalAlignment="Center">
                                             <ui:SymbolIcon Symbol="ArrowCounterclockwise20" FontSize="11" Foreground="#8D98A8" />
                                         </ui:Button>
-                                    </Grid>
+                                        </Grid>
+                                        <ui:Button
+                                            x:Name="BtnSendMapToDiscord"
+                                            Margin="0,2,0,0"
+                                            Padding="6,4"
+                                            Appearance="Transparent"
+                                            BorderThickness="0"
+                                            Click="BtnSendMapToDiscord_Click"
+                                            ToolTip="Send current map view to Discord channel"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Path Data="M23.0212 1.67671C21.3107 0.879656 19.5079 0.318797 17.6584 0C17.4062 0.461742 17.1749 0.934541 16.9708 1.4184C15.003 1.12145 12.9974 1.12145 11.0283 1.4184C10.819 0.934541 10.589 0.461744 10.3368 0C8.4859 0.318796 6.68307 0.879656 4.97255 1.67671C1.56727 6.77853 0.649666 11.7538 1.11108 16.652C3.10102 18.1418 5.3262 19.0453 7.5222 19.6631C8.04626 18.9431 8.52285 18.1873 8.94639 17.4005C8.1639 17.1064 7.41014 16.7381 6.69467 16.3013C6.88344 16.1554 7.06733 16.0022 7.24584 15.8427C11.1963 17.6749 16.822 17.6749 20.7303 15.8427C20.9124 16.0057 21.0998 16.1626 21.2921 16.3013C20.5752 16.7397 19.8201 17.1077 19.0363 17.4005C19.4609 18.1872 19.9375 18.9431 20.4615 19.6631C22.6639 19.0453 24.889 18.1418 26.879 16.652C27.4243 10.963 26.0121 6.00683 23.0212 1.67671ZM9.21556 13.5606C8.01639 13.5606 7.02672 12.4411 7.02672 11.0664C7.02672 9.69168 7.9954 8.57219 9.21556 8.57219C10.4357 8.57219 11.4254 9.69168 11.4044 11.0664C11.4044 12.4411 10.4357 13.5606 9.21556 13.5606ZM18.7844 13.5606C17.5852 13.5606 16.5956 12.4411 16.5956 11.0664C16.5956 9.69168 17.5643 8.57219 18.7844 8.57219C20.0046 8.57219 20.9942 9.69168 20.9733 11.0664C20.9733 12.4411 20.0046 13.5606 18.7844 13.5606Z" Fill="#5865F2" Width="14" Height="11" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                                <TextBlock Text="Send to Discord" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </ui:Button>
+                                    </StackPanel>
                                 </ui:Card>
                             </StackPanel>
 

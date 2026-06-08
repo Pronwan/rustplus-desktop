@@ -276,6 +276,31 @@ public class DiscordBotListenerService
                         result.Message = mainWindow.GetSmartSwitchListForDiscord();
                         break;
 
+                    case "map":
+                        result.Success = true;
+                        result.Message = "⌛ Die Map wird gerendert... bitte warten.";
+                        // Start upload asynchronously so it doesn't block
+                        _ = Task.Run(async () =>
+                        {
+                            var base64 = await mainWindow.GetCurrentMapScreenshotBase64Async();
+                            await mainWindow.UploadMapScreenshotToDiscordAsync(base64, 
+                                record.Payload?["interaction_token"]?.ToString(),
+                                record.Payload?["application_id"]?.ToString(), null);
+                        });
+                        break;
+
+                    case "mapfull":
+                        result.Success = true;
+                        result.Message = "⌛ Die gesamte Map wird gerendert... bitte warten.";
+                        _ = Task.Run(async () =>
+                        {
+                            var base64 = await mainWindow.GetFullMapScreenshotBase64Async();
+                            await mainWindow.UploadMapScreenshotToDiscordAsync(base64, 
+                                record.Payload?["interaction_token"]?.ToString(),
+                                record.Payload?["application_id"]?.ToString(), null);
+                        });
+                        break;
+
                     default:
                         result.Message = $"Unknown or unsupported command: {commandType}";
                         break;
