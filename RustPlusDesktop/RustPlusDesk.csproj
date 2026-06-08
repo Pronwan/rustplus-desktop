@@ -158,6 +158,7 @@
 	  <None Remove="Assets\Images\5.5.0\discord-no-permission.png" />
 	  <None Remove="Assets\Images\5.5.0\New-Custom-Death-Markers.png" />
 	  <None Remove="Assets\Images\5.5.0\r+desktop-icon-bot.png" />
+	  <None Remove="Assets\Images\6.0 Cloud Patch\MapFetchDiscord.png" />
 	  <None Remove="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
 	  <None Remove="Assets\rustplus-desktop-icon.ico" />
 	  <None Remove="Assets\Data\rust_items.json" />
@@ -352,6 +353,7 @@
     <Resource Include="Assets\Images\5.5.0\discord-no-permission.png" />
     <Resource Include="Assets\Images\5.5.0\New-Custom-Death-Markers.png" />
     <Resource Include="Assets\Images\5.5.0\r+desktop-icon-bot.png" />
+    <Resource Include="Assets\Images\6.0 Cloud Patch\MapFetchDiscord.png" />
     <Resource Include="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
     <Resource Include="Assets\rustplus-desktop-icon.ico" />
     <Resource Include="Assets\Screenshots\3.0_1.png" />

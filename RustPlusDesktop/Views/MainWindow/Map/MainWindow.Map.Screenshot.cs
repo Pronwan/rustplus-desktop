@@ -165,13 +165,28 @@ public partial class MainWindow
             string? channelId = null;
             try
             {
-                var channelsRes = await RustPlusDesk.Services.Auth.SupabaseAuthManager.Client
-                    .From<RustPlusDesk.Models.DiscordChannelsConfigModel>()
-                    .Get();
-                channelId = channelsRes.Models?.FirstOrDefault(c => c.NotificationType == "chat" && !string.IsNullOrEmpty(c.ChannelId))?.ChannelId;
-                if (string.IsNullOrEmpty(channelId))
+                string? guildId = null;
+                var vm = _vm;
+                if (vm != null && !string.IsNullOrEmpty(vm.SteamId64))
                 {
-                    channelId = channelsRes.Models?.FirstOrDefault(c => c.NotificationType == "events" && !string.IsNullOrEmpty(c.ChannelId))?.ChannelId;
+                    var guildRes = await RustPlusDesk.Services.Auth.SupabaseAuthManager.Client
+                        .From<RustPlusDesk.Models.DiscordBotSettingsModel>()
+                        .Filter("owner_steam_id", Postgrest.Constants.Operator.Equals, vm.SteamId64)
+                        .Get();
+                    guildId = guildRes.Models?.FirstOrDefault()?.GuildId;
+                }
+
+                if (!string.IsNullOrEmpty(guildId))
+                {
+                    var channelsRes = await RustPlusDesk.Services.Auth.SupabaseAuthManager.Client
+                        .From<RustPlusDesk.Models.DiscordChannelsConfigModel>()
+                        .Filter("guild_id", Postgrest.Constants.Operator.Equals, guildId)
+                        .Get();
+                    channelId = channelsRes.Models?.FirstOrDefault(c => c.NotificationType == "chat" && !string.IsNullOrEmpty(c.ChannelId))?.ChannelId;
+                    if (string.IsNullOrEmpty(channelId))
+                    {
+                        channelId = channelsRes.Models?.FirstOrDefault(c => c.NotificationType == "events" && !string.IsNullOrEmpty(c.ChannelId))?.ChannelId;
+                    }
                 }
             }
             catch (Exception ex)
