@@ -44,10 +44,71 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 
 *(I publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
+
+[![YouTube V6](./RustPlusDesktop/Assets/Images/6.0%20Cloud%20Patch/Thumbnail_RustPlus6_V6.jpg?raw=true)](https://www.youtube.com/watch?v=Ywv0hjE8nAI)
 [![YouTube V5](./RustPlusDesktop/Assets/Images/RustPlus_V5_Thumbnail.jpg?raw=true)](https://www.youtube.com/watch?v=wrqGoTCtAjs)
 
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
+
+# Rust+ Desktop v6.0.2 - Hotfix Update
+**🐛 Bug Fixes**
+
+- Event Notifications: Fixed an issue where event notifications (e.g., Deep Sea, Cargo Ship, Patrol Heli) weren't showing up correctly. They now correctly appear in the Event Channel instead of just Oil Rig and Timers.
+- Trade Alerts: Trade alerts are now loaded correctly.
+- Hotkeys: Fixed an issue causing "ghost" hotkeys.
+- Discord Bot: Fixed soft-connect Discord raid alerts.
+- Server Optimization: Fixed a server-side memory leak by instantiating the Supabase clients globally in the edge functions.
+
+**✨ New Features & Improvements**
+- Player Direction Indicator: Added a direction indicator for the movement direction of players on the map. This feature can be toggled in the Team tab.
+- Team Markers Settings: Added a new Team Markers section to the main application settings overlay.
+- UI Improvements: Improved the layout of the UI timer section. Matched the events dock and custom timer button backgrounds to the in-game time overlay.
+- Discord Bot: Translated various hardcoded bot error messages to English for better consistency.
+
+# 🔥 Rust+ Desktop v6.0.1 Hotfix
+- Added TTS support for Discord webhooks
+- Reworked custom timers with configurable 1-minute countdown and time-up alerts
+- Added a separate Advanced Bot channel for shop alerts
+- Fixed stale Advanced Bot channel database entries
+- Discord Raid Alerts now work during Soft Connect
+- One !switch command can now trigger multiple devices
+- Improved the Discord webhook setup window to prevent accidental closing
+
+# 🚀 Rust+ Desktop v6.0.0 - The Cloud & Intelligence Update!
+
+We are incredibly excited to announce our maybe biggest update ever! Version 6.0.0 (which includes all the great changes from our unreleased 5.5 update) brings a completely new Cloud Backend and Advanced Discord Integration to Rust+ Desktop.
+
+IMPORTANT: Rust+ Desktop remains completely FREE! We want to assure everyone that the app and its core features, including the new basic cloud features, are entirely free to use. We have simply restructured how data is synced to open the path for all the amazing new team features to come.
+
+Here is a quick breakdown of how the new tiers work:
+
+**🏠 1. Local Setup (No Account - FREE)**
+Your data stays 100% local on your PC. This is exactly how the app used to work if you were playing solo.
+
+❌ No Cloud Sync or Backups
+❌ No Device Sharing with teammates
+❌ No Web Portal Access
+
+**☁️ 2. Free Cloud Account (FREE)**
+By simply creating a free account via Email or Discord, you unlock our new cloud synchronization! This replaces the old "Free Version" and gives you:
+
+✔️ Device Sharing: Sync and share up to 10 smart devices across your team.
+✔️ Map Sharing: Share your map overlay (300 KB, 2 Bases, 1 Base-Screenshot).
+✔️ Basic Discord: Get basic webhook alerts sent straight to your Discord server.
+✔️ Web Portal Access: Manage your account via our new dashboard at rustplusdesktop.onrender.com/dashboard.
+
+**⭐ 3. Supporter Cloud**
+For clans, large groups, and power users, the Supporter Tier unlocks the ultimate Rust+ experience!
+
+🌟 Pro Map Sharing: Up to 3 MB of overlay data, 10 Bases, limitless devices and 5 Screenshots per base.
+🌟 Chat Master System: One person's client acts as the "Master" to prevent duplicate chat commands and raid alerts for the whole team. It intelligently hands off master status to another team member when the app is closed!
+🌟 Advanced Discord Bot: A bidirectional Discord Bot with custom command permissions, raid alerts, and event queries directly from your Discord server.
+🌟 Early Beta Access: Get early access to test versions via our Discord.
+
+Here's our new [Rust+ Cloud Dashboard](https://rustplusdesktop.onrender.com/) for free and Supporter Roles (you can also create an account or link discord through the app)
+
+
 # Rust+ Desktop v5.5.0: Custom Timers & Shop Overhaul 🚀
 Welcome to **v5.5.0**! This update introduces highly requested custom timers, a completely overhauled in-app shop, and several quality-of-life improvements for the mini map and death markers.
 
