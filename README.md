@@ -51,6 +51,19 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# **🚀 Update v6.1.0: Advanced Discord Bot Map Features! :map:**
+We added interactive Rust+ Desktop Map directly to your Discord server! With Advanced Discord Bot integration, you can now seamlessly share tactical map intel with your team.
+
+**:sparkles: New Feature:**
+
+- **One-Click Map Sharing**: Just click the new "Send to Discord" button right from the map view. Your current zoom level, view, and drawn markers will instantly be shared to your designated Chat Alerts channel.
+- **/map Slash Command:** Want to check the area around your team members without opening the app? Use the /map command directly in your Discord server! The bot will instantly reply with a screenshot of the app's current map viewport.
+- **/mapfull Slash Command**: Need the bigger picture? Use /mapfull in Discord to generate a high-resolution screenshot of the entire island, including all active event markers (Cargo, Heli, Crate, etc.), monuments, and team locations!
+
+
+:warning: If your bot doesn't have permission yet to send attachments to the Chat Alerts (Fallback Event Alerts), **please kick the bot and re-invite through the app**. All your channels settings will still work but this gives the bot the right to send attachments.
+
+
 # Rust+ Desktop v6.0.2 - Hotfix Update
 **🐛 Bug Fixes**
 
@@ -587,9 +600,9 @@ GPL-3.0-or-later
 
 ## Release Checksum:
 
-SHA256-Hash for current RustPlusDesk-Setup.exe 5.4.0:
+SHA256-Hash for current RustPlusDesk-Setup.exe 6.0.1:
 
-sha256:82a08dc8fa4e9375c204d2fcd021bc40aeaa35900efe2ac94df1f2b898d2a9d7
+sha256:8ff1cb89ec0d794575e679bf28d9653f3f9420d6f56f2a92bbf649c74561ca54
 
 ---
 
