@@ -218,8 +218,16 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private BitmapSource? _mapBaseBmp; // Original-Map ohne Marker
     private readonly List<(double uPx, double vPx, string? label)> _staticMarkers = new();
+    private bool _isShuttingDown = false;
+
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
+        if (_isShuttingDown)
+        {
+            base.OnClosing(e);
+            return;
+        }
+
         if (TrackingService.CloseToTrayEnabled)
         {
             e.Cancel = true;
@@ -375,6 +383,8 @@ public partial class MainWindow : WpfUi.FluentWindow
         InitSmoothFollowLoop();
         StartCloudSyncTimer();
         ApplySettings();
+        LoadPersistentAlerts();
+        RefreshEventDock();
         _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
         AppendLog($"[items-new] baseDir={baseDir}");
         EnsureNewItemDbLoaded();
@@ -681,7 +691,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             Dispatcher.InvokeAsync(async () =>
             {
                 var msg = string.Format(Properties.Resources.AlertOilRigTriggered, rigName, timeStr);
-                await SendTeamChatSafeAsync(msg);
+                await SendTeamChatSafeAsync(msg, false, true);
                 _ = DiscordBotListenerService.Instance.SendNotificationAsync("events", "\uD83D\uDEA2 **Event:** " + msg);
             });
         };
@@ -692,7 +702,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
             Dispatcher.InvokeAsync(async () =>
             {
-                await SendTeamChatSafeAsync(message);
+                await SendTeamChatSafeAsync(message, false, true);
                 _ = DiscordBotListenerService.Instance.SendNotificationAsync("events", "\uD83D\uDEA2 **Event Update:** " + message);
             });
         };
@@ -2034,13 +2044,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
 
         SmartDevice? dev = null;
+        ServerProfile? alarmProfile = null;
         if (n.EntityId.HasValue)
         {
             uint eid = n.EntityId.Value;
             foreach (var profile in _vm.Servers)
             {
                 dev = FindDeviceById(profile.Devices, eid);
-                if (dev != null) break;
+                if (dev != null)
+                {
+                    alarmProfile = profile;
+                    break;
+                }
             }
         }
 
@@ -2055,6 +2070,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (profile != null)
             {
+                alarmProfile = profile;
                 var serverAlarms = profile.Devices.Where(d => d.Kind == "SmartAlarm").ToList();
                 if (serverAlarms.Count == 1)
                 {
@@ -2071,6 +2087,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (allAlarms.Count == 1)
                 {
                     dev = allAlarms[0];
+                    alarmProfile = _vm.Servers.FirstOrDefault(p => FindDeviceById(p.Devices, dev.EntityId) != null);
                     n = n with { EntityId = dev.EntityId };
                     AppendLog($"[alarm/debug] ({source}) Fuzzy matched single global alarm device: {dev.Name} (ID: {dev.EntityId})");
                 }
@@ -2094,7 +2111,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _alarmMetadataCache[tid.Value] = (n.DeviceName, n.Message);
                 if (dev == null)
                 {
-                    foreach (var profile in _vm.Servers) { dev = FindDeviceById(profile.Devices, tid.Value); if (dev != null) break; }
+                    foreach (var profile in _vm.Servers)
+                    {
+                        dev = FindDeviceById(profile.Devices, tid.Value);
+                        if (dev != null)
+                        {
+                            alarmProfile = profile;
+                            break;
+                        }
+                    }
                 }
                 if (dev != null) dev.LastAlarmMessage = n.Message;
             }
@@ -2152,13 +2177,25 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         PlayAlarmAudio(dev);
 
         // Send smart alert to Discord Bot
-        _ = DiscordBotListenerService.Instance.SendNotificationAsync("raid", $"\uD83D\uDEA8 **{dev?.PureName ?? n.DeviceName ?? "Smart Alarm"}**: {n.Message}");
+        alarmProfile ??= _vm.Servers.FirstOrDefault(p =>
+            string.Equals(CleanServerName(p.Name), cleanSrv, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(p.Host, cleanSrv, StringComparison.OrdinalIgnoreCase));
+        var raidServerKey = alarmProfile == null ? "" : $"{alarmProfile.Host}-{alarmProfile.Port}";
+        var raidOwnerSteamId = !string.IsNullOrWhiteSpace(_vm.SteamId64)
+            ? _vm.SteamId64
+            : alarmProfile?.SteamId64 ?? "";
+        _ = DiscordBotListenerService.Instance.SendRaidNotificationAsync(
+            raidServerKey,
+            raidOwnerSteamId,
+            $"\uD83D\uDEA8 **{dev?.PureName ?? n.DeviceName ?? "Smart Alarm"}**: {n.Message}");
 
         // Send smart alert to team chat if setting and master switch are enabled
-        if (TrackingService.AnnounceSmartAlerts && _announceSpawns)
+        if (_vm.Selected?.IsFullConnected == true
+            && TrackingService.AnnounceSmartAlerts
+            && _announceSpawns)
         {
             string alarmName = dev?.PureName ?? (!string.IsNullOrEmpty(n.DeviceName) ? n.DeviceName : "Smart Alarm");
-            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertAlarmTriggered, alarmName));
+            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertAlarmTriggered, alarmName), false, true);
         }
 
         if (dev != null)
@@ -2265,6 +2302,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             UpdateAlarmOverlayUi();
             if (AlarmOverlayAutoHideChk.IsChecked == true) RestartAlarmOverlayTimer();
         }
+    }
+
+    private static string CleanServerName(string? serverName)
+    {
+        var clean = Regex.Replace(serverName ?? "", @"\x1B\[[0-9;]*[A-Za-z]", "");
+        return Regex.Replace(clean, @"\[/?[a-zA-Z]+\]", "").Trim();
     }
 
     private void AlarmOverlayNext_Click(object sender, RoutedEventArgs e)
@@ -2422,6 +2465,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
+        if (_isShuttingDown) return;
+
         if (TrackingService.CloseToTrayEnabled)
         {
             e.Cancel = true;
@@ -2431,18 +2476,32 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         }
 
+        e.Cancel = true;
+        this.Hide();
+
         try
         {
-            AppendLog($"Speichere Profile Ã¢â€ â€™ {StorageService.GetProfilesPath()}");
+            AppendLog($"Speichere Profile → {StorageService.GetProfilesPath()}");
             _vm.Save();
         }
         catch (Exception ex) { AppendLog("Saving failed: " + ex.Message); }
 
-        try
+        Task.Run(async () =>
         {
-            Task.Run(NotifyTeamFeatureAppClosingAsync).Wait(TimeSpan.FromSeconds(3));
-        }
-        catch { }
+            try
+            {
+                await NotifyTeamFeatureAppClosingAsync();
+            }
+            catch { }
+            finally
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    _isShuttingDown = true;
+                    this.Close();
+                });
+            }
+        });
     }
 
     public void HandleRustPlusLink(string link)
@@ -2583,6 +2642,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 // Persist SteamId into the FCM config file so future launches read it
                 TrackingService.PatchFcmConfigSteamId(e.SteamId64);
                 HydrateSteamUiFromStorage();
+                
+                // Immediately attempt guest registration if not logged in
+                _ = RustPlusDesk.Services.Auth.SupabaseAuthManager.TryInitializeGuestAuthAsync();
             }
 
             bool datesChanged = false;
@@ -3032,6 +3094,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private bool _showProfileMarkers = true;
     private bool _showDeathMarkers = false;
+    private bool _showPlayerArrows = true;
 
     // death pins per player
     private readonly Dictionary<Guid, FrameworkElement> _deathPins = new();
@@ -4361,7 +4424,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert: {msg}");
 
                 if (rule.NotifyChat)
-                    await SendTeamChatSafeAsync(msg);
+                    await SendTeamChatSafeAsync(msg, false, true);
+                
+                _ = DiscordBotListenerService.Instance.SendNotificationAsync("shop", $"🛒 **Trade Alert:** {msg}");
 
                 if (rule.NotifySound)
                     PlayShopAlertSound();
@@ -4755,6 +4820,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _showProfileMarkers = TrackingService.MapShowSteamMarkers;
         if (ChkProfileMarkers != null) ChkProfileMarkers.IsChecked = _showProfileMarkers;
 
+        _showPlayerArrows = TrackingService.MapShowPlayerArrows;
+        if (ChkPlayerArrows != null) ChkPlayerArrows.IsChecked = _showPlayerArrows;
+
         _showDeathMarkers = TrackingService.MapShowDeathTags;
         if (ChkDeathMarkers != null) ChkDeathMarkers.IsChecked = _showDeathMarkers;
 
@@ -4784,7 +4852,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         snackbar.Show();
     }
 
-    private void ShowTimerExpiredSnackbar(string timerName)
+    private void ShowTimerSnackbar(string title, string timerName, int timeoutSeconds = 8)
     {
         if (RootSnackbar == null) return;
 
@@ -4823,11 +4891,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         var snackbar = new WpfUi.Snackbar(RootSnackbar)
         {
-            Title = "Timer Expired",
+            Title = title,
             Content = panel,
             Appearance = WpfUi.ControlAppearance.Caution,
             Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Timer24),
-            Timeout = TimeSpan.FromSeconds(8),
+            Timeout = TimeSpan.FromSeconds(timeoutSeconds),
             MaxWidth = 400,
             HorizontalAlignment = HorizontalAlignment.Right
         };

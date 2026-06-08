@@ -173,6 +173,11 @@ public partial class MainWindow
 
     private void StopTeamFeatureMasterWatch()
     {
+        if (!Dispatcher.CheckAccess())
+        {
+            Dispatcher.Invoke(StopTeamFeatureMasterWatch);
+            return;
+        }
         var timer = _teamFeatureMasterWatchTimer;
         if (timer == null) return;
 

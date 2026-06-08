@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -873,6 +873,9 @@ Download and install now?</value>
   </data>
   <data name="MapSettings" xml:space="preserve">
     <value>Map Settings</value>
+  </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>Team Markers</value>
   </data>
   <data name="AutoLoadShops" xml:space="preserve">
     <value>Auto load shops on connection</value>
@@ -1821,6 +1824,9 @@ Are you sure you want to continue?</value>
   <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
+  <data name="PlayerDirectionArrow" xml:space="preserve">
+    <value>Direction</value>
+  </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
@@ -2097,32 +2103,175 @@ Are you sure you want to continue?</value>
   <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
     <value>No thanks</value>
   </data>
-  <data name="CloudTooltipSyncLimitReached" xml:space="preserve"><value>Sync limit reached</value></data>
-  <data name="CloudTooltipBaseLimit" xml:space="preserve"><value>Base limit reached (Free: max 2 bases, Premium: max 10 bases)</value></data>
-  <data name="BaseAddScreenshot" xml:space="preserve"><value>Add Screenshot</value></data>
-  <data name="BaseScreenshotDragDrop" xml:space="preserve"><value>Drag &amp; Drop an image here</value></data>
-  <data name="BaseScreenshotPasteHint" xml:space="preserve"><value>or press CTRL+V to paste a screenshot</value></data>
-  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve"><value>No image found in clipboard.</value></data>
-  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve"><value>Paste Error</value></data>
-  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve"><value>Failed to paste image: {0}</value></data>
-  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve"><value>Failed to load image file: {0}</value></data>
-  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve"><value>Compression Error</value></data>
-  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve"><value>Error compressing image: {0}</value></data>
-  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve"><value>Resolution: {0}x{1} | Size: {2} KB (Quality 25%)</value></data>
-  <data name="BaseNoteWindowTitle" xml:space="preserve"><value>Edit Base Note</value></data>
-  <data name="BaseNoteTitle" xml:space="preserve"><value>Base Note</value></data>
-  <data name="BaseAddNote" xml:space="preserve"><value>Add Note</value></data>
-  <data name="BaseEditNote" xml:space="preserve"><value>Edit Note</value></data>
-  <data name="BaseDeleteNote" xml:space="preserve"><value>Delete Note</value></data>
-  <data name="BaseDeleteScreenshotFormat" xml:space="preserve"><value>Delete Screenshot {0}</value></data>
-  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve"><value>Add Screenshot {0} (Premium required)</value></data>
-  <data name="BaseNoNotesYet" xml:space="preserve"><value>No notes added yet.</value></data>
-  <data name="BaseNoScreenshotsYet" xml:space="preserve"><value>No screenshots added yet</value></data>
-  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve"><value>Chat Master online</value></data>
-  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve"><value>{0} is controlling Chat Alerts and Chat Commands for this team.</value></data>
-  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve"><value>Chat Master {0} online. Chat Alerts and Chat Commands are paused on this device.</value></data>
-  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve"><value>You are Chat Master</value></data>
-  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve"><value>This device is now controlling Chat Alerts and Chat Commands for your team.</value></data>
-  <data name="ChatFeatureMasterAccept" xml:space="preserve"><value>Accept</value></data>
-  <data name="ChatFeatureMasterDeny" xml:space="preserve"><value>Deny</value></data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
+    <value>Sync limit reached</value>
+  </data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve">
+    <value>Base limit reached (Free: max 2 bases, Premium: max 10 bases)</value>
+  </data>
+  <data name="BaseAddScreenshot" xml:space="preserve">
+    <value>Add Screenshot</value>
+  </data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve">
+    <value>Drag &amp; Drop an image here</value>
+  </data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve">
+    <value>or press CTRL+V to paste a screenshot</value>
+  </data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
+    <value>No image found in clipboard.</value>
+  </data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
+    <value>Paste Error</value>
+  </data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
+    <value>Failed to paste image: {0}</value>
+  </data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
+    <value>Failed to load image file: {0}</value>
+  </data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
+    <value>Compression Error</value>
+  </data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
+    <value>Error compressing image: {0}</value>
+  </data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
+    <value>Resolution: {0}x{1} | Size: {2} KB (Quality 25%)</value>
+  </data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve">
+    <value>Edit Base Note</value>
+  </data>
+  <data name="BaseNoteTitle" xml:space="preserve">
+    <value>Base Note</value>
+  </data>
+  <data name="BaseAddNote" xml:space="preserve">
+    <value>Add Note</value>
+  </data>
+  <data name="BaseEditNote" xml:space="preserve">
+    <value>Edit Note</value>
+  </data>
+  <data name="BaseDeleteNote" xml:space="preserve">
+    <value>Delete Note</value>
+  </data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
+    <value>Delete Screenshot {0}</value>
+  </data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
+    <value>Add Screenshot {0} (Premium required)</value>
+  </data>
+  <data name="BaseNoNotesYet" xml:space="preserve">
+    <value>No notes added yet.</value>
+  </data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve">
+    <value>No screenshots added yet</value>
+  </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>Chat Master online</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>{0} is controlling Chat Alerts and Chat Commands for this team.</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>Chat Master {0} online. Chat Alerts and Chat Commands are paused on this device.</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>You are Chat Master</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>This device is now controlling Chat Alerts and Chat Commands for your team.</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>Accept</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>Deny</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>v6.0.0 Update</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>Compare Cloud Features</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>Cloud Features Comparison</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>Welcome to the Cloud</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>Choose the tier that best fits your needs.</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>No Account</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>Your data stays 100% local. Best for solo players.</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>No Cloud Sync or Backups</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>No Device Sharing</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>No Web Portal Access</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>Free Cloud Account</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>Basic cloud features to get you started with sharing.</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>Basic Discord Webhook Alerts</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>Share up to 10 Devices</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>Map Sharing (300 KB, 2 Bases, 1 screenshot)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>Act as Supporter Helper</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>Access to Cloud Web Portal</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>Supporter Cloud</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>The ultimate Rust+ experience for clans and advanced users.</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>Pro Map Sharing (3 MB, 10 Bases, 5 screenshots)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>Chat Master System</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>Advanced Bidirectional Discord Bot</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>Early Beta &amp; Test Versions via Discord</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>Become a Supporter</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>Support us on </value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value> - Link Patreon with Discord for automatic Supporter role &amp; App detection.</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>Tip via </value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value> - Poke Jawad or Pronwan in Discord for manual Supporter role (Amount / $2.50 = Months).</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>Open Cloud Web Portal</value>
+  </data>
 </root>

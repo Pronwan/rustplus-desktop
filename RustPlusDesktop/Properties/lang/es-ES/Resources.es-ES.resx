@@ -1794,6 +1794,9 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   <data name="RenameDeathMarker" xml:space="preserve">
     <value>Renombrar marcador de muerte</value>
   </data>
+  <data name="PlayerDirectionArrow" xml:space="preserve">
+    <value>Dirección</value>
+  </data>
   <data name="Profile" xml:space="preserve">
     <value>Perfil</value>
   </data>

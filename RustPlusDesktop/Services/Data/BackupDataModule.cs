@@ -74,11 +74,53 @@ namespace RustPlusDesk.Services.Data
                     File.Copy(crosshairPath, Path.Combine(tempDir, "custom_crosshairs.json"), true);
                 }
 
-                // 4. Copy minimap_settings.json
+                // 4. Copy settings and cloud files from Cache and AppData
                 string minimapPath = Path.Combine(DataManager.CacheDir, "minimap_settings.json");
                 if (File.Exists(minimapPath))
                 {
                     File.Copy(minimapPath, Path.Combine(tempDir, "minimap_settings.json"), true);
+                }
+
+                string supabaseSessionPath = Path.Combine(DataManager.CacheDir, "supabase_session.json");
+                if (File.Exists(supabaseSessionPath))
+                {
+                    File.Copy(supabaseSessionPath, Path.Combine(tempDir, "supabase_session.json"), true);
+                }
+
+                string handshakeKeyPath = Path.Combine(DataManager.CacheDir, "handshake_key.json");
+                if (File.Exists(handshakeKeyPath))
+                {
+                    File.Copy(handshakeKeyPath, Path.Combine(tempDir, "handshake_key.json"), true);
+                }
+
+                string handshakeJwtPath = Path.Combine(DataManager.CacheDir, "handshake_jwt.json");
+                if (File.Exists(handshakeJwtPath))
+                {
+                    File.Copy(handshakeJwtPath, Path.Combine(tempDir, "handshake_jwt.json"), true);
+                }
+
+                string trackedPlayersPath = Path.Combine(DataManager.AppDir, "tracked_players.json");
+                if (File.Exists(trackedPlayersPath))
+                {
+                    File.Copy(trackedPlayersPath, Path.Combine(tempDir, "tracked_players.json"), true);
+                }
+
+                string trackingSettingsPath = Path.Combine(DataManager.AppDir, "tracking_settings.json");
+                if (File.Exists(trackingSettingsPath))
+                {
+                    File.Copy(trackingSettingsPath, Path.Combine(tempDir, "tracking_settings.json"), true);
+                }
+
+                string hotkeysPath = Path.Combine(DataManager.AppDir, "hotkeys.json");
+                if (File.Exists(hotkeysPath))
+                {
+                    File.Copy(hotkeysPath, Path.Combine(tempDir, "hotkeys.json"), true);
+                }
+
+                string shopAlertsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "shop_alerts.json");
+                if (File.Exists(shopAlertsPath))
+                {
+                    File.Copy(shopAlertsPath, Path.Combine(tempDir, "shop_alerts.json"), true);
                 }
 
                 // 5. Copy Overlays folder
@@ -173,6 +215,30 @@ namespace RustPlusDesk.Services.Data
                     File.Copy(stagingFcm, targetFcm, true);
                 }
 
+                // 4c. Restore tracked_players.json
+                string stagingTrackedPlayers = Path.Combine(tempDir, "tracked_players.json");
+                if (File.Exists(stagingTrackedPlayers))
+                {
+                    Directory.CreateDirectory(DataManager.AppDir);
+                    File.Copy(stagingTrackedPlayers, Path.Combine(DataManager.AppDir, "tracked_players.json"), true);
+                }
+
+                // 4d. Restore tracking_settings.json
+                string stagingTrackingSettings = Path.Combine(tempDir, "tracking_settings.json");
+                if (File.Exists(stagingTrackingSettings))
+                {
+                    Directory.CreateDirectory(DataManager.AppDir);
+                    File.Copy(stagingTrackingSettings, Path.Combine(DataManager.AppDir, "tracking_settings.json"), true);
+                }
+
+                // 4e. Restore hotkeys.json
+                string stagingHotkeys = Path.Combine(tempDir, "hotkeys.json");
+                if (File.Exists(stagingHotkeys))
+                {
+                    Directory.CreateDirectory(DataManager.AppDir);
+                    File.Copy(stagingHotkeys, Path.Combine(DataManager.AppDir, "hotkeys.json"), true);
+                }
+
                 // 5. Restore custom_crosshairs.json
                 string stagingCrosshairs = Path.Combine(tempDir, "custom_crosshairs.json");
                 if (File.Exists(stagingCrosshairs))
@@ -188,12 +254,40 @@ namespace RustPlusDesk.Services.Data
                     File.Copy(stagingCrosshairs, targetCrosshairs, true);
                 }
 
-                // 6. Restore minimap_settings.json
+                // 6. Restore Cache files
                 string stagingMinimap = Path.Combine(tempDir, "minimap_settings.json");
                 if (File.Exists(stagingMinimap))
                 {
                     Directory.CreateDirectory(DataManager.CacheDir);
                     File.Copy(stagingMinimap, Path.Combine(DataManager.CacheDir, "minimap_settings.json"), true);
+                }
+
+                string stagingSupabase = Path.Combine(tempDir, "supabase_session.json");
+                if (File.Exists(stagingSupabase))
+                {
+                    Directory.CreateDirectory(DataManager.CacheDir);
+                    File.Copy(stagingSupabase, Path.Combine(DataManager.CacheDir, "supabase_session.json"), true);
+                }
+
+                string stagingHandshakeKey = Path.Combine(tempDir, "handshake_key.json");
+                if (File.Exists(stagingHandshakeKey))
+                {
+                    Directory.CreateDirectory(DataManager.CacheDir);
+                    File.Copy(stagingHandshakeKey, Path.Combine(DataManager.CacheDir, "handshake_key.json"), true);
+                }
+
+                string stagingHandshakeJwt = Path.Combine(tempDir, "handshake_jwt.json");
+                if (File.Exists(stagingHandshakeJwt))
+                {
+                    Directory.CreateDirectory(DataManager.CacheDir);
+                    File.Copy(stagingHandshakeJwt, Path.Combine(DataManager.CacheDir, "handshake_jwt.json"), true);
+                }
+
+                string stagingShopAlerts = Path.Combine(tempDir, "shop_alerts.json");
+                if (File.Exists(stagingShopAlerts))
+                {
+                    string targetShopAlerts = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "shop_alerts.json");
+                    File.Copy(stagingShopAlerts, targetShopAlerts, true);
                 }
 
                 // 7. Restore Overlays folder

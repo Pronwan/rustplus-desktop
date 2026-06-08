@@ -152,6 +152,27 @@
                     </StackPanel>
                 </CheckBox>
 
+                <!-- Player direction arrow -->
+                <CheckBox x:Name="ChkPlayerArrows" IsChecked="True" Checked="ChkPlayerArrows_Toggled" Unchecked="ChkPlayerArrows_Toggled" Margin="0,0,12,0" Cursor="Hand">
+                    <CheckBox.Template>
+                        <ControlTemplate TargetType="CheckBox">
+                            <Border Background="Transparent">
+                                <ContentPresenter />
+                            </Border>
+                        </ControlTemplate>
+                    </CheckBox.Template>
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox Width="18" Height="18" Margin="0,0,6,0" Stretch="Uniform">
+                            <Grid Width="40" Height="40">
+                                <Path Data="M 20,4 L 32,32 L 8,32 Z" Fill="LimeGreen" Stroke="Black" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkPlayerArrows, Converter={StaticResource BoolToVisibility}}" />
+                                <Path Data="M 20,4 L 32,32 L 8,32 Z" Fill="#444" Stroke="#666" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkPlayerArrows, Converter={StaticResource BoolToVisibilityInv}}" />
+                            </Grid>
+                        </Viewbox>
+                        <TextBlock VerticalAlignment="Center" Text="{DynamicResource PlayerDirectionArrow}" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </CheckBox>
+
+
                 <Grid x:Name="DeathMarkerToggleContainer" Background="Transparent" Margin="0,0,12,0">
                     <StackPanel Orientation="Horizontal">
                         <CheckBox x:Name="ChkDeathMarkers" IsChecked="False" Checked="ChkDeathMarkers_Toggled" Unchecked="ChkDeathMarkers_Toggled" VerticalAlignment="Center" Cursor="Hand">

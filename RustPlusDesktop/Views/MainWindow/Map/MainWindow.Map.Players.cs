@@ -28,14 +28,17 @@ public partial class MainWindow
         public TextBlock NameText = null!;
         public string? Name { get; set; }
         public Ellipse? AvatarCircle;
+        public Path? ArrowPath;
         public double Radius;
         public bool IsDeathPin { get; set; }
         public bool IsPlayer { get; set; }
         public bool IsDot;
+        public bool HasAvatar;
 
         public double ScaleExp { get; set; } = SHOP_SIZE_EXP;
         public double ScaleBaseMult { get; set; } = 1.0;
         public FrameworkElement? ScaleTarget { get; set; }
+        public FrameworkElement? RotationTarget { get; set; }
         public double ScaleCenterX { get; set; }
         public double ScaleCenterY { get; set; }
         public double Rotation { get; set; }
@@ -82,7 +85,19 @@ public partial class MainWindow
             Fill = brush,
             Stroke = Brushes.Black,
             StrokeThickness = 2,
-            Margin = new Thickness(0, 0, 4, 0),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        var arrow = new Path
+        {
+            Data = Geometry.Parse("M 14,0 L 17,5 L 11,5 Z"),
+            Fill = brush,
+            Stroke = Brushes.Black,
+            StrokeThickness = 1,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+            Visibility = _showPlayerArrows ? Visibility.Visible : Visibility.Collapsed
         };
 
         var displayName = GetDisplayPlayerName(name);
@@ -91,33 +106,65 @@ public partial class MainWindow
             Text = displayName,
             Foreground = brush,
             FontSize = 12,
-            Margin = new Thickness(6, -2, 0, 0)
+            Margin = new Thickness(6, -2, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center
         };
 
-        var sp = new StackPanel { Orientation = Orientation.Horizontal };
-        sp.Children.Add(dot);
-        sp.Children.Add(tb);
-        ToolTipService.SetToolTip(sp, name);
+        // Dot + arrow stacked in a small 28x28 grid (same layout as BuildPlayerMarker)
+        var dotContainer = new Grid
+        {
+            Width = 14,
+            Height = 14,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        dotContainer.Children.Add(dot);
 
-        sp.Tag = new PlayerMarkerTag
+        var arrowContainer = new Grid
+        {
+            Width = 28,
+            Height = 28,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        arrowContainer.Children.Add(arrow);
+
+        var markerContainer = new Grid { Width = 28, Height = 28, Margin = new Thickness(0, 0, 4, 0) };
+        markerContainer.Children.Add(dotContainer);
+        markerContainer.Children.Add(arrowContainer);
+
+        var host = new Grid();
+        host.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        host.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        host.Children.Add(markerContainer);
+        Grid.SetColumn(markerContainer, 0);
+        host.Children.Add(tb);
+        Grid.SetColumn(tb, 1);
+
+        ToolTipService.SetToolTip(host, name);
+
+        host.Tag = new PlayerMarkerTag
         {
             SteamId = sid,
             Name = name,
             NameText = tb,
             AvatarCircle = dot,
-            Radius = 5,
+            ArrowPath = arrow,
+            RotationTarget = arrowContainer,
+            Radius = 14,
             IsDeathPin = false,
             IsPlayer = true,
             IsDot = true,
-            ScaleExp = 1.05,
+            ScaleExp = 0.85,
             ScaleBaseMult = 1.0,
-            ScaleTarget = sp,
-            ScaleCenterX = 5.0,
-            ScaleCenterY = 5.0
+            ScaleTarget = host,
+            ScaleCenterX = 14.0,
+            ScaleCenterY = 14.0
         };
 
-        ApplyCurrentOverlayScale(sp);
-        return sp;
+        Panel.SetZIndex(host, 905);
+        ApplyCurrentOverlayScale(host);
+        return host;
     }
 
     private FrameworkElement BuildPlayerMarker(ulong sid, string name, bool online, bool dead)
@@ -128,37 +175,82 @@ public partial class MainWindow
 
         if (avatar == null)
         {
-            var dot = new Ellipse
-            {
-                Width = 10,
-                Height = 10,
-                Fill = brush,
-                Stroke = Brushes.Black,
-                StrokeThickness = 2,
-                Margin = new Thickness(0, 0, 4, 0)
-            };
             var displayName = GetDisplayPlayerName(name);
             var tb = new TextBlock { Text = displayName, Foreground = brush, FontSize = 12, Margin = new Thickness(6, -2, 0, 0) };
-            var sp = new StackPanel { Orientation = Orientation.Horizontal };
-            sp.Children.Add(dot);
-            sp.Children.Add(tb);
-            sp.Tag = new PlayerMarkerTag
+            
+            var circle = new Ellipse
+            {
+                Width = PlayerAvatarSize,
+                Height = PlayerAvatarSize,
+                Stroke = Brushes.Black,
+                StrokeThickness = 2,
+                Fill = brush
+            };
+
+            var arrow = new Path
+            {
+                Data = Geometry.Parse("M 14,0 L 17,5 L 11,5 Z"),
+                Fill = brush,
+                Stroke = Brushes.Black,
+                StrokeThickness = 1,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                Visibility = _showPlayerArrows ? Visibility.Visible : Visibility.Collapsed
+            };
+
+            var host = new Grid();
+            host.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            host.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+            var markerContainer = new Grid { Width = 28, Height = 28, Margin = new Thickness(0, 0, 4, 0) };
+            
+            var circleHost = new Grid
+            {
+                Width = PlayerAvatarSize,
+                Height = PlayerAvatarSize,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            circleHost.Children.Add(circle);
+
+            var arrowContainer = new Grid
+            {
+                Width = 28,
+                Height = 28,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            arrowContainer.Children.Add(arrow);
+
+            markerContainer.Children.Add(circleHost);
+            markerContainer.Children.Add(arrowContainer);
+
+            host.Children.Add(markerContainer);
+            Grid.SetColumn(markerContainer, 0);
+            host.Children.Add(tb);
+            Grid.SetColumn(tb, 1);
+
+            host.Tag = new PlayerMarkerTag
             {
                 SteamId = sid,
                 NameText = tb,
-                AvatarCircle = null,
-                Radius = 5,
+                AvatarCircle = circle,
+                ArrowPath = arrow,
+                Radius = 14.0,
                 IsPlayer = true,
-                IsDot = true,
-                ScaleExp = 1.05,
+                IsDot = false,
+                HasAvatar = false,
+                ScaleExp = 0.85,
                 ScaleBaseMult = 1.0,
-                ScaleTarget = sp,
-                ScaleCenterX = 5.0,
-                ScaleCenterY = 5.0
+                ScaleTarget = host,
+                RotationTarget = arrowContainer,
+                ScaleCenterX = 14.0,
+                ScaleCenterY = 14.0,
             };
-            Panel.SetZIndex(sp, 905);
-            ApplyCurrentOverlayScale(sp);
-            return sp;
+            Panel.SetZIndex(host, 905);
+            ToolTipService.SetToolTip(host, name);
+            ApplyCurrentOverlayScale(host);
+            return host;
         }
         else
         {
@@ -173,15 +265,46 @@ public partial class MainWindow
                 Fill = new ImageBrush(avatar) { Stretch = Stretch.UniformToFill }
             };
 
+            var arrow = new Path
+            {
+                Data = Geometry.Parse("M 14,0 L 17,5 L 11,5 Z"),
+                Fill = brush,
+                Stroke = Brushes.Black,
+                StrokeThickness = 1,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                Visibility = _showPlayerArrows ? Visibility.Visible : Visibility.Collapsed
+            };
+
             var host = new Grid();
             host.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             host.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-            var avatarHost = new Grid { Width = PlayerAvatarSize, Height = PlayerAvatarSize, Margin = new Thickness(0, 0, 4, 0) };
+            var markerContainer = new Grid { Width = 28, Height = 28, Margin = new Thickness(0, 0, 4, 0) };
+
+            var avatarHost = new Grid
+            {
+                Width = PlayerAvatarSize,
+                Height = PlayerAvatarSize,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
             avatarHost.Children.Add(circle);
 
-            host.Children.Add(avatarHost);
-            Grid.SetColumn(avatarHost, 0);
+            var arrowContainer = new Grid
+            {
+                Width = 28,
+                Height = 28,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            arrowContainer.Children.Add(arrow);
+
+            markerContainer.Children.Add(avatarHost);
+            markerContainer.Children.Add(arrowContainer);
+
+            host.Children.Add(markerContainer);
+            Grid.SetColumn(markerContainer, 0);
             host.Children.Add(tb);
             Grid.SetColumn(tb, 1);
 
@@ -190,13 +313,17 @@ public partial class MainWindow
                 SteamId = sid,
                 NameText = tb,
                 AvatarCircle = circle,
-                Radius = PlayerAvatarSize * 0.5,
+                ArrowPath = arrow,
+                Radius = 14.0,
                 IsPlayer = true,
+                IsDot = false,
+                HasAvatar = true,
                 ScaleExp = 0.85,
                 ScaleBaseMult = 1.0,
                 ScaleTarget = host,
-                ScaleCenterX = PlayerAvatarSize * 0.5,
-                ScaleCenterY = PlayerAvatarSize * 0.5,
+                RotationTarget = arrowContainer,
+                ScaleCenterX = 14.0,
+                ScaleCenterY = 14.0,
             };
             Panel.SetZIndex(host, 905);
             ToolTipService.SetToolTip(host, name);
@@ -251,12 +378,11 @@ public partial class MainWindow
             {
                 t.NameText.Text = displayName;
                 t.NameText.Foreground = brush;
-
-                if (t.NameText.Parent is Panel sp)
+                if (t.AvatarCircle != null) t.AvatarCircle.Fill = brush;
+                if (t.ArrowPath != null)
                 {
-                    var dot = sp.Children.OfType<Ellipse>().FirstOrDefault();
-                    Panel.SetZIndex(dot, 905);
-                    if (dot != null) dot.Fill = brush;
+                    t.ArrowPath.Fill = brush;
+                    t.ArrowPath.Visibility = _showPlayerArrows ? Visibility.Visible : Visibility.Collapsed;
                 }
             }
 
@@ -273,8 +399,29 @@ public partial class MainWindow
             if (tag.NameText != null) tag.NameText.Text = displayName;
             if (tag.NameText != null) tag.NameText.Foreground = brush2;
 
-            if (avatar != null && tag.IsDot ||
-                avatar == null && !tag.IsDot)
+            if (tag.ArrowPath != null)
+            {
+                tag.ArrowPath.Visibility = _showPlayerArrows ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            bool needsRebuild = false;
+            if (tag.IsDot)
+            {
+                needsRebuild = true;
+            }
+            else
+            {
+                if (avatar != null && !tag.HasAvatar)
+                {
+                    needsRebuild = true;
+                }
+                else if (avatar == null && tag.HasAvatar)
+                {
+                    needsRebuild = true;
+                }
+            }
+
+            if (needsRebuild)
             {
                 var newEl = BuildPlayerMarker(sid, name, online, dead);
                 int idx = Overlay.Children.IndexOf(el);
@@ -285,6 +432,10 @@ public partial class MainWindow
             else if (avatar != null && !tag.IsDot && tag.AvatarCircle != null)
             {
                 tag.AvatarCircle.Fill = new ImageBrush(avatar) { Stretch = Stretch.UniformToFill };
+            }
+            else if (avatar == null && !tag.IsDot && tag.AvatarCircle != null)
+            {
+                tag.AvatarCircle.Fill = brush2;
             }
         }
         else
@@ -318,6 +469,25 @@ public partial class MainWindow
                 else
                 {
                     UpdatePlayerMarker(ref el, kv.Key, sid, name, online: false, dead: false);
+                }
+            }
+        }
+    }
+
+    private void ChkPlayerArrows_Toggled(object? sender, RoutedEventArgs e)
+    {
+        _showPlayerArrows = ChkPlayerArrows.IsChecked == true;
+        if (_vm != null && !_vm.IsInitializing) TrackingService.MapShowPlayerArrows = _showPlayerArrows;
+
+        foreach (var kv in _dynEls.ToList())
+        {
+            if (kv.Value is FrameworkElement el && el.Tag is PlayerMarkerTag tag)
+            {
+                if (tag.SteamId == 0 || tag.IsDeathPin) continue;
+                
+                if (tag.ArrowPath != null)
+                {
+                    tag.ArrowPath.Visibility = _showPlayerArrows ? Visibility.Visible : Visibility.Collapsed;
                 }
             }
         }
@@ -616,6 +786,7 @@ public partial class MainWindow
 
         FrameworkElement target = el;
         double centerX = -1.0, centerY = -1.0;
+        FrameworkElement? rotationTarget = null;
 
         if (el.Tag is PlayerMarkerTag pt)
         {
@@ -637,6 +808,8 @@ public partial class MainWindow
                 if (!ReferenceEquals(target, el))
                     el.RenderTransform = Transform.Identity;
             }
+
+            rotationTarget = pt.RotationTarget;
         }
 
         bool isPlayerOrDeathMarker = el.Tag is PlayerMarkerTag pmtScale && (pmtScale.IsPlayer || pmtScale.IsDeathPin);
@@ -663,33 +836,83 @@ public partial class MainWindow
             target.RenderTransformOrigin = new Point(0.5, 0.5);
         }
 
-        var group = target.RenderTransform as TransformGroup;
-        if (group == null || group.Children.Count < 2 || !(group.Children[0] is ScaleTransform) || !(group.Children[1] is RotateTransform))
+        bool shouldRotateParent = (rotationTarget == null);
+        if (el.Tag is PlayerMarkerTag pmtCheck && (pmtCheck.IsPlayer || pmtCheck.IsDeathPin))
         {
-            group = new TransformGroup();
-            group.Children.Add(new ScaleTransform(scale, scale));
-            group.Children.Add(new RotateTransform(rotation));
-            target.RenderTransform = group;
+            shouldRotateParent = false;
+        }
+
+        if (rotationTarget != null)
+        {
+            var st = target.RenderTransform as ScaleTransform;
+            if (st == null)
+            {
+                target.RenderTransform = new ScaleTransform(scale, scale);
+            }
+            else
+            {
+                st.ScaleX = scale;
+                st.ScaleY = scale;
+            }
+
+            rotationTarget.RenderTransformOrigin = new Point(0.5, 0.5);
+            var rt = rotationTarget.RenderTransform as RotateTransform;
+            if (rt == null)
+            {
+                rotationTarget.RenderTransform = new RotateTransform(rotation);
+            }
+            else
+            {
+                var source = DependencyPropertyHelper.GetValueSource(rt, RotateTransform.AngleProperty);
+                if (!source.IsAnimated)
+                {
+                    rt.Angle = rotation;
+                }
+            }
+        }
+        else if (shouldRotateParent)
+        {
+            var group = target.RenderTransform as TransformGroup;
+            if (group == null || group.Children.Count < 2 || !(group.Children[0] is ScaleTransform) || !(group.Children[1] is RotateTransform))
+            {
+                group = new TransformGroup();
+                group.Children.Add(new ScaleTransform(scale, scale));
+                group.Children.Add(new RotateTransform(rotation));
+                target.RenderTransform = group;
+            }
+            else
+            {
+                var st = (ScaleTransform)group.Children[0];
+                st.ScaleX = scale;
+                st.ScaleY = scale;
+
+                var rt = (RotateTransform)group.Children[1];
+                var source = DependencyPropertyHelper.GetValueSource(rt, RotateTransform.AngleProperty);
+                if (!source.IsAnimated)
+                {
+                    rt.Angle = rotation;
+                }
+            }
         }
         else
         {
-            var st = (ScaleTransform)group.Children[0];
-            st.ScaleX = scale;
-            st.ScaleY = scale;
-
-            var rt = (RotateTransform)group.Children[1];
-            var source = DependencyPropertyHelper.GetValueSource(rt, RotateTransform.AngleProperty);
-            if (!source.IsAnimated)
+            var st = target.RenderTransform as ScaleTransform;
+            if (st == null)
             {
-                rt.Angle = rotation;
+                target.RenderTransform = new ScaleTransform(scale, scale);
+            }
+            else
+            {
+                st.ScaleX = scale;
+                st.ScaleY = scale;
             }
         }
 
         // Scale stroke thickness proportionally for player markers
         if (el.Tag is PlayerMarkerTag pmt && pmt.AvatarCircle != null)
         {
-            double baseStroke = pmt.IsDot ? 2.0 : 2.0;
-            pmt.AvatarCircle.StrokeThickness = Math.Max(0.5, baseStroke * _playerMarkerScale);
+            double baseStroke = pmt.IsDot ? 1.0 : 1.0;
+            pmt.AvatarCircle.StrokeThickness = Math.Max(0.5, baseStroke / _playerMarkerScale);
         }
     }
 
@@ -742,5 +965,37 @@ public partial class MainWindow
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Reads all player marker settings from TrackingService and syncs them into
+    /// the toolbar controls and internal state. Called by AppSettingsOverlay after
+    /// the user changes marker settings there.
+    /// </summary>
+    public void SyncPlayerSettingsFromTrackingService()
+    {
+        // Profile markers
+        _showProfileMarkers = TrackingService.MapShowSteamMarkers;
+        if (ChkProfileMarkers != null) ChkProfileMarkers.IsChecked = _showProfileMarkers;
+        ChkProfileMarkers_Toggled(null, null!);
+
+        // Player arrows
+        _showPlayerArrows = TrackingService.MapShowPlayerArrows;
+        if (ChkPlayerArrows != null) ChkPlayerArrows.IsChecked = _showPlayerArrows;
+        ChkPlayerArrows_Toggled(null, null!);
+
+        // Death markers
+        _showDeathMarkers = TrackingService.MapShowDeathTags;
+        if (ChkDeathMarkers != null) ChkDeathMarkers.IsChecked = _showDeathMarkers;
+        RedrawDeathPins();
+
+        // Streamer / abbreviate names
+        _abbreviateNames = TrackingService.MapAbbreviateNames;
+        if (BtnAbbreviateNames != null) BtnAbbreviateNames.IsChecked = _abbreviateNames;
+
+        // Player icon scale
+        _playerMarkerScale = TrackingService.MapPlayerIconScale;
+        if (SliderPlayerIconSize != null) SliderPlayerIconSize.Value = _playerMarkerScale;
+        RefreshAllOverlayScales();
     }
 }

@@ -19,12 +19,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>6.0.0</Version>
+		<Version>6.0.2</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>6.0.0</AssemblyVersion>
-		<FileVersion>6.0.0</FileVersion>
-		<InformationalVersion>6.0.0</InformationalVersion>
+		<AssemblyVersion>6.0.2</AssemblyVersion>
+		<FileVersion>6.0.2</FileVersion>
+		<InformationalVersion>6.0.2</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -60,10 +60,12 @@
 	
 	<ItemGroup>
 	  <None Remove="Assets\1-76fc6c7e.ico" />
+	  <None Remove="Assets\1min.mp3" />
 	  <None Remove="Assets\bell.mp3" />
 	  <None Remove="Assets\cash.wav" />
 	  <None Remove="Assets\icons\airfield.png" />
 	  <None Remove="Assets\icons\animat-Icons\chinook_animate.png" />
+	  <None Remove="Assets\icons\animat-Icons\chinook_map_body.png" />
 	  <None Remove="Assets\icons\arcticresearch.png" />
 	  <None Remove="Assets\icons\banditcamp.png" />
 	  <None Remove="Assets\icons\barn.png" />
@@ -187,6 +189,7 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Resource Include="Assets\icons\animat-Icons\chinook_animate.png" />
+	  <Resource Include="Assets\icons\animat-Icons\chinook_map_body.png" />
 	  <Resource Include="Assets\icons\cloud-download.png" />
 	  <Resource Include="Assets\icons\cloud-upload.png" />
 	  <Resource Include="Assets\icons\crate3.png" />
@@ -200,6 +203,10 @@
 	  <Resource Include="Assets\icons\pin.png">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>
+	  <Content Include="Assets\1min.mp3">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	  </Content>
 	  <Content Include="Assets\bell.mp3">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>

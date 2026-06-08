@@ -1800,6 +1800,9 @@ Ladda ner och installera nu?</value>
 <data name="RenameDeathMarker" xml:space="preserve">
     <value>Byt namn på dödsmarkör</value>
   </data>
+<data name="PlayerDirectionArrow" xml:space="preserve">
+  <value>Riktning</value>
+</data>
 <data name="Profile" xml:space="preserve">
     <value>Profil</value>
   </data>

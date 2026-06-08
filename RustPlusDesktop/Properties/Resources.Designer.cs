@@ -270,6 +270,7 @@ namespace RustPlusDesk.Properties {
         public static string HideSystemConsole => GetString("HideSystemConsole");
         public static string HideConsoleToolTip => GetString("HideConsoleToolTip");
         public static string MapSettings => GetString("MapSettings");
+        public static string TeamMarkersSettings => GetString("TeamMarkersSettings");
         public static string AutoLoadShops => GetString("AutoLoadShops");
         public static string AutoLoadShopsToolTip => GetString("AutoLoadShopsToolTip");
         public static string UseMonumentNames => GetString("UseMonumentNames");
@@ -662,6 +663,7 @@ namespace RustPlusDesk.Properties {
         public static string PremiumInfoDevicesDesc => GetString("PremiumInfoDevicesDesc");
         public static string PremiumInfoMapDesc => GetString("PremiumInfoMapDesc");
         public static string RenameDeathMarker => GetString("RenameDeathMarker");
+        public static string PlayerDirectionArrow => GetString("PlayerDirectionArrow");
         public static string Profile => GetString("Profile");
         public static string TimeOfDeath => GetString("TimeOfDeath");
         public static string Death => GetString("Death");

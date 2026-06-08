@@ -31,6 +31,123 @@
                 <ResourceDictionary Source="Views/MainWindow/SharedResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <Style TargetType="ui:Snackbar">
+                <Setter Property="Background" Value="#E6101418"/>
+                <Setter Property="BorderBrush" Value="#25FFFFFF"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ui:Snackbar">
+                            <!-- Glassmorphic card container with shadow -->
+                            <Border x:Name="SnackbarBorder"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="8"
+                                    Margin="0,0,0,10"
+                                    MaxWidth="380"
+                                    SnapsToDevicePixels="True">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="15" Color="Black" Opacity="0.4" ShadowDepth="3"/>
+                                </Border.Effect>
+                                
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/> <!-- Colored Accent Bar -->
+                                        <ColumnDefinition Width="*"/>    <!-- Main Content Area -->
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <!-- Left accent indicator bar -->
+                                    <Border x:Name="AccentBar" 
+                                            Grid.Column="0" 
+                                            Width="5" 
+                                            CornerRadius="8,0,0,8" 
+                                            Background="{DynamicResource Accent}" 
+                                            VerticalAlignment="Stretch"/>
+                                    
+                                    <Border Grid.Column="1" Padding="14,16,14,16">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/> <!-- Icon -->
+                                                <ColumnDefinition Width="*"/>    <!-- Text & Content -->
+                                                <ColumnDefinition Width="Auto"/> <!-- Close Button -->
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <!-- Icon on the Left -->
+                                            <ContentPresenter Grid.Column="0" 
+                                                              Content="{TemplateBinding Icon}" 
+                                                              VerticalAlignment="Top" 
+                                                              Margin="0,2,12,0" />
+                                            
+                                            <!-- Center Content -->
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                <TextBlock Text="{TemplateBinding Title}" 
+                                                           FontWeight="Bold" 
+                                                           FontSize="14" 
+                                                           Margin="0,0,0,6" 
+                                                           Foreground="{DynamicResource TextPrimary}">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Style.Triggers>
+                                                                <Trigger Property="Text" Value="">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                </Trigger>
+                                                                <Trigger Property="Text" Value="{x:Null}">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                                           
+                                                <ContentPresenter Content="{TemplateBinding Content}"/>
+                                            </StackPanel>
+                                            
+                                            <!-- Close Button -->
+                                            <ui:Button Grid.Column="2" 
+                                                       x:Name="PART_CloseButton" 
+                                                       Appearance="Transparent" 
+                                                       Width="28" 
+                                                       Height="28" 
+                                                       Padding="0" 
+                                                       VerticalAlignment="Top" 
+                                                       Margin="8,-4,-4,0" 
+                                                       ToolTip="Dismiss">
+                                                <ui:SymbolIcon Symbol="Dismiss24" FontSize="14" Foreground="{DynamicResource TextSubtle}" />
+                                            </ui:Button>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            
+                            <ControlTemplate.Triggers>
+                                <!-- Appearance=Success: Green indicator -->
+                                <Trigger Property="Appearance" Value="Success">
+                                    <Setter TargetName="AccentBar" Property="Background" Value="#4CAF50"/>
+                                </Trigger>
+                                <!-- Appearance=Caution: Orange/Yellow indicator -->
+                                <Trigger Property="Appearance" Value="Caution">
+                                    <Setter TargetName="AccentBar" Property="Background" Value="#FFA500"/>
+                                </Trigger>
+                                <!-- Appearance=Danger: Red indicator -->
+                                <Trigger Property="Appearance" Value="Danger">
+                                    <Setter TargetName="AccentBar" Property="Background" Value="#F44336"/>
+                                </Trigger>
+                                <!-- Appearance=Info: Blue indicator -->
+                                <Trigger Property="Appearance" Value="Info">
+                                    <Setter TargetName="AccentBar" Property="Background" Value="{DynamicResource Accent}"/>
+                                </Trigger>
+                                <!-- Appearance=Primary: System Accent indicator -->
+                                <Trigger Property="Appearance" Value="Primary">
+                                    <Setter TargetName="AccentBar" Property="Background" Value="{DynamicResource Accent}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
         <DataTemplate x:Key="TrackedPlayerTemplate" DataType="{x:Type services:TrackedPlayer}">
             <Grid
                 x:Name="PlayerRow"
@@ -1914,17 +2031,14 @@
                                     </ListBox>
 
                                     <!-- RESPONSIVE SETTINGS GRID -->
-                                    <Grid Grid.Row="1" Margin="8,4,8,8">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
+                                    <Grid Grid.Row="1" Margin="8,4,8,4">
                                         <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
 
-                                        <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,12,0" VerticalAlignment="Center">
+                                        <!-- ROW 0: Marker Toggles -->
+                                        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,4">
                                             <TextBlock Text="{DynamicResource Markers}" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#AAA" FontSize="11" />
                                             
                                             <!-- Profile Markers -->
@@ -1945,6 +2059,22 @@
                                                     <TextBlock VerticalAlignment="Center" Text="{DynamicResource Profile}" TextTrimming="CharacterEllipsis" />
                                                 </StackPanel>
                                             </CheckBox>
+
+                                            <!-- Player direction arrow -->
+                                            <CheckBox x:Name="ChkPlayerArrows" IsChecked="True" Checked="ChkPlayerArrows_Toggled" Unchecked="ChkPlayerArrows_Toggled" Margin="0,0,12,0" Style="{StaticResource DotCheckBox}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Viewbox Width="18" Height="18" Margin="0,0,6,0" Stretch="Uniform">
+                                                        <Grid Width="40" Height="40">
+                                                            <!-- Arrow preview -->
+                                                            <Path Data="M 20,4 L 32,32 L 8,32 Z" Fill="LimeGreen" Stroke="Black" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkPlayerArrows, Converter={StaticResource BoolToVisibility}}" />
+                                                            <!-- Fallback if unchecked -->
+                                                            <Path Data="M 20,4 L 32,32 L 8,32 Z" Fill="#444" Stroke="#666" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkPlayerArrows, Converter={StaticResource BoolToVisibilityInv}}" />
+                                                        </Grid>
+                                                    </Viewbox>
+                                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource PlayerDirectionArrow}" TextTrimming="CharacterEllipsis" />
+                                                </StackPanel>
+                                            </CheckBox>
+
 
                                             <!-- Death Markers -->
                                             <Grid x:Name="DeathMarkerToggleContainer" Background="Transparent">
@@ -1993,46 +2123,54 @@
                                             </Grid>
                                         </StackPanel>
 
-                                        <!-- Abbreviate Names Toggle -->
-                                        <ToggleButton Grid.Column="1" x:Name="BtnAbbreviateNames" Margin="0,0,12,0" Width="24" Height="24" ToolTip="{DynamicResource StreamerMode}" Checked="BtnAbbreviateNames_Toggled" Unchecked="BtnAbbreviateNames_Toggled">
-                                            <ToggleButton.Style>
-                                                <Style TargetType="ToggleButton">
-                                                    <Setter Property="Background" Value="Transparent"/>
-                                                    <Setter Property="BorderThickness" Value="1"/>
-                                                    <Setter Property="BorderBrush" Value="#444"/>
-                                                    <Setter Property="Foreground" Value="#CCC"/>
-                                                    <Setter Property="Template">
-                                                        <Setter.Value>
-                                                            <ControlTemplate TargetType="ToggleButton">
-                                                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3">
-                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                </Border>
-                                                            </ControlTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                    <Style.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#222"/></Trigger>
-                                                        <Trigger Property="IsChecked" Value="True">
-                                                            <Setter Property="Background" Value="#1C4B82"/>
-                                                            <Setter Property="BorderBrush" Value="#2A6CA6"/>
-                                                            <Setter Property="Foreground" Value="White"/>
-                                                        </Trigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </ToggleButton.Style>
-                                            <TextBlock Text="A..." FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
-                                        </ToggleButton>
-
-                                        <!-- Dynamic Slider -->
-                                        <Grid Grid.Column="2" VerticalAlignment="Center">
+                                        <!-- ROW 1: Streamer Mode + Icon Scale -->
+                                        <Grid Grid.Row="1" VerticalAlignment="Center">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="{DynamicResource ScaleLabel}" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10" />
-                                            <Slider Grid.Column="1" x:Name="SliderPlayerIconSize" Minimum="0.5" Maximum="1.5" Value="1.0" TickFrequency="0.05" IsSnapToTickEnabled="True" ValueChanged="SliderPlayerIconSize_ValueChanged" VerticalAlignment="Center" MinWidth="30" />
-                                            <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=SliderPlayerIconSize, StringFormat={}{0:P0}}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="#AAA" FontSize="10" Width="30" />
+
+                                            <!-- Abbreviate Names Toggle -->
+                                            <ToggleButton Grid.Column="0" x:Name="BtnAbbreviateNames" Margin="0,0,10,0" Width="24" Height="24" ToolTip="{DynamicResource StreamerMode}" Checked="BtnAbbreviateNames_Toggled" Unchecked="BtnAbbreviateNames_Toggled">
+                                                <ToggleButton.Style>
+                                                    <Style TargetType="ToggleButton">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Setter Property="BorderThickness" Value="1"/>
+                                                        <Setter Property="BorderBrush" Value="#444"/>
+                                                        <Setter Property="Foreground" Value="#CCC"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3">
+                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#222"/></Trigger>
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Setter Property="Background" Value="#1C4B82"/>
+                                                                <Setter Property="BorderBrush" Value="#2A6CA6"/>
+                                                                <Setter Property="Foreground" Value="White"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ToggleButton.Style>
+                                                <TextBlock Text="A..." FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                            </ToggleButton>
+
+                                            <!-- Dynamic Slider -->
+                                            <Grid Grid.Column="1" VerticalAlignment="Center">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{DynamicResource ScaleLabel}" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10" />
+                                                <Slider Grid.Column="1" x:Name="SliderPlayerIconSize" Minimum="0.5" Maximum="1.5" Value="1.0" TickFrequency="0.05" IsSnapToTickEnabled="True" ValueChanged="SliderPlayerIconSize_ValueChanged" VerticalAlignment="Center" MinWidth="30" />
+                                                <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=SliderPlayerIconSize, StringFormat={}{0:P0}}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="#AAA" FontSize="10" Width="30" />
+                                            </Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -2925,34 +3063,39 @@
                                                              Tag="DiscordWebhook"
                                                              IsEnabled="{Binding IsCloudConnected}">
                                                              <MenuItem.Header>
-                                                                 <StackPanel>
+                                                                 <StackPanel VerticalAlignment="Center">
                                                                      <TextBlock Text="Discord Webhook" />
                                                                      <TextBlock Text="Chat Alerts -&gt; Discord" FontSize="10" FontStyle="Italic" Foreground="{DynamicResource TextSubtle}" Opacity="0.8" />
                                                                  </StackPanel>
                                                              </MenuItem.Header>
                                                          </MenuItem>
                                                          
-                                                         <Grid Margin="18,4,8,8" IsEnabled="{Binding IsCloudConnected}">
-                                                             <Grid.Resources>
-                                                                 <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
-                                                             </Grid.Resources>
-                                                             <Grid.ColumnDefinitions>
-                                                                 <ColumnDefinition Width="*" />
-                                                                 <ColumnDefinition Width="Auto" />
-                                                             </Grid.ColumnDefinitions>
-                                                             <TextBox
-                                                                 Grid.Column="0"
-                                                                 Height="24"
-                                                                 VerticalAlignment="Center"
-                                                                 Background="#1AFFFFFF"
-                                                                 BorderBrush="#33FFFFFF"
-                                                                 BorderThickness="1"
-                                                                 Foreground="White"
-                                                                 Padding="4,2"
-                                                                 IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
-                                                                 Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                             <ui:Button x:Name="BtnClearChatAlertsWebhook" Grid.Column="1" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" Margin="4,0,0,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" />
-                                                         </Grid>
+                                                         <MenuItem StaysOpenOnClick="True" Focusable="False" Style="{StaticResource DarkMenuItem}" IsEnabled="{Binding IsCloudConnected}">
+                                                             <MenuItem.Header>
+                                                                 <StackPanel Margin="0,0,0,8">
+                                                                     <StackPanel.Resources>
+                                                                         <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
+                                                                     </StackPanel.Resources>
+                                                                     <Grid Margin="0,0,0,8">
+                                                                         <Grid.ColumnDefinitions>
+                                                                             <ColumnDefinition Width="*" />
+                                                                             <ColumnDefinition Width="Auto" />
+                                                                         </Grid.ColumnDefinitions>
+                                                                         <TextBox
+                                                                             x:Name="TxtChatAlertWebhook"
+                                                                             Height="26"
+                                                                             Padding="6,3"
+                                                                             Background="#1AFFFFFF"
+                                                                             BorderBrush="#33FFFFFF"
+                                                                             Foreground="White"
+                                                                             IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
+                                                                             Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                         <ui:Button Grid.Column="1" x:Name="BtnClearChatAlertsWebhook" Margin="4,0,0,0" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
+                                                                     </Grid>
+                                                                     <ui:ToggleSwitch Content="TTS" IsChecked="{Binding Selected.DiscordWebhookChatAlertsTts, Mode=TwoWay}" Margin="0,6,0,0" Foreground="{DynamicResource TextPrimary}" ToolTip="Read alerts aloud via Discord TTS" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
+                                                                 </StackPanel>
+                                                             </MenuItem.Header>
+                                                         </MenuItem>
                                                      </MenuItem>
                                                  </ContextMenu>
                                              </ui:DropDownButton.Flyout>
@@ -3708,13 +3851,13 @@
                             
                             <ui:Button
                                 x:Name="BtnCustomTimer"
+                                HorizontalAlignment="Right"
                                 Margin="0,10,0,0"
                                 Padding="8"
-                                Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}"
-                                Background="#B414191E"
-                                BorderBrush="#3CFFFFFF"
+                                Background="#AA16181C"
+                                BorderBrush="#40FFFFFF"
                                 BorderThickness="1"
-                                CornerRadius="10"
+                                CornerRadius="12"
                                 Appearance="Transparent"
                                 Click="BtnCustomTimer_Click"
                                 ToolTip="{DynamicResource HoverCustomTimer}">
@@ -3722,9 +3865,58 @@
                             </ui:Button>
                             
                             <Popup x:Name="PopupCustomTimer" AllowsTransparency="True" StaysOpen="False" PlacementTarget="{Binding ElementName=BtnCustomTimer}" Placement="Left" HorizontalOffset="-10">
-                                <ui:Card Margin="0,0,10,10" Padding="15" MinWidth="300" MaxWidth="350" Background="#E60F1215" BorderBrush="#334466" BorderThickness="1">
+                                <ui:Card Margin="0,0,10,10" Padding="16" MinWidth="320" MaxWidth="360" Background="#AA16181C" BorderBrush="#40FFFFFF" BorderThickness="1">
+                                    <ui:Card.Resources>
+                                        <Style x:Key="WpfUiToggleButtonStyle" TargetType="ToggleButton">
+                                            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                                            <Setter Property="Background" Value="#12FFFFFF"/>
+                                            <Setter Property="BorderBrush" Value="#16FFFFFF"/>
+                                            <Setter Property="BorderThickness" Value="1"/>
+                                            <Setter Property="Width" Value="32"/>
+                                            <Setter Property="Height" Value="32"/>
+                                            <Setter Property="Padding" Value="0"/>
+                                            <Setter Property="Margin" Value="0,0,6,0"/>
+                                            <Setter Property="Cursor" Value="Hand"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ToggleButton">
+                                                        <Border x:Name="Bd"
+                                                                Background="{TemplateBinding Background}"
+                                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                                CornerRadius="5">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="Bd" Property="Background" Value="#22FFFFFF"/>
+                                                                <Setter TargetName="Bd" Property="BorderBrush" Value="#40FFFFFF"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Accent}"/>
+                                                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                                                <Setter Property="Foreground" Value="Black"/>
+                                                            </Trigger>
+                                                            <MultiTrigger>
+                                                                <MultiTrigger.Conditions>
+                                                                    <Condition Property="IsChecked" Value="True"/>
+                                                                    <Condition Property="IsMouseOver" Value="True"/>
+                                                                </MultiTrigger.Conditions>
+                                                                <Setter TargetName="Bd" Property="Background" Value="#80CDFF"/>
+                                                                <Setter TargetName="Bd" Property="BorderBrush" Value="#80CDFF"/>
+                                                                <Setter Property="Foreground" Value="Black"/>
+                                                            </MultiTrigger>
+                                                            <Trigger Property="IsEnabled" Value="False">
+                                                                <Setter TargetName="Bd" Property="Opacity" Value="0.4"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ui:Card.Resources>
                                     <StackPanel>
-                                        <TextBlock Text="{DynamicResource ActiveTimersCategory}" FontWeight="SemiBold" Margin="0,0,0,10" />
+                                        <TextBlock Text="{DynamicResource ActiveTimersCategory}" FontWeight="SemiBold" Margin="0,0,0,12" FontSize="13" />
                                         
                                         <!-- List of active timers -->
                                         <ItemsControl x:Name="ListActiveTimers">
@@ -3736,57 +3928,90 @@
                                                             <ColumnDefinition Width="Auto"/>
                                                             <ColumnDefinition Width="Auto"/>
                                                         </Grid.ColumnDefinitions>
-                                                        <TextBlock VerticalAlignment="Center" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}">
+                                                        <TextBlock VerticalAlignment="Center" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" Margin="4,0,8,0">
                                                             <Run Text="{Binding Name}" />
                                                             <Run Text=" (" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
                                                             <Run Text="{Binding PlacementTarget.DataContext.Selected.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=Popup}}" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
                                                             <Run Text="{Binding Command}" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
                                                             <Run Text=")" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
                                                         </TextBlock>
-                                                        <TextBlock Grid.Column="1" Text="{Binding RemainingTimeText}" VerticalAlignment="Center" Margin="10,0,10,0" FontFamily="Consolas" />
-                                                        <ui:Button Grid.Column="2" Appearance="Transparent" Padding="4" Tag="{Binding Id}" Click="BtnDeleteTimer_Click">
-                                                            <ui:SymbolIcon Symbol="Dismiss24" Foreground="IndianRed" FontSize="14" />
-                                                        </ui:Button>
+                                                        <TextBlock Grid.Column="1" Text="{Binding RemainingTimeText}" VerticalAlignment="Center" Margin="0,0,12,0" FontFamily="Consolas" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource Accent}" />
+                                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                            <ToggleButton IsChecked="{Binding EnableCountdownAudio}" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="Play 1min countdown audio">
+                                                                <ui:SymbolIcon Symbol="Hourglass24" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}" />
+                                                            </ToggleButton>
+                                                            <ToggleButton IsChecked="{Binding EnableAlarmAudio}" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="Play loud alarm at 00:00">
+                                                                <ui:SymbolIcon Symbol="Alert24" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}" />
+                                                            </ToggleButton>
+                                                            <ui:Button Appearance="Transparent" Width="32" Height="32" Padding="0" Tag="{Binding Id}" Click="BtnDeleteTimer_Click" ToolTip="Delete Timer">
+                                                                <ui:SymbolIcon Symbol="Dismiss24" Foreground="IndianRed" FontSize="14" />
+                                                            </ui:Button>
+                                                        </StackPanel>
                                                     </Grid>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
                                         
                                         <!-- Add Timer Section -->
-                                        <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ControlStrokeDefault}" Margin="0,5,0,10" Padding="0,10,0,0">
+                                        <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ControlStrokeDefault}" Margin="0,8,0,12" Padding="0,12,0,0">
                                             <StackPanel>
-                                                <TextBlock Text="{DynamicResource AddTimer}" FontWeight="SemiBold" Margin="0,0,0,10" />
-                                                <Grid>
+                                                <TextBlock Text="{DynamicResource AddTimer}" FontWeight="SemiBold" Margin="0,0,0,12" FontSize="13" />
+                                                <Grid Margin="0,0,0,8">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <ui:TextBox x:Name="TxtTimerName" PlaceholderText="{DynamicResource TimerName}" TextChanged="TxtTimerName_TextChanged" />
-                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,0,0,0">
-                                                        <ui:TextBox x:Name="TxtTimerHours" ClearButtonEnabled="False" PlaceholderText="hh" MaxLength="2" Width="50" Margin="0,0,3,0" TextAlignment="Center" />
-                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,3,0" />
-                                                        <ui:TextBox x:Name="TxtTimerMinutes" ClearButtonEnabled="False" PlaceholderText="mm" MaxLength="2" Width="50" Margin="0,0,3,0" TextAlignment="Center" />
-                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,3,0" />
-                                                        <ui:TextBox x:Name="TxtTimerSeconds" ClearButtonEnabled="False" PlaceholderText="ss" MaxLength="2" Width="50" TextAlignment="Center" />
+                                                    <ui:TextBox x:Name="TxtTimerName" PlaceholderText="{DynamicResource TimerName}" TextChanged="TxtTimerName_TextChanged" Height="32" Padding="8,4" VerticalContentAlignment="Center" />
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
+                                                        <ui:TextBox x:Name="TxtTimerHours" ClearButtonEnabled="False" PlaceholderText="hh" MaxLength="2" Width="42" Height="32" Padding="0,4" TextAlignment="Center" VerticalContentAlignment="Center" />
+                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="2,0,2,0" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" />
+                                                        <ui:TextBox x:Name="TxtTimerMinutes" ClearButtonEnabled="False" PlaceholderText="mm" MaxLength="2" Width="42" Height="32" Padding="0,4" TextAlignment="Center" VerticalContentAlignment="Center" />
+                                                        <TextBlock Text=":" VerticalAlignment="Center" Margin="2,0,2,0" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" />
+                                                        <ui:TextBox x:Name="TxtTimerSeconds" ClearButtonEnabled="False" PlaceholderText="ss" MaxLength="2" Width="42" Height="32" Padding="0,4" TextAlignment="Center" VerticalContentAlignment="Center" />
                                                     </StackPanel>
                                                 </Grid>
-                                                <TextBlock x:Name="TxtTimerValidation" Foreground="IndianRed" FontSize="11" Margin="0,5,0,0" TextWrapping="Wrap" />
-                                                <Grid Margin="0,10,0,0">
+                                                
+                                                <TextBlock x:Name="TxtTimerValidation" Foreground="IndianRed" FontSize="11" Margin="0,0,0,8" TextWrapping="Wrap">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Style.Triggers>
+                                                                <Trigger Property="Text" Value="">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                </Trigger>
+                                                                <Trigger Property="Text" Value="{x:Null}">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                                
+                                                <Grid Margin="0,4,0,0">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0,0,0">
                                                         <TextBlock Text="{Binding PlacementTarget.DataContext.Selected.ChatCommandPrefix, RelativeSource={RelativeSource AncestorType=Popup}}" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,2,0" />
                                                         <TextBlock x:Name="TxtTimerCommandPreview" Text="" Foreground="{DynamicResource TextSubtle}" />
                                                     </StackPanel>
-                                                    <ui:Button Grid.Column="1" x:Name="BtnAddTimer" Content="{DynamicResource AddTimer}" Appearance="Primary" Click="BtnAddTimer_Click" />
+                                                    
+                                                    <ToggleButton x:Name="TglAddTimerCountdown" Grid.Column="1" IsChecked="True" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="Play 1min countdown audio">
+                                                        <ui:SymbolIcon Symbol="Hourglass24" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}" />
+                                                    </ToggleButton>
+                                                    <ToggleButton x:Name="TglAddTimerAlarm" Grid.Column="2" IsChecked="False" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="Play loud alarm at 00:00" Margin="0,0,10,0">
+                                                        <ui:SymbolIcon Symbol="Alert24" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}" />
+                                                    </ToggleButton>
+
+                                                    <ui:Button Grid.Column="3" x:Name="BtnAddTimer" Content="{DynamicResource AddTimer}" Appearance="Primary" Padding="14,6" Height="32" CornerRadius="5" Click="BtnAddTimer_Click" />
                                                 </Grid>
                                             </StackPanel>
                                         </Border>
 
                                         <!-- Timer Alarm Controls -->
-                                        <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ControlStrokeDefault}" Margin="0,5,0,0" Padding="0,10,0,0">
+                                        <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ControlStrokeDefault}" Margin="0,8,0,0" Padding="0,12,0,0">
                                             <StackPanel>
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
@@ -3794,23 +4019,35 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <ui:Button x:Name="BtnStopTimerAlarm" Visibility="Collapsed" Appearance="Transparent" Padding="6,4" Margin="0,0,4,0" Click="BtnStopTimerAlarm_Click" ToolTip="Stop alarm sound">
+                                                    <ui:Button x:Name="BtnStopTimerAlarm" Visibility="Collapsed" Appearance="Secondary" Padding="12,6" Margin="0,0,6,0" Height="32" CornerRadius="5" Click="BtnStopTimerAlarm_Click" ToolTip="Stop alarm sound">
                                                         <StackPanel Orientation="Horizontal">
                                                             <ui:SymbolIcon Symbol="SpeakerMute24" Foreground="IndianRed" FontSize="16" />
-                                                            <TextBlock Text="Stop" Margin="4,0,0,0" VerticalAlignment="Center" Foreground="IndianRed" />
+                                                            <TextBlock Text="Stop" Margin="6,0,0,0" VerticalAlignment="Center" Foreground="IndianRed" FontWeight="SemiBold" />
                                                         </StackPanel>
                                                     </ui:Button>
-                                                    <ui:Button x:Name="BtnSnoozeTimerAlarm" Grid.Column="1" Visibility="Collapsed" Appearance="Transparent" Padding="6,4" Click="BtnSnoozeTimerAlarm_Click" ToolTip="Snooze alarm">
+                                                    <ui:Button x:Name="BtnSnoozeTimerAlarm" Grid.Column="1" Visibility="Collapsed" Appearance="Secondary" Padding="12,6" Margin="0,0,6,0" Height="32" CornerRadius="5" Click="BtnSnoozeTimerAlarm_Click" ToolTip="Snooze alarm">
                                                         <StackPanel Orientation="Horizontal">
                                                             <ui:SymbolIcon Symbol="ClockAlarm24" Foreground="#FFA500" FontSize="16" />
-                                                            <TextBlock Text="Snooze" Margin="4,0,0,0" VerticalAlignment="Center" Foreground="#FFA500" />
+                                                            <TextBlock Text="Snooze" Margin="6,0,0,0" VerticalAlignment="Center" Foreground="#FFA500" FontWeight="SemiBold" />
                                                         </StackPanel>
                                                     </ui:Button>
-                                                    <ui:Button Grid.Column="3" Appearance="Transparent" Padding="6,4" Click="BtnSelectTimerAlarmAudio_Click" ToolTip="Select custom alarm sound">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <ui:SymbolIcon Symbol="MusicNote224" FontSize="16" />
+                                                    
+                                                    <!-- Spacer Column (Column 2) -->
+                                                    
+                                                    <ui:Button Grid.Column="3" Appearance="Secondary" Padding="8,6" Margin="0,0,6,0" Height="32" CornerRadius="5" Click="BtnSelectTimerCountdownAudio_Click" ToolTip="Select custom 1-minute countdown sound">
+                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                            <ui:SymbolIcon Symbol="Hourglass24" FontSize="16" />
+                                                            <TextBlock Text="1min" FontSize="11" Margin="4,0,0,0" VerticalAlignment="Center" />
                                                         </StackPanel>
+                                                    </ui:Button>
+                                                    <ui:Button Grid.Column="4" Appearance="Secondary" Padding="8,6" Margin="0,0,6,0" Height="32" Width="32" CornerRadius="5" Click="BtnSelectTimerAlarmAudio_Click" ToolTip="Select custom alarm sound (00:00)">
+                                                        <ui:SymbolIcon Symbol="MusicNote224" FontSize="16" />
+                                                    </ui:Button>
+                                                    <ui:Button Grid.Column="5" Appearance="Secondary" Padding="8,6" Height="32" Width="32" CornerRadius="5" Click="BtnResetTimerAlarmAudio_Click" ToolTip="Reset sounds to default">
+                                                        <ui:SymbolIcon Symbol="ArrowReset24" FontSize="16" />
                                                     </ui:Button>
                                                 </Grid>
                                             </StackPanel>

@@ -1800,6 +1800,9 @@ Bạn có chắc chắn muốn tiếp tục không?</value>
 <data name="RenameDeathMarker" xml:space="preserve">
     <value>Đổi tên đánh dấu tử vong</value>
   </data>
+<data name="PlayerDirectionArrow" xml:space="preserve">
+  <value>Hướng</value>
+</data>
 <data name="Profile" xml:space="preserve">
     <value>Hồ sơ</value>
   </data>

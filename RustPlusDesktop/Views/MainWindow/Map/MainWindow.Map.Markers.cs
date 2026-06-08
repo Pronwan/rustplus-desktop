@@ -385,7 +385,9 @@ public partial class MainWindow
                 {
                     string grid = GetGridLabel(m.X, m.Y);
                     string locStr = distFromCenter > (half * 1.05) ? string.Format(Properties.Resources.CargoFarOutAtSea, grid) : grid;
-                    _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertCargoSpawned, locStr));
+                    var msg = string.Format(Properties.Resources.AlertCargoSpawned, locStr);
+                    _ = SendTeamChatSafeAsync(msg, false, true);
+                    _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event:** {msg}");
                     
                     if (state.SeenAtEdge)
                         AppendLog($"[cargo] Spawn detected at edge (dist: {distFromCenter:F0}, threshold: {half * 0.85:F0})");
@@ -483,7 +485,9 @@ public partial class MainWindow
             if ((DateTime.UtcNow - state.DockTime.Value).TotalSeconds >= 5)
             {
                 string grid = GetGridLabel(m.X, m.Y);
-                _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertCargoDocked, state.HarborName, grid));
+                var msg = string.Format(Properties.Resources.AlertCargoDocked, state.HarborName, grid);
+                _ = SendTeamChatSafeAsync(msg, false, true);
+                _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event Update:** {msg}");
                 state.AnnouncedDock = true;
             }
         }
@@ -506,7 +510,9 @@ public partial class MainWindow
                         if (dToH < dLastToH) // Approaching
                         {
                             string grid = GetGridLabel(h.X, h.Y);
-                            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertCargoExpectedDock, Beautify(h.Name!), grid));
+                            var msg = string.Format(Properties.Resources.AlertCargoExpectedDock, Beautify(h.Name!), grid);
+                            _ = SendTeamChatSafeAsync(msg, false, true);
+                            _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event Update:** {msg}");
                             state.AnnouncedArrivalWarning = true;
                             state.ArrivalWarnedAt = DateTime.UtcNow; // Record for accuracy validation
                             break;
@@ -532,7 +538,9 @@ public partial class MainWindow
                 else
                 {
                     string grid = GetGridLabel(m.X, m.Y);
-                    _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertCargoDeparting, state.HarborName, grid));
+                    var msg = string.Format(Properties.Resources.AlertCargoDeparting, state.HarborName, grid);
+                    _ = SendTeamChatSafeAsync(msg, false, true);
+                    _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event Update:** {msg}");
                     state.AnnouncedEgressWarning = true;
                 }
             }
@@ -877,32 +885,38 @@ public partial class MainWindow
             dsTip = string.Format(Properties.Resources.DeepSeaEndedAgo, FormatAgo(dsInactive));
         }
         activeEvents.Add(new EventDockItem { Name = Properties.Resources.DeepSea, Icon = "pack://application:,,,/Assets/icons/ds_event.png", Active = _deepSeaActive, Id = 0, X = 0, Y = 0, Trackable = false, Type = 0, TimerText = dsTimer, ToolTip = dsTip });
-
         Dispatcher.Invoke(() =>
         {
             // Try to find existing dock or create one
             var mainBorder = EventDock.Children.OfType<Border>().FirstOrDefault(b => b.Tag as string == "MainDock");
             StackPanel stack;
 
-            if (mainBorder == null)
-            {
-                mainBorder = new Border
-                {
-                    Tag = "MainDock",
-                    Background = new SolidColorBrush(Color.FromArgb(180, 20, 25, 30)),
-                    BorderBrush = new SolidColorBrush(Color.FromArgb(60, 255, 255, 255)),
-                    BorderThickness = new Thickness(1),
-                    CornerRadius = new CornerRadius(10),
-                    Padding = new Thickness(6),
-                    HorizontalAlignment = HorizontalAlignment.Right
-                };
+             if (mainBorder == null)
+             {
+                 mainBorder = new Border
+                 {
+                     Tag = "MainDock",
+                     Background = new SolidColorBrush(Color.FromArgb(170, 22, 24, 28)), // Match in-game time overlay background (#AA16181C)
+                     BorderBrush = new SolidColorBrush(Color.FromArgb(64, 255, 255, 255)), // Match in-game time overlay border (#40FFFFFF)
+                     BorderThickness = new Thickness(1),
+                     CornerRadius = new CornerRadius(12),
+                     Padding = new Thickness(6, 8, 6, 8),
+                     HorizontalAlignment = HorizontalAlignment.Right,
+                     Effect = new System.Windows.Media.Effects.DropShadowEffect
+                     {
+                         BlurRadius = 15,
+                         Color = Colors.Black,
+                         Opacity = 0.3,
+                         ShadowDepth = 2
+                     }
+                 };
                 stack = new StackPanel { Orientation = Orientation.Vertical };
                 mainBorder.Child = stack;
                 EventDock.Children.Add(mainBorder);
 
                 // Hover logic once
                 mainBorder.MouseEnter += (s, e) => {
-                    var items = stack.Children.OfType<Grid>().ToList();
+                    var items = stack.Children.OfType<Border>().Select(b => b.Child as Grid).Where(g => g != null).ToList();
                     foreach (var item in items) {
                         foreach (var lb in item.Children.OfType<TextBlock>()) {
                             lb.Visibility = Visibility.Visible;
@@ -911,7 +925,7 @@ public partial class MainWindow
                     }
                 };
                 mainBorder.MouseLeave += (s, e) => {
-                    var items = stack.Children.OfType<Grid>().ToList();
+                    var items = stack.Children.OfType<Border>().Select(b => b.Child as Grid).Where(g => g != null).ToList();
                     foreach (var item in items) {
                         foreach (var lb in item.Children.OfType<TextBlock>()) {
                             var anim = new DoubleAnimation(0, TimeSpan.FromMilliseconds(150));
@@ -932,42 +946,75 @@ public partial class MainWindow
             {
                 var ev = activeEvents[i];
                 bool isClickable = ev.Active && ev.Trackable;
-                Grid itemRow;
+                Border itemRow;
+                Grid grid;
 
                 if (i < stack.Children.Count)
                 {
-                    itemRow = (Grid)stack.Children[i];
-                    if (itemRow.Children.Count < 5 || itemRow.RowDefinitions.Count < 2) { stack.Children.Clear(); i = -1; continue; } // Force rebuild on structure change
+                    itemRow = (Border)stack.Children[i];
+                    grid = (Grid)itemRow.Child;
+                    if (grid == null || grid.Children.Count < 5 || grid.RowDefinitions.Count < 2) { stack.Children.Clear(); i = -1; continue; } // Force rebuild on structure change
                 }
                 else
                 {
-                    itemRow = new Grid { Margin = new Thickness(0, 2, 0, 2), UseLayoutRounding = true, SnapsToDevicePixels = true };
-                    itemRow.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Row 0: name
-                    itemRow.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Row 1: timer
-                    itemRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(36) });
-                    itemRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                    itemRow = new Border
+                    {
+                        Height = 34,
+                        CornerRadius = new CornerRadius(8),
+                        Background = Brushes.Transparent,
+                        Padding = new Thickness(4, 1, 4, 1),
+                        Margin = new Thickness(0, 1, 0, 1),
+                        UseLayoutRounding = true,
+                        SnapsToDevicePixels = true
+                    };
+                    
+                    grid = new Grid();
+                    grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Row 0: name
+                    grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Row 1: timer
+                    grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(36) });
+                    grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                    itemRow.Child = grid;
                     
                     // Add components once
-                    var glow = new System.Windows.Shapes.Ellipse { Width = 32, Height = 32, Effect = new System.Windows.Media.Effects.BlurEffect { Radius = 10 }, HorizontalAlignment = HorizontalAlignment.Center, Visibility = Visibility.Collapsed };
-                    Grid.SetColumn(glow, 0); Grid.SetRowSpan(glow, 2); itemRow.Children.Add(glow);
+                    var glow = new System.Windows.Shapes.Ellipse { Width = 32, Height = 32, Effect = new System.Windows.Media.Effects.BlurEffect { Radius = 12 }, HorizontalAlignment = HorizontalAlignment.Center, Visibility = Visibility.Collapsed };
+                    Grid.SetColumn(glow, 0); Grid.SetRowSpan(glow, 2); grid.Children.Add(glow);
 
                     var iconHost = new Grid { Width = 32, Height = 32, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
-                    Grid.SetColumn(iconHost, 0); Grid.SetRowSpan(iconHost, 2); itemRow.Children.Add(iconHost);
+                    Grid.SetColumn(iconHost, 0); Grid.SetRowSpan(iconHost, 2); grid.Children.Add(iconHost);
 
                     var img = new Image { Width = 24, Height = 24, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
                     RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
                     iconHost.Children.Add(img);
 
                     // Row 0: event name
-                    var txt = new TextBlock { Foreground = Brushes.White, FontSize = 12, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 2, 12, 0), Visibility = mainBorder.IsMouseOver ? Visibility.Visible : Visibility.Collapsed, Opacity = mainBorder.IsMouseOver ? 1 : 0 };
-                    Grid.SetColumn(txt, 1); Grid.SetRow(txt, 0); itemRow.Children.Add(txt);
+                    var txt = new TextBlock { Foreground = (Brush)Application.Current.FindResource("TextPrimary"), FontSize = 12, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 2, 12, 0), Visibility = mainBorder.IsMouseOver ? Visibility.Visible : Visibility.Collapsed, Opacity = mainBorder.IsMouseOver ? 1 : 0 };
+                    Grid.SetColumn(txt, 1); Grid.SetRow(txt, 0); grid.Children.Add(txt);
 
                     // Row 1: countdown timer (directly below name)
-                    var timer = new TextBlock { Foreground = new SolidColorBrush(Color.FromRgb(100, 200, 255)), FontSize = 10, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0, 12, 2), Opacity = mainBorder.IsMouseOver ? 0.9 : 0, Visibility = mainBorder.IsMouseOver ? Visibility.Visible : Visibility.Collapsed };
-                    Grid.SetColumn(timer, 1); Grid.SetRow(timer, 1); itemRow.Children.Add(timer);
+                    var timer = new TextBlock { Foreground = (Brush)Application.Current.FindResource("Accent"), FontSize = 10, FontWeight = FontWeights.SemiBold, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0, 12, 2), Opacity = mainBorder.IsMouseOver ? 0.9 : 0, Visibility = mainBorder.IsMouseOver ? Visibility.Visible : Visibility.Collapsed };
+                    Grid.SetColumn(timer, 1); Grid.SetRow(timer, 1); grid.Children.Add(timer);
 
                     var dot = new System.Windows.Shapes.Ellipse { Width = 6, Height = 6, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 0, 4, 0) };
-                    Grid.SetColumn(dot, 0); Grid.SetRowSpan(dot, 2); itemRow.Children.Add(dot);
+                    Grid.SetColumn(dot, 0); Grid.SetRowSpan(dot, 2); grid.Children.Add(dot);
+
+                    // Hover visual feedback (WPF UI style)
+                    itemRow.MouseEnter += (s, e) => {
+                        if (s is Border border && border.Cursor == Cursors.Hand)
+                        {
+                            Color hoverCol = Color.FromArgb(20, 255, 255, 255);
+                            if (Application.Current.FindResource("Accent") is SolidColorBrush sb)
+                            {
+                                hoverCol = Color.FromArgb(25, sb.Color.R, sb.Color.G, sb.Color.B);
+                            }
+                            border.Background = new SolidColorBrush(hoverCol);
+                        }
+                    };
+                    itemRow.MouseLeave += (s, e) => {
+                        if (s is Border border)
+                        {
+                            border.Background = Brushes.Transparent;
+                        }
+                    };
 
                     stack.Children.Add(itemRow);
                 }
@@ -977,11 +1024,18 @@ public partial class MainWindow
                 itemRow.Opacity = ev.Active ? 1.0 : 0.35;
                 itemRow.Tag = ev; // Store for click handler
 
-                var uiGlow = (System.Windows.Shapes.Ellipse)itemRow.Children[0];
-                uiGlow.Fill = new SolidColorBrush(Color.FromArgb(40, 0, 200, 255));
+                // Resolve glow color dynamically from theme accent
+                Color glowColor = Color.FromRgb(0, 200, 255);
+                if (Application.Current.FindResource("Accent") is SolidColorBrush sbAccent)
+                {
+                    glowColor = sbAccent.Color;
+                }
+
+                var uiGlow = (System.Windows.Shapes.Ellipse)grid.Children[0];
+                uiGlow.Fill = new SolidColorBrush(Color.FromArgb(30, glowColor.R, glowColor.G, glowColor.B));
                 uiGlow.Visibility = ev.Active ? Visibility.Visible : Visibility.Collapsed;
 
-                var uiIconHost = (Grid)itemRow.Children[1];
+                var uiIconHost = (Grid)grid.Children[1];
                 var uiImg = (Image)uiIconHost.Children[0];
                 if (uiImg.Source == null || uiImg.Tag as string != ev.Icon) {
                     try { 
@@ -1001,10 +1055,10 @@ public partial class MainWindow
                 {
                     uiImg.Effect = new System.Windows.Media.Effects.DropShadowEffect
                     {
-                        Color = Colors.Cyan,
-                        BlurRadius = 8,
+                        Color = glowColor,
+                        BlurRadius = 10,
                         ShadowDepth = 0,
-                        Opacity = 0.8
+                        Opacity = 0.7
                     };
                 }
                 else
@@ -1016,12 +1070,22 @@ public partial class MainWindow
                 if (ev.Type == 8 || ev.Type == 4)
                 {
                     int rotorCount = ev.Type == 4 ? 2 : 1;
+                    double bladeSize = ev.Type == 4 ? 16 : 18;
+
+                    // Remove extra blades if they exist
+                    while (uiIconHost.Children.Count - 1 > rotorCount)
+                    {
+                        uiIconHost.Children.RemoveAt(uiIconHost.Children.Count - 1);
+                    }
+
                     while (uiIconHost.Children.Count - 1 < rotorCount)
                     {
                         var blades = new Image
                         {
-                            Width = 24,
-                            Height = 24,
+                            Width = bladeSize,
+                            Height = bladeSize,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Center,
                             Source = new BitmapImage(new Uri("pack://application:,,,/Assets/icons/animat-Icons/chinook_map_blades.png")),
                             RenderTransformOrigin = new Point(0.5, 0.5),
                             RenderTransform = new RotateTransform(0),
@@ -1034,6 +1098,11 @@ public partial class MainWindow
                     for (int r = 0; r < rotorCount; r++)
                     {
                         var uiBlades = (Image)uiIconHost.Children[r + 1];
+                        uiBlades.Width = bladeSize;
+                        uiBlades.Height = bladeSize;
+                        uiBlades.HorizontalAlignment = HorizontalAlignment.Center;
+                        uiBlades.VerticalAlignment = VerticalAlignment.Center;
+
                         var rt = (RotateTransform)uiBlades.RenderTransform;
 
                         if (ev.Active)
@@ -1054,7 +1123,7 @@ public partial class MainWindow
                         // Offsets for rotors
                         if (ev.Type == 4) // Chinook
                         {
-                            uiBlades.Margin = r == 0 ? new Thickness(0, 0, 0, 16) : new Thickness(0, 16, 0, 0);
+                            uiBlades.Margin = r == 0 ? new Thickness(0, 0, 0, 12) : new Thickness(0, 12, 0, 0);
                         }
                         else
                         {
@@ -1063,7 +1132,7 @@ public partial class MainWindow
                     }
 
                     // Nudge body icon for Heli (Type 8) to align with centered rotor
-                    if (ev.Type == 8) uiImg.Margin = new Thickness(0, 8, 0, 0);
+                    if (ev.Type == 8) uiImg.Margin = new Thickness(0, 6, 0, 0);
                     else uiImg.Margin = new Thickness(0);
                 }
                 else
@@ -1072,17 +1141,20 @@ public partial class MainWindow
                     uiImg.Margin = new Thickness(0);
                 }
 
-                var uiTxt = (TextBlock)itemRow.Children[2];
+                var uiTxt = (TextBlock)grid.Children[2];
                 uiTxt.Text = ev.Name;
                 uiTxt.FontWeight = ev.Active ? FontWeights.SemiBold : FontWeights.Normal;
+                uiTxt.Foreground = ev.Active 
+                    ? (Brush)Application.Current.FindResource("TextPrimary") 
+                    : (Brush)Application.Current.FindResource("TextSubtle");
 
-                var uiTimer = (TextBlock)itemRow.Children[3];
+                var uiTimer = (TextBlock)grid.Children[3];
                 uiTimer.Text = ev.TimerText ?? "";
                 // Visibility is managed by hover logic, but we must update the state
                 if (string.IsNullOrEmpty(ev.TimerText)) uiTimer.Visibility = Visibility.Collapsed;
 
-                var uiDot = (System.Windows.Shapes.Ellipse)itemRow.Children[4];
-                uiDot.Fill = ev.Active ? Brushes.Cyan : Brushes.Transparent;
+                var uiDot = (System.Windows.Shapes.Ellipse)grid.Children[4];
+                uiDot.Fill = ev.Active ? (Brush)Application.Current.FindResource("Accent") : Brushes.Transparent;
                 
                 // Tooltip
                 itemRow.ToolTip = ev.ToolTip;
@@ -1208,7 +1280,11 @@ public partial class MainWindow
                     });
                     _heliCrashSites.Remove(existing);
                     if (_announceSpawns && TrackingService.AnnounceHeli)
-                        _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertHeliCrashFalseAlarm, GetGridLabel(m.X, m.Y)));
+                    {
+                        var msg = string.Format(Properties.Resources.AlertHeliCrashFalseAlarm, GetGridLabel(m.X, m.Y));
+                        _ = SendTeamChatSafeAsync(msg, false, true);
+                        _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event Update:** {msg}");
+                    }
                     AppendLog($"[HeliCrash] False alarm retracted — Heli {key} reappeared at {GetGridLabel(m.X, m.Y)}");
                 }
             }
@@ -1342,7 +1418,9 @@ public partial class MainWindow
                         {
                             var grid = GetGridLabel(m.X, m.Y);
                             var kind = EventKindText(m.Type);
-                            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertEventSpawned, kind, grid));
+                            var msg = string.Format(Properties.Resources.AlertEventSpawned, kind, grid);
+                            _ = SendTeamChatSafeAsync(msg, false, true);
+                            _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event:** {msg}");
                         }
                     }
 
@@ -1403,7 +1481,20 @@ public partial class MainWindow
                 if (el.Tag is PlayerMarkerTag pmt)
                 {
                     double targetRot;
-                    if (m.Type == 5 || m.Type == 8 || m.Type == 4)
+                    if (isPlayer)
+                    {
+                        double distSq = state.LastVX * state.LastVX + state.LastVY * state.LastVY;
+                        if (state.History.Count > 1 && distSq > 0.0025)
+                        {
+                            double angleRad = Math.Atan2(state.LastVX, state.LastVY);
+                            targetRot = angleRad * (180.0 / Math.PI);
+                        }
+                        else
+                        {
+                            targetRot = isNew ? 0 : pmt.Rotation;
+                        }
+                    }
+                    else if (m.Type == 5 || m.Type == 8 || m.Type == 4)
                     {
                         targetRot = -m.Rotation;
                     }
@@ -1590,7 +1681,11 @@ public partial class MainWindow
                         _heliCrashSites.Add(site);
                         _ = Dispatcher.InvokeAsync(() => site.MapElement = PlaceHeliCrashSite(site));
                         if (_announceSpawns && TrackingService.AnnounceHeli)
-                            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertHeliShotDown, crashGrid));
+                        {
+                            var msg = string.Format(Properties.Resources.AlertHeliShotDown, crashGrid);
+                            _ = SendTeamChatSafeAsync(msg, false, true);
+                            _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event Update:** {msg}");
+                        }
                         AppendLog($"[HeliCrash] Crash detected at {crashGrid} (last real pos {cx:F0},{cy:F0})");
                     }
                     else
@@ -1731,7 +1826,7 @@ public partial class MainWindow
         if (m.Label != null) ToolTipService.SetToolTip(grid, m.Label);
 
         bool isChinook = m.Type == 4;
-        var bodyUri = isChinook ? "pack://application:,,,/Assets/icons/animat-Icons/chinook_animate.png" : "pack://application:,,,/Assets/icons/animat-Icons/patrol_helicopter.png";
+        var bodyUri = isChinook ? "pack://application:,,,/Assets/icons/animat-Icons/chinook_map_body.png" : "pack://application:,,,/Assets/icons/animat-Icons/patrol_helicopter.png";
         var bladesUri = "pack://application:,,,/Assets/icons/animat-Icons/chinook_map_blades.png";
 
         var body = MakeIcon(bodyUri, isChinook ? 64 : 48);
@@ -1827,28 +1922,45 @@ public partial class MainWindow
     private void AnimateMarkerRotation(FrameworkElement el, double targetAngle)
     {
         if (el == null) return;
-        ApplyCurrentOverlayScale(el); // Ensure TransformGroup exists
+        ApplyCurrentOverlayScale(el); // Ensure TransformGroup or RotateTransform exists
         
-        if (el.Tag is PlayerMarkerTag pt && pt.ScaleTarget != null)
+        if (el.Tag is PlayerMarkerTag pt)
         {
-            var group = pt.ScaleTarget.RenderTransform as TransformGroup;
-            if (group != null && group.Children.Count >= 2 && group.Children[1] is RotateTransform rt)
+            var rotEl = pt.RotationTarget;
+            if (rotEl == null && !pt.IsPlayer && !pt.IsDeathPin)
             {
-                // Use the last logical rotation as the start point
-                double current = pt.Rotation;
-                
-                // Calculate shortest path for rotation
-                double diff = (targetAngle - current) % 360;
-                if (diff > 180) diff -= 360;
-                if (diff < -180) diff += 360;
-                
-                double normalizedTarget = current + diff;
+                rotEl = pt.ScaleTarget;
+            }
+            if (rotEl != null)
+            {
+                RotateTransform? rt = null;
+                if (rotEl.RenderTransform is TransformGroup group)
+                {
+                    rt = group.Children.OfType<RotateTransform>().FirstOrDefault();
+                }
+                else if (rotEl.RenderTransform is RotateTransform r)
+                {
+                    rt = r;
+                }
 
-                var anim = new DoubleAnimation(normalizedTarget, TimeSpan.FromMilliseconds(1000));
-                rt.BeginAnimation(RotateTransform.AngleProperty, anim);
-                
-                // Store the logical target so the next poll (and scaling updates) stay in sync
-                pt.Rotation = normalizedTarget;
+                if (rt != null)
+                {
+                    // Use the last logical rotation as the start point
+                    double current = pt.Rotation;
+                    
+                    // Calculate shortest path for rotation
+                    double diff = (targetAngle - current) % 360;
+                    if (diff > 180) diff -= 360;
+                    if (diff < -180) diff += 360;
+                    
+                    double normalizedTarget = current + diff;
+
+                    var anim = new DoubleAnimation(normalizedTarget, TimeSpan.FromMilliseconds(1000));
+                    rt.BeginAnimation(RotateTransform.AngleProperty, anim);
+                    
+                    // Store the logical target so the next poll (and scaling updates) stay in sync
+                    pt.Rotation = normalizedTarget;
+                }
             }
         }
     }

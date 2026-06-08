@@ -1785,6 +1785,9 @@
   <data name="RenameDeathMarker" xml:space="preserve">
     <value>إعادة تسمية علامة الموت</value>
   </data>
+  <data name="PlayerDirectionArrow" xml:space="preserve">
+    <value>اتجاه</value>
+  </data>
   <data name="Profile" xml:space="preserve">
     <value>الملف الشخصي</value>
   </data>
