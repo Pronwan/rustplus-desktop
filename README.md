@@ -44,10 +44,27 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 
 *(I publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
+
+[![YouTube V6](./RustPlusDesktop/Assets/Images/6.0%20Cloud%20Patch/Thumbnail_RustPlus6_V6.jpg?raw=true)](https://www.youtube.com/watch?v=Ywv0hjE8nAI)
 [![YouTube V5](./RustPlusDesktop/Assets/Images/RustPlus_V5_Thumbnail.jpg?raw=true)](https://www.youtube.com/watch?v=wrqGoTCtAjs)
 
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
+
+# Rust+ Desktop v6.0.2 - Hotfix Update
+**🐛 Bug Fixes**
+
+- Event Notifications: Fixed an issue where event notifications (e.g., Deep Sea, Cargo Ship, Patrol Heli) weren't showing up correctly. They now correctly appear in the Event Channel instead of just Oil Rig and Timers.
+- Trade Alerts: Trade alerts are now loaded correctly.
+- Hotkeys: Fixed an issue causing "ghost" hotkeys.
+- Discord Bot: Fixed soft-connect Discord raid alerts.
+- Server Optimization: Fixed a server-side memory leak by instantiating the Supabase clients globally in the edge functions.
+
+**✨ New Features & Improvements**
+- Player Direction Indicator: Added a direction indicator for the movement direction of players on the map. This feature can be toggled in the Team tab.
+- Team Markers Settings: Added a new Team Markers section to the main application settings overlay.
+- UI Improvements: Improved the layout of the UI timer section. Matched the events dock and custom timer button backgrounds to the in-game time overlay.
+- Discord Bot: Translated various hardcoded bot error messages to English for better consistency.
 
 # 🔥 Rust+ Desktop v6.0.1 Hotfix
 - Added TTS support for Discord webhooks
