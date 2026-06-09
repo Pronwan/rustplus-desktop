@@ -1106,13 +1106,25 @@
                             HorizontalAlignment="Right"
                             DockPanel.Dock="Bottom"
                             Orientation="Horizontal">
-                            <ui:Button
+                            <Button
                                 x:Name="BtnHotkeys"
-                                Width="90"
+                                MinWidth="135"
+                                Height="36"
                                 Margin="0,0,5,0"
-                                Appearance="Secondary"
                                 Click="BtnHotkeys_Click"
-                                Content="{DynamicResource Hotkeys}" />
+                                MouseEnter="BtnHotkeys_MouseEnter"
+                                MouseLeave="BtnHotkeys_MouseLeave">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Keyboard24" 
+                                                   Margin="0,0,6,0" 
+                                                   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                   VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="TxtBtnHotkeys" 
+                                               Text="{DynamicResource Hotkeys}" 
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
 
                             <ui:Button
                                 x:Name="BtnPremiumInfoDevices"

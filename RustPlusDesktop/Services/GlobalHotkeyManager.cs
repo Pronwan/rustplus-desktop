@@ -23,24 +23,38 @@ public sealed class GlobalHotkeyManager : IDisposable
     private int _nextId = 1;
     private readonly Dictionary<int, string> _idToGesture = new();
     private readonly Dictionary<string, int> _gestureToId = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, bool> _registrationStatus = new(StringComparer.OrdinalIgnoreCase);
 
     public event Action<string>? HotkeyPressed;
+
+    public IReadOnlyDictionary<string, bool> RegistrationStatus => _registrationStatus;
 
     public GlobalHotkeyManager(IntPtr hwnd) => _hwnd = hwnd;
 
     public bool Register(string gesture)
     {
-        if (_gestureToId.ContainsKey(gesture)) return true;
-        if (!TryParseGesture(gesture, out var mods, out var vk)) return false;
+        if (!TryParseGesture(gesture, out var mods, out var vk))
+        {
+            _registrationStatus[gesture] = false;
+            return false;
+        }
+
+        if (_gestureToId.TryGetValue(gesture, out var existingId))
+        {
+            return _registrationStatus.TryGetValue(gesture, out var status) && status;
+        }
 
         int id = _nextId++;
         // 👇 NOREPEAT hier addieren
-        if (!RegisterHotKey(_hwnd, id, mods | MOD_NOREPEAT, vk))
-            return false;
+        bool success = RegisterHotKey(_hwnd, id, mods | MOD_NOREPEAT, vk);
+        _registrationStatus[gesture] = success;
 
-        _gestureToId[gesture] = id;
-        _idToGesture[id] = gesture;
-        return true;
+        if (success)
+        {
+            _gestureToId[gesture] = id;
+            _idToGesture[id] = gesture;
+        }
+        return success;
     }
 
     public void UnregisterAll()
@@ -49,6 +63,7 @@ public sealed class GlobalHotkeyManager : IDisposable
             UnregisterHotKey(_hwnd, id);
         _idToGesture.Clear();
         _gestureToId.Clear();
+        _registrationStatus.Clear();
     }
 
     public void OnWmHotkey(IntPtr wParam, IntPtr lParam)

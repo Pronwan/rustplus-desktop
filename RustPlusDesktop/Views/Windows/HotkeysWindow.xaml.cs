@@ -1,35 +1,43 @@
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
+using RustPlusDesk.Views.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
-using static RustPlusDesk.Views.MainWindow;
 
 namespace RustPlusDesk.Views
 {
-
-
     public partial class HotkeysWindow : Window
     {
         public sealed class RowVM
         {
             public long EntityId { get; init; }
-            public string Display { get; init; } = "";
+            public string DisplayName { get; init; } = "";
+            public string Status { get; init; } = "";
+            public bool IsDeleted { get; init; }
             public string? Hotkey { get; set; }
-        }
+            public bool IsRegisteredWarningVisible { get; set; }
 
-        
+            public bool HasHotkey => !string.IsNullOrEmpty(Hotkey);
+        }
 
         private readonly List<RowVM> _rows;
         private readonly Dictionary<string, List<long>> _map;
+        private readonly HotkeyOptions _options;
+        private readonly IReadOnlyDictionary<string, bool>? _regStatus;
 
         public HotkeysWindow(IEnumerable<SmartDevice> devices,
-                             Dictionary<string, List<long>> hotkeyMap)
+                             Dictionary<string, List<long>> hotkeyMap,
+                             HotkeyOptions options,
+                             IReadOnlyDictionary<string, bool>? regStatus = null)
         {
             InitializeComponent();
             _map = hotkeyMap;
+            _options = options;
+            _regStatus = regStatus;
 
             var existingIds = devices.Select(d => d.EntityId).ToHashSet();
             var tempList = devices
@@ -37,8 +45,11 @@ namespace RustPlusDesk.Views
                 .Select(d => new RowVM
                 {
                     EntityId = d.EntityId,
-                    Display = d.Display,
-                    Hotkey = FindGestureFor(d.EntityId)
+                    DisplayName = d.DisplayName,
+                    Status = d.IsOn is bool b ? (b ? "ON" : "OFF") : "–",
+                    IsDeleted = false,
+                    Hotkey = FindGestureFor(d.EntityId),
+                    IsRegisteredWarningVisible = false
                 })
                 .ToList();
 
@@ -51,16 +62,41 @@ namespace RustPlusDesk.Views
                         tempList.Add(new RowVM
                         {
                             EntityId = id,
-                            Display = $"Unknown Device (Deleted) - ID {id}",
-                            Hotkey = kv.Key
+                            DisplayName = "Unknown Device",
+                            Status = "DELETED",
+                            IsDeleted = true,
+                            Hotkey = kv.Key,
+                            IsRegisteredWarningVisible = false
                         });
                     }
                 }
             }
 
-            _rows = tempList.OrderBy(r => r.Display).ToList();
+            _rows = tempList.OrderBy(r => r.DisplayName).ToList();
+            
+            // Set warning visibility flag
+            foreach (var row in _rows)
+            {
+                row.IsRegisteredWarningVisible = IsHotkeyWarningVisible(row.Hotkey);
+            }
 
             DataContext = _rows;
+
+            // Load options
+            CbMode.SelectedIndex = _options.ParallelMode ? 1 : 0;
+            SldDelay.Value = _options.ToggleDelayMs;
+            PanelDelay.Visibility = _options.ParallelMode ? Visibility.Collapsed : Visibility.Visible;
+            TxtDelayLabel.Text = $"Toggle Delay: {_options.ToggleDelayMs}ms";
+        }
+
+        private bool IsHotkeyWarningVisible(string? hotkey)
+        {
+            if (string.IsNullOrEmpty(hotkey)) return false;
+            if (_regStatus != null && _regStatus.TryGetValue(hotkey, out var success))
+            {
+                return !success;
+            }
+            return false;
         }
 
         public bool ActivateOnClose { get; private set; }
@@ -68,14 +104,14 @@ namespace RustPlusDesk.Views
         private void BtnCloseActivate_Click(object sender, RoutedEventArgs e)
         {
             ActivateOnClose = true;
-            DialogResult = true;   // MainWindow interpretiert true = aktivieren
+            DialogResult = true;
             Close();
         }
 
         private void BtnCloseDeactivate_Click(object sender, RoutedEventArgs e)
         {
             ActivateOnClose = false;
-            DialogResult = false;  // MainWindow interpretiert false = deaktivieren
+            DialogResult = false;
             Close();
         }
 
@@ -91,8 +127,7 @@ namespace RustPlusDesk.Views
         {
             if ((sender as FrameworkElement)?.DataContext is not RowVM row) return;
 
-            // kleines Capture-Dialogfenster inline:
-            var cap = new HotkeyCaptureDialog();
+            var cap = new HotkeyCaptureWindow { Owner = this };
             if (cap.ShowDialog() == true && !string.IsNullOrWhiteSpace(cap.Gesture))
             {
                 // Entity aus allen Gestures entfernen
@@ -103,6 +138,7 @@ namespace RustPlusDesk.Views
                 if (!l.Contains(row.EntityId)) l.Add(row.EntityId);
 
                 row.Hotkey = cap.Gesture!;
+                row.IsRegisteredWarningVisible = IsHotkeyWarningVisible(row.Hotkey);
                 GridDevices.Items.Refresh();
             }
         }
@@ -112,48 +148,35 @@ namespace RustPlusDesk.Views
             if ((sender as FrameworkElement)?.DataContext is not RowVM row) return;
             foreach (var list in _map.Values) list.Remove(row.EntityId);
             row.Hotkey = null;
+            row.IsRegisteredWarningVisible = false;
             GridDevices.Items.Refresh();
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e) => Close();
-    }
 
-    // sehr einfacher Dialog zum Einfangen eines KeyGestures
-    public sealed class HotkeyCaptureDialog : Window
-    {
-        public string? Gesture { get; private set; }
-        public HotkeyCaptureDialog()
+        private void SldDelay_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            Title = "Press hotkey…";
-            Width = 320; Height = 120;
-            WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            Content = new System.Windows.Controls.TextBlock
-            {
-                Text = "Press the desired key combination",
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Foreground = System.Windows.Media.Brushes.White
-            };
-            Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(34, 34, 34));
-            PreviewKeyDown += OnPreviewKeyDown;
+            if (TxtDelayLabel == null || _options == null) return;
+            int val = (int)e.NewValue;
+            TxtDelayLabel.Text = $"Toggle Delay: {val}ms";
+            _options.ToggleDelayMs = val;
         }
-        private void OnPreviewKeyDown(object? s, KeyEventArgs e)
+
+        private void CbMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.Key == Key.System) return;
-            var key = (e.Key == Key.ImeProcessed) ? e.ImeProcessedKey : e.Key;
-            if (key == Key.LeftCtrl || key == Key.RightCtrl ||
-                key == Key.LeftShift || key == Key.RightShift ||
-                key == Key.LeftAlt || key == Key.RightAlt ||
-                key == Key.LWin || key == Key.RWin) return;
+            if (CbMode == null || PanelDelay == null || _options == null) return;
+            bool parallel = CbMode.SelectedIndex == 1;
+            _options.ParallelMode = parallel;
+            PanelDelay.Visibility = parallel ? Visibility.Collapsed : Visibility.Visible;
+        }
 
-            bool ctrl = (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl));
-            bool alt = (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt));
-            bool shift = (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift));
-            bool win = (Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin));
-
-            Gesture = GlobalHotkeyManager.Format(key, ctrl, alt, shift, win);
-            DialogResult = true;
-            e.Handled = true;
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                DragMove();
+            }
         }
     }
 }

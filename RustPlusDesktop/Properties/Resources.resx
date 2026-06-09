@@ -1102,6 +1102,21 @@ Download and install now?</value>
   <data name="CloseActivate" xml:space="preserve">
     <value>Close &amp; Activate</value>
   </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>Execution Mode</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>Sequential (with delay)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>Parallel (instant)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>Toggle Delay</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>This hotkey is already registered by another application.</value>
+  </data>
   <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
     <value>Upkeep, Minimap &amp; Tracking Update</value>
   </data>
