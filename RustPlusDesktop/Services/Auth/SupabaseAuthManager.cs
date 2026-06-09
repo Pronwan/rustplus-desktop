@@ -30,9 +30,10 @@ namespace RustPlusDesk.Services.Auth
 
         public static System.Collections.Generic.Dictionary<string, RustPlusDesk.Models.TierLimitModel> TierLimits { get; private set; } = new(StringComparer.OrdinalIgnoreCase);
 
-        public static async Task FetchTierLimitsAsync()
+        public static async Task FetchTierLimitsAsync(bool forceRefresh = false)
         {
             if (Client == null) return;
+            if (!forceRefresh && TierLimits != null && TierLimits.Count > 0) return;
             try
             {
                 var body = await CallEdgeFunctionAsync("user-profile/limits", HttpMethod.Get);
@@ -583,7 +584,7 @@ namespace RustPlusDesk.Services.Auth
                 CurrentTier = existingProfile.SubscriptionTier ?? "free";
                 IsPremium = existingProfile.IsManualSupporter || (CurrentTier != "free" && !string.Equals(CurrentTier, "guest", StringComparison.OrdinalIgnoreCase));
                 AppendLog($"[Cloud/Debug] Found existing profile. Tier: {CurrentTier} (IsPremium: {IsPremium})");
-                await FetchTierLimitsAsync();
+                await FetchTierLimitsAsync(forceRefresh: true);
                 await TouchProfileAsync(steamId, discordId);
                 return;
             }
@@ -621,7 +622,7 @@ namespace RustPlusDesk.Services.Auth
                         var isManual = row.TryGetProperty("is_manual_supporter", out var manualEl) && manualEl.GetBoolean();
                         IsPremium = isManual || (CurrentTier != "free" && !string.Equals(CurrentTier, "guest", StringComparison.OrdinalIgnoreCase));
                         AppendLog($"[Cloud] Claimed guest profile — linked to Discord/Email. Tier: {CurrentTier} (IsPremium: {IsPremium})");
-                        await FetchTierLimitsAsync();
+                        await FetchTierLimitsAsync(forceRefresh: true);
                         await TouchProfileAsync(steamId, discordId);
                         return;
                     }
@@ -1043,10 +1044,41 @@ namespace RustPlusDesk.Services.Auth
             }
         }
 
-        public static async Task<RustPlusDesk.Models.TeamFeatureMasterState?> GetTeamFeatureMasterStateAsync(string serverKey, string teamKey)
-        {
-            if (Client == null) return null;
+        private static readonly object _masterFetchLock = new();
+        private static Task<RustPlusDesk.Models.TeamFeatureMasterState?>? _activeMasterFetchTask;
+        private static string? _activeMasterFetchKey;
+        private static RustPlusDesk.Models.TeamFeatureMasterState? _cachedMasterState;
+        private static string? _cachedMasterKey;
+        private static DateTime _cachedMasterExpiry = DateTime.MinValue;
 
+        public static Task<RustPlusDesk.Models.TeamFeatureMasterState?> GetTeamFeatureMasterStateAsync(string serverKey, string teamKey)
+        {
+            if (Client == null || Client.Auth?.CurrentSession == null)
+            {
+                return Task.FromResult<RustPlusDesk.Models.TeamFeatureMasterState?>(null);
+            }
+
+            var key = $"{serverKey}:{teamKey}";
+            lock (_masterFetchLock)
+            {
+                if (_cachedMasterKey == key && DateTime.UtcNow < _cachedMasterExpiry)
+                {
+                    return Task.FromResult(_cachedMasterState);
+                }
+
+                if (_activeMasterFetchTask != null && _activeMasterFetchKey == key)
+                {
+                    return _activeMasterFetchTask;
+                }
+
+                _activeMasterFetchKey = key;
+                _activeMasterFetchTask = GetTeamFeatureMasterStateInternalAsync(serverKey, teamKey, key);
+                return _activeMasterFetchTask;
+            }
+        }
+
+        private static async Task<RustPlusDesk.Models.TeamFeatureMasterState?> GetTeamFeatureMasterStateInternalAsync(string serverKey, string teamKey, string key)
+        {
             try
             {
                 if (IsAuthenticated)
@@ -1061,23 +1093,48 @@ namespace RustPlusDesk.Services.Auth
                 var body = await CallEdgeFunctionAsync("team-feature/master", HttpMethod.Get, null, queryParams);
                 if (string.IsNullOrWhiteSpace(body)) return null;
 
+                RustPlusDesk.Models.TeamFeatureMasterState? result = null;
                 using var doc = JsonDocument.Parse(body);
                 var root = doc.RootElement;
                 if (root.ValueKind == JsonValueKind.Array)
                 {
                     var list = JsonSerializer.Deserialize<System.Collections.Generic.List<RustPlusDesk.Models.TeamFeatureMasterState>>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                    return list?.FirstOrDefault();
+                    result = list?.FirstOrDefault();
                 }
                 else if (root.ValueKind == JsonValueKind.Object)
                 {
-                    return JsonSerializer.Deserialize<RustPlusDesk.Models.TeamFeatureMasterState>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    result = JsonSerializer.Deserialize<RustPlusDesk.Models.TeamFeatureMasterState>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                 }
-                return null;
+
+                lock (_masterFetchLock)
+                {
+                    _cachedMasterKey = key;
+                    _cachedMasterState = result;
+                    _cachedMasterExpiry = DateTime.UtcNow.AddSeconds(4);
+                }
+                return result;
             }
             catch (Exception ex)
             {
                 AppendLog($"[Cloud/Debug] Team feature state fetch failed: {ex.Message}");
+                lock (_masterFetchLock)
+                {
+                    _cachedMasterKey = key;
+                    _cachedMasterState = null;
+                    _cachedMasterExpiry = DateTime.UtcNow.AddSeconds(4);
+                }
                 return null;
+            }
+            finally
+            {
+                lock (_masterFetchLock)
+                {
+                    if (_activeMasterFetchKey == key)
+                    {
+                        _activeMasterFetchTask = null;
+                        _activeMasterFetchKey = null;
+                    }
+                }
             }
         }
 

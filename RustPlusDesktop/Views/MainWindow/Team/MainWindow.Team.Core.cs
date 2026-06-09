@@ -131,6 +131,8 @@ public partial class MainWindow
     private readonly Dictionary<ulong, string> _steamNames = new();
     private DateTime _lastTeamRefresh = DateTime.MinValue;
     private string? _lastCloudPresenceSignature;
+    private DateTime _lastPresenceUploadTime = DateTime.MinValue;
+    private bool _hasCriticalPresenceChange;
 
     private void StartTeamPolling()
     {
@@ -236,6 +238,7 @@ public partial class MainWindow
                 {
                     vm = new TeamMemberVM { SteamId = sid, Abbreviate = _abbreviateNames };
                     TeamMembers.Add(vm);
+                    _hasCriticalPresenceChange = true;
                     _ = LoadAvatarAsync(vm);
                     if (vm.Avatar == null && CanTryAvatar(sid))
                     {
@@ -263,12 +266,18 @@ public partial class MainWindow
                 }
 
                 if (hadPrev && prev != now)
+                {
+                    _hasCriticalPresenceChange = true;
                     _ = AnnouncePresenceChangeAsync(vm, prev, now);
+                }
             }
 
             for (int i = TeamMembers.Count - 1; i >= 0; i--)
                 if (TeamMembers[i].MissingCount > 2)
+                {
                     TeamMembers.RemoveAt(i);
+                    _hasCriticalPresenceChange = true;
+                }
 
             var cloudTeamMembers = TeamMembers.Select(t => new RustPlusDesk.Services.Auth.SupabaseAuthManager.CloudTeamMemberDto
                 {
@@ -284,11 +293,17 @@ public partial class MainWindow
             var cloudPresenceSignature = BuildCloudPresenceSignature(serverKey, serverName, cloudTeamMembers);
             if (cloudPresenceSignature != _lastCloudPresenceSignature)
             {
-                _lastCloudPresenceSignature = cloudPresenceSignature;
-                _ = RustPlusDesk.Services.Auth.SupabaseAuthManager.UpdatePresenceAsync(
-                    serverKey,
-                    serverName,
-                    cloudTeamMembers);
+                var timeSinceLast = DateTime.UtcNow - _lastPresenceUploadTime;
+                if (_hasCriticalPresenceChange || timeSinceLast.TotalSeconds >= 15)
+                {
+                    _lastCloudPresenceSignature = cloudPresenceSignature;
+                    _lastPresenceUploadTime = DateTime.UtcNow;
+                    _hasCriticalPresenceChange = false;
+                    _ = RustPlusDesk.Services.Auth.SupabaseAuthManager.UpdatePresenceAsync(
+                        serverKey,
+                        serverName,
+                        cloudTeamMembers);
+                }
             }
 
             if (ShouldSyncTeamFeatureMasterForCurrentState(cloudPresenceSignature))

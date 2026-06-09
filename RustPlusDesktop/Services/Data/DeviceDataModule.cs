@@ -10,6 +10,10 @@ namespace RustPlusDesk.Services.Data
 {
     public static class DeviceDataModule
     {
+        private static string? _lastSyncedDevicesJson;
+        private static string? _lastSyncedServerKey;
+        private static ulong _lastSyncedSteamId;
+
         public static ExportedDeviceDto MapDeviceToDto(SmartDevice d)
         {
             var dto = new ExportedDeviceDto
@@ -193,6 +197,15 @@ namespace RustPlusDesk.Services.Data
                     try
                     {
                         var devJson = JsonSerializer.Serialize(dtoList, new JsonSerializerOptions { WriteIndented = false });
+
+                        if (!explicitWipe &&
+                            _lastSyncedDevicesJson == devJson &&
+                            _lastSyncedServerKey == serverKey &&
+                            _lastSyncedSteamId == steamId)
+                        {
+                            return 0; // Skip uploading if nothing has changed
+                        }
+
                         var payload = new
                         {
                             server_key = serverKey,
@@ -203,6 +216,11 @@ namespace RustPlusDesk.Services.Data
                             }
                         };
                         await Auth.SupabaseAuthManager.CallEdgeFunctionAsync("overlay", System.Net.Http.HttpMethod.Post, payload);
+
+                        _lastSyncedDevicesJson = devJson;
+                        _lastSyncedServerKey = serverKey;
+                        _lastSyncedSteamId = steamId;
+
                         syncedCount = actualCount;
                     }
                     catch (Exception ex)

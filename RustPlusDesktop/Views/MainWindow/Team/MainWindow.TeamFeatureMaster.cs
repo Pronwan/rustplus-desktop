@@ -29,6 +29,9 @@ public partial class MainWindow
     private bool _teamFeatureMasterWatchBusy;
     private bool _teamFeatureShutdownSent;
     private string? _lastTeamFeatureDisconnectReleaseSignature;
+    private DateTime _lastHeartbeatTime = DateTime.MinValue;
+    private bool? _lastWantsAlerts;
+    private bool? _lastWantsCommands;
 
     private static string TeamFeatureText(string key, string fallback)
         => Properties.Resources.ResourceManager.GetString(key) ?? fallback;
@@ -110,6 +113,14 @@ public partial class MainWindow
             TeamFeatureMasterState? state;
             if (SupabaseAuthManager.IsDiscordAuthenticated || SupabaseAuthManager.IsEmailAuthenticated)
             {
+                var isCriticalChange = wantsAlerts != _lastWantsAlerts || wantsCommands != _lastWantsCommands || (!wantsAlerts && !wantsCommands);
+                var timeSinceLast = DateTime.UtcNow - _lastHeartbeatTime;
+
+                if (!isCriticalChange && timeSinceLast.TotalSeconds < 15)
+                {
+                    return; // Skip heartbeat to save server bandwidth
+                }
+
                 state = await SupabaseAuthManager.HeartbeatTeamFeaturePresenceAsync(
                     mySteamId,
                     myName,
@@ -119,6 +130,10 @@ public partial class MainWindow
                     orderIndex,
                     wantsAlerts,
                     wantsCommands);
+
+                _lastHeartbeatTime = DateTime.UtcNow;
+                _lastWantsAlerts = wantsAlerts;
+                _lastWantsCommands = wantsCommands;
             }
             else
             {
