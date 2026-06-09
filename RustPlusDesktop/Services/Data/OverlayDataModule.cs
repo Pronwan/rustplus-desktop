@@ -83,19 +83,17 @@ namespace RustPlusDesk.Services.Data
             // Client-side validations before uploading
             int baseCount = baseIcons.Count;
             int maxBases = Auth.SupabaseAuthManager.GetMaxBases();
-            if (baseCount > maxBases)
-            {
-                AppendLog($"[overlay/cloud] Upload blocked: base limit exceeded ({baseCount}/{maxBases}).");
-                return false;
-            }
-
             int maxScreenshots = Auth.SupabaseAuthManager.GetMaxScreenshotsPerBase();
-            foreach (var icon in baseIcons)
+            bool baseLimitHit = baseCount > maxBases;
+            if (!baseLimitHit)
             {
-                if (icon.Screenshots != null && icon.Screenshots.Count > maxScreenshots)
+                foreach (var icon in baseIcons)
                 {
-                    AppendLog($"[overlay/cloud] Upload blocked: a base has {icon.Screenshots.Count} screenshots, limit is {maxScreenshots}.");
-                    return false;
+                    if (icon.Screenshots != null && icon.Screenshots.Count > maxScreenshots)
+                    {
+                        baseLimitHit = true;
+                        break;
+                    }
                 }
             }
 
@@ -112,47 +110,74 @@ namespace RustPlusDesk.Services.Data
             var mapJson = JsonSerializer.Serialize(overlayOnlyData, new JsonSerializerOptions { WriteIndented = false });
             int byteSize = Encoding.UTF8.GetByteCount(mapJson);
             int uncompressedSize = CalculateUncompressedSize(data);
-            //AppendLog($"[overlay/cloud] Size check - Uncompressed: {uncompressedSize} B, Compressed (Polyline): {byteSize} B (Saved {(uncompressedSize - byteSize) * 100.0 / Math.Max(1, uncompressedSize):F1}%)");
-
             int maxBytes = Auth.SupabaseAuthManager.GetMaxOverlayBytes();
+            bool overlayLimitHit = uncompressedSize > maxBytes;
 
-            if (uncompressedSize > maxBytes)
+            // Smart devices limit check
+            var dtoList = data.Devices ?? new System.Collections.Generic.List<ExportedDeviceDto>();
+            int maxDevices = Auth.SupabaseAuthManager.GetMaxDevices();
+            int actualDeviceCount = DeviceDataModule.CountActualDevices(dtoList);
+            bool deviceLimitHit = actualDeviceCount > maxDevices;
+
+            // Log warnings for limit hits
+            if (overlayLimitHit)
             {
-                int kbSize  = uncompressedSize / 1024;
-                int kbLimit = maxBytes / 1024;
-                AppendLog($"[overlay/cloud] Upload blocked: uncompressed overlay is {kbSize} KB, limit is {kbLimit} KB " +
-                          $"({Auth.SupabaseAuthManager.CurrentTier} tier).");
-                return false;
+                AppendLog($"[overlay/cloud] Map overlay size ({uncompressedSize / 1024} KB) exceeds limit ({maxBytes / 1024} KB) for {Auth.SupabaseAuthManager.CurrentTier} tier. Omitting from upload.");
+            }
+            if (baseLimitHit)
+            {
+                AppendLog($"[overlay/cloud] Base markers count ({baseCount}/{maxBases}) or screenshot limit exceeded for {Auth.SupabaseAuthManager.CurrentTier} tier. Omitting from upload.");
+            }
+            if (deviceLimitHit)
+            {
+                AppendLog($"[overlay/cloud] Smart devices count ({actualDeviceCount}/{maxDevices}) exceeds limit for {Auth.SupabaseAuthManager.CurrentTier} tier. Omitting from upload.");
             }
 
             try
             {
-                var baseJson = JsonSerializer.Serialize(baseIcons, new JsonSerializerOptions { WriteIndented = false });
-                var dtoList = data.Devices ?? new System.Collections.Generic.List<ExportedDeviceDto>();
-                int maxDevices = Auth.SupabaseAuthManager.GetMaxDevices();
-                if (DeviceDataModule.CountActualDevices(dtoList) > maxDevices)
+                var payload = new System.Collections.Generic.Dictionary<string, object>
                 {
-                    dtoList = DeviceDataModule.GetTrimmedDeviceList(dtoList, maxDevices);
-                }
-                var devJson = dtoList.Count > 0 
-                    ? JsonSerializer.Serialize(dtoList, new JsonSerializerOptions { WriteIndented = false })
-                    : null;
+                    ["server_key"] = serverKey,
+                    ["steam_id"] = steamId.ToString()
+                };
 
-                var payload = new
+                bool hasUpdates = false;
+
+                if (!overlayLimitHit)
                 {
-                    server_key = serverKey,
-                    steam_id = steamId.ToString(),
-                    map_overlay = new
+                    payload["map_overlay"] = new
                     {
                         overlay_data = mapJson,
                         uncompressed_size = uncompressedSize
-                    },
-                    base_markers = new
+                    };
+                    hasUpdates = true;
+                }
+
+                if (!baseLimitHit)
+                {
+                    var baseJson = JsonSerializer.Serialize(baseIcons, new JsonSerializerOptions { WriteIndented = false });
+                    payload["base_markers"] = new
                     {
                         marker_data = baseJson
-                    },
-                    smart_devices = devJson != null ? new { device_data = devJson } : null
-                };
+                    };
+                    hasUpdates = true;
+                }
+
+                if (!deviceLimitHit && dtoList.Count > 0)
+                {
+                    var devJson = JsonSerializer.Serialize(dtoList, new JsonSerializerOptions { WriteIndented = false });
+                    payload["smart_devices"] = new
+                    {
+                        device_data = devJson
+                    };
+                    hasUpdates = true;
+                }
+
+                if (!hasUpdates)
+                {
+                    AppendLog("[overlay/cloud] Sync skipped: All modified components exceed tier limits.");
+                    return false;
+                }
 
                 await Auth.SupabaseAuthManager.CallEdgeFunctionAsync("overlay", HttpMethod.Post, payload);
 

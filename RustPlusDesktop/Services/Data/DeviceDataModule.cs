@@ -186,27 +186,29 @@ namespace RustPlusDesk.Services.Data
                 int actualCount = CountActualDevices(dtoList);
                 if (actualCount > maxDevices)
                 {
-                    dtoList = GetTrimmedDeviceList(dtoList, maxDevices);
+                    AppendLog($"[devices/cloud] Sync skipped: Smart devices count ({actualCount}/{maxDevices}) exceeds limit for {Auth.SupabaseAuthManager.CurrentTier} tier.");
                 }
-
-                try
+                else
                 {
-                    var devJson = JsonSerializer.Serialize(dtoList, new JsonSerializerOptions { WriteIndented = false });
-                    var payload = new
+                    try
                     {
-                        server_key = serverKey,
-                        steam_id = steamId.ToString(),
-                        smart_devices = new
+                        var devJson = JsonSerializer.Serialize(dtoList, new JsonSerializerOptions { WriteIndented = false });
+                        var payload = new
                         {
-                            device_data = devJson
-                        }
-                    };
-                    await Auth.SupabaseAuthManager.CallEdgeFunctionAsync("overlay", System.Net.Http.HttpMethod.Post, payload);
-                    syncedCount = CountActualDevices(dtoList);
-                }
-                catch (Exception ex)
-                {
-                    AppendLog($"[Cloud/Error] Syncing devices to Supabase failed: {ex.Message}");
+                            server_key = serverKey,
+                            steam_id = steamId.ToString(),
+                            smart_devices = new
+                            {
+                                device_data = devJson
+                            }
+                        };
+                        await Auth.SupabaseAuthManager.CallEdgeFunctionAsync("overlay", System.Net.Http.HttpMethod.Post, payload);
+                        syncedCount = actualCount;
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog($"[Cloud/Error] Syncing devices to Supabase failed: {ex.Message}");
+                    }
                 }
             }
 
