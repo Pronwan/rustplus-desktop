@@ -107,6 +107,8 @@
                                             <!-- Close Button -->
                                             <ui:Button Grid.Column="2" 
                                                        x:Name="PART_CloseButton" 
+                                                       Command="{TemplateBinding TemplateButtonCommand}"
+                                                       Visibility="{Binding IsCloseButtonEnabled, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibility}}"
                                                        Appearance="Transparent" 
                                                        Width="28" 
                                                        Height="28" 
