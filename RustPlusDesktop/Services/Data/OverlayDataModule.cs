@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net.Http;
 using RustPlusDesk.Models;
 
 namespace RustPlusDesk.Services.Data
@@ -126,54 +127,34 @@ namespace RustPlusDesk.Services.Data
 
             try
             {
-                // Use OnConflict upsert – no need for a pre-fetch to get existing ID.
-                // The unique constraint on (server_key, steam_id) handles duplicates.
-                var mapModel = new MapOverlayModel
-                {
-                    Id               = Guid.NewGuid().ToString(), // ignored on conflict – DB keeps existing PK
-                    ServerKey        = serverKey,
-                    SteamId          = steamId.ToString(),
-                    OverlayData      = mapJson,
-                    UncompressedSize = uncompressedSize,
-                    UpdatedAt        = DateTime.UtcNow
-                };
-
-                await Auth.SupabaseAuthManager.Client
-                    .From<MapOverlayModel>()
-                    .Upsert(mapModel, new Postgrest.QueryOptions { OnConflict = "server_key, steam_id" });
-
-                // Decoupled: Upsert base markers to base_markers table
                 var baseJson = JsonSerializer.Serialize(baseIcons, new JsonSerializerOptions { WriteIndented = false });
-                var baseModel = new BaseMarkerModel
+                var dtoList = data.Devices ?? new System.Collections.Generic.List<ExportedDeviceDto>();
+                int maxDevices = Auth.SupabaseAuthManager.GetMaxDevices();
+                if (DeviceDataModule.CountActualDevices(dtoList) > maxDevices)
                 {
-                    Id         = Guid.NewGuid().ToString(),
-                    ServerKey  = serverKey,
-                    SteamId    = steamId.ToString(),
-                    MarkerData = baseJson,
-                    UpdatedAt  = DateTime.UtcNow
+                    dtoList = DeviceDataModule.GetTrimmedDeviceList(dtoList, maxDevices);
+                }
+                var devJson = dtoList.Count > 0 
+                    ? JsonSerializer.Serialize(dtoList, new JsonSerializerOptions { WriteIndented = false })
+                    : null;
+
+                var payload = new
+                {
+                    server_key = serverKey,
+                    steam_id = steamId.ToString(),
+                    map_overlay = new
+                    {
+                        overlay_data = mapJson,
+                        uncompressed_size = uncompressedSize
+                    },
+                    base_markers = new
+                    {
+                        marker_data = baseJson
+                    },
+                    smart_devices = devJson != null ? new { device_data = devJson } : null
                 };
 
-                await Auth.SupabaseAuthManager.Client
-                    .From<BaseMarkerModel>()
-                    .Upsert(baseModel, new Postgrest.QueryOptions { OnConflict = "server_key, steam_id" });
-
-                // Also keep smart_devices table in sync when overlay contains devices
-                var dtoList = data.Devices ?? new System.Collections.Generic.List<ExportedDeviceDto>();
-                if (dtoList.Count > 0)
-                {
-                    var devJson = JsonSerializer.Serialize(dtoList, new JsonSerializerOptions { WriteIndented = false });
-                    var devModel = new SmartDeviceModel
-                    {
-                        Id         = Guid.NewGuid().ToString(),
-                        ServerKey  = serverKey,
-                        SteamId    = steamId.ToString(),
-                        DeviceData = devJson,
-                        UpdatedAt  = DateTime.UtcNow
-                    };
-                    await Auth.SupabaseAuthManager.Client
-                        .From<SmartDeviceModel>()
-                        .Upsert(devModel, new Postgrest.QueryOptions { OnConflict = "server_key, steam_id" });
-                }
+                await Auth.SupabaseAuthManager.CallEdgeFunctionAsync("overlay", HttpMethod.Post, payload);
 
                 // Always keep local cache updated
                 SaveLocalOverlay(serverKey, steamId, data);
@@ -226,97 +207,82 @@ namespace RustPlusDesk.Services.Data
             OverlaySaveData data = new OverlaySaveData();
             bool foundData = false;
 
-            // --- map_overlays (drawing strokes, icons, texts) ---
             try
             {
-                var mapResult = await Auth.SupabaseAuthManager.Client
-                    .From<MapOverlayModel>()
-                    .Filter("server_key", Postgrest.Constants.Operator.Equals, serverKey)
-                    .Filter("steam_id", Postgrest.Constants.Operator.Equals, steamId.ToString())
-                    .Get();
-
-                var mapRow = mapResult?.Models?.FirstOrDefault();
-                if (mapRow != null && !string.IsNullOrEmpty(mapRow.OverlayData))
+                var queryParams = new System.Collections.Generic.Dictionary<string, string>
                 {
-                    var mapData = JsonSerializer.Deserialize<OverlaySaveData>(mapRow.OverlayData);
-                    if (mapData != null)
+                    ["server_key"] = serverKey,
+                    ["steam_id"] = steamId.ToString()
+                };
+
+                var body = await Auth.SupabaseAuthManager.CallEdgeFunctionAsync("overlay", HttpMethod.Get, null, queryParams);
+                using var doc = JsonDocument.Parse(body);
+                var root = doc.RootElement;
+
+                // Parse map_overlay
+                if (root.TryGetProperty("map_overlay", out var mapEl) && mapEl.ValueKind == JsonValueKind.Object)
+                {
+                    var mapRow = JsonSerializer.Deserialize<RustPlusDesk.Models.MapOverlayModel>(mapEl.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (mapRow != null && !string.IsNullOrEmpty(mapRow.OverlayData))
                     {
-                        data.Strokes         = mapData.Strokes  ?? data.Strokes;
-                        data.Icons           = mapData.Icons    ?? data.Icons;
-                        data.Texts           = mapData.Texts    ?? data.Texts;
-                        data.LastUpdatedUnix = mapData.LastUpdatedUnix > 0
-                            ? mapData.LastUpdatedUnix
-                            : new DateTimeOffset(mapRow.UpdatedAt).ToUnixTimeSeconds();
-                        if (mapData.Devices?.Count > 0)
-                            data.Devices = mapData.Devices;
-                        foundData = true;
+                        var mapData = JsonSerializer.Deserialize<OverlaySaveData>(mapRow.OverlayData);
+                        if (mapData != null)
+                        {
+                            data.Strokes         = mapData.Strokes  ?? data.Strokes;
+                            data.Icons           = mapData.Icons    ?? data.Icons;
+                            data.Texts           = mapData.Texts    ?? data.Texts;
+                            data.LastUpdatedUnix = mapData.LastUpdatedUnix > 0
+                                ? mapData.LastUpdatedUnix
+                                : new DateTimeOffset(mapRow.UpdatedAt).ToUnixTimeSeconds();
+                            if (mapData.Devices?.Count > 0)
+                                data.Devices = mapData.Devices;
+                            foundData = true;
+                        }
+                    }
+                }
+
+                // Parse base_markers
+                if (root.TryGetProperty("base_markers", out var baseEl) && baseEl.ValueKind == JsonValueKind.Object)
+                {
+                    var baseRow = JsonSerializer.Deserialize<RustPlusDesk.Models.BaseMarkerModel>(baseEl.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (baseRow != null && !string.IsNullOrEmpty(baseRow.MarkerData))
+                    {
+                        var baseIcons = JsonSerializer.Deserialize<System.Collections.Generic.List<SavedIcon>>(baseRow.MarkerData);
+                        if (baseIcons?.Count > 0)
+                        {
+                            if (data.Icons == null) data.Icons = new System.Collections.Generic.List<SavedIcon>();
+                            data.Icons.AddRange(baseIcons);
+                            
+                            var baseUpdatedUnix = new DateTimeOffset(baseRow.UpdatedAt).ToUnixTimeSeconds();
+                            if (baseUpdatedUnix > data.LastUpdatedUnix)
+                                data.LastUpdatedUnix = baseUpdatedUnix;
+                            foundData = true;
+                        }
+                    }
+                }
+
+                // Parse smart_devices
+                if (root.TryGetProperty("smart_devices", out var devEl) && devEl.ValueKind == JsonValueKind.Object)
+                {
+                    var devRow = JsonSerializer.Deserialize<RustPlusDesk.Models.SmartDeviceModel>(devEl.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (devRow != null && !string.IsNullOrEmpty(devRow.DeviceData))
+                    {
+                        var devs = JsonSerializer.Deserialize<System.Collections.Generic.List<ExportedDeviceDto>>(devRow.DeviceData);
+                        if (devs?.Count > 0)
+                        {
+                            data.Devices = devs;
+                            var deviceUpdatedUnix = new DateTimeOffset(devRow.UpdatedAt).ToUnixTimeSeconds();
+                            if (deviceUpdatedUnix > data.LastUpdatedUnix)
+                                data.LastUpdatedUnix = deviceUpdatedUnix;
+                            foundData = true;
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
                 LastFetchHadError = true;
-                AppendLog($"[overlay/cloud/err] FetchOverlay map_overlays failed for {steamId}: {ex.Message}");
-            }
-
-            // --- base_markers (decoupled base markers) ---
-            try
-            {
-                var baseResult = await Auth.SupabaseAuthManager.Client
-                    .From<BaseMarkerModel>()
-                    .Filter("server_key", Postgrest.Constants.Operator.Equals, serverKey)
-                    .Filter("steam_id", Postgrest.Constants.Operator.Equals, steamId.ToString())
-                    .Get();
-
-                var baseRow = baseResult?.Models?.FirstOrDefault();
-                if (baseRow != null && !string.IsNullOrEmpty(baseRow.MarkerData))
-                {
-                    var baseIcons = JsonSerializer.Deserialize<System.Collections.Generic.List<SavedIcon>>(baseRow.MarkerData);
-                    if (baseIcons?.Count > 0)
-                    {
-                        if (data.Icons == null) data.Icons = new System.Collections.Generic.List<SavedIcon>();
-                        data.Icons.AddRange(baseIcons);
-                        
-                        var baseUpdatedUnix = new DateTimeOffset(baseRow.UpdatedAt).ToUnixTimeSeconds();
-                        if (baseUpdatedUnix > data.LastUpdatedUnix)
-                            data.LastUpdatedUnix = baseUpdatedUnix;
-                        foundData = true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                LastFetchHadError = true;
-                AppendLog($"[overlay/cloud/err] FetchOverlay base_markers failed for {steamId}: {ex.Message}");
-            }
-
-            // --- smart_devices (device list) ---
-            try
-            {
-                var devResult = await Auth.SupabaseAuthManager.Client
-                    .From<SmartDeviceModel>()
-                    .Filter("server_key", Postgrest.Constants.Operator.Equals, serverKey)
-                    .Filter("steam_id", Postgrest.Constants.Operator.Equals, steamId.ToString())
-                    .Get();
-
-                var devRow = devResult?.Models?.FirstOrDefault();
-                if (devRow != null && !string.IsNullOrEmpty(devRow.DeviceData))
-                {
-                    var devs = JsonSerializer.Deserialize<System.Collections.Generic.List<ExportedDeviceDto>>(devRow.DeviceData);
-                    if (devs?.Count > 0)
-                    {
-                        data.Devices = devs;
-                        var deviceUpdatedUnix = new DateTimeOffset(devRow.UpdatedAt).ToUnixTimeSeconds();
-                        if (deviceUpdatedUnix > data.LastUpdatedUnix)
-                            data.LastUpdatedUnix = deviceUpdatedUnix;
-                        foundData = true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                LastFetchHadError = true;
-                AppendLog($"[overlay/cloud/err] FetchOverlay smart_devices failed for {steamId}: {ex.Message}");
+                AppendLog($"[overlay/cloud/err] FetchOverlay via Edge Function failed for {steamId}: {ex.Message}");
             }
 
             if (!foundData) return null;

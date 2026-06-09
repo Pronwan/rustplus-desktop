@@ -1154,7 +1154,7 @@ private bool _overlayToolsVisible = false;
 
     private bool IsFreeDeviceSyncLimitExceeded()
     {
-        return (_vm.Selected?.Devices?.Count ?? 0) > Services.Auth.SupabaseAuthManager.GetMaxDevices();
+        return Services.Data.DeviceDataModule.CountActualDevices(_vm.Selected?.Devices) > Services.Auth.SupabaseAuthManager.GetMaxDevices();
     }
 
     private bool IsFreeOverlaySyncLimitExceeded()
@@ -1174,7 +1174,7 @@ private bool _overlayToolsVisible = false;
 
     public int GetCurrentDevicesCount()
     {
-        return _vm?.Selected?.Devices?.Count ?? 0;
+        return Services.Data.DeviceDataModule.CountActualDevices(_vm?.Selected?.Devices);
     }
 
     public int GetCurrentBaseCount()

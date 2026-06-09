@@ -46,31 +46,34 @@ namespace RustPlusDesk.Views.Windows
             {
                 if (SupabaseAuthManager.Client == null) return;
                 
-                var response = await SupabaseAuthManager.Client.From<UserProfileModel>().Get();
-                var profiles = response.Models;
+                var body = await SupabaseAuthManager.CallEdgeFunctionAsync("admin/users", System.Net.Http.HttpMethod.Get);
+                var profiles = JsonSerializer.Deserialize<List<UserProfileModel>>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                 _users.Clear();
-                foreach (var p in profiles)
+                if (profiles != null)
                 {
-                    var vm = new AdminUserViewModel
+                    foreach (var p in profiles)
                     {
-                        SteamId = p.SteamId,
-                        DiscordName = p.DiscordName,
-                        SubscriptionTier = p.SubscriptionTier,
-                        SyncAccepted = p.SyncAccepted,
-                        LastActiveAt = p.LastActiveAt,
-                        DatabaseIsOnline = p.IsOnline,
-                        CurrentServerName = p.CurrentServerName,
-                        CurrentServerKey = p.CurrentServerKey,
-                        TeamMemberCount = p.TeamMemberCount,
-                        TeamMembersJson = p.TeamMembersJson,
-                        IsManualSupporter = p.IsManualSupporter,
-                        ManualPremiumAt = p.ManualPremiumAt
-                    };
+                        var vm = new AdminUserViewModel
+                        {
+                            SteamId = p.SteamId,
+                            DiscordName = p.DiscordName,
+                            SubscriptionTier = p.SubscriptionTier,
+                            SyncAccepted = p.SyncAccepted,
+                            LastActiveAt = p.LastActiveAt,
+                            DatabaseIsOnline = p.IsOnline,
+                            CurrentServerName = p.CurrentServerName,
+                            CurrentServerKey = p.CurrentServerKey,
+                            TeamMemberCount = p.TeamMemberCount,
+                            TeamMembersJson = p.TeamMembersJson,
+                            IsManualSupporter = p.IsManualSupporter,
+                            ManualPremiumAt = p.ManualPremiumAt
+                        };
 
-                    // Subscribe to changes for Manual Override
-                    vm.PropertyChanged += Vm_PropertyChanged;
-                    _users.Add(vm);
+                        // Subscribe to changes for Manual Override
+                        vm.PropertyChanged += Vm_PropertyChanged;
+                        _users.Add(vm);
+                    }
                 }
             }
             catch (Exception ex)
@@ -86,16 +89,14 @@ namespace RustPlusDesk.Views.Windows
                 var vm = (AdminUserViewModel)sender;
                 try
                 {
-                    if (SupabaseAuthManager.Client != null)
+                    var payload = new
                     {
-                        var update = await SupabaseAuthManager.Client.From<UserProfileModel>()
-                            .Filter("steam_id", Postgrest.Constants.Operator.Equals, vm.SteamId)
-                            .Set(x => x.IsManualSupporter, vm.IsManualSupporter)
-                            .Set(x => x.ManualPremiumAt, vm.IsManualSupporter ? DateTime.UtcNow : (DateTime?)null)
-                            .Update();
+                        steam_id = vm.SteamId,
+                        is_manual_supporter = vm.IsManualSupporter
+                    };
 
-                        vm.ManualPremiumAt = vm.IsManualSupporter ? DateTime.UtcNow : null;
-                    }
+                    await SupabaseAuthManager.CallEdgeFunctionAsync("admin/set-supporter", System.Net.Http.HttpMethod.Post, payload);
+                    vm.ManualPremiumAt = vm.IsManualSupporter ? DateTime.UtcNow : null;
                 }
                 catch (Exception ex)
                 {

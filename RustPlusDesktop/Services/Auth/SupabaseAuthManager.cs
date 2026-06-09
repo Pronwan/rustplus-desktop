@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -33,11 +35,12 @@ namespace RustPlusDesk.Services.Auth
             if (Client == null) return;
             try
             {
-                var result = await Client.From<RustPlusDesk.Models.TierLimitModel>().Get();
-                if (result?.Models != null)
+                var body = await CallEdgeFunctionAsync("user-profile/limits", HttpMethod.Get);
+                var limits = JsonSerializer.Deserialize<System.Collections.Generic.List<RustPlusDesk.Models.TierLimitModel>>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                if (limits != null)
                 {
                     var dict = new System.Collections.Generic.Dictionary<string, RustPlusDesk.Models.TierLimitModel>(StringComparer.OrdinalIgnoreCase);
-                    foreach (var limit in result.Models)
+                    foreach (var limit in limits)
                     {
                         if (limit.TierCode != null)
                         {
@@ -553,19 +556,26 @@ namespace RustPlusDesk.Services.Auth
                 return;
             }
 
-            // ── Step 1: Direct read (works when user_id already matches the caller) ──
+            // ── Step 1: GET /user-profile ──
             AppendLog($"[Cloud/Debug] Querying user profile for SteamID: {steamId}");
-            RustPlusDesk.Models.UserProfileModel existingProfile = null;
+            RustPlusDesk.Models.UserProfileModel? existingProfile = null;
             try
             {
-                existingProfile = await Client.From<RustPlusDesk.Models.UserProfileModel>()
-                    .Filter("steam_id", Postgrest.Constants.Operator.Equals, steamId)
-                    .Single();
+                var queryParams = new System.Collections.Generic.Dictionary<string, string>
+                {
+                    ["steam_id"] = steamId
+                };
+                var body = await CallEdgeFunctionAsync("user-profile", HttpMethod.Get, null, queryParams);
+                using var doc = JsonDocument.Parse(body);
+                var root = doc.RootElement;
+                if (root.TryGetProperty("profile", out var profileEl) && profileEl.ValueKind == JsonValueKind.Object)
+                {
+                    existingProfile = JsonSerializer.Deserialize<RustPlusDesk.Models.UserProfileModel>(profileEl.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                }
             }
             catch
             {
-                // Single() throws when RLS hides the row (profile owned by a ghost guest user_id).
-                // existingProfile stays null — handled below.
+                // Profile might not exist or be hidden by RLS
             }
 
             if (existingProfile != null)
@@ -578,31 +588,32 @@ namespace RustPlusDesk.Services.Auth
                 return;
             }
 
-            // ── Step 2: Profile hidden by RLS — claim via secure SECURITY DEFINER RPC ──
-            // A previous guest handshake linked the profile to a ghost auth user (steamId@rustplus.local).
-            // The RPC re-links user_id + discord_id to this real Discord/Email session.
-            AppendLog($"[Cloud/Debug] Profile not visible via RLS. Attempting claim_user_profile RPC for SteamId={steamId}");
+            // ── Step 2: Claim via secure Edge Function (user-profile/claim) ──
+            AppendLog($"[Cloud/Debug] Profile not visible via RLS. Attempting claim via Edge Function user-profile/claim for SteamId={steamId}");
             try
             {
-                var rpcArgs = new System.Collections.Generic.Dictionary<string, object?>
+                var claimPayload = new
                 {
-                    ["p_steam_id"] = steamId
+                    steam_id = steamId
                 };
-                var claimResult = await Client.Rpc("claim_user_profile", rpcArgs);
-
-                if (!string.IsNullOrWhiteSpace(claimResult?.Content)
-                    && claimResult.Content != "[]"
-                    && claimResult.Content != "null")
+                var claimResult = await CallEdgeFunctionAsync("user-profile/claim", HttpMethod.Post, claimPayload);
+                if (!string.IsNullOrWhiteSpace(claimResult) && claimResult != "[]" && claimResult != "null")
                 {
-                    using var doc = JsonDocument.Parse(claimResult.Content);
+                    using var doc = JsonDocument.Parse(claimResult);
                     var root = doc.RootElement;
                     JsonElement row = default;
                     bool hasRow = false;
 
                     if (root.ValueKind == JsonValueKind.Array && root.GetArrayLength() > 0)
-                    { row = root[0]; hasRow = true; }
+                    {
+                        row = root[0];
+                        hasRow = true;
+                    }
                     else if (root.ValueKind == JsonValueKind.Object)
-                    { row = root; hasRow = true; }
+                    {
+                        row = root;
+                        hasRow = true;
+                    }
 
                     if (hasRow)
                     {
@@ -615,29 +626,29 @@ namespace RustPlusDesk.Services.Auth
                         return;
                     }
                 }
-                AppendLog("[Cloud/Debug] claim_user_profile returned empty — profile does not exist. Will create.");
+                AppendLog("[Cloud/Debug] claim returned empty — profile does not exist. Will create.");
             }
             catch (Exception claimEx)
             {
-                AppendLog($"[Cloud/Debug] claim_user_profile RPC error: {claimEx.Message}. Will attempt fresh insert.");
+                AppendLog($"[Cloud/Debug] claim Edge Function error: {claimEx.Message}. Will attempt fresh insert.");
             }
 
-            // ── Step 3: Profile genuinely does not exist — insert fresh ──
+            // ── Step 3: Insert fresh via POST /user-profile ──
             try
             {
-                var newProfile = new RustPlusDesk.Models.UserProfileModel
+                var newProfile = new
                 {
-                    SteamId = steamId,
-                    UserId = Client.Auth.CurrentUser?.Id,
-                    DiscordId = discordId,
-                    DiscordName = Client.Auth.CurrentUser?.UserMetadata?.ContainsKey("full_name") == true ? Client.Auth.CurrentUser.UserMetadata["full_name"]?.ToString() : null,
-                    SubscriptionTier = "free",
-                    SyncAccepted = TrackingService.CloudSyncEnabled,
-                    LastActiveAt = DateTime.UtcNow,
-                    IsOnline = true
+                    steam_id = steamId,
+                    user_id = Client.Auth.CurrentUser?.Id,
+                    discord_id = discordId,
+                    discord_name = Client.Auth.CurrentUser?.UserMetadata?.ContainsKey("full_name") == true ? Client.Auth.CurrentUser.UserMetadata["full_name"]?.ToString() : null,
+                    subscription_tier = "free",
+                    sync_accepted = TrackingService.CloudSyncEnabled,
+                    last_active_at = DateTime.UtcNow,
+                    is_online = true
                 };
                 AppendLog($"[Cloud/Debug] No profile found. Creating new user profile for SteamId={steamId}, DiscordId={discordId}");
-                await Client.From<RustPlusDesk.Models.UserProfileModel>().Insert(newProfile);
+                await CallEdgeFunctionAsync("user-profile", HttpMethod.Post, newProfile);
                 CurrentTier = "free";
                 IsPremium = false;
                 AppendLog("[Cloud] Created new user profile row in database successfully.");
@@ -776,12 +787,12 @@ namespace RustPlusDesk.Services.Auth
 
             try
             {
-                await Client.From<RustPlusDesk.Models.UserProfileModel>()
-                    .Filter("steam_id", Postgrest.Constants.Operator.Equals, steamId)
-                    .Set(x => x.SyncAccepted, accepted)
-                    .Set(x => x.LastActiveAt, DateTime.UtcNow)
-                    .Set(x => x.IsOnline, true)
-                    .Update();
+                var payload = new
+                {
+                    steam_id = steamId,
+                    sync_accepted = accepted
+                };
+                await CallEdgeFunctionAsync("user-profile/consent", HttpMethod.Post, payload);
                 AppendLog($"[Cloud] Updated database consent status to: {accepted}");
             }
             catch (Exception ex)
@@ -813,15 +824,16 @@ namespace RustPlusDesk.Services.Auth
                 var srvKey = TrackingService.CloudSyncEnabled ? (serverKey ?? "") : "";
                 var srvName = TrackingService.CloudSyncEnabled ? (serverName ?? "") : "";
 
-                await Client.From<RustPlusDesk.Models.UserProfileModel>()
-                    .Filter("steam_id", Postgrest.Constants.Operator.Equals, steamId)
-                    .Set(x => x.LastActiveAt, DateTime.UtcNow)
-                    .Set(x => x.IsOnline, true)
-                    .Set(x => x.CurrentServerKey, srvKey)
-                    .Set(x => x.CurrentServerName, srvName)
-                    .Set(x => x.TeamMemberCount, teamCount)
-                    .Set(x => x.TeamMembersJson, teamJson)
-                    .Update();
+                var payload = new
+                {
+                    steam_id = steamId,
+                    is_online = true,
+                    current_server_key = srvKey,
+                    current_server_name = srvName,
+                    team_member_count = teamCount,
+                    team_members_json = teamJson
+                };
+                await CallEdgeFunctionAsync("user-profile/presence", HttpMethod.Post, payload);
             }
             catch (Exception ex)
             {
@@ -838,11 +850,12 @@ namespace RustPlusDesk.Services.Auth
 
             try
             {
-                await Client.From<RustPlusDesk.Models.UserProfileModel>()
-                    .Filter("steam_id", Postgrest.Constants.Operator.Equals, steamId)
-                    .Set(x => x.LastActiveAt, DateTime.UtcNow)
-                    .Set(x => x.IsOnline, false)
-                    .Update();
+                var payload = new
+                {
+                    steam_id = steamId,
+                    is_online = false
+                };
+                await CallEdgeFunctionAsync("user-profile/presence", HttpMethod.Post, payload);
             }
             catch (Exception ex)
             {
@@ -965,19 +978,18 @@ namespace RustPlusDesk.Services.Auth
         private static async Task TouchProfileAsync(string steamId, string? discordId = null)
         {
             if (Client?.Auth?.CurrentUser == null && !IsGuestAuthenticated) return;
-
-            var update = Client.From<RustPlusDesk.Models.UserProfileModel>()
-                .Filter("steam_id", Postgrest.Constants.Operator.Equals, steamId)
-                .Set(x => x.LastActiveAt, DateTime.UtcNow)
-                .Set(x => x.IsOnline, true);
-
-            if (!string.IsNullOrWhiteSpace(Client.Auth.CurrentUser?.Id))
-                update = update.Set(x => x.UserId, Client.Auth.CurrentUser.Id);
-
-            if (!string.IsNullOrWhiteSpace(discordId))
-                update = update.Set(x => x.DiscordId, discordId);
-
-            await update.Update();
+            try
+            {
+                var payload = new
+                {
+                    steam_id = steamId
+                };
+                await CallEdgeFunctionAsync("user-profile/touch", HttpMethod.Post, payload);
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Cloud/Debug] Touch profile failed: {ex.Message}");
+            }
         }
 
         public static async Task<RustPlusDesk.Models.TeamFeatureMasterState?> HeartbeatTeamFeaturePresenceAsync(
@@ -996,23 +1008,33 @@ namespace RustPlusDesk.Services.Auth
 
             try
             {
-                var args = new System.Collections.Generic.Dictionary<string, object?>
+                var payload = new
                 {
-                    ["p_steam_id"] = steamId,
-                    ["p_display_name"] = displayName,
-                    ["p_server_key"] = serverKey,
-                    ["p_server_name"] = serverName,
-                    ["p_team_key"] = teamKey,
-                    ["p_team_order_index"] = teamOrderIndex,
-                    ["p_wants_chat_alerts"] = wantsChatAlerts,
-                    ["p_wants_chat_commands"] = wantsChatCommands
+                    steam_id = steamId,
+                    display_name = displayName,
+                    server_key = serverKey,
+                    server_name = serverName,
+                    team_key = teamKey,
+                    team_order_index = teamOrderIndex,
+                    wants_chat_alerts = wantsChatAlerts,
+                    wants_chat_commands = wantsChatCommands
                 };
 
-                var result = await Client.Rpc<System.Collections.Generic.List<RustPlusDesk.Models.TeamFeatureMasterState>>(
-                    "heartbeat_team_feature_presence",
-                    args);
+                var body = await CallEdgeFunctionAsync("team-feature/heartbeat", HttpMethod.Post, payload);
+                if (string.IsNullOrWhiteSpace(body)) return null;
 
-                return result?.FirstOrDefault();
+                using var doc = JsonDocument.Parse(body);
+                var root = doc.RootElement;
+                if (root.ValueKind == JsonValueKind.Array)
+                {
+                    var list = JsonSerializer.Deserialize<System.Collections.Generic.List<RustPlusDesk.Models.TeamFeatureMasterState>>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return list?.FirstOrDefault();
+                }
+                else if (root.ValueKind == JsonValueKind.Object)
+                {
+                    return JsonSerializer.Deserialize<RustPlusDesk.Models.TeamFeatureMasterState>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                }
+                return null;
             }
             catch (Exception ex)
             {
@@ -1030,17 +1052,27 @@ namespace RustPlusDesk.Services.Auth
                 if (IsAuthenticated)
                     await EnsureFreshSessionAsync();
 
-                var args = new System.Collections.Generic.Dictionary<string, object?>
+                var queryParams = new System.Collections.Generic.Dictionary<string, string>
                 {
-                    ["p_server_key"] = serverKey,
-                    ["p_team_key"] = teamKey
+                    ["server_key"] = serverKey,
+                    ["team_key"] = teamKey
                 };
 
-                var result = await Client.Rpc<System.Collections.Generic.List<RustPlusDesk.Models.TeamFeatureMasterState>>(
-                    "get_team_feature_master_state",
-                    args);
+                var body = await CallEdgeFunctionAsync("team-feature/master", HttpMethod.Get, null, queryParams);
+                if (string.IsNullOrWhiteSpace(body)) return null;
 
-                return result?.FirstOrDefault();
+                using var doc = JsonDocument.Parse(body);
+                var root = doc.RootElement;
+                if (root.ValueKind == JsonValueKind.Array)
+                {
+                    var list = JsonSerializer.Deserialize<System.Collections.Generic.List<RustPlusDesk.Models.TeamFeatureMasterState>>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return list?.FirstOrDefault();
+                }
+                else if (root.ValueKind == JsonValueKind.Object)
+                {
+                    return JsonSerializer.Deserialize<RustPlusDesk.Models.TeamFeatureMasterState>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                }
+                return null;
             }
             catch (Exception ex)
             {
@@ -1059,15 +1091,15 @@ namespace RustPlusDesk.Services.Auth
                 if (IsAuthenticated)
                     await EnsureFreshSessionAsync();
 
-                var args = new System.Collections.Generic.Dictionary<string, object?>
+                var queryParams = new System.Collections.Generic.Dictionary<string, string>
                 {
-                    ["p_server_key"] = serverKey,
-                    ["p_steam_id"] = steamId
+                    ["server_key"] = serverKey,
+                    ["steam_id"] = steamId
                 };
 
-                return await Client.Rpc<bool>(
-                    "has_active_team_feature_master_for_member",
-                    args);
+                var body = await CallEdgeFunctionAsync("team-feature/has-master", HttpMethod.Get, null, queryParams);
+                using var doc = JsonDocument.Parse(body);
+                return doc.RootElement.TryGetProperty("has_master", out var hasMasterEl) && hasMasterEl.GetBoolean();
             }
             catch (Exception ex)
             {
@@ -1083,16 +1115,65 @@ namespace RustPlusDesk.Services.Auth
             try
             {
                 if (!await EnsureFreshSessionAsync()) return (false, "Session expired and could not be refreshed.");
-                var result = await Client.Rpc<bool>("is_admin", null);
-                return (result, null);
+                var body = await CallEdgeFunctionAsync("admin/check", HttpMethod.Get);
+                using var doc = JsonDocument.Parse(body);
+                var root = doc.RootElement;
+                bool isAdmin = root.TryGetProperty("is_admin", out var adminEl) && adminEl.GetBoolean();
+                return (isAdmin, null);
             }
             catch (Exception ex)
             {
                 string errMsg = ex.Message;
                 if (ex.InnerException != null) errMsg += " -> " + ex.InnerException.Message;
-                AppendLog($"[Cloud/Error] Admin check RPC failed: {errMsg}");
+                AppendLog($"[Cloud/Error] Admin check Edge Function failed: {errMsg}");
                 return (false, errMsg);
             }
+        }
+
+        private static readonly HttpClient Http = new();
+
+        public static async Task<string> CallEdgeFunctionAsync(
+            string functionName,
+            HttpMethod method,
+            object? payload = null,
+            System.Collections.Generic.Dictionary<string, string>? queryParams = null)
+        {
+            if (Client == null)
+                throw new InvalidOperationException("Supabase client not initialized.");
+
+            var url = $"{DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/{functionName}";
+            if (queryParams != null && queryParams.Count > 0)
+            {
+                var queryStr = string.Join("&", queryParams.Select(q => $"{Uri.EscapeDataString(q.Key)}={Uri.EscapeDataString(q.Value)}"));
+                url += "?" + queryStr;
+            }
+
+            AppendLog($"[Cloud/Debug] API Request: {method} /functions/v1/{functionName}" + (payload != null ? " (with payload)" : ""));
+
+            var req = new HttpRequestMessage(method, url);
+            req.Headers.Add("apikey", DataManager.SUPABASE_ANON_KEY);
+            
+            if (Client.Auth?.CurrentSession != null)
+            {
+                req.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Client.Auth.CurrentSession.AccessToken);
+            }
+
+            if (payload != null)
+            {
+                var json = JsonSerializer.Serialize(payload);
+                req.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            }
+
+            var resp = await Http.SendAsync(req);
+            var body = await resp.Content.ReadAsStringAsync();
+
+            AppendLog($"[Cloud/Debug] API Response: {method} /functions/v1/{functionName} -> {(int)resp.StatusCode} {resp.StatusCode}");
+
+            if (!resp.IsSuccessStatusCode)
+            {
+                throw new Exception($"Edge Function {functionName} returned {resp.StatusCode}: {body}");
+            }
+            return body;
         }
 
         private static void AppendLog(string msg)
