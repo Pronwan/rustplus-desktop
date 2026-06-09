@@ -1445,6 +1445,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     }
     private static void BindIcon(Image img, int itemId, string? shortName, int decodePx = 32)
     {
+        RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
         // 1) Sofort versuchen
         var src = ResolveItemIcon(itemId, shortName, decodePx);
         if (src != null) { img.Source = src; return; }

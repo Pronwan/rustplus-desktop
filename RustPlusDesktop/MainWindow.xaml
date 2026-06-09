@@ -3756,7 +3756,8 @@
                                                     Height="24"
                                                     ClipToBounds="True"
                                                     Source="{Binding FollowingPlayerAvatar}"
-                                                    Stretch="UniformToFill">
+                                                    Stretch="UniformToFill"
+                                                    RenderOptions.BitmapScalingMode="HighQuality">
                                                     <Image.Clip>
                                                         <EllipseGeometry
                                                             Center="12,12"
@@ -4843,7 +4844,7 @@
                                         Margin="2,0"
                                         Click="ToolDrawButton_Click"
                                         ToolTip="{DynamicResource DrawToolTip}">
-                                        <Image Source="pack://application:,,,/Assets/icons/pen.png" />
+                                        <Image Source="pack://application:,,,/Assets/icons/pen.png" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Button>
 
                                     <!--  Text  -->
@@ -4854,7 +4855,7 @@
                                         Margin="2,0"
                                         Click="ToolTextButton_Click"
                                         ToolTip="{DynamicResource PlaceTextToolTip}">
-                                        <Image Source="pack://application:,,,/Assets/icons/text.png" />
+                                        <Image Source="pack://application:,,,/Assets/icons/text.png" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Button>
 
                                     <!--  Icons  -->
@@ -4865,7 +4866,7 @@
                                         Margin="2,0"
                                         Click="ToolIconButton_Click"
                                         ToolTip="{DynamicResource PlaceIconToolTip}">
-                                        <Image Source="pack://application:,,,/Assets/icons/pin.png" />
+                                        <Image Source="pack://application:,,,/Assets/icons/pin.png" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Button>
 
                                     <!--  Radierer  -->
@@ -4876,7 +4877,7 @@
                                         Margin="2,0"
                                         Click="ToolEraseButton_Click"
                                         ToolTip="{DynamicResource EraserToolTip}">
-                                        <Image Source="pack://application:,,,/Assets/icons/eraser.png" />
+                                        <Image Source="pack://application:,,,/Assets/icons/eraser.png" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Button>
 
                                     <Rectangle Width="1" Height="20" Margin="6,0" Fill="#40FFFFFF" VerticalAlignment="Center" />
@@ -4889,7 +4890,7 @@
                                         Margin="2,0"
                                         Click="ToolTrashButton_Click"
                                         ToolTip="{DynamicResource DeleteOverlayToolTip}">
-                                        <Image Source="pack://application:,,,/Assets/icons/trash.png" />
+                                        <Image Source="pack://application:,,,/Assets/icons/trash.png" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Button>
 
                                     <!--  Upload / Teilen  -->
@@ -4997,16 +4998,16 @@
                                         <Rectangle Width="1" Height="14" Fill="#30FFFFFF" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                         
                                         <Button x:Name="BtnIconBase1" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/base1.png" ToolTip="Own Base (Black)">
-                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/base1.png"/>
+                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/base1.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                                         </Button>
                                         <Button x:Name="BtnIconBase2" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/base2.png" ToolTip="Enemy Base (Red)">
-                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/base2.png"/>
+                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/base2.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                                         </Button>
                                         <Button x:Name="BtnIconSam" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/sam-site.png" ToolTip="SAM Site">
-                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/sam-site.png"/>
+                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/sam-site.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                                         </Button>
                                         <Button x:Name="BtnIconTurret" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/turret.png" ToolTip="Turret">
-                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/turret.png"/>
+                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/turret.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                                         </Button>
                                     </StackPanel>
 
