@@ -2421,7 +2421,7 @@ private bool _overlayToolsVisible = false;
         int imported = 0;
         foreach (var dto in data.Devices)
         {
-            if (!dto.IsGroup && FindDeviceById(_vm.Selected.Devices, dto.EntityId) != null)
+            if (FindDeviceById(_vm.Selected.Devices, dto.EntityId) != null)
                 continue;
 
             _vm.Selected.Devices.Add(MapDtoToDeviceFiltered(dto));

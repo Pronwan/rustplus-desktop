@@ -1167,7 +1167,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
                 if (it.OriginalDto != null)
                 {
                     // Rekursiver Import via DTO - prüfen auf allen Ebenen
-                    if (!it.OriginalDto.IsGroup && FindDeviceById(_vm.Selected.Devices, it.OriginalDto.EntityId) != null)
+                    if (FindDeviceById(_vm.Selected.Devices, it.OriginalDto.EntityId) != null)
                         continue;
 
                     var dev = MapDtoToDeviceFiltered(it.OriginalDto);
@@ -1326,7 +1326,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         for (int i = parent.Children.Count - 1; i >= 0; i--)
         {
             var child = parent.Children[i];
-            if (!child.IsGroup && FindDeviceById(_vm?.Selected?.Devices, child.EntityId) != null)
+            if (FindDeviceById(_vm?.Selected?.Devices, child.EntityId) != null)
             {
                 parent.Children.RemoveAt(i);
             }
