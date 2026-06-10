@@ -1,0 +1,515 @@
+<UserControl x:Class="RustPlusDesk.Views.CheaterAnalyticsPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{DynamicResource Surface}"
+             Foreground="{DynamicResource TextPrimary}"
+             FontFamily="Segoe UI">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolVis"/>
+
+        <Style x:Key="AnalyticsTextBox" TargetType="TextBox">
+            <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="CaretBrush" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <Style x:Key="AnalyticsComboBox" TargetType="ComboBox">
+            <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <Style x:Key="SmallDanger" TargetType="Button">
+            <Setter Property="Background" Value="#3A1515"/>
+            <Setter Property="Foreground" Value="{DynamicResource AccentRed}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentRed}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#5C1E1E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SmallGhost" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#8C96A8"/>
+            <Setter Property="BorderBrush" Value="#28FFFFFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1AFFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AnalyticsPrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#1A4D6B"/>
+            <Setter Property="Foreground" Value="#60CDFF"/>
+            <Setter Property="BorderBrush" Value="#60CDFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2A6D8B"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DiscordButton" TargetType="Button">
+            <Setter Property="Background" Value="#1D3A6E"/>
+            <Setter Property="Foreground" Value="#93C5FD"/>
+            <Setter Property="BorderBrush" Value="#3B82F6"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2D4D8E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AnalyticsCloseButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#8C96A8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="4" Padding="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1AFFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>  <!-- panel header bar -->
+            <RowDefinition Height="*"/>     <!-- scrollable body -->
+        </Grid.RowDefinitions>
+
+        <!-- ═══ PANEL HEADER ═══ -->
+        <Border Grid.Row="0"
+                Background="{DynamicResource SurfaceAlt}"
+                BorderBrush="{DynamicResource CardBorder}"
+                BorderThickness="0,0,0,1"
+                Padding="12,8">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Left"
+                           Text="🛡 Cheater Analytics"
+                           FontSize="14" FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+                <Button DockPanel.Dock="Right"
+                        Content="✕"
+                        Style="{StaticResource AnalyticsCloseButton}"
+                        Width="26" Height="26"
+                        FontSize="12"
+                        Click="BtnClosePanel_Click"/>
+            </DockPanel>
+        </Border>
+
+        <!-- ═══ SCROLLABLE BODY ═══ -->
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="12">
+
+                <!-- ── Metric cards ── -->
+                <TextBlock Text="CURRENT WIPE SNAPSHOT"
+                           FontSize="10" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextCaption}"
+                           Margin="0,0,0,6"/>
+
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/><ColumnDefinition/>
+                        <ColumnDefinition/><ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Background="{DynamicResource SurfaceAlt}"
+                            BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+                            CornerRadius="6" Margin="0,0,4,0" Padding="8">
+                        <StackPanel>
+                            <TextBlock Text="Players" FontSize="10"
+                                       Foreground="{DynamicResource TextSubtle}"/>
+                            <TextBlock Text="{Binding Current.ActivePlayerCount, Mode=OneWay}"
+                                       FontSize="20" FontWeight="Bold"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="1" Background="#2E1515"
+                            BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+                            CornerRadius="6" Margin="2,0" Padding="8">
+                        <StackPanel>
+                            <TextBlock Text="Confirmed" FontSize="10" Foreground="#FFAAAA"/>
+                            <TextBlock Text="{Binding Current.ConfirmedCheaterCount, Mode=OneWay}"
+                                       FontSize="20" FontWeight="Bold"
+                                       Foreground="{DynamicResource AccentRed}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="2" Background="#2E2515"
+                            BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+                            CornerRadius="6" Margin="2,0" Padding="8">
+                        <StackPanel>
+                            <TextBlock Text="Suspected" FontSize="10" Foreground="#FFDDAA"/>
+                            <TextBlock Text="{Binding Current.SuspectedFlaggedCount, Mode=OneWay}"
+                                       FontSize="20" FontWeight="Bold" Foreground="#FFA040"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="3" Background="#1E2E1E"
+                            BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+                            CornerRadius="6" Margin="4,0,0,0" Padding="8">
+                        <StackPanel>
+                            <TextBlock Text="Risk %" FontSize="10"
+                                       Foreground="{DynamicResource AccentGreen}"/>
+                            <TextBlock FontSize="20" FontWeight="Bold"
+                                       Foreground="{DynamicResource AccentGreen}">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0:F1}%">
+                                        <Binding Path="Current.CheaterRatioPercent" Mode="OneWay"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Risk band pill -->
+                <Border CornerRadius="4" Padding="8,4"
+                        HorizontalAlignment="Left" Margin="0,0,0,12">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Background" Value="#1E5C1E"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Current.RiskBand}" Value="Moderate">
+                                    <Setter Property="Background" Value="#5C5C1E"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Current.RiskBand}" Value="High">
+                                    <Setter Property="Background" Value="#5C3A1E"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Current.RiskBand}" Value="Critical">
+                                    <Setter Property="Background" Value="#5C1E1E"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <TextBlock FontSize="12">
+                        <Run Text="Risk Level: " Foreground="{DynamicResource TextSubtle}"/>
+                        <Run Text="{Binding Current.RiskBand, Mode=OneWay}" FontWeight="SemiBold"/>
+                    </TextBlock>
+                </Border>
+
+                <!-- ── Add-record expander ── -->
+                <Expander Header="➕ Flag a Player"
+                          Foreground="{DynamicResource TextPrimary}"
+                          Margin="0,0,0,12">
+                    <Border Background="{DynamicResource SurfaceAlt}"
+                            BorderBrush="{DynamicResource CardBorder}"
+                            BorderThickness="1" CornerRadius="0,0,6,6"
+                            Padding="10,8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBox Grid.Row="0" Grid.Column="0" Margin="0,0,4,4"
+                                     Text="{Binding NewSteamId, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource AnalyticsTextBox}"
+                                     FontFamily="Cascadia Code, Consolas, monospace"
+                                     ToolTip="Steam ID (17 digits)"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Margin="4,0,0,4"
+                                     Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource AnalyticsTextBox}"
+                                     ToolTip="Display name"/>
+
+                            <ComboBox Grid.Row="1" Grid.Column="0" Margin="0,0,4,4"
+                                      ItemsSource="{Binding ConfidenceLevels}"
+                                      SelectedItem="{Binding NewConfidence}"
+                                      Style="{StaticResource AnalyticsComboBox}"/>
+                            <ComboBox Grid.Row="1" Grid.Column="1" Margin="4,0,0,4"
+                                      ItemsSource="{Binding FlagSources}"
+                                      SelectedItem="{Binding NewSource}"
+                                      Style="{StaticResource AnalyticsComboBox}"/>
+
+                            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                     Margin="0,0,0,4"
+                                     Text="{Binding NewNotes, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource AnalyticsTextBox}"
+                                     ToolTip="Evidence notes (max 500 chars)"
+                                     MaxLength="500"
+                                     Height="52" TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     VerticalScrollBarVisibility="Auto"/>
+
+                            <TextBox Grid.Row="3" Grid.Column="0" Margin="0,0,4,0"
+                                     Text="{Binding NewEvidenceLink, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource AnalyticsTextBox}"
+                                     ToolTip="Evidence link (optional)"/>
+                            <Button Grid.Row="3" Grid.Column="1" Margin="4,0,0,0"
+                                    Content="🔍 Flag + Steam Lookup"
+                                    Style="{StaticResource AnalyticsPrimaryButton}"
+                                    Command="{Binding AddRecordCommand}"
+                                    FontSize="11"/>
+                        </Grid>
+                    </Border>
+                </Expander>
+
+                <!-- ── Report & Export ── -->
+                <TextBlock Text="REPORT &amp; EXPORT"
+                           FontSize="10" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextCaption}"
+                           Margin="0,0,0,6"/>
+
+                <Border Background="{DynamicResource SurfaceAlt}"
+                        BorderBrush="{DynamicResource CardBorder}"
+                        BorderThickness="1" CornerRadius="6"
+                        Padding="10,8" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBox Text="{Binding DiscordWebhookUrl, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource AnalyticsTextBox}"
+                                 ToolTip="Discord Webhook URL"
+                                 Margin="0,0,0,6">
+                            <TextBox.Resources>
+                                <Style TargetType="TextBox" BasedOn="{StaticResource AnalyticsTextBox}">
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="Transparent"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Resources>
+                        </TextBox>
+
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="4"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="4"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0"
+                                    Content="📋 Copy F7 List"
+                                    Style="{StaticResource SmallGhost}"
+                                    Command="{Binding ExportTxtCommand}"
+                                    Padding="6,5"/>
+                            <Button Grid.Column="2"
+                                    Content="💾 Export CSV"
+                                    Style="{StaticResource AnalyticsPrimaryButton}"
+                                    Command="{Binding ExportCsvCommand}"
+                                    Padding="6,5"/>
+                            <Button Grid.Column="4"
+                                    Content="📨 Send Discord"
+                                    Style="{StaticResource DiscordButton}"
+                                    Command="{Binding SendDiscordCommand}"
+                                    Padding="6,5"/>
+                        </Grid>
+
+                        <TextBlock Text="{Binding ReportStatus, Mode=OneWay}"
+                                   FontSize="11"
+                                   Foreground="{DynamicResource TextSubtle}"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Flagged records list ── -->
+                <TextBlock Text="FLAGGED PLAYERS"
+                           FontSize="10" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextCaption}"
+                           Margin="0,0,0,6"/>
+
+                <ItemsControl ItemsSource="{Binding Records}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1" CornerRadius="6"
+                                    Margin="0,0,0,6" Padding="10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock FontWeight="SemiBold" FontSize="13"
+                                                   Text="{Binding DisplayName}"/>
+                                        <TextBlock FontSize="10"
+                                                   Foreground="{DynamicResource TextCaption}"
+                                                   FontFamily="Cascadia Code, Consolas, monospace"
+                                                   Text="{Binding SteamId}"
+                                                   Margin="0,1,0,4"/>
+
+                                        <WrapPanel>
+                                            <!-- Confidence -->
+                                            <Border CornerRadius="3" Padding="4,1" Margin="0,0,4,2"
+                                                    Background="{DynamicResource SurfaceHover}"
+                                                    BorderBrush="{DynamicResource CardBorder}"
+                                                    BorderThickness="1">
+                                                <TextBlock Text="{Binding Confidence}" FontSize="10"
+                                                           Foreground="{DynamicResource TextSubtle}"/>
+                                            </Border>
+                                            <!-- VAC badge -->
+                                            <Border CornerRadius="3" Padding="4,1" Margin="0,0,4,2"
+                                                    Background="#5C1E1E"
+                                                    Visibility="{Binding HasVacBan, Converter={StaticResource BoolVis}}">
+                                                <TextBlock Text="VAC" FontSize="10" Foreground="#FF8888"/>
+                                            </Border>
+                                            <!-- Game Ban badge -->
+                                            <Border CornerRadius="3" Padding="4,1" Margin="0,0,4,2"
+                                                    Background="#3C1E1E"
+                                                    Visibility="{Binding HasGameBan, Converter={StaticResource BoolVis}}">
+                                                <TextBlock Text="Game Ban" FontSize="10" Foreground="#FFAAAA"/>
+                                            </Border>
+                                            <!-- Report count -->
+                                            <TextBlock FontSize="10"
+                                                       Foreground="{DynamicResource TextCaption}"
+                                                       VerticalAlignment="Center" Margin="2,0">
+                                                <Run Text="Reports:"/>
+                                                <Run Text="{Binding ReportCount}"/>
+                                            </TextBlock>
+                                        </WrapPanel>
+
+                                        <TextBlock Text="{Binding EvidenceNotes}"
+                                                   FontSize="11"
+                                                   Foreground="{DynamicResource TextSubtle}"
+                                                   TextWrapping="Wrap"
+                                                   MaxHeight="40"
+                                                   Margin="0,4,0,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="1" Margin="8,0,0,0"
+                                                VerticalAlignment="Center">
+                                        <Button Content="✓ Confirm"
+                                                Style="{StaticResource SmallDanger}"
+                                                Margin="0,0,0,4"
+                                                Command="{Binding DataContext.ConfirmBanCommand,
+                                                    RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}"/>
+                                        <Button Content="🗑 Remove"
+                                                Style="{StaticResource SmallGhost}"
+                                                Command="{Binding DataContext.DeleteRecordCommand,
+                                                    RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- Empty state -->
+                <TextBlock HorizontalAlignment="Center"
+                           Margin="0,12"
+                           FontSize="12"
+                           Foreground="{DynamicResource TextCaption}"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Records.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                    No players flagged yet.&#x0A;Use ➕ Flag a Player above to add your first entry.
+                </TextBlock>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

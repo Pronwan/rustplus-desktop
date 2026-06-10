@@ -422,7 +422,8 @@
 		<CopyRetryDelayMilliseconds>250</CopyRetryDelayMilliseconds>
 	</PropertyGroup>
 
-	<Target Name="ObfuscateSecretsTarget" BeforeTargets="BeforeBuild">
+	<Target Name="ObfuscateSecretsTarget" BeforeTargets="BeforeBuild"
+	        Condition="!Exists('$(MSBuildProjectDirectory)\Services\Data\ObfuscatedSecrets.cs')">
 		<Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\..\obfuscate_secrets.ps1&quot; &quot;$(MSBuildProjectDirectory)&quot;" />
 		<ItemGroup>
 			<Compile Remove="$(MSBuildProjectDirectory)\Services\Data\ObfuscatedSecrets.cs" />

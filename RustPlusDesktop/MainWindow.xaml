@@ -858,6 +858,16 @@
                                         Icon="{ui:SymbolIcon Symbol=Info20}"
                                         ToolTip="{DynamicResource ServerDetails}" />
 
+                                    <!--  Cheater Analytics  -->
+                                    <ui:Button
+                                        x:Name="BtnCheaterAnalytics"
+                                        Margin="4,0,0,0"
+                                        Padding="10,4"
+                                        Appearance="Secondary"
+                                        Click="BtnCheaterAnalytics_Click"
+                                        Icon="{ui:SymbolIcon Symbol=ShieldError20}"
+                                        ToolTip="Cheater Analytics" />
+
 
                                 </StackPanel>
                             </Grid>
@@ -2556,6 +2566,11 @@
                     <!--  App Settings Overlay  -->
                     <views:AppSettingsOverlay
                         x:Name="AppSettingsPanel"
+                        Visibility="Collapsed" />
+
+                    <!--  Cheater Analytics Overlay  -->
+                    <views:CheaterAnalyticsPanel
+                        x:Name="CheaterAnalyticsPanel"
                         Visibility="Collapsed" />
                 </Grid>
             </Border>
