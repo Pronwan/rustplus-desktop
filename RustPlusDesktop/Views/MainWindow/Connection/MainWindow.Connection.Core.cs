@@ -488,6 +488,12 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
+            if (_vm?.Selected != null)
+            {
+                _vm.Selected.IsConnected = false;
+                _vm.Selected.IsFullConnected = false;
+                _vm.NotifyDevicesChanged();
+            }
             if (showBusy)
             {
                 _vm.IsInitializing = false;

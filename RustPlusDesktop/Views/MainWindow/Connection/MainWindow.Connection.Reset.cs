@@ -226,6 +226,13 @@ public partial class MainWindow
         if (_isReconnecting) return;
         _isReconnecting = true;
 
+        if (_vm?.Selected != null)
+        {
+            _vm.Selected.IsConnected = false;
+            _vm.Selected.IsFullConnected = false;
+            _vm.NotifyDevicesChanged();
+        }
+
         try
         {
             // Suppress errors if the socket is already completely dead
