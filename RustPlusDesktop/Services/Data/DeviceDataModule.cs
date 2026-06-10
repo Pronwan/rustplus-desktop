@@ -10,6 +10,10 @@ namespace RustPlusDesk.Services.Data
 {
     public static class DeviceDataModule
     {
+        private static string? _lastSyncedDevicesJson;
+        private static string? _lastSyncedServerKey;
+        private static ulong _lastSyncedSteamId;
+
         public static ExportedDeviceDto MapDeviceToDto(SmartDevice d)
         {
             var dto = new ExportedDeviceDto
@@ -56,6 +60,115 @@ namespace RustPlusDesk.Services.Data
             return dev;
         }
 
+        public static int CountActualDevices(IEnumerable<SmartDevice>? devices)
+        {
+            if (devices == null) return 0;
+            int count = 0;
+            foreach (var d in devices)
+            {
+                if (d.IsGroup)
+                {
+                    if (d.Children != null)
+                    {
+                        count += CountActualDevices(d.Children);
+                    }
+                }
+                else
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        public static int CountActualDevices(IEnumerable<ExportedDeviceDto>? dtos)
+        {
+            if (dtos == null) return 0;
+            int count = 0;
+            foreach (var d in dtos)
+            {
+                if (d.IsGroup)
+                {
+                    if (d.Children != null)
+                    {
+                        count += CountActualDevices(d.Children);
+                    }
+                }
+                else
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        public static List<ExportedDeviceDto> GetTrimmedDeviceList(List<ExportedDeviceDto> dtos, int maxDevices)
+        {
+            var result = new List<ExportedDeviceDto>();
+            int currentCount = 0;
+            foreach (var dto in dtos)
+            {
+                if (currentCount >= maxDevices)
+                    break;
+
+                if (dto.IsGroup)
+                {
+                    var trimmedGroup = CloneGroupWithLimit(dto, maxDevices - currentCount, out int added);
+                    if (added > 0)
+                    {
+                        result.Add(trimmedGroup);
+                        currentCount += added;
+                    }
+                }
+                else
+                {
+                    result.Add(dto);
+                    currentCount++;
+                }
+            }
+            return result;
+        }
+
+        private static ExportedDeviceDto CloneGroupWithLimit(ExportedDeviceDto group, int remainingLimit, out int added)
+        {
+            added = 0;
+            var newGroup = new ExportedDeviceDto
+            {
+                EntityId = group.EntityId,
+                Kind = group.Kind,
+                Name = group.Name,
+                Alias = group.Alias,
+                IsGroup = group.IsGroup,
+                Children = new List<ExportedDeviceDto>()
+            };
+
+            if (group.Children != null)
+            {
+                foreach (var child in group.Children)
+                {
+                    if (added >= remainingLimit)
+                        break;
+
+                    if (child.IsGroup)
+                    {
+                        var subGroup = CloneGroupWithLimit(child, remainingLimit - added, out int subAdded);
+                        if (subAdded > 0)
+                        {
+                            newGroup.Children.Add(subGroup);
+                            added += subAdded;
+                        }
+                    }
+                    else
+                    {
+                        newGroup.Children.Add(child);
+                        added++;
+                    }
+                }
+            }
+
+            return newGroup;
+        }
+
         public static async Task<int> UploadDevicesSnapshotAsync(string serverKey, ulong steamId, IEnumerable<SmartDevice> devices, OverlaySaveData canvasOverlay, bool explicitWipe = false)
         {
             var dtoList = new List<ExportedDeviceDto>();
@@ -74,31 +187,46 @@ namespace RustPlusDesk.Services.Data
             {
                 if (!await Auth.SupabaseAuthManager.EnsureFreshSessionAsync()) return 0;
                 int maxDevices = Auth.SupabaseAuthManager.GetMaxDevices();
-                if (dtoList.Count > maxDevices)
+                int actualCount = CountActualDevices(dtoList);
+                if (actualCount > maxDevices)
                 {
-                    dtoList = dtoList.GetRange(0, maxDevices);
+                    AppendLog($"[devices/cloud] Sync skipped: Smart devices count ({actualCount}/{maxDevices}) exceeds limit for {Auth.SupabaseAuthManager.CurrentTier} tier.");
                 }
-
-                try
+                else
                 {
-                    // Upsert directly using OnConflict – no pre-fetch needed.
-                    // Generates a new UUID on insert, keeps existing on conflict.
-                    var devJson = JsonSerializer.Serialize(dtoList, new JsonSerializerOptions { WriteIndented = false });
-                    var model = new SmartDeviceModel
+                    try
                     {
-                        Id         = Guid.NewGuid().ToString(),
-                        ServerKey  = serverKey,
-                        SteamId    = steamId.ToString(),
-                        DeviceData = devJson,
-                        UpdatedAt  = DateTime.UtcNow
-                    };
-                    await Auth.SupabaseAuthManager.Client.From<SmartDeviceModel>()
-                        .Upsert(model, new Postgrest.QueryOptions { OnConflict = "server_key, steam_id" });
-                    syncedCount = dtoList.Count;
-                }
-                catch (Exception ex)
-                {
-                    AppendLog($"[Cloud/Error] Syncing devices to Supabase failed: {ex.Message}");
+                        var devJson = JsonSerializer.Serialize(dtoList, new JsonSerializerOptions { WriteIndented = false });
+
+                        if (!explicitWipe &&
+                            _lastSyncedDevicesJson == devJson &&
+                            _lastSyncedServerKey == serverKey &&
+                            _lastSyncedSteamId == steamId)
+                        {
+                            return 0; // Skip uploading if nothing has changed
+                        }
+
+                        var payload = new
+                        {
+                            server_key = serverKey,
+                            steam_id = steamId.ToString(),
+                            smart_devices = new
+                            {
+                                device_data = devJson
+                            }
+                        };
+                        await Auth.SupabaseAuthManager.CallEdgeFunctionAsync("overlay", System.Net.Http.HttpMethod.Post, payload);
+
+                        _lastSyncedDevicesJson = devJson;
+                        _lastSyncedServerKey = serverKey;
+                        _lastSyncedSteamId = steamId;
+
+                        syncedCount = actualCount;
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog($"[Cloud/Error] Syncing devices to Supabase failed: {ex.Message}");
+                    }
                 }
             }
 

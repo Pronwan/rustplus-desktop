@@ -568,7 +568,7 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
             || s.Contains("aborted");
     }
 
-    private async Task HandleDeviceToggleAsync(object sender, bool on)
+    private async Task HandleDeviceToggleAsync(object sender, bool on, bool ignoreGlobalBusy = false)
     {
         if (_suppressToggleHandler) return;
 
@@ -577,14 +577,17 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
 
         // Lock erst NACH erfolgreichem Connect setzen? → dein Flow kann bleiben,
         // ABER ganz wichtig: Timeout um das Toggle, damit der Task nicht hängt.
-        if (_globalToggleBusy) return;
+        if (!ignoreGlobalBusy && _globalToggleBusy) return;
         if (!TryMarkToggleBusy(dev.EntityId))
         {
             AppendLog($"(skip) Toggle #{dev.EntityId} already in progress");
             return;
         }
 
-        _globalToggleBusy = true;
+        if (!ignoreGlobalBusy)
+        {
+            _globalToggleBusy = true;
+        }
 
         dev.IsToggleBusy = true;
         int attempts = 0;
@@ -643,7 +646,10 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
             dev.IsToggleBusy = false;
             
             // Release global lock after a small cooldown to prevent spamming different switches
-            _ = Task.Delay(500).ContinueWith(_ => _globalToggleBusy = false);
+            if (!ignoreGlobalBusy)
+            {
+                _ = Task.Delay(500).ContinueWith(_ => _globalToggleBusy = false);
+            }
         }
     }
 
@@ -1167,7 +1173,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
                 if (it.OriginalDto != null)
                 {
                     // Rekursiver Import via DTO - prüfen auf allen Ebenen
-                    if (!it.OriginalDto.IsGroup && FindDeviceById(_vm.Selected.Devices, it.OriginalDto.EntityId) != null)
+                    if (FindDeviceById(_vm.Selected.Devices, it.OriginalDto.EntityId) != null)
                         continue;
 
                     var dev = MapDtoToDeviceFiltered(it.OriginalDto);
@@ -1326,7 +1332,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         for (int i = parent.Children.Count - 1; i >= 0; i--)
         {
             var child = parent.Children[i];
-            if (!child.IsGroup && FindDeviceById(_vm?.Selected?.Devices, child.EntityId) != null)
+            if (FindDeviceById(_vm?.Selected?.Devices, child.EntityId) != null)
             {
                 parent.Children.RemoveAt(i);
             }

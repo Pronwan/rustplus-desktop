@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -2243,5 +2243,11 @@
   </data>
   <data name="OpenCloudWebPortal" xml:space="preserve">
     <value>افتح البوابة الإلكترونية السحابية</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>فشل الاتصال: لا يمكن الوصول إلى Rust+.</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>إما أن جدار الحماية الخاص بك يمنع الاتصال أو أن واجهة برمجة تطبيقات Rust+ على الخادم لا تعمل بشكل صحيح.</value>
   </data>
 </root>

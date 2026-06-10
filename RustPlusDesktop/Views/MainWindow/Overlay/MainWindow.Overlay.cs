@@ -104,6 +104,7 @@ private bool _overlayToolsVisible = false;
                 Source = tm.Avatar ?? GetPlaceholderAvatar(),
                 SnapsToDevicePixels = true
             };
+            RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
 
             btn.Content = img;
             OverlayTeamStack.Children.Add(btn);
@@ -352,6 +353,7 @@ private bool _overlayToolsVisible = false;
             // wichtig: gleiche Transform wie Map, damit es mitzoomt/panned
             RenderTransform = MapTransform
         };
+        RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
 
         Canvas.SetLeft(img, 0);
         Canvas.SetTop(img, 0);
@@ -463,6 +465,7 @@ private bool _overlayToolsVisible = false;
                     IsUserEditable = true
                 }
             };
+            RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
 
             Canvas.SetLeft(img, icon.X);
             Canvas.SetTop(img, icon.Y);
@@ -713,6 +716,7 @@ private bool _overlayToolsVisible = false;
                 Screenshots = new List<string>()
             }
         };
+        RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
 
         bool isBase = _currentIconPath.Contains("base1.png") || _currentIconPath.Contains("base2.png");
 
@@ -1154,7 +1158,7 @@ private bool _overlayToolsVisible = false;
 
     private bool IsFreeDeviceSyncLimitExceeded()
     {
-        return (_vm.Selected?.Devices?.Count ?? 0) > Services.Auth.SupabaseAuthManager.GetMaxDevices();
+        return Services.Data.DeviceDataModule.CountActualDevices(_vm.Selected?.Devices) > Services.Auth.SupabaseAuthManager.GetMaxDevices();
     }
 
     private bool IsFreeOverlaySyncLimitExceeded()
@@ -1174,7 +1178,7 @@ private bool _overlayToolsVisible = false;
 
     public int GetCurrentDevicesCount()
     {
-        return _vm?.Selected?.Devices?.Count ?? 0;
+        return Services.Data.DeviceDataModule.CountActualDevices(_vm?.Selected?.Devices);
     }
 
     public int GetCurrentBaseCount()
@@ -2205,6 +2209,7 @@ private bool _overlayToolsVisible = false;
                              ? Visibility.Visible
                              : Visibility.Collapsed
             };
+            RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
 
             if (icon.IconPath.Contains("base1.png") || icon.IconPath.Contains("base2.png"))
             {
@@ -2421,7 +2426,7 @@ private bool _overlayToolsVisible = false;
         int imported = 0;
         foreach (var dto in data.Devices)
         {
-            if (!dto.IsGroup && FindDeviceById(_vm.Selected.Devices, dto.EntityId) != null)
+            if (FindDeviceById(_vm.Selected.Devices, dto.EntityId) != null)
                 continue;
 
             _vm.Selected.Devices.Add(MapDtoToDeviceFiltered(dto));

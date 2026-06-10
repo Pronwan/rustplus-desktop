@@ -51,6 +51,13 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# **🚀 RustPlusDesktop — Patch v6.1.1 (Hotfix & Optimization)**
+
+- **Hardened Auto-Reconnect Stability:** Fixed a state synchronization issue where the app remained marked as "connected" during server restarts or crashes. The app now seamlessly and reliably auto-reconnects after server reboots.
+- **Clean Connection Error Alerts:** If the Rust+ API on the game server goes offline or the connection is blocked by a firewall, the app now displays a cleaner, localized Snackbar notification with helpful troubleshooting tips. The alert duration has been increased to 8 seconds, and text wrapping is now fixed.
+- **Hotkey Feature Rework:** Under-the-hood improvements to make local hotkey mapping and triggers more responsive and reliable.
+- **Cloud Traffic Optimization:** The query interval for the Chat Master synchronization has been increased to reduce server load and data egress, keeping our cloud database healthy.
+
 # **🚀 Update v6.1.0: Advanced Discord Bot Map Features! :map:**
 We added interactive Rust+ Desktop Map directly to your Discord server! With Advanced Discord Bot integration, you can now seamlessly share tactical map intel with your team.
 

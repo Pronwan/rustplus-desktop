@@ -1,0 +1,59 @@
+<Window x:Class="RustPlusDesk.Views.Windows.HotkeyCaptureWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Press Hotkey"
+        Height="200" Width="360"
+        WindowStartupLocation="CenterOwner"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        Topmost="True">
+    
+    <Border Background="{DynamicResource SurfaceAlt}" 
+            BorderBrush="{DynamicResource CardBorder}" 
+            BorderThickness="2" 
+            CornerRadius="12">
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <TextBlock Text="Set Shortcut" 
+                       FontSize="16" FontWeight="SemiBold" 
+                       Foreground="{DynamicResource TextPrimary}"
+                       HorizontalAlignment="Center"/>
+
+            <!-- Visual Key Badge -->
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <ui:SymbolIcon Symbol="Keyboard24" FontSize="32" Foreground="{DynamicResource Accent}" Margin="0,0,0,10" />
+                
+                <Border Background="{DynamicResource Surface}" 
+                        BorderBrush="{DynamicResource CardBorder}" 
+                        BorderThickness="1.5" 
+                        CornerRadius="6" 
+                        Padding="16,8"
+                        MinWidth="200">
+                    <TextBlock x:Name="TxtGesture" 
+                               Text="Press desired key combination..." 
+                               FontSize="14" 
+                               FontWeight="SemiBold" 
+                               Foreground="{DynamicResource TextPrimary}"
+                               HorizontalAlignment="Center"
+                               TextWrapping="NoWrap"/>
+                </Border>
+            </StackPanel>
+
+            <!-- Footer Instructions -->
+            <TextBlock Grid.Row="2" 
+                       Text="Press ESC to cancel, Enter to save" 
+                       FontSize="11" 
+                       Foreground="{DynamicResource TextSubtle}"
+                       HorizontalAlignment="Center"/>
+        </Grid>
+    </Border>
+</Window>

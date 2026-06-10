@@ -1445,6 +1445,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     }
     private static void BindIcon(Image img, int itemId, string? shortName, int decodePx = 32)
     {
+        RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
         // 1) Sofort versuchen
         var src = ResolveItemIcon(itemId, shortName, decodePx);
         if (src != null) { img.Source = src; return; }
@@ -4839,14 +4840,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     internal void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)
     {
         if (RootSnackbar == null) return;
+
+        var textBlock = new System.Windows.Controls.TextBlock
+        {
+            Text = message,
+            TextWrapping = System.Windows.TextWrapping.Wrap
+        };
+
         var snackbar = new WpfUi.Snackbar(RootSnackbar)
         {
             Title = title,
-            Content = message,
+            Content = textBlock,
             Appearance = appearance,
             Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Info24),
-            Timeout = TimeSpan.FromSeconds(5),
-            MaxWidth = 350,
+            Timeout = TimeSpan.FromSeconds(8),
+            MaxWidth = 500,
             HorizontalAlignment = HorizontalAlignment.Right
         };
         snackbar.Show();
@@ -5225,9 +5233,50 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private GlobalHotkeyManager? _hotkeyMgr;
     private readonly Dictionary<string, Dictionary<string, List<long>>> _hotkeysByServer
      = new(StringComparer.OrdinalIgnoreCase);
+    private HotkeyOptions _hotkeyOptions = new();
+
     private static string HotkeyConfigPath =>
         System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                                "RustPlusDesk", "hotkeys.json");
+
+    private static string HotkeyOptionsPath =>
+        System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                               "RustPlusDesk", "hotkey_options.json");
+
+    private void LoadHotkeyOptions()
+    {
+        try
+        {
+            var p = HotkeyOptionsPath;
+            if (!System.IO.File.Exists(p))
+            {
+                _hotkeyOptions = new HotkeyOptions();
+                return;
+            }
+            var json = System.IO.File.ReadAllText(p);
+            _hotkeyOptions = JsonSerializer.Deserialize<HotkeyOptions>(json) ?? new HotkeyOptions();
+        }
+        catch (Exception ex)
+        {
+            AppendLog("Hotkey options load error: " + ex.Message);
+            _hotkeyOptions = new HotkeyOptions();
+        }
+    }
+
+    private void SaveHotkeyOptions()
+    {
+        try
+        {
+            var p = HotkeyOptionsPath;
+            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(p)!);
+            var json = JsonSerializer.Serialize(_hotkeyOptions, new JsonSerializerOptions { WriteIndented = true });
+            System.IO.File.WriteAllText(p, json);
+        }
+        catch (Exception ex)
+        {
+            AppendLog("Hotkey options save error: " + ex.Message);
+        }
+    }
 
     private string CurrentServerKey()
     {
@@ -5260,6 +5309,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         HwndSource.FromHwnd(hwnd)!.AddHook(WndProc);
 
+        LoadHotkeyOptions();
         LoadHotkeys();
         ActivateHotkeysForCurrentServer();   // statt RegisterAllHotkeys()
     }
@@ -5425,29 +5475,51 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private async Task ToggleSequenceAsync(IEnumerable<long> entityIds)
     {
+        var allTargets = new List<SmartDevice>();
         foreach (var id in entityIds)
         {
             var rootDev = FindDevice(id);
             if (rootDev == null) continue;
 
-            var targets = new List<SmartDevice>();
             if (rootDev.IsGroup && rootDev.Children != null)
-                targets.AddRange(GetSwitchesRecursive(rootDev.Children));
+                allTargets.AddRange(GetSwitchesRecursive(rootDev.Children));
             else if (string.Equals(rootDev.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase))
-                targets.Add(rootDev);
+                allTargets.Add(rootDev);
+        }
 
-            foreach (var dev in targets)
+        var uniqueSwitches = allTargets
+            .GroupBy(d => d.EntityId)
+            .Select(g => g.First())
+            .Where(d => !d.IsMissing)
+            .ToList();
+
+        if (uniqueSwitches.Count == 0) return;
+
+        if (_hotkeyOptions.ParallelMode)
+        {
+            var tasks = uniqueSwitches.Select(dev =>
             {
-                if (dev.IsMissing) continue;
-
                 bool current = dev.IsOn ?? false;
-                bool desired = !current; 
-
+                bool desired = !current;
                 var fakeSender = new System.Windows.FrameworkElement { DataContext = dev };
-                await HandleDeviceToggleAsync(fakeSender, desired);
+                return HandleDeviceToggleAsync(fakeSender, desired, ignoreGlobalBusy: true);
+            });
+            await Task.WhenAll(tasks);
+        }
+        else
+        {
+            foreach (var dev in uniqueSwitches)
+            {
+                bool current = dev.IsOn ?? false;
+                bool desired = !current;
+                var fakeSender = new System.Windows.FrameworkElement { DataContext = dev };
+                await HandleDeviceToggleAsync(fakeSender, desired, ignoreGlobalBusy: true);
 
-                await Task.Delay(650);
-                if (_rust == null) break; 
+                if (_hotkeyOptions.ToggleDelayMs > 0)
+                {
+                    await Task.Delay(_hotkeyOptions.ToggleDelayMs);
+                }
+                if (_rust == null) break;
             }
         }
     }
@@ -5542,10 +5614,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         
         var flatAssignable = GetHotkeyAssignableDevices(src.OfType<SmartDevice>());
 
-        var dlg = new HotkeysWindow(flatAssignable, MapForCurrentServer()) { Owner = this };
+        var dlg = new HotkeysWindow(flatAssignable, MapForCurrentServer(), _hotkeyOptions, _hotkeyMgr?.RegistrationStatus) { Owner = this };
         bool? activate = dlg.ShowDialog();
 
         SaveHotkeys();
+        SaveHotkeyOptions();
 
         if (activate == true) ActivateHotkeysForCurrentServer();
         else DeactivateHotkeys();
@@ -5571,22 +5644,41 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void UpdateHotkeyButtonUi()
     {
-        if (BtnHotkeys == null) return;
+        if (BtnHotkeys == null || TxtBtnHotkeys == null) return;
 
         if (_hotkeysActive)
         {
-            BtnHotkeys.Content = "Hotkeys active";
-            BtnHotkeys.Background = new SolidColorBrush(Color.FromRgb(255, 204, 0));   // gelb
-            BtnHotkeys.BorderBrush = new SolidColorBrush(Color.FromRgb(255, 224, 64));
-            BtnHotkeys.Foreground = Brushes.Black;
+            TxtBtnHotkeys.Text = "Hotkeys active";
+            if (BtnHotkeys.IsMouseOver)
+            {
+                BtnHotkeys.Background = Brushes.Transparent;
+                BtnHotkeys.BorderBrush = new SolidColorBrush(Color.FromRgb(255, 204, 0)); // gelb
+                BtnHotkeys.Foreground = new SolidColorBrush(Color.FromRgb(255, 204, 0));
+            }
+            else
+            {
+                BtnHotkeys.Background = new SolidColorBrush(Color.FromRgb(255, 204, 0));   // gelb
+                BtnHotkeys.BorderBrush = new SolidColorBrush(Color.FromRgb(255, 224, 64));
+                BtnHotkeys.Foreground = Brushes.Black;
+            }
         }
         else
         {
-            BtnHotkeys.Content = "Hotkeys";
+            TxtBtnHotkeys.Text = "Hotkeys";
             BtnHotkeys.ClearValue(Button.BackgroundProperty);
             BtnHotkeys.ClearValue(Button.BorderBrushProperty);
             BtnHotkeys.ClearValue(Button.ForegroundProperty);
         }
+    }
+
+    private void BtnHotkeys_MouseEnter(object sender, MouseEventArgs e)
+    {
+        UpdateHotkeyButtonUi();
+    }
+
+    private void BtnHotkeys_MouseLeave(object sender, MouseEventArgs e)
+    {
+        UpdateHotkeyButtonUi();
     }
 
     private void DeactivateHotkeys()

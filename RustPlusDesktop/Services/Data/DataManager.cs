@@ -94,23 +94,22 @@ namespace RustPlusDesk.Services.Data
                 }
                 catch { uncompressedSize = overlayB64.Length; }
 
-                var model = new MapOverlayModel
+                var payload = new
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    ServerKey = serverKey,
-                    SteamId = steamId.ToString(),
-                    OverlayData = overlayB64,
-                    UncompressedSize = uncompressedSize,
-                    UpdatedAt = DateTime.UtcNow
+                    server_key = serverKey,
+                    steam_id = steamId.ToString(),
+                    map_overlay = new
+                    {
+                        overlay_data = overlayB64,
+                        uncompressed_size = uncompressedSize
+                    }
                 };
 
-                // Perform an Upsert. Supabase handles 'ON CONFLICT' automatically
-                await SupabaseAuthManager.Client.From<MapOverlayModel>().Upsert(model);
+                await SupabaseAuthManager.CallEdgeFunctionAsync("overlay", HttpMethod.Post, payload);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[DataManager] Upload error: {ex.Message}");
-                // throw new InvalidOperationException("Upload failed: " + ex.Message);
             }
         }
 
@@ -123,12 +122,21 @@ namespace RustPlusDesk.Services.Data
 
             try
             {
-                var response = await SupabaseAuthManager.Client.From<MapOverlayModel>()
-                    .Filter("server_key", Postgrest.Constants.Operator.Equals, serverKey)
-                    .Filter("steam_id", Postgrest.Constants.Operator.Equals, steamId.ToString())
-                    .Single();
+                var queryParams = new System.Collections.Generic.Dictionary<string, string>
+                {
+                    ["server_key"] = serverKey,
+                    ["steam_id"] = steamId.ToString()
+                };
 
-                return response?.OverlayData;
+                var body = await SupabaseAuthManager.CallEdgeFunctionAsync("overlay", HttpMethod.Get, null, queryParams);
+                using var doc = JsonDocument.Parse(body);
+                var root = doc.RootElement;
+                if (root.TryGetProperty("map_overlay", out var mapEl) && mapEl.ValueKind == JsonValueKind.Object)
+                {
+                    var mapRow = JsonSerializer.Deserialize<RustPlusDesk.Models.MapOverlayModel>(mapEl.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return mapRow?.OverlayData;
+                }
+                return null;
             }
             catch (Exception ex)
             {
