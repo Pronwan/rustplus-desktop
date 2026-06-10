@@ -5337,7 +5337,7 @@
                 Margin="20,0,20,20"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
-                MaxWidth="400"
+                MaxWidth="550"
                 Panel.ZIndex="9999" />
 
         </Grid>

@@ -4846,8 +4846,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             Content = message,
             Appearance = appearance,
             Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Info24),
-            Timeout = TimeSpan.FromSeconds(5),
-            MaxWidth = 350,
+            Timeout = TimeSpan.FromSeconds(8),
+            MaxWidth = 500,
             HorizontalAlignment = HorizontalAlignment.Right
         };
         snackbar.Show();
