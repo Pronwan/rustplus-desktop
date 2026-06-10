@@ -3685,6 +3685,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         bool masterOn = TrackingService.AnnounceSpawnsMaster;
         PopulateTradeAlertsSubMenu(masterOn);
+        PopulateHotkeyTriggersSubMenu();
 
         SyncContextMenu(ChatAnnounce.ContextMenu, masterOn);
         if (ChatAlertsConfigureButton.Flyout is ContextMenu cm)
@@ -3829,6 +3830,77 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 RequestTeamFeatureMasterSync();
             }
+        }
+    }
+
+    private void PopulateHotkeyTriggersSubMenu()
+    {
+        if (HotkeyTriggersMenuItem == null) return;
+
+        HotkeyTriggersMenuItem.Items.Clear();
+
+        // Build the list of devices that have hotkeys assigned for the current server
+        var map = MapForCurrentServer();
+        var serverKey = CurrentServerKey();
+
+        // Collect devices with hotkeys
+        var hotkeyDevices = new List<(string gesture, long entityId, SmartDevice? dev)>();
+        foreach (var kvp in map)
+        {
+            foreach (var entityId in kvp.Value)
+            {
+                var dev = FindDevice(entityId);
+                if (dev != null)
+                    hotkeyDevices.Add((kvp.Key, entityId, dev));
+            }
+        }
+
+        // Remove duplicates (same entityId can appear under multiple gestures)
+        var seen = new HashSet<long>();
+        var uniqueDevices = new List<(string gesture, long entityId, SmartDevice? dev)>();
+        foreach (var item in hotkeyDevices)
+        {
+            if (seen.Add(item.entityId))
+                uniqueDevices.Add(item);
+        }
+
+        // Grey out if no hotkeys are assigned
+        HotkeyTriggersMenuItem.IsEnabled = uniqueDevices.Count > 0;
+
+        if (uniqueDevices.Count == 0)
+        {
+            HotkeyTriggersMenuItem.Header = "Hotkey Triggers (0)";
+            return;
+        }
+
+        HotkeyTriggersMenuItem.Header = "Hotkey Triggers";
+
+        foreach (var (gesture, entityId, dev) in uniqueDevices)
+        {
+            bool isEnabled = TrackingService.GetHotkeyTriggerChatAlert(serverKey, entityId);
+            string label = dev?.PureName ?? $"#{entityId}";
+
+            var mi = new MenuItem
+            {
+                Header = label,
+                IsCheckable = true,
+                IsChecked = isEnabled,
+                IsEnabled = true,
+                StaysOpenOnClick = true,
+                Style = (Style)FindResource("DarkMenuItem"),
+                Tag = entityId          // store entityId for the click handler
+            };
+            mi.Click += HotkeyTriggerSubItem_Click;
+            HotkeyTriggersMenuItem.Items.Add(mi);
+        }
+    }
+
+    private void HotkeyTriggerSubItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is long entityId)
+        {
+            string serverKey = CurrentServerKey();
+            TrackingService.SetHotkeyTriggerChatAlert(serverKey, entityId, mi.IsChecked);
         }
     }
 
@@ -5466,6 +5538,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return null;
     }
 
+    private string MyPlayerNameOrYou()
+    {
+        if (_mySteamId != 0 && _steamNames.TryGetValue(_mySteamId, out var name) && !string.IsNullOrWhiteSpace(name))
+            return name;
+        return "you";
+    }
+
     private async Task ToggleSequenceAsync(IEnumerable<long> entityIds)
     {
         var allTargets = new List<SmartDevice>();
@@ -5488,16 +5567,31 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (uniqueSwitches.Count == 0) return;
 
+        string serverKey = CurrentServerKey();
+
         if (_hotkeyOptions.ParallelMode)
         {
-            var tasks = uniqueSwitches.Select(dev =>
+            // Capture desired states before launching parallel tasks
+            var toggleWork = uniqueSwitches.Select(dev =>
             {
                 bool current = dev.IsOn ?? false;
                 bool desired = !current;
                 var fakeSender = new System.Windows.FrameworkElement { DataContext = dev };
-                return HandleDeviceToggleAsync(fakeSender, desired, ignoreGlobalBusy: true);
-            });
-            await Task.WhenAll(tasks);
+                return (dev, desired, task: HandleDeviceToggleAsync(fakeSender, desired, ignoreGlobalBusy: true));
+            }).ToList();
+
+            await Task.WhenAll(toggleWork.Select(t => t.task));
+
+            // Send chat alerts for devices that had it enabled
+            foreach (var (dev, desired, _) in toggleWork)
+            {
+                if (TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
+                {
+                    string state = desired ? "ON" : "OFF";
+                    string msg = $"[Hotkey] {dev.PureName}: turned {state} (triggered by {MyPlayerNameOrYou()})";
+                    _ = SendTeamChatSafeAsync(msg, false, true);
+                }
+            }
         }
         else
         {
@@ -5507,6 +5601,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 bool desired = !current;
                 var fakeSender = new System.Windows.FrameworkElement { DataContext = dev };
                 await HandleDeviceToggleAsync(fakeSender, desired, ignoreGlobalBusy: true);
+
+                // Send chat alert if enabled for this device
+                if (TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
+                {
+                    string state = desired ? "ON" : "OFF";
+                    string msg = $"[Hotkey] {dev.PureName}: turned {state} (triggered by {MyPlayerNameOrYou()})";
+                    _ = SendTeamChatSafeAsync(msg, false, true);
+                }
 
                 if (_hotkeyOptions.ToggleDelayMs > 0)
                 {
@@ -5615,6 +5717,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (activate == true) ActivateHotkeysForCurrentServer();
         else DeactivateHotkeys();
+
+        // Refresh the Hotkey Triggers submenu to reflect any new/removed hotkey assignments
+        SyncAlertMenuItems();
     }
 
     private IEnumerable<SmartDevice> GetHotkeyAssignableDevices(IEnumerable<SmartDevice> devices)

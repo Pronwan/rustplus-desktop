@@ -121,6 +121,8 @@ public class TrackingSettings
     public bool TranslationConsentGiven { get; set; } = false;
     public bool UploadConsentGiven { get; set; } = false;
     public bool CloudSyncEnabled { get; set; } = false;
+    // Key = "host:port|entityId", value = true if that device should send a chat alert when toggled via hotkey
+    public Dictionary<string, bool> HotkeyTriggerChatAlertEnabled { get; set; } = new();
 }
 
 
@@ -644,6 +646,24 @@ public static class TrackingService
         get => _settings.CloudSyncEnabled;
         set { _settings.CloudSyncEnabled = value; SaveDB(); }
     }
+
+    private static string HotkeyAlertKey(string serverKey, long entityId) => $"{serverKey}|{entityId}";
+
+    public static bool GetHotkeyTriggerChatAlert(string serverKey, long entityId)
+    {
+        var key = HotkeyAlertKey(serverKey, entityId);
+        return _settings.HotkeyTriggerChatAlertEnabled.TryGetValue(key, out var val) && val;
+    }
+
+    public static void SetHotkeyTriggerChatAlert(string serverKey, long entityId, bool enabled)
+    {
+        var key = HotkeyAlertKey(serverKey, entityId);
+        _settings.HotkeyTriggerChatAlertEnabled[key] = enabled;
+        SaveDB();
+    }
+
+    public static IReadOnlyDictionary<string, bool> GetAllHotkeyTriggerChatAlerts()
+        => _settings.HotkeyTriggerChatAlertEnabled;
 
     public static bool AnnounceCargoDocking
     {
