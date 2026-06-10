@@ -1812,4 +1812,9 @@
 <data name="Markers" xml:space="preserve">
     <value>Ознаке:</value>
   </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: пребачен у {1} (покренуо {2})</value>
+  </data>
 </root>
+
+

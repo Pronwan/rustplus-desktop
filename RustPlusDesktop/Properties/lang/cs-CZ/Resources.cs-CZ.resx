@@ -1812,4 +1812,9 @@ Jste si jisti, že chcete pokračovat?</value>
 <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: přepnuto na {1} (spustil {2})</value>
+  </data>
 </root>
+
+

@@ -1812,4 +1812,9 @@ Tem a certeza de que pretende continuar?</value>
 <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: alternado para {1} (acionado por {2})</value>
+  </data>
 </root>
+
+

@@ -2328,4 +2328,9 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
     <value>Entweder blockiert deine Firewall die Verbindung oder die Rust+ API auf dem Server läuft nicht ordnungsgemäß.</value>
   </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: auf {1} geschaltet (ausgelöst von {2})</value>
+  </data>
 </root>
+
+

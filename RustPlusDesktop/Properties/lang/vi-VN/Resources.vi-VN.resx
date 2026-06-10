@@ -1812,4 +1812,9 @@ Bạn có chắc chắn muốn tiếp tục không?</value>
 <data name="Markers" xml:space="preserve">
     <value>Đánh dấu:</value>
   </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: đã chuyển {1} (kích hoạt bởi {2})</value>
+  </data>
 </root>
+
+

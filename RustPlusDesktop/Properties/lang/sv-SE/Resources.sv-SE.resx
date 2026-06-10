@@ -1812,4 +1812,9 @@ Ladda ner och installera nu?</value>
 <data name="Markers" xml:space="preserve">
     <value>Markörer:</value>
   </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: växlad till {1} (utlöst av {2})</value>
+  </data>
 </root>
+
+

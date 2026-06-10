@@ -1812,4 +1812,9 @@
 <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: {1} 전환됨 ({2}님이 실행)</value>
+  </data>
 </root>
+
+

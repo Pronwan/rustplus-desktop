@@ -1812,4 +1812,9 @@ Devam etmek istediğinizden emin misiniz?</value>
 <data name="Markers" xml:space="preserve">
     <value>İşaretler:</value>
   </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: {1} durumuna alındı ({2} tarafından tetiklendi)</value>
+  </data>
 </root>
+
+

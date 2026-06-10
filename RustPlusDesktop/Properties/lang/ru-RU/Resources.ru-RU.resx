@@ -2025,4 +2025,9 @@
   <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
     <value>Либо ваш брандмауэр блокирует соединение, либо API Rust+ на сервере работает некорректно.</value>
   </data>
-</root>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: переключен в {1} (запущено {2})</value>
+  </data></root>
+
+
+

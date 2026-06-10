@@ -1812,4 +1812,9 @@ Biztos, hogy folytatni szeretné?</value>
 <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: {1} kapcsolva (kiváltotta: {2})</value>
+  </data>
 </root>
+
+

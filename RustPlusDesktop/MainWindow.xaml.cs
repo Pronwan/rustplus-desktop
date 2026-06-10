@@ -5595,7 +5595,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
                 {
                     string state = desired ? "ON" : "OFF";
-                    string msg = $"[Hotkey] {dev.PureName}: turned {state} (triggered by {MyPlayerNameOrYou()})";
+                    string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, MyPlayerNameOrYou());
                     _ = SendTeamChatSafeAsync(msg, false, true);
                 }
             }
@@ -5613,7 +5613,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
                 {
                     string state = desired ? "ON" : "OFF";
-                    string msg = $"[Hotkey] {dev.PureName}: turned {state} (triggered by {MyPlayerNameOrYou()})";
+                    string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, MyPlayerNameOrYou());
                     _ = SendTeamChatSafeAsync(msg, false, true);
                 }
 

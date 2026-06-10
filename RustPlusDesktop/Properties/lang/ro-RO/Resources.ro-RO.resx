@@ -1812,4 +1812,9 @@ Sunteți sigur că doriți să continuați?</value>
 <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: comutat {1} (declanșat de {2})</value>
+  </data>
 </root>
+
+
