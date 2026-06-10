@@ -607,9 +607,9 @@ GPL-3.0-or-later
 
 ## Release Checksum:
 
-SHA256-Hash for current RustPlusDesk-Setup.exe 6.0.1:
+SHA256-Hash for current RustPlusDesk-Setup.exe 6.1.1:
 
-sha256:8ff1cb89ec0d794575e679bf28d9653f3f9420d6f56f2a92bbf649c74561ca54
+sha256:6f43839d3350a8856937e2f9ce7412c10c830fe2c91c03e08f468545d5b92572
 
 ---
 
