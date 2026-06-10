@@ -2130,4 +2130,10 @@ Are you sure you want to continue?</value>
   <data name="OpenCloudWebPortal" xml:space="preserve">
     <value>Open Cloud Web Portal</value>
   </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>Connection failed: Rust+ is unreachable.</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>Either your firewall is blocking the connection or the Rust+ API on the server is not running properly.</value>
+  </data>
 </root>

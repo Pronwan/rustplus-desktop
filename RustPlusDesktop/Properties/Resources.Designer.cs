@@ -680,6 +680,8 @@ namespace RustPlusDesk.Properties {
         public static string ChatCmdTimerMaxReached => GetString("ChatCmdTimerMaxReached");
         public static string TimerDurationRequired => GetString("TimerDurationRequired");
         public static string TimerNameMustStartWithLetter => GetString("TimerNameMustStartWithLetter");
+        public static string ConnectionFailedRustPlusUnreachable => GetString("ConnectionFailedRustPlusUnreachable");
+        public static string ConnectionFailedRustPlusUnreachableComment => GetString("ConnectionFailedRustPlusUnreachableComment");
     }
 }
 
