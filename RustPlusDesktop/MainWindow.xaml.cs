@@ -5545,11 +5545,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return null;
     }
 
-    private string MyPlayerNameOrYou()
+    private async Task<string> MyPlayerNameOrYouAsync()
     {
-        if (_mySteamId != 0 && _steamNames.TryGetValue(_mySteamId, out var name) && !string.IsNullOrWhiteSpace(name))
-            return name;
-        return "you";
+        if (_mySteamId != 0)
+        {
+            if (_steamNames.TryGetValue(_mySteamId, out var name) && !string.IsNullOrWhiteSpace(name))
+                return name;
+            await RefreshTeamNamesAsync();
+            if (_steamNames.TryGetValue(_mySteamId, out name) && !string.IsNullOrWhiteSpace(name))
+                return name;
+        }
+        return Properties.Resources.WordYou;
     }
 
     private async Task ToggleSequenceAsync(IEnumerable<long> entityIds)
@@ -5595,7 +5601,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
                 {
                     string state = desired ? Properties.Resources.StateOn : Properties.Resources.StateOff;
-                    string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, MyPlayerNameOrYou());
+                    string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, await MyPlayerNameOrYouAsync());
                     _ = SendTeamChatSafeAsync(msg, true, true);
                 }
             }
@@ -5613,7 +5619,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
                 {
                     string state = desired ? Properties.Resources.StateOn : Properties.Resources.StateOff;
-                    string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, MyPlayerNameOrYou());
+                    string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, await MyPlayerNameOrYouAsync());
                     _ = SendTeamChatSafeAsync(msg, true, true);
                 }
 

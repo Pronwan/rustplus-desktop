@@ -1812,6 +1812,9 @@ Jste si jisti, že chcete pokračovat?</value>
 <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>vy</value>
+  </data>
   <data name="StateOn" xml:space="preserve">
     <value>ZAPNUTO</value>
   </data>

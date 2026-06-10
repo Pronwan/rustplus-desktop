@@ -1812,6 +1812,9 @@ Ladda ner och installera nu?</value>
 <data name="Markers" xml:space="preserve">
     <value>Markörer:</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>du</value>
+  </data>
   <data name="StateOn" xml:space="preserve">
     <value>PÅ</value>
   </data>

@@ -1812,6 +1812,9 @@ Tem a certeza de que pretende continuar?</value>
 <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>você</value>
+  </data>
   <data name="StateOn" xml:space="preserve">
     <value>ATIVADO</value>
   </data>

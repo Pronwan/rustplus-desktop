@@ -2268,6 +2268,9 @@ Télécharger et installer maintenant ?</value>
   <data name="OpenCloudWebPortal" xml:space="preserve">
     <value>Ouvrir le portail Web Cloud</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>vous</value>
+  </data>
   <data name="StateOn" xml:space="preserve">
     <value>ACTIVÉ</value>
   </data>

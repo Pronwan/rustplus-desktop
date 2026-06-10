@@ -2136,6 +2136,9 @@ Are you sure you want to continue?</value>
   <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
     <value>Either your firewall is blocking the connection or the Rust+ API on the server is not running properly.</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>you</value>
+  </data>
   <data name="StateOn" xml:space="preserve">
     <value>ON</value>
   </data>

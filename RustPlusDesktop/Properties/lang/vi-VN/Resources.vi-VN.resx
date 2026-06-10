@@ -1812,6 +1812,9 @@ Bạn có chắc chắn muốn tiếp tục không?</value>
 <data name="Markers" xml:space="preserve">
     <value>Đánh dấu:</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>bạn</value>
+  </data>
   <data name="StateOn" xml:space="preserve">
     <value>BẬT</value>
   </data>

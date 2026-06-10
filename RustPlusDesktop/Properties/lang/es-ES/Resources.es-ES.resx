@@ -2058,6 +2058,9 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   <data name="OpenCloudWebPortal" xml:space="preserve">
     <value>Abrir el Portal Web de la Nube</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>tú</value>
+  </data>
   <data name="StateOn" xml:space="preserve">
     <value>ENCENDIDO</value>
   </data>

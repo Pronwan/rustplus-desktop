@@ -1812,6 +1812,9 @@ Devam etmek istediğinizden emin misiniz?</value>
 <data name="Markers" xml:space="preserve">
     <value>İşaretler:</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>sen</value>
+  </data>
   <data name="StateOn" xml:space="preserve">
     <value>AÇIK</value>
   </data>

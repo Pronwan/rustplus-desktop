@@ -2025,6 +2025,9 @@
   <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
     <value>Либо ваш брандмауэр блокирует соединение, либо API Rust+ на сервере работает некорректно.</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>вы</value>
+  </data>
   <data name="StateOn" xml:space="preserve">
     <value>ВКЛ</value>
   </data>

@@ -1812,6 +1812,9 @@
 <data name="Markers" xml:space="preserve">
     <value>Ознаке:</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>ви</value>
+  </data>
   <data name="StateOn" xml:space="preserve">
     <value>УКЉУЧЕНО</value>
   </data>
