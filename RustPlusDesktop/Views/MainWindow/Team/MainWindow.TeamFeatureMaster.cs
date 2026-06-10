@@ -173,9 +173,10 @@ public partial class MainWindow
         {
             if (_teamFeatureMasterWatchTimer != null) return;
 
+            int intervalSeconds = SupabaseAuthManager.IsPremium ? 15 : 60;
             _teamFeatureMasterWatchTimer = new System.Windows.Threading.DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(5)
+                Interval = TimeSpan.FromSeconds(intervalSeconds)
             };
             _teamFeatureMasterWatchTimer.Tick += TeamFeatureMasterWatchTimer_Tick;
             _teamFeatureMasterWatchTimer.Start();
