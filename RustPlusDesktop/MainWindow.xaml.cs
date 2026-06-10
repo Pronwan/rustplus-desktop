@@ -5596,7 +5596,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 {
                     string state = desired ? "ON" : "OFF";
                     string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, MyPlayerNameOrYou());
-                    _ = SendTeamChatSafeAsync(msg, false, true);
+                    _ = SendTeamChatSafeAsync(msg, true, true);
                 }
             }
         }
@@ -5614,7 +5614,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 {
                     string state = desired ? "ON" : "OFF";
                     string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, MyPlayerNameOrYou());
-                    _ = SendTeamChatSafeAsync(msg, false, true);
+                    _ = SendTeamChatSafeAsync(msg, true, true);
                 }
 
                 if (_hotkeyOptions.ToggleDelayMs > 0)
