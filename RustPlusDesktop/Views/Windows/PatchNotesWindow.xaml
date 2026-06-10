@@ -58,6 +58,11 @@
                                 <Run FontWeight="Bold">&#x2022; Chat Master Polling Optimization:</Run>
                                 Optimized watchdog polling intervals for database connections to prevent Supabase egress/rate-limit issues and improve Cloud performance.
                             </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Auto-Reconnect Hardening:</Run>
+                                Fixed a state synchronization issue where the app remained marked as connected during a server restart/crash, preventing background services and commands from auto-reconnecting.
+                            </TextBlock>
                             
                             <Image Source="pack://application:,,,/Assets/Images/6.0 Cloud Patch/MapFetchDiscord.png" Stretch="Uniform" MaxHeight="350" Margin="0,4,0,12" />
                         </StackPanel>
