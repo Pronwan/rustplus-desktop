@@ -2322,4 +2322,10 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   <data name="OpenCloudWebPortal" xml:space="preserve">
     <value>Cloud Web Portal öffnen</value>
   </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>Verbindung fehlgeschlagen: Rust+ ist nicht erreichbar.</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>Entweder blockiert deine Firewall die Verbindung oder die Rust+ API auf dem Server läuft nicht ordnungsgemäß.</value>
+  </data>
 </root>

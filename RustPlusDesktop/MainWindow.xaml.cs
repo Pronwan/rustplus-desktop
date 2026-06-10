@@ -4912,14 +4912,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     internal void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)
     {
         if (RootSnackbar == null) return;
+
+        var textBlock = new System.Windows.Controls.TextBlock
+        {
+            Text = message,
+            TextWrapping = System.Windows.TextWrapping.Wrap
+        };
+
         var snackbar = new WpfUi.Snackbar(RootSnackbar)
         {
             Title = title,
-            Content = message,
+            Content = textBlock,
             Appearance = appearance,
             Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Info24),
-            Timeout = TimeSpan.FromSeconds(5),
-            MaxWidth = 350,
+            Timeout = TimeSpan.FromSeconds(8),
+            MaxWidth = 500,
             HorizontalAlignment = HorizontalAlignment.Right
         };
         snackbar.Show();

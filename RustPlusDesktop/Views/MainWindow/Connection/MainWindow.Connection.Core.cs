@@ -488,6 +488,12 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
+            if (_vm?.Selected != null)
+            {
+                _vm.Selected.IsConnected = false;
+                _vm.Selected.IsFullConnected = false;
+                _vm.NotifyDevicesChanged();
+            }
             if (showBusy)
             {
                 _vm.IsInitializing = false;
@@ -495,7 +501,23 @@ public partial class MainWindow
                 _vm.BusyText = "";
             }
             AppendLog("Fehler: " + ex.Message);
-            if (!silent) MessageBox.Show($"Connection failed: {ex.Message}");
+            if (!silent)
+            {
+                if (ex.Message != null && (ex.Message.Contains("nicht erreichbar") || ex.Message.Contains("unreachable")))
+                {
+                    ShowInfoSnackbar(
+                        Properties.Resources.ConnectionFailedRustPlusUnreachable,
+                        Properties.Resources.ConnectionFailedRustPlusUnreachableComment,
+                        WpfUi.ControlAppearance.Danger);
+                }
+                else
+                {
+                    ShowInfoSnackbar(
+                        Properties.Resources.SnackbarTitleConnection,
+                        $"{Properties.Resources.ErrorPrefix}{ex.Message}",
+                        WpfUi.ControlAppearance.Danger);
+                }
+            }
             return false;
         }
 
