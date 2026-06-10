@@ -1812,9 +1812,16 @@ Open Releases page?</value>
 <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>ΕΝΕΡΓΟ</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>ΑΝΕΝΕΡΓΟ</value>
+  </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: τέθηκε σε {1} (ενεργοποιήθηκε από {2})</value>
   </data>
 </root>
+
 
 

@@ -682,6 +682,8 @@ namespace RustPlusDesk.Properties {
         public static string TimerNameMustStartWithLetter => GetString("TimerNameMustStartWithLetter");
         public static string ConnectionFailedRustPlusUnreachable => GetString("ConnectionFailedRustPlusUnreachable");
         public static string ConnectionFailedRustPlusUnreachableComment => GetString("ConnectionFailedRustPlusUnreachableComment");
+        public static string StateOn => GetString("StateOn");
+        public static string StateOff => GetString("StateOff");
         public static string HotkeyTriggerToggled => GetString("HotkeyTriggerToggled");
     }
 }

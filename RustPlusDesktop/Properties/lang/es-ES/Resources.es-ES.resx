@@ -2058,9 +2058,16 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   <data name="OpenCloudWebPortal" xml:space="preserve">
     <value>Abrir el Portal Web de la Nube</value>
   </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>ENCENDIDO</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>APAGADO</value>
+  </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: cambiado a {1} (activado por {2})</value>
   </data>
 </root>
+
 
 

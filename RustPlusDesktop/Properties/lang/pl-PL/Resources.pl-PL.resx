@@ -1812,9 +1812,16 @@ Czy na pewno chcesz kontynuować?</value>
 <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>WŁĄCZONE</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>WYŁĄCZONE</value>
+  </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: przełączono na {1} (wywołane przez {2})</value>
   </data>
 </root>
+
 
 

@@ -1812,9 +1812,16 @@ Weet je zeker dat je wilt doorgaan?</value>
 <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>AAN</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>UIT</value>
+  </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: {1} gezet (geactiveerd door {2})</value>
   </data>
 </root>
+
 
 

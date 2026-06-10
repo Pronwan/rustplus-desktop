@@ -2250,9 +2250,16 @@
   <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
     <value>إما أن جدار الحماية الخاص بك يمنع الاتصال أو أن واجهة برمجة تطبيقات Rust+ على الخادم لا تعمل بشكل صحيح.</value>
   </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>تشغيل</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>إيقاف</value>
+  </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: تم التبديل إلى {1} (بواسطة {2})</value>
   </data>
 </root>
+
 
 

@@ -2274,9 +2274,16 @@
   <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
     <value>可能是您的防火墙阻止了连接，或者是服务器上的 Rust+ API 未正常运行。</value>
   </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>开启</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>关闭</value>
+  </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: 已切换至 {1} (由 {2} 触发)</value>
   </data>
 </root>
+
 
 

@@ -1812,9 +1812,16 @@
 <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>דלוק</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>כבוי</value>
+  </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: הועבר למצב {1} (הופעל על ידי {2})</value>
   </data>
 </root>
+
 
 

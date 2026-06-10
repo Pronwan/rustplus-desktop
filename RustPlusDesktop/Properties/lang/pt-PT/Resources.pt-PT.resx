@@ -1812,9 +1812,16 @@ Tem a certeza de que pretende continuar?</value>
 <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>ATIVADO</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>DESATIVADO</value>
+  </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: alternado para {1} (acionado por {2})</value>
   </data>
 </root>
+
 
 

@@ -2268,9 +2268,16 @@ Télécharger et installer maintenant ?</value>
   <data name="OpenCloudWebPortal" xml:space="preserve">
     <value>Ouvrir le portail Web Cloud</value>
   </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>ACTIVÉ</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>DÉSACTIVÉ</value>
+  </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: passé en mode {1} (déclenché par {2})</value>
   </data>
 </root>
+
 
 

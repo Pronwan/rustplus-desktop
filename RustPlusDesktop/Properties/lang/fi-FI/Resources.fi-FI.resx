@@ -1812,9 +1812,16 @@ Haluatko varmasti jatkaa?</value>
 <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>PÄÄLLE</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>POIS</value>
+  </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: kytketty {1} (käynnistänyt {2})</value>
   </data>
 </root>
+
 
 
