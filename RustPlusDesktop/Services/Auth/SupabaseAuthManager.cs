@@ -27,6 +27,7 @@ namespace RustPlusDesk.Services.Auth
         public static bool IsGuestAuthenticated { get; private set; }
         private static readonly SemaphoreSlim SessionRefreshLock = new SemaphoreSlim(1, 1);
         private static bool CloudAccountPromptShownThisSession;
+        private static bool GuestRegistrationFailedPermanently;
 
         public static System.Collections.Generic.Dictionary<string, RustPlusDesk.Models.TierLimitModel> TierLimits { get; private set; } = new(StringComparer.OrdinalIgnoreCase);
 
@@ -878,6 +879,12 @@ namespace RustPlusDesk.Services.Auth
         /// </summary>
         public static async Task TryInitializeGuestAuthAsync()
         {
+            if (GuestRegistrationFailedPermanently)
+            {
+                AppendLog("[Supabase/Guest] Skipping — registration previously failed permanently.");
+                return;
+            }
+
             try
             {
                 string steamId = TrackingService.SteamId64;
@@ -925,6 +932,11 @@ namespace RustPlusDesk.Services.Auth
                 else
                 {
                     AppendLog($"[Supabase/Guest] Registration failed: {regError}. Cloud sync disabled.");
+                    if (regError == "Server returned no token")
+                    {
+                        GuestRegistrationFailedPermanently = true;
+                        AppendLog("[Supabase/Guest] Registration permanently disabled for this session — server returned no token.");
+                    }
                     ShowCloudAccountRequiredPromptOnce();
                 }
             }
