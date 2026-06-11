@@ -5345,8 +5345,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     public System.Windows.Controls.Primitives.CustomPopupPlacement[] CenterMegaMenu_Callback(Size popupSize, Size targetSize, Point offset)
     {
-        double x = (targetSize.Width - popupSize.Width) / 2;
-        double y = targetSize.Height + 4; // Fluent spacing gap
+        double targetLeft = ChatAlertsConfigureButton.TranslatePoint(new Point(0, 0), this).X;
+        double x = ((ActualWidth - popupSize.Width) / 2) - targetLeft;
+        x = Math.Max(x, 8 - targetLeft);
+        x = Math.Min(x, ActualWidth - popupSize.Width - 8 - targetLeft);
+        double y = targetSize.Height + 4;
         return new[] { new System.Windows.Controls.Primitives.CustomPopupPlacement(new Point(x, y), System.Windows.Controls.Primitives.PopupPrimaryAxis.Horizontal) };
     }
 
