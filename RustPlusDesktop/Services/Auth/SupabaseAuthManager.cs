@@ -689,6 +689,7 @@ namespace RustPlusDesk.Services.Auth
                     var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Post, url);
                     request.Headers.Add("apikey", DataManager.SUPABASE_ANON_KEY);
                     request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Client.Auth.CurrentSession.AccessToken);
+                    request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
                     request.Content = new System.Net.Http.StringContent(jsonBody, Encoding.UTF8, "application/json");
 
                     var responseMsg = await httpClient.SendAsync(request);
@@ -1209,6 +1210,7 @@ namespace RustPlusDesk.Services.Auth
 
             var req = new HttpRequestMessage(method, url);
             req.Headers.Add("apikey", DataManager.SUPABASE_ANON_KEY);
+            req.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
             
             if (Client.Auth?.CurrentSession != null)
             {

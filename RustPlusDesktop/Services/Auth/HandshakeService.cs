@@ -246,6 +246,7 @@ namespace RustPlusDesk.Services.Auth
             var request = new HttpRequestMessage(HttpMethod.Post, url);
             request.Headers.Add("apikey", DataManager.SUPABASE_ANON_KEY);
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", DataManager.SUPABASE_ANON_KEY);
+            request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
             request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await _http.SendAsync(request);
