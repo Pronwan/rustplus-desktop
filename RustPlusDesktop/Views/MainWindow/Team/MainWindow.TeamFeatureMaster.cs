@@ -170,6 +170,12 @@ public partial class MainWindow
 
     private void UpdateTeamFeatureMasterWatch()
     {
+        if (TeamMembers.Count <= 1 || _isChatFeatureMaster)
+        {
+            StopTeamFeatureMasterWatch();
+            return;
+        }
+
         if (_chatFeaturesBlockedByMaster || HasLocalChatFeatureIntent())
         {
             int intervalSeconds;

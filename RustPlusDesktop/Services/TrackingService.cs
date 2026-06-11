@@ -123,6 +123,8 @@ public class TrackingSettings
     public bool CloudSyncEnabled { get; set; } = false;
     // Key = "host:port|entityId", value = true if that device should send a chat alert when toggled via hotkey
     public Dictionary<string, bool> HotkeyTriggerChatAlertEnabled { get; set; } = new();
+    public string LastCrosshairStyle { get; set; } = "GreenDot";
+    public string LastCustomCrosshairId { get; set; } = string.Empty;
 }
 
 
@@ -824,6 +826,18 @@ public static class TrackingService
     {
         get => _settings.SaveAlertSelection;
         set { _settings.SaveAlertSelection = value; SaveDB(); }
+    }
+
+    public static string LastCrosshairStyle
+    {
+        get => _settings.LastCrosshairStyle ?? "GreenDot";
+        set { _settings.LastCrosshairStyle = value; SaveDB(); }
+    }
+
+    public static string LastCustomCrosshairId
+    {
+        get => _settings.LastCustomCrosshairId ?? string.Empty;
+        set { _settings.LastCustomCrosshairId = value; SaveDB(); }
     }
 
     private static void SetAutoStart(bool enabled)

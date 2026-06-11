@@ -33,35 +33,40 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v6.1.1 PATCH NOTES -->
+                    <!-- NEW v6.2.2 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="v6.1.1 | Discord Map Integration &amp; Fixes" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="v6.2.2 | Crosshair Memory, Hardened Setup &amp; Polling Optimizations" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; Share Maps to Discord:</Run>
-                                With the Advanced Bot, you can now fetch live map data directly into your Discord Chat-Alerts channel using the /map and /mapfull commands. You can also trigger a map upload manually right from the desktop app. This makes it incredibly easy to share crucial tactical information and base locations with your team instantly!
+                                <Run FontWeight="Bold">&#x2022; Smart Crosshair Memory:</Run>
+                                The custom crosshair overlay now remembers your last selected style! Toggling the crosshair off and on again will automatically restore your design instead of reverting to the standard format.
                             </TextBlock>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; Hotkey Feature Rework:</Run>
-                                Under-the-hood improvements to make local hotkey mapping and triggers more responsive and reliable.
+                                <Run FontWeight="Bold">&#x2022; Bulletproof Setup &amp; Pairing:</Run>
+                                Clicking the "Login &amp; Pair Account" button on the setup screen now instantly clears any running, blocked, or expired background processes and local configs to guarantee a clean, instant browser login flow.
                             </TextBlock>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; Smart Connection Alerts:</Run>
-                                Clearer and prettier Wpf.Ui Alert in the Snackbar when the Rust+ API is not running properly on the server or a firewall is blocking the connection.
+                                <Run FontWeight="Bold">&#x2022; Clean Logs &amp; Quiet Polling:</Run>
+                                Massive under-the-hood performance updates to suppress redundant log entries and console spam, delivering a cleaner logger feed and a smoother desktop application experience.
                             </TextBlock>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; Chat Master Polling Optimization:</Run>
-                                Optimized watchdog polling intervals for database connections to prevent Supabase egress/rate-limit issues and improve Cloud performance.
+                                <Run FontWeight="Bold">&#x2022; Solo Bandwidth Optimizer:</Run>
+                                When playing alone in a team or when teammates are offline, the client now dynamically suspends status polling database calls to save immense amounts of server bandwidth and RAM.
                             </TextBlock>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; Auto-Reconnect Hardening:</Run>
-                                Fixed a state synchronization issue where the app remained marked as connected during a server restart/crash, preventing background services and commands from auto-reconnecting.
+                                <Run FontWeight="Bold">&#x2022; Cloud Device Sync Fix:</Run>
+                                Fixed a cache synchronization bug. Deleting a smart device from the UI now immediately registers the deletion and purges the device from the cloud overlay database permanently.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Discord Map Integrations:</Run>
+                                Added direct map exports to Discord Chat-Alerts using /map and /mapfull commands, alongside enhanced hotkey mapping.
                             </TextBlock>
                             
                             <Image Source="pack://application:,,,/Assets/Images/6.0 Cloud Patch/MapFetchDiscord.png" Stretch="Uniform" MaxHeight="350" Margin="0,4,0,12" />
