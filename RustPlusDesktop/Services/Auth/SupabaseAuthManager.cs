@@ -683,6 +683,13 @@ namespace RustPlusDesk.Services.Auth
                     AppendLog("[Cloud/Debug] DiscordProviderToken is null/empty, calling Edge Function without it.");
                 }
 
+                if (IsUpgradeRequiredSnackbarShown)
+                {
+                    AppendLog("[Cloud] Skipping discord-roles sync: application update is required.");
+                    await RefreshUserProfileAsync();
+                    return;
+                }
+
                 using (var httpClient = new System.Net.Http.HttpClient())
                 {
                     var url = $"{DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/discord-roles";
@@ -1188,6 +1195,8 @@ namespace RustPlusDesk.Services.Auth
             }
         }
 
+        public static bool IsUpgradeRequiredSnackbarShown { get; set; } = false;
+
         private static readonly HttpClient Http = new();
 
         public static async Task<string> CallEdgeFunctionAsync(
@@ -1198,6 +1207,9 @@ namespace RustPlusDesk.Services.Auth
         {
             if (Client == null)
                 throw new InvalidOperationException("Supabase client not initialized.");
+
+            if (IsUpgradeRequiredSnackbarShown)
+                throw new InvalidOperationException("Cloud features are unavailable because an application update is required.");
 
             var url = $"{DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/{functionName}";
             if (queryParams != null && queryParams.Count > 0)
@@ -1230,6 +1242,37 @@ namespace RustPlusDesk.Services.Auth
 
             if (!resp.IsSuccessStatusCode)
             {
+                try
+                {
+                    using var doc = JsonDocument.Parse(body);
+                    var root = doc.RootElement;
+                    if (root.TryGetProperty("error", out var errEl) && errEl.GetString() == "upgrade_required")
+                    {
+                        if (!IsUpgradeRequiredSnackbarShown)
+                        {
+                            IsUpgradeRequiredSnackbarShown = true;
+                            string message = root.TryGetProperty("message", out var msgEl)
+                                ? msgEl.GetString() ?? "An update is required to use cloud features."
+                                : "An update is required to use cloud features.";
+                            string upgradeUrl = root.TryGetProperty("upgrade_url", out var urlEl)
+                                ? urlEl.GetString() ?? "https://github.com/JawadYzbk/rustplus-desktop/releases/latest"
+                                : "https://github.com/JawadYzbk/rustplus-desktop/releases/latest";
+
+                            if (Application.Current != null)
+                            {
+                                Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    if (Application.Current.MainWindow is RustPlusDesk.Views.MainWindow mainWin)
+                                    {
+                                        mainWin.ShowUpgradeRequiredSnackbar(message, upgradeUrl);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+                catch { /* Ignore JSON parse errors */ }
+
                 throw new Exception($"Edge Function {functionName} returned {resp.StatusCode}: {body}");
             }
             return body;

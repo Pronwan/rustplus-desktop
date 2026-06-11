@@ -4915,6 +4915,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     // --- Konfiguration ---
     private async Task AutoCheckUpdatesAsync()
     {
+        if (_vm.IsDownloadingUpdate || !string.IsNullOrEmpty(_updateService.PendingInstallerPath)) return;
         try
         {
             var latestInfo = await _updateService.GetLatestReleaseAsync();
@@ -5050,6 +5051,91 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         };
         snackbar.Show();
     }
+
+    internal void ShowUpgradeRequiredSnackbar(string message, string upgradeUrl)
+    {
+        if (RootSnackbar == null) return;
+        if (_vm.IsDownloadingUpdate || !string.IsNullOrEmpty(_updateService.PendingInstallerPath)) return;
+
+        var stack = new StackPanel { Orientation = Orientation.Vertical };
+
+        string displayMessage = message;
+        if (!string.IsNullOrEmpty(displayMessage) && !displayMessage.Contains("cloud features", StringComparison.OrdinalIgnoreCase))
+        {
+            displayMessage = displayMessage.TrimEnd(' ', '.') + ". To continue using cloud features, you must update the application.";
+        }
+
+        var textBlock = new TextBlock
+        {
+            Text = displayMessage,
+            TextWrapping = TextWrapping.Wrap,
+            Margin = new Thickness(0, 0, 0, 8)
+        };
+        stack.Children.Add(textBlock);
+
+        WpfUi.Snackbar? snackbar = null;
+
+        var btn = new WpfUi.Button
+        {
+            Content = "Download Update",
+            Appearance = WpfUi.ControlAppearance.Primary,
+            HorizontalAlignment = HorizontalAlignment.Left
+        };
+        btn.Click += async (s, e) =>
+        {
+            btn.IsEnabled = false;
+            try
+            {
+                var latestInfo = await _updateService.GetLatestReleaseAsync();
+                if (latestInfo != null && !string.IsNullOrEmpty(latestInfo.Value.downloadUrl))
+                {
+                    if (snackbar != null)
+                    {
+                        snackbar.Visibility = Visibility.Collapsed;
+                    }
+                    await PerformUpdateDownloadAsync(latestInfo.Value.tag, latestInfo.Value.downloadUrl);
+                }
+                else
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(upgradeUrl) { UseShellExecute = true });
+                    if (snackbar != null)
+                    {
+                        snackbar.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
+            catch
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(upgradeUrl) { UseShellExecute = true });
+                    if (snackbar != null)
+                    {
+                        snackbar.Visibility = Visibility.Collapsed;
+                    }
+                }
+                catch { /* ignore */ }
+            }
+            finally
+            {
+                btn.IsEnabled = true;
+            }
+        };
+        stack.Children.Add(btn);
+
+        snackbar = new WpfUi.Snackbar(RootSnackbar)
+        {
+            Title = "Update Required",
+            Content = stack,
+            Appearance = WpfUi.ControlAppearance.Danger,
+            Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.ArrowDownload24),
+            Timeout = TimeSpan.FromSeconds(25),
+            MaxWidth = 450,
+            HorizontalAlignment = HorizontalAlignment.Right
+        };
+        snackbar.Show();
+    }
+
 
     private void ShowTimerSnackbar(string title, string timerName, int timeoutSeconds = 8)
     {

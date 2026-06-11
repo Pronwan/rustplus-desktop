@@ -241,6 +241,9 @@ namespace RustPlusDesk.Services.Auth
 
         private static async Task<HandshakeResponse?> CallEdgeFunctionAsync(object payload)
         {
+            if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown)
+                return null;
+
             var json = JsonSerializer.Serialize(payload);
             var url = $"{DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/auth-handshake";
             var request = new HttpRequestMessage(HttpMethod.Post, url);
@@ -251,6 +254,41 @@ namespace RustPlusDesk.Services.Auth
 
             var response = await _http.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    using var doc = JsonDocument.Parse(body);
+                    var root = doc.RootElement;
+                    if (root.TryGetProperty("error", out var errEl) && errEl.GetString() == "upgrade_required")
+                    {
+                        if (!SupabaseAuthManager.IsUpgradeRequiredSnackbarShown)
+                        {
+                            SupabaseAuthManager.IsUpgradeRequiredSnackbarShown = true;
+                            string message = root.TryGetProperty("message", out var msgEl)
+                                ? msgEl.GetString() ?? "An update is required to use cloud features."
+                                : "An update is required to use cloud features.";
+                            string upgradeUrl = root.TryGetProperty("upgrade_url", out var urlEl)
+                                ? urlEl.GetString() ?? "https://github.com/JawadYzbk/rustplus-desktop/releases/latest"
+                                : "https://github.com/JawadYzbk/rustplus-desktop/releases/latest";
+
+                            if (System.Windows.Application.Current != null)
+                            {
+                                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    if (System.Windows.Application.Current.MainWindow is RustPlusDesk.Views.MainWindow mainWin)
+                                    {
+                                        mainWin.ShowUpgradeRequiredSnackbar(message, upgradeUrl);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+                catch { /* Ignore JSON parse errors */ }
+            }
+
             return JsonSerializer.Deserialize<HandshakeResponse>(body);
         }
 

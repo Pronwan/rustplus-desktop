@@ -466,6 +466,12 @@ public class DiscordBotListenerService
                     audio_alert = config.AudioAlertEnabled
                 };
 
+                if (RustPlusDesk.Services.Auth.SupabaseAuthManager.IsUpgradeRequiredSnackbarShown)
+                {
+                    Log("[DiscordBotListener] Skipping notification: application update is required.");
+                    return;
+                }
+
                 using (var httpClient = new System.Net.Http.HttpClient())
                 {
                     var url = $"{RustPlusDesk.Services.Data.DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/discord-bot-interactions";
