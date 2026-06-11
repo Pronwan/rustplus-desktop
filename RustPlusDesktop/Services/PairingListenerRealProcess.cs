@@ -377,6 +377,18 @@ namespace RustPlusDesk.Services
                 _log($"Pairing (via rustplus://) → {urlPayload.Host}:{urlPayload.Port} // Steam {urlPayload.SteamId64}");
                 return;
             }
+
+            // 0.1) Single-line JSON Check: If it matches BodyJson, process immediately and bypass multiline checks.
+            var mSingle = BodyJson.Match(s);
+            if (mSingle.Success)
+            {
+                _collectingJson = false;
+                var json = mSingle.Groups["json"].Value;
+                ProcessBodyJson(json);
+                HandleListenOutputRest(s);
+                return;
+            }
+
             // ### A) raw key/value-Zeilen erkennen (channelId/title/body)
             // Falls wir uns im multiline JSON-Modus befinden, sammeln wir die Zeilen
             if (_collectingJson)
