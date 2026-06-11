@@ -53,3 +53,6 @@ RustPlusDesktop/Setup.iss
 .env
 RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs
 RustPlusDesktop/supabase/.temp/
+.env-backup
+env
+
