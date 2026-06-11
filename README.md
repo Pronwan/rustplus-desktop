@@ -51,24 +51,28 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
-# **🚀 RustPlusDesktop — Patch v6.1.1 (Hotfix & Optimization)**
+# 🚀 Rust+ Desktop v6.2.0 is Live! 🚀
+We've just pushed a major update to the beta branch, focused on performance, cloud optimizations, offline notifications, and highly requested Quality-of-Life changes!
 
-- **Hardened Auto-Reconnect Stability:** Fixed a state synchronization issue where the app remained marked as "connected" during server restarts or crashes. The app now seamlessly and reliably auto-reconnects after server reboots.
-- **Clean Connection Error Alerts:** If the Rust+ API on the game server goes offline or the connection is blocked by a firewall, the app now displays a cleaner, localized Snackbar notification with helpful troubleshooting tips. The alert duration has been increased to 8 seconds, and text wrapping is now fixed.
-- **Hotkey Feature Rework:** Under-the-hood improvements to make local hotkey mapping and triggers more responsive and reliable.
-- **Cloud Traffic Optimization:** The query interval for the Chat Master synchronization has been increased to reduce server load and data egress, keeping our cloud database healthy.
+**☁️ Cloud Backend & Performance Tuning**
+- Solo Bandwidth Optimizer: When playing solo on a server or when all teammates are offline, the client now dynamically pauses database polling. This saves massive amounts of server bandwidth and RAM, keeping the app extremely lightweight!
+- Robust Cloud Device Sync: Deleting a smart device in the app now instantly syncs and permanently removes it from the cloud database overlay, fixing previous sync caching issues.
+**💀 Offline Death Notifications & Logs**
+- Offline Death Alerts: Get notified when you get killed while offline, featuring full language localization (including EN, DE, FR, ES, RU, ZH, AR, HE).
+- Infinite Snackbar Alert: The offline death alert popup now stays open on your screen until you manually close it or click "Stop Sound" – so you'll never miss a death!
+- Offline Death Log & History: Added a local log window to track your offline deaths, showing who killed you, when, and on which server.
+**🛠️ Quality-of-Life Updates**
+- Custom Crosshair Memory: Toggling the custom crosshairs off and on now remembers your last selected design instead of resetting to default.
+- Safer Setup & Pairing: The "Login & Pair Account" flow now forcefully kills any stale or blocked background processes to guarantee a clean, instant browser login.
+- Death Marker Tweaks: Customizable local death markers on the map.
+- Cleaned Team Options: Removed the "Kick from Team" button/command to streamline team options and prevent accidental actions.
+  Discord Map Export: Directly export maps using the new /map and /mapfull commands through the Discord Bot.
+**🗺️One-Click Map Sharing:**
+- Just click the new "Send to Discord" button right from the map view. Your current zoom level, view, and drawn markers will instantly be shared to your designated Chat Alerts channel.
+- /map Slash Command: Want to check the area around your team members without opening the app? Use the /map command directly in your Discord server! The bot will instantly reply with a screenshot of the app's current map viewport.
+- /mapfull Slash Command: Need the bigger picture? Use /mapfull in Discord to generate a high-resolution screenshot of the entire island, including all active event markers (Cargo, Heli, Crate, etc.), monuments, and team locations!
 
-# **🚀 Update v6.1.0: Advanced Discord Bot Map Features! :map:**
-We added interactive Rust+ Desktop Map directly to your Discord server! With Advanced Discord Bot integration, you can now seamlessly share tactical map intel with your team.
 
-**:sparkles: New Feature:**
-
-- **One-Click Map Sharing**: Just click the new "Send to Discord" button right from the map view. Your current zoom level, view, and drawn markers will instantly be shared to your designated Chat Alerts channel.
-- **/map Slash Command:** Want to check the area around your team members without opening the app? Use the /map command directly in your Discord server! The bot will instantly reply with a screenshot of the app's current map viewport.
-- **/mapfull Slash Command**: Need the bigger picture? Use /mapfull in Discord to generate a high-resolution screenshot of the entire island, including all active event markers (Cargo, Heli, Crate, etc.), monuments, and team locations!
-
-
-:warning: If your bot doesn't have permission yet to send attachments to the Chat Alerts (Fallback Event Alerts), **please kick the bot and re-invite through the app**. All your channels settings will still work but this gives the bot the right to send attachments.
 
 
 # Rust+ Desktop v6.0.2 - Hotfix Update
