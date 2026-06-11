@@ -36,7 +36,6 @@
                     <MenuItem Click="Team_OpenProfile_Click" Header="{DynamicResource OpenSteamProfile}" />
                     <Separator />
                     <MenuItem Click="Team_Promote_Click" Header="{DynamicResource PromoteToLeader}" />
-                    <MenuItem Click="Team_Kick_Click" Header="{DynamicResource KickFromTeam}" />
                 </ContextMenu>
             </ListBox.Resources>
             <ListBox.ItemContainerStyle>

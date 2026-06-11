@@ -145,34 +145,42 @@ namespace RustPlusDesk.Services.Data
             }
         }
 
+        private static readonly object FileLock = new object();
+
         public static void SaveCache<T>(string key, T data)
         {
-            try
+            lock (FileLock)
             {
-                Directory.CreateDirectory(CacheDir);
-                var path = Path.Combine(CacheDir, key + ".json");
-                var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(path, json);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"SaveCache Error ({key}): {ex.Message}");
+                try
+                {
+                    Directory.CreateDirectory(CacheDir);
+                    var path = Path.Combine(CacheDir, key + ".json");
+                    var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
+                    File.WriteAllText(path, json);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"SaveCache Error ({key}): {ex.Message}");
+                }
             }
         }
 
         public static T? LoadCache<T>(string key)
         {
-            try
+            lock (FileLock)
             {
-                var path = Path.Combine(CacheDir, key + ".json");
-                if (!File.Exists(path)) return default;
-                var json = File.ReadAllText(path);
-                return JsonSerializer.Deserialize<T>(json);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"LoadCache Error ({key}): {ex.Message}");
-                return default;
+                try
+                {
+                    var path = Path.Combine(CacheDir, key + ".json");
+                    if (!File.Exists(path)) return default;
+                    var json = File.ReadAllText(path);
+                    return JsonSerializer.Deserialize<T>(json);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"LoadCache Error ({key}): {ex.Message}");
+                    return default;
+                }
             }
         }
     }

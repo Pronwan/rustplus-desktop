@@ -293,7 +293,7 @@ namespace RustPlusDesk.Services.Data
                     if (devRow != null && !string.IsNullOrEmpty(devRow.DeviceData))
                     {
                         var devs = JsonSerializer.Deserialize<System.Collections.Generic.List<ExportedDeviceDto>>(devRow.DeviceData);
-                        if (devs?.Count > 0)
+                        if (devs != null)
                         {
                             data.Devices = devs;
                             var deviceUpdatedUnix = new DateTimeOffset(devRow.UpdatedAt).ToUnixTimeSeconds();

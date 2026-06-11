@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -2058,4 +2058,64 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   <data name="OpenCloudWebPortal" xml:space="preserve">
     <value>Abrir el Portal Web de la Nube</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>tú</value>
+  </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>ENCENDIDO</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>APAGADO</value>
+  </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: cambiado a {1} (activado por {2})</value>
+  </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>Muerte offline</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>Fuiste asesinado por {0} en {1}.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>Detener sonido</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>Notificaciones de muerte offline</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>Habilitar alertas de muerte offline</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>Sonido de alerta</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>Predeterminado: death.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>Seleccionar...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>Repetir sonido de alerta</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Enviar a alertas de raid de Discord (Supporter)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>Abrir registro de muertes offline</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>Registro de muertes offline</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>Limpiar registro</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>No se registraron muertes offline.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>Asesinado por</value>
+  </data>
 </root>
+
+
+

@@ -27,6 +27,7 @@ namespace RustPlusDesk.Services.Auth
         public static bool IsGuestAuthenticated { get; private set; }
         private static readonly SemaphoreSlim SessionRefreshLock = new SemaphoreSlim(1, 1);
         private static bool CloudAccountPromptShownThisSession;
+        private static bool GuestRegistrationFailedPermanently;
 
         public static System.Collections.Generic.Dictionary<string, RustPlusDesk.Models.TierLimitModel> TierLimits { get; private set; } = new(StringComparer.OrdinalIgnoreCase);
 
@@ -683,12 +684,20 @@ namespace RustPlusDesk.Services.Auth
                     AppendLog("[Cloud/Debug] DiscordProviderToken is null/empty, calling Edge Function without it.");
                 }
 
+                if (IsUpgradeRequiredSnackbarShown)
+                {
+                    AppendLog("[Cloud] Skipping discord-roles sync: application update is required.");
+                    await RefreshUserProfileAsync();
+                    return;
+                }
+
                 using (var httpClient = new System.Net.Http.HttpClient())
                 {
                     var url = $"{DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/discord-roles";
                     var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Post, url);
                     request.Headers.Add("apikey", DataManager.SUPABASE_ANON_KEY);
                     request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Client.Auth.CurrentSession.AccessToken);
+                    request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
                     request.Content = new System.Net.Http.StringContent(jsonBody, Encoding.UTF8, "application/json");
 
                     var responseMsg = await httpClient.SendAsync(request);
@@ -870,6 +879,12 @@ namespace RustPlusDesk.Services.Auth
         /// </summary>
         public static async Task TryInitializeGuestAuthAsync()
         {
+            if (GuestRegistrationFailedPermanently)
+            {
+                AppendLog("[Supabase/Guest] Skipping — registration previously failed permanently.");
+                return;
+            }
+
             try
             {
                 string steamId = TrackingService.SteamId64;
@@ -917,6 +932,11 @@ namespace RustPlusDesk.Services.Auth
                 else
                 {
                     AppendLog($"[Supabase/Guest] Registration failed: {regError}. Cloud sync disabled.");
+                    if (regError == "Server returned no token")
+                    {
+                        GuestRegistrationFailedPermanently = true;
+                        AppendLog("[Supabase/Guest] Registration permanently disabled for this session — server returned no token.");
+                    }
                     ShowCloudAccountRequiredPromptOnce();
                 }
             }
@@ -1187,6 +1207,8 @@ namespace RustPlusDesk.Services.Auth
             }
         }
 
+        public static bool IsUpgradeRequiredSnackbarShown { get; set; } = false;
+
         private static readonly HttpClient Http = new();
 
         public static async Task<string> CallEdgeFunctionAsync(
@@ -1197,6 +1219,9 @@ namespace RustPlusDesk.Services.Auth
         {
             if (Client == null)
                 throw new InvalidOperationException("Supabase client not initialized.");
+
+            if (IsUpgradeRequiredSnackbarShown)
+                throw new InvalidOperationException("Cloud features are unavailable because an application update is required.");
 
             var url = $"{DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/{functionName}";
             if (queryParams != null && queryParams.Count > 0)
@@ -1209,6 +1234,7 @@ namespace RustPlusDesk.Services.Auth
 
             var req = new HttpRequestMessage(method, url);
             req.Headers.Add("apikey", DataManager.SUPABASE_ANON_KEY);
+            req.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
             
             if (Client.Auth?.CurrentSession != null)
             {
@@ -1228,6 +1254,37 @@ namespace RustPlusDesk.Services.Auth
 
             if (!resp.IsSuccessStatusCode)
             {
+                try
+                {
+                    using var doc = JsonDocument.Parse(body);
+                    var root = doc.RootElement;
+                    if (root.TryGetProperty("error", out var errEl) && errEl.GetString() == "upgrade_required")
+                    {
+                        if (!IsUpgradeRequiredSnackbarShown)
+                        {
+                            IsUpgradeRequiredSnackbarShown = true;
+                            string message = root.TryGetProperty("message", out var msgEl)
+                                ? msgEl.GetString() ?? "An update is required to use cloud features."
+                                : "An update is required to use cloud features.";
+                            string upgradeUrl = root.TryGetProperty("upgrade_url", out var urlEl)
+                                ? urlEl.GetString() ?? "https://github.com/JawadYzbk/rustplus-desktop/releases/latest"
+                                : "https://github.com/JawadYzbk/rustplus-desktop/releases/latest";
+
+                            if (Application.Current != null)
+                            {
+                                Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    if (Application.Current.MainWindow is RustPlusDesk.Views.MainWindow mainWin)
+                                    {
+                                        mainWin.ShowUpgradeRequiredSnackbar(message, upgradeUrl);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+                catch { /* Ignore JSON parse errors */ }
+
                 throw new Exception($"Edge Function {functionName} returned {resp.StatusCode}: {body}");
             }
             return body;

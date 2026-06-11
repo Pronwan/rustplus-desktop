@@ -1812,4 +1812,19 @@ Estàs segur que vols continuar?</value>
 <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>tu</value>
+  </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>ACTIU</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>INACTIU</value>
+  </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: canviat a {1} (activat per {2})</value>
+  </data>
 </root>
+
+
+

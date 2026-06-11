@@ -19,6 +19,7 @@ public partial class MainWindow
     private bool _isChatFeatureMaster;
     private string _chatFeatureMasterName = "";
     private string? _lastKnownTeamFeatureMasterId;
+    private string? _lastKnownPremiumSponsorId;
     private string? _lastMasterOfferKey;
     private string? _declinedMasterTeamKey;
     private DateTime _declinedMasterUntilUtc;
@@ -169,11 +170,37 @@ public partial class MainWindow
 
     private void UpdateTeamFeatureMasterWatch()
     {
+        if (TeamMembers.Count <= 1 || _isChatFeatureMaster)
+        {
+            StopTeamFeatureMasterWatch();
+            return;
+        }
+
         if (_chatFeaturesBlockedByMaster || HasLocalChatFeatureIntent())
         {
-            if (_teamFeatureMasterWatchTimer != null) return;
+            int intervalSeconds;
+            if (SupabaseAuthManager.IsPremium)
+            {
+                intervalSeconds = 15;
+            }
+            else if (!string.IsNullOrEmpty(_lastKnownPremiumSponsorId))
+            {
+                intervalSeconds = 60;
+            }
+            else
+            {
+                intervalSeconds = 300;
+            }
 
-            int intervalSeconds = SupabaseAuthManager.IsPremium ? 15 : 60;
+            if (_teamFeatureMasterWatchTimer != null)
+            {
+                if (_teamFeatureMasterWatchTimer.Interval.TotalSeconds != intervalSeconds)
+                {
+                    _teamFeatureMasterWatchTimer.Interval = TimeSpan.FromSeconds(intervalSeconds);
+                }
+                return;
+            }
+
             _teamFeatureMasterWatchTimer = new System.Windows.Threading.DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(intervalSeconds)
@@ -353,6 +380,7 @@ public partial class MainWindow
         }
 
         _lastKnownTeamFeatureMasterId = currentMasterId;
+        _lastKnownPremiumSponsorId = state?.PremiumSponsorSteamId;
         ApplyChatFeatureMasterUiState();
         UpdateTeamFeatureMasterWatch();
 

@@ -136,6 +136,58 @@
                     </StackPanel>
                 </Border>
 
+                <!-- Offline Death Section -->
+                <TextBlock Text="{DynamicResource OfflineDeathNotifications}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <!-- Enable Offline Death alerts -->
+                        <CheckBox x:Name="ChkOfflineDeathAlerts" 
+                                  Content="{DynamicResource EnableOfflineDeathAlerts}" 
+                                  Margin="0,0,0,10" 
+                                  Style="{StaticResource DotCheckBox}"
+                                  Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
+
+                        <!-- Custom sound selector -->
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{DynamicResource AlertSound}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}"/>
+                            
+                            <ui:Button Grid.Column="1" x:Name="BtnSelectOfflineDeathSound" 
+                                       Content="{DynamicResource SelectEllipsis}" Icon="{ui:SymbolIcon Symbol=Folder24}" 
+                                       Margin="8,0,0,0" Height="28" Click="BtnSelectOfflineDeathSound_Click"/>
+                            <ui:Button Grid.Column="2" x:Name="BtnResetOfflineDeathSound" 
+                                       Content="{DynamicResource Reset}" Icon="{ui:SymbolIcon Symbol=ArrowReset24}" 
+                                       Margin="8,0,0,0" Height="28" Click="BtnResetOfflineDeathSound_Click"/>
+                        </Grid>
+
+                        <TextBlock x:Name="TxtOfflineDeathSoundPath" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,8" TextWrapping="Wrap" />
+
+                        <!-- Loop Alert Sound toggle -->
+                        <CheckBox x:Name="ChkOfflineDeathSoundLoop" 
+                                  Content="{DynamicResource LoopAlertSound}" 
+                                  Margin="0,0,0,10" 
+                                  Style="{StaticResource DotCheckBox}"
+                                  Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
+
+                        <!-- Discord advanced bot toggle (Supporter only) -->
+                        <CheckBox x:Name="ChkOfflineDeathDiscord" 
+                                  Content="{DynamicResource SendToDiscordRaidAlerts}" 
+                                  Margin="0,0,0,12" 
+                                  Style="{StaticResource DotCheckBox}"
+                                  Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                                  PreviewMouseDown="PremiumFeature_PreviewMouseDown"/>
+
+                        <!-- Button to open offline deaths log popup -->
+                        <ui:Button x:Name="BtnOpenOfflineDeathsLog" 
+                                   Content="{DynamicResource OpenOfflineDeathsLog}" Icon="{ui:SymbolIcon Symbol=List24}" 
+                                   HorizontalAlignment="Stretch" Height="36" Click="BtnOpenOfflineDeathsLog_Click"/>
+                    </StackPanel>
+                </Border>
+
                 <!-- Map Section -->
                 <TextBlock Text="{DynamicResource MapSettings}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
                 <Border Style="{StaticResource Card}" Margin="0,0,0,16">

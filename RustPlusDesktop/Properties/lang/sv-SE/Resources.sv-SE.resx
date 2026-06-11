@@ -1812,4 +1812,19 @@ Ladda ner och installera nu?</value>
 <data name="Markers" xml:space="preserve">
     <value>Markörer:</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>du</value>
+  </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>PÅ</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>AV</value>
+  </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: växlad till {1} (utlöst av {2})</value>
+  </data>
 </root>
+
+
+

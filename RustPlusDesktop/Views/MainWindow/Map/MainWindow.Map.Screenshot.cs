@@ -125,9 +125,16 @@ public partial class MainWindow
             if (!string.IsNullOrEmpty(channelId))
                 content.Add(new StringContent(channelId), "channel_id");
 
+            if (RustPlusDesk.Services.Auth.SupabaseAuthManager.IsUpgradeRequiredSnackbarShown)
+            {
+                AppendLog("[DiscordBot] Skipping map upload: application update is required.");
+                return false;
+            }
+
             var url = $"{RustPlusDesk.Services.Data.DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/discord-send-map";
             var request = new HttpRequestMessage(HttpMethod.Post, url);
             request.Headers.Add("apikey", RustPlusDesk.Services.Data.DataManager.SUPABASE_ANON_KEY);
+            request.Headers.Add("X-Client-Version", RustPlusDesk.Helpers.VersionHelper.GetClientVersion());
             
             var token = RustPlusDesk.Services.Auth.SupabaseAuthManager.Client?.Auth?.CurrentSession?.AccessToken;
             if (!string.IsNullOrEmpty(token))

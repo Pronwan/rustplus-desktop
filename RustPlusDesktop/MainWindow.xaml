@@ -1940,7 +1940,6 @@
                                                 <MenuItem Click="Team_OpenProfile_Click" Header="{DynamicResource OpenSteamProfile}" />
                                                 <Separator />
                                                 <MenuItem Click="Team_Promote_Click" Header="{DynamicResource PromoteToLeader}" />
-                                                <MenuItem Click="Team_Kick_Click" Header="{DynamicResource KickFromTeam}" />
                                             </ContextMenu>
                                         </ListBox.Resources>
 
@@ -3018,14 +3017,14 @@
                                                              Tag="PlayerRespawnTeam" />
                                                      </MenuItem>
 
-                                                     <!-- Column 3: Shops & Actions -->
-                                                     <MenuItem Header="{DynamicResource Shops}" BorderThickness="0">
-                                                         <MenuItem.Style>
-                                                             <Style TargetType="MenuItem">
-                                                                 <Setter Property="Template">
-                                                                     <Setter.Value>
-                                                                         <ControlTemplate TargetType="MenuItem">
-                                                                             <Border
+                                                      <!-- Column 3: Shops & Actions -->
+                                                      <MenuItem Header="Shops" BorderThickness="0,0,1,0">
+                                                          <MenuItem.Style>
+                                                              <Style TargetType="MenuItem">
+                                                                  <Setter Property="Template">
+                                                                      <Setter.Value>
+                                                                          <ControlTemplate TargetType="MenuItem">
+                                                                              <Border
                                                                                  BorderBrush="#15FFFFFF"
                                                                                  BorderThickness="{TemplateBinding BorderThickness}"
                                                                                  Margin="0"
@@ -3110,6 +3109,42 @@
                                                                  </StackPanel>
                                                              </MenuItem.Header>
                                                          </MenuItem>
+                                                     </MenuItem>
+
+                                                     <!-- Column 4: Devices -->
+                                                     <MenuItem Header="Devices" BorderThickness="0">
+                                                         <MenuItem.Style>
+                                                             <Style TargetType="MenuItem">
+                                                                 <Setter Property="Template">
+                                                                     <Setter.Value>
+                                                                         <ControlTemplate TargetType="MenuItem">
+                                                                             <Border
+                                                                                 BorderBrush="#15FFFFFF"
+                                                                                 BorderThickness="{TemplateBinding BorderThickness}"
+                                                                                 Margin="0"
+                                                                                 Padding="0">
+                                                                                 <StackPanel Width="180">
+                                                                                     <TextBlock
+                                                                                         Text="{TemplateBinding Header}"
+                                                                                         FontSize="11"
+                                                                                         FontWeight="Bold"
+                                                                                         Foreground="{DynamicResource TextSubtle}"
+                                                                                         Opacity="0.8"
+                                                                                         Margin="8,4,8,8" />
+                                                                                     <ItemsPresenter />
+                                                                                 </StackPanel>
+                                                                             </Border>
+                                                                         </ControlTemplate>
+                                                                     </Setter.Value>
+                                                                 </Setter>
+                                                             </Style>
+                                                         </MenuItem.Style>
+
+                                                         <MenuItem
+                                                             x:Name="HotkeyTriggersMenuItem"
+                                                             Header="Hotkey Triggers"
+                                                             StaysOpenOnClick="True"
+                                                             Style="{StaticResource DarkMenuItem}" />
                                                      </MenuItem>
                                                  </ContextMenu>
                                              </ui:DropDownButton.Flyout>
@@ -5149,7 +5184,7 @@
                             Height="50"
                             HorizontalAlignment="Stretch"
                             Appearance="Primary"
-                            Click="BtnListenPairing_Click"
+                            Click="BtnOverlayPair_Click"
                             FontSize="16"
                             FontWeight="SemiBold"
                             Icon="{ui:SymbolIcon Symbol=BluetoothConnected24}">

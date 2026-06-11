@@ -1,0 +1,83 @@
+<Window x:Class="RustPlusDesk.Views.Windows.OfflineDeathsHistoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="{DynamicResource OfflineDeathLogTitle}" 
+        Height="400" Width="450"
+        Background="{DynamicResource Surface}"
+        Foreground="{DynamicResource TextPrimary}"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False">
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header Row -->
+        <DockPanel Grid.Row="0" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                <ui:SymbolIcon Symbol="List24" FontSize="18" Foreground="{DynamicResource Accent}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                <TextBlock Text="{DynamicResource OfflineDeathLogTitle}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <ui:Button x:Name="BtnClearHistory" 
+                       DockPanel.Dock="Right" 
+                       HorizontalAlignment="Right" 
+                       Content="{DynamicResource ClearLog}" 
+                       Icon="{ui:SymbolIcon Symbol=Delete24}" 
+                       Appearance="Caution" 
+                       Click="BtnClearHistory_Click"
+                       VerticalAlignment="Center"/>
+        </DockPanel>
+
+        <!-- List View -->
+        <Border Grid.Row="1" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="6">
+            <Grid>
+                <!-- Empty State -->
+                <TextBlock x:Name="TxtEmptyState" 
+                           Text="{DynamicResource NoOfflineDeathsRecorded}" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" 
+                           Foreground="{DynamicResource TextSubtle}"
+                           Visibility="Collapsed"/>
+
+                <!-- Death Log ListView -->
+                <ListView x:Name="ListDeaths" 
+                          Background="Transparent" 
+                          BorderThickness="0"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="6,8" CornerRadius="4">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                        <TextBlock FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}">
+                                            <Run Text="{DynamicResource KilledBy}"/>
+                                            <Run Text=" "/>
+                                            <Run Text="{Binding AttackerName}" Foreground="#EF5350" FontWeight="Bold"/>
+                                        </TextBlock>
+                                        <TextBlock Text="{Binding ServerName}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Column="1" 
+                                               Text="{Binding Timestamp, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}" 
+                                               FontSize="11" 
+                                               Foreground="{DynamicResource TextSubtle}" 
+                                               VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

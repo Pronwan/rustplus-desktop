@@ -95,6 +95,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     // CROSSHAIR
     private CrosshairWindow? _overlay;
     private CrosshairStyle _currentStyle = CrosshairStyle.GreenDot;
+    private string _currentCustomBase64 = "";
     private bool _alertsNeedRebaseline = false;
     private bool _visible;
     // CAMERA TAB
@@ -385,6 +386,27 @@ public partial class MainWindow : WpfUi.FluentWindow
         ApplySettings();
         LoadPersistentAlerts();
         RefreshEventDock();
+
+        // Load crosshair settings
+        if (Enum.TryParse<CrosshairStyle>(TrackingService.LastCrosshairStyle, out var parsedStyle))
+        {
+            _currentStyle = parsedStyle;
+        }
+        _currentCustomBase64 = "";
+        if (_currentStyle == CrosshairStyle.Custom && !string.IsNullOrEmpty(TrackingService.LastCustomCrosshairId))
+        {
+            var customCrosshairs = CustomCrosshairManager.LoadCrosshairs();
+            var matched = customCrosshairs.FirstOrDefault(c => c.Id == TrackingService.LastCustomCrosshairId);
+            if (matched != null)
+            {
+                _currentCustomBase64 = matched.Base64Image;
+            }
+            else
+            {
+                _currentStyle = CrosshairStyle.GreenDot;
+            }
+        }
+
         _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
         AppendLog($"[items-new] baseDir={baseDir}");
         EnsureNewItemDbLoaded();
@@ -557,10 +579,11 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _pairing.Paired += Pairing_Paired;
 
-        // EINMALIG auf AlarmReceived hÃƒÂ¶ren:
+        // EINMALIG auf AlarmReceived hören:
         if (_pairing is PairingListenerRealProcess pr)
         {
             pr.AlarmReceived += (_, a) => Dispatcher.Invoke(() => ShowAlarmPopup(a));
+            pr.OfflineDeathReceived += (_, d) => Dispatcher.Invoke(() => HandleOfflineDeath(d));
         }
 
         // Status Ã¢â€ â€™ UI
@@ -749,6 +772,10 @@ public partial class MainWindow : WpfUi.FluentWindow
                 ShowInTaskbar = false
             };
 
+        if (_currentStyle == CrosshairStyle.Custom)
+        {
+            _overlay.CustomBase64 = _currentCustomBase64;
+        }
         _overlay.SetStyle(_currentStyle);
         _overlay.Topmost = true;
         if (_selectedMonitor != null)
@@ -844,10 +871,10 @@ public partial class MainWindow : WpfUi.FluentWindow
                 var btnRename = new Button { Content = "Abc", ToolTip = "Rename", Width = 28, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Foreground = Brushes.LightGray, Tag = cc };
                 btnRename.Click += CustomCrosshairRename_Click;
 
-                var btnEdit = new Button { Content = "âœ  ï¸  ", ToolTip = "Edit", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
+                var btnEdit = new Button { Content = "\u270F\uFE0F", ToolTip = "Edit", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
                 btnEdit.Click += CustomCrosshairEdit_Click;
                 
-                var btnDelete = new Button { Content = "ðŸ—‘ï¸  ", ToolTip = "Delete", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
+                var btnDelete = new Button { Content = "\uD83D\uDDD1\uFE0F", ToolTip = "Delete", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
                 btnDelete.Click += CustomCrosshairDelete_Click;
 
                 sp.Children.Add(btnRename);
@@ -891,9 +918,12 @@ public partial class MainWindow : WpfUi.FluentWindow
         if (editor.ShowDialog() == true && editor.SavedCrosshair != null)
         {
             _currentStyle = CrosshairStyle.Custom;
+            _currentCustomBase64 = editor.SavedCrosshair.Base64Image;
+            TrackingService.LastCrosshairStyle = _currentStyle.ToString();
+            TrackingService.LastCustomCrosshairId = editor.SavedCrosshair.Id;
             if (_visible && _overlay != null)
             {
-                _overlay.CustomBase64 = editor.SavedCrosshair.Base64Image;
+                _overlay.CustomBase64 = _currentCustomBase64;
                 _overlay.SetStyle(_currentStyle);
                 if (_selectedMonitor != null)
                     PositionOverlayCentered(_overlay, _selectedMonitor);
@@ -909,6 +939,9 @@ public partial class MainWindow : WpfUi.FluentWindow
             if (btn != null && btn.Tag is CustomCrosshair cc)
             {
                 _currentStyle = CrosshairStyle.Custom;
+                _currentCustomBase64 = cc.Base64Image;
+                TrackingService.LastCrosshairStyle = _currentStyle.ToString();
+                TrackingService.LastCustomCrosshairId = cc.Id;
                 UpdateStyleChecks();
 
                 if (!_visible)
@@ -917,7 +950,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                 }
                 if (_visible && _overlay != null)
                 {
-                    _overlay.CustomBase64 = cc.Base64Image;
+                    _overlay.CustomBase64 = _currentCustomBase64;
                     _overlay.SetStyle(_currentStyle);
                     if (_selectedMonitor != null)
                         PositionOverlayCentered(_overlay, _selectedMonitor);
@@ -956,10 +989,14 @@ public partial class MainWindow : WpfUi.FluentWindow
             {
                 // The editor saves it correctly now, replacing the old entry.
                 // We just update the currently selected crosshair if we were editing the active one
-                if (_currentStyle == CrosshairStyle.Custom && _overlay?.CustomBase64 == cc.Base64Image)
+                if (_currentStyle == CrosshairStyle.Custom && _currentCustomBase64 == cc.Base64Image)
                 {
-                    _overlay.CustomBase64 = editor.SavedCrosshair.Base64Image;
-                    if (_visible) _overlay.SetStyle(_currentStyle);
+                    _currentCustomBase64 = editor.SavedCrosshair.Base64Image;
+                    if (_overlay != null)
+                    {
+                        _overlay.CustomBase64 = _currentCustomBase64;
+                        if (_visible) _overlay.SetStyle(_currentStyle);
+                    }
                 }
             }
             BtnCrosshair.ContextMenu.IsOpen = false;
@@ -1027,7 +1064,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                     var btn = ((StackPanel)item.Header).Children.OfType<Button>().FirstOrDefault();
                     if (btn != null && btn.Tag is CustomCrosshair cc)
                     {
-                        isSelected = (_currentStyle == CrosshairStyle.Custom && _overlay?.CustomBase64 == cc.Base64Image);
+                        isSelected = (_currentStyle == CrosshairStyle.Custom && _currentCustomBase64 == cc.Base64Image);
                     }
                     item.Background = isSelected ? new SolidColorBrush(Color.FromRgb(45, 90, 136)) : Brushes.Transparent;
                 }
@@ -1062,6 +1099,8 @@ public partial class MainWindow : WpfUi.FluentWindow
                 "RangeLine" => CrosshairStyle.RangeLine,
                 _ => _currentStyle
             };
+
+            TrackingService.LastCrosshairStyle = _currentStyle.ToString();
 
             UpdateStyleChecks();
 
@@ -2248,6 +2287,173 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _alarmWin.Add(n);
     }
 
+    private void HandleOfflineDeath(OfflineDeathNotification d)
+    {
+        if (!TrackingService.OfflineDeathAlertsEnabled) return;
+
+        AppendLog($"[FCM] Offline Death Notification received: You were killed by {d.AttackerName} on {d.ServerName}");
+
+        // Save to local history
+        TrackingService.AddOfflineDeath(d);
+
+        // Play Offline Death sound
+        try
+        {
+            string soundPath = TrackingService.OfflineDeathSoundPath;
+            if (string.IsNullOrWhiteSpace(soundPath) || !System.IO.File.Exists(soundPath))
+            {
+                string baseDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
+                soundPath = System.IO.Path.Combine(baseDir, "Assets", "death.mp3");
+            }
+
+            if (System.IO.File.Exists(soundPath))
+            {
+                var fullPath = System.IO.Path.GetFullPath(soundPath);
+                Dispatcher.Invoke(() =>
+                {
+                    bool useLoopPlayer = TrackingService.OfflineDeathSoundLoopEnabled;
+
+                    if (useLoopPlayer)
+                    {
+                        if (_loopPlayer == null)
+                        {
+                            _loopPlayer = new System.Windows.Media.MediaPlayer();
+                            _loopPlayer.MediaFailed += (s, e) => AppendLog($"[audio] Loop Media Failed: {e.ErrorException?.Message}");
+                            _loopPlayer.MediaEnded += (s, e) => {
+                                if (_isLooping && _loopPlayer != null)
+                                {
+                                    _loopPlayer.Position = TimeSpan.Zero;
+                                    _loopPlayer.Play();
+                                }
+                            };
+                        }
+
+                        _loopPlayer.Stop();
+                        _loopPlayer.Open(new Uri(fullPath, UriKind.Absolute));
+                        _loopPlayer.Volume = 1.0;
+                        _isLooping = true;
+                        _loopPlayer.Play();
+                        AppendLog($"[audio] Looping offline death sound: {fullPath}");
+                    }
+                    else
+                    {
+                        if (_alarmPlayer == null)
+                        {
+                            _alarmPlayer = new System.Windows.Media.MediaPlayer();
+                            _alarmPlayer.MediaFailed += (s, e) => AppendLog($"[audio] Death Sound Media Failed: {e.ErrorException?.Message}");
+                        }
+                        _alarmPlayer.Stop();
+                        _alarmPlayer.Open(new Uri(fullPath, UriKind.Absolute));
+                        _alarmPlayer.Volume = 1.0;
+                        _alarmPlayer.Play();
+                        AppendLog($"[audio] Playing offline death sound: {fullPath}");
+                    }
+                });
+            }
+            else
+            {
+                AppendLog($"[audio] Offline death sound file not found: {soundPath}");
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[audio] Error playing offline death sound: {ex.Message}");
+        }
+
+        // Show Snackbar Alert with Stop Button to stop looping sound
+        Dispatcher.Invoke(() =>
+        {
+            if (RootSnackbar == null) return;
+
+            WpfUi.Snackbar? snackbar = null;
+
+            var stopBtn = new WpfUi.Button
+            {
+                Content = Properties.Resources.StopSound,
+                Appearance = WpfUi.ControlAppearance.Danger,
+                FontSize = 12,
+                Padding = new Thickness(8, 2, 8, 2),
+                Margin = new Thickness(0, 4, 0, 0)
+            };
+            stopBtn.Click += (s, e) =>
+            {
+                StopLoopPlayer();
+                StopAlarmPlayer();
+                if (snackbar != null)
+                {
+                    snackbar.Visibility = Visibility.Collapsed;
+                }
+            };
+
+            var panel = new StackPanel { Orientation = Orientation.Vertical };
+            panel.Children.Add(new TextBlock 
+            { 
+                Text = string.Format(Properties.Resources.OfflineDeathMessage, d.AttackerName, d.ServerName), 
+                TextWrapping = TextWrapping.Wrap 
+            });
+            panel.Children.Add(stopBtn);
+
+            snackbar = new WpfUi.Snackbar(RootSnackbar)
+            {
+                Title = Properties.Resources.OfflineDeathTitle,
+                Content = panel,
+                Appearance = WpfUi.ControlAppearance.Danger,
+                Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Alert24),
+                Timeout = TimeSpan.FromHours(24),
+                MaxWidth = 400,
+                HorizontalAlignment = HorizontalAlignment.Right
+            };
+            
+            // Also stop sound when snackbar hides automatically or is closed
+            snackbar.Closed += (s, e) =>
+            {
+                StopLoopPlayer();
+                StopAlarmPlayer();
+            };
+
+            snackbar.IsVisibleChanged += (s, e) =>
+            {
+                if (snackbar.Visibility != Visibility.Visible || !snackbar.IsVisible)
+                {
+                    StopLoopPlayer();
+                    StopAlarmPlayer();
+                }
+            };
+
+            snackbar.Show();
+        });
+
+        // Send to Discord Bot Raid Alerts if premium user and setting is enabled
+        if (TrackingService.OfflineDeathDiscordEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.IsPremium)
+        {
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    string cleanSrv = CleanServerName(d.ServerName);
+                    var alarmProfile = _vm.Servers.FirstOrDefault(p =>
+                        string.Equals(CleanServerName(p.Name), cleanSrv, StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(p.Host, cleanSrv, StringComparison.OrdinalIgnoreCase));
+                    
+                    var raidServerKey = alarmProfile == null ? "" : $"{alarmProfile.Host}-{alarmProfile.Port}";
+                    var raidOwnerSteamId = !string.IsNullOrWhiteSpace(_vm.SteamId64)
+                        ? _vm.SteamId64
+                        : alarmProfile?.SteamId64 ?? "";
+
+                    await DiscordBotListenerService.Instance.SendRaidNotificationAsync(
+                        raidServerKey,
+                        raidOwnerSteamId,
+                        $"☠️ **Offline Death**: You were killed by **{d.AttackerName}** on **{d.ServerName}**"
+                    );
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[DiscordBotListener] Failed to send offline death raid notification: {ex.Message}");
+                }
+            });
+        }
+    }
+
     private void AddAlarmToOverlay(SmartDevice? dev, AlarmNotification n)
     {
         Dispatcher.Invoke(() =>
@@ -2855,7 +3061,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         _listenerStarting = true;
         _vm.IsPairingBusy = true; // Tell UI we are trying to start
-        TxtPairingState.Text = "Pairing: startingÃ¢â‚¬Â¦";
+        TxtPairingState.Text = "Pairing: starting...";
         _ = Task.Run(async () =>
         {
             try { await _pairing.StartAsync(); }
@@ -2879,7 +3085,30 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private async void BtnListenWithEdge_Click(object sender, RoutedEventArgs e)
     {
-        if (_listenerStarting || _pairing.IsRunning) { AppendLog("Listener lÃƒÂ¤uft bereits."); return; }
+        AppendLog("[pairing] Edge pairing button clicked. Forcing a clean stop of any starting or running listener...");
+
+        // Force stop any starting/running process and cancel active tokens
+        await Task.Run(async () => await _pairing.StopAsync());
+
+        // Reset the starting guard to allow fresh registration
+        _listenerStarting = false;
+
+        var configPath = System.IO.Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "RustPlusDesk", "rustplusjs-config.json");
+        try
+        {
+            if (File.Exists(configPath))
+            {
+                File.Delete(configPath);
+                AppendLog("[pairing] Deleted old FCM config to ensure new registration via Edge.");
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[pairing] Warning: Could not delete config file: {ex.Message}");
+        }
+
         await StartPairingListenerUiWithEdgeAsync();
     }
 
@@ -2898,7 +3127,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _listenerStarting = true;
             _vm.IsPairingBusy = true;
-            _vm.BusyText = "Starting Pairing-Listener (Edge) Ã¢â‚¬Â¦";
+            _vm.BusyText = "Starting Pairing-Listener (Edge)...";
 
             var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
             EventHandler onListen = (_, __) => tcs.TrySetResult(true);
@@ -2962,7 +3191,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void OnStatus(object? s, string st)
     {
-        if (st == "starting") _vm.BusyText = "Starting Pairing-Listener Ã¢â‚¬Â¦";
+        if (st == "starting") _vm.BusyText = "Starting Pairing-Listener...";
     }
 
     private ServerProfile? _serverToDelete;
@@ -3001,7 +3230,65 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private async void BtnListenPairing_Click(object sender, RoutedEventArgs e)
     {
-        if (_listenerStarting || _pairing.IsRunning) { AppendLog("Listener already running."); return; }
+        // 1. Check if token is valid & not expired
+        bool isTokenValid = TrackingService.IsFcmConfigured() &&
+                            (!TrackingService.FcmExpiresAt.HasValue || TrackingService.FcmExpiresAt.Value >= DateTime.Now);
+
+        if (isTokenValid)
+        {
+            AppendLog("[pairing] Valid FCM config exists. Starting listener...");
+            await StartPairingListenerUiAsync();
+            return;
+        }
+
+        // 2. Token is not configured or expired: Force re-pairing
+        AppendLog("[pairing] FCM token is missing or expired. Forcing a clean stop and re-pairing...");
+
+        // Force stop any starting/running process and cancel active tokens
+        await Task.Run(async () => await _pairing.StopAsync());
+
+        // Reset the starting guard to allow fresh registration
+        _listenerStarting = false;
+
+        try
+        {
+            if (File.Exists(PairingConfigPath))
+            {
+                File.Delete(PairingConfigPath);
+                AppendLog("[pairing] Deleted old/expired FCM config to ensure new registration.");
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[pairing] Warning: Could not delete config file: {ex.Message}");
+        }
+
+        await StartPairingListenerUiAsync();
+    }
+
+    private async void BtnOverlayPair_Click(object sender, RoutedEventArgs e)
+    {
+        AppendLog("[pairing] Overlay Login & Pair button clicked. Forcing a clean stop and fresh registration...");
+
+        // Always force stop the listener/registration process
+        await Task.Run(async () => await _pairing.StopAsync());
+
+        // Reset the starting guard
+        _listenerStarting = false;
+
+        try
+        {
+            if (File.Exists(PairingConfigPath))
+            {
+                File.Delete(PairingConfigPath);
+                AppendLog("[pairing] Deleted old FCM config from overlay click.");
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[pairing] Warning: Could not delete config file: {ex.Message}");
+        }
+
         await StartPairingListenerUiAsync();
     }
 
@@ -3685,6 +3972,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         bool masterOn = TrackingService.AnnounceSpawnsMaster;
         PopulateTradeAlertsSubMenu(masterOn);
+        PopulateHotkeyTriggersSubMenu();
 
         SyncContextMenu(ChatAnnounce.ContextMenu, masterOn);
         if (ChatAlertsConfigureButton.Flyout is ContextMenu cm)
@@ -3829,6 +4117,77 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 RequestTeamFeatureMasterSync();
             }
+        }
+    }
+
+    private void PopulateHotkeyTriggersSubMenu()
+    {
+        if (HotkeyTriggersMenuItem == null) return;
+
+        HotkeyTriggersMenuItem.Items.Clear();
+
+        // Build the list of devices that have hotkeys assigned for the current server
+        var map = MapForCurrentServer();
+        var serverKey = CurrentServerKey();
+
+        // Collect devices with hotkeys
+        var hotkeyDevices = new List<(string gesture, long entityId, SmartDevice? dev)>();
+        foreach (var kvp in map)
+        {
+            foreach (var entityId in kvp.Value)
+            {
+                var dev = FindDevice(entityId);
+                if (dev != null)
+                    hotkeyDevices.Add((kvp.Key, entityId, dev));
+            }
+        }
+
+        // Remove duplicates (same entityId can appear under multiple gestures)
+        var seen = new HashSet<long>();
+        var uniqueDevices = new List<(string gesture, long entityId, SmartDevice? dev)>();
+        foreach (var item in hotkeyDevices)
+        {
+            if (seen.Add(item.entityId))
+                uniqueDevices.Add(item);
+        }
+
+        // Grey out if no hotkeys are assigned
+        HotkeyTriggersMenuItem.IsEnabled = uniqueDevices.Count > 0;
+
+        if (uniqueDevices.Count == 0)
+        {
+            HotkeyTriggersMenuItem.Header = "Hotkey Triggers (0)";
+            return;
+        }
+
+        HotkeyTriggersMenuItem.Header = "Hotkey Triggers";
+
+        foreach (var (gesture, entityId, dev) in uniqueDevices)
+        {
+            bool isEnabled = TrackingService.GetHotkeyTriggerChatAlert(serverKey, entityId);
+            string label = dev?.PureName ?? $"#{entityId}";
+
+            var mi = new MenuItem
+            {
+                Header = label,
+                IsCheckable = true,
+                IsChecked = isEnabled,
+                IsEnabled = true,
+                StaysOpenOnClick = true,
+                Style = (Style)FindResource("DarkMenuItem"),
+                Tag = entityId          // store entityId for the click handler
+            };
+            mi.Click += HotkeyTriggerSubItem_Click;
+            HotkeyTriggersMenuItem.Items.Add(mi);
+        }
+    }
+
+    private void HotkeyTriggerSubItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is long entityId)
+        {
+            string serverKey = CurrentServerKey();
+            TrackingService.SetHotkeyTriggerChatAlert(serverKey, entityId, mi.IsChecked);
         }
     }
 
@@ -4651,7 +5010,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             if (stopListenerFirst && _pairing.IsRunning)
             {
-                AppendLog("Stopping pairing listener Ã¢â‚¬Â¦");
+                AppendLog("Stopping pairing listener...");
                 await Task.Run(async () => await _pairing.StopAsync());
                 await Task.Delay(200); // kleine Atempause
             }
@@ -4724,6 +5083,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     // --- Konfiguration ---
     private async Task AutoCheckUpdatesAsync()
     {
+        if (_vm.IsDownloadingUpdate || !string.IsNullOrEmpty(_updateService.PendingInstallerPath)) return;
         try
         {
             var latestInfo = await _updateService.GetLatestReleaseAsync();
@@ -4859,6 +5219,91 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         };
         snackbar.Show();
     }
+
+    internal void ShowUpgradeRequiredSnackbar(string message, string upgradeUrl)
+    {
+        if (RootSnackbar == null) return;
+        if (_vm.IsDownloadingUpdate || !string.IsNullOrEmpty(_updateService.PendingInstallerPath)) return;
+
+        var stack = new StackPanel { Orientation = Orientation.Vertical };
+
+        string displayMessage = message;
+        if (!string.IsNullOrEmpty(displayMessage) && !displayMessage.Contains("cloud features", StringComparison.OrdinalIgnoreCase))
+        {
+            displayMessage = displayMessage.TrimEnd(' ', '.') + ". To continue using cloud features, you must update the application.";
+        }
+
+        var textBlock = new TextBlock
+        {
+            Text = displayMessage,
+            TextWrapping = TextWrapping.Wrap,
+            Margin = new Thickness(0, 0, 0, 8)
+        };
+        stack.Children.Add(textBlock);
+
+        WpfUi.Snackbar? snackbar = null;
+
+        var btn = new WpfUi.Button
+        {
+            Content = "Download Update",
+            Appearance = WpfUi.ControlAppearance.Primary,
+            HorizontalAlignment = HorizontalAlignment.Left
+        };
+        btn.Click += async (s, e) =>
+        {
+            btn.IsEnabled = false;
+            try
+            {
+                var latestInfo = await _updateService.GetLatestReleaseAsync();
+                if (latestInfo != null && !string.IsNullOrEmpty(latestInfo.Value.downloadUrl))
+                {
+                    if (snackbar != null)
+                    {
+                        snackbar.Visibility = Visibility.Collapsed;
+                    }
+                    await PerformUpdateDownloadAsync(latestInfo.Value.tag, latestInfo.Value.downloadUrl);
+                }
+                else
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(upgradeUrl) { UseShellExecute = true });
+                    if (snackbar != null)
+                    {
+                        snackbar.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
+            catch
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(upgradeUrl) { UseShellExecute = true });
+                    if (snackbar != null)
+                    {
+                        snackbar.Visibility = Visibility.Collapsed;
+                    }
+                }
+                catch { /* ignore */ }
+            }
+            finally
+            {
+                btn.IsEnabled = true;
+            }
+        };
+        stack.Children.Add(btn);
+
+        snackbar = new WpfUi.Snackbar(RootSnackbar)
+        {
+            Title = "Update Required",
+            Content = stack,
+            Appearance = WpfUi.ControlAppearance.Danger,
+            Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.ArrowDownload24),
+            Timeout = TimeSpan.FromSeconds(25),
+            MaxWidth = 450,
+            HorizontalAlignment = HorizontalAlignment.Right
+        };
+        snackbar.Show();
+    }
+
 
     private void ShowTimerSnackbar(string title, string timerName, int timeoutSeconds = 8)
     {
@@ -5068,8 +5513,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     public System.Windows.Controls.Primitives.CustomPopupPlacement[] CenterMegaMenu_Callback(Size popupSize, Size targetSize, Point offset)
     {
-        double x = (targetSize.Width - popupSize.Width) / 2;
-        double y = targetSize.Height + 4; // Fluent spacing gap
+        double targetLeft = ChatAlertsConfigureButton.TranslatePoint(new Point(0, 0), this).X;
+        double x = ((ActualWidth - popupSize.Width) / 2) - targetLeft;
+        x = Math.Max(x, 8 - targetLeft);
+        x = Math.Min(x, ActualWidth - popupSize.Width - 8 - targetLeft);
+        double y = targetSize.Height + 4;
         return new[] { new System.Windows.Controls.Primitives.CustomPopupPlacement(new Point(x, y), System.Windows.Controls.Primitives.PopupPrimaryAxis.Horizontal) };
     }
 
@@ -5199,7 +5647,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 return;
             }
 
-            AppendLog("Starting installer Ã¢â‚¬Â¦");
+            AppendLog("Starting installer...");
             _updateService.StartInstaller(path);
             try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
             await Task.Delay(500);
@@ -5473,6 +5921,19 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return null;
     }
 
+    private async Task<string> MyPlayerNameOrYouAsync()
+    {
+        if (_mySteamId != 0)
+        {
+            if (_steamNames.TryGetValue(_mySteamId, out var name) && !string.IsNullOrWhiteSpace(name))
+                return name;
+            await RefreshTeamNamesAsync();
+            if (_steamNames.TryGetValue(_mySteamId, out name) && !string.IsNullOrWhiteSpace(name))
+                return name;
+        }
+        return Properties.Resources.WordYou;
+    }
+
     private async Task ToggleSequenceAsync(IEnumerable<long> entityIds)
     {
         var allTargets = new List<SmartDevice>();
@@ -5495,16 +5956,31 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (uniqueSwitches.Count == 0) return;
 
+        string serverKey = CurrentServerKey();
+
         if (_hotkeyOptions.ParallelMode)
         {
-            var tasks = uniqueSwitches.Select(dev =>
+            // Capture desired states before launching parallel tasks
+            var toggleWork = uniqueSwitches.Select(dev =>
             {
                 bool current = dev.IsOn ?? false;
                 bool desired = !current;
                 var fakeSender = new System.Windows.FrameworkElement { DataContext = dev };
-                return HandleDeviceToggleAsync(fakeSender, desired, ignoreGlobalBusy: true);
-            });
-            await Task.WhenAll(tasks);
+                return (dev, desired, task: HandleDeviceToggleAsync(fakeSender, desired, ignoreGlobalBusy: true));
+            }).ToList();
+
+            await Task.WhenAll(toggleWork.Select(t => t.task));
+
+            // Send chat alerts for devices that had it enabled
+            foreach (var (dev, desired, _) in toggleWork)
+            {
+                if (TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
+                {
+                    string state = desired ? Properties.Resources.StateOn : Properties.Resources.StateOff;
+                    string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, await MyPlayerNameOrYouAsync());
+                    _ = SendTeamChatSafeAsync(msg, true, true);
+                }
+            }
         }
         else
         {
@@ -5514,6 +5990,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 bool desired = !current;
                 var fakeSender = new System.Windows.FrameworkElement { DataContext = dev };
                 await HandleDeviceToggleAsync(fakeSender, desired, ignoreGlobalBusy: true);
+
+                // Send chat alert if enabled for this device
+                if (TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
+                {
+                    string state = desired ? Properties.Resources.StateOn : Properties.Resources.StateOff;
+                    string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, await MyPlayerNameOrYouAsync());
+                    _ = SendTeamChatSafeAsync(msg, true, true);
+                }
 
                 if (_hotkeyOptions.ToggleDelayMs > 0)
                 {
@@ -5622,6 +6106,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (activate == true) ActivateHotkeysForCurrentServer();
         else DeactivateHotkeys();
+
+        // Refresh the Hotkey Triggers submenu to reflect any new/removed hotkey assignments
+        SyncAlertMenuItems();
     }
 
     private IEnumerable<SmartDevice> GetHotkeyAssignableDevices(IEnumerable<SmartDevice> devices)

@@ -466,11 +466,18 @@ public class DiscordBotListenerService
                     audio_alert = config.AudioAlertEnabled
                 };
 
+                if (RustPlusDesk.Services.Auth.SupabaseAuthManager.IsUpgradeRequiredSnackbarShown)
+                {
+                    Log("[DiscordBotListener] Skipping notification: application update is required.");
+                    return;
+                }
+
                 using (var httpClient = new System.Net.Http.HttpClient())
                 {
                     var url = $"{RustPlusDesk.Services.Data.DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/discord-bot-interactions";
                     var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Post, url);
                     request.Headers.Add("apikey", RustPlusDesk.Services.Data.DataManager.SUPABASE_ANON_KEY);
+                    request.Headers.Add("X-Client-Version", RustPlusDesk.Helpers.VersionHelper.GetClientVersion());
 
                     var token = SupabaseAuthManager.Client.Auth.CurrentSession?.AccessToken;
                     if (!string.IsNullOrEmpty(token))

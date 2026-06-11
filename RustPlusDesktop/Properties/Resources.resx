@@ -2295,4 +2295,61 @@ Are you sure you want to continue?</value>
   <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
     <value>Either your firewall is blocking the connection or the Rust+ API on the server is not running properly.</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>you</value>
+  </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: turned {1} (triggered by {2})</value>
+  </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>Offline Death</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>You were killed by {0} on {1}.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>Stop Sound</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>Offline Death Notifications</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>Enable Offline Death alerts</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>Alert Sound</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>Default: death.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>Select...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>Loop Alert Sound</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Send to Discord Raid Alerts (Supporter)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>Open Offline Deaths Log</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>Offline Death Log</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>Clear Log</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>No offline deaths recorded.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>Killed by</value>
+  </data>
 </root>

@@ -1812,4 +1812,19 @@
 <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>당신</value>
+  </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>켜짐</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>꺼짐</value>
+  </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: {1} 전환됨 ({2}님이 실행)</value>
+  </data>
 </root>
+
+
+

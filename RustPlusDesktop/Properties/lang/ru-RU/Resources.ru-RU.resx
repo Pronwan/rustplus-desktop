@@ -2025,4 +2025,65 @@
   <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
     <value>Либо ваш брандмауэр блокирует соединение, либо API Rust+ на сервере работает некорректно.</value>
   </data>
+  <data name="WordYou" xml:space="preserve">
+    <value>вы</value>
+  </data>
+  <data name="StateOn" xml:space="preserve">
+    <value>ВКЛ</value>
+  </data>
+  <data name="StateOff" xml:space="preserve">
+    <value>ВЫКЛ</value>
+  </data>
+  <data name="HotkeyTriggerToggled" xml:space="preserve">
+    <value>[Hotkey] {0}: переключен в {1} (запущено {2})</value>
+  </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>Смерть оффлайн</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>Вы были убиты игроком {0} на {1}.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>Остановить звук</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>Оповещения о смерти оффлайн</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>Включить оповещения о смерти оффлайн</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>Звук оповещения</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>По умолчанию: death.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>Выбрать...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>Повторять звук оповещения</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Отправлять в оповещения о рейдах Discord (Supporter)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>Открыть журнал смертей оффлайн</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>Журнал смертей оффлайн</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>Очистить журнал</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>Записи о смертях оффлайн отсутствуют.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>Убит игроком</value>
+  </data>
 </root>
+
+
+
+
