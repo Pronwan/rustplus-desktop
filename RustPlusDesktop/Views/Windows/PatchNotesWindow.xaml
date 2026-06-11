@@ -69,7 +69,12 @@
                                 Added direct map exports to Discord Chat-Alerts using /map and /mapfull commands, alongside enhanced hotkey mapping.
                             </TextBlock>
                             
-                            <Image Source="pack://application:,,,/Assets/Images/6.0 Cloud Patch/MapFetchDiscord.png" Stretch="Uniform" MaxHeight="350" Margin="0,4,0,12" />
+                            <!-- v6.2.0 Dynamic Image Gallery -->
+                            <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/MapFetchDiscord.png" Description="Discord Map Fetch and Send from App"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/death-notifications.png" Description="Offline Death Settings and Player Log History"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/death-snackbar.png" Description="Offline Death Snackbar Popup Alert with Stop Trigger"/>
+                            </views:ImageGallery>
                         </StackPanel>
                     </Border>
 

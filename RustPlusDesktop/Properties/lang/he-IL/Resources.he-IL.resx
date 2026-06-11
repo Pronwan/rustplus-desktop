@@ -1824,6 +1824,51 @@
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: הועבר למצב {1} (הופעל על ידי {2})</value>
   </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>מוות במצב לא מקוון</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>נהרגת על ידי {0} ב-{1}.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>עצור צליל</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>התראות מוות במצב לא מקוון</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>הפעל התראות מוות במצב לא מקוון</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>צליל התראה</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>ברירת מחדל: death.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>בחר...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>לולאת צליל התראה</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>שלח להתראות פשיטה בדיסקורד (Supporter)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>פתח יומן מוות לא מקוון</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>יומן מוות לא מקוון</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>נקה יומן</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>לא תועדו מקרי מוות לא מקוונים.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>נהרג על ידי</value>
+  </data>
 </root>
 
 

@@ -2262,6 +2262,51 @@
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: تم التبديل إلى {1} (بواسطة {2})</value>
   </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>موت خارج اللعبة</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>تم قتلك بواسطة {0} في {1}.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>إيقاف الصوت</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>إشعارات الموت خارج اللعبة</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>تمكين تنبيهات الموت خارج اللعبة</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>صوت التنبيه</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>افتراضي: death.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>اختيار...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>تكرار صوت التنبيه</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>إرسال إلى تنبيهات مداهمة ديسكورد (Supporter)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>فتح سجل الموت خارج اللعبة</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>سجل الموت خارج اللعبة</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>مسح السجل</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>لم يتم تسجيل أي وفيات خارج اللعبة.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>قتل بواسطة</value>
+  </data>
 </root>
 
 

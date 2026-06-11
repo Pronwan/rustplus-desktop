@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using RustPlusDesk.Models;
 
 namespace RustPlusDesk.Services;
 
@@ -125,6 +126,11 @@ public class TrackingSettings
     public Dictionary<string, bool> HotkeyTriggerChatAlertEnabled { get; set; } = new();
     public string LastCrosshairStyle { get; set; } = "GreenDot";
     public string LastCustomCrosshairId { get; set; } = string.Empty;
+    public bool OfflineDeathAlertsEnabled { get; set; } = true;
+    public string OfflineDeathSoundPath { get; set; } = string.Empty;
+    public bool OfflineDeathSoundLoopEnabled { get; set; } = false;
+    public bool OfflineDeathDiscordEnabled { get; set; } = false;
+    public List<OfflineDeathNotification> OfflineDeathHistory { get; set; } = new();
 }
 
 
@@ -1556,5 +1562,58 @@ public static class TrackingService
     private static async Task<DateTime> FetchLastSeenTimeAsync(string bmId)
     {
         return await Task.FromResult(DateTime.UtcNow);
+    }
+
+    public static bool OfflineDeathAlertsEnabled
+    {
+        get => _settings.OfflineDeathAlertsEnabled;
+        set { _settings.OfflineDeathAlertsEnabled = value; SaveDB(); }
+    }
+
+    public static string OfflineDeathSoundPath
+    {
+        get => _settings.OfflineDeathSoundPath;
+        set { _settings.OfflineDeathSoundPath = value; SaveDB(); }
+    }
+
+    public static bool OfflineDeathSoundLoopEnabled
+    {
+        get => _settings.OfflineDeathSoundLoopEnabled;
+        set { _settings.OfflineDeathSoundLoopEnabled = value; SaveDB(); }
+    }
+
+    public static bool OfflineDeathDiscordEnabled
+    {
+        get => _settings.OfflineDeathDiscordEnabled;
+        set { _settings.OfflineDeathDiscordEnabled = value; SaveDB(); }
+    }
+
+    public static List<OfflineDeathNotification> OfflineDeathHistory
+    {
+        get
+        {
+            if (_settings.OfflineDeathHistory == null) _settings.OfflineDeathHistory = new();
+            return _settings.OfflineDeathHistory;
+        }
+    }
+
+    public static void AddOfflineDeath(OfflineDeathNotification notification)
+    {
+        if (_settings.OfflineDeathHistory == null) _settings.OfflineDeathHistory = new();
+        _settings.OfflineDeathHistory.Insert(0, notification);
+        if (_settings.OfflineDeathHistory.Count > 100)
+        {
+            _settings.OfflineDeathHistory.RemoveAt(_settings.OfflineDeathHistory.Count - 1);
+        }
+        SaveDB();
+    }
+
+    public static void ClearOfflineDeathHistory()
+    {
+        if (_settings.OfflineDeathHistory != null)
+        {
+            _settings.OfflineDeathHistory.Clear();
+        }
+        SaveDB();
     }
 }

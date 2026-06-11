@@ -2340,6 +2340,51 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: auf {1} geschaltet (ausgelöst von {2})</value>
   </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>Offline-Tod</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>Du wurdest von {0} auf {1} getötet.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>Sound stoppen</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>Offline-Todesbenachrichtigungen</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>Offline-Todesbenachrichtigungen aktivieren</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>Alarm-Sound</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>Standard: death.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>Auswählen...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>Alarm-Sound wiederholen</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>An Discord-Raid-Alerts senden (Supporter)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>Offline-Todesprotokoll öffnen</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>Offline-Todesprotokoll</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>Protokoll löschen</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>Keine Offline-Tode aufgezeichnet.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>Getötet von</value>
+  </data>
 </root>
 
 

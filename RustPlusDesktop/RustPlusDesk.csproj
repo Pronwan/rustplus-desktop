@@ -158,6 +158,8 @@
 	  <None Remove="Assets\Images\5.5.0\discord-no-permission.png" />
 	  <None Remove="Assets\Images\5.5.0\New-Custom-Death-Markers.png" />
 	  <None Remove="Assets\Images\5.5.0\r+desktop-icon-bot.png" />
+	  <None Remove="Assets\Images\6.0 Cloud Patch\death-notifications.png" />
+	  <None Remove="Assets\Images\6.0 Cloud Patch\death-snackbar.png" />
 	  <None Remove="Assets\Images\6.0 Cloud Patch\MapFetchDiscord.png" />
 	  <None Remove="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
 	  <None Remove="Assets\rustplus-desktop-icon.ico" />
@@ -210,6 +212,10 @@
 	  </Content>
 	  <Content Include="Assets\bell.mp3">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	  </Content>
+	  <Content Include="Assets\death.mp3">
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Content>
 	  <Content Include="Assets\icons\rust-c4.mp3">
@@ -393,6 +399,8 @@
     <Resource Include="Assets\Screenshots\beta-5.1_7.png" />
     <Resource Include="Assets\Screenshots\Notifications.png" />
     <Resource Include="Assets\Flags\*.png" />
+    <Resource Include="Assets\Images\6.0 Cloud Patch\death-notifications.png" />
+    <Resource Include="Assets\Images\6.0 Cloud Patch\death-snackbar.png" />
     <Resource Include="Assets\TitleScreen-rust-plus-desktop.png" />
     <Resource Include="Assets\Data\rust_items.json" />
     <Resource Include="Assets\Images\5.3.0\ChatCommandsUI-1.png" />

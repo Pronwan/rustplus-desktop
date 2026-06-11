@@ -18,6 +18,7 @@ public interface IPairingListener
     // NEU: Alarm-Popups
     event EventHandler<AlarmNotification>? AlarmReceived;
     event EventHandler<TeamChatMessage>? ChatReceived;
+    event EventHandler<OfflineDeathNotification>? OfflineDeathReceived;
     bool IsRunning { get; }
     bool IsConfigured { get; }
     Task StartAsync(CancellationToken ct = default);

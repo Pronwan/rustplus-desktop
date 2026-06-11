@@ -29,6 +29,7 @@ public class PairingListenerStub : IPairingListener
     private DateTime? _pendingAlarmMsgTs;
 
     public event EventHandler<AlarmNotification>? AlarmReceived;
+    public event EventHandler<OfflineDeathNotification>? OfflineDeathReceived;
     private volatile bool _running;
     public bool IsRunning => _running;
     public bool IsConfigured => true;

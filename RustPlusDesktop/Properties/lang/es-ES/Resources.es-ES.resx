@@ -2070,6 +2070,51 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: cambiado a {1} (activado por {2})</value>
   </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>Muerte offline</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>Fuiste asesinado por {0} en {1}.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>Detener sonido</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>Notificaciones de muerte offline</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>Habilitar alertas de muerte offline</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>Sonido de alerta</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>Predeterminado: death.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>Seleccionar...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>Repetir sonido de alerta</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Enviar a alertas de raid de Discord (Supporter)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>Abrir registro de muertes offline</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>Registro de muertes offline</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>Limpiar registro</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>No se registraron muertes offline.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>Asesinado por</value>
+  </data>
 </root>
 
 

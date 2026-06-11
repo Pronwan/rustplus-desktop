@@ -28,8 +28,15 @@ namespace RustPlusDesk.Services
         private DateTime _lastPairAt;
 
         // key/value-Zeilen (z.B. { key: 'gcm.notification.body', value: 'Your base is under attack!' })
-        private static readonly Regex KvLine = new(@"\{\s*key:\s*'(?<k>[^']+)'\s*,\s*value:\s*'(?<v>.*)'\s*\}", RegexOptions.Compiled);
+        private static readonly Regex KvLine = new(@"\{\s*key:\s*'(?<k>[^']+)'\s*,\s*value:\s*(?:'|""|`)(?<v>.*?)(?:'|""|`)\s*\}", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex DeathTitleRegex = new(@"^(?:You were killed by|Du wurdest getötet von)\s+(?<attacker>.+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         public event EventHandler<AlarmNotification>? AlarmReceived;
+        public event EventHandler<OfflineDeathNotification>? OfflineDeathReceived;
+        
+        private string? _pendingDeathAttacker;
+        private string? _pendingDeathServer;
+        private DateTime? _pendingDeathTs;
+
         // body-JSON in der gleichen Zeile (klassisch)
         private static readonly Regex BodyJson =
     new(@"value:\s*(?:'|`)(?<json>\{.*?\})(?:'|`)", RegexOptions.Compiled | RegexOptions.Singleline);
@@ -206,6 +213,20 @@ namespace RustPlusDesk.Services
             _log($"[{ts:HH:mm:ss}] Alarm | {srv} | {dev}#{(entityId?.ToString() ?? "?")} | \"{message}\"");
         }
 
+        private void TryFlushOfflineDeath()
+        {
+            if (string.IsNullOrEmpty(_pendingDeathAttacker) || string.IsNullOrEmpty(_pendingDeathServer)) return;
+
+            var timestamp = _pendingDeathTs ?? DateTime.Now;
+            var death = new OfflineDeathNotification(timestamp, _pendingDeathServer, _pendingDeathAttacker);
+            OfflineDeathReceived?.Invoke(this, death);
+            _log($"[{timestamp:HH:mm:ss}] Offline Death | Server: {_pendingDeathServer} | Attacker: {_pendingDeathAttacker}");
+
+            _pendingDeathAttacker = null;
+            _pendingDeathServer = null;
+            _pendingDeathTs = null;
+        }
+
         public Task StopAsync()
         {
             try
@@ -357,6 +378,36 @@ namespace RustPlusDesk.Services
                 return;
             }
             // ### A) raw key/value-Zeilen erkennen (channelId/title/body)
+            // Falls wir uns im multiline JSON-Modus befinden, sammeln wir die Zeilen
+            if (_collectingJson)
+            {
+                _jsonBuffer.AppendLine(s);
+                if (s.Contains("`") || s.Contains("'") || s.Contains("\""))
+                {
+                    _collectingJson = false;
+                    var fullBodyValue = _jsonBuffer.ToString().Trim();
+                    // Let's strip key/value wrapper if any, or extract JSON
+                    var jsonMatch = Regex.Match(fullBodyValue, @"(?:value:\s*`|value:\s*'\s*|value:\s*""\s*)(?<json>\{.*?\})", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+                    if (jsonMatch.Success)
+                    {
+                        var json = jsonMatch.Groups["json"].Value;
+                        ProcessBodyJson(json);
+                    }
+                    else
+                    {
+                        // Fallback: extract everything between quotes/backticks
+                        var contentMatch = Regex.Match(fullBodyValue, @"(?:value:\s*`|value:\s*'\s*|value:\s*""\s*)(?<content>.*?)(?:`|'|"")", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+                        if (contentMatch.Success && !string.IsNullOrEmpty(_pendingDeathAttacker))
+                        {
+                            _pendingDeathServer = contentMatch.Groups["content"].Value;
+                            TryFlushOfflineDeath();
+                        }
+                    }
+                    _jsonBuffer.Clear();
+                }
+                return;
+            }
+
             var kv = KvLine.Match(s);
             if (kv.Success)
             {
@@ -374,7 +425,33 @@ namespace RustPlusDesk.Services
                         _pendingChatTitle = null;
                         _pendingChatTs = null;
                     }
-                    // nicht returnen → evtl. mehr Zeilen in diesem Durchlauf
+                }
+
+                // Offline-Tod: Abfangen des Titels
+                if (k.Equals("title", StringComparison.OrdinalIgnoreCase) ||
+                    k.Equals("gcm.notification.title", StringComparison.OrdinalIgnoreCase))
+                {
+                    var mDeath = DeathTitleRegex.Match(v);
+                    if (mDeath.Success)
+                    {
+                        _pendingDeathAttacker = mDeath.Groups["attacker"].Value.Trim('\'', '"');
+                        _pendingDeathTs = DateTime.Now;
+                        _log($"[FCM/debug] Matched death attacker: {_pendingDeathAttacker}");
+                        return;
+                    }
+                }
+
+                // Offline-Tod: Abfangen des Servers (Body)
+                if (k.Equals("body", StringComparison.OrdinalIgnoreCase) ||
+                    k.Equals("gcm.notification.body", StringComparison.OrdinalIgnoreCase))
+                {
+                    _log($"[FCM/debug] Matched body/server. Attacker is: {_pendingDeathAttacker ?? "null"}, value is: {v}");
+                    if (!string.IsNullOrEmpty(_pendingDeathAttacker))
+                    {
+                        _pendingDeathServer = v;
+                        TryFlushOfflineDeath();
+                        return;
+                    }
                 }
 
                 // Absender (title) – erst merken, später mit message flushen
@@ -389,6 +466,14 @@ namespace RustPlusDesk.Services
                     }
                 }
             }
+            else if (s.Contains("key: 'body'") || s.Contains("key: 'gcm.notification.body'"))
+            {
+                // Start of a multiline value block
+                _collectingJson = true;
+                _jsonBuffer.Clear();
+                _jsonBuffer.AppendLine(s);
+                return;
+            }
 
             // ### B) message/body-Zeilen
             var mm = MsgLine.Match(s);
@@ -401,7 +486,6 @@ namespace RustPlusDesk.Services
                     TryFlushChat();
                     return;
                 }
-                // kein Chat-Kanal → andere Handler (Alarm etc.) übernehmen
             }
 
             // ### C) JSON "value: '...'" – falls vorhanden, zusätzlich heuristisch chat erkennen
@@ -409,34 +493,52 @@ namespace RustPlusDesk.Services
             if (m.Success)
             {
                 var json = m.Groups["json"].Value;
-                try
-                {
-                    using var doc = JsonDocument.Parse(json);
-                    var root = doc.RootElement;
-
-                    static string? J(JsonElement el, string name)
-                        => el.TryGetProperty(name, out var v) ? v.GetString() : null;
-
-                    var type = GetJsonString(root, "type");   // "alarm" | "entity" | "server" | evtl. "chat"
-                    if (string.Equals(type, "chat", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var author = GetJsonString(root, "name") ?? GetJsonString(root, "username") ?? "Team";
-                        var text = GetJsonString(root, "message") ?? _pendingChatMsg ?? "";
-                        ChatReceived?.Invoke(this,
-                            new TeamChatMessage(DateTime.Now, author, 0, text));
-                        // Chat-Bundle zurücksetzen
-                        _pendingChatMsg = null; _pendingChatTitle = null; _pendingChatTs = null;
-                        return;
-                    }
-                }
-                catch
-                {
-                    // JSON-Fehler hier ignorieren; andere Pfade behandeln die Logs weiter
-                }
+                ProcessBodyJson(json);
             }
 
-            // 1) ALARM: message-Zeilen (kommen manchmal vor/nach dem body)
+            HandleListenOutputRest(s);
+        }
 
+        private void ProcessBodyJson(string json)
+        {
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                var root = doc.RootElement;
+
+                var type = GetJsonString(root, "type");
+                if (string.Equals(type, "chat", StringComparison.OrdinalIgnoreCase))
+                {
+                    var author = GetJsonString(root, "name") ?? GetJsonString(root, "username") ?? "Team";
+                    var text = GetJsonString(root, "message") ?? _pendingChatMsg ?? "";
+                    ChatReceived?.Invoke(this,
+                        new TeamChatMessage(DateTime.Now, author, 0, text));
+                    _pendingChatMsg = null; _pendingChatTitle = null; _pendingChatTs = null;
+                }
+                else if (string.Equals(type, "death", StringComparison.OrdinalIgnoreCase))
+                {
+                    // If FCM body contains a JSON death payload, let's extract the server name from it
+                    var serverName = GetJsonString(root, "name");
+                    _log($"[FCM/debug] Parsed death JSON: server='{serverName}', attacker='{_pendingDeathAttacker}'");
+                    if (!string.IsNullOrEmpty(serverName) && !string.IsNullOrEmpty(_pendingDeathAttacker))
+                    {
+                        _pendingDeathServer = serverName;
+                        TryFlushOfflineDeath();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _log("[FCM/debug] process JSON error: " + ex.Message);
+            }
+        }
+
+        private void HandleListenOutputRest(string s)
+        {
+            var mm = MsgLine.Match(s);
+            var m = BodyJson.Match(s);
+
+            // 1) ALARM: message-Zeilen (kommen manchmal vor/nach dem body)
             if (mm.Success)
             {
                 _pendingAlarmMsg = mm.Groups["msg"].Value;
@@ -458,7 +560,6 @@ namespace RustPlusDesk.Services
             }
 
             // 2) appData-body: JSON in der Zeile "value: '...'" ODER "value: `...`"
-
             if (m.Success)
             {
                 var json = m.Groups["json"].Value;

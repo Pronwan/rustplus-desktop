@@ -686,6 +686,21 @@ namespace RustPlusDesk.Properties {
         public static string StateOn => GetString("StateOn");
         public static string StateOff => GetString("StateOff");
         public static string HotkeyTriggerToggled => GetString("HotkeyTriggerToggled");
+        public static string OfflineDeathTitle => GetString("OfflineDeathTitle");
+        public static string OfflineDeathMessage => GetString("OfflineDeathMessage");
+        public static string StopSound => GetString("StopSound");
+        public static string OfflineDeathNotifications => GetString("OfflineDeathNotifications");
+        public static string EnableOfflineDeathAlerts => GetString("EnableOfflineDeathAlerts");
+        public static string AlertSound => GetString("AlertSound");
+        public static string DefaultSoundLabel => GetString("DefaultSoundLabel");
+        public static string SelectEllipsis => GetString("SelectEllipsis");
+        public static string LoopAlertSound => GetString("LoopAlertSound");
+        public static string SendToDiscordRaidAlerts => GetString("SendToDiscordRaidAlerts");
+        public static string OpenOfflineDeathsLog => GetString("OpenOfflineDeathsLog");
+        public static string OfflineDeathLogTitle => GetString("OfflineDeathLogTitle");
+        public static string ClearLog => GetString("ClearLog");
+        public static string NoOfflineDeathsRecorded => GetString("NoOfflineDeathsRecorded");
+        public static string KilledBy => GetString("KilledBy");
     }
 }
 

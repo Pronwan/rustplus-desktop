@@ -2280,6 +2280,51 @@ Télécharger et installer maintenant ?</value>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: passé en mode {1} (déclenché par {2})</value>
   </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>Mort hors ligne</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>Tu as été tué par {0} sur {1}.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>Arrêter le son</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>Notifications de mort hors ligne</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>Activer les alertes de mort hors ligne</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>Son d'alerte</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>Par défaut : death.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>Sélectionner...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>Répéter le son d'alerte</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Envoyer aux alertes de raid Discord (Supporter)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>Ouvrir le journal des morts hors ligne</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>Journal des morts hors ligne</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>Effacer le journal</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>Aucune mort hors ligne enregistrée.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>Tué par</value>
+  </data>
 </root>
 
 

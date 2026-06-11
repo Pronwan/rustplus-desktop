@@ -113,6 +113,12 @@ namespace RustPlusDesk.Views
             ChkStreamerModeMarkers.IsChecked  = TrackingService.MapAbbreviateNames;
             SliderPlayerIconScaleOverlay.Value = TrackingService.MapPlayerIconScale;
 
+            // Offline Death
+            ChkOfflineDeathAlerts.IsChecked = TrackingService.OfflineDeathAlertsEnabled;
+            TxtOfflineDeathSoundPath.Text = string.IsNullOrEmpty(TrackingService.OfflineDeathSoundPath) ? Properties.Resources.DefaultSoundLabel : System.IO.Path.GetFileName(TrackingService.OfflineDeathSoundPath);
+            ChkOfflineDeathSoundLoop.IsChecked = TrackingService.OfflineDeathSoundLoopEnabled;
+            ChkOfflineDeathDiscord.IsChecked = TrackingService.OfflineDeathDiscordEnabled;
+
 
             // Auth connection state
             bool isDiscord = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated;
@@ -260,6 +266,10 @@ namespace RustPlusDesk.Views
             {
                 TrackingService.CloudSyncEnabled = ChkCloudSync.IsChecked == true;
             }
+
+            TrackingService.OfflineDeathAlertsEnabled = ChkOfflineDeathAlerts.IsChecked == true;
+            TrackingService.OfflineDeathSoundLoopEnabled = ChkOfflineDeathSoundLoop.IsChecked == true;
+            TrackingService.OfflineDeathDiscordEnabled = ChkOfflineDeathDiscord.IsChecked == true;
 
             ParentWindow?.ApplySettings();
             ParentWindow?.UpdateCloudSyncUI();
@@ -811,6 +821,33 @@ namespace RustPlusDesk.Views
                 .ToArray();
 
             return string.Join(",", ids);
+        }
+
+        private void BtnSelectOfflineDeathSound_Click(object sender, RoutedEventArgs e)
+        {
+            var ofd = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Audio Files (*.mp3, *.wav)|*.mp3;*.wav",
+                Title = "Select Custom Death Sound"
+            };
+            if (ofd.ShowDialog() == true)
+            {
+                TrackingService.OfflineDeathSoundPath = ofd.FileName;
+                TxtOfflineDeathSoundPath.Text = System.IO.Path.GetFileName(ofd.FileName);
+            }
+        }
+
+        private void BtnResetOfflineDeathSound_Click(object sender, RoutedEventArgs e)
+        {
+            TrackingService.OfflineDeathSoundPath = string.Empty;
+            TxtOfflineDeathSoundPath.Text = Properties.Resources.DefaultSoundLabel;
+        }
+
+        private void BtnOpenOfflineDeathsLog_Click(object sender, RoutedEventArgs e)
+        {
+            if (ParentWindow == null) return;
+            var win = new Windows.OfflineDeathsHistoryWindow { Owner = ParentWindow };
+            win.ShowDialog();
         }
     }
 }

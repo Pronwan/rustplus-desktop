@@ -579,10 +579,11 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _pairing.Paired += Pairing_Paired;
 
-        // EINMALIG auf AlarmReceived hÃƒÂ¶ren:
+        // EINMALIG auf AlarmReceived hören:
         if (_pairing is PairingListenerRealProcess pr)
         {
             pr.AlarmReceived += (_, a) => Dispatcher.Invoke(() => ShowAlarmPopup(a));
+            pr.OfflineDeathReceived += (_, d) => Dispatcher.Invoke(() => HandleOfflineDeath(d));
         }
 
         // Status Ã¢â€ â€™ UI
@@ -2284,6 +2285,173 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _alarmWin.Show();
         }
         _alarmWin.Add(n);
+    }
+
+    private void HandleOfflineDeath(OfflineDeathNotification d)
+    {
+        if (!TrackingService.OfflineDeathAlertsEnabled) return;
+
+        AppendLog($"[FCM] Offline Death Notification received: You were killed by {d.AttackerName} on {d.ServerName}");
+
+        // Save to local history
+        TrackingService.AddOfflineDeath(d);
+
+        // Play Offline Death sound
+        try
+        {
+            string soundPath = TrackingService.OfflineDeathSoundPath;
+            if (string.IsNullOrWhiteSpace(soundPath) || !System.IO.File.Exists(soundPath))
+            {
+                string baseDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
+                soundPath = System.IO.Path.Combine(baseDir, "Assets", "death.mp3");
+            }
+
+            if (System.IO.File.Exists(soundPath))
+            {
+                var fullPath = System.IO.Path.GetFullPath(soundPath);
+                Dispatcher.Invoke(() =>
+                {
+                    bool useLoopPlayer = TrackingService.OfflineDeathSoundLoopEnabled;
+
+                    if (useLoopPlayer)
+                    {
+                        if (_loopPlayer == null)
+                        {
+                            _loopPlayer = new System.Windows.Media.MediaPlayer();
+                            _loopPlayer.MediaFailed += (s, e) => AppendLog($"[audio] Loop Media Failed: {e.ErrorException?.Message}");
+                            _loopPlayer.MediaEnded += (s, e) => {
+                                if (_isLooping && _loopPlayer != null)
+                                {
+                                    _loopPlayer.Position = TimeSpan.Zero;
+                                    _loopPlayer.Play();
+                                }
+                            };
+                        }
+
+                        _loopPlayer.Stop();
+                        _loopPlayer.Open(new Uri(fullPath, UriKind.Absolute));
+                        _loopPlayer.Volume = 1.0;
+                        _isLooping = true;
+                        _loopPlayer.Play();
+                        AppendLog($"[audio] Looping offline death sound: {fullPath}");
+                    }
+                    else
+                    {
+                        if (_alarmPlayer == null)
+                        {
+                            _alarmPlayer = new System.Windows.Media.MediaPlayer();
+                            _alarmPlayer.MediaFailed += (s, e) => AppendLog($"[audio] Death Sound Media Failed: {e.ErrorException?.Message}");
+                        }
+                        _alarmPlayer.Stop();
+                        _alarmPlayer.Open(new Uri(fullPath, UriKind.Absolute));
+                        _alarmPlayer.Volume = 1.0;
+                        _alarmPlayer.Play();
+                        AppendLog($"[audio] Playing offline death sound: {fullPath}");
+                    }
+                });
+            }
+            else
+            {
+                AppendLog($"[audio] Offline death sound file not found: {soundPath}");
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[audio] Error playing offline death sound: {ex.Message}");
+        }
+
+        // Show Snackbar Alert with Stop Button to stop looping sound
+        Dispatcher.Invoke(() =>
+        {
+            if (RootSnackbar == null) return;
+
+            WpfUi.Snackbar? snackbar = null;
+
+            var stopBtn = new WpfUi.Button
+            {
+                Content = Properties.Resources.StopSound,
+                Appearance = WpfUi.ControlAppearance.Danger,
+                FontSize = 12,
+                Padding = new Thickness(8, 2, 8, 2),
+                Margin = new Thickness(0, 4, 0, 0)
+            };
+            stopBtn.Click += (s, e) =>
+            {
+                StopLoopPlayer();
+                StopAlarmPlayer();
+                if (snackbar != null)
+                {
+                    snackbar.Visibility = Visibility.Collapsed;
+                }
+            };
+
+            var panel = new StackPanel { Orientation = Orientation.Vertical };
+            panel.Children.Add(new TextBlock 
+            { 
+                Text = string.Format(Properties.Resources.OfflineDeathMessage, d.AttackerName, d.ServerName), 
+                TextWrapping = TextWrapping.Wrap 
+            });
+            panel.Children.Add(stopBtn);
+
+            snackbar = new WpfUi.Snackbar(RootSnackbar)
+            {
+                Title = Properties.Resources.OfflineDeathTitle,
+                Content = panel,
+                Appearance = WpfUi.ControlAppearance.Danger,
+                Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Alert24),
+                Timeout = TimeSpan.FromHours(24),
+                MaxWidth = 400,
+                HorizontalAlignment = HorizontalAlignment.Right
+            };
+            
+            // Also stop sound when snackbar hides automatically or is closed
+            snackbar.Closed += (s, e) =>
+            {
+                StopLoopPlayer();
+                StopAlarmPlayer();
+            };
+
+            snackbar.IsVisibleChanged += (s, e) =>
+            {
+                if (snackbar.Visibility != Visibility.Visible || !snackbar.IsVisible)
+                {
+                    StopLoopPlayer();
+                    StopAlarmPlayer();
+                }
+            };
+
+            snackbar.Show();
+        });
+
+        // Send to Discord Bot Raid Alerts if premium user and setting is enabled
+        if (TrackingService.OfflineDeathDiscordEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.IsPremium)
+        {
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    string cleanSrv = CleanServerName(d.ServerName);
+                    var alarmProfile = _vm.Servers.FirstOrDefault(p =>
+                        string.Equals(CleanServerName(p.Name), cleanSrv, StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(p.Host, cleanSrv, StringComparison.OrdinalIgnoreCase));
+                    
+                    var raidServerKey = alarmProfile == null ? "" : $"{alarmProfile.Host}-{alarmProfile.Port}";
+                    var raidOwnerSteamId = !string.IsNullOrWhiteSpace(_vm.SteamId64)
+                        ? _vm.SteamId64
+                        : alarmProfile?.SteamId64 ?? "";
+
+                    await DiscordBotListenerService.Instance.SendRaidNotificationAsync(
+                        raidServerKey,
+                        raidOwnerSteamId,
+                        $"☠️ **Offline Death**: You were killed by **{d.AttackerName}** on **{d.ServerName}**"
+                    );
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[DiscordBotListener] Failed to send offline death raid notification: {ex.Message}");
+                }
+            });
+        }
     }
 
     private void AddAlarmToOverlay(SmartDevice? dev, AlarmNotification n)
