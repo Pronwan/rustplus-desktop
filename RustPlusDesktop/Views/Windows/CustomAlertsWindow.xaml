@@ -1,0 +1,79 @@
+<Window x:Class="RustPlusDesk.Views.Windows.CustomAlertsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="{DynamicResource CustomAlertsTitle}"
+        Width="650" Height="600"
+        WindowStartupLocation="CenterOwner"
+        Background="#0F1215"
+        Foreground="White"
+        FontFamily="Segoe UI">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock Text="{DynamicResource CustomAlertsHeader}" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource Accent}" />
+            <TextBlock Text="{DynamicResource CustomAlertsDesc}" 
+                       Foreground="{DynamicResource TextSubtle}" FontSize="12" TextWrapping="Wrap" Margin="0,4,0,0"/>
+            <Separator Background="{DynamicResource CardBorder}" Margin="0,10,0,0"/>
+        </StackPanel>
+
+        <!-- Scrollable List of Alert Templates -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,0,15">
+            <ItemsControl x:Name="AlertsItemsControl">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="0,12" Margin="0,0,10,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Text Fields and Variable details -->
+                                <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="13" Foreground="White" />
+                                    <TextBlock Text="{Binding Description}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,6" />
+                                    
+                                    <TextBox Text="{Binding CurrentText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                             Background="#1A1D21" Foreground="White" BorderBrush="#333" BorderThickness="1" 
+                                             Padding="8,6" FontSize="12" TextWrapping="Wrap" AcceptsReturn="False"/>
+
+                                    <TextBlock Text="{Binding Variables}" FontSize="11" Foreground="#999" Margin="2,4,0,0" />
+                                </StackPanel>
+
+                                <!-- Actions Row -->
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <!-- Save Button -->
+                                    <ui:Button Click="BtnSave_Click" Appearance="Primary" Padding="8" Margin="0,0,6,0" ToolTip="{DynamicResource Save}">
+                                        <ui:Button.Icon>
+                                            <ui:SymbolIcon Symbol="Save24" />
+                                        </ui:Button.Icon>
+                                    </ui:Button>
+
+                                    <!-- Reset Button -->
+                                    <ui:Button Click="BtnReset_Click" Appearance="Secondary" Padding="8" ToolTip="{DynamicResource Reset}">
+                                        <ui:Button.Icon>
+                                            <ui:SymbolIcon Symbol="ArrowUndo24" />
+                                        </ui:Button.Icon>
+                                    </ui:Button>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Footer Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <ui:Button Content="{DynamicResource Close}" Width="100" Height="32" Click="BtnClose_Click" Appearance="Secondary" />
+        </StackPanel>
+    </Grid>
+</Window>

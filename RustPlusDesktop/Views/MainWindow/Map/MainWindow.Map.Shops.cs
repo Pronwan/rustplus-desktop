@@ -51,7 +51,7 @@ public partial class MainWindow
                     string dir = GetDeepSeaDirection(deepSeaShop.X, deepSeaShop.Y);
                     if (_announceSpawns && TrackingService.AnnounceDeepSea)
                     {
-                        var msg = Properties.Resources.AlertDeepSeaUp;
+                        var msg = AlertTemplateService.GetAlertTemplate("AlertDeepSeaUp");
                         _ = SendTeamChatSafeAsync(msg, false, true);
                         _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event:** {msg}");
                     }
@@ -124,7 +124,7 @@ public partial class MainWindow
             if (cluster != null && cluster.Count > 0)
             {
                 double avgX = cluster.Average(x => x.X);
-                double avgY = cluster.Average(x => x.Y);
+                double avgY = cluster.Average(y => y.Y);
                 CenterMapOnWorldAnimated(avgX, avgY, false, true);
                 ShowShopDetails(cluster, fe);
                 e.Handled = true;
@@ -296,7 +296,7 @@ public partial class MainWindow
                 : "no stock";
 
             string shopName = s.Label ?? Properties.Resources.ShopWord;
-            string msg = string.Format(Properties.Resources.AlertNewShop, shopName, GetGridLabel(s), offersShort);
+            string msg = AlertTemplateService.GetFormattedAlert("AlertNewShop", shopName, GetGridLabel(s), offersShort);
             AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert [new shop] {shopName} [{GetGridLabel(s)}]: {offersShort}");
             await SendTeamChatSafeAsync(msg, false, true);
             _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("shop", $"🛒 **New Shop:** {msg}");
@@ -315,7 +315,7 @@ public partial class MainWindow
             {
                 // Compare against cluster average position
                 double avgX = c.Average(x => x.X);
-                double avgY = c.Average(x => x.Y);
+                double avgY = c.Average(y => y.Y);
                 double dx = avgX - s.X;
                 double dy = avgY - s.Y;
                 if (Math.Sqrt(dx * dx + dy * dy) < CLUSTER_DIST)
@@ -388,7 +388,7 @@ public partial class MainWindow
                                 : "nothing in stock";
 
                             string snapShopName = snap.Label ?? Properties.Resources.ShopWord;
-                            string msg = string.Format(Properties.Resources.AlertSuspiciousShop, snapShopName, GetGridLabel(snap), Math.Round(lived.TotalSeconds), firstFew);
+                            string msg = AlertTemplateService.GetFormattedAlert("AlertSuspiciousShop", snapShopName, GetGridLabel(snap), Math.Round(lived.TotalSeconds), firstFew);
 
                             life.AnnouncedSuspicious = true; // Set BEFORE sending to prevent race condition spam
                             _ = SendTeamChatSafeAsync(msg, false, true);
