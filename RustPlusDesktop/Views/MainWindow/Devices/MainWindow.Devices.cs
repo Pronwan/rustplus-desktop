@@ -1678,6 +1678,7 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
                     Owner = this
                 };
                 
+                _activeDialog = dlg;
                 ApplyWindowBlur();
                 if (Root != null)
                 {
@@ -1686,6 +1687,10 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
 
                 dlg.Closed += (s, ev) =>
                 {
+                    if (ReferenceEquals(_activeDialog, dlg))
+                    {
+                        _activeDialog = null;
+                    }
                     RemoveWindowBlur();
                     if (Root != null)
                     {
@@ -1727,6 +1732,7 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
                 };
 
                 dlg.Show();
+                CenterActiveDialog();
             }
         }
         catch (Exception ex)

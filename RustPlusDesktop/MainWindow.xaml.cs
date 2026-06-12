@@ -378,6 +378,8 @@ public partial class MainWindow : WpfUi.FluentWindow
         
         if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
         this.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
+        this.LocationChanged += MainWindow_LocationChangedOrResized;
+        this.SizeChanged += MainWindow_LocationChangedOrResized;
         if (FindName("TxtAppVersion") is TextBlock txt)
             txt.Text = $"v{_updateService.VersionRaw}";
         InitCameraUi();
@@ -3860,6 +3862,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         var win = new Views.Windows.CustomAlertsWindow();
         win.Owner = this;
+        _activeDialog = win;
         ApplyWindowBlur();
         if (Root != null)
         {
@@ -3868,6 +3871,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         win.Closed += (s, ev) =>
         {
+            if (ReferenceEquals(_activeDialog, win))
+            {
+                _activeDialog = null;
+            }
             RemoveWindowBlur();
             if (Root != null)
             {
@@ -3876,6 +3883,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         };
 
         win.Show();
+        CenterActiveDialog();
     }
 
     private void SetAllAlerts(bool val)
@@ -6231,6 +6239,30 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _vm.NotifyFcmChanged();
         
         AppendLog("[SYSTEM] Application data reloaded successfully after restore.");
+    }
+
+    private Window? _activeDialog;
+
+    public void CenterActiveDialog()
+    {
+        if (_activeDialog != null && _activeDialog.IsVisible)
+        {
+            double ownerLeft = this.Left;
+            double ownerTop = this.Top;
+            double ownerWidth = this.ActualWidth;
+            double ownerHeight = this.ActualHeight;
+
+            double dialogWidth = _activeDialog.Width;
+            double dialogHeight = _activeDialog.Height;
+
+            _activeDialog.Left = ownerLeft + (ownerWidth - dialogWidth) / 2;
+            _activeDialog.Top = ownerTop + (ownerHeight - dialogHeight) / 2;
+        }
+    }
+
+    private void MainWindow_LocationChangedOrResized(object? sender, EventArgs e)
+    {
+        CenterActiveDialog();
     }
 }
 
