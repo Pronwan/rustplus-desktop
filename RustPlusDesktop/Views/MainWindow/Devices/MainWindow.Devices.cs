@@ -1678,10 +1678,21 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
                     Owner = this
                 };
                 
-                try
+                ApplyWindowBlur();
+                if (Root != null)
                 {
-                    ApplyWindowBlur();
-                    if (dlg.ShowDialog() == true)
+                    Root.IsHitTestVisible = false;
+                }
+
+                dlg.Closed += (s, ev) =>
+                {
+                    RemoveWindowBlur();
+                    if (Root != null)
+                    {
+                        Root.IsHitTestVisible = true;
+                    }
+
+                    if (dlg.IsSaved)
                     {
                         if (dlg.IsResetClicked)
                         {
@@ -1713,11 +1724,9 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
                             }
                         }
                     }
-                }
-                finally
-                {
-                    RemoveWindowBlur();
-                }
+                };
+
+                dlg.Show();
             }
         }
         catch (Exception ex)

@@ -11,6 +11,7 @@ namespace RustPlusDesk.Views.Windows
         public int? SelectedIconId { get; private set; }
         public string? SelectedIconShortName { get; private set; }
         public bool IsResetClicked { get; private set; }
+        public bool IsSaved { get; private set; }
 
         public ChangeDeviceIconDialog(int? currentIconId, string? currentIconShortName)
         {
@@ -18,6 +19,7 @@ namespace RustPlusDesk.Views.Windows
             SelectedIconId = currentIconId;
             SelectedIconShortName = currentIconShortName;
             IsResetClicked = false;
+            IsSaved = false;
             
             Loaded += (s, e) =>
             {
@@ -69,7 +71,6 @@ namespace RustPlusDesk.Views.Windows
                 else if (e.Key == Key.Escape)
                 {
                     e.Handled = true;
-                    DialogResult = false;
                     Close();
                 }
             }
@@ -97,7 +98,7 @@ namespace RustPlusDesk.Views.Windows
             SelectedIconId = null;
             SelectedIconShortName = null;
             IsResetClicked = true;
-            DialogResult = true;
+            IsSaved = true;
             Close();
         }
 
@@ -108,7 +109,6 @@ namespace RustPlusDesk.Views.Windows
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false;
             Close();
         }
 
@@ -119,7 +119,7 @@ namespace RustPlusDesk.Views.Windows
                 SelectedIconId = selected.Id;
                 SelectedIconShortName = selected.ShortName;
             }
-            DialogResult = true;
+            IsSaved = true;
             Close();
         }
     }
