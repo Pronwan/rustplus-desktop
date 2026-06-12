@@ -2190,13 +2190,14 @@ private bool _overlayToolsVisible = false;
             bi.EndInit();
             bi.Freeze();
 
+            bool isBase = icon.IconPath.Contains("base1.png") || icon.IconPath.Contains("base2.png");
             var img = new Image
             {
                 Source = bi,
                 Width = icon.Width,
                 Height = icon.Height,
                 RenderTransformOrigin = new Point(0.5, 0.5),
-                IsHitTestVisible = editableIfMine, // meine Icons kann ich anfassen
+                IsHitTestVisible = editableIfMine || isBase, // base icons are always interactive so users can hover/click to see screenshots
                 Opacity = editableIfMine ? 1.0 : 0.8,
                 Tag = new OverlayTag
                 {
