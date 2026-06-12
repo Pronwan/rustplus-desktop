@@ -51,6 +51,36 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# ⚙️ **RUST+ DESKTOP UPDATE — VERSION v6.3.0** ⚙️
+
+A new update is here! This release brings long-awaited live camera & turret controls directly to your desktop, modernizes smart device management, and ensures maximum layout flexibility for all screen resolutions.
+
+🎮 **NEW FEATURES & IMPROVEMENTS**
+
+🔧 **Remote Camera & Turret Controls (Live Steering)**
+* **Interactive Control:** Full remote control integration for Auto-Turrets and PTZ cameras directly within the desktop app.
+* **Mouse Steering:** Smoothly pan and tilt cameras by dragging directly on the live image (sensitivity has been fine-tuned for precise adjustments).
+* **Continuous Button Inputs:** Press and hold D-pad buttons for continuous steering or action execution (fire, reload, jump, duck).
+* **New Borderless Window:** The camera view now opens in a sleek WPF borderless frame (fully draggable and dynamically resizable while preserving the image aspect ratio).
+* **Interactive Tiles:** Simply click directly on the camera thumbnail in your dashboard to pop out the live stream window.
+
+🎨 **Custom Smart Device Icons**
+* You can now assign custom icons to your smart devices in the Device List for a cleaner overview and quicker identification at a glance.
+
+📐 **Flexible Window Layout & Resolution Support (Stretched Res)**
+* Drastically reduced minimum width constraints (Minimum window width: 1000px, Map side minimum width: 400px).
+* This allows players using lower resolutions or stretched aspect ratios (like 4:3) to comfortably scale and fit the application on their displays.
+
+📱 **Premium WPF Device List Layout**
+* Overhauled the smart device dashboard with a modernized WPF-styled list design, providing a cleaner grid view and faster switch control access.
+
+💤 **AFK Status & Command-Delay**
+* Easily identify inactive players! Added AFK status indicators to player cards.
+* Custom settings overlays for Team Chat styles alongside customizable command execution delays to prevent spam rate-limits.
+
+🛡️ **Hardened Discord Polling Connection**
+* Resolved a database keep-alive issue. Optimizations to the polling database connection now prevent the Discord bot integration from disconnecting after two hours of inactivity.
+
 # **🚀 RustPlusDesktop — Patch v6.1.1 (Hotfix & Optimization)**
 
 - **Hardened Auto-Reconnect Stability:** Fixed a state synchronization issue where the app remained marked as "connected" during server restarts or crashes. The app now seamlessly and reliably auto-reconnects after server reboots.
