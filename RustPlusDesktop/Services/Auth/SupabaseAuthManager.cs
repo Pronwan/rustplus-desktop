@@ -154,6 +154,7 @@ namespace RustPlusDesk.Services.Auth
                 await Client.InitializeAsync();
                 
                 StartKeepAliveTimer();
+                StartProfileUpdateTimer();
 
                 // Explicitly restore the persisted Discord session.
                 // Client.InitializeAsync() loads the session via SessionHandler but may not
@@ -266,6 +267,50 @@ namespace RustPlusDesk.Services.Auth
                     try { await EnsureFreshSessionAsync(); } catch { }
                 }
             }, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
+        }
+
+        private static System.Threading.Timer? _profileUpdateTimer;
+        private static int _profileUpdateBusy = 0;
+
+        public static void StartProfileUpdateTimer()
+        {
+            _profileUpdateTimer ??= new System.Threading.Timer(async _ =>
+            {
+                if (System.Threading.Interlocked.Exchange(ref _profileUpdateBusy, 1) == 1) return;
+                try
+                {
+                    if (IsAuthenticated)
+                    {
+                        string steamId = TrackingService.SteamId64;
+                        if (!string.IsNullOrEmpty(steamId) && steamId != "0")
+                        {
+                            string? discordId = null;
+                            if (Client?.Auth?.CurrentUser?.UserMetadata != null)
+                            {
+                                if (Client.Auth.CurrentUser.UserMetadata.TryGetValue("provider_id", out var pidObj) && pidObj != null)
+                                {
+                                    discordId = pidObj.ToString();
+                                }
+                            }
+                            if (string.IsNullOrEmpty(discordId))
+                            {
+                                discordId = Client?.Auth?.CurrentUser?.Identities != null && Client.Auth.CurrentUser.Identities.Count > 0
+                                    ? Client.Auth.CurrentUser.Identities[0].Id
+                                    : Client?.Auth?.CurrentUser?.Id;
+                            }
+                            await TouchProfileAsync(steamId, discordId);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[Cloud/Debug] Auto profile touch failed: {ex.Message}");
+                }
+                finally
+                {
+                    System.Threading.Interlocked.Exchange(ref _profileUpdateBusy, 0);
+                }
+            }, null, TimeSpan.FromSeconds(290), TimeSpan.FromSeconds(290));
         }
 
         public static async Task<bool> EnsureFreshSessionAsync()

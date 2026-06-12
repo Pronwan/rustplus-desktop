@@ -390,10 +390,11 @@ public partial class MainWindow
             var serverKey = GetServerKey();
             var serverName = _vm.Selected?.Name;
             var cloudPresenceSignature = BuildCloudPresenceSignature(serverKey, serverName, cloudTeamMembers);
-            if (cloudPresenceSignature != _lastCloudPresenceSignature)
+            var timeSinceLast = DateTime.UtcNow - _lastPresenceUploadTime;
+            bool forcePeriodicUpload = timeSinceLast.TotalSeconds >= 290;
+            if (cloudPresenceSignature != _lastCloudPresenceSignature || forcePeriodicUpload)
             {
-                var timeSinceLast = DateTime.UtcNow - _lastPresenceUploadTime;
-                if (_hasCriticalPresenceChange || timeSinceLast.TotalSeconds >= 15)
+                if (_hasCriticalPresenceChange || forcePeriodicUpload || timeSinceLast.TotalSeconds >= 15)
                 {
                     _lastCloudPresenceSignature = cloudPresenceSignature;
                     _lastPresenceUploadTime = DateTime.UtcNow;
