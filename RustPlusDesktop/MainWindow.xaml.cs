@@ -3860,7 +3860,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         var win = new Views.Windows.CustomAlertsWindow();
         win.Owner = this;
-        win.ShowDialog();
+        try
+        {
+            ApplyWindowBlur();
+            win.ShowDialog();
+        }
+        finally
+        {
+            RemoveWindowBlur();
+        }
     }
 
     private void SetAllAlerts(bool val)

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views.Windows
@@ -17,6 +18,14 @@ namespace RustPlusDesk.Views.Windows
             InitializeComponent();
             LoadAlerts();
             AlertsItemsControl.ItemsSource = Alerts;
+        }
+
+        private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                DragMove();
+            }
         }
 
         private void LoadAlerts()
