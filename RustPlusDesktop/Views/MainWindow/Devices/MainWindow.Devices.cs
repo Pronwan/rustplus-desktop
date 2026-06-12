@@ -1729,17 +1729,20 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
     private void ApplyWindowBlur()
     {
         var blur = new System.Windows.Media.Effects.BlurEffect { Radius = 0 };
-        this.Effect = blur;
-        var anim = new System.Windows.Media.Animation.DoubleAnimation(0, 10, TimeSpan.FromMilliseconds(200))
+        if (Root != null)
         {
-            EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut }
-        };
-        blur.BeginAnimation(System.Windows.Media.Effects.BlurEffect.RadiusProperty, anim);
+            Root.Effect = blur;
+            var anim = new System.Windows.Media.Animation.DoubleAnimation(0, 10, TimeSpan.FromMilliseconds(200))
+            {
+                EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut }
+            };
+            blur.BeginAnimation(System.Windows.Media.Effects.BlurEffect.RadiusProperty, anim);
+        }
     }
 
     private void RemoveWindowBlur()
     {
-        if (this.Effect is System.Windows.Media.Effects.BlurEffect blur)
+        if (Root != null && Root.Effect is System.Windows.Media.Effects.BlurEffect blur)
         {
             var anim = new System.Windows.Media.Animation.DoubleAnimation(0, TimeSpan.FromMilliseconds(150))
             {
@@ -1747,9 +1750,9 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
             };
             anim.Completed += (s, e) =>
             {
-                if (ReferenceEquals(this.Effect, blur))
+                if (ReferenceEquals(Root.Effect, blur))
                 {
-                    this.Effect = null;
+                    Root.Effect = null;
                 }
             };
             blur.BeginAnimation(System.Windows.Media.Effects.BlurEffect.RadiusProperty, anim);
