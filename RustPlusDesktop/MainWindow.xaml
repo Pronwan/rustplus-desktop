@@ -2000,6 +2000,18 @@
                                                                 Fill="Gold"
                                                                 Stroke="Black"
                                                                 Visibility="{Binding IsLeader, Converter={StaticResource Vis}}" />
+                                                            <TextBlock
+                                                                Text="💤"
+                                                                FontSize="16"
+                                                                HorizontalAlignment="Right"
+                                                                VerticalAlignment="Top"
+                                                                Margin="0,-8,-8,0"
+                                                                RenderTransformOrigin="0.5,0.5"
+                                                                Visibility="{Binding IsAfk, Converter={StaticResource Vis}}">
+                                                                <TextBlock.RenderTransform>
+                                                                    <RotateTransform Angle="15" />
+                                                                </TextBlock.RenderTransform>
+                                                            </TextBlock>
                                                         </Grid>
 
                                                         <!--  Textseite  -->
@@ -2032,6 +2044,12 @@
                                                                 Foreground="White"
                                                                 Opacity="0.65"
                                                                 Text="{Binding DisplaySteamId}" />
+                                                            <TextBlock
+                                                                FontSize="10"
+                                                                Foreground="#FF8C00"
+                                                                FontWeight="SemiBold"
+                                                                Text="{Binding AfkText}"
+                                                                Visibility="{Binding IsAfk, Converter={StaticResource Vis}}" />
                                                         </StackPanel>
                                                     </Grid>
                                                 </Border>
@@ -2781,34 +2799,47 @@
                                                                              <StackPanel Orientation="Vertical">
                                                                                  <!-- Top Row: Quick Actions -->
                                                                                  <Grid Margin="4,2,4,8">
-                                                                                     <Grid.ColumnDefinitions>
-                                                                                         <ColumnDefinition Width="*" />
-                                                                                         <ColumnDefinition Width="12" />
-                                                                                         <ColumnDefinition Width="*" />
-                                                                                     </Grid.ColumnDefinitions>
-                                                                                     
-                                                                                     <ui:Button
-                                                                                         Grid.Column="0"
-                                                                                         Content="{DynamicResource SelectAll}"
-                                                                                         Click="SelectAllAlerts_Click"
-                                                                                         Appearance="Secondary"
-                                                                                         HorizontalAlignment="Stretch">
-                                                                                         <ui:Button.Icon>
-                                                                                             <ui:SymbolIcon Symbol="CheckmarkSquare24" />
-                                                                                         </ui:Button.Icon>
-                                                                                     </ui:Button>
-                                                                                     
-                                                                                     <ui:Button
-                                                                                         Grid.Column="2"
-                                                                                         Content="{DynamicResource DeselectAll}"
-                                                                                         Click="DeselectAllAlerts_Click"
-                                                                                         Appearance="Secondary"
-                                                                                         HorizontalAlignment="Stretch">
-                                                                                         <ui:Button.Icon>
-                                                                                             <ui:SymbolIcon Symbol="DismissSquare24" />
-                                                                                         </ui:Button.Icon>
-                                                                                     </ui:Button>
-                                                                                 </Grid>
+                                                                                      <Grid.ColumnDefinitions>
+                                                                                          <ColumnDefinition Width="*" />
+                                                                                          <ColumnDefinition Width="6" />
+                                                                                          <ColumnDefinition Width="*" />
+                                                                                          <ColumnDefinition Width="6" />
+                                                                                          <ColumnDefinition Width="Auto" />
+                                                                                      </Grid.ColumnDefinitions>
+                                                                                      
+                                                                                      <ui:Button
+                                                                                          Grid.Column="0"
+                                                                                          Content="{DynamicResource SelectAll}"
+                                                                                          Click="SelectAllAlerts_Click"
+                                                                                          Appearance="Secondary"
+                                                                                          HorizontalAlignment="Stretch">
+                                                                                          <ui:Button.Icon>
+                                                                                              <ui:SymbolIcon Symbol="CheckmarkSquare24" />
+                                                                                          </ui:Button.Icon>
+                                                                                      </ui:Button>
+                                                                                      
+                                                                                      <ui:Button
+                                                                                          Grid.Column="2"
+                                                                                          Content="{DynamicResource DeselectAll}"
+                                                                                          Click="DeselectAllAlerts_Click"
+                                                                                          Appearance="Secondary"
+                                                                                          HorizontalAlignment="Stretch">
+                                                                                          <ui:Button.Icon>
+                                                                                              <ui:SymbolIcon Symbol="DismissSquare24" />
+                                                                                          </ui:Button.Icon>
+                                                                                      </ui:Button>
+
+                                                                                      <ui:Button
+                                                                                          Grid.Column="4"
+                                                                                          Click="EditAlertTemplates_Click"
+                                                                                          Appearance="Secondary"
+                                                                                          Padding="8,6"
+                                                                                          ToolTip="{DynamicResource CustomizeChatAlertsToolTip}">
+                                                                                          <ui:Button.Icon>
+                                                                                              <ui:SymbolIcon Symbol="Edit24" />
+                                                                                          </ui:Button.Icon>
+                                                                                      </ui:Button>
+                                                                                  </Grid>
                                                                                  
                                                                                  <!-- Horizontal Separator -->
                                                                                  <Border BorderBrush="#15FFFFFF" BorderThickness="0,0,0,1" Margin="0,0,0,10" />

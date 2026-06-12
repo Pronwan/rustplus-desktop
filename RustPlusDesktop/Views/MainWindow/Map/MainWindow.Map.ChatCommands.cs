@@ -40,9 +40,18 @@ public partial class MainWindow
     private DateTime _lastChatCommandTime = DateTime.MinValue;
     private const int ChatCommandCooldownSeconds = 2; // 2s cooldown for system stability
 
-    private Task SendChatCommandResponseAsync(string text)
+    private async Task SendChatCommandResponseAsync(string text)
     {
-        return SendTeamChatSafeAsync(text, bypassChatAlertMasterBlock: true);
+        var profile = _vm.Selected;
+        if (profile != null)
+        {
+            int delayMs = (int)(profile.ChatResponseDelaySeconds * 1000);
+            if (delayMs > 0)
+            {
+                await Task.Delay(delayMs);
+            }
+        }
+        await SendTeamChatSafeAsync(text, bypassChatAlertMasterBlock: true);
     }
 
     private async Task ProcessChatCommands(TeamChatMessage m)
@@ -88,6 +97,7 @@ public partial class MainWindow
             if (!string.IsNullOrWhiteSpace(profile.CmdHeli)) standardCmds.Add(prefix + profile.CmdHeli);
             if (!string.IsNullOrWhiteSpace(profile.CmdVendor)) standardCmds.Add(prefix + profile.CmdVendor);
             if (!string.IsNullOrWhiteSpace(profile.CmdUpkeepDetail)) standardCmds.Add(prefix + profile.CmdUpkeepDetail);
+            if (!string.IsNullOrWhiteSpace(profile.CmdAfk)) standardCmds.Add(prefix + profile.CmdAfk);
 
             string standardMsg = string.Format(Properties.Resources.ChatCmdListHeader, string.Join(", ", standardCmds));
             if (standardMsg.Length > 128) standardMsg = standardMsg.Substring(0, 125) + "...";
@@ -146,6 +156,32 @@ public partial class MainWindow
             }
             _ = SendChatCommandResponseAsync(msg.Trim());
             AppendLog($"[ChatCommand] Time executed by {m.Author}");
+            return;
+        }
+
+        // Command: AFK
+        if (!string.IsNullOrWhiteSpace(profile.CmdAfk) && cmd == profile.CmdAfk.ToLowerInvariant())
+        {
+            var afkMembers = TeamMembers.Where(t => t.IsAfk).ToList();
+            if (afkMembers.Count == 0)
+            {
+                var noOneAfkMsg = Properties.Resources.ResourceManager.GetString("ChatCmdNoOneAfk") ?? "No one is AFK.";
+                _ = SendChatCommandResponseAsync(noOneAfkMsg);
+            }
+            else
+            {
+                var now = DateTime.UtcNow;
+                var parts = afkMembers.Select(t => 
+                {
+                    var elapsed = now - t.LastMoveTime;
+                    int totalSecs = (int)elapsed.TotalSeconds;
+                    int mins = totalSecs / 60;
+                    int secs = totalSecs % 60;
+                    return $"{t.Name} - {mins}:{secs:D2}";
+                }).ToList();
+                _ = SendChatCommandResponseAsync("AFK: " + string.Join(" | ", parts));
+            }
+            AppendLog($"[ChatCommand] AFK executed by {m.Author}");
             return;
         }
 
@@ -540,7 +576,8 @@ public partial class MainWindow
                     {
                         if (!first)
                         {
-                            await Task.Delay(profile.ChatCommandDelaySeconds * 1000);
+                            int delayMs = (int)(Math.Max(2.0, profile.ChatResponseDelaySeconds) * 1000);
+                            await Task.Delay(delayMs);
                         }
                         first = false;
 

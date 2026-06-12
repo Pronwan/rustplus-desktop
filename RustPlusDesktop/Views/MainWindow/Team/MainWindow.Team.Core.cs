@@ -18,6 +18,7 @@ namespace RustPlusDesk.Views;
 public partial class MainWindow
 {
     private System.Windows.Threading.DispatcherTimer? _teamTimer;
+    private System.Windows.Threading.DispatcherTimer? _afkTimer;
     public ObservableCollection<TeamMemberVM> TeamMembers { get; } = new();
 
     private readonly Dictionary<ulong, ImageSource> _avatarCache = new();
@@ -116,6 +117,78 @@ public partial class MainWindow
         public double? X { get; set; }
         public double? Y { get; set; }
 
+        private DateTime _lastMoveTime = DateTime.UtcNow;
+        public DateTime LastMoveTime => _lastMoveTime;
+
+        private bool _isAfk;
+        public bool IsAfk
+        {
+            get => _isAfk;
+            set { if (_isAfk == value) return; _isAfk = value; OnChanged(nameof(IsAfk)); }
+        }
+
+        private string _afkText = string.Empty;
+        public string AfkText
+        {
+            get => _afkText;
+            set { if (_afkText == value) return; _afkText = value; OnChanged(nameof(AfkText)); }
+        }
+
+        public void SetPosition(double? x, double? y)
+        {
+            if (x == null || y == null)
+            {
+                X = x;
+                Y = y;
+                return;
+            }
+            if (X != null && Y != null)
+            {
+                double dx = X.Value - x.Value;
+                double dy = Y.Value - y.Value;
+                double dist = Math.Sqrt(dx * dx + dy * dy);
+                if (dist > 0.05)
+                {
+                    _lastMoveTime = DateTime.UtcNow;
+                }
+            }
+            else
+            {
+                _lastMoveTime = DateTime.UtcNow;
+            }
+            X = x;
+            Y = y;
+        }
+
+        public bool UpdateAfkState(DateTime now)
+        {
+            if (!IsOnline || IsDead)
+            {
+                _lastMoveTime = now;
+                IsAfk = false;
+                AfkText = string.Empty;
+                return false;
+            }
+
+            var elapsed = now - _lastMoveTime;
+            if (elapsed.TotalMinutes >= 5)
+            {
+                bool becameAfk = !_isAfk;
+                IsAfk = true;
+                int totalSecs = (int)elapsed.TotalSeconds;
+                int mins = totalSecs / 60;
+                int secs = totalSecs % 60;
+                AfkText = $"AFK: {mins}:{secs:D2}";
+                return becameAfk;
+            }
+            else
+            {
+                IsAfk = false;
+                AfkText = string.Empty;
+                return false;
+            }
+        }
+
         private ImageSource? _avatar;
         public ImageSource? Avatar
         {
@@ -144,6 +217,13 @@ public partial class MainWindow
         _teamTimer.Tick += TeamTimer_Tick;
         // Stagger start by 3s to avoid timer burst at connect time
         _ = Task.Delay(TimeSpan.FromSeconds(3)).ContinueWith(_ => Dispatcher.Invoke(() => _teamTimer?.Start()));
+
+        _afkTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(1)
+        };
+        _afkTimer.Tick += AfkTimer_Tick;
+        _afkTimer.Start();
     }
 
     private void StopTeamPolling()
@@ -151,12 +231,32 @@ public partial class MainWindow
         NotifyTeamFeatureServerDisconnected();
 
         var t = _teamTimer;
-        if (t == null) return;
-        t.Tick -= TeamTimer_Tick;
-        t.Stop();
-        _teamTimer = null;
+        if (t != null)
+        {
+            t.Tick -= TeamTimer_Tick;
+            t.Stop();
+            _teamTimer = null;
+        }
+
+        var at = _afkTimer;
+        if (at != null)
+        {
+            at.Tick -= AfkTimer_Tick;
+            at.Stop();
+            _afkTimer = null;
+        }
+
         _lastCloudPresenceSignature = null;
         ResetTeamFeatureMasterSyncState();
+    }
+
+    private void AfkTimer_Tick(object? sender, EventArgs e)
+    {
+        var now = DateTime.UtcNow;
+        foreach (var m in TeamMembers)
+        {
+            m.UpdateAfkState(now);
+        }
     }
 
     private int _teamPollBusy = 0;
@@ -254,8 +354,7 @@ public partial class MainWindow
                 vm.IsLeader = leaderId != 0 && sid == leaderId;
                 vm.IsOnline = m.Online;
                 vm.IsDead = m.Dead;
-                vm.X = m.X;
-                vm.Y = m.Y;
+                vm.SetPosition(m.X, m.Y);
 
                 var now = (m.Online, m.Dead);
                 _lastPresence[sid] = now;
@@ -359,7 +458,7 @@ public partial class MainWindow
                 {
                     var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : Properties.Resources.Unknown;
                     var dispName = GetDisplayPlayerName(vm.Name);
-                    var txt = now.online ? string.Format(Properties.Resources.AlertPlayerOnlineWithPos, dispName, where) : string.Format(Properties.Resources.AlertPlayerOffline, dispName);
+                    var txt = now.online ? AlertTemplateService.GetFormattedAlert("AlertPlayerOnlineWithPos", dispName, where) : AlertTemplateService.GetFormattedAlert("AlertPlayerOffline", dispName);
                     await SendTeamChatSafeAsync(txt);
                 }
             }
@@ -388,7 +487,7 @@ public partial class MainWindow
                     {
                         var where = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : Properties.Resources.Unknown;
                         var dispName = GetDisplayPlayerName(vm.Name);
-                        var txt = now.dead ? string.Format(Properties.Resources.AlertPlayerDied, dispName, where) : string.Format(Properties.Resources.AlertPlayerRespawned, dispName, where);
+                        var txt = now.dead ? AlertTemplateService.GetFormattedAlert("AlertPlayerDied", dispName, where) : AlertTemplateService.GetFormattedAlert("AlertPlayerRespawned", dispName, where);
                         await SendTeamChatSafeAsync(txt);
                     }
                 }
