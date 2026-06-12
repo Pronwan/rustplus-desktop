@@ -98,28 +98,28 @@ namespace RustPlusDesk.Views
             // Hook button press-and-hold events for continuous steering/actions
             BtnCamUp.PreviewMouseDown += (_, __) => {
                 if (_movementSupported) StartContinuousInput(CameraButtons.Forward, 0f, 0f);
-                else if (_mouseLookSupported) StartContinuousInput(CameraButtons.None, 0f, -15f);
+                else if (_mouseLookSupported) StartContinuousInput(CameraButtons.None, 0f, -5f);
             };
             BtnCamUp.PreviewMouseUp += (_, __) => StopContinuousInput();
             BtnCamUp.MouseLeave += (_, __) => StopContinuousInput();
 
             BtnCamDown.PreviewMouseDown += (_, __) => {
                 if (_movementSupported) StartContinuousInput(CameraButtons.Backward, 0f, 0f);
-                else if (_mouseLookSupported) StartContinuousInput(CameraButtons.None, 0f, 15f);
+                else if (_mouseLookSupported) StartContinuousInput(CameraButtons.None, 0f, 5f);
             };
             BtnCamDown.PreviewMouseUp += (_, __) => StopContinuousInput();
             BtnCamDown.MouseLeave += (_, __) => StopContinuousInput();
 
             BtnCamLeft.PreviewMouseDown += (_, __) => {
                 if (_movementSupported) StartContinuousInput(CameraButtons.Left, 0f, 0f);
-                else if (_mouseLookSupported) StartContinuousInput(CameraButtons.None, -15f, 0f);
+                else if (_mouseLookSupported) StartContinuousInput(CameraButtons.None, -5f, 0f);
             };
             BtnCamLeft.PreviewMouseUp += (_, __) => StopContinuousInput();
             BtnCamLeft.MouseLeave += (_, __) => StopContinuousInput();
 
             BtnCamRight.PreviewMouseDown += (_, __) => {
                 if (_movementSupported) StartContinuousInput(CameraButtons.Right, 0f, 0f);
-                else if (_mouseLookSupported) StartContinuousInput(CameraButtons.None, 15f, 0f);
+                else if (_mouseLookSupported) StartContinuousInput(CameraButtons.None, 5f, 0f);
             };
             BtnCamRight.PreviewMouseUp += (_, __) => StopContinuousInput();
             BtnCamRight.MouseLeave += (_, __) => StopContinuousInput();
@@ -476,8 +476,8 @@ namespace RustPlusDesk.Views
                 
                 if (Math.Abs(dx) > 0.5 || Math.Abs(dy) > 0.5)
                 {
-                    float rx = (float)dx * 2.0f;
-                    float ry = (float)-dy * 2.0f;
+                    float rx = (float)dx * 0.5f;
+                    float ry = (float)-dy * 0.5f;
                     
                     await SendCameraInputAsync(CameraButtons.None, rx, ry);
                     _lastMousePos = currentPos;
