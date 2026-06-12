@@ -19,12 +19,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>6.2.1</Version>
+		<Version>6.3.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>6.2.1</AssemblyVersion>
-		<FileVersion>6.2.1</FileVersion>
-		<InformationalVersion>6.2.1</InformationalVersion>
+		<AssemblyVersion>6.3.0</AssemblyVersion>
+		<FileVersion>6.3.0</FileVersion>
+		<InformationalVersion>6.3.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -158,9 +158,17 @@
 	  <None Remove="Assets\Images\5.5.0\discord-no-permission.png" />
 	  <None Remove="Assets\Images\5.5.0\New-Custom-Death-Markers.png" />
 	  <None Remove="Assets\Images\5.5.0\r+desktop-icon-bot.png" />
+	  <None Remove="Assets\Images\6.0 Cloud Patch\afk.png" />
+	  <None Remove="Assets\Images\6.0 Cloud Patch\camera_move.png" />
+	  <None Remove="Assets\Images\6.0 Cloud Patch\Chat-Command-Customization.png" />
+	  <None Remove="Assets\Images\6.0 Cloud Patch\Chat-Command-Delay.png" />
 	  <None Remove="Assets\Images\6.0 Cloud Patch\death-notifications.png" />
 	  <None Remove="Assets\Images\6.0 Cloud Patch\death-snackbar.png" />
+	  <None Remove="Assets\Images\6.0 Cloud Patch\devices-icons.png" />
 	  <None Remove="Assets\Images\6.0 Cloud Patch\MapFetchDiscord.png" />
+	  <None Remove="Assets\Images\6.0 Cloud Patch\Thumbnail_RustPlus6_V6.jpg" />
+	  <None Remove="Assets\Images\6.0 Cloud Patch\window-size.png" />
+	  <None Remove="Assets\Images\6.0 Cloud Patch\WPF_devicelist.png" />
 	  <None Remove="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
 	  <None Remove="Assets\rustplus-desktop-icon.ico" />
 	  <None Remove="Assets\Data\rust_items.json" />
@@ -359,7 +367,15 @@
     <Resource Include="Assets\Images\5.5.0\discord-no-permission.png" />
     <Resource Include="Assets\Images\5.5.0\New-Custom-Death-Markers.png" />
     <Resource Include="Assets\Images\5.5.0\r+desktop-icon-bot.png" />
+    <Resource Include="Assets\Images\6.0 Cloud Patch\afk.png" />
+    <Resource Include="Assets\Images\6.0 Cloud Patch\camera_move.png" />
+    <Resource Include="Assets\Images\6.0 Cloud Patch\Chat-Command-Customization.png" />
+    <Resource Include="Assets\Images\6.0 Cloud Patch\Chat-Command-Delay.png" />
+    <Resource Include="Assets\Images\6.0 Cloud Patch\devices-icons.png" />
     <Resource Include="Assets\Images\6.0 Cloud Patch\MapFetchDiscord.png" />
+    <Resource Include="Assets\Images\6.0 Cloud Patch\Thumbnail_RustPlus6_V6.jpg" />
+    <Resource Include="Assets\Images\6.0 Cloud Patch\window-size.png" />
+    <Resource Include="Assets\Images\6.0 Cloud Patch\WPF_devicelist.png" />
     <Resource Include="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
     <Resource Include="Assets\rustplus-desktop-icon.ico" />
     <Resource Include="Assets\Screenshots\3.0_1.png" />

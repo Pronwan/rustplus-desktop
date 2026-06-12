@@ -216,6 +216,13 @@ public class ServerProfile : INotifyPropertyChanged
         set { _cmdCargo = ValidateCommand(value, "cargo"); OnProp(); }
     }
 
+    private string _cmdAfk = "afk";
+    public string CmdAfk
+    {
+        get => _cmdAfk;
+        set { _cmdAfk = ValidateCommand(value, "afk"); OnProp(); }
+    }
+
     private string _chatCommandPrefix = "!";
     public string ChatCommandPrefix
     {
@@ -256,6 +263,13 @@ public class ServerProfile : INotifyPropertyChanged
     {
         get => _chatCommandDelaySeconds;
         set { if (value >= 1 && value <= 5) { _chatCommandDelaySeconds = value; OnProp(); } }
+    }
+
+    private double _chatResponseDelaySeconds = 0.5;
+    public double ChatResponseDelaySeconds
+    {
+        get => _chatResponseDelaySeconds;
+        set { if (value >= 0.0 && value <= 5.0) { _chatResponseDelaySeconds = value; OnProp(); } }
     }
 
     private ObservableCollection<ChatCommandMapping> _switchCommandMappings = new();

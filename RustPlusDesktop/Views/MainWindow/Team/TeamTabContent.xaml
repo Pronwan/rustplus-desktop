@@ -85,6 +85,12 @@
                                     Fill="Gold"
                                     Stroke="Black"
                                     Visibility="{Binding IsLeader, Converter={StaticResource Vis}}" />
+                                <TextBlock
+                                    Text="💤"
+                                    FontSize="20"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Visibility="{Binding IsAfk, Converter={StaticResource Vis}}" />
                             </Grid>
                             <StackPanel Grid.Column="1" Margin="10,0,0,0">
                                 <TextBlock FontSize="14" FontWeight="SemiBold">
@@ -111,6 +117,12 @@
                                     Foreground="White"
                                     Opacity="0.65"
                                     Text="{Binding DisplaySteamId}" />
+                                <TextBlock
+                                    FontSize="10"
+                                    Foreground="#FF8C00"
+                                    FontWeight="SemiBold"
+                                    Text="{Binding AfkText}"
+                                    Visibility="{Binding IsAfk, Converter={StaticResource Vis}}" />
                             </StackPanel>
                         </Grid>
                     </Border>

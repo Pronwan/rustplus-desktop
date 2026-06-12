@@ -15,7 +15,7 @@
     Title="{DynamicResource AppTitle}"
     Width="1750"
     Height="814"
-    MinWidth="1500"
+    MinWidth="1000"
     MinHeight="700"
     Background="{DynamicResource AppBg}"
     ExtendsContentIntoTitleBar="True"
@@ -303,7 +303,7 @@
                     MinWidth="400"
                     MaxWidth="600" />
                 <ColumnDefinition Width="8" />
-                <ColumnDefinition Width="*" MinWidth="800" />
+                <ColumnDefinition Width="*" MinWidth="400" />
             </Grid.ColumnDefinitions>
 
             <GridSplitter
@@ -1198,8 +1198,9 @@
                                                 <Setter Property="Background" Value="Transparent" />
                                                 <Setter Property="BorderThickness" Value="0" />
                                                 <Style.Resources>
-                                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#3340A070" />
-                                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White" />
+                                                    <!-- Nullify default highlight brushes so our card layout handles highlights -->
+                                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{DynamicResource TextPrimary}" />
                                                     <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
                                                 </Style.Resources>
                                             </Style>
@@ -1207,32 +1208,92 @@
 
                                         <TreeView.ItemTemplate>
                                             <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                                <HierarchicalDataTemplate.Resources>
+                                                    <!-- Custom style for borderless checkboxes that behave like WinUI toggle buttons -->
+                                                    <Style x:Key="DeviceActionCheckBox" TargetType="CheckBox">
+                                                        <Setter Property="Width" Value="28"/>
+                                                        <Setter Property="Height" Value="28"/>
+                                                        <Setter Property="Cursor" Value="Hand"/>
+                                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                                        <Setter Property="Foreground" Value="{DynamicResource TextSubtle}"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="CheckBox">
+                                                                    <Border x:Name="Bd"
+                                                                            Background="Transparent"
+                                                                            BorderBrush="Transparent"
+                                                                            BorderThickness="1"
+                                                                            CornerRadius="6"
+                                                                            SnapsToDevicePixels="True">
+                                                                        <ContentPresenter x:Name="Content"
+                                                                                          HorizontalAlignment="Center"
+                                                                                          VerticalAlignment="Center"
+                                                                                          Opacity="0.6"/>
+                                                                    </Border>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter TargetName="Bd" Property="Background" Value="#1AFFFFFF"/>
+                                                                        </Trigger>
+                                                                        <Trigger Property="IsChecked" Value="True">
+                                                                            <Setter TargetName="Bd" Property="Background" Value="#1F60CDFF"/>
+                                                                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                                                            <Setter TargetName="Content" Property="Opacity" Value="1.0"/>
+                                                                        </Trigger>
+                                                                        <Trigger Property="IsEnabled" Value="False">
+                                                                            <Setter TargetName="Bd" Property="Opacity" Value="0.4"/>
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </HierarchicalDataTemplate.Resources>
+
                                                 <!--  Row + Details teilen sich den gleichen DataContext (SmartDevice)  -->
                                                 <StackPanel Margin="0,2,0,0">
 
                                                     <!--  ===== Zeile =====  -->
                                                     <Border
                                                         Margin="0,2,8,2"
-                                                        Padding="12,6"
+                                                        Padding="12,8"
                                                         CornerRadius="8">
                                                         <Border.Style>
                                                             <Style TargetType="Border">
-                                                                <Setter Property="Background" Value="#171A21" />
-                                                                <Setter Property="BorderBrush" Value="#222734" />
+                                                                <Setter Property="Background" Value="{DynamicResource Surface}" />
+                                                                <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}" />
                                                                 <Setter Property="BorderThickness" Value="1" />
                                                                 <Style.Triggers>
                                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                                        <Setter Property="Background" Value="#1C202A" />
-                                                                        <Setter Property="BorderBrush" Value="#303746" />
+                                                                        <Setter Property="Background" Value="{DynamicResource SurfaceHover}" />
+                                                                        <Setter Property="BorderBrush" Value="#40FFFFFF" />
                                                                     </Trigger>
                                                                     <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                        <Setter Property="Opacity" Value="0.6" />
-                                                                        <Setter Property="Background" Value="#101217" />
+                                                                        <Setter Property="Opacity" Value="0.65" />
+                                                                        <Setter Property="Background" Value="#121418" />
+                                                                        <Setter Property="BorderBrush" Value="#1EFFFFFF" />
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding IsGroup}" Value="True">
-                                                                        <Setter Property="Background" Value="#141F33" />
-                                                                        <Setter Property="BorderBrush" Value="#253550" />
+                                                                        <Setter Property="Background" Value="#14223C" />
+                                                                        <Setter Property="BorderBrush" Value="#253A5A" />
                                                                     </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsSelected}" Value="True">
+                                                                        <Setter Property="Background" Value="#1F60CDFF" />
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource Accent}" />
+                                                                    </DataTrigger>
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsSelected}" Value="True" />
+                                                                            <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver}" Value="True" />
+                                                                        </MultiDataTrigger.Conditions>
+                                                                        <Setter Property="Background" Value="#2D60CDFF" />
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource Accent}" />
+                                                                    </MultiDataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </Border.Style>
@@ -1244,35 +1305,97 @@
                                                             </Grid.ColumnDefinitions>
 
                                                             <!--  Spalte 1: Icon  -->
-                                                            <Image
-                                                                Grid.Column="0"
-                                                                Width="16"
-                                                                Height="16"
-                                                                VerticalAlignment="Center"
-                                                                RenderOptions.BitmapScalingMode="HighQuality">
-                                                                <Image.Style>
-                                                                    <Style TargetType="Image">
-                                                                        <Setter Property="Source" Value="{StaticResource IconSmartSwitch}" />
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
-                                                                                <Setter Property="Source" Value="{StaticResource IconStorageMonitor}" />
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding Kind}" Value="Storage Monitor">
-                                                                                <Setter Property="Source" Value="{StaticResource IconStorageMonitor}" />
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
-                                                                                <Setter Property="Source" Value="{StaticResource IconSmartAlarm}" />
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
-                                                                                <Setter Property="Source" Value="{StaticResource IconSmartAlarm}" />
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding IsGroup}" Value="True">
-                                                                                <Setter Property="Source" Value="{StaticResource IconGroup}" />
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </Image.Style>
-                                                            </Image>
+                                                            <Border Grid.Column="0"
+                                                                    x:Name="IconBorder"
+                                                                    Width="38"
+                                                                    Height="38"
+                                                                    Background="#14FFFFFF"
+                                                                    CornerRadius="8"
+                                                                    Padding="0"
+                                                                    Margin="0,0,10,0"
+                                                                    VerticalAlignment="Center"
+                                                                    Cursor="Hand"
+                                                                    ToolTip="Change Icon"
+                                                                    PreviewMouseLeftButtonDown="DeviceIcon_PreviewMouseLeftButtonDown">
+                                                                <Grid>
+                                                                    <Image
+                                                                        x:Name="DeviceIconImg"
+                                                                        Width="24"
+                                                                        Height="24"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        RenderOptions.BitmapScalingMode="HighQuality">
+                                                                        <Image.Style>
+                                                                            <Style TargetType="Image">
+                                                                                <Setter Property="Source" Value="{Binding CustomIcon}" />
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding CustomIcon}" Value="{x:Null}">
+                                                                                        <Setter Property="Source" Value="{StaticResource IconSmartSwitch}" />
+                                                                                    </DataTrigger>
+                                                                                    <MultiDataTrigger>
+                                                                                        <MultiDataTrigger.Conditions>
+                                                                                            <Condition Binding="{Binding CustomIcon}" Value="{x:Null}"/>
+                                                                                            <Condition Binding="{Binding Kind}" Value="StorageMonitor"/>
+                                                                                        </MultiDataTrigger.Conditions>
+                                                                                        <Setter Property="Source" Value="{StaticResource IconStorageMonitor}"/>
+                                                                                    </MultiDataTrigger>
+                                                                                    <MultiDataTrigger>
+                                                                                        <MultiDataTrigger.Conditions>
+                                                                                            <Condition Binding="{Binding CustomIcon}" Value="{x:Null}"/>
+                                                                                            <Condition Binding="{Binding Kind}" Value="Storage Monitor"/>
+                                                                                        </MultiDataTrigger.Conditions>
+                                                                                        <Setter Property="Source" Value="{StaticResource IconStorageMonitor}"/>
+                                                                                    </MultiDataTrigger>
+                                                                                    <MultiDataTrigger>
+                                                                                        <MultiDataTrigger.Conditions>
+                                                                                            <Condition Binding="{Binding CustomIcon}" Value="{x:Null}"/>
+                                                                                            <Condition Binding="{Binding Kind}" Value="SmartAlarm"/>
+                                                                                        </MultiDataTrigger.Conditions>
+                                                                                        <Setter Property="Source" Value="{StaticResource IconSmartAlarm}"/>
+                                                                                    </MultiDataTrigger>
+                                                                                    <MultiDataTrigger>
+                                                                                        <MultiDataTrigger.Conditions>
+                                                                                            <Condition Binding="{Binding CustomIcon}" Value="{x:Null}"/>
+                                                                                            <Condition Binding="{Binding Kind}" Value="Smart Alarm"/>
+                                                                                        </MultiDataTrigger.Conditions>
+                                                                                        <Setter Property="Source" Value="{StaticResource IconSmartAlarm}"/>
+                                                                                    </MultiDataTrigger>
+                                                                                    <MultiDataTrigger>
+                                                                                        <MultiDataTrigger.Conditions>
+                                                                                            <Condition Binding="{Binding CustomIcon}" Value="{x:Null}"/>
+                                                                                            <Condition Binding="{Binding IsGroup}" Value="True"/>
+                                                                                        </MultiDataTrigger.Conditions>
+                                                                                        <Setter Property="Source" Value="{StaticResource IconGroup}"/>
+                                                                                    </MultiDataTrigger>
+                                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=IsMouseOver}" Value="True">
+                                                                                        <Setter Property="Opacity" Value="0.15"/>
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Image.Style>
+                                                                    </Image>
+                                                                    
+                                                                    <ui:SymbolIcon
+                                                                        x:Name="EditIcon"
+                                                                        Symbol="Edit20"
+                                                                        Filled="True"
+                                                                        Foreground="White"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center">
+                                                                        <ui:SymbolIcon.Style>
+                                                                            <Style TargetType="ui:SymbolIcon">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=IsMouseOver}" Value="True">
+                                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </ui:SymbolIcon.Style>
+                                                                    </ui:SymbolIcon>
+
+                                                                </Grid>
+                                                            </Border>
 
                                                             <!--  Spalte 2: strukturierte Device-Infos  -->
                                                             <StackPanel
@@ -1281,14 +1404,13 @@
                                                                 VerticalAlignment="Center"
                                                                 Orientation="Horizontal">
                                                                 <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                                                                    <TextBlock
-                                                                        VerticalAlignment="Center"
-                                                                        FontSize="14"
-                                                                        FontWeight="Bold"
-                                                                        Foreground="#FF4B4B"
-                                                                        Text="✗ ">
-                                                                        <TextBlock.Style>
-                                                                            <Style TargetType="TextBlock">
+                                                                    <ui:SymbolIcon
+                                                                        Symbol="Warning20"
+                                                                        Foreground="#F04747"
+                                                                        Margin="0,0,6,0"
+                                                                        VerticalAlignment="Center">
+                                                                        <ui:SymbolIcon.Style>
+                                                                            <Style TargetType="ui:SymbolIcon">
                                                                                 <Setter Property="Visibility" Value="Collapsed" />
                                                                                 <Style.Triggers>
                                                                                     <DataTrigger Binding="{Binding IsMissing}" Value="True">
@@ -1296,68 +1418,104 @@
                                                                                     </DataTrigger>
                                                                                 </Style.Triggers>
                                                                             </Style>
-                                                                        </TextBlock.Style>
-                                                                    </TextBlock>
-                                                                    <TextBlock
-                                                                        VerticalAlignment="Center"
-                                                                        FontSize="13"
-                                                                        FontWeight="SemiBold"
-                                                                        Foreground="#EAECEE"
-                                                                        Text="{Binding PureName, TargetNullValue=Device}"
-                                                                        ToolTip="{DynamicResource RightClickRename}">                                                                        <TextBlock.Style>
-                                                                            <Style TargetType="TextBlock">
-                                                                                <Style.Triggers>
-                                                                                    <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                                        <Setter Property="Foreground" Value="#888" />
-                                                                                        <Setter Property="FontStyle" Value="Italic" />
-                                                                                    </DataTrigger>
-                                                                                </Style.Triggers>
-                                                                            </Style>
-                                                                        </TextBlock.Style>
-                                                                        <TextBlock.ContextMenu>
-                                                                            <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                                                                <MenuItem Click="Device_Rename_Click" Header="{DynamicResource RenameDevice}" />
-                                                                            </ContextMenu>
-                                                                        </TextBlock.ContextMenu>
-                                                                    </TextBlock>
+                                                                        </ui:SymbolIcon.Style>
+                                                                    </ui:SymbolIcon>
+                                                                    <Grid VerticalAlignment="Center">
+                                                                        <TextBlock
+                                                                            x:Name="TxtDeviceNameView"
+                                                                            VerticalAlignment="Center"
+                                                                            FontSize="13"
+                                                                            FontWeight="SemiBold"
+                                                                            Foreground="{DynamicResource TextPrimary}"
+                                                                            Text="{Binding PureName, TargetNullValue=Device}"
+                                                                            ToolTip="{DynamicResource RightClickRename}"
+                                                                            MouseLeftButtonDown="DeviceName_MouseLeftButtonDown">
+                                                                            <TextBlock.Style>
+                                                                                <Style TargetType="TextBlock">
+                                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                        </DataTrigger>
+                                                                                        <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                                            <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
+                                                                                            <Setter Property="FontStyle" Value="Italic" />
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </TextBlock.Style>
+                                                                            <TextBlock.ContextMenu>
+                                                                                <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                                                                    <MenuItem Click="Device_Rename_Click" Header="{DynamicResource RenameDevice}" />
+                                                                                </ContextMenu>
+                                                                            </TextBlock.ContextMenu>
+                                                                        </TextBlock>
+                                                                        
+                                                                        <ui:TextBox
+                                                                            x:Name="TxtDeviceNameEdit"
+                                                                            Text="{Binding Alias, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
+                                                                            FontSize="12"
+                                                                            Height="24"
+                                                                            Padding="4,2"
+                                                                            VerticalAlignment="Center"
+                                                                            MinWidth="120"
+                                                                            LostFocus="TxtRename_LostFocus"
+                                                                            KeyDown="TxtRename_KeyDown"
+                                                                            IsVisibleChanged="TxtRename_IsVisibleChanged">
+                                                                            <ui:TextBox.Style>
+                                                                                <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+                                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </ui:TextBox.Style>
+                                                                        </ui:TextBox>
+                                                                    </Grid>
                                                                 </StackPanel>
 
                                                                 <TextBlock
                                                                     Margin="8,0,0,0"
                                                                     VerticalAlignment="Center"
                                                                     FontSize="10"
-                                                                    Foreground="#8D98A8"
+                                                                    Foreground="{DynamicResource TextSubtle}"
                                                                     Text="{Binding EntityId, StringFormat=#\{0\}}" />
 
                                                                 <Border
                                                                     Margin="12,0,0,0"
                                                                     Padding="6,2"
                                                                     VerticalAlignment="Center"
-                                                                    Background="#2E3646"
-                                                                    BorderBrush="#4A5670"
-                                                                    BorderThickness="1"
-                                                                    CornerRadius="8">
+                                                                    CornerRadius="6"
+                                                                    BorderThickness="1">
                                                                     <Border.Style>
                                                                         <Style TargetType="Border">
-                                                                            <Setter Property="Background" Value="#2E3646" />
-                                                                            <Setter Property="BorderBrush" Value="#4A5670" />
+                                                                            <Setter Property="Background" Value="#1AFFFFFF" />
+                                                                            <Setter Property="BorderBrush" Value="#1EFFFFFF" />
                                                                             <Style.Triggers>
                                                                                 <!--  ON / ACTIVE / ONLINE Status (Grün)  -->
                                                                                 <DataTrigger Binding="{Binding IsOn}" Value="True">
-                                                                                    <Setter Property="Background" Value="#193F2A" />
-                                                                                    <Setter Property="BorderBrush" Value="#2B7A4E" />
+                                                                                    <Setter Property="Background" Value="#1A4EB887" />
+                                                                                    <Setter Property="BorderBrush" Value="#334EB887" />
                                                                                 </DataTrigger>
 
                                                                                 <!--  Storage Monitor & Others: Immer grün wenn da  -->
                                                                                 <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
-                                                                                    <Setter Property="Background" Value="#193F2A" />
-                                                                                    <Setter Property="BorderBrush" Value="#2B7A4E" />
+                                                                                    <Setter Property="Background" Value="#1A4EB887" />
+                                                                                    <Setter Property="BorderBrush" Value="#334EB887" />
                                                                                 </DataTrigger>
 
                                                                                 <!--  MISSING / DISCONNECTED (Rot)  -->
                                                                                 <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                                    <Setter Property="Background" Value="#412226" />
-                                                                                    <Setter Property="BorderBrush" Value="#8E3B45" />
+                                                                                    <Setter Property="Background" Value="#1AF04747" />
+                                                                                    <Setter Property="BorderBrush" Value="#33F04747" />
+                                                                                </DataTrigger>
+                                                                                
+                                                                                <!--  Group  -->
+                                                                                <DataTrigger Binding="{Binding IsGroup}" Value="True">
+                                                                                    <Setter Property="Background" Value="#1A60CDFF" />
+                                                                                    <Setter Property="BorderBrush" Value="#3360CDFF" />
                                                                                 </DataTrigger>
                                                                             </Style.Triggers>
                                                                         </Style>
@@ -1365,15 +1523,28 @@
 
                                                                     <TextBlock
                                                                         FontSize="9"
-                                                                        FontWeight="SemiBold"
-                                                                        Foreground="#EAF2FF">
+                                                                        FontWeight="SemiBold">
                                                                         <TextBlock.Style>
                                                                             <Style TargetType="TextBlock">
                                                                                 <Setter Property="Text" Value="{DynamicResource Online}" />
+                                                                                <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
                                                                                 <Style.Triggers>
+                                                                                    <!--  ON Status colors (Grün)  -->
+                                                                                    <DataTrigger Binding="{Binding IsOn}" Value="True">
+                                                                                        <Setter Property="Foreground" Value="#4EB887" />
+                                                                                    </DataTrigger>
+                                                                                    <!--  Storage Monitor color  -->
+                                                                                    <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
+                                                                                        <Setter Property="Foreground" Value="#4EB887" />
+                                                                                    </DataTrigger>
+                                                                                    <DataTrigger Binding="{Binding Kind}" Value="Storage Monitor">
+                                                                                        <Setter Property="Foreground" Value="#4EB887" />
+                                                                                    </DataTrigger>
+
                                                                                     <!--  MISSING  -->
                                                                                     <DataTrigger Binding="{Binding IsMissing}" Value="True">
                                                                                         <Setter Property="Text" Value="{DynamicResource Offline}" />
+                                                                                        <Setter Property="Foreground" Value="#F04747" />
                                                                                     </DataTrigger>
 
                                                                                     <!--  Smart Switch  -->
@@ -1389,6 +1560,7 @@
                                                                                             <Condition Binding="{Binding IsOn}" Value="True" />
                                                                                         </MultiDataTrigger.Conditions>
                                                                                         <Setter Property="Text" Value="{DynamicResource On}" />
+                                                                                        <Setter Property="Foreground" Value="#4EB887" />
                                                                                     </MultiDataTrigger>
                                                                                     <MultiDataTrigger>
                                                                                         <MultiDataTrigger.Conditions>
@@ -1396,6 +1568,7 @@
                                                                                             <Condition Binding="{Binding IsOn}" Value="True" />
                                                                                         </MultiDataTrigger.Conditions>
                                                                                         <Setter Property="Text" Value="{DynamicResource On}" />
+                                                                                        <Setter Property="Foreground" Value="#4EB887" />
                                                                                     </MultiDataTrigger>
 
                                                                                     <!--  Smart Alarm  -->
@@ -1411,6 +1584,7 @@
                                                                                             <Condition Binding="{Binding IsOn}" Value="True" />
                                                                                         </MultiDataTrigger.Conditions>
                                                                                         <Setter Property="Text" Value="{DynamicResource Active}" />
+                                                                                        <Setter Property="Foreground" Value="#4EB887" />
                                                                                     </MultiDataTrigger>
                                                                                     <MultiDataTrigger>
                                                                                         <MultiDataTrigger.Conditions>
@@ -1418,11 +1592,13 @@
                                                                                             <Condition Binding="{Binding IsOn}" Value="True" />
                                                                                         </MultiDataTrigger.Conditions>
                                                                                         <Setter Property="Text" Value="{DynamicResource Active}" />
+                                                                                        <Setter Property="Foreground" Value="#4EB887" />
                                                                                     </MultiDataTrigger>
 
                                                                                     <!--  Group  -->
                                                                                     <DataTrigger Binding="{Binding IsGroup}" Value="True">
                                                                                         <Setter Property="Text" Value="{DynamicResource Group}" />
+                                                                                        <Setter Property="Foreground" Value="#60CDFF" />
                                                                                     </DataTrigger>
                                                                                 </Style.Triggers>
                                                                             </Style>
@@ -1431,7 +1607,7 @@
                                                                 </Border>
                                                             </StackPanel>
 
-                                                            <!--  Spalte 3: Toggle NUR fÃ¼r SmartSwitch  -->
+                                                            <!--  Spalte 3: Toggle NUR für SmartSwitch  -->
                                                             <ToggleButton
                                                                 Grid.Column="2"
                                                                 Width="60"
@@ -1448,16 +1624,11 @@
                                                                                         x:Name="Bd"
                                                                                         Padding="2"
                                                                                         Background="{TemplateBinding Background}"
-                                                                                        BorderBrush="#66000000"
+                                                                                        BorderBrush="{TemplateBinding BorderBrush}"
                                                                                         BorderThickness="1"
                                                                                         CornerRadius="11">
                                                                                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                                     </Border>
-                                                                                    <ControlTemplate.Triggers>
-                                                                                        <Trigger Property="IsEnabled" Value="False">
-                                                                                            <Setter TargetName="Bd" Property="Opacity" Value="0.4" />
-                                                                                        </Trigger>
-                                                                                    </ControlTemplate.Triggers>
                                                                                 </ControlTemplate>
                                                                             </Setter.Value>
                                                                         </Setter>
@@ -1465,8 +1636,9 @@
                                                                         <EventSetter Event="Unchecked" Handler="DeviceToggle_Unchecked" />
 
                                                                         <Setter Property="Visibility" Value="Collapsed" />
-                                                                        <Setter Property="Foreground" Value="White" />
-                                                                        <Setter Property="Background" Value="IndianRed" />
+                                                                        <Setter Property="Foreground" Value="#A0AEC0" />
+                                                                        <Setter Property="Background" Value="#2A3240" />
+                                                                        <Setter Property="BorderBrush" Value="#1EFFFFFF" />
                                                                         <Setter Property="Content" Value="OFF" />
                                                                         <Setter Property="FontSize" Value="10" />
                                                                         <Setter Property="FontWeight" Value="SemiBold" />
@@ -1484,10 +1656,22 @@
                                                                                 <Setter Property="IsEnabled" Value="False" />
                                                                                 <Setter Property="Opacity" Value="0.6" />
                                                                             </DataTrigger>
+                                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                                <Setter Property="Background" Value="#353E4F" />
+                                                                            </Trigger>
                                                                             <Trigger Property="IsChecked" Value="True">
-                                                                                <Setter Property="Background" Value="SeaGreen" />
+                                                                                <Setter Property="Background" Value="#2B7A4E" />
+                                                                                <Setter Property="BorderBrush" Value="#332B7A4E" />
+                                                                                <Setter Property="Foreground" Value="White" />
                                                                                 <Setter Property="Content" Value="ON" />
                                                                             </Trigger>
+                                                                            <MultiTrigger>
+                                                                                <MultiTrigger.Conditions>
+                                                                                    <Condition Property="IsChecked" Value="True" />
+                                                                                    <Condition Property="IsMouseOver" Value="True" />
+                                                                                </MultiTrigger.Conditions>
+                                                                                <Setter Property="Background" Value="#358F5C" />
+                                                                            </MultiTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
                                                                 </ToggleButton.Style>
@@ -1512,7 +1696,7 @@
                                                                                         x:Name="Bd"
                                                                                         Padding="2"
                                                                                         Background="{TemplateBinding Background}"
-                                                                                        BorderBrush="#66000000"
+                                                                                        BorderBrush="{TemplateBinding BorderBrush}"
                                                                                         BorderThickness="1"
                                                                                         CornerRadius="11">
                                                                                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -1522,11 +1706,18 @@
                                                                         </Setter>
                                                                         <Setter Property="Visibility" Value="Collapsed" />
                                                                         <Setter Property="Foreground" Value="White" />
-                                                                        <Setter Property="Background" Value="#E67E22" />
+                                                                        <Setter Property="Background" Value="#D97706" />
+                                                                        <Setter Property="BorderBrush" Value="#1EFFFFFF" />
                                                                         <Setter Property="FontSize" Value="10" />
                                                                         <Setter Property="FontWeight" Value="SemiBold" />
                                                                         <Setter Property="Cursor" Value="Hand" />
                                                                         <Style.Triggers>
+                                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                                <Setter Property="Background" Value="#F59E0B" />
+                                                                            </Trigger>
+                                                                            <Trigger Property="IsPressed" Value="True">
+                                                                                <Setter Property="Background" Value="#B45309" />
+                                                                            </Trigger>
                                                                             <MultiDataTrigger>
                                                                                 <MultiDataTrigger.Conditions>
                                                                                     <Condition Binding="{Binding IsGroup}" Value="True" />
@@ -1567,7 +1758,7 @@
                                                                     Margin="0,0,8,0"
                                                                     ToolTip="{DynamicResource PopupWindow}"
                                                                     IsChecked="{Binding PopupEnabled, Mode=TwoWay}"
-                                                                    Style="{StaticResource DotCheckBox}">
+                                                                    Style="{StaticResource DeviceActionCheckBox}">
                                                                     <Image Source="pack://application:,,,/Assets/icons/Popup.png" Width="16" Height="16" Stretch="Uniform"/>
                                                                 </CheckBox>
 
@@ -1577,7 +1768,7 @@
                                                                     IsChecked="{Binding OverlayEnabled, Mode=TwoWay}"
                                                                     PreviewMouseLeftButtonDown="OnInAppPopupCheckBoxClick">
                                                                     <CheckBox.Style>
-                                                                        <Style TargetType="CheckBox" BasedOn="{StaticResource DotCheckBox}">
+                                                                        <Style TargetType="CheckBox" BasedOn="{StaticResource DeviceActionCheckBox}">
                                                                             <Style.Triggers>
                                                                                 <DataTrigger Binding="{Binding AudioLoopEnabled}" Value="True">
                                                                                     <Setter Property="Opacity" Value="0.4" />
@@ -1591,7 +1782,7 @@
                                                                 <CheckBox
                                                                     ToolTip="{DynamicResource AudioAlert}"
                                                                     IsChecked="{Binding AudioEnabled, Mode=TwoWay}"
-                                                                    Style="{StaticResource DotCheckBox}">
+                                                                    Style="{StaticResource DeviceActionCheckBox}">
                                                                     <ui:SymbolIcon Symbol="Speaker224" FontSize="16"/>
                                                                     <CheckBox.ContextMenu>
                                                                         <ContextMenu Style="{StaticResource DarkContextMenu}">
@@ -1634,9 +1825,9 @@
                                                                 Padding="6,2"
                                                                 VerticalAlignment="Center"
                                                                 Background="{Binding Storage, Converter={StaticResource UpkeepBackgroundConverter}}"
-                                                                BorderBrush="#55FFFFFF"
+                                                                BorderBrush="#1EFFFFFF"
                                                                 BorderThickness="1"
-                                                                CornerRadius="11"
+                                                                CornerRadius="6"
                                                                 PreviewMouseWheel="StorPill_PreviewMouseWheel"
                                                                 ToolTipOpening="StorPill_ToolTipOpening"
                                                                 ToolTipService.InitialShowDelay="250"
@@ -1655,10 +1846,10 @@
                                                                 <Border.ToolTip>
                                                                     <ToolTip MaxWidth="520">
                                                                         <Border
-                                                                            Background="#171A1F"
-                                                                            BorderBrush="#2A2F37"
+                                                                            Background="{DynamicResource SurfaceAlt}"
+                                                                            BorderBrush="{DynamicResource CardBorder}"
                                                                             BorderThickness="1"
-                                                                            CornerRadius="10">
+                                                                            CornerRadius="8">
                                                                             <StackPanel Margin="8,8,8,6">
 
                                                                                 <!--  Header (no pencil / kebab)  -->
@@ -1671,14 +1862,13 @@
                                                                                         RenderOptions.BitmapScalingMode="HighQuality"
                                                                                         Source="{StaticResource IconStorageMonitor}" />
                                                                                     <StackPanel Orientation="Horizontal">
-                                                                                        <TextBlock
-                                                                                            VerticalAlignment="Center"
-                                                                                            FontSize="13"
-                                                                                            FontWeight="Bold"
-                                                                                            Foreground="#FF4B4B"
-                                                                                            Text="✗ ">
-                                                                                            <TextBlock.Style>
-                                                                                                <Style TargetType="TextBlock">
+                                                                                        <ui:SymbolIcon
+                                                                                            Symbol="Warning20"
+                                                                                            Foreground="#F04747"
+                                                                                            Margin="0,0,6,0"
+                                                                                            VerticalAlignment="Center">
+                                                                                            <ui:SymbolIcon.Style>
+                                                                                                <Style TargetType="ui:SymbolIcon">
                                                                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                                                                     <Style.Triggers>
                                                                                                         <DataTrigger Binding="{Binding IsMissing}" Value="True">
@@ -1686,13 +1876,13 @@
                                                                                                         </DataTrigger>
                                                                                                     </Style.Triggers>
                                                                                                 </Style>
-                                                                                            </TextBlock.Style>
-                                                                                        </TextBlock>
+                                                                                            </ui:SymbolIcon.Style>
+                                                                                        </ui:SymbolIcon>
                                                                                         <TextBlock
                                                                                             DockPanel.Dock="Left"
                                                                                             FontSize="13"
                                                                                             FontWeight="SemiBold"
-                                                                                            Foreground="#EAECEE"
+                                                                                            Foreground="{DynamicResource TextPrimary}"
                                                                                             Text="{Binding PureName, TargetNullValue=Storage Monitor}" />
                                                                                     </StackPanel>
                                                                                 </DockPanel>
@@ -1701,7 +1891,7 @@
                                                                                 <TextBlock
                                                                                     Margin="0,0,0,4"
                                                                                     FontSize="10.5"
-                                                                                    Foreground="#9AA3B2"
+                                                                                    Foreground="{DynamicResource TextSubtle}"
                                                                                     Text="{Binding Storage, Converter={StaticResource StorageChipConverter}}" />
 
                                                                                 <!--  Dense grid  -->
@@ -1723,12 +1913,13 @@
                                                                                                 <Border
                                                                                                     Width="64"
                                                                                                     Height="64"
-                                                                                                    Background="#1F242B"
-                                                                                                    BorderBrush="#2A2F37"
-                                                                                                    BorderThickness="0"
+                                                                                                    Background="{DynamicResource Surface}"
+                                                                                                    BorderBrush="{DynamicResource CardBorder}"
+                                                                                                    BorderThickness="1"
+                                                                                                    CornerRadius="6"
                                                                                                     SnapsToDevicePixels="True">
                                                                                                     <Grid>
-                                                                                                        <!--  Icon groÃŸ & zentriert  -->
+                                                                                                        <!--  Icon groß & zentriert  -->
                                                                                                         <Image
                                                                                                             Width="48"
                                                                                                             Height="48"
@@ -1743,14 +1934,14 @@
                                                                                                             Padding="4,1.5"
                                                                                                             HorizontalAlignment="Right"
                                                                                                             VerticalAlignment="Bottom"
-                                                                                                            Background="#252B33"
-                                                                                                            BorderBrush="#3B4756"
+                                                                                                            Background="#CC0F1013"
+                                                                                                            BorderBrush="#1EFFFFFF"
                                                                                                             BorderThickness="1"
-                                                                                                            CornerRadius="5">
+                                                                                                            CornerRadius="4">
                                                                                                             <TextBlock
                                                                                                                 FontSize="10"
                                                                                                                 FontWeight="SemiBold"
-                                                                                                                Foreground="#EAECEE">
+                                                                                                                Foreground="{DynamicResource TextPrimary}">
                                                                                                                 <Run Text="x" /><Run Text="{Binding Amount, StringFormat={}{0:N0}}" />
                                                                                                             </TextBlock>
                                                                                                         </Border>
@@ -1773,7 +1964,7 @@
                                                                                     Margin="0,2,0,0"
                                                                                     HorizontalAlignment="Right"
                                                                                     FontSize="9.5"
-                                                                                    Foreground="#7F8A99"
+                                                                                    Foreground="{DynamicResource TextSubtle}"
                                                                                     Text="{Binding Storage.ItemsCount, StringFormat={}{0} items}" />
                                                                             </StackPanel>
                                                                         </Border>
@@ -1786,10 +1977,10 @@
                                                     <!--  ===== Ende Zeile =====  -->
 
                                                     <!-- ===== Klappbereich (hÃ¤ngt direkt an
-                                            ) =====
-                                            <Grid Margin="0,4,0,8" Visibility="Collapsed">
-                                                <Grid.Style>
-                                                    <Style TargetType="Grid">
+                                             ) =====
+                                             <Grid Margin="0,4,0,8" Visibility="Collapsed">
+                                                 <Grid.Style>
+                                                     <Style TargetType="Grid">
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding IsExpanded}" Value="True">
                                                                 <Setter Property="Visibility" Value="Visible"/>
@@ -2000,6 +2191,18 @@
                                                                 Fill="Gold"
                                                                 Stroke="Black"
                                                                 Visibility="{Binding IsLeader, Converter={StaticResource Vis}}" />
+                                                            <TextBlock
+                                                                Text="💤"
+                                                                FontSize="16"
+                                                                HorizontalAlignment="Right"
+                                                                VerticalAlignment="Top"
+                                                                Margin="0,-8,-8,0"
+                                                                RenderTransformOrigin="0.5,0.5"
+                                                                Visibility="{Binding IsAfk, Converter={StaticResource Vis}}">
+                                                                <TextBlock.RenderTransform>
+                                                                    <RotateTransform Angle="15" />
+                                                                </TextBlock.RenderTransform>
+                                                            </TextBlock>
                                                         </Grid>
 
                                                         <!--  Textseite  -->
@@ -2032,6 +2235,12 @@
                                                                 Foreground="White"
                                                                 Opacity="0.65"
                                                                 Text="{Binding DisplaySteamId}" />
+                                                            <TextBlock
+                                                                FontSize="10"
+                                                                Foreground="#FF8C00"
+                                                                FontWeight="SemiBold"
+                                                                Text="{Binding AfkText}"
+                                                                Visibility="{Binding IsAfk, Converter={StaticResource Vis}}" />
                                                         </StackPanel>
                                                     </Grid>
                                                 </Border>
@@ -2306,8 +2515,8 @@
                                         </StackPanel>
                                     </StackPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <Button x:Name="BtnRefreshProfitTrades" Content="⟳" Style="{StaticResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="16" Margin="0,0,6,0" ToolTip="{DynamicResource Refresh}" />
-                                        <Button x:Name="BtnCloseProfitTrades" Content="&#x2715;" Style="{StaticResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="13" Foreground="{DynamicResource TextSubtle}" />
+                                        <Button x:Name="BtnRefreshProfitTrades" Content="⟳" Style="{DynamicResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="16" Margin="0,0,6,0" ToolTip="{DynamicResource Refresh}" />
+                                        <Button x:Name="BtnCloseProfitTrades" Content="&#x2715;" Style="{DynamicResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="13" Foreground="{DynamicResource TextSubtle}" />
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -2562,7 +2771,7 @@
             <!--  Rechte Spalte: Login/Status + WebViewHost  -->
             <Border
                 Grid.Column="2"
-                MinWidth="800"
+                MinWidth="400"
                 Padding="12"
                 Background="{DynamicResource Surface}"
                 BorderBrush="{DynamicResource CardBorder}"
@@ -2781,34 +2990,47 @@
                                                                              <StackPanel Orientation="Vertical">
                                                                                  <!-- Top Row: Quick Actions -->
                                                                                  <Grid Margin="4,2,4,8">
-                                                                                     <Grid.ColumnDefinitions>
-                                                                                         <ColumnDefinition Width="*" />
-                                                                                         <ColumnDefinition Width="12" />
-                                                                                         <ColumnDefinition Width="*" />
-                                                                                     </Grid.ColumnDefinitions>
-                                                                                     
-                                                                                     <ui:Button
-                                                                                         Grid.Column="0"
-                                                                                         Content="{DynamicResource SelectAll}"
-                                                                                         Click="SelectAllAlerts_Click"
-                                                                                         Appearance="Secondary"
-                                                                                         HorizontalAlignment="Stretch">
-                                                                                         <ui:Button.Icon>
-                                                                                             <ui:SymbolIcon Symbol="CheckmarkSquare24" />
-                                                                                         </ui:Button.Icon>
-                                                                                     </ui:Button>
-                                                                                     
-                                                                                     <ui:Button
-                                                                                         Grid.Column="2"
-                                                                                         Content="{DynamicResource DeselectAll}"
-                                                                                         Click="DeselectAllAlerts_Click"
-                                                                                         Appearance="Secondary"
-                                                                                         HorizontalAlignment="Stretch">
-                                                                                         <ui:Button.Icon>
-                                                                                             <ui:SymbolIcon Symbol="DismissSquare24" />
-                                                                                         </ui:Button.Icon>
-                                                                                     </ui:Button>
-                                                                                 </Grid>
+                                                                                      <Grid.ColumnDefinitions>
+                                                                                          <ColumnDefinition Width="*" />
+                                                                                          <ColumnDefinition Width="6" />
+                                                                                          <ColumnDefinition Width="*" />
+                                                                                          <ColumnDefinition Width="6" />
+                                                                                          <ColumnDefinition Width="Auto" />
+                                                                                      </Grid.ColumnDefinitions>
+                                                                                      
+                                                                                      <ui:Button
+                                                                                          Grid.Column="0"
+                                                                                          Content="{DynamicResource SelectAll}"
+                                                                                          Click="SelectAllAlerts_Click"
+                                                                                          Appearance="Secondary"
+                                                                                          HorizontalAlignment="Stretch">
+                                                                                          <ui:Button.Icon>
+                                                                                              <ui:SymbolIcon Symbol="CheckmarkSquare24" />
+                                                                                          </ui:Button.Icon>
+                                                                                      </ui:Button>
+                                                                                      
+                                                                                      <ui:Button
+                                                                                          Grid.Column="2"
+                                                                                          Content="{DynamicResource DeselectAll}"
+                                                                                          Click="DeselectAllAlerts_Click"
+                                                                                          Appearance="Secondary"
+                                                                                          HorizontalAlignment="Stretch">
+                                                                                          <ui:Button.Icon>
+                                                                                              <ui:SymbolIcon Symbol="DismissSquare24" />
+                                                                                          </ui:Button.Icon>
+                                                                                      </ui:Button>
+
+                                                                                      <ui:Button
+                                                                                          Grid.Column="4"
+                                                                                          Click="EditAlertTemplates_Click"
+                                                                                          Appearance="Secondary"
+                                                                                          Padding="8,6"
+                                                                                          ToolTip="{DynamicResource CustomizeChatAlertsToolTip}">
+                                                                                          <ui:Button.Icon>
+                                                                                              <ui:SymbolIcon Symbol="Edit24" />
+                                                                                          </ui:Button.Icon>
+                                                                                      </ui:Button>
+                                                                                  </Grid>
                                                                                  
                                                                                  <!-- Horizontal Separator -->
                                                                                  <Border BorderBrush="#15FFFFFF" BorderThickness="0,0,0,1" Margin="0,0,0,10" />

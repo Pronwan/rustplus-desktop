@@ -51,26 +51,37 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
-# 🚀 Rust+ Desktop v6.2.0 is Live! 🚀
-We've just pushed a major update to the beta branch, focused on performance, cloud optimizations, offline notifications, and highly requested Quality-of-Life changes!
+# ⚙️ **RUST+ DESKTOP UPDATE — VERSION v6.3.0** ⚙️
 
-**☁️ Cloud Backend & Performance Tuning**
-- Solo Bandwidth Optimizer: When playing solo on a server or when all teammates are offline, the client now dynamically pauses database polling. This saves massive amounts of server bandwidth and RAM, keeping the app extremely lightweight!
-- Robust Cloud Device Sync: Deleting a smart device in the app now instantly syncs and permanently removes it from the cloud database overlay, fixing previous sync caching issues.
-**💀 Offline Death Notifications & Logs**
-- Offline Death Alerts: Get notified when you get killed while offline, featuring full language localization (including EN, DE, FR, ES, RU, ZH, AR, HE).
-- Infinite Snackbar Alert: The offline death alert popup now stays open on your screen until you manually close it or click "Stop Sound" – so you'll never miss a death!
-- Offline Death Log & History: Added a local log window to track your offline deaths, showing who killed you, when, and on which server.
-**🛠️ Quality-of-Life Updates**
-- Custom Crosshair Memory: Toggling the custom crosshairs off and on now remembers your last selected design instead of resetting to default.
-- Safer Setup & Pairing: The "Login & Pair Account" flow now forcefully kills any stale or blocked background processes to guarantee a clean, instant browser login.
-- Death Marker Tweaks: Customizable local death markers on the map.
-- Cleaned Team Options: Removed the "Kick from Team" button/command to streamline team options and prevent accidental actions.
-  Discord Map Export: Directly export maps using the new /map and /mapfull commands through the Discord Bot.
-**🗺️One-Click Map Sharing:**
-- Just click the new "Send to Discord" button right from the map view. Your current zoom level, view, and drawn markers will instantly be shared to your designated Chat Alerts channel.
-- /map Slash Command: Want to check the area around your team members without opening the app? Use the /map command directly in your Discord server! The bot will instantly reply with a screenshot of the app's current map viewport.
-- /mapfull Slash Command: Need the bigger picture? Use /mapfull in Discord to generate a high-resolution screenshot of the entire island, including all active event markers (Cargo, Heli, Crate, etc.), monuments, and team locations!
+A new update is here! This release brings long-awaited live camera & turret controls directly to your desktop, modernizes smart device management, and ensures maximum layout flexibility for all screen resolutions.
+
+🎮 **NEW FEATURES & IMPROVEMENTS**
+
+🔧 **Remote Camera & Turret Controls (Live Steering)**
+* **Interactive Control:** Full remote control integration for Auto-Turrets and PTZ cameras directly within the desktop app.
+* **Mouse Steering:** Smoothly pan and tilt cameras by dragging directly on the live image (sensitivity has been fine-tuned for precise adjustments).
+* **Continuous Button Inputs:** Press and hold D-pad buttons for continuous steering or action execution (fire, reload, jump, duck).
+* **New Borderless Window:** The camera view now opens in a sleek WPF borderless frame (fully draggable and dynamically resizable while preserving the image aspect ratio).
+* **Interactive Tiles:** Simply click directly on the camera thumbnail in your dashboard to pop out the live stream window.
+
+🎨 **Custom Smart Device Icons**
+* You can now assign custom icons to your smart devices in the Device List for a cleaner overview and quicker identification at a glance.
+
+📐 **Flexible Window Layout & Resolution Support (Stretched Res)**
+* Drastically reduced minimum width constraints (Minimum window width: 1000px, Map side minimum width: 400px).
+* This allows players using lower resolutions or stretched aspect ratios (like 4:3) to comfortably scale and fit the application on their displays.
+
+📱 **Premium WPF Device List Layout**
+* Overhauled the smart device dashboard with a modernized WPF-styled list design, providing a cleaner grid view and faster switch control access.
+
+💤 **AFK Status & Command-Delay**
+* Easily identify inactive players! Added AFK status indicators to player cards.
+* Custom settings overlays for Team Chat styles alongside customizable command execution delays to prevent spam rate-limits.
+
+🛡️ **Hardened Discord Polling Connection**
+* Resolved a database keep-alive issue. Optimizations to the polling database connection now prevent the Discord bot integration from disconnecting after two hours of inactivity.
+
+# **🚀 RustPlusDesktop — Patch v6.1.1 (Hotfix & Optimization)**
 
 
 

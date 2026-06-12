@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -2115,7 +2115,244 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   <data name="KilledBy" xml:space="preserve">
     <value>Asesinado por</value>
   </data>
+  <data name="CustomAlertsTitle" xml:space="preserve">
+    <value>Personalizar alertas de chat</value>
+  </data>
+  <data name="CustomAlertsHeader" xml:space="preserve">
+    <value>Personalizar plantillas de alertas de chat</value>
+  </data>
+  <data name="CustomAlertsDesc" xml:space="preserve">
+    <value>Aquí puede editar las plantillas para las alertas de chat automatizadas. Las variables (como {0}, {1}) se reemplazarán automáticamente.</value>
+  </data>
+  <data name="VariablesLabel" xml:space="preserve">
+    <value>Variables: {0}</value>
+  </data>
+  <data name="SaveSuccess" xml:space="preserve">
+    <value>Plantilla para &apos;{0}&apos; guardada con éxito.</value>
+  </data>
+  <data name="ResetSuccess" xml:space="preserve">
+    <value>Plantilla para &apos;{0}&apos; restablecida por defecto.</value>
+  </data>
+  <data name="SaveSuccessTitle" xml:space="preserve">
+    <value>Guardado con éxito</value>
+  </data>
+  <data name="ResetSuccessTitle" xml:space="preserve">
+    <value>Restablecer</value>
+  </data>
+  <data name="AlertOilRigTriggeredName" xml:space="preserve">
+    <value>Oil Rig Triggered</value>
+  </data>
+  <data name="AlertOilRigTriggeredDesc" xml:space="preserve">
+    <value>Sent when the Oil Rig event starts.</value>
+  </data>
+  <data name="AlertOilRigTriggeredVars" xml:space="preserve">
+    <value>{0}: Rig Name, {1}: Time to open</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinName" xml:space="preserve">
+    <value>Crate Unlocks (10m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinDesc" xml:space="preserve">
+    <value>Warning sent 10 minutes before crate unlocks.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinVars" xml:space="preserve">
+    <value>{0}: Rig Name</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinName" xml:space="preserve">
+    <value>Crate Unlocks (5m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinDesc" xml:space="preserve">
+    <value>Warning sent 5 minutes before crate unlocks.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinVars" xml:space="preserve">
+    <value>{0}: Rig Name</value>
+  </data>
+  <data name="AlertAlarmTriggeredName" xml:space="preserve">
+    <value>Smart Alarm Triggered</value>
+  </data>
+  <data name="AlertAlarmTriggeredDesc" xml:space="preserve">
+    <value>Sent when a Smart Alarm is triggered.</value>
+  </data>
+  <data name="AlertAlarmTriggeredVars" xml:space="preserve">
+    <value>{0}: Alarm Name</value>
+  </data>
+  <data name="AlertDeepSeaUpName" xml:space="preserve">
+    <value>Deep Sea Event Active</value>
+  </data>
+  <data name="AlertDeepSeaUpDesc" xml:space="preserve">
+    <value>Sent when the Deep Sea event is active.</value>
+  </data>
+  <data name="AlertDeepSeaUpVars" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="AlertNewShopName" xml:space="preserve">
+    <value>New Vending Machine</value>
+  </data>
+  <data name="AlertNewShopDesc" xml:space="preserve">
+    <value>Sent when a new vending machine is detected.</value>
+  </data>
+  <data name="AlertNewShopVars" xml:space="preserve">
+    <value>{0}: Shop Name, {1}: Grid, {2}: Offers</value>
+  </data>
+  <data name="AlertSuspiciousShopName" xml:space="preserve">
+    <value>Suspicious Shop</value>
+  </data>
+  <data name="AlertSuspiciousShopDesc" xml:space="preserve">
+    <value>Sent when a vending machine was online for a very short time.</value>
+  </data>
+  <data name="AlertSuspiciousShopVars" xml:space="preserve">
+    <value>{0}: Shop Name, {1}: Grid, {2}: Online time (s), {3}: Offers</value>
+  </data>
+  <data name="AlertShopMatchName" xml:space="preserve">
+    <value>Vending Machine Item Match</value>
+  </data>
+  <data name="AlertShopMatchDesc" xml:space="preserve">
+    <value>Sent when a vending machine sells an item on your watchlist.</value>
+  </data>
+  <data name="AlertShopMatchVars" xml:space="preserve">
+    <value>{0}: Shop Name, {1}: Grid, {2}: Item, {3}: Cost Qty, {4}: Cost Item, {5}: Stock, {6}: Sell Qty, {7}: Sell Item</value>
+  </data>
+  <data name="AlertCargoSpawnedName" xml:space="preserve">
+    <value>Cargo Ship Spawned</value>
+  </data>
+  <data name="AlertCargoSpawnedDesc" xml:space="preserve">
+    <value>Sent when the Cargo Ship spawns.</value>
+  </data>
+  <data name="AlertCargoSpawnedVars" xml:space="preserve">
+    <value>{0}: Location / Description</value>
+  </data>
+  <data name="AlertCargoDockedName" xml:space="preserve">
+    <value>Cargo Ship Docked</value>
+  </data>
+  <data name="AlertCargoDockedDesc" xml:space="preserve">
+    <value>Sent when the Cargo Ship docks at a harbor.</value>
+  </data>
+  <data name="AlertCargoDockedVars" xml:space="preserve">
+    <value>{0}: Harbor Name, {1}: Grid</value>
+  </data>
+  <data name="AlertCargoExpectedDockName" xml:space="preserve">
+    <value>Cargo Ship Approaching</value>
+  </data>
+  <data name="AlertCargoExpectedDockDesc" xml:space="preserve">
+    <value>Sent when the Cargo Ship is expected to dock in 5 minutes.</value>
+  </data>
+  <data name="AlertCargoExpectedDockVars" xml:space="preserve">
+    <value>{0}: Harbor Name, {1}: Grid</value>
+  </data>
+  <data name="AlertCargoDepartingName" xml:space="preserve">
+    <value>Cargo Ship Departing</value>
+  </data>
+  <data name="AlertCargoDepartingDesc" xml:space="preserve">
+    <value>Sent 5 minutes before the Cargo Ship departs.</value>
+  </data>
+  <data name="AlertCargoDepartingVars" xml:space="preserve">
+    <value>{0}: Harbor Name, {1}: Grid</value>
+  </data>
+  <data name="AlertEventSpawnedName" xml:space="preserve">
+    <value>Event Spawned</value>
+  </data>
+  <data name="AlertEventSpawnedDesc" xml:space="preserve">
+    <value>Sent when general events (like Heli) spawn.</value>
+  </data>
+  <data name="AlertEventSpawnedVars" xml:space="preserve">
+    <value>{0}: Event Name, {1}: Grid</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmName" xml:space="preserve">
+    <value>Heli Crash False Alarm</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmDesc" xml:space="preserve">
+    <value>Sent when a detected Heli crash was actually server lag.</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmVars" xml:space="preserve">
+    <value>{0}: Grid</value>
+  </data>
+  <data name="AlertHeliShotDownName" xml:space="preserve">
+    <value>Patrol Heli Shot Down</value>
+  </data>
+  <data name="AlertHeliShotDownDesc" xml:space="preserve">
+    <value>Sent when the Patrol Heli is shot down.</value>
+  </data>
+  <data name="AlertHeliShotDownVars" xml:space="preserve">
+    <value>{0}: Grid</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosName" xml:space="preserve">
+    <value>Player Online</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosDesc" xml:space="preserve">
+    <value>Sent when a tracked team member comes online.</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosVars" xml:space="preserve">
+    <value>{0}: Player Name, {1}: Grid/Position</value>
+  </data>
+  <data name="AlertPlayerOfflineName" xml:space="preserve">
+    <value>Player Offline</value>
+  </data>
+  <data name="AlertPlayerOfflineDesc" xml:space="preserve">
+    <value>Sent when a tracked team member goes offline.</value>
+  </data>
+  <data name="AlertPlayerOfflineVars" xml:space="preserve">
+    <value>{0}: Player Name</value>
+  </data>
+  <data name="AlertPlayerDiedName" xml:space="preserve">
+    <value>Player Died</value>
+  </data>
+  <data name="AlertPlayerDiedDesc" xml:space="preserve">
+    <value>Sent when a tracked team member dies.</value>
+  </data>
+  <data name="AlertPlayerDiedVars" xml:space="preserve">
+    <value>{0}: Player Name, {1}: Grid/Position</value>
+  </data>
+  <data name="AlertPlayerRespawnedName" xml:space="preserve">
+    <value>Player Respawned</value>
+  </data>
+  <data name="AlertPlayerRespawnedDesc" xml:space="preserve">
+    <value>Sent when a tracked team member respawns.</value>
+  </data>
+  <data name="AlertPlayerRespawnedVars" xml:space="preserve">
+    <value>{0}: Player Name, {1}: Grid/Position</value>
+  </data>
+  <data name="AlertTrackingOnlineName" xml:space="preserve">
+    <value>Tracking Online</value>
+  </data>
+  <data name="AlertTrackingOnlineDesc" xml:space="preserve">
+    <value>Sent when a tracked player goes online.</value>
+  </data>
+  <data name="AlertTrackingOnlineVars" xml:space="preserve">
+    <value>{0}: Player Name, {1}: Group Info</value>
+  </data>
+  <data name="AlertTrackingOfflineName" xml:space="preserve">
+    <value>Tracking Offline</value>
+  </data>
+  <data name="AlertTrackingOfflineDesc" xml:space="preserve">
+    <value>Sent when a tracked player goes offline.</value>
+  </data>
+  <data name="AlertTrackingOfflineVars" xml:space="preserve">
+    <value>{0}: Player Name, {1}: Group Info</value>
+  </data>
+  <data name="AlertTrackingRenamedName" xml:space="preserve">
+    <value>Tracking Renamed</value>
+  </data>
+  <data name="AlertTrackingRenamedDesc" xml:space="preserve">
+    <value>Sent when a tracked player changes their name.</value>
+  </data>
+  <data name="AlertTrackingRenamedVars" xml:space="preserve">
+    <value>{0}: Old Name, {1}: Group Info, {2}: New Name</value>
+  </data>
+  <data name="CustomizeChatAlertsToolTip" xml:space="preserve">
+    <value>Personalizar alertas de chat</value>
+  </data>
+  <data name="AfkCommand" xml:space="preserve">
+    <value>Jugadores AFK</value>
+  </data>
+  <data name="ChatCmdNoOneAfk" xml:space="preserve">
+    <value>Nadie está AFK.</value>
+  </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>Jugador AFK</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>Enviado cuando un miembro del equipo está AFK demasiado tiempo.</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: Nombre del jugador, {1}: Tiempo</value>
+  </data>
 </root>
-
-
-

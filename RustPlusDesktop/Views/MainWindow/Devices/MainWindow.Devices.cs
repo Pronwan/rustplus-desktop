@@ -66,12 +66,37 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
 
     private void TreeViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
+        if (e.OriginalSource is DependencyObject depObj)
+        {
+            var parentBorder = FindParentBorderByName(depObj, "IconBorder");
+            if (parentBorder != null)
+            {
+                // Let the click pass to the IconBorder's handler but do not initiate drag/drop
+                return;
+            }
+        }
+
         _dragStartPoint = e.GetPosition(null);
         if (sender is TreeViewItem tvi)
         {
             _draggedItemContainer = tvi;
             _draggedDevice = tvi.Header as SmartDevice ?? tvi.DataContext as SmartDevice;
             // Allow event to continue for selection
+        }
+    }
+
+    private Border? FindParentBorderByName(DependencyObject child, string name)
+    {
+        if (child == null) return null;
+        if (child is Border border && border.Name == name) return border;
+        try
+        {
+            var parent = VisualTreeHelper.GetParent(child);
+            return parent != null ? FindParentBorderByName(parent, name) : null;
+        }
+        catch
+        {
+            return null;
         }
     }
 
@@ -910,6 +935,8 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
                                 ex.IsOn = false;
                             ex.IsMissing = s.IsMissing;
                             if (!string.IsNullOrWhiteSpace(s.Alias)) ex.Alias = s.Alias;
+                            ex.CustomIconId = s.CustomIconId;
+                            ex.CustomIconShortName = s.CustomIconShortName;
                         }
                     }
                 }
@@ -935,56 +962,86 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
     private void Device_Rename_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev) return;
-
-        var title = dev.IsGroup ? Properties.Resources.RenameGroup : Properties.Resources.RenameDevice;
-        var promptText = dev.IsGroup ? Properties.Resources.NewNameForGroup : string.Format(Properties.Resources.NewNameForDevice, dev.EntityId);
-        var preset = string.IsNullOrWhiteSpace(dev.Alias) ? (dev.Name ?? "") : dev.Alias!;
-        var input = PromptText(this, title, promptText, preset);
-
-        if (input == null) return;                   // Abgebrochen
-        dev.Alias = string.IsNullOrWhiteSpace(input) ? null : input.Trim();
-        _vm.Save();                                  // Profile inkl. Alias persistieren
+        dev.IsEditing = true;
     }
-    private const double MIN_S = 1.0;   // nicht kleiner als "fit"
-    private const double MAX_S = 8.0;
-    // Mini-Prompt, keine zusätzlichen XAML-Dateien nötig
-    private static string? PromptText(Window owner, string title, string message, string initial = "")
+
+    private void DeviceName_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        var win = new Window
+        if (e.ClickCount == 2 && sender is TextBlock tb && tb.DataContext is SmartDevice dev)
         {
-            Title = title,
-            Width = 380,
-            Height = 160,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Owner = owner,
-            ResizeMode = ResizeMode.NoResize,
-            WindowStyle = WindowStyle.ToolWindow,
-            ShowInTaskbar = false
-        };
+            e.Handled = true;
+            dev.IsEditing = true;
+        }
+    }
 
-        var grid = new Grid { Margin = new Thickness(12) };
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+    private void TxtRename_LostFocus(object sender, RoutedEventArgs e)
+    {
+        if (sender is TextBox tb && tb.DataContext is SmartDevice dev)
+        {
+            EndRenameEditing(dev, tb, save: true);
+        }
+    }
 
-        var tbMsg = new TextBlock { Text = message, Margin = new Thickness(0, 0, 0, 6) };
-        var box = new TextBox { Text = initial, MinWidth = 300 };
-        var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 10, 0, 0) };
-        var ok = new Button { Content = "OK", Width = 80, IsDefault = true, Margin = new Thickness(0, 0, 6, 0) };
-        var cancel = new Button { Content = "Cancel", Width = 100, IsCancel = true };
+    private void TxtRename_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (sender is TextBox tb && tb.DataContext is SmartDevice dev)
+        {
+            if (e.Key == Key.Enter)
+            {
+                e.Handled = true;
+                EndRenameEditing(dev, tb, save: true);
+            }
+            else if (e.Key == Key.Escape)
+            {
+                e.Handled = true;
+                EndRenameEditing(dev, tb, save: false);
+            }
+        }
+    }
 
-        buttons.Children.Add(ok);
-        buttons.Children.Add(cancel);
+    private void TxtRename_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (sender is TextBox tb && tb.Visibility == Visibility.Visible)
+        {
+            tb.Focus();
+            tb.SelectAll();
+        }
+    }
 
-        Grid.SetRow(tbMsg, 0); grid.Children.Add(tbMsg);
-        Grid.SetRow(box, 1); grid.Children.Add(box);
-        Grid.SetRow(buttons, 2); grid.Children.Add(buttons);
+    private void EndRenameEditing(SmartDevice dev, TextBox tb, bool save)
+    {
+        if (!dev.IsEditing) return;
 
-        string? result = null;
-        ok.Click += (_, __) => { result = box.Text; win.DialogResult = true; };
-        win.Content = grid;
+        if (save)
+        {
+            var be = tb.GetBindingExpression(TextBox.TextProperty);
+            be?.UpdateSource();
 
-        return win.ShowDialog() == true ? result : null;
+            if (string.IsNullOrWhiteSpace(dev.Alias))
+            {
+                dev.Alias = null;
+            }
+
+            _vm?.Save();
+            SaveOwnOverlayToJson();
+            if (TrackingService.CloudSyncEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.Client != null)
+            {
+                try
+                {
+                    _ = UploadDevicesSnapshotForCurrentServerAsync();
+                }
+                catch (Exception ex)
+                {
+                    AppendLog("[dev/sync] Error: " + ex.Message);
+                }
+            }
+        }
+        else
+        {
+            tb.Text = dev.Alias;
+        }
+
+        dev.IsEditing = false;
     }
 
 public List<ExportedDeviceDto> Devices { get; set; } = new();
@@ -1142,7 +1199,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
                 foreach (var d in data.Devices)
                 {
-                    AddDeviceToImportItems(items, d, tm);
+                    CollectIndividualDevices(items, d, tm);
                 }
             }
 
@@ -1298,8 +1355,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
     private void AddDeviceToImportItems(List<DeviceImportItem> items, ExportedDeviceDto d, TeamMemberVM tm)
     {
-        // Wir fügen nur Top-Level Items hinzu, die dann aber den OriginalDto mitschleifen
-        bool already = _vm.Selected.Devices?.Any(x => x.EntityId == d.EntityId) == true;
+        bool already = FindDeviceById(_vm.Selected.Devices, d.EntityId) != null;
 
         var item = new DeviceImportItem
         {
@@ -1316,6 +1372,24 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             OriginalDto = d // <- Hier speichern wir das volle DTO inklusive Children!
         };
         items.Add(item);
+    }
+
+    private void CollectIndividualDevices(List<DeviceImportItem> items, ExportedDeviceDto d, TeamMemberVM tm)
+    {
+        if (d.IsGroup)
+        {
+            if (d.Children != null)
+            {
+                foreach (var child in d.Children)
+                {
+                    CollectIndividualDevices(items, child, tm);
+                }
+            }
+        }
+        else
+        {
+            AddDeviceToImportItems(items, d, tm);
+        }
     }
 
     private SmartDevice MapDtoToDeviceFiltered(ExportedDeviceDto dto)
@@ -1590,5 +1664,137 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
             if (r != null) return r;
         }
         return null;
+    }
+
+    private void DeviceIcon_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        try
+        {
+            e.Handled = true;
+            if (sender is FrameworkElement fe && fe.DataContext is SmartDevice dev)
+            {
+                var dlg = new RustPlusDesk.Views.Windows.ChangeDeviceIconDialog(dev.CustomIconId, dev.CustomIconShortName)
+                {
+                    Owner = this
+                };
+                
+                _activeDialog = dlg;
+                ApplyWindowBlur();
+                if (Root != null)
+                {
+                    Root.IsHitTestVisible = false;
+                }
+
+                dlg.Closed += (s, ev) =>
+                {
+                    if (ReferenceEquals(_activeDialog, dlg))
+                    {
+                        _activeDialog = null;
+                    }
+                    RemoveWindowBlur();
+                    if (Root != null)
+                    {
+                        Root.IsHitTestVisible = true;
+                    }
+
+                    if (dlg.IsSaved)
+                    {
+                        if (dlg.IsResetClicked)
+                        {
+                            dev.CustomIconId = null;
+                            dev.CustomIconShortName = null;
+                        }
+                        else
+                        {
+                            dev.CustomIconId = dlg.SelectedIconId;
+                            dev.CustomIconShortName = dlg.SelectedIconShortName;
+                        }
+                        
+                        if (_vm != null)
+                        {
+                            _vm.Save();
+                        }
+
+                        // Save local and push sync
+                        SaveOwnOverlayToJson();
+                        if (TrackingService.CloudSyncEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.Client != null)
+                        {
+                            try
+                            {
+                                _ = UploadDevicesSnapshotForCurrentServerAsync();
+                            }
+                            catch (Exception ex)
+                            {
+                                AppendLog("[dev/sync] Error: " + ex.Message);
+                            }
+                        }
+                    }
+                };
+
+                dlg.Show();
+                CenterActiveDialog();
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[dev/icon] Dialog error: " + ex.Message);
+        }
+    }
+
+    private void ApplyWindowBlur()
+    {
+        var blur = new System.Windows.Media.Effects.BlurEffect { Radius = 0 };
+        if (Root != null)
+        {
+            Root.Effect = blur;
+            var anim = new System.Windows.Media.Animation.DoubleAnimation(0, 10, TimeSpan.FromMilliseconds(200))
+            {
+                EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut }
+            };
+            blur.BeginAnimation(System.Windows.Media.Effects.BlurEffect.RadiusProperty, anim);
+        }
+    }
+
+    private void RemoveWindowBlur()
+    {
+        if (Root != null && Root.Effect is System.Windows.Media.Effects.BlurEffect blur)
+        {
+            var anim = new System.Windows.Media.Animation.DoubleAnimation(0, TimeSpan.FromMilliseconds(150))
+            {
+                EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseIn }
+            };
+            anim.Completed += (s, e) =>
+            {
+                if (ReferenceEquals(Root.Effect, blur))
+                {
+                    Root.Effect = null;
+                }
+            };
+            blur.BeginAnimation(System.Windows.Media.Effects.BlurEffect.RadiusProperty, anim);
+        }
+    }
+
+    internal static List<ShopSearchControl.AutocompleteItem> SearchItems(string query)
+    {
+        EnsureNewItemDbLoaded();
+        string cleanQuery = (query ?? "").Trim().ToLowerInvariant();
+        if (string.IsNullOrWhiteSpace(cleanQuery))
+        {
+            return new List<ShopSearchControl.AutocompleteItem>();
+        }
+
+        return sItemsById.Values
+            .Where(ii => !string.IsNullOrWhiteSpace(ii.Display) && 
+                         (ii.Display.Contains(cleanQuery, StringComparison.OrdinalIgnoreCase) || 
+                          (ii.ShortName != null && ii.ShortName.Contains(cleanQuery, StringComparison.OrdinalIgnoreCase))))
+            .Take(50)
+            .Select(ii => new ShopSearchControl.AutocompleteItem
+            {
+                Id = ii.Id,
+                Display = ii.Display,
+                ShortName = ii.ShortName ?? "",
+                Icon = ResolveItemIcon(ii.Id, ii.ShortName, 32)
+            })
+            .ToList();
     }
 }

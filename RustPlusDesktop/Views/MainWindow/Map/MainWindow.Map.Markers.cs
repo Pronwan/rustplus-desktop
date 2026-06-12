@@ -385,7 +385,7 @@ public partial class MainWindow
                 {
                     string grid = GetGridLabel(m.X, m.Y);
                     string locStr = distFromCenter > (half * 1.05) ? string.Format(Properties.Resources.CargoFarOutAtSea, grid) : grid;
-                    var msg = string.Format(Properties.Resources.AlertCargoSpawned, locStr);
+                    var msg = AlertTemplateService.GetFormattedAlert("AlertCargoSpawned", locStr);
                     _ = SendTeamChatSafeAsync(msg, false, true);
                     _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event:** {msg}");
                     
@@ -485,7 +485,7 @@ public partial class MainWindow
             if ((DateTime.UtcNow - state.DockTime.Value).TotalSeconds >= 5)
             {
                 string grid = GetGridLabel(m.X, m.Y);
-                var msg = string.Format(Properties.Resources.AlertCargoDocked, state.HarborName, grid);
+                var msg = AlertTemplateService.GetFormattedAlert("AlertCargoDocked", state.HarborName, grid);
                 _ = SendTeamChatSafeAsync(msg, false, true);
                 _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event Update:** {msg}");
                 state.AnnouncedDock = true;
@@ -510,7 +510,7 @@ public partial class MainWindow
                         if (dToH < dLastToH) // Approaching
                         {
                             string grid = GetGridLabel(h.X, h.Y);
-                            var msg = string.Format(Properties.Resources.AlertCargoExpectedDock, Beautify(h.Name!), grid);
+                            var msg = AlertTemplateService.GetFormattedAlert("AlertCargoExpectedDock", Beautify(h.Name!), grid);
                             _ = SendTeamChatSafeAsync(msg, false, true);
                             _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event Update:** {msg}");
                             state.AnnouncedArrivalWarning = true;
@@ -538,7 +538,7 @@ public partial class MainWindow
                 else
                 {
                     string grid = GetGridLabel(m.X, m.Y);
-                    var msg = string.Format(Properties.Resources.AlertCargoDeparting, state.HarborName, grid);
+                    var msg = AlertTemplateService.GetFormattedAlert("AlertCargoDeparting", state.HarborName, grid);
                     _ = SendTeamChatSafeAsync(msg, false, true);
                     _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event Update:** {msg}");
                     state.AnnouncedEgressWarning = true;
@@ -1281,7 +1281,7 @@ public partial class MainWindow
                     _heliCrashSites.Remove(existing);
                     if (_announceSpawns && TrackingService.AnnounceHeli)
                     {
-                        var msg = string.Format(Properties.Resources.AlertHeliCrashFalseAlarm, GetGridLabel(m.X, m.Y));
+                        var msg = AlertTemplateService.GetFormattedAlert("AlertHeliCrashFalseAlarm", GetGridLabel(m.X, m.Y));
                         _ = SendTeamChatSafeAsync(msg, false, true);
                         _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event Update:** {msg}");
                     }
@@ -1418,7 +1418,7 @@ public partial class MainWindow
                         {
                             var grid = GetGridLabel(m.X, m.Y);
                             var kind = EventKindText(m.Type);
-                            var msg = string.Format(Properties.Resources.AlertEventSpawned, kind, grid);
+                            var msg = AlertTemplateService.GetFormattedAlert("AlertEventSpawned", kind, grid);
                             _ = SendTeamChatSafeAsync(msg, false, true);
                             _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event:** {msg}");
                         }
@@ -1682,7 +1682,7 @@ public partial class MainWindow
                         _ = Dispatcher.InvokeAsync(() => site.MapElement = PlaceHeliCrashSite(site));
                         if (_announceSpawns && TrackingService.AnnounceHeli)
                         {
-                            var msg = string.Format(Properties.Resources.AlertHeliShotDown, crashGrid);
+                            var msg = AlertTemplateService.GetFormattedAlert("AlertHeliShotDown", crashGrid);
                             _ = SendTeamChatSafeAsync(msg, false, true);
                             _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event Update:** {msg}");
                         }

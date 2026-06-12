@@ -145,13 +145,15 @@ namespace RustPlusDesk.Services.Auth
 
                 var options = new SupabaseOptions
                 {
-                    AutoRefreshToken = true,
+                    AutoRefreshToken = false,
                     AutoConnectRealtime = true,
                     SessionHandler = new DesktopSessionHandler()
                 };
 
                 Client = new Supabase.Client(url, key, options);
                 await Client.InitializeAsync();
+                
+                StartKeepAliveTimer();
 
                 // Explicitly restore the persisted Discord session.
                 // Client.InitializeAsync() loads the session via SessionHandler but may not
@@ -251,6 +253,19 @@ namespace RustPlusDesk.Services.Auth
             }
             catch { }
             return DateTime.MinValue;
+        }
+
+        private static System.Threading.Timer? _keepAliveTimer;
+
+        public static void StartKeepAliveTimer()
+        {
+            _keepAliveTimer ??= new System.Threading.Timer(async _ =>
+            {
+                if (IsAuthenticated)
+                {
+                    try { await EnsureFreshSessionAsync(); } catch { }
+                }
+            }, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
         }
 
         public static async Task<bool> EnsureFreshSessionAsync()

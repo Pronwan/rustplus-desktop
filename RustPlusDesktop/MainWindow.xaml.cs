@@ -378,6 +378,8 @@ public partial class MainWindow : WpfUi.FluentWindow
         
         if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
         this.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
+        this.LocationChanged += MainWindow_LocationChangedOrResized;
+        this.SizeChanged += MainWindow_LocationChangedOrResized;
         if (FindName("TxtAppVersion") is TextBlock txt)
             txt.Text = $"v{_updateService.VersionRaw}";
         InitCameraUi();
@@ -501,7 +503,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }));
 
         // One-time migration notice for v5.2.0
-        const string AppVersion = "6.0.0";
+        const string AppVersion = "6.3.0";
 
         bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
         {
@@ -713,7 +715,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                              data.Name;
             Dispatcher.InvokeAsync(async () =>
             {
-                var msg = string.Format(Properties.Resources.AlertOilRigTriggered, rigName, timeStr);
+                var msg = AlertTemplateService.GetFormattedAlert("AlertOilRigTriggered", rigName, timeStr);
                 await SendTeamChatSafeAsync(msg, false, true);
                 _ = DiscordBotListenerService.Instance.SendNotificationAsync("events", "\uD83D\uDEA2 **Event:** " + msg);
             });
@@ -2235,7 +2237,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             && _announceSpawns)
         {
             string alarmName = dev?.PureName ?? (!string.IsNullOrEmpty(n.DeviceName) ? n.DeviceName : "Smart Alarm");
-            _ = SendTeamChatSafeAsync(string.Format(Properties.Resources.AlertAlarmTriggered, alarmName), false, true);
+            _ = SendTeamChatSafeAsync(AlertTemplateService.GetFormattedAlert("AlertAlarmTriggered", alarmName), false, true);
         }
 
         if (dev != null)
@@ -3040,7 +3042,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     }
 
 
-    /// <summary>Starts the FCM pairing listener silently Ã¢â‚¬â€ no busy overlay, no blocking.</summary>
+    /// <summary>Starts the FCM pairing listener silently Ã¢â‚¬â€  no busy overlay, no blocking.</summary>
     private void StartPairingSilent(bool autoStart = false)
     {
         if (_listenerStarting || _pairing.IsRunning) return;
@@ -3076,7 +3078,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private async Task StartPairingListenerUiAsync()
     {
-        // Delegate to silent start Ã¢â‚¬â€ no more busy overlay
+        // Delegate to silent start Ã¢â‚¬â€  no more busy overlay
         StartPairingSilent(false);
         await Task.CompletedTask;
     }
@@ -3136,7 +3138,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _pairing.Listening += onListen;
             _pairing.Failed += onFail;
 
-            await _pairing.StartAsyncUsingEdge();   // <Ã¢â‚¬â€ NEU: eigene Methode (siehe unten)
+            await _pairing.StartAsyncUsingEdge();   // <Ã¢â‚¬â€  NEU: eigene Methode (siehe unten)
 
             var completed = await Task.WhenAny(tcs.Task, Task.Delay(8000));
             bool ok = (completed == tcs.Task) && tcs.Task.Result;
@@ -3856,6 +3858,34 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         RequestTeamFeatureMasterSync();
     }
 
+    private void EditAlertTemplates_Click(object sender, RoutedEventArgs e)
+    {
+        var win = new Views.Windows.CustomAlertsWindow();
+        win.Owner = this;
+        _activeDialog = win;
+        ApplyWindowBlur();
+        if (Root != null)
+        {
+            Root.IsHitTestVisible = false;
+        }
+
+        win.Closed += (s, ev) =>
+        {
+            if (ReferenceEquals(_activeDialog, win))
+            {
+                _activeDialog = null;
+            }
+            RemoveWindowBlur();
+            if (Root != null)
+            {
+                Root.IsHitTestVisible = true;
+            }
+        };
+
+        win.Show();
+        CenterActiveDialog();
+    }
+
     private void SetAllAlerts(bool val)
     {
         TrackingService.AnnounceCargo = val;
@@ -4264,7 +4294,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         border.Cursor = Cursors.Hand;
         border.MouseLeftButtonUp += (_, __) =>
         {
-            CenterMapOnWorld(shop.X, shop.Y);   // Ã¢â€ Â hier wird zentriert
+            CenterMapOnWorld(shop.X, shop.Y);   // Ã¢â€ Â  hier wird zentriert
                                                 // __?.Handled = true;
         };
 
@@ -4286,7 +4316,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         public bool NotifyChat { get; set; } = true;
         public bool NotifySound { get; set; } = true;
 
-        // vom User Ã¢â‚¬Å“gespeichertÃ¢â‚¬Â? Dann ÃƒÂ¼ber Neustart hinweg laden
+        // vom User Ã¢â‚¬Å“gespeichertÃ¢â‚¬Â ? Dann ÃƒÂ¼ber Neustart hinweg laden
         public bool IsSaved { get; set; } = false;
 
         // Baseline der schon bekannten Orders beim Anlegen
@@ -4443,7 +4473,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 Cursor = Cursors.Hand,
                 Content = new TextBlock
                 {Style = null,
-                    Text = "Ã°Å¸â€Å ",
+                    Text = "Ã°Å¸â€ Å ",
                     FontSize = 14,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,
@@ -6209,6 +6239,30 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _vm.NotifyFcmChanged();
         
         AppendLog("[SYSTEM] Application data reloaded successfully after restore.");
+    }
+
+    private Window? _activeDialog;
+
+    public void CenterActiveDialog()
+    {
+        if (_activeDialog != null && _activeDialog.IsVisible)
+        {
+            double ownerLeft = this.Left;
+            double ownerTop = this.Top;
+            double ownerWidth = this.ActualWidth;
+            double ownerHeight = this.ActualHeight;
+
+            double dialogWidth = _activeDialog.Width;
+            double dialogHeight = _activeDialog.Height;
+
+            _activeDialog.Left = ownerLeft + (ownerWidth - dialogWidth) / 2;
+            _activeDialog.Top = ownerTop + (ownerHeight - dialogHeight) / 2;
+        }
+    }
+
+    private void MainWindow_LocationChangedOrResized(object? sender, EventArgs e)
+    {
+        CenterActiveDialog();
     }
 }
 

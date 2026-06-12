@@ -21,8 +21,14 @@ namespace RustPlusDesk.Views
     {
         private readonly RustPlusClientReal _real;
         private readonly string _cameraId;
-        private readonly DispatcherTimer _timer = new();
         private bool _running;
+        private bool _mouseLookSupported;
+        private bool _crosshairSupported;
+        private bool _movementSupported;
+        private DateTime _lastFrameRenderTime = DateTime.MinValue;
+        private int _fpsLimit = 2;
+        private System.Diagnostics.Process? _nodeProcess;
+        private int _frameCount = 0;
         
         private static readonly string[] EnvWords = { "tree", "bush", "ore", "stone", "hemp", "barrel", "crate", "rock", "node", "stump", "collectible" };
 
@@ -80,28 +86,81 @@ namespace RustPlusDesk.Views
             InitializeComponent();
             _real = real;
             _cameraId = cameraId;
+            Title = cameraId;
             _real.CameraEntities += OnCameraEntities;
-            TxtId.Text = cameraId;
+            TxtTitle.Text = cameraId;
 
+            // Hook mouse events for PTZ pan/tilt drag
+            Img.MouseDown += Img_MouseDown;
+            Img.MouseMove += Img_MouseMove;
+            Img.MouseUp += Img_MouseUp;
+            Img.MouseLeave += Img_MouseLeave;
+
+            // Hook button press-and-hold events for continuous steering/actions
+            BtnCamUp.PreviewMouseDown += (_, __) => {
+                if (_movementSupported) StartContinuousInput(CameraButtons.Forward, 0f, 0f);
+                else if (_mouseLookSupported) StartContinuousInput(CameraButtons.None, 0f, -5f);
+            };
+            BtnCamUp.PreviewMouseUp += (_, __) => StopContinuousInput();
+            BtnCamUp.MouseLeave += (_, __) => StopContinuousInput();
+
+            BtnCamDown.PreviewMouseDown += (_, __) => {
+                if (_movementSupported) StartContinuousInput(CameraButtons.Backward, 0f, 0f);
+                else if (_mouseLookSupported) StartContinuousInput(CameraButtons.None, 0f, 5f);
+            };
+            BtnCamDown.PreviewMouseUp += (_, __) => StopContinuousInput();
+            BtnCamDown.MouseLeave += (_, __) => StopContinuousInput();
+
+            BtnCamLeft.PreviewMouseDown += (_, __) => {
+                if (_movementSupported) StartContinuousInput(CameraButtons.Left, 0f, 0f);
+                else if (_mouseLookSupported) StartContinuousInput(CameraButtons.None, -5f, 0f);
+            };
+            BtnCamLeft.PreviewMouseUp += (_, __) => StopContinuousInput();
+            BtnCamLeft.MouseLeave += (_, __) => StopContinuousInput();
+
+            BtnCamRight.PreviewMouseDown += (_, __) => {
+                if (_movementSupported) StartContinuousInput(CameraButtons.Right, 0f, 0f);
+                else if (_mouseLookSupported) StartContinuousInput(CameraButtons.None, 5f, 0f);
+            };
+            BtnCamRight.PreviewMouseUp += (_, __) => StopContinuousInput();
+            BtnCamRight.MouseLeave += (_, __) => StopContinuousInput();
+
+            BtnCamJump.PreviewMouseDown += (_, __) => StartContinuousInput(CameraButtons.Jump, 0f, 0f);
+            BtnCamJump.PreviewMouseUp += (_, __) => StopContinuousInput();
+            BtnCamJump.MouseLeave += (_, __) => StopContinuousInput();
+
+            BtnCamDuck.PreviewMouseDown += (_, __) => StartContinuousInput(CameraButtons.Duck, 0f, 0f);
+            BtnCamDuck.PreviewMouseUp += (_, __) => StopContinuousInput();
+            BtnCamDuck.MouseLeave += (_, __) => StopContinuousInput();
+
+            BtnCamFire.PreviewMouseDown += (_, __) => {
+                CrosshairGrid.Visibility = Visibility.Visible;
+                StartContinuousInput(CameraButtons.FirePrimary, 0f, 0f);
+            };
+            BtnCamFire.PreviewMouseUp += (_, __) => {
+                StopContinuousInput();
+                if (!_crosshairSupported) CrosshairGrid.Visibility = Visibility.Collapsed;
+            };
+            BtnCamFire.MouseLeave += (_, __) => {
+                StopContinuousInput();
+                if (!_crosshairSupported) CrosshairGrid.Visibility = Visibility.Collapsed;
+            };
+
+            _real.CameraControlFlagsChanged += OnCameraControlFlagsChanged;
 
             // FPS Dropdown
             CmbFps.SelectionChanged += (_, __) => ApplyFps();
 
-            Loaded += async (_, __) =>
+            Loaded += (_, __) =>
             {
                 ApplyFps();
                 _running = true;
                 Overlay.SizeChanged += (_, __2) => DrawOverlay(); Img.SizeChanged += (_, __2) => DrawOverlay();
             
-            await RefreshTeamAsync();
+                _ = RefreshTeamAsync();
 
-                // optional: erstes Bild
-                var first = await _real.GetCameraFrameViaNodeAsync(_cameraId, timeoutMs: 5000);
-               
-                if (first?.Bytes != null) ShowFrame(first);
-
-                _timer.Tick += Timer_Tick;
-                _timer.Start();
+                // Start persistent stream using the Node.js process
+                _nodeProcess = _real.StartPersistentCameraStream(_cameraId, OnNodeLineReceived, OnNodeErrorReceived);
 
                 // Thumbnails für diese Kamera pausieren (im MainWindow hast du _camBusy)
                 if (Owner is MainWindow mw) mw._camBusy.Add(_cameraId);
@@ -110,8 +169,12 @@ namespace RustPlusDesk.Views
             Closed += (_, __) =>
             {
                 _running = false;
-                _timer.Stop();
-                _timer.Tick -= Timer_Tick;
+                try
+                {
+                    _nodeProcess?.Kill();
+                    _nodeProcess?.Dispose();
+                }
+                catch { }
                 if (Owner is MainWindow mw) mw._camBusy.Remove(_cameraId);
             };
            
@@ -209,32 +272,115 @@ namespace RustPlusDesk.Views
         private void ApplyFps()
         {
             if (CmbFps.SelectedItem is ComboBoxItem it && int.TryParse(it.Content?.ToString(), out var fps) && fps > 0)
-                _timer.Interval = TimeSpan.FromMilliseconds(1000.0 / fps);
+                _fpsLimit = fps;
             else
-                _timer.Interval = TimeSpan.FromMilliseconds(500); // default 2 FPS
+                _fpsLimit = 2; // default 2 FPS
         }
 
-        private int _snapInFlight = 0;
-
-        private async void Timer_Tick(object? sender, EventArgs e)
+        private void OnNodeLineReceived(string line)
         {
-            if (!_running) return;
-            if (System.Threading.Interlocked.Exchange(ref _snapInFlight, 1) == 1) return;
+            if (string.IsNullOrWhiteSpace(line) || !_running) return;
 
+            // FRAME:<b64>
+            if (line.StartsWith("FRAME:"))
+            {
+                try
+                {
+                    var b64 = line.Substring("FRAME:".Length);
+                    var bytes = Convert.FromBase64String(b64);
+                    
+                    var now = DateTime.UtcNow;
+                    var minIntervalMs = 1000.0 / _fpsLimit;
+                    if ((now - _lastFrameRenderTime).TotalMilliseconds < minIntervalMs) return;
+                    _lastFrameRenderTime = now;
+
+                    Dispatcher.Invoke(() => ShowFrame(new CameraFrame(bytes, null, _lastW, _lastH, _lastEnts)));
+                }
+                catch { }
+                return;
+            }
+
+            // ENTS:<b64 json>
+            if (line.StartsWith("ENTS:"))
+            {
+                try
+                {
+                    var b = Convert.FromBase64String(line.Substring(5));
+                    var json = System.Text.Encoding.UTF8.GetString(b);
+                    using var doc = System.Text.Json.JsonDocument.Parse(json);
+                    
+                    double vFov = 65.0;
+                    if (doc.RootElement.TryGetProperty("fov", out var vf) && vf.ValueKind == System.Text.Json.JsonValueKind.Number)
+                        vFov = vf.GetDouble();
+
+                    var list = new List<CameraEntity>();
+                    if (doc.RootElement.TryGetProperty("ents", out var arr) && arr.ValueKind == System.Text.Json.JsonValueKind.Array)
+                    {
+                        foreach (var it in arr.EnumerateArray())
+                        {
+                            double x = it.TryGetProperty("x", out var vx) ? vx.GetDouble() : 0;
+                            double y = it.TryGetProperty("y", out var vy) ? vy.GetDouble() : 0;
+                            double z = it.TryGetProperty("z", out var vz) ? vz.GetDouble() : 0;
+                            int entityId = it.TryGetProperty("id", out var vi) ? (vi.ValueKind == System.Text.Json.JsonValueKind.Number ? vi.GetInt32() : 0) : 0;
+                            int type = it.TryGetProperty("type", out var vt) ? (vt.ValueKind == System.Text.Json.JsonValueKind.Number ? vt.GetInt32() : 0) : 0;
+                            ulong sid = 0;
+                            if (it.TryGetProperty("sidStr", out var vss) && vss.ValueKind == System.Text.Json.JsonValueKind.String)
+                                _ = ulong.TryParse(vss.GetString(), out sid);
+
+                            string name = it.TryGetProperty("name", out var vn) ? (vn.GetString() ?? "") : "";
+                            list.Add(new CameraEntity(x, y, z, name, entityId, type, sid));
+                        }
+                    }
+
+                    _lastEnts = list;
+                    _lastVFovDeg = vFov;
+                    Dispatcher.Invoke(DrawOverlay);
+                }
+                catch { }
+                return;
+            }
+
+            // INFO:<b64 json>
+            if (line.StartsWith("INFO:"))
+            {
+                try
+                {
+                    var b = Convert.FromBase64String(line.Substring(5));
+                    var json = System.Text.Encoding.UTF8.GetString(b);
+                    using var doc = System.Text.Json.JsonDocument.Parse(json);
+                    _lastW = doc.RootElement.TryGetProperty("w", out var w) ? w.GetInt32() : _lastW;
+                    _lastH = doc.RootElement.TryGetProperty("h", out var h) ? h.GetInt32() : _lastH;
+                    int cf = doc.RootElement.TryGetProperty("cf", out var vcf) ? vcf.GetInt32() : 0;
+                    
+                    OnCameraControlFlagsChanged(_cameraId, cf);
+                }
+                catch { }
+                return;
+            }
+        }
+
+        private void OnNodeErrorReceived(string line)
+        {
+            System.Diagnostics.Debug.WriteLine($"[node-err] {line}");
+            Dispatcher.Invoke(() =>
+            {
+                if (Owner is MainWindow mw)
+                {
+                    mw.AppendLog($"[node-err] {line}");
+                }
+            });
+        }
+
+        private async Task SendCameraInputAsync(CameraButtons buttons, float mouseDeltaX, float mouseDeltaY)
+        {
             try
             {
-                var frame = await _real.GetCameraFrameViaNodeAsync(_cameraId, timeoutMs: 4000);
-                if (frame?.Bytes != null) ShowFrame(frame);
-                else TxtStatus.Text = "no frame";
+                var cmd = $"INPUT:{(int)buttons}:{mouseDeltaX.ToString(System.Globalization.CultureInfo.InvariantCulture)}:{mouseDeltaY.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
+                _nodeProcess?.StandardInput.WriteLine(cmd);
+                _nodeProcess?.StandardInput.Flush();
             }
-            catch (Exception ex)
-            {
-                TxtStatus.Text = ex.Message;
-            }
-            finally
-            {
-                System.Threading.Interlocked.Exchange(ref _snapInFlight, 0);
-            }
+            catch { }
+            await Task.CompletedTask;
         }
 
         private void ShowFrame(CameraFrame frame)
@@ -250,9 +396,10 @@ namespace RustPlusDesk.Views
                 bi.Freeze();
                 Img.Source = bi;
 
-                TxtStatus.Text = (frame.Width > 0 && frame.Height > 0)
-                    ? $"{frame.Width}×{frame.Height}"
-                    : "snapshot";
+                _frameCount++;
+                TxtTitle.Text = (frame.Width > 0 && frame.Height > 0)
+                    ? $"{_cameraId} ({frame.Width}×{frame.Height}, Frames: {_frameCount})"
+                    : $"{_cameraId} (snapshot, Frames: {_frameCount})";
 
                 // Wenn du dennoch eine einfache Fallback-Liste willst:
                 if ((_lastEnts == null || _lastEnts.Count == 0) && frame.Entities != null && frame.Entities.Count > 0)
@@ -264,5 +411,155 @@ namespace RustPlusDesk.Views
             catch { /* tolerant */ }
         }
 
+        private System.Threading.CancellationTokenSource? _continuousInputCts;
+
+        private void StartContinuousInput(CameraButtons buttons, float dx, float dy)
+        {
+            StopContinuousInput();
+            _continuousInputCts = new System.Threading.CancellationTokenSource();
+            var token = _continuousInputCts.Token;
+
+            System.Threading.Tasks.Task.Run(async () =>
+            {
+                try
+                {
+                    while (!token.IsCancellationRequested)
+                    {
+                        await SendCameraInputAsync(buttons, dx, dy);
+                        await System.Threading.Tasks.Task.Delay(100, token);
+                    }
+                }
+                catch (System.Threading.Tasks.TaskCanceledException) { }
+                finally
+                {
+                    await SendCameraInputAsync(CameraButtons.None, 0f, 0f);
+                }
+            }, token);
+        }
+
+        private void StopContinuousInput()
+        {
+            if (_continuousInputCts != null)
+            {
+                try { _continuousInputCts.Cancel(); } catch { }
+                try { _continuousInputCts.Dispose(); } catch { }
+                _continuousInputCts = null;
+            }
+        }
+
+        private async void BtnCamReload_Click(object sender, RoutedEventArgs e)
+        {
+            await SendCameraInputAsync(CameraButtons.Reload, 0f, 0f);
+        }
+
+        private bool _isMouseDown;
+        private Point _lastMousePos;
+
+        private void Img_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (!_mouseLookSupported) return;
+            if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
+            {
+                _isMouseDown = true;
+                _lastMousePos = e.GetPosition(Img);
+                Img.CaptureMouse();
+            }
+        }
+
+        private async void Img_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (!_mouseLookSupported) return;
+            if (_isMouseDown)
+            {
+                var currentPos = e.GetPosition(Img);
+                double dx = currentPos.X - _lastMousePos.X;
+                double dy = currentPos.Y - _lastMousePos.Y;
+                
+                if (Math.Abs(dx) > 0.5 || Math.Abs(dy) > 0.5)
+                {
+                    float rx = (float)dx * 0.5f;
+                    float ry = (float)-dy * 0.5f;
+                    
+                    await SendCameraInputAsync(CameraButtons.None, rx, ry);
+                    _lastMousePos = currentPos;
+                }
+            }
+        }
+
+        private void OnCameraControlFlagsChanged(string camId, int flagsVal)
+        {
+            if (!string.Equals(camId, _cameraId, StringComparison.OrdinalIgnoreCase)) return;
+
+            Dispatcher.Invoke(() =>
+            {
+                var flags = (CameraControlFlags)flagsVal;
+                
+                if (flags == CameraControlFlags.None)
+                {
+                    string lowerId = _cameraId.ToLowerInvariant();
+                    if (lowerId.Contains("turret"))
+                    {
+                        flags = CameraControlFlags.Mouse | CameraControlFlags.Fire | CameraControlFlags.Reload | CameraControlFlags.Crosshair;
+                    }
+                    else if (lowerId.Contains("drone"))
+                    {
+                        flags = CameraControlFlags.Movement | CameraControlFlags.Mouse | CameraControlFlags.SprintAndDuck;
+                    }
+                }
+
+                if (flags == CameraControlFlags.None)
+                {
+                    ControlBorder.Visibility = Visibility.Collapsed;
+                    _mouseLookSupported = false;
+                    _crosshairSupported = false;
+                    CrosshairGrid.Visibility = Visibility.Collapsed;
+                    return;
+                }
+
+                ControlBorder.Visibility = Visibility.Visible;
+
+                _movementSupported = flags.HasFlag(CameraControlFlags.Movement);
+                _mouseLookSupported = flags.HasFlag(CameraControlFlags.Mouse);
+                MovementPad.Visibility = (_movementSupported || _mouseLookSupported) ? Visibility.Visible : Visibility.Collapsed;
+
+                BtnCamJump.Visibility = flags.HasFlag(CameraControlFlags.SprintAndDuck) ? Visibility.Visible : Visibility.Collapsed;
+                BtnCamDuck.Visibility = flags.HasFlag(CameraControlFlags.SprintAndDuck) ? Visibility.Visible : Visibility.Collapsed;
+                
+                BtnCamFire.Visibility = flags.HasFlag(CameraControlFlags.Fire) ? Visibility.Visible : Visibility.Collapsed;
+                BtnCamReload.Visibility = flags.HasFlag(CameraControlFlags.Reload) ? Visibility.Visible : Visibility.Collapsed;
+
+                _crosshairSupported = flags.HasFlag(CameraControlFlags.Crosshair);
+                CrosshairGrid.Visibility = _crosshairSupported ? Visibility.Visible : Visibility.Collapsed;
+            });
+        }
+
+        private void Img_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
+            {
+                _isMouseDown = false;
+                Img.ReleaseMouseCapture();
+            }
+        }
+
+        private void Img_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (_isMouseDown)
+            {
+                _isMouseDown = false;
+                Img.ReleaseMouseCapture();
+            }
+        }
+
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            try { DragMove(); } catch { }
+        }
     }
 }

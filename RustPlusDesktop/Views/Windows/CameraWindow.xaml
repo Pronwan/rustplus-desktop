@@ -1,40 +1,101 @@
-﻿<Window x:Class="RustPlusDesk.Views.CameraWindow"
+<Window x:Class="RustPlusDesk.Views.CameraWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
-        Title="{DynamicResource Camera}" Width="665" Height="480"
-        Background="#1E1E1E" Foreground="#F0F0F0">
-    <Grid Margin="8">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        Title="Camera" Width="665" Height="500"
+        WindowStartupLocation="CenterOwner"
+        AllowsTransparency="True" 
+        WindowStyle="None"
+        ResizeMode="CanResizeWithGrip"
+        Background="Transparent"
+        Foreground="#F0F0F0">
+    
+    <Border Background="{DynamicResource SurfaceAlt}" 
+            BorderBrush="{DynamicResource CardBorder}" 
+            BorderThickness="2" 
+            CornerRadius="12">
+        <Grid Margin="12">
+            <Grid.RowDefinitions>
+                <!-- Titlebar -->
+                <RowDefinition Height="Auto"/>
+                <!-- Controls (FPS selection) -->
+                <RowDefinition Height="Auto"/>
+                <!-- Image + Overlay -->
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-            <TextBlock Text="{DynamicResource Identifier}" VerticalAlignment="Center"/>
-            <TextBlock x:Name="TxtId" Margin="8,0,0,0" FontWeight="SemiBold" />
-            <StackPanel Orientation="Horizontal" Margin="16,0,0,0">
-                <TextBlock Text="{DynamicResource FPS}" VerticalAlignment="Center"/>
+            <!-- Custom Titlebar -->
+            <DockPanel Grid.Row="0" Margin="0,0,0,8" LastChildFill="True">
+                <Button x:Name="BtnClose" Content="✕" 
+                        DockPanel.Dock="Right"
+                        HorizontalAlignment="Right" 
+                        Click="BtnClose_Click"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Foreground="{DynamicResource TextSubtle}"
+                        FontSize="16"
+                        Cursor="Hand"
+                        VerticalAlignment="Center"/>
+                <TextBlock x:Name="TxtTitle"
+                           Text="Camera" 
+                           FontSize="16" FontWeight="SemiBold" 
+                           Foreground="{DynamicResource TextPrimary}"
+                           VerticalAlignment="Center"/>
+            </DockPanel>
+
+            <!-- Controls (FPS) -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
+                <TextBlock Text="{DynamicResource FPS}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}"/>
                 <ComboBox x:Name="CmbFps" Width="60" Margin="6,0,0,0">
                     <ComboBoxItem Content="2" IsSelected="True"/>
                     <ComboBoxItem Content="4"/>
                     <ComboBoxItem Content="8"/>
                 </ComboBox>
-                <TextBlock Text="{DynamicResource CameraFPSNote}" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                <TextBlock Text=" (2 fps recommended for API stability)" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="{DynamicResource TextSubtle}" FontSize="12" Opacity="0.8"/>
             </StackPanel>
-        </StackPanel>
 
-        <!-- Bild + Overlay -->
-        <Grid Grid.Row="1" ClipToBounds="True" Background="#222">
-            <Image x:Name="Img" Stretch="Uniform" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-            <Canvas x:Name="Overlay" IsHitTestVisible="False" 
-          HorizontalAlignment="Stretch"
-          VerticalAlignment="Stretch"/>
+            <!-- Bild + Overlay -->
+            <Grid Grid.Row="2" ClipToBounds="True" Background="#222">
+                <Image x:Name="Img" Stretch="Uniform" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                <Canvas x:Name="Overlay" IsHitTestVisible="False" 
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"/>
+
+                <!-- Fadenkreuz (Crosshair) -->
+                <Grid x:Name="CrosshairGrid" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
+                    <Ellipse Width="16" Height="16" Stroke="#FF4A4A" StrokeThickness="1.5" />
+                    <Line X1="-12" Y1="0" X2="-2" Y2="0" Stroke="#FF4A4A" StrokeThickness="1.5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <Line X1="2" Y1="0" X2="12" Y2="0" Stroke="#FF4A4A" StrokeThickness="1.5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <Line X1="0" Y1="-12" X2="0" Y2="-2" Stroke="#FF4A4A" StrokeThickness="1.5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <Line X1="0" Y1="2" X2="0" Y2="12" Stroke="#FF4A4A" StrokeThickness="1.5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+
+                <!-- Control Panel (Bottom-Left) -->
+                <Border x:Name="ControlBorder" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="12" Padding="8" CornerRadius="8" Background="#A0101010" BorderBrush="#30FFFFFF" BorderThickness="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Movement/Direction Pad -->
+                        <Grid x:Name="MovementPad" Grid.Column="0" Width="80" Height="80">
+                            <Button x:Name="BtnCamUp" Content="▲" Width="26" Height="26" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#40FFFFFF" BorderThickness="0" Foreground="White" FontWeight="Bold" Focusable="False" />
+                            <Button x:Name="BtnCamDown" Content="▼" Width="26" Height="26" HorizontalAlignment="Center" VerticalAlignment="Bottom" Background="#40FFFFFF" BorderThickness="0" Foreground="White" FontWeight="Bold" Focusable="False" />
+                            <Button x:Name="BtnCamLeft" Content="◀" Width="26" Height="26" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#40FFFFFF" BorderThickness="0" Foreground="White" FontWeight="Bold" Focusable="False" />
+                            <Button x:Name="BtnCamRight" Content="▶" Width="26" Height="26" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#40FFFFFF" BorderThickness="0" Foreground="White" FontWeight="Bold" Focusable="False" />
+                        </Grid>
+     
+                        <!-- Action Buttons -->
+                        <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
+                            <Button x:Name="BtnCamJump" Content="▲ Jump" Margin="0,0,6,0" Padding="6,4" Background="#40FFFFFF" BorderThickness="0" Foreground="White" FontWeight="SemiBold" Focusable="False" />
+                            <Button x:Name="BtnCamDuck" Content="▼ Duck" Margin="0,0,6,0" Padding="6,4" Background="#40FFFFFF" BorderThickness="0" Foreground="White" FontWeight="SemiBold" Focusable="False" />
+                            <Button x:Name="BtnCamFire" Content="🎯 Fire" Margin="0,0,6,0" Padding="8,4" Background="#60FF4A4A" BorderThickness="0" Foreground="White" FontWeight="Bold" Focusable="False" />
+                            <Button x:Name="BtnCamReload" Content="🔄 Reload" Padding="6,4" Click="BtnCamReload_Click" Background="#40FFFFFF" BorderThickness="0" Foreground="White" FontWeight="SemiBold" Focusable="False" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
         </Grid>
-
-        <TextBlock x:Name="TxtStatus"
-               Grid.Row="2" Margin="0,6,0,0"
-               Opacity="0.8"/>
-    </Grid>
+    </Border>
 </Window>
