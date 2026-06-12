@@ -86,8 +86,9 @@ namespace RustPlusDesk.Views
             InitializeComponent();
             _real = real;
             _cameraId = cameraId;
+            Title = cameraId;
             _real.CameraEntities += OnCameraEntities;
-            TxtId.Text = cameraId;
+            TxtTitle.Text = cameraId;
 
             // Hook mouse events for PTZ pan/tilt drag
             Img.MouseDown += Img_MouseDown;
@@ -396,9 +397,9 @@ namespace RustPlusDesk.Views
                 Img.Source = bi;
 
                 _frameCount++;
-                TxtStatus.Text = (frame.Width > 0 && frame.Height > 0)
-                    ? $"{frame.Width}×{frame.Height} (Frames: {_frameCount})"
-                    : $"snapshot (Frames: {_frameCount})";
+                TxtTitle.Text = (frame.Width > 0 && frame.Height > 0)
+                    ? $"{_cameraId} ({frame.Width}×{frame.Height}, Frames: {_frameCount})"
+                    : $"{_cameraId} (snapshot, Frames: {_frameCount})";
 
                 // Wenn du dennoch eine einfache Fallback-Liste willst:
                 if ((_lastEnts == null || _lastEnts.Count == 0) && frame.Entities != null && frame.Entities.Count > 0)
@@ -548,6 +549,17 @@ namespace RustPlusDesk.Views
                 _isMouseDown = false;
                 Img.ReleaseMouseCapture();
             }
+        }
+
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            try { DragMove(); } catch { }
         }
     }
 }

@@ -257,7 +257,28 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         Grid.SetRow(header, 0);
 
         // Thumb
-        var img = new Image { Stretch = Stretch.UniformToFill, SnapsToDevicePixels = true, UseLayoutRounding = true, Height = 110, ClipToBounds = true };
+        var img = new Image 
+        { 
+            Stretch = Stretch.UniformToFill, 
+            SnapsToDevicePixels = true, 
+            UseLayoutRounding = true, 
+            Height = 110, 
+            ClipToBounds = true,
+            Cursor = System.Windows.Input.Cursors.Hand
+        };
+        img.MouseDown += (s, ev) =>
+        {
+            if (ev.ChangedButton == System.Windows.Input.MouseButton.Left)
+            {
+                if (_rust is RustPlusClientReal real)
+                {
+                    var w = new RustPlusDesk.Views.CameraWindow(real, id) { Owner = this };
+                    _camBusy.Add(id);
+                    w.Closed += (_, __2) => _camBusy.Remove(id);
+                    w.Show();
+                }
+            }
+        };
         img.Tag = id; // damit der Thumb-Refresher weiß, wohin
         Grid.SetRow(img, 1);
 
