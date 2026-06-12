@@ -1648,43 +1648,81 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
                     Owner = this
                 };
                 
-                if (dlg.ShowDialog() == true)
+                try
                 {
-                    if (dlg.IsResetClicked)
+                    ApplyWindowBlur();
+                    if (dlg.ShowDialog() == true)
                     {
-                        dev.CustomIconId = null;
-                        dev.CustomIconShortName = null;
-                    }
-                    else
-                    {
-                        dev.CustomIconId = dlg.SelectedIconId;
-                        dev.CustomIconShortName = dlg.SelectedIconShortName;
-                    }
-                    
-                    if (_vm != null)
-                    {
-                        _vm.Save();
-                    }
+                        if (dlg.IsResetClicked)
+                        {
+                            dev.CustomIconId = null;
+                            dev.CustomIconShortName = null;
+                        }
+                        else
+                        {
+                            dev.CustomIconId = dlg.SelectedIconId;
+                            dev.CustomIconShortName = dlg.SelectedIconShortName;
+                        }
+                        
+                        if (_vm != null)
+                        {
+                            _vm.Save();
+                        }
 
-                    // Save local and push sync
-                    SaveOwnOverlayToJson();
-                    if (TrackingService.CloudSyncEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.Client != null)
-                    {
-                        try
+                        // Save local and push sync
+                        SaveOwnOverlayToJson();
+                        if (TrackingService.CloudSyncEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.Client != null)
                         {
-                            _ = UploadDevicesSnapshotForCurrentServerAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            AppendLog("[dev/sync] Error: " + ex.Message);
+                            try
+                            {
+                                _ = UploadDevicesSnapshotForCurrentServerAsync();
+                            }
+                            catch (Exception ex)
+                            {
+                                AppendLog("[dev/sync] Error: " + ex.Message);
+                            }
                         }
                     }
+                }
+                finally
+                {
+                    RemoveWindowBlur();
                 }
             }
         }
         catch (Exception ex)
         {
             AppendLog("[dev/icon] Dialog error: " + ex.Message);
+        }
+    }
+
+    private void ApplyWindowBlur()
+    {
+        var blur = new System.Windows.Media.Effects.BlurEffect { Radius = 0 };
+        this.Effect = blur;
+        var anim = new System.Windows.Media.Animation.DoubleAnimation(0, 10, TimeSpan.FromMilliseconds(200))
+        {
+            EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut }
+        };
+        blur.BeginAnimation(System.Windows.Media.Effects.BlurEffect.RadiusProperty, anim);
+    }
+
+    private void RemoveWindowBlur()
+    {
+        if (this.Effect is System.Windows.Media.Effects.BlurEffect blur)
+        {
+            var anim = new System.Windows.Media.Animation.DoubleAnimation(0, TimeSpan.FromMilliseconds(150))
+            {
+                EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseIn }
+            };
+            anim.Completed += (s, e) =>
+            {
+                if (ReferenceEquals(this.Effect, blur))
+                {
+                    this.Effect = null;
+                }
+            };
+            blur.BeginAnimation(System.Windows.Media.Effects.BlurEffect.RadiusProperty, anim);
         }
     }
 
