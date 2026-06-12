@@ -6,6 +6,7 @@
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True" 
         WindowStyle="None"
+        ResizeMode="CanResizeWithGrip"
         Background="Transparent"
         Foreground="#F0F0F0">
     
@@ -50,6 +51,7 @@
                     <ComboBoxItem Content="4"/>
                     <ComboBoxItem Content="8"/>
                 </ComboBox>
+                <TextBlock Text=" (2 fps recommended for API stability)" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="{DynamicResource TextSubtle}" FontSize="12" Opacity="0.8"/>
             </StackPanel>
 
             <!-- Bild + Overlay -->
