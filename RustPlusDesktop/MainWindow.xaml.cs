@@ -501,7 +501,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }));
 
         // One-time migration notice for v5.2.0
-        const string AppVersion = "6.0.0";
+        const string AppVersion = "6.3.0";
 
         bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
         {

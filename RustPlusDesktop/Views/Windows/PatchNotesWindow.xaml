@@ -33,7 +33,50 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v6.2.0 PATCH NOTES -->
+                    <!-- NEW v6.3.0 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v6.3.0 | Remote Camera Controls, WPF Device List &amp; Discord Resilience" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Remote Camera &amp; Turret Controls:</Run>
+                                Complete remote control integration for Auto-Turrets and PTZ cameras! Supports mouse-drag steering, continuous button actions (firing, reloading, jumping, ducking), and smooth frame streaming.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Premium WPF Device List Layout:</Run>
+                                Overhauled the smart device dashboard with a gorgeous, modernized WPF-styled list design, providing a cleaner grid view and faster switch control access.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; AFK Status &amp; Indicators:</Run>
+                                Easily identify inactive players! Added AFK status indicators to player cards, integrated with active command indicators.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Chat Customization &amp; Command Delays:</Run>
+                                Full customization overlays for Team Chat styles alongside customizable command execution delays to prevent spam rate-limits.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Hardened Discord Polling Connection:</Run>
+                                Resolved a database keep-alive issue. Optimizations to the polling database connection now prevent the Discord bot integration from disconnecting after two hours of inactivity.
+                            </TextBlock>
+
+                            <!-- v6.3.0 Dynamic Image Gallery -->
+                            <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/camera_move.png" Description="Remote Camera &amp; Turret Mouse-Steering with Live Controls"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/WPF_devicelist.png" Description="Modernized WPF-styled Device List Dashboard Layout"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/afk.png" Description="AFK Status Indicators on Player Cards"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/Chat-Command-Customization.png" Description="Chat Customization Settings Panel Overlay"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/Chat-Command-Delay.png" Description="Chat Command Delay Settings Slider"/>
+                            </views:ImageGallery>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
+                    <!-- OLD v6.2.0 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
