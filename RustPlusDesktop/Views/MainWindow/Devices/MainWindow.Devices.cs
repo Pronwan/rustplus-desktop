@@ -1142,7 +1142,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
                 foreach (var d in data.Devices)
                 {
-                    AddDeviceToImportItems(items, d, tm);
+                    CollectIndividualDevices(items, d, tm);
                 }
             }
 
@@ -1298,8 +1298,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
     private void AddDeviceToImportItems(List<DeviceImportItem> items, ExportedDeviceDto d, TeamMemberVM tm)
     {
-        // Wir fügen nur Top-Level Items hinzu, die dann aber den OriginalDto mitschleifen
-        bool already = _vm.Selected.Devices?.Any(x => x.EntityId == d.EntityId) == true;
+        bool already = FindDeviceById(_vm.Selected.Devices, d.EntityId) != null;
 
         var item = new DeviceImportItem
         {
@@ -1316,6 +1315,24 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             OriginalDto = d // <- Hier speichern wir das volle DTO inklusive Children!
         };
         items.Add(item);
+    }
+
+    private void CollectIndividualDevices(List<DeviceImportItem> items, ExportedDeviceDto d, TeamMemberVM tm)
+    {
+        if (d.IsGroup)
+        {
+            if (d.Children != null)
+            {
+                foreach (var child in d.Children)
+                {
+                    CollectIndividualDevices(items, child, tm);
+                }
+            }
+        }
+        else
+        {
+            AddDeviceToImportItems(items, d, tm);
+        }
     }
 
     private SmartDevice MapDtoToDeviceFiltered(ExportedDeviceDto dto)
