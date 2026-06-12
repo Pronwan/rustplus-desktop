@@ -66,12 +66,37 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
 
     private void TreeViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
+        if (e.OriginalSource is DependencyObject depObj)
+        {
+            var parentBorder = FindParentBorderByName(depObj, "IconBorder");
+            if (parentBorder != null)
+            {
+                // Let the click pass to the IconBorder's handler but do not initiate drag/drop
+                return;
+            }
+        }
+
         _dragStartPoint = e.GetPosition(null);
         if (sender is TreeViewItem tvi)
         {
             _draggedItemContainer = tvi;
             _draggedDevice = tvi.Header as SmartDevice ?? tvi.DataContext as SmartDevice;
             // Allow event to continue for selection
+        }
+    }
+
+    private Border? FindParentBorderByName(DependencyObject child, string name)
+    {
+        if (child == null) return null;
+        if (child is Border border && border.Name == name) return border;
+        try
+        {
+            var parent = VisualTreeHelper.GetParent(child);
+            return parent != null ? FindParentBorderByName(parent, name) : null;
+        }
+        catch
+        {
+            return null;
         }
     }
 
@@ -910,6 +935,8 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
                                 ex.IsOn = false;
                             ex.IsMissing = s.IsMissing;
                             if (!string.IsNullOrWhiteSpace(s.Alias)) ex.Alias = s.Alias;
+                            ex.CustomIconId = s.CustomIconId;
+                            ex.CustomIconShortName = s.CustomIconShortName;
                         }
                     }
                 }
@@ -1607,5 +1634,81 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
             if (r != null) return r;
         }
         return null;
+    }
+
+    private void DeviceIcon_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        try
+        {
+            e.Handled = true;
+            if (sender is FrameworkElement fe && fe.DataContext is SmartDevice dev)
+            {
+                var dlg = new RustPlusDesk.Views.Windows.ChangeDeviceIconDialog(dev.CustomIconId, dev.CustomIconShortName)
+                {
+                    Owner = this
+                };
+                
+                if (dlg.ShowDialog() == true)
+                {
+                    if (dlg.IsResetClicked)
+                    {
+                        dev.CustomIconId = null;
+                        dev.CustomIconShortName = null;
+                    }
+                    else
+                    {
+                        dev.CustomIconId = dlg.SelectedIconId;
+                        dev.CustomIconShortName = dlg.SelectedIconShortName;
+                    }
+                    
+                    if (_vm != null)
+                    {
+                        _vm.Save();
+                    }
+
+                    // Save local and push sync
+                    SaveOwnOverlayToJson();
+                    if (TrackingService.CloudSyncEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.Client != null)
+                    {
+                        try
+                        {
+                            _ = UploadDevicesSnapshotForCurrentServerAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            AppendLog("[dev/sync] Error: " + ex.Message);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[dev/icon] Dialog error: " + ex.Message);
+        }
+    }
+
+    internal static List<ShopSearchControl.AutocompleteItem> SearchItems(string query)
+    {
+        EnsureNewItemDbLoaded();
+        string cleanQuery = (query ?? "").Trim().ToLowerInvariant();
+        if (string.IsNullOrWhiteSpace(cleanQuery))
+        {
+            return new List<ShopSearchControl.AutocompleteItem>();
+        }
+
+        return sItemsById.Values
+            .Where(ii => !string.IsNullOrWhiteSpace(ii.Display) && 
+                         (ii.Display.Contains(cleanQuery, StringComparison.OrdinalIgnoreCase) || 
+                          (ii.ShortName != null && ii.ShortName.Contains(cleanQuery, StringComparison.OrdinalIgnoreCase))))
+            .Take(50)
+            .Select(ii => new ShopSearchControl.AutocompleteItem
+            {
+                Id = ii.Id,
+                Display = ii.Display,
+                ShortName = ii.ShortName ?? "",
+                Icon = ResolveItemIcon(ii.Id, ii.ShortName, 32)
+            })
+            .ToList();
     }
 }

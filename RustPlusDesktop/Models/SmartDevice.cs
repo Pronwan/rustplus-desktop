@@ -249,6 +249,33 @@ public class SmartDevice : INotifyPropertyChanged
         set { if (_lastAlarmMessage != value) { _lastAlarmMessage = value; OnProp(); } }
     }
 
+    private int? _customIconId;
+    public int? CustomIconId
+    {
+        get => _customIconId;
+        set { if (_customIconId != value) { _customIconId = value; OnProp(); OnProp(nameof(CustomIcon)); } }
+    }
+
+    private string? _customIconShortName;
+    public string? CustomIconShortName
+    {
+        get => _customIconShortName;
+        set { if (_customIconShortName != value) { _customIconShortName = value; OnProp(); OnProp(nameof(CustomIcon)); } }
+    }
+
+    [JsonIgnore]
+    public System.Windows.Media.ImageSource? CustomIcon
+    {
+        get
+        {
+            if (CustomIconId.HasValue && CustomIconId.Value != 0)
+            {
+                return RustPlusDesk.Views.MainWindow.ResolveItemIcon(CustomIconId.Value, CustomIconShortName);
+            }
+            return null;
+        }
+    }
+
 
     public string PureName
     {

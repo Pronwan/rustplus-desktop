@@ -24,6 +24,8 @@ namespace RustPlusDesk.Models
         public string? Alias { get; set; }
         public bool IsGroup { get; set; }
         public List<ExportedDeviceDto>? Children { get; set; }
+        public int? CustomIconId { get; set; }
+        public string? CustomIconShortName { get; set; }
     }
 
     [JsonConverter(typeof(SavedStrokeJsonConverter))]

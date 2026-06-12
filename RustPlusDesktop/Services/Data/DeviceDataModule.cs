@@ -22,7 +22,9 @@ namespace RustPlusDesk.Services.Data
                 Kind = d.Kind,
                 Name = d.Name,
                 Alias = d.Alias,
-                IsGroup = d.IsGroup
+                IsGroup = d.IsGroup,
+                CustomIconId = d.CustomIconId,
+                CustomIconShortName = d.CustomIconShortName
             };
 
             if (d.IsGroup && d.Children != null && d.Children.Count > 0)
@@ -46,7 +48,9 @@ namespace RustPlusDesk.Services.Data
                 Name = dto.Name,
                 Alias = dto.Alias,
                 IsGroup = dto.IsGroup,
-                IsMissing = !dto.IsGroup
+                IsMissing = !dto.IsGroup,
+                CustomIconId = dto.CustomIconId,
+                CustomIconShortName = dto.CustomIconShortName
             };
 
             if (dto.Children != null && dto.Children.Count > 0)

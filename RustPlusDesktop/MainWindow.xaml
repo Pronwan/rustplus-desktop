@@ -1306,41 +1306,95 @@
 
                                                             <!--  Spalte 1: Icon  -->
                                                             <Border Grid.Column="0"
-                                                                    Width="28"
-                                                                    Height="28"
+                                                                    x:Name="IconBorder"
+                                                                    Width="38"
+                                                                    Height="38"
                                                                     Background="#14FFFFFF"
-                                                                    CornerRadius="6"
-                                                                    Padding="5"
-                                                                    Margin="0,0,8,0"
-                                                                    VerticalAlignment="Center">
-                                                                <Image
-                                                                    Width="16"
-                                                                    Height="16"
+                                                                    CornerRadius="8"
+                                                                    Padding="0"
+                                                                    Margin="0,0,10,0"
                                                                     VerticalAlignment="Center"
-                                                                    RenderOptions.BitmapScalingMode="HighQuality">
-                                                                    <Image.Style>
-                                                                        <Style TargetType="Image">
-                                                                            <Setter Property="Source" Value="{StaticResource IconSmartSwitch}" />
-                                                                            <Style.Triggers>
-                                                                                <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
-                                                                                    <Setter Property="Source" Value="{StaticResource IconStorageMonitor}" />
-                                                                                </DataTrigger>
-                                                                                <DataTrigger Binding="{Binding Kind}" Value="Storage Monitor">
-                                                                                    <Setter Property="Source" Value="{StaticResource IconStorageMonitor}" />
-                                                                                </DataTrigger>
-                                                                                <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
-                                                                                    <Setter Property="Source" Value="{StaticResource IconSmartAlarm}" />
-                                                                                </DataTrigger>
-                                                                                <DataTrigger Binding="{Binding Kind}" Value="Smart Alarm">
-                                                                                    <Setter Property="Source" Value="{StaticResource IconSmartAlarm}" />
-                                                                                </DataTrigger>
-                                                                                <DataTrigger Binding="{Binding IsGroup}" Value="True">
-                                                                                    <Setter Property="Source" Value="{StaticResource IconGroup}" />
-                                                                                </DataTrigger>
-                                                                            </Style.Triggers>
-                                                                        </Style>
-                                                                    </Image.Style>
-                                                                </Image>
+                                                                    Cursor="Hand"
+                                                                    ToolTip="Change Icon"
+                                                                    PreviewMouseLeftButtonDown="DeviceIcon_PreviewMouseLeftButtonDown">
+                                                                <Grid>
+                                                                    <Image
+                                                                        x:Name="DeviceIconImg"
+                                                                        Width="24"
+                                                                        Height="24"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        RenderOptions.BitmapScalingMode="HighQuality">
+                                                                        <Image.Style>
+                                                                            <Style TargetType="Image">
+                                                                                <Setter Property="Source" Value="{Binding CustomIcon}" />
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding CustomIcon}" Value="{x:Null}">
+                                                                                        <Setter Property="Source" Value="{StaticResource IconSmartSwitch}" />
+                                                                                    </DataTrigger>
+                                                                                    <MultiDataTrigger>
+                                                                                        <MultiDataTrigger.Conditions>
+                                                                                            <Condition Binding="{Binding CustomIcon}" Value="{x:Null}"/>
+                                                                                            <Condition Binding="{Binding Kind}" Value="StorageMonitor"/>
+                                                                                        </MultiDataTrigger.Conditions>
+                                                                                        <Setter Property="Source" Value="{StaticResource IconStorageMonitor}"/>
+                                                                                    </MultiDataTrigger>
+                                                                                    <MultiDataTrigger>
+                                                                                        <MultiDataTrigger.Conditions>
+                                                                                            <Condition Binding="{Binding CustomIcon}" Value="{x:Null}"/>
+                                                                                            <Condition Binding="{Binding Kind}" Value="Storage Monitor"/>
+                                                                                        </MultiDataTrigger.Conditions>
+                                                                                        <Setter Property="Source" Value="{StaticResource IconStorageMonitor}"/>
+                                                                                    </MultiDataTrigger>
+                                                                                    <MultiDataTrigger>
+                                                                                        <MultiDataTrigger.Conditions>
+                                                                                            <Condition Binding="{Binding CustomIcon}" Value="{x:Null}"/>
+                                                                                            <Condition Binding="{Binding Kind}" Value="SmartAlarm"/>
+                                                                                        </MultiDataTrigger.Conditions>
+                                                                                        <Setter Property="Source" Value="{StaticResource IconSmartAlarm}"/>
+                                                                                    </MultiDataTrigger>
+                                                                                    <MultiDataTrigger>
+                                                                                        <MultiDataTrigger.Conditions>
+                                                                                            <Condition Binding="{Binding CustomIcon}" Value="{x:Null}"/>
+                                                                                            <Condition Binding="{Binding Kind}" Value="Smart Alarm"/>
+                                                                                        </MultiDataTrigger.Conditions>
+                                                                                        <Setter Property="Source" Value="{StaticResource IconSmartAlarm}"/>
+                                                                                    </MultiDataTrigger>
+                                                                                    <MultiDataTrigger>
+                                                                                        <MultiDataTrigger.Conditions>
+                                                                                            <Condition Binding="{Binding CustomIcon}" Value="{x:Null}"/>
+                                                                                            <Condition Binding="{Binding IsGroup}" Value="True"/>
+                                                                                        </MultiDataTrigger.Conditions>
+                                                                                        <Setter Property="Source" Value="{StaticResource IconGroup}"/>
+                                                                                    </MultiDataTrigger>
+                                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=IsMouseOver}" Value="True">
+                                                                                        <Setter Property="Opacity" Value="0.15"/>
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Image.Style>
+                                                                    </Image>
+                                                                    
+                                                                    <ui:SymbolIcon
+                                                                        x:Name="EditIcon"
+                                                                        Symbol="Edit20"
+                                                                        Filled="True"
+                                                                        Foreground="White"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center">
+                                                                        <ui:SymbolIcon.Style>
+                                                                            <Style TargetType="ui:SymbolIcon">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=IsMouseOver}" Value="True">
+                                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </ui:SymbolIcon.Style>
+                                                                    </ui:SymbolIcon>
+
+                                                                </Grid>
                                                             </Border>
 
                                                             <!--  Spalte 2: strukturierte Device-Infos  -->
