@@ -22,7 +22,7 @@
 		<Version>6.2.2-beta</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>6.2.2-beta</AssemblyVersion>
+		<AssemblyVersion>6.2.11</AssemblyVersion>
 		<FileVersion>6.2.2-beta</FileVersion>
 		<InformationalVersion>6.2.2-beta</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
