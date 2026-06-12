@@ -164,6 +164,7 @@
 	  <None Remove="Assets\Images\6.0 Cloud Patch\Chat-Command-Delay.png" />
 	  <None Remove="Assets\Images\6.0 Cloud Patch\death-notifications.png" />
 	  <None Remove="Assets\Images\6.0 Cloud Patch\death-snackbar.png" />
+	  <None Remove="Assets\Images\6.0 Cloud Patch\devices-icons.png" />
 	  <None Remove="Assets\Images\6.0 Cloud Patch\MapFetchDiscord.png" />
 	  <None Remove="Assets\Images\6.0 Cloud Patch\Thumbnail_RustPlus6_V6.jpg" />
 	  <None Remove="Assets\Images\6.0 Cloud Patch\WPF_devicelist.png" />
@@ -369,6 +370,7 @@
     <Resource Include="Assets\Images\6.0 Cloud Patch\camera_move.png" />
     <Resource Include="Assets\Images\6.0 Cloud Patch\Chat-Command-Customization.png" />
     <Resource Include="Assets\Images\6.0 Cloud Patch\Chat-Command-Delay.png" />
+    <Resource Include="Assets\Images\6.0 Cloud Patch\devices-icons.png" />
     <Resource Include="Assets\Images\6.0 Cloud Patch\MapFetchDiscord.png" />
     <Resource Include="Assets\Images\6.0 Cloud Patch\Thumbnail_RustPlus6_V6.jpg" />
     <Resource Include="Assets\Images\6.0 Cloud Patch\WPF_devicelist.png" />

@@ -40,13 +40,18 @@
                             <TextBlock Text="v6.3.0 | Remote Camera Controls, WPF Device List &amp; Discord Resilience" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; Remote Camera &amp; Turret Controls:</Run>
-                                Complete remote control integration for Auto-Turrets and PTZ cameras! Supports mouse-drag steering, continuous button actions (firing, reloading, jumping, ducking), and smooth frame streaming.
+                                <Run FontWeight="Bold">&#x2022; Custom Smart Device Icons:</Run>
+                                Assign custom icons to your smart devices in the Device List for better overview and easier management at a glance.
                             </TextBlock>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Premium WPF Device List Layout:</Run>
                                 Overhauled the smart device dashboard with a gorgeous, modernized WPF-styled list design, providing a cleaner grid view and faster switch control access.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Remote Camera &amp; Turret Controls:</Run>
+                                Complete remote control integration for Auto-Turrets and PTZ cameras! Supports mouse-drag steering, continuous button actions (firing, reloading, jumping, ducking), and smooth frame streaming.
                             </TextBlock>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
@@ -66,6 +71,7 @@
 
                             <!-- v6.3.0 Dynamic Image Gallery -->
                             <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/devices-icons.png" Description="Customizable Icons for Smart Devices in the Device List"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/camera_move.png" Description="Remote Camera &amp; Turret Mouse-Steering with Live Controls"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/WPF_devicelist.png" Description="Modernized WPF-styled Device List Dashboard Layout"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/afk.png" Description="AFK Status Indicators on Player Cards"/>
