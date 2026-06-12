@@ -761,6 +761,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
     }
 
     public event Action<string /*cameraId*/, double /*vFovDeg*/, int /*w*/, int /*h*/, List<CameraEntity> /*(x,y,z,name)*/>? CameraEntities;
+    public event Action<string /*cameraId*/, int /*controlFlags*/>? CameraControlFlagsChanged;
 
     private string? _currentCamId;  // setzen, wenn wir subscriben
     private (int w, int h, double vfov) _lastCamInfo = (160, 90, 65);
@@ -805,6 +806,7 @@ const tok    = process.argv[5];
 const cam    = process.argv[6];
 const tmo    = parseInt(process.argv[7], 10) || 5000;
 const pkgDir = process.argv[8]; // ...\node_modules\@liamcottle\rustplus.js
+const useProxy = process.argv[9] === "true";
 // console.error("using pkg dir: " + pkgDir);
 
 function reqFrom(base, id){
@@ -916,7 +918,7 @@ const RustPlus = reqFrom(pkgDir, "@liamcottle/rustplus.js");
 try { hook && hook.relaxAlreadyBuilt && hook.relaxAlreadyBuilt(); } catch {}
 
 // 4) Kamera benutzen
-const rp = new RustPlus(host, port, pid, tok);
+const rp = new RustPlus(host, port, pid, tok, useProxy);
 let timer = null;
 
 rp.on("connected", async () => {
@@ -948,10 +950,11 @@ rp.on("connected", async () => {
           // console.error(`RAYS n=${ents.length}`);
         }
 
-        const info = resp.cameraInfo || resp.appCameraInfo || null;
+        const info = resp.cameraSubscribeInfo || resp.cameraInfo || resp.appCameraInfo || null;
         if (info && (info.width || info.height)) {
           const w = info.width || 0, h = info.height || 0;
-          process.stdout.write("INFO:" + Buffer.from(JSON.stringify({ cam, w, h }), "utf8").toString("base64") + "\n");
+          const cf = info.controlFlags || 0;
+          process.stdout.write("INFO:" + Buffer.from(JSON.stringify({ cam, w, h, cf }), "utf8").toString("base64") + "\n");
         }
       } catch { /* schlucken */ }
     };
@@ -1004,8 +1007,9 @@ rp.connect();
         var jsFile = Path.Combine(tempDir, "camera_once.js");
         File.WriteAllText(jsFile, js);
 
+        var useProxyStr = _useProxyCurrent.ToString().ToLowerInvariant();
         var psi = new ProcessStartInfo(nodeExe,
-    $"\"{jsFile}\" {host} {port} {playerId} {token} {cameraId} {timeoutMs} \"{rustplusPkgDir}\"")
+    $"\"{jsFile}\" {host} {port} {playerId} {token} {cameraId} {timeoutMs} \"{rustplusPkgDir}\" {useProxyStr}")
         {
             UseShellExecute = false,
             RedirectStandardOutput = true,
@@ -1104,6 +1108,8 @@ rp.connect();
                     var doc = System.Text.Json.JsonDocument.Parse(json);
                     widthHint = doc.RootElement.TryGetProperty("w", out var w) ? w.GetInt32() : 0;
                     heightHint = doc.RootElement.TryGetProperty("h", out var h) ? h.GetInt32() : 0;
+                    int cf = doc.RootElement.TryGetProperty("cf", out var vcf) ? vcf.GetInt32() : 0;
+                    CameraControlFlagsChanged?.Invoke(cameraId, cf);
                 }
                 catch { /* ignore */ }
                 return;
@@ -1334,7 +1340,7 @@ rp.connect();
                       RProp2(resp, "Camera");
 
             // Kamera-Info (Breite/Höhe/FOV) mitnehmen, wenn vorhanden
-            var info = RProp2(resp, "CameraInfo") ?? RProp2(resp, "AppCameraInfo");
+            var info = RProp2(resp, "CameraSubscribeInfo") ?? RProp2(resp, "CameraInfo") ?? RProp2(resp, "AppCameraInfo");
             if (info != null)
             {
                 int w = (int)(RProp2(info, "Width") ?? 160);
@@ -1343,6 +1349,9 @@ rp.connect();
                 double.TryParse(RProp2(info, "VerticalFov")?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out vf);
                 if (vf <= 0) vf = _lastCamInfo.vfov;
                 _lastCamInfo = (w, h, vf);
+
+                int controlFlags = (int)(RProp2(info, "ControlFlags") ?? 0);
+                CameraControlFlagsChanged?.Invoke(_currentCamId ?? "", controlFlags);
             }
 
             // Rays/Entities
@@ -1528,6 +1537,73 @@ rp.connect();
         catch { /* tolerant */ }
     }
 
+    public async Task SendCameraInputAsync(CameraButtons buttons, float mouseDeltaX, float mouseDeltaY)
+    {
+        if (_api is null) return;
+        void L(string s) => _log?.Invoke("[cam-input] " + s);
+        try
+        {
+            var asm = typeof(RustPlus).Assembly;
+            var appReqType = asm.GetType("RustPlusContracts.AppRequest");
+            if (appReqType == null) { L("AppRequest type not found"); return; }
+
+            var inputType = asm.GetType("RustPlusContracts.AppCameraInput");
+            if (inputType == null) { L("AppCameraInput type not found"); return; }
+
+            var vectorType = asm.GetType("RustPlusContracts.Vector2");
+            if (vectorType == null) { L("Vector2 type not found"); return; }
+
+            // 1) Create AppRequest instance
+            var req = Activator.CreateInstance(appReqType)!;
+
+            // 2) Create AppCameraInput instance
+            var camInput = Activator.CreateInstance(inputType)!;
+
+            // Set buttons (int)
+            var buttonsProp = inputType.GetProperty("Buttons");
+            if (buttonsProp != null)
+            {
+                buttonsProp.SetValue(camInput, (int)buttons);
+            }
+
+            // 3) Create Vector2 instance for mouseDelta
+            var mouseDelta = Activator.CreateInstance(vectorType)!;
+            var xProp = vectorType.GetProperty("X");
+            var yProp = vectorType.GetProperty("Y");
+            if (xProp != null && yProp != null)
+            {
+                xProp.SetValue(mouseDelta, mouseDeltaX);
+                yProp.SetValue(mouseDelta, mouseDeltaY);
+            }
+
+            // Set MouseDelta property on AppCameraInput
+            var mouseDeltaProp = inputType.GetProperty("MouseDelta");
+            if (mouseDeltaProp != null)
+            {
+                mouseDeltaProp.SetValue(camInput, mouseDelta);
+            }
+
+            // Set CameraInput property on AppRequest
+            var camInputProp = appReqType.GetProperty("CameraInput");
+            if (camInputProp != null)
+            {
+                camInputProp.SetValue(req, camInput);
+            }
+
+            // Send via SendRequestAsync
+            var send = _api.GetType().GetMethod("SendRequestAsync", new[] { appReqType });
+            if (send != null)
+            {
+                var taskObj = send.Invoke(_api, new object[] { req });
+                if (taskObj is Task t) await t.ConfigureAwait(false);
+            }
+        }
+        catch (Exception ex)
+        {
+            L("Error sending camera input: " + ex.Message);
+        }
+    }
+
     private readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCase);
     private int _camThumbIndex = 0; // rotiert über die Tiles, damit alle mal dran kommen
 
@@ -1635,6 +1711,236 @@ rp.connect();
             }
             catch { /* ignore */ }
         }
+    }
+
+    public System.Diagnostics.Process? StartPersistentCameraStream(
+        string cameraId, 
+        Action<string> onLineReceived, 
+        Action<string> onErrorReceived)
+    {
+        if (_api is null) return null;
+
+        GetConnForCamera(out var host, out var port, out var playerId, out var token);
+        if (string.IsNullOrWhiteSpace(host) || port <= 0 ||
+            string.IsNullOrWhiteSpace(playerId) || string.IsNullOrWhiteSpace(token))
+        {
+            return null;
+        }
+
+        string? nodeExe = RuntimeHelper.FindBundledNode();
+        if (nodeExe == null) return null;
+
+        string? pkgRoot = RuntimeHelper.FindRustplusJsPackageRoot();
+        if (pkgRoot == null) return null;
+
+        var js = """
+const host   = process.argv[2];
+const port   = parseInt(process.argv[3], 10);
+const pid    = process.argv[4];
+const tok    = process.argv[5];
+const cam    = process.argv[6];
+const pkgDir = process.argv[7];
+const useProxy = process.argv[8] === "true";
+
+function reqFrom(base, id){
+  return require(require.resolve(id, { paths: [base] }));
+}
+
+function hookProtobuf(pb){
+  if (!pb) return;
+  const RELAX_ALL = true;
+  const RELAX = new Set(["nearPlane","controlFlags","sampleOffset","sampleCount","horizontalFov","verticalFov","fov"]);
+  const shouldRelax = (fname) => RELAX_ALL || RELAX.has(fname);
+  function relaxFieldsObj(obj){
+    if (!obj || typeof obj !== "object") return;
+    if (obj.fields && typeof obj.fields === "object"){
+      for (const [fname, f] of Object.entries(obj.fields)){
+        if (!f) continue;
+        if ((f.rule === "required" || f.required === true) && shouldRelax(fname)){
+          f.rule = "optional";
+          f.required = false;
+        }
+      }
+    }
+    for (const k of Object.keys(obj)) relaxFieldsObj(obj[k]);
+  }
+  if (pb.Root && typeof pb.Root.fromJSON === "function"){
+    const orig = pb.Root.fromJSON;
+    pb.Root.fromJSON = function(json, root){
+      try{ relaxFieldsObj(json); }catch{}
+      return orig.call(this, json, root);
+    };
+  }
+  if (pb.Type && typeof pb.Type.fromJSON === "function"){
+    const orig = pb.Type.fromJSON;
+    pb.Type.fromJSON = function(name, json){
+      try{
+        if (json && json.fields){
+          for (const [fname, f] of Object.entries(json.fields)){
+            if ((f.rule === "required" || f.required === true) && shouldRelax(fname)){
+              f.rule = "optional";
+              f.required = false;
+            }
+          }
+        }
+      }catch{}
+      return orig.call(this, name, json);
+    };
+  }
+  if (pb.Type && pb.Type.prototype){
+    const origAdd = pb.Type.prototype.add;
+    pb.Type.prototype.add = function(field){
+      try{
+        if (field && (field.rule === "required" || field.required === true) && shouldRelax(field.name)){
+          field.rule = "optional";
+          field.required = false;
+        }
+      }catch{}
+      return origAdd.call(this, field);
+    };
+  }
+  function relaxAlreadyBuilt(){
+    try{
+      const roots = pb.roots ? Object.values(pb.roots) : [];
+      for (const root of roots){
+        if (!root) continue;
+        try { root.resolveAll(); } catch {}
+        (function walk(ns){
+          if (!ns) return;
+          if (ns.fields && typeof ns.fields === "object"){
+            for (const [fname, f] of Object.entries(ns.fields)){
+              if ((f.rule === "required" || f.required === true) && shouldRelax(fname)){
+                f.rule = "optional";
+                f.required = false;
+              }
+            }
+          }
+          if (ns.nested){
+            for (const v of Object.values(ns.nested)) walk(v);
+          }
+        })(root);
+      }
+    }catch{}
+  }
+  return { relaxAlreadyBuilt };
+}
+
+let pb = null;
+try { pb = reqFrom(pkgDir, "protobufjs"); }
+catch { try { pb = reqFrom(pkgDir, "protobufjs/minimal"); } catch {} }
+const hook = hookProtobuf(pb);
+const RustPlus = reqFrom(pkgDir, "@liamcottle/rustplus.js");
+try { hook && hook.relaxAlreadyBuilt && hook.relaxAlreadyBuilt(); } catch {}
+
+const rp = new RustPlus(host, port, pid, tok, useProxy);
+
+rp.on("connected", async () => {
+  try {
+    const c = rp.getCamera(cam);
+    const onMsg = (m) => {
+      try {
+        const resp = (m && (m.response || m.appMessage || m.data)) || m || {};
+        const broadcast = resp.broadcast || resp.appBroadcast || {};
+        const rays = broadcast.cameraRays || broadcast.appCameraRays || resp.cameraRays || null;
+        if (rays && Array.isArray(rays.entities)) {
+          const ents = rays.entities.map(e => ({
+            id:  e.entityId || 0,
+            type: e.type || 0,
+            name: e.name || "",
+            x: (e.position && e.position.x) || 0,
+            y: (e.position && e.position.y) || 0,
+            z: (e.position && e.position.z) || 0,
+            sid:    (e.steamId || e.playerId || 0),
+            sidStr: (e.steamId || e.playerId) ? String(e.steamId || e.playerId) : ""
+          }));
+          const payload = { cam, ents, fov: rays.verticalFov || rays.fov || 65 };
+          process.stdout.write("ENTS:" + Buffer.from(JSON.stringify(payload), "utf8").toString("base64") + "\n");
+        }
+        const info = resp.cameraSubscribeInfo || resp.cameraInfo || resp.appCameraInfo || null;
+        if (info && (info.width || info.height)) {
+          const w = info.width || 0, h = info.height || 0;
+          const cf = info.controlFlags || 0;
+          process.stdout.write("INFO:" + Buffer.from(JSON.stringify({ cam, w, h, cf }), "utf8").toString("base64") + "\n");
+        }
+      } catch (ex) {
+        // quiet
+      }
+    };
+    rp.on("message", onMsg);
+    c.on("message", onMsg);
+    c.on("render", (frame) => {
+      process.stdout.write("FRAME:" + Buffer.from(frame).toString("base64") + "\n");
+    });
+    await c.subscribe();
+    
+    process.stdin.setEncoding('utf-8');
+    process.stdin.on('data', (data) => {
+      const lines = data.trim().split('\n');
+      for (const line of lines) {
+        if (line.startsWith("INPUT:")) {
+          const parts = line.split(':');
+          if (parts.length >= 4) {
+            const buttons = parseInt(parts[1], 10);
+            const dx = parseFloat(parts[2]);
+            const dy = parseFloat(parts[3]);
+            rp.sendRequest({
+              cameraInput: {
+                buttons: buttons,
+                mouseDelta: { x: dx, y: dy }
+              }
+            }, (m) => {
+              // quiet
+            });
+          }
+        }
+      }
+    });
+    process.stdin.resume();
+  } catch (e) {
+    console.error("ERR:" + (e && e.message ? e.message : String(e)));
+    process.exit(1);
+  }
+});
+rp.on("error", (e) => {
+  try {
+    const msg = (e && (e.message || e.code)) ? `${e.message||e.code}` : JSON.stringify(e);
+    console.error("ERR:" + msg);
+  } catch { console.error("ERR:unknown"); }
+});
+rp.connect();
+""";
+
+        var rustplusPkgDir = Path.Combine(pkgRoot, "node_modules", "@liamcottle", "rustplus.js");
+        PatchNearPlaneIfNeeded(rustplusPkgDir, _log);
+        if (!Directory.Exists(rustplusPkgDir)) return null;
+
+        var tempDir = Path.Combine(Path.GetTempPath(), "RustPlusDesk");
+        Directory.CreateDirectory(tempDir);
+        var jsFile = Path.Combine(tempDir, "camera_persistent.js");
+        File.WriteAllText(jsFile, js);
+
+        var useProxyStr = _useProxyCurrent.ToString().ToLowerInvariant();
+        var psi = new ProcessStartInfo(nodeExe,
+            $"\"{jsFile}\" {host} {port} {playerId} {token} {cameraId} \"{rustplusPkgDir}\" {useProxyStr}")
+        {
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            RedirectStandardInput = true,
+            CreateNoWindow = true,
+            WorkingDirectory = pkgRoot
+        };
+
+        var p = new System.Diagnostics.Process { StartInfo = psi };
+        p.OutputDataReceived += (_, e) => { if (e.Data != null) onLineReceived(e.Data); };
+        p.ErrorDataReceived += (_, e) => { if (e.Data != null) onErrorReceived(e.Data); };
+
+        p.Start();
+        try { p.StandardInput.AutoFlush = true; } catch { }
+        p.BeginOutputReadLine();
+        p.BeginErrorReadLine();
+
+        return p;
     }
 
     private static void DumpTree(object? o, Action<string> log, string prefix = "[cam-dump] ", int depth = 0, int maxDepth = 5)

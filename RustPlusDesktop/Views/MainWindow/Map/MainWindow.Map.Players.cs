@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using RustPlusDesk.Services;
+using Path = System.Windows.Shapes.Path;
 
 namespace RustPlusDesk.Views;
 

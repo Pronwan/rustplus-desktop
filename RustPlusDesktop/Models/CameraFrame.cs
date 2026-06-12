@@ -28,11 +28,41 @@ namespace RustPlusDesk.Models
 
     // Einheitlicher Frame-Typ mit optionalen Extras (Mime, Zeitstempel, Entities)
     public sealed record CameraFrame(
-    byte[] Bytes,
-    string? Mime,
-    int Width,
-    int Height,
-    IReadOnlyList<CameraEntity> Entities
-);
+        byte[] Bytes,
+        string? Mime,
+        int Width,
+        int Height,
+        IReadOnlyList<CameraEntity> Entities
+    );
+
+    [System.Flags]
+    public enum CameraButtons
+    {
+        None = 0,
+        Forward = 2,
+        Backward = 4,
+        Left = 8,
+        Right = 16,
+        Jump = 32,
+        Duck = 64,
+        Sprint = 128,
+        Use = 256,
+        FirePrimary = 1024,
+        FireSecondary = 2048,
+        Reload = 8192,
+        FireThird = 134217728
+    }
+
+    [System.Flags]
+    public enum CameraControlFlags
+    {
+        None = 0,
+        Movement = 1,
+        Mouse = 2,
+        SprintAndDuck = 4,
+        Fire = 8,
+        Reload = 16,
+        Crosshair = 32
+    }
 }
 
