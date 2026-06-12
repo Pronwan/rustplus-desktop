@@ -45,6 +45,11 @@
                             </TextBlock>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Flexible Window Layout &amp; Resolution Support:</Run>
+                                Reduced the minimum window and map width constraints, allowing players on lower display resolutions or stretched aspect ratios (like 4:3) to comfortably scale and fit the application on their screens.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Premium WPF Device List Layout:</Run>
                                 Overhauled the smart device dashboard with a gorgeous, modernized WPF-styled list design, providing a cleaner grid view and faster switch control access.
                             </TextBlock>
@@ -71,6 +76,7 @@
 
                             <!-- v6.3.0 Dynamic Image Gallery -->
                             <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/window-size.png" Description="Enhanced Flexible Window Resizing for Stretched Resolutions"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/devices-icons.png" Description="Customizable Icons for Smart Devices in the Device List"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/camera_move.png" Description="Remote Camera &amp; Turret Mouse-Steering with Live Controls"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.0 Cloud Patch/WPF_devicelist.png" Description="Modernized WPF-styled Device List Dashboard Layout"/>
