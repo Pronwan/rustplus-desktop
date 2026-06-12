@@ -15,7 +15,7 @@
     Title="{DynamicResource AppTitle}"
     Width="1750"
     Height="814"
-    MinWidth="1500"
+    MinWidth="1000"
     MinHeight="700"
     Background="{DynamicResource AppBg}"
     ExtendsContentIntoTitleBar="True"
@@ -303,7 +303,7 @@
                     MinWidth="400"
                     MaxWidth="600" />
                 <ColumnDefinition Width="8" />
-                <ColumnDefinition Width="*" MinWidth="800" />
+                <ColumnDefinition Width="*" MinWidth="400" />
             </Grid.ColumnDefinitions>
 
             <GridSplitter
@@ -2515,8 +2515,8 @@
                                         </StackPanel>
                                     </StackPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <Button x:Name="BtnRefreshProfitTrades" Content="⟳" Style="{StaticResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="16" Margin="0,0,6,0" ToolTip="{DynamicResource Refresh}" />
-                                        <Button x:Name="BtnCloseProfitTrades" Content="&#x2715;" Style="{StaticResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="13" Foreground="{DynamicResource TextSubtle}" />
+                                        <Button x:Name="BtnRefreshProfitTrades" Content="⟳" Style="{DynamicResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="16" Margin="0,0,6,0" ToolTip="{DynamicResource Refresh}" />
+                                        <Button x:Name="BtnCloseProfitTrades" Content="&#x2715;" Style="{DynamicResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="13" Foreground="{DynamicResource TextSubtle}" />
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -2771,7 +2771,7 @@
             <!--  Rechte Spalte: Login/Status + WebViewHost  -->
             <Border
                 Grid.Column="2"
-                MinWidth="800"
+                MinWidth="400"
                 Padding="12"
                 Background="{DynamicResource Surface}"
                 BorderBrush="{DynamicResource CardBorder}"
