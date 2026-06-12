@@ -1420,29 +1420,60 @@
                                                                             </Style>
                                                                         </ui:SymbolIcon.Style>
                                                                     </ui:SymbolIcon>
-                                                                    <TextBlock
-                                                                        VerticalAlignment="Center"
-                                                                        FontSize="13"
-                                                                        FontWeight="SemiBold"
-                                                                        Foreground="{DynamicResource TextPrimary}"
-                                                                        Text="{Binding PureName, TargetNullValue=Device}"
-                                                                        ToolTip="{DynamicResource RightClickRename}">
-                                                                        <TextBlock.Style>
-                                                                            <Style TargetType="TextBlock">
-                                                                                <Style.Triggers>
-                                                                                    <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                                        <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
-                                                                                        <Setter Property="FontStyle" Value="Italic" />
-                                                                                    </DataTrigger>
-                                                                                </Style.Triggers>
-                                                                            </Style>
-                                                                        </TextBlock.Style>
-                                                                        <TextBlock.ContextMenu>
-                                                                            <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                                                                <MenuItem Click="Device_Rename_Click" Header="{DynamicResource RenameDevice}" />
-                                                                            </ContextMenu>
-                                                                        </TextBlock.ContextMenu>
-                                                                    </TextBlock>
+                                                                    <Grid VerticalAlignment="Center">
+                                                                        <TextBlock
+                                                                            x:Name="TxtDeviceNameView"
+                                                                            VerticalAlignment="Center"
+                                                                            FontSize="13"
+                                                                            FontWeight="SemiBold"
+                                                                            Foreground="{DynamicResource TextPrimary}"
+                                                                            Text="{Binding PureName, TargetNullValue=Device}"
+                                                                            ToolTip="{DynamicResource RightClickRename}"
+                                                                            MouseLeftButtonDown="DeviceName_MouseLeftButtonDown">
+                                                                            <TextBlock.Style>
+                                                                                <Style TargetType="TextBlock">
+                                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                        </DataTrigger>
+                                                                                        <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                                            <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
+                                                                                            <Setter Property="FontStyle" Value="Italic" />
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </TextBlock.Style>
+                                                                            <TextBlock.ContextMenu>
+                                                                                <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                                                                    <MenuItem Click="Device_Rename_Click" Header="{DynamicResource RenameDevice}" />
+                                                                                </ContextMenu>
+                                                                            </TextBlock.ContextMenu>
+                                                                        </TextBlock>
+                                                                        
+                                                                        <ui:TextBox
+                                                                            x:Name="TxtDeviceNameEdit"
+                                                                            Text="{Binding Alias, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
+                                                                            FontSize="12"
+                                                                            Height="24"
+                                                                            Padding="4,2"
+                                                                            VerticalAlignment="Center"
+                                                                            MinWidth="120"
+                                                                            LostFocus="TxtRename_LostFocus"
+                                                                            KeyDown="TxtRename_KeyDown"
+                                                                            IsVisibleChanged="TxtRename_IsVisibleChanged">
+                                                                            <ui:TextBox.Style>
+                                                                                <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+                                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </ui:TextBox.Style>
+                                                                        </ui:TextBox>
+                                                                    </Grid>
                                                                 </StackPanel>
 
                                                                 <TextBlock

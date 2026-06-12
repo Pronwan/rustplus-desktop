@@ -307,6 +307,14 @@ public class SmartDevice : INotifyPropertyChanged
         }
     }
 
+    private bool _isEditing;
+    [JsonIgnore]
+    public bool IsEditing
+    {
+        get => _isEditing;
+        set { if (_isEditing != value) { _isEditing = value; OnProp(); } }
+    }
+
     public void NotifyUpkeepChanged()
     {
         OnProp(nameof(UpkeepSeconds));

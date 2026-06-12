@@ -962,56 +962,86 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
     private void Device_Rename_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev) return;
-
-        var title = dev.IsGroup ? Properties.Resources.RenameGroup : Properties.Resources.RenameDevice;
-        var promptText = dev.IsGroup ? Properties.Resources.NewNameForGroup : string.Format(Properties.Resources.NewNameForDevice, dev.EntityId);
-        var preset = string.IsNullOrWhiteSpace(dev.Alias) ? (dev.Name ?? "") : dev.Alias!;
-        var input = PromptText(this, title, promptText, preset);
-
-        if (input == null) return;                   // Abgebrochen
-        dev.Alias = string.IsNullOrWhiteSpace(input) ? null : input.Trim();
-        _vm.Save();                                  // Profile inkl. Alias persistieren
+        dev.IsEditing = true;
     }
-    private const double MIN_S = 1.0;   // nicht kleiner als "fit"
-    private const double MAX_S = 8.0;
-    // Mini-Prompt, keine zusätzlichen XAML-Dateien nötig
-    private static string? PromptText(Window owner, string title, string message, string initial = "")
+
+    private void DeviceName_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        var win = new Window
+        if (e.ClickCount == 2 && sender is TextBlock tb && tb.DataContext is SmartDevice dev)
         {
-            Title = title,
-            Width = 380,
-            Height = 160,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Owner = owner,
-            ResizeMode = ResizeMode.NoResize,
-            WindowStyle = WindowStyle.ToolWindow,
-            ShowInTaskbar = false
-        };
+            e.Handled = true;
+            dev.IsEditing = true;
+        }
+    }
 
-        var grid = new Grid { Margin = new Thickness(12) };
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+    private void TxtRename_LostFocus(object sender, RoutedEventArgs e)
+    {
+        if (sender is TextBox tb && tb.DataContext is SmartDevice dev)
+        {
+            EndRenameEditing(dev, tb, save: true);
+        }
+    }
 
-        var tbMsg = new TextBlock { Text = message, Margin = new Thickness(0, 0, 0, 6) };
-        var box = new TextBox { Text = initial, MinWidth = 300 };
-        var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 10, 0, 0) };
-        var ok = new Button { Content = "OK", Width = 80, IsDefault = true, Margin = new Thickness(0, 0, 6, 0) };
-        var cancel = new Button { Content = "Cancel", Width = 100, IsCancel = true };
+    private void TxtRename_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (sender is TextBox tb && tb.DataContext is SmartDevice dev)
+        {
+            if (e.Key == Key.Enter)
+            {
+                e.Handled = true;
+                EndRenameEditing(dev, tb, save: true);
+            }
+            else if (e.Key == Key.Escape)
+            {
+                e.Handled = true;
+                EndRenameEditing(dev, tb, save: false);
+            }
+        }
+    }
 
-        buttons.Children.Add(ok);
-        buttons.Children.Add(cancel);
+    private void TxtRename_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (sender is TextBox tb && tb.Visibility == Visibility.Visible)
+        {
+            tb.Focus();
+            tb.SelectAll();
+        }
+    }
 
-        Grid.SetRow(tbMsg, 0); grid.Children.Add(tbMsg);
-        Grid.SetRow(box, 1); grid.Children.Add(box);
-        Grid.SetRow(buttons, 2); grid.Children.Add(buttons);
+    private void EndRenameEditing(SmartDevice dev, TextBox tb, bool save)
+    {
+        if (!dev.IsEditing) return;
 
-        string? result = null;
-        ok.Click += (_, __) => { result = box.Text; win.DialogResult = true; };
-        win.Content = grid;
+        if (save)
+        {
+            var be = tb.GetBindingExpression(TextBox.TextProperty);
+            be?.UpdateSource();
 
-        return win.ShowDialog() == true ? result : null;
+            if (string.IsNullOrWhiteSpace(dev.Alias))
+            {
+                dev.Alias = null;
+            }
+
+            _vm?.Save();
+            SaveOwnOverlayToJson();
+            if (TrackingService.CloudSyncEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.Client != null)
+            {
+                try
+                {
+                    _ = UploadDevicesSnapshotForCurrentServerAsync();
+                }
+                catch (Exception ex)
+                {
+                    AppendLog("[dev/sync] Error: " + ex.Message);
+                }
+            }
+        }
+        else
+        {
+            tb.Text = dev.Alias;
+        }
+
+        dev.IsEditing = false;
     }
 
 public List<ExportedDeviceDto> Devices { get; set; } = new();
