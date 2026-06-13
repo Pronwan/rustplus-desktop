@@ -5245,15 +5245,32 @@
                                         </Style>
                                         <!-- Shared square icon selector style -->
                                         <Style x:Key="IconSelectorButton" TargetType="Button">
-                                            <Setter Property="Width" Value="24"/>
-                                            <Setter Property="Height" Value="24"/>
-                                            <Setter Property="Margin" Value="3,0"/>
-                                            <Setter Property="Padding" Value="2"/>
+                                            <Setter Property="Width" Value="32"/>
+                                            <Setter Property="Height" Value="32"/>
+                                            <Setter Property="Margin" Value="2"/>
+                                            <Setter Property="Padding" Value="3"/>
                                             <Setter Property="Background" Value="Transparent"/>
                                             <Setter Property="BorderThickness" Value="1"/>
                                             <Setter Property="BorderBrush" Value="#40FFFFFF"/>
                                             <Setter Property="Cursor" Value="Hand"/>
                                         </Style>
+
+                                         <!-- Custom marker color button style for better UI/UX -->
+                                         <Style x:Key="MarkerColorCircleButton" TargetType="Button">
+                                             <Setter Property="Width" Value="24"/>
+                                             <Setter Property="Height" Value="24"/>
+                                             <Setter Property="Margin" Value="3,0"/>
+                                             <Setter Property="BorderThickness" Value="1"/>
+                                             <Setter Property="BorderBrush" Value="#40FFFFFF"/>
+                                             <Setter Property="Cursor" Value="Hand"/>
+                                             <Setter Property="Template">
+                                                 <Setter.Value>
+                                                     <ControlTemplate TargetType="Button">
+                                                         <Border Background="{TemplateBinding Background}" CornerRadius="12" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"/>
+                                                     </ControlTemplate>
+                                                 </Setter.Value>
+                                             </Setter>
+                                         </Style>
                                     </Grid.Resources>
 
                                     <!-- Draw Options -->
@@ -5287,25 +5304,56 @@
                                     </StackPanel>
 
                                     <!-- Icon Options -->
-                                    <StackPanel x:Name="IconOptionsPanel" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
-                                        <TextBlock Text="Size:" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
-                                        <Slider x:Name="SliderIconSize" Width="100" Minimum="12" Maximum="64" Value="24" VerticalAlignment="Center" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="SliderIconSize_ValueChanged"/>
-                                        <TextBlock Text="{Binding ElementName=SliderIconSize, Path=Value, StringFormat={}{0:F0}px}" Width="35" VerticalAlignment="Center" Foreground="White" FontSize="11" Margin="4,0,10,0"/>
-                                        <Rectangle Width="1" Height="14" Fill="#30FFFFFF" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                        
-                                        <Button x:Name="BtnIconBase1" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/base1.png" ToolTip="Own Base (Black)">
-                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/base1.png" RenderOptions.BitmapScalingMode="HighQuality"/>
-                                        </Button>
-                                        <Button x:Name="BtnIconBase2" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/base2.png" ToolTip="Enemy Base (Red)">
-                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/base2.png" RenderOptions.BitmapScalingMode="HighQuality"/>
-                                        </Button>
-                                        <Button x:Name="BtnIconSam" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/sam-site.png" ToolTip="SAM Site">
-                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/sam-site.png" RenderOptions.BitmapScalingMode="HighQuality"/>
-                                        </Button>
-                                        <Button x:Name="BtnIconTurret" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/turret.png" ToolTip="Turret">
-                                            <Image Source="pack://application:,,,/Assets/icons/map-icons/turret.png" RenderOptions.BitmapScalingMode="HighQuality"/>
-                                        </Button>
-                                    </StackPanel>
+                                    <StackPanel x:Name="IconOptionsPanel" Orientation="Vertical" VerticalAlignment="Center" Visibility="Collapsed">
+                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                             <TextBlock Text="Size:" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
+                                             <Slider x:Name="SliderIconSize" Width="100" Minimum="12" Maximum="64" Value="24" VerticalAlignment="Center" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="SliderIconSize_ValueChanged"/>
+                                             <TextBlock Text="{Binding ElementName=SliderIconSize, Path=Value, StringFormat={}{0:F0}px}" Width="35" VerticalAlignment="Center" Foreground="White" FontSize="11" Margin="4,0,10,0"/>
+                                             <Rectangle Width="1" Height="14" Fill="#30FFFFFF" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                             
+                                             <Button x:Name="BtnIconBase1" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/base1.png" ToolTip="Own Base (Black)">
+                                                 <Image Source="pack://application:,,,/Assets/icons/map-icons/base1.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                             </Button>
+                                             <Button x:Name="BtnIconBase2" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/base2.png" ToolTip="Enemy Base (Red)">
+                                                 <Image Source="pack://application:,,,/Assets/icons/map-icons/base2.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                             </Button>
+                                             <Button x:Name="BtnIconSam" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/sam-site.png" ToolTip="SAM Site">
+                                                 <Image Source="pack://application:,,,/Assets/icons/map-icons/sam-site.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                             </Button>
+                                             <Button x:Name="BtnIconTurret" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/turret.png" ToolTip="Turret">
+                                                 <Image Source="pack://application:,,,/Assets/icons/map-icons/turret.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                             </Button>
+                                         </StackPanel>
+
+                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,4,0,0">
+                                             <TextBlock Text="Marker:" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
+                                             <UniformGrid x:Name="RustMarkerSelectorPanel" Rows="2" Columns="6" Height="72" VerticalAlignment="Center">
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="pin" ToolTip="Pin"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="dollar" ToolTip="Dollar"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="gun" ToolTip="Gun"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="home" ToolTip="Home"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="loot" ToolTip="Loot"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="parachute" ToolTip="Parachute"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="rock" ToolTip="Rock"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="scope" ToolTip="Scope"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="shield" ToolTip="Shield"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="skull" ToolTip="Skull"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="sleep" ToolTip="Sleep"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="zzz" ToolTip="ZZZ"/>
+                                             </UniformGrid>
+                                             <Rectangle Width="1" Height="56" Fill="#30FFFFFF" Margin="8,0,8,0" VerticalAlignment="Center"/>
+                                             <TextBlock Text="Color:" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
+                                             <StackPanel x:Name="RustColorSelectorPanel" Orientation="Horizontal" VerticalAlignment="Center">
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#b5c234" Click="RustColorSelection_Click" Tag="yellow" ToolTip="Yellow"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#2b7fb7" Click="RustColorSelection_Click" Tag="blue" ToolTip="Blue"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#4caf50" Click="RustColorSelection_Click" Tag="green" ToolTip="Green"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#d32f2f" Click="RustColorSelection_Click" Tag="red" ToolTip="Red"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#8e24aa" Click="RustColorSelection_Click" Tag="purple" ToolTip="Purple"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#e25cba" Click="RustColorSelection_Click" Tag="pink" ToolTip="Pink"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#00acc1" Click="RustColorSelection_Click" Tag="cyan" ToolTip="Cyan"/>
+                                             </StackPanel>
+                                         </StackPanel>
+                                     </StackPanel>
 
                                     <!-- Eraser Options -->
                                     <StackPanel x:Name="EraserOptionsPanel" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">

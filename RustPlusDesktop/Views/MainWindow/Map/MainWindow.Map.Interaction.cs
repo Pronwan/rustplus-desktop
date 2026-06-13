@@ -171,7 +171,7 @@ public partial class MainWindow
         {
             if (e.ChangedButton == MouseButton.Right)
             {
-                if (TryHandleBaseRightClick(mapPos))
+                if (TryHandleOverlayRightClick(mapPos))
                 {
                     e.Handled = true;
                     return;

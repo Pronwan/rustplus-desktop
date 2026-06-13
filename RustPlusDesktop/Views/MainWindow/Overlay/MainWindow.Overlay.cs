@@ -40,6 +40,8 @@ private bool _overlayToolsVisible = false;
     private Color _textColor = Colors.White;
     private double _textSize = 16.0;
     private string _currentIconPath = "pack://application:,,,/Assets/icons/map-icons/base1.png";
+    private string _selectedMarkerShape = "pin";
+    private string _selectedMarkerColor = "blue";
 
     // Fuer Draggen von platzierten Icons/Text
     private FrameworkElement? _draggingElement = null;
@@ -650,8 +652,8 @@ private bool _overlayToolsVisible = false;
                         double y = Canvas.GetTop(fe);
 
                         // Wenn WPF noch kein ActualWidth/Height gemessen hat, fallback:
-                        double w = fe is Image img ? img.Width : (fe.ActualWidth > 0 ? fe.ActualWidth : 32);
-                        double h = fe is Image img2 ? img2.Height : (fe.ActualHeight > 0 ? fe.ActualHeight : 16);
+                        double w = !double.IsNaN(fe.Width) ? fe.Width : (fe.ActualWidth > 0 ? fe.ActualWidth : 32);
+                        double h = !double.IsNaN(fe.Height) ? fe.Height : (fe.ActualHeight > 0 ? fe.ActualHeight : 16);
 
                         // Check ob der Radierer-Punkt im Bereich des Elements liegt (plus Puffer durch eraserSize)
                         if (mapPos.X >= x - _eraserSize && mapPos.X <= x + w + _eraserSize &&
@@ -748,46 +750,68 @@ private bool _overlayToolsVisible = false;
             scale = USER_ICON_MAX_SCALE;
 
         // 4. Icon bauen
-        var img = new Image
+        FrameworkElement elementToPlace;
+        bool isCustom = _currentIconPath.StartsWith("rust-marker://");
+        if (isCustom)
         {
-            Source = new BitmapImage(new Uri(_currentIconPath, UriKind.RelativeOrAbsolute)),
-            Width = _activeIconSize,
-            Height = _activeIconSize,
-            RenderTransformOrigin = new Point(0.5, 0.5),
-            RenderTransform = new ScaleTransform(scale, scale),
-            Tag = new OverlayTag
+            elementToPlace = CreateRustMarkerElement(_currentIconPath, _activeIconSize, _activeIconSize, true, _mySteamId, null, new List<string>());
+        }
+        else
+        {
+            var img = new Image
             {
-                OwnerSteamId = _mySteamId,
-                IsUserEditable = true,
-                BaseSize = _activeIconSize,
-                Note = null,
-                Screenshots = new List<string>()
-            }
-        };
-        RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
+                Source = new BitmapImage(new Uri(_currentIconPath, UriKind.RelativeOrAbsolute)),
+                Width = _activeIconSize,
+                Height = _activeIconSize,
+                RenderTransformOrigin = new Point(0.5, 0.5),
+                IsHitTestVisible = false
+            };
+            RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
 
-        bool isBase = _currentIconPath.Contains("base1.png") || _currentIconPath.Contains("base2.png");
+            var grid = new Grid
+            {
+                Width = _activeIconSize,
+                Height = _activeIconSize,
+                RenderTransformOrigin = new Point(0.5, 0.5),
+                IsHitTestVisible = true,
+                Tag = new OverlayTag
+                {
+                    OwnerSteamId = _mySteamId,
+                    IsUserEditable = true,
+                    BaseSize = _activeIconSize,
+                    Note = null,
+                    Screenshots = new List<string>(),
+                    CustomIconPath = _currentIconPath
+                }
+            };
+            grid.Children.Add(img);
+            elementToPlace = grid;
+        }
+
+        elementToPlace.RenderTransform = new ScaleTransform(scale, scale);
+
+        bool isBase = !isCustom && (_currentIconPath.Contains("base1.png") || _currentIconPath.Contains("base2.png"));
 
         if (isBase)
         {
-            img.MouseEnter += BaseIcon_MouseEnter;
-            img.MouseLeave += BaseIcon_MouseLeave;
-            img.MouseLeftButtonUp += BaseIcon_MouseLeftButtonUp;
+            elementToPlace.MouseEnter += BaseIcon_MouseEnter;
+            elementToPlace.MouseLeave += BaseIcon_MouseLeave;
+            elementToPlace.MouseLeftButtonUp += BaseIcon_MouseLeftButtonUp;
         }
 
         // 5. Canvas-Position IMMER aus der Basisgroesse ableiten
-        Canvas.SetLeft(img, mapPos.X - _activeIconSize / 2);
-        Canvas.SetTop(img, mapPos.Y - _activeIconSize / 2);
+        Canvas.SetLeft(elementToPlace, mapPos.X - _activeIconSize / 2);
+        Canvas.SetTop(elementToPlace, mapPos.Y - _activeIconSize / 2);
 
         // 6. ins Overlay
-        Overlay.Children.Add(img);
-        RegisterElementForOwner(_mySteamId, img);
+        Overlay.Children.Add(elementToPlace);
+        RegisterElementForOwner(_mySteamId, elementToPlace);
 
         // 7. speichern (nimmt BASIS-W/H, nicht die skalierten Pixel - das ist korrekt!)
         SaveOwnOverlayToJson();
 
         // 8. Bei Base-Icons: direkt Screenshot-Dialog oeffnen (keine Galerie auf Placement-Klick)
-        if (isBase && img.Tag is OverlayTag baseMeta)
+        if (isBase && elementToPlace.Tag is OverlayTag baseMeta)
         {
             int maxScreenshots = Services.Auth.SupabaseAuthManager.GetMaxScreenshotsPerBase();
             if (baseMeta.Screenshots.Count < maxScreenshots)
@@ -827,14 +851,13 @@ private bool _overlayToolsVisible = false;
 
         foreach (var child in Overlay.Children)
         {
-            if (child is Image img && img.Tag is OverlayTag meta)
+            if (child is FrameworkElement fe && fe.Tag is OverlayTag meta)
             {
-                // nur Icons anfassen - Strokes/Text bleiben wie sie sind
-                // wenn du GANZ sicher sein willst, dass es wirklich ein "Overlay-Icon" ist:
-                // if (meta.BaseSize is null) continue;
-
-                img.RenderTransformOrigin = new Point(0.5, 0.5);
-                img.RenderTransform = new ScaleTransform(scale, scale);
+                if (fe is Image || fe is Grid)
+                {
+                    fe.RenderTransformOrigin = new Point(0.5, 0.5);
+                    fe.RenderTransform = new ScaleTransform(scale, scale);
+                }
             }
         }
     }
@@ -877,9 +900,9 @@ private bool _overlayToolsVisible = false;
                 double x = Canvas.GetLeft(fe);
                 double y = Canvas.GetTop(fe);
 
-                double w = fe is Image img ? img.Width :
+                double w = !double.IsNaN(fe.Width) ? fe.Width :
                            (fe.ActualWidth > 0 ? fe.ActualWidth : 32);
-                double h = fe is Image img2 ? img2.Height :
+                double h = !double.IsNaN(fe.Height) ? fe.Height :
                            (fe.ActualHeight > 0 ? fe.ActualHeight : 16);
 
                 if (mapPos.X >= x && mapPos.X <= x + w &&
@@ -912,8 +935,8 @@ private bool _overlayToolsVisible = false;
                 double y = Canvas.GetTop(fe);
 
                 // Wenn WPF noch kein ActualWidth/Height gemessen hat, fallback:
-                double w = fe is Image img ? img.Width : (fe.ActualWidth > 0 ? fe.ActualWidth : 32);
-                double h = fe is Image img2 ? img2.Height : (fe.ActualHeight > 0 ? fe.ActualHeight : 16);
+                double w = !double.IsNaN(fe.Width) ? fe.Width : (fe.ActualWidth > 0 ? fe.ActualWidth : 32);
+                double h = !double.IsNaN(fe.Height) ? fe.Height : (fe.ActualHeight > 0 ? fe.ActualHeight : 16);
 
                 if (mapPos.X >= x && mapPos.X <= x + w &&
                     mapPos.Y >= y && mapPos.Y <= y + h)
@@ -1917,6 +1940,314 @@ private bool _overlayToolsVisible = false;
                 btn.BorderThickness = new Thickness(1);
             }
         }
+
+        // Custom Rust Marker selectors
+        bool isCustom = activePath.StartsWith("rust-marker://");
+        string activeShape = "pin";
+        string activeColor = "blue";
+        if (isCustom)
+        {
+            try
+            {
+                var uri = new Uri(activePath);
+                activeShape = uri.Host;
+                activeColor = uri.AbsolutePath.Trim('/');
+            }
+            catch {}
+        }
+
+        if (RustMarkerSelectorPanel != null)
+        {
+            foreach (var child in RustMarkerSelectorPanel.Children)
+            {
+                if (child is Button btn && btn.Tag is string shape)
+                {
+                    if (isCustom && shape.Equals(activeShape, StringComparison.OrdinalIgnoreCase))
+                    {
+                        btn.Background = new SolidColorBrush(Color.FromArgb(48, 255, 255, 255));
+                        btn.BorderBrush = Brushes.DodgerBlue;
+                        btn.BorderThickness = new Thickness(2);
+                    }
+                    else
+                    {
+                        btn.Background = Brushes.Transparent;
+                        btn.BorderBrush = new SolidColorBrush(Color.FromArgb(64, 255, 255, 255));
+                        btn.BorderThickness = new Thickness(1);
+                    }
+                }
+            }
+        }
+
+        if (RustColorSelectorPanel != null)
+        {
+            foreach (var child in RustColorSelectorPanel.Children)
+            {
+                if (child is Button btn && btn.Tag is string colorName)
+                {
+                    if (isCustom && colorName.Equals(activeColor, StringComparison.OrdinalIgnoreCase))
+                    {
+                        btn.BorderBrush = Brushes.White;
+                        btn.BorderThickness = new Thickness(2);
+                    }
+                    else
+                    {
+                        btn.BorderBrush = new SolidColorBrush(Color.FromArgb(64, 255, 255, 255));
+                        btn.BorderThickness = new Thickness(1);
+                    }
+                }
+            }
+        }
+
+        UpdateMarkerSelectorPreviews();
+    }
+
+    private void UpdateMarkerSelectorPreviews()
+    {
+        if (RustMarkerSelectorPanel == null) return;
+
+        foreach (var child in RustMarkerSelectorPanel.Children)
+        {
+            if (child is Button btn && btn.Tag is string shape)
+            {
+                var preview = CreateRustMarkerElement($"rust-marker://{shape}/{_selectedMarkerColor}", 22, 22, false, 0, null, null);
+                btn.Content = preview;
+            }
+        }
+    }
+
+    private void RustMarkerSelection_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is string shape)
+        {
+            _selectedMarkerShape = shape;
+            _currentIconPath = $"rust-marker://{_selectedMarkerShape}/{_selectedMarkerColor}";
+            HighlightActiveIcon(_currentIconPath);
+        }
+    }
+
+    private void RustColorSelection_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is string colorName)
+        {
+            _selectedMarkerColor = colorName;
+            _currentIconPath = $"rust-marker://{_selectedMarkerShape}/{_selectedMarkerColor}";
+            HighlightActiveIcon(_currentIconPath);
+        }
+    }
+
+    private static class RustMarkerColors
+    {
+        public static readonly Dictionary<string, (string Bright, string Dark)> Colors = new(StringComparer.OrdinalIgnoreCase)
+        {
+            { "yellow", ("#b5c234", "#151a05") },
+            { "blue",   ("#2b7fb7", "#05141e") },
+            { "green",  ("#4caf50", "#0a190b") },
+            { "red",    ("#d32f2f", "#1e0606") },
+            { "purple", ("#8e24aa", "#140518") },
+            { "pink",   ("#e25cba", "#1e0618") },
+            { "cyan",   ("#00acc1", "#00171a") }
+        };
+    }
+
+    private BitmapImage LoadBitmapResource(string packUri)
+    {
+        var uri = new Uri(packUri, UriKind.RelativeOrAbsolute);
+        var sri = Application.GetResourceStream(uri);
+        if (sri == null)
+        {
+            throw new System.IO.IOException($"Cannot locate resource: {packUri}");
+        }
+        var bitmap = new BitmapImage();
+        bitmap.BeginInit();
+        bitmap.StreamSource = sri.Stream;
+        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+        bitmap.EndInit();
+        bitmap.Freeze();
+        return bitmap;
+    }
+
+    private void UpdateNoteVisibilityAndText(Grid container, string? note)
+    {
+        if (note != null && note.Length > 10)
+        {
+            note = note.Substring(0, 10);
+        }
+
+        var noteBorder = container.Children.OfType<Border>().FirstOrDefault(b => (b.Tag as string) == "NoteBorder");
+        if (noteBorder != null)
+        {
+            noteBorder.VerticalAlignment = VerticalAlignment.Bottom;
+            noteBorder.Margin = new Thickness(-100, 0, -100, -18);
+            var textBlock = noteBorder.Child as TextBlock;
+            if (textBlock != null)
+            {
+                textBlock.TextWrapping = TextWrapping.NoWrap;
+                textBlock.TextTrimming = TextTrimming.None;
+                if (string.IsNullOrWhiteSpace(note))
+                {
+                    noteBorder.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    textBlock.Text = note;
+                    noteBorder.Visibility = Visibility.Visible;
+                }
+            }
+        }
+        else if (!string.IsNullOrWhiteSpace(note))
+        {
+            var textBlock = new TextBlock
+            {
+                Text = note,
+                Foreground = Brushes.White,
+                FontSize = 10,
+                FontWeight = FontWeights.SemiBold,
+                TextAlignment = TextAlignment.Center,
+                TextWrapping = TextWrapping.NoWrap,
+                TextTrimming = TextTrimming.None
+            };
+            var border = new Border
+            {
+                Tag = "NoteBorder",
+                Background = new SolidColorBrush(Color.FromArgb(180, 0, 0, 0)),
+                CornerRadius = new CornerRadius(4),
+                Padding = new Thickness(5, 1, 5, 1),
+                VerticalAlignment = VerticalAlignment.Bottom,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(-100, 0, -100, -18),
+                Child = textBlock,
+                IsHitTestVisible = false
+            };
+            container.Children.Add(border);
+        }
+    }
+
+    private FrameworkElement CreateRustMarkerElement(string iconPath, double width, double height, bool isHitTestVisible, ulong ownerSteamId, string? note, List<string>? screenshots)
+    {
+        try
+        {
+            string shape = "pin";
+            string colorName = "blue";
+
+            try
+            {
+                var uri = new Uri(iconPath);
+                if (uri.Scheme == "rust-marker")
+                {
+                    shape = uri.Host;
+                    colorName = uri.AbsolutePath.Trim('/');
+                }
+            }
+            catch {}
+
+            if (!RustMarkerColors.Colors.TryGetValue(colorName, out var colorPair))
+            {
+                colorPair = RustMarkerColors.Colors["blue"];
+            }
+
+            var brightBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(colorPair.Bright));
+            var darkBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(colorPair.Dark));
+
+            var grid = new Grid
+            {
+                Width = width,
+                Height = height,
+                RenderTransformOrigin = new Point(0.5, 0.5),
+                IsHitTestVisible = isHitTestVisible,
+                Tag = new OverlayTag
+                {
+                    OwnerSteamId = ownerSteamId,
+                    IsUserEditable = isHitTestVisible,
+                    Note = note,
+                    Screenshots = screenshots ?? new List<string>(),
+                    CustomIconPath = iconPath
+                }
+            };
+
+            RenderOptions.SetBitmapScalingMode(grid, BitmapScalingMode.HighQuality);
+
+            if (shape.Equals("pin", StringComparison.OrdinalIgnoreCase))
+            {
+                // 1. Background layer: Filled with the bright color, masked by the pin background PNG.
+                var bgRect = new Rectangle
+                {
+                    Width = width,
+                    Height = height,
+                    Fill = brightBrush,
+                    OpacityMask = new ImageBrush(LoadBitmapResource("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmappinbg.png"))
+                };
+                grid.Children.Add(bgRect);
+
+                // 2. Foreground layer: Rendered as-is (original PNG colors) to draw the black outlines and shadows natively.
+                var fgRect = new Rectangle
+                {
+                    Width = width,
+                    Height = height,
+                    Fill = new ImageBrush(LoadBitmapResource("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmappinfg.png"))
+                };
+                grid.Children.Add(fgRect);
+            }
+            else
+            {
+                // 1. Background layer (bright color, masked by circular background mask)
+                var bgRect = new Rectangle
+                {
+                    Width = width,
+                    Height = height,
+                    Fill = brightBrush,
+                    OpacityMask = new ImageBrush(LoadBitmapResource("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmapbackground.png"))
+                };
+                grid.Children.Add(bgRect);
+
+                // 2. Foreground layer (uncolored/original PNG containing black outlines, shadows, and semi-transparent center)
+                var fgRect = new Rectangle
+                {
+                    Width = width,
+                    Height = height,
+                    Fill = new ImageBrush(LoadBitmapResource("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmapforeground.png"))
+                };
+                grid.Children.Add(fgRect);
+
+                // 3. Icon layer (bright color, masked by icon mask)
+                string iconResPath = $"pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_{shape.ToLowerInvariant()}.png";
+                var iconRect = new Rectangle
+                {
+                    Width = width,
+                    Height = height,
+                    Fill = brightBrush,
+                    OpacityMask = new ImageBrush(LoadBitmapResource(iconResPath))
+                };
+                grid.Children.Add(iconRect);
+            }
+
+            if (!string.IsNullOrWhiteSpace(note))
+            {
+                UpdateNoteVisibilityAndText(grid, note);
+            }
+
+            return grid;
+        }
+        catch (Exception ex)
+        {
+            // Fail-safe fallback: Red ellipse to prevent crash
+            var fallback = new Ellipse
+            {
+                Width = width,
+                Height = height,
+                Fill = Brushes.Red,
+                Stroke = Brushes.Black,
+                StrokeThickness = 1,
+                Tag = new OverlayTag
+                {
+                    OwnerSteamId = ownerSteamId,
+                    IsUserEditable = isHitTestVisible,
+                    Note = note,
+                    Screenshots = screenshots ?? new List<string>(),
+                    CustomIconPath = iconPath
+                }
+            };
+            return fallback;
+        }
     }
 
     private void SliderDrawThickness_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -2104,6 +2435,7 @@ private bool _overlayToolsVisible = false;
         public double? BaseSize;   // nur fuer Icons, wird NICHT gespeichert
         public string? Note;
         public List<string> Screenshots = new();
+        public string? CustomIconPath;
     }
 
     // Liest lokales Overlay (mich) als OverlaySaveData
@@ -2144,11 +2476,30 @@ private bool _overlayToolsVisible = false;
 
                         var si = new SavedIcon
                         {
-                            IconPath = bi?.UriSource?.ToString() ?? _currentIconPath,
+                            IconPath = meta.CustomIconPath ?? bi?.UriSource?.ToString() ?? _currentIconPath,
                             X = x,
                             Y = y,
                             Width = img.Width,
                             Height = img.Height,
+                            Note = meta?.Note,
+                            Screenshots = meta?.Screenshots
+                        };
+                        data.Icons.Add(si);
+                        break;
+                    }
+
+                case Grid grid:
+                    {
+                        var x = Canvas.GetLeft(grid);
+                        var y = Canvas.GetTop(grid);
+
+                        var si = new SavedIcon
+                        {
+                            IconPath = meta.CustomIconPath ?? _currentIconPath,
+                            X = x,
+                            Y = y,
+                            Width = grid.Width,
+                            Height = grid.Height,
                             Note = meta?.Note,
                             Screenshots = meta?.Screenshots
                         };
@@ -2237,47 +2588,74 @@ private bool _overlayToolsVisible = false;
 
         foreach (var icon in data.Icons)
         {
-            var bi = new BitmapImage();
-            bi.BeginInit();
-            bi.CacheOption = BitmapCacheOption.OnLoad;
-            bi.UriSource = new Uri(icon.IconPath, UriKind.RelativeOrAbsolute);
-            bi.EndInit();
-            bi.Freeze();
+            FrameworkElement elementToPlace;
+            bool isCustom = icon.IconPath.StartsWith("rust-marker://");
 
-            bool isBase = icon.IconPath.Contains("base1.png") || icon.IconPath.Contains("base2.png");
-            var img = new Image
+            if (isCustom)
             {
-                Source = bi,
-                Width = icon.Width,
-                Height = icon.Height,
-                RenderTransformOrigin = new Point(0.5, 0.5),
-                IsHitTestVisible = editableIfMine || isBase, // base icons are always interactive so users can hover/click to see screenshots
-                Opacity = editableIfMine ? 1.0 : 0.8,
-                Tag = new OverlayTag
+                elementToPlace = CreateRustMarkerElement(icon.IconPath, icon.Width, icon.Height, editableIfMine, steamId, icon.Note, icon.Screenshots);
+            }
+            else
+            {
+                var bi = new BitmapImage();
+                bi.BeginInit();
+                bi.CacheOption = BitmapCacheOption.OnLoad;
+                bi.UriSource = new Uri(icon.IconPath, UriKind.RelativeOrAbsolute);
+                bi.EndInit();
+                bi.Freeze();
+
+                bool isBase = icon.IconPath.Contains("base1.png") || icon.IconPath.Contains("base2.png");
+                var img = new Image
                 {
-                    OwnerSteamId = steamId,
-                    IsUserEditable = editableIfMine,
-                    Note = icon.Note,
-                    Screenshots = icon.Screenshots ?? new List<string>()
-                },
-                Visibility = _visibleOverlayOwners.Contains(steamId)
-                             ? Visibility.Visible
-                             : Visibility.Collapsed
-            };
-            RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
+                    Source = bi,
+                    Width = icon.Width,
+                    Height = icon.Height,
+                    RenderTransformOrigin = new Point(0.5, 0.5),
+                    IsHitTestVisible = false
+                };
+                RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
 
-            if (icon.IconPath.Contains("base1.png") || icon.IconPath.Contains("base2.png"))
-            {
-                img.MouseEnter += BaseIcon_MouseEnter;
-                img.MouseLeave += BaseIcon_MouseLeave;
-                img.MouseLeftButtonUp += BaseIcon_MouseLeftButtonUp;
+                var grid = new Grid
+                {
+                    Width = icon.Width,
+                    Height = icon.Height,
+                    RenderTransformOrigin = new Point(0.5, 0.5),
+                    IsHitTestVisible = editableIfMine || isBase,
+                    Opacity = editableIfMine ? 1.0 : 0.8,
+                    Tag = new OverlayTag
+                    {
+                        OwnerSteamId = steamId,
+                        IsUserEditable = editableIfMine,
+                        Note = icon.Note,
+                        Screenshots = icon.Screenshots ?? new List<string>(),
+                        CustomIconPath = icon.IconPath
+                    },
+                    Visibility = _visibleOverlayOwners.Contains(steamId)
+                                 ? Visibility.Visible
+                                 : Visibility.Collapsed
+                };
+                grid.Children.Add(img);
+
+                if (isBase)
+                {
+                    grid.MouseEnter += BaseIcon_MouseEnter;
+                    grid.MouseLeave += BaseIcon_MouseLeave;
+                    grid.MouseLeftButtonUp += BaseIcon_MouseLeftButtonUp;
+                }
+
+                if (!string.IsNullOrWhiteSpace(icon.Note))
+                {
+                    UpdateNoteVisibilityAndText(grid, icon.Note);
+                }
+
+                elementToPlace = grid;
             }
 
-            Canvas.SetLeft(img, icon.X);
-            Canvas.SetTop(img, icon.Y);
+            Canvas.SetLeft(elementToPlace, icon.X);
+            Canvas.SetTop(elementToPlace, icon.Y);
 
-            Overlay.Children.Add(img);
-            list.Add(img);
+            Overlay.Children.Add(elementToPlace);
+            list.Add(elementToPlace);
         }
 
         foreach (var txt in data.Texts)
@@ -3225,29 +3603,36 @@ private bool _overlayToolsVisible = false;
         BaseGalleryMagnifierBrush.Viewbox = new Rect(viewX, viewY, viewWidth, viewHeight);
     }
 
-    public bool TryHandleBaseRightClick(Point mapPos)
+    public bool TryHandleOverlayRightClick(Point mapPos)
     {
         if (Overlay == null) return false;
 
         for (int i = Overlay.Children.Count - 1; i >= 0; i--)
         {
-            if (Overlay.Children[i] is Image img && img.Tag is OverlayTag meta)
+            if (Overlay.Children[i] is FrameworkElement fe && fe.Tag is OverlayTag meta)
             {
                 if (meta.OwnerSteamId != _mySteamId || !meta.IsUserEditable) continue;
+                if (fe is Polyline) continue;
 
-                var bi = img.Source as BitmapImage;
-                string path = bi?.UriSource?.ToString() ?? "";
-                if (!path.Contains("base1.png") && !path.Contains("base2.png")) continue;
-
-                double x = Canvas.GetLeft(img);
-                double y = Canvas.GetTop(img);
-                double w = img.Width > 0 ? img.Width : 32;
-                double h = img.Height > 0 ? img.Height : 32;
+                double x = Canvas.GetLeft(fe);
+                double y = Canvas.GetTop(fe);
+                double w = fe.Width > 0 ? fe.Width : 32;
+                double h = fe.Height > 0 ? fe.Height : 32;
 
                 if (mapPos.X >= x && mapPos.X <= x + w &&
                     mapPos.Y >= y && mapPos.Y <= y + h)
                 {
-                    ShowBaseContextMenu(img, meta);
+                    string path = meta.CustomIconPath ?? "";
+                    bool isBase = path.Contains("base1.png") || path.Contains("base2.png");
+
+                    if (isBase)
+                    {
+                        ShowBaseContextMenu(fe, meta);
+                    }
+                    else
+                    {
+                        ShowGenericIconContextMenu(fe, meta);
+                    }
                     return true;
                 }
             }
@@ -3255,7 +3640,47 @@ private bool _overlayToolsVisible = false;
         return false;
     }
 
-    private void ShowBaseContextMenu(Image baseImg, OverlayTag meta)
+    private void ReplaceOverlayElement(FrameworkElement oldEl, FrameworkElement newEl)
+    {
+        // Copy Canvas position
+        double left = Canvas.GetLeft(oldEl);
+        double top = Canvas.GetTop(oldEl);
+        Canvas.SetLeft(newEl, left);
+        Canvas.SetTop(newEl, top);
+
+        // Copy RenderTransform
+        newEl.RenderTransform = oldEl.RenderTransform;
+
+        // Replace in Overlay Canvas children
+        int index = Overlay.Children.IndexOf(oldEl);
+        if (index != -1)
+        {
+            Overlay.Children[index] = newEl;
+        }
+        else
+        {
+            Overlay.Children.Add(newEl);
+        }
+
+        // Replace in _playerOverlayElements list
+        if (_playerOverlayElements.TryGetValue(_mySteamId, out var list))
+        {
+            int listIdx = list.IndexOf(oldEl);
+            if (listIdx != -1)
+            {
+                list[listIdx] = newEl;
+            }
+            else
+            {
+                list.Add(newEl);
+            }
+        }
+
+        SaveOwnOverlayToJson();
+        UploadOwnOverlayToTeam();
+    }
+
+    private void ShowGenericIconContextMenu(FrameworkElement iconEl, OverlayTag meta)
     {
         var menu = new ContextMenu { Style = (Style)FindResource("DarkContextMenu") };
 
@@ -3266,6 +3691,8 @@ private bool _overlayToolsVisible = false;
             if (dlg.ShowDialog() == true)
             {
                 meta.Note = dlg.NoteResult;
+                if (iconEl is Grid g)
+                    UpdateNoteVisibilityAndText(g, meta.Note);
                 SaveOwnOverlayToJson();
                 UploadOwnOverlayToTeam();
             }
@@ -3278,6 +3705,111 @@ private bool _overlayToolsVisible = false;
             miDelNote.Click += (s, e) =>
             {
                 meta.Note = null;
+                if (iconEl is Grid g)
+                    UpdateNoteVisibilityAndText(g, null);
+                SaveOwnOverlayToJson();
+                UploadOwnOverlayToTeam();
+            };
+            menu.Items.Add(miDelNote);
+        }
+
+        bool isCustomMarker = meta.CustomIconPath != null && meta.CustomIconPath.StartsWith("rust-marker://");
+        if (isCustomMarker)
+        {
+            menu.Items.Add(new Separator());
+
+            string shape = "pin";
+            string color = "blue";
+            try
+            {
+                var uri = new Uri(meta.CustomIconPath);
+                if (uri.Scheme == "rust-marker")
+                {
+                    shape = uri.Host;
+                    color = uri.AbsolutePath.Trim('/');
+                }
+            }
+            catch {}
+
+            var miChangeIcon = new MenuItem { Header = "Change Icon" };
+            string[] shapes = { "pin", "dollar", "gun", "home", "loot", "parachute", "rock", "scope", "shield", "skull", "sleep", "zzz" };
+            foreach (var sh in shapes)
+            {
+                var shapeItem = new MenuItem { Header = sh.Substring(0, 1).ToUpper() + sh.Substring(1) };
+                string targetShape = sh;
+                shapeItem.Click += (s, e) =>
+                {
+                    string newPath = $"rust-marker://{targetShape}/{color}";
+                    var newEl = CreateRustMarkerElement(newPath, iconEl.Width, iconEl.Height, true, _mySteamId, meta.Note, meta.Screenshots);
+                    ReplaceOverlayElement(iconEl, newEl);
+                };
+                miChangeIcon.Items.Add(shapeItem);
+            }
+            menu.Items.Add(miChangeIcon);
+
+            var miChangeColor = new MenuItem { Header = "Change Color" };
+            string[] colors = { "yellow", "blue", "green", "red", "purple", "pink", "cyan" };
+            foreach (var co in colors)
+            {
+                var colorItem = new MenuItem { Header = co.Substring(0, 1).ToUpper() + co.Substring(1) };
+                string targetColor = co;
+                colorItem.Click += (s, e) =>
+                {
+                    string newPath = $"rust-marker://{shape}/{targetColor}";
+                    var newEl = CreateRustMarkerElement(newPath, iconEl.Width, iconEl.Height, true, _mySteamId, meta.Note, meta.Screenshots);
+                    ReplaceOverlayElement(iconEl, newEl);
+                };
+                miChangeColor.Items.Add(colorItem);
+            }
+            menu.Items.Add(miChangeColor);
+        }
+
+        menu.Items.Add(new Separator());
+
+        var miDelete = new MenuItem { Header = CloudText("Delete", "Delete") };
+        miDelete.Click += (s, e) =>
+        {
+            Overlay.Children.Remove(iconEl);
+            if (_playerOverlayElements.TryGetValue(_mySteamId, out var mine))
+            {
+                mine.Remove(iconEl);
+            }
+            SaveOwnOverlayToJson();
+            UploadOwnOverlayToTeam();
+        };
+        menu.Items.Add(miDelete);
+
+        iconEl.ContextMenu = menu;
+        menu.IsOpen = true;
+    }
+
+    private void ShowBaseContextMenu(FrameworkElement baseImg, OverlayTag meta)
+    {
+        var menu = new ContextMenu { Style = (Style)FindResource("DarkContextMenu") };
+
+        var miNote = new MenuItem { Header = string.IsNullOrEmpty(meta.Note) ? CloudText("BaseAddNote", "Add Note") : CloudText("BaseEditNote", "Edit Note") };
+        miNote.Click += (s, e) =>
+        {
+            var dlg = new Views.Windows.BaseNoteWindow(meta.Note) { Owner = this };
+            if (dlg.ShowDialog() == true)
+            {
+                meta.Note = dlg.NoteResult;
+                if (baseImg is Grid g)
+                    UpdateNoteVisibilityAndText(g, meta.Note);
+                SaveOwnOverlayToJson();
+                UploadOwnOverlayToTeam();
+            }
+        };
+        menu.Items.Add(miNote);
+
+        if (!string.IsNullOrEmpty(meta.Note))
+        {
+            var miDelNote = new MenuItem { Header = CloudText("BaseDeleteNote", "Delete Note") };
+            miDelNote.Click += (s, e) =>
+            {
+                meta.Note = null;
+                if (baseImg is Grid g)
+                    UpdateNoteVisibilityAndText(g, null);
                 SaveOwnOverlayToJson();
                 UploadOwnOverlayToTeam();
             };
