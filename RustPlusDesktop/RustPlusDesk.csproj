@@ -19,12 +19,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>6.3.0</Version>
+		<Version>6.3.1</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>6.3.0</AssemblyVersion>
-		<FileVersion>6.3.0</FileVersion>
-		<InformationalVersion>6.3.0</InformationalVersion>
+		<AssemblyVersion>6.3.1</AssemblyVersion>
+		<FileVersion>6.3.1</FileVersion>
+		<InformationalVersion>6.3.1</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -99,6 +99,29 @@
 	  <None Remove="Assets\icons\map-icons\base2.png" />
 	  <None Remove="Assets\icons\map-icons\sam-site.png" />
 	  <None Remove="Assets\icons\map-icons\turret.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmap_dollar.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmap_gun.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmap_home.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmap_loot.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmap_parachute.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmap_rock.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmap_scope.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmap_shield.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmap_skull.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmap_sleep.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmap_zzz.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmapbackground.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmapforeground.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmapforegroundleader.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmappinbg.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmappinfg.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_iconmappinfgleader.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_shop_background.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_shop_icon.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_shop_tint.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_submarine.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_train.png" />
+	  <None Remove="Assets\icons\map-markers\assets_markers_tunnel.png" />
 	  <None Remove="Assets\icons\militarybase.png" />
 	  <None Remove="Assets\icons\militarytunnel.png" />
 	  <None Remove="Assets\icons\miningoutpost.png" />
@@ -169,6 +192,8 @@
 	  <None Remove="Assets\Images\6.0 Cloud Patch\Thumbnail_RustPlus6_V6.jpg" />
 	  <None Remove="Assets\Images\6.0 Cloud Patch\window-size.png" />
 	  <None Remove="Assets\Images\6.0 Cloud Patch\WPF_devicelist.png" />
+	  <None Remove="Assets\Images\6.3.1\Logic-Engine.png" />
+	  <None Remove="Assets\Images\6.3.1\LogicEngine-Button_and_subscriber_dock.png" />
 	  <None Remove="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
 	  <None Remove="Assets\rustplus-desktop-icon.ico" />
 	  <None Remove="Assets\Data\rust_items.json" />
@@ -376,6 +401,8 @@
     <Resource Include="Assets\Images\6.0 Cloud Patch\Thumbnail_RustPlus6_V6.jpg" />
     <Resource Include="Assets\Images\6.0 Cloud Patch\window-size.png" />
     <Resource Include="Assets\Images\6.0 Cloud Patch\WPF_devicelist.png" />
+    <Resource Include="Assets\Images\6.3.1\Logic-Engine.png" />
+    <Resource Include="Assets\Images\6.3.1\LogicEngine-Button_and_subscriber_dock.png" />
     <Resource Include="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
     <Resource Include="Assets\rustplus-desktop-icon.ico" />
     <Resource Include="Assets\Screenshots\3.0_1.png" />
@@ -415,6 +442,75 @@
     <Resource Include="Assets\Screenshots\beta-5.1_7.png" />
     <Resource Include="Assets\Screenshots\Notifications.png" />
     <Resource Include="Assets\Flags\*.png" />
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmap_dollar.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmap_gun.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmap_home.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmap_loot.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmap_parachute.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmap_rock.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmap_scope.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmap_shield.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmap_skull.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmap_sleep.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmap_zzz.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmapbackground.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmapforeground.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmapforegroundleader.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmappinbg.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmappinfg.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_iconmappinfgleader.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_shop_background.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_shop_icon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_shop_tint.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_submarine.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_train.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\icons\map-markers\assets_markers_tunnel.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\Images\6.0 Cloud Patch\death-notifications.png" />
     <Resource Include="Assets\Images\6.0 Cloud Patch\death-snackbar.png" />
     <Resource Include="Assets\TitleScreen-rust-plus-desktop.png" />

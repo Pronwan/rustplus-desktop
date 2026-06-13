@@ -428,6 +428,22 @@ public partial class MainWindow
 
             ClearUserOverlayElements();
             _visibleOverlayOwners.Add(_mySteamId);
+
+            // Restore saved subscriptions for this server profile
+            if (_vm?.Selected != null)
+            {
+                var savedSubs = _vm.Selected.SubscribedTeammateSteamIds;
+                if (savedSubs != null)
+                {
+                    foreach (var sid in savedSubs)
+                    {
+                        if (sid != _mySteamId)
+                        {
+                            _visibleOverlayOwners.Add(sid);
+                        }
+                    }
+                }
+            }
             // Async init: merge local + cloud overlays intelligently (no wipe risk)
             _ownCloudRestoreReady = false;
             _ = InitOwnOverlayAsync();
@@ -435,6 +451,19 @@ public partial class MainWindow
 
             // Wait for core initialization to complete
             await Task.WhenAll(initTasks);
+            
+            // Rebuild team bar and subscription dock with loaded team data, and fetch restored teammate overlays
+            await Dispatcher.InvokeAsync(() =>
+            {
+                RebuildOverlayTeamBar();
+                UpdateSubscriptionDock();
+
+                var restoredTeammates = _visibleOverlayOwners.Where(id => id != _mySteamId).ToList();
+                foreach (var sid in restoredTeammates)
+                {
+                    _ = TryFetchOverlayForPlayerFromServerAsync(sid);
+                }
+            });
             
             // Core data is now loaded (_worldSizeS is available)
             if (TrackingService.AutoLoadShops)

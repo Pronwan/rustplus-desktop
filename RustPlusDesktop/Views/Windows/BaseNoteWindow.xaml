@@ -56,12 +56,13 @@
                          Foreground="{DynamicResource TextPrimary}"
                          BorderBrush="{DynamicResource CardBorder}"
                          BorderThickness="1"
-                         Padding="8"
-                         AcceptsReturn="True" 
-                         TextWrapping="Wrap" 
-                         MaxLength="1000"
+                         Padding="8,6"
+                         AcceptsReturn="False" 
+                         TextWrapping="NoWrap" 
+                         MaxLength="100"
                          FontSize="13"
-                         VerticalScrollBarVisibility="Auto"/>
+                         Height="36"
+                         VerticalContentAlignment="Center"/>
             </Grid>
         </DockPanel>
     </Border>

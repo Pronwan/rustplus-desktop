@@ -453,7 +453,10 @@ public partial class MainWindow : WpfUi.FluentWindow
         _vm.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(MainViewModel.Selected))
+            {
                 SwitchCameraSourceTo(_vm.Selected);
+                LogicEnginePanel?.RefreshListBindings();
+            }
             if (e.PropertyName == nameof(MainViewModel.IsDownloadingUpdate) && !_vm.IsDownloadingUpdate)
                 UpdateDownloadPopup.IsOpen = false;
         };
@@ -637,6 +640,8 @@ public partial class MainWindow : WpfUi.FluentWindow
                         dev.IsOn = isOn;                  // zeigt in der Liste AKTIV nur wÃƒÂ¤hrend der AuslÃƒÂ¶sung
                         _suppressToggleHandler = false;
 
+                        TriggerLogicEngineOnDeviceEvent(id, isOn);
+
                         // optional: nach kurzer Zeit automatisch auf INAKTIV zurÃƒÂ¼cknehmen,
                         // falls kein weiterer Alarm-Event kommt
                         // Trigger Alarm UI/Sound auch via WebSocket
@@ -681,6 +686,8 @@ public partial class MainWindow : WpfUi.FluentWindow
                     _suppressToggleHandler = true;
                     dev.IsOn = isOn;
                     _suppressToggleHandler = false;
+
+                    TriggerLogicEngineOnDeviceEvent(id, isOn);
                 });
             };
         }
@@ -3369,7 +3376,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         Dispatcher.Invoke(() =>
         {
-            TxtLog.AppendText(line + Environment.NewLine);
+            string timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+            TxtLog.AppendText($"[{timestamp}] {line}{Environment.NewLine}");
             TxtLog.ScrollToEnd();
         });
     }
@@ -5476,10 +5484,26 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         else
         {
+            LogicEnginePanel.Visibility = Visibility.Collapsed;
             ProfitTradesPanel.Visibility = Visibility.Collapsed;
             BuyXForYPanel.Visibility = Visibility.Collapsed;
             AppSettingsPanel.LoadSettings();
             AppSettingsPanel.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void BtnLogicEngine_Click(object sender, RoutedEventArgs e)
+    {
+        if (LogicEnginePanel.Visibility == Visibility.Visible)
+        {
+            LogicEnginePanel.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            AppSettingsPanel.Visibility = Visibility.Collapsed;
+            ProfitTradesPanel.Visibility = Visibility.Collapsed;
+            BuyXForYPanel.Visibility = Visibility.Collapsed;
+            LogicEnginePanel.Visibility = Visibility.Visible;
         }
     }
 
@@ -5526,6 +5550,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (AppSettingsPanel != null)
         {
             AppSettingsPanel.ParentWindow = this;
+        }
+        if (LogicEnginePanel != null)
+        {
+            LogicEnginePanel.ParentWindow = this;
         }
     }
 

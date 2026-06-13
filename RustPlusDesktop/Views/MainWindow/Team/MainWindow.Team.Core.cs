@@ -328,6 +328,7 @@ public partial class MainWindow
             var leaderId = team.LeaderSteamId;
             foreach (var m in TeamMembers) m.MissingCount++;
 
+            var avatarTasks = new List<Task>();
             foreach (var m in team.Members)
             {
                 var sid = m.SteamId;
@@ -339,10 +340,14 @@ public partial class MainWindow
                     vm = new TeamMemberVM { SteamId = sid, Abbreviate = _abbreviateNames };
                     TeamMembers.Add(vm);
                     _hasCriticalPresenceChange = true;
-                    _ = LoadAvatarAsync(vm);
-                    if (vm.Avatar == null && CanTryAvatar(sid))
+                }
+
+                if (vm.Avatar == null)
+                {
+                    avatarTasks.Add(LoadAvatarAsync(vm));
+                    if (CanTryAvatar(sid))
                     {
-                        _ = EnsureAvatarAsync(vm);
+                        avatarTasks.Add(EnsureAvatarAsync(vm));
                     }
                 }
 
@@ -378,6 +383,30 @@ public partial class MainWindow
                     _hasCriticalPresenceChange = true;
                 }
 
+            // Cleanup subscriptions of players who left the team on the UI thread
+            var currentTeamIds = TeamMembers.Select(tm => tm.SteamId).ToHashSet();
+            await Dispatcher.InvokeAsync(() =>
+            {
+                var toRemoveSubs = _visibleOverlayOwners.Where(id => id != _mySteamId && !currentTeamIds.Contains(id)).ToList();
+                if (toRemoveSubs.Count > 0)
+                {
+                    foreach (var id in toRemoveSubs)
+                    {
+                        _visibleOverlayOwners.Remove(id);
+                        _teammatePollStates.Remove(id);
+                        if (_playerOverlayElements.TryGetValue(id, out var listToHide))
+                        {
+                            foreach (var fe in listToHide)
+                                Overlay.Children.Remove(fe);
+                            _playerOverlayElements.Remove(id);
+                        }
+                    }
+                    RebuildOverlayTeamBar();
+                    UpdateSubscriptionDock();
+                    UpdateSavedSubscriptionsInProfile();
+                }
+            });
+
             var cloudTeamMembers = TeamMembers.Select(t => new RustPlusDesk.Services.Auth.SupabaseAuthManager.CloudTeamMemberDto
                 {
                     SteamId = t.SteamId.ToString(),
@@ -390,10 +419,11 @@ public partial class MainWindow
             var serverKey = GetServerKey();
             var serverName = _vm.Selected?.Name;
             var cloudPresenceSignature = BuildCloudPresenceSignature(serverKey, serverName, cloudTeamMembers);
-            if (cloudPresenceSignature != _lastCloudPresenceSignature)
+            var timeSinceLast = DateTime.UtcNow - _lastPresenceUploadTime;
+            bool forcePeriodicUpload = timeSinceLast.TotalSeconds >= 290;
+            if (cloudPresenceSignature != _lastCloudPresenceSignature || forcePeriodicUpload)
             {
-                var timeSinceLast = DateTime.UtcNow - _lastPresenceUploadTime;
-                if (_hasCriticalPresenceChange || timeSinceLast.TotalSeconds >= 15)
+                if (_hasCriticalPresenceChange || forcePeriodicUpload || timeSinceLast.TotalSeconds >= 15)
                 {
                     _lastCloudPresenceSignature = cloudPresenceSignature;
                     _lastPresenceUploadTime = DateTime.UtcNow;
@@ -407,6 +437,11 @@ public partial class MainWindow
 
             if (ShouldSyncTeamFeatureMasterForCurrentState(cloudPresenceSignature))
                 _ = SyncTeamFeatureMasterAsync();
+
+            if (avatarTasks.Count > 0)
+            {
+                try { await Task.WhenAll(avatarTasks); } catch { }
+            }
         }
         catch (Exception ex)
         {

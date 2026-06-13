@@ -112,6 +112,18 @@ public partial class MainWindow
                     if (dev != null) deviceCmds.Add($"[{dev.PureName}]: {prefix}{mapping.Command}");
                 }
             }
+            if (profile.IsLogicEngineActive && !_chatFeaturesBlockedByMaster && profile.LogicRules != null)
+            {
+                foreach (var rule in profile.LogicRules)
+                {
+                    if (rule.IsEnabled && rule.TriggerType == "ChatCommand" && !string.IsNullOrWhiteSpace(rule.TriggerCommand))
+                    {
+                        string cleanCmd = rule.TriggerCommand.Trim();
+                        if (cleanCmd.StartsWith(prefix)) cleanCmd = cleanCmd.Substring(prefix.Length).Trim();
+                        deviceCmds.Add($"[Rule: {rule.Name}]: {prefix}{cleanCmd}");
+                    }
+                }
+            }
             foreach (var mapping in profile.UpkeepCommandMappings)
             {
                 if (!string.IsNullOrWhiteSpace(mapping.Command) && mapping.EntityId != 0)
@@ -479,6 +491,29 @@ public partial class MainWindow
                 }
             }
             return;
+        }
+
+        // Check if logic engine is running an action
+        if (_logicEngineRunningAction)
+        {
+            AppendLog("[ChatCommand] Switch command ignored: Logic Engine is currently executing an action.");
+            return;
+        }
+
+        // Check Logic Engine rules
+        if (profile.IsLogicEngineActive && !_chatFeaturesBlockedByMaster && profile.LogicRules != null)
+        {
+            var matchedRule = profile.LogicRules.FirstOrDefault(r => {
+                if (!r.IsEnabled || r.TriggerType != "ChatCommand") return false;
+                string cleanCmd = r.TriggerCommand?.Trim().ToLowerInvariant() ?? "";
+                if (cleanCmd.StartsWith(prefix)) cleanCmd = cleanCmd.Substring(prefix.Length).Trim();
+                return cleanCmd == cmd;
+            });
+            if (matchedRule != null)
+            {
+                TriggerLogicEngineOnChatCommand(cmd);
+                return;
+            }
         }
 
         // Command: Switches (Dynamic List)

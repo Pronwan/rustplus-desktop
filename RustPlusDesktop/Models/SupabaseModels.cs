@@ -411,4 +411,24 @@ namespace RustPlusDesk.Models
         [JsonPropertyName("updated_at")]
         public DateTime UpdatedAt { get; set; }
     }
+
+    [Table("team_feature_presence")]
+    public class TeamFeaturePresenceModel : BaseModel
+    {
+        [PrimaryKey("steam_id")]
+        [Column("steam_id")]
+        [JsonProperty("steam_id")]
+        [JsonPropertyName("steam_id")]
+        public string? SteamId { get; set; }
+
+        [Column("server_key")]
+        [JsonProperty("server_key")]
+        [JsonPropertyName("server_key")]
+        public string? ServerKey { get; set; }
+
+        [Column("team_key")]
+        [JsonProperty("team_key")]
+        [JsonPropertyName("team_key")]
+        public string? TeamKey { get; set; }
+    }
 }
