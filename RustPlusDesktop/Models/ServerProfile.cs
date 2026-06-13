@@ -479,7 +479,22 @@ public class ServerProfile : INotifyPropertyChanged
         get => _rustMapsWipeTime;
         set { _rustMapsWipeTime = value; OnProp(); }
     }
+
+    private List<LogicRule> _logicRules = new();
+    public List<LogicRule> LogicRules
+    {
+        get => _logicRules;
+        set { _logicRules = value ?? new(); OnProp(); }
+    }
+
+    private bool _isLogicEngineActive = false;
+    public bool IsLogicEngineActive
+    {
+        get => _isLogicEngineActive;
+        set { if (_isLogicEngineActive != value) { _isLogicEngineActive = value; OnProp(); } }
+    }
 }
+
 
 public class ChatCommandMapping : INotifyPropertyChanged
 {

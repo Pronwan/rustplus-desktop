@@ -192,6 +192,8 @@
 	  <None Remove="Assets\Images\6.0 Cloud Patch\Thumbnail_RustPlus6_V6.jpg" />
 	  <None Remove="Assets\Images\6.0 Cloud Patch\window-size.png" />
 	  <None Remove="Assets\Images\6.0 Cloud Patch\WPF_devicelist.png" />
+	  <None Remove="Assets\Images\6.3.1\Logic-Engine.png" />
+	  <None Remove="Assets\Images\6.3.1\LogicEngine-Button_and_subscriber_dock.png" />
 	  <None Remove="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
 	  <None Remove="Assets\rustplus-desktop-icon.ico" />
 	  <None Remove="Assets\Data\rust_items.json" />
@@ -399,6 +401,8 @@
     <Resource Include="Assets\Images\6.0 Cloud Patch\Thumbnail_RustPlus6_V6.jpg" />
     <Resource Include="Assets\Images\6.0 Cloud Patch\window-size.png" />
     <Resource Include="Assets\Images\6.0 Cloud Patch\WPF_devicelist.png" />
+    <Resource Include="Assets\Images\6.3.1\Logic-Engine.png" />
+    <Resource Include="Assets\Images\6.3.1\LogicEngine-Button_and_subscriber_dock.png" />
     <Resource Include="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
     <Resource Include="Assets\rustplus-desktop-icon.ico" />
     <Resource Include="Assets\Screenshots\3.0_1.png" />

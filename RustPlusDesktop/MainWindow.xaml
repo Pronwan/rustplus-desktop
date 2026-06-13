@@ -1151,24 +1151,60 @@
                                 x:Name="BtnDevicesExport"
                                 Width="36"
                                 Height="36"
-                                Margin="0,0,16,0"
+                                Margin="0,0,8,0"
                                 Padding="4"
                                 Appearance="Secondary"
                                 Click="BtnDevicesExport_Click"
                                 Icon="{ui:SymbolIcon Symbol=Cloud24}"
                                 ToolTip="{DynamicResource ExportDevices}" />
                             <ui:Button
-                                Width="80"
-                                Margin="10,0,0,0"
+                                x:Name="BtnLogicEngine"
+                                Width="36"
+                                Height="36"
+                                Margin="0,0,8,0"
+                                Padding="4"
+                                Appearance="Secondary"
+                                Click="BtnLogicEngine_Click"
+                                ToolTip="Logic Engine">
+                                <ui:Button.Icon>
+                                    <ui:SymbolIcon Symbol="DeveloperBoard24" />
+                                </ui:Button.Icon>
+                                <ui:Button.Style>
+                                    <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Selected.IsLogicEngineActive}" Value="True">
+                                                <Setter Property="BorderBrush" Value="#3b82f6"/>
+                                                <Setter Property="Background" Value="#1a3b82f6"/>
+                                                <Setter Property="Effect">
+                                                    <Setter.Value>
+                                                        <DropShadowEffect Color="#3b82f6" BlurRadius="8" ShadowDepth="0" Opacity="0.8"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ui:Button.Style>
+                            </ui:Button>
+                            <ui:Button
+                                x:Name="BtnDeviceRefresh"
+                                Width="36"
+                                Height="36"
+                                Margin="0,0,8,0"
+                                Padding="4"
                                 Appearance="Secondary"
                                 Click="BtnDeviceRefresh_Click"
-                                Content="{DynamicResource Refresh}" />
+                                Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}"
+                                ToolTip="{DynamicResource Refresh}" />
                             <ui:Button
-                                Width="80"
-                                Margin="10,0,0,0"
+                                x:Name="BtnDeleteDevice"
+                                Width="36"
+                                Height="36"
+                                Margin="0,0,0,0"
+                                Padding="4"
                                 Appearance="Secondary"
                                 Click="BtnDeleteDevice_Click"
-                                Content="{DynamicResource Delete}"
+                                Icon="{ui:SymbolIcon Symbol=Delete24}"
+                                Foreground="IndianRed"
                                 IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem.IsMissing, Converter={StaticResource NotNull}}"
                                 ToolTip="{DynamicResource DeleteMissingOnly}" />
                         </StackPanel>
@@ -2765,6 +2801,11 @@
                     <views:AppSettingsOverlay
                         x:Name="AppSettingsPanel"
                         Visibility="Collapsed" />
+
+                    <!--  Logic Engine Overlay  -->
+                    <views:LogicEngineOverlay
+                        x:Name="LogicEnginePanel"
+                        Visibility="Collapsed" />
                 </Grid>
             </Border>
 
@@ -3945,6 +3986,45 @@
                                         </ui:Button>
                                     </StackPanel>
                                 </ui:Card>
+
+                                <!--  SUBSCRIPTION DOCK  -->
+                                <ui:Card
+                                    x:Name="SubscriptionDock"
+                                    Margin="0,6,0,0"
+                                    Padding="6"
+                                    Background="#AA16181C"
+                                    BorderBrush="#40FFFFFF"
+                                    BorderThickness="1"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Visibility="Collapsed">
+                                    <StackPanel Orientation="Vertical">
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="240" HorizontalScrollBarVisibility="Disabled">
+                                            <StackPanel x:Name="SubscriptionStack" Orientation="Vertical" />
+                                        </ScrollViewer>
+                                        <ui:Button
+                                            x:Name="DockEditSubscriptionsButton"
+                                            Margin="0,4,0,0"
+                                            Padding="4"
+                                            Width="36"
+                                            Height="36"
+                                            HorizontalAlignment="Center"
+                                            Click="DockEditSubscriptionsButton_Click"
+                                            ToolTip="Edit Subscriptions (Drawing Overlay)">
+                                            <ui:Button.Style>
+                                                <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsMouseOver, ElementName=SubscriptionDock}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ui:Button.Style>
+                                            <ui:SymbolIcon Symbol="Edit24" Foreground="White" FontSize="18" />
+                                        </ui:Button>
+                                    </StackPanel>
+                                </ui:Card>
                             </StackPanel>
 
                             <ui:Card
@@ -4122,35 +4202,6 @@
                                         </StackPanel>
                                     </ui:Button>
                                 </Grid>
-                            </ui:Card>
-
-                            <!--  SUBSCRIPTION DOCK  -->
-                            <ui:Card
-                                x:Name="SubscriptionDock"
-                                Margin="8,6,0,0"
-                                Padding="6"
-                                Background="#AA16181C"
-                                BorderBrush="#40FFFFFF"
-                                BorderThickness="1"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Top"
-                                Visibility="Collapsed">
-                                <StackPanel Orientation="Vertical">
-                                    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="240" HorizontalScrollBarVisibility="Disabled">
-                                        <StackPanel x:Name="SubscriptionStack" Orientation="Vertical" />
-                                    </ScrollViewer>
-                                    <ui:Button
-                                        x:Name="DockEditSubscriptionsButton"
-                                        Margin="0,4,0,0"
-                                        Padding="4"
-                                        Width="36"
-                                        Height="36"
-                                        HorizontalAlignment="Center"
-                                        Click="DockEditSubscriptionsButton_Click"
-                                        ToolTip="Edit Subscriptions (Drawing Overlay)">
-                                        <ui:SymbolIcon Symbol="Edit24" Foreground="White" FontSize="18" />
-                                    </ui:Button>
-                                </StackPanel>
                             </ui:Card>
                         </StackPanel>
 
