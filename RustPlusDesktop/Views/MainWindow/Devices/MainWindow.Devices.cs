@@ -597,6 +597,12 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
     {
         if (_suppressToggleHandler) return;
 
+        if (_logicEngineRunningAction)
+        {
+            AppendLog("[LogicEngine] Manual toggle blocked: Logic Engine is executing an action.");
+            return;
+        }
+
         if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev) return;
         if (!string.Equals(dev.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase)) return;
 
@@ -1277,6 +1283,12 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         if (Interlocked.Exchange(ref _refreshAllBusy, 1) == 1) return;
         try
         {
+        if (_logicEngineRunningAction)
+        {
+            AppendLog("[LogicEngine] Manual refresh blocked: Logic Engine is executing an action.");
+            return;
+        }
+
         if (_vm.Selected is null)
         {
             AppendLog("No Server Selected.");

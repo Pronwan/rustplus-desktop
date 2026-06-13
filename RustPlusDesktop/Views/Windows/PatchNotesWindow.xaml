@@ -40,6 +40,11 @@
                             <TextBlock Text="v6.3.1 | Overlay Subscriptions, Bandwidth &amp; Base Screenshot Fix" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold" Foreground="{DynamicResource Accent}">&#x2022; Smart Logic Engine (Beta):</Run>
+                                Automate your gameplay with our brand-new Logic Engine! Construct rules using an intuitive IFTTT-style builder triggered by Smart Alarms, Smart Switches, or custom Chat Commands (which automatically sync to your Chat Settings). All subsequent steps in a rule function as logical gates: the rule execution will only proceed if the condition (like checking device availability/state) is met. This lets you use unpowered Smart Switches as simple logic inputs! Future updates will introduce cloud sharing of rules and more triggers.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Teammate Overlay Subscriptions &amp; left Dock:</Run>
                                 Added a new Subscription Dock on the left side of the map to visually manage active teammate overlay subscriptions. Supports pulsing green glow indicators, quick refresh on avatar click, hover actions to unsubscribe, and a pencil button to toggle drawing mode.
                             </TextBlock>
@@ -50,9 +55,20 @@
                             </TextBlock>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Base Overlay Screenshot Indicators:</Run>
+                                Small indicators have been added to bases on the map overlay that have screenshots attached, allowing you to easily identify bases with uploaded visual references.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Teammate Base Screenshot Fix:</Run>
                                 Resolved a permission issue that prevented team members from viewing screenshots uploaded to bases by their teammates.
                             </TextBlock>
+
+                            <!-- v6.3.1 Dynamic Image Gallery -->
+                            <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.3.1/LogicEngine-Button_and_subscriber_dock.png" Description="Logic Engine entry button in the device list &amp; teammate subscription overlay dock on the map"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/6.3.1/Logic-Engine.png" Description="Logic Engine builder showing a custom rule triggered by a team chat command"/>
+                            </views:ImageGallery>
                         </StackPanel>
                     </Border>
 
