@@ -3698,18 +3698,16 @@ private bool _overlayToolsVisible = false;
     {
         var menu = new ContextMenu { Style = (Style)FindResource("DarkContextMenu") };
 
-        var miNote = new MenuItem { Header = string.IsNullOrEmpty(meta.Note) ? CloudText("BaseAddNote", "Add Note") : CloudText("BaseEditNote", "Edit Note") };
+        // --- Add / Edit Note (inline on map) ---
+        var noteHeader = string.IsNullOrEmpty(meta.Note)
+            ? CloudText("BaseAddNote", "Add Note")
+            : CloudText("BaseEditNote", "Edit Note");
+        var miNote = new MenuItem { Header = noteHeader };
         miNote.Click += (s, e) =>
         {
-            var dlg = new Views.Windows.BaseNoteWindow(meta.Note) { Owner = this };
-            if (dlg.ShowDialog() == true)
-            {
-                meta.Note = dlg.NoteResult;
-                if (iconEl is Grid g)
-                    UpdateNoteVisibilityAndText(g, meta.Note);
-                SaveOwnOverlayToJson();
-                UploadOwnOverlayToTeam();
-            }
+            menu.IsOpen = false;
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, new Action(() =>
+                ShowInlineNotePicker(iconEl, meta)));
         };
         menu.Items.Add(miNote);
 
@@ -3743,68 +3741,26 @@ private bool _overlayToolsVisible = false;
                     color = uri.AbsolutePath.Trim('/');
                 }
             }
-            catch {}
+            catch { }
 
+            // Change Icon – opens inline picker
             var miChangeIcon = new MenuItem { Header = "Change Icon" };
-            string[] shapes = { "pin", "dollar", "gun", "home", "loot", "parachute", "rock", "scope", "shield", "skull", "sleep", "zzz" };
-            foreach (var sh in shapes)
+            miChangeIcon.Click += (s, e) =>
             {
-                var shapeItem = new MenuItem { Header = sh.Substring(0, 1).ToUpper() + sh.Substring(1) };
-                string targetShape = sh;
-                shapeItem.Click += (s, e) =>
-                {
-                    var capturedEl = iconEl;
-                    string capturedPath = $"rust-marker://{targetShape}/{color}";
-                    double w = !double.IsNaN(capturedEl.Width) ? capturedEl.Width : (_activeIconSize > 0 ? _activeIconSize : 32);
-                    double h = !double.IsNaN(capturedEl.Height) ? capturedEl.Height : (_activeIconSize > 0 ? _activeIconSize : 32);
-                    string capturedNote = meta.Note;
-                    var capturedScreenshots = meta.Screenshots;
-                    Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, new Action(() =>
-                    {
-                        try
-                        {
-                            var newEl = CreateRustMarkerElement(capturedPath, w, h, true, _mySteamId, capturedNote, capturedScreenshots);
-                            ReplaceOverlayElement(capturedEl, newEl);
-                        }
-                        catch (Exception ex)
-                        {
-                            AppendLog("[ChangeIcon] error: " + ex.Message);
-                        }
-                    }));
-                };
-                miChangeIcon.Items.Add(shapeItem);
-            }
+                menu.IsOpen = false;
+                Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, new Action(() =>
+                    ShowInlineIconPicker(iconEl, meta, shape, color)));
+            };
             menu.Items.Add(miChangeIcon);
 
+            // Change Color – opens inline picker
             var miChangeColor = new MenuItem { Header = "Change Color" };
-            string[] colors = { "yellow", "blue", "green", "red", "purple", "pink", "cyan" };
-            foreach (var co in colors)
+            miChangeColor.Click += (s, e) =>
             {
-                var colorItem = new MenuItem { Header = co.Substring(0, 1).ToUpper() + co.Substring(1) };
-                string targetColor = co;
-                colorItem.Click += (s, e) =>
-                {
-                    var capturedEl = iconEl;
-                    string capturedPath = $"rust-marker://{shape}/{targetColor}";
-                    double w = !double.IsNaN(capturedEl.Width) ? capturedEl.Width : (_activeIconSize > 0 ? _activeIconSize : 32);
-                    double h = !double.IsNaN(capturedEl.Height) ? capturedEl.Height : (_activeIconSize > 0 ? _activeIconSize : 32);
-                    string capturedNote = meta.Note;
-                    var capturedScreenshots = meta.Screenshots;
-                    Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, new Action(() =>
-                    {
-                        try
-                        {
-                            var newEl = CreateRustMarkerElement(capturedPath, w, h, true, _mySteamId, capturedNote, capturedScreenshots);
-                            ReplaceOverlayElement(capturedEl, newEl);
-                        }
-                        catch (Exception ex)
-                        {
-                            AppendLog("[ChangeColor] error: " + ex.Message);
-                        }
-                    }));
-                };
-                miChangeColor.Items.Add(colorItem);
-            }
+                menu.IsOpen = false;
+                Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, new Action(() =>
+                    ShowInlineColorPicker(iconEl, meta, shape, color)));
+            };
             menu.Items.Add(miChangeColor);
         }
 
@@ -3815,9 +3771,7 @@ private bool _overlayToolsVisible = false;
         {
             Overlay.Children.Remove(iconEl);
             if (_playerOverlayElements.TryGetValue(_mySteamId, out var mine))
-            {
                 mine.Remove(iconEl);
-            }
             SaveOwnOverlayToJson();
             UploadOwnOverlayToTeam();
         };
@@ -3825,6 +3779,240 @@ private bool _overlayToolsVisible = false;
 
         iconEl.ContextMenu = menu;
         menu.IsOpen = true;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Inline overlay pickers (no modal dialogs / broken sub-menus)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /// <summary>Shared helper: anchors an inline panel on the Overlay canvas near a marker and
+    /// adds a transparent full-canvas dismiss layer behind it so a click elsewhere removes it.</summary>
+    private (Border panel, Border dismissLayer) CreateInlinePanel(FrameworkElement anchorEl, UIElement content)
+    {
+        // Dismiss backdrop
+        var dismissLayer = new Border
+        {
+            Background = Brushes.Transparent,
+            Width  = Overlay.ActualWidth  > 0 ? Overlay.ActualWidth  : 2000,
+            Height = Overlay.ActualHeight > 0 ? Overlay.ActualHeight : 2000,
+        };
+        Canvas.SetLeft(dismissLayer, 0);
+        Canvas.SetTop(dismissLayer,  0);
+        Panel.SetZIndex(dismissLayer, 9990);
+
+        // Panel
+        var panel = new Border
+        {
+            Background   = new SolidColorBrush(Color.FromArgb(230, 22, 26, 32)),
+            BorderBrush  = new SolidColorBrush(Color.FromArgb(90,  255, 255, 255)),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(10),
+            Padding      = new Thickness(10),
+            Effect       = new System.Windows.Media.Effects.DropShadowEffect
+            {
+                Color     = Colors.Black,
+                Opacity   = 0.7,
+                BlurRadius = 18,
+                ShadowDepth = 3
+            },
+            Child = content
+        };
+        Panel.SetZIndex(panel, 9999);
+
+        // Position: just below & to the right of the anchor
+        double anchorLeft = Canvas.GetLeft(anchorEl);
+        double anchorTop  = Canvas.GetTop(anchorEl);
+        double anchorH    = !double.IsNaN(anchorEl.Height) ? anchorEl.Height
+                            : (anchorEl.ActualHeight > 0 ? anchorEl.ActualHeight : 32);
+        Canvas.SetLeft(panel, anchorLeft + 4);
+        Canvas.SetTop(panel,  anchorTop  + anchorH + 4);
+
+        return (panel, dismissLayer);
+    }
+
+    private void RemoveInlinePanel(Border panel, Border dismissLayer)
+    {
+        Overlay.Children.Remove(panel);
+        Overlay.Children.Remove(dismissLayer);
+    }
+
+    private void ShowInlineIconPicker(FrameworkElement iconEl, OverlayTag meta, string currentShape, string currentColor)
+    {
+        string[] shapes = { "pin", "dollar", "gun", "home", "loot", "parachute", "rock", "scope", "shield", "skull", "sleep", "zzz" };
+
+        // Build 4-column grid of shape buttons
+        var grid = new System.Windows.Controls.WrapPanel { Orientation = Orientation.Horizontal, Width = 180 };
+
+        Border? panel = null;
+        Border? dismissLayer = null;
+
+        foreach (var sh in shapes)
+        {
+            string captured = sh;
+            var btn = new Button
+            {
+                Content     = sh[0].ToString().ToUpper() + sh.Substring(1),
+                Width       = 80,
+                Height      = 30,
+                Margin      = new Thickness(2),
+                FontSize    = 11,
+                Background  = currentShape == sh
+                    ? new SolidColorBrush(Color.FromArgb(100, 96, 205, 255))
+                    : new SolidColorBrush(Color.FromArgb(60,  255, 255, 255)),
+                Foreground  = Brushes.White,
+                BorderThickness = new Thickness(0),
+                Cursor      = Cursors.Hand,
+            };
+            btn.Click += (_, __) =>
+            {
+                try
+                {
+                    double w = !double.IsNaN(iconEl.Width)  ? iconEl.Width  : (_activeIconSize > 0 ? _activeIconSize : 32);
+                    double h = !double.IsNaN(iconEl.Height) ? iconEl.Height : (_activeIconSize > 0 ? _activeIconSize : 32);
+                    string newPath = $"rust-marker://{captured}/{currentColor}";
+                    var newEl = CreateRustMarkerElement(newPath, w, h, true, _mySteamId, meta.Note, meta.Screenshots);
+                    ReplaceOverlayElement(iconEl, newEl);
+                }
+                catch (Exception ex) { AppendLog("[IconPicker] " + ex.Message); }
+                finally { RemoveInlinePanel(panel!, dismissLayer!); }
+            };
+            grid.Children.Add(btn);
+        }
+
+        (panel, dismissLayer) = CreateInlinePanel(iconEl, grid);
+        dismissLayer.MouseLeftButtonDown += (_, __) => RemoveInlinePanel(panel, dismissLayer);
+
+        Overlay.Children.Add(dismissLayer);
+        Overlay.Children.Add(panel);
+    }
+
+    private void ShowInlineColorPicker(FrameworkElement iconEl, OverlayTag meta, string currentShape, string currentColor)
+    {
+        // Map logical color names to hex swatches for visual pills
+        var colorMap = new (string name, Color swatch)[] {
+            ("yellow",  Color.FromRgb(255, 214,  51)),
+            ("blue",    Color.FromRgb( 41, 128, 255)),
+            ("green",   Color.FromRgb( 46, 195,  70)),
+            ("red",     Color.FromRgb(220,  50,  50)),
+            ("purple",  Color.FromRgb(150,  70, 220)),
+            ("pink",    Color.FromRgb(226,  92, 186)),
+            ("cyan",    Color.FromRgb( 20, 210, 210)),
+        };
+
+        var stack = new StackPanel { Orientation = Orientation.Horizontal };
+
+        Border? panel = null;
+        Border? dismissLayer = null;
+
+        foreach (var (name, swatch) in colorMap)
+        {
+            string capturedName = name;
+            bool isCurrent = name == currentColor;
+            var pill = new Border
+            {
+                Width           = 32,
+                Height          = 32,
+                CornerRadius    = new CornerRadius(16),
+                Background      = new SolidColorBrush(swatch),
+                BorderBrush     = isCurrent ? Brushes.White : new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+                BorderThickness = new Thickness(isCurrent ? 2.5 : 1),
+                Margin          = new Thickness(3),
+                Cursor          = Cursors.Hand,
+                ToolTip         = name[0].ToString().ToUpper() + name.Substring(1),
+            };
+            pill.MouseLeftButtonDown += (_, __) =>
+            {
+                try
+                {
+                    double w = !double.IsNaN(iconEl.Width)  ? iconEl.Width  : (_activeIconSize > 0 ? _activeIconSize : 32);
+                    double h = !double.IsNaN(iconEl.Height) ? iconEl.Height : (_activeIconSize > 0 ? _activeIconSize : 32);
+                    string newPath = $"rust-marker://{currentShape}/{capturedName}";
+                    var newEl = CreateRustMarkerElement(newPath, w, h, true, _mySteamId, meta.Note, meta.Screenshots);
+                    ReplaceOverlayElement(iconEl, newEl);
+                }
+                catch (Exception ex) { AppendLog("[ColorPicker] " + ex.Message); }
+                finally { RemoveInlinePanel(panel!, dismissLayer!); }
+            };
+            stack.Children.Add(pill);
+        }
+
+        (panel, dismissLayer) = CreateInlinePanel(iconEl, stack);
+        dismissLayer.MouseLeftButtonDown += (_, __) => RemoveInlinePanel(panel, dismissLayer);
+
+        Overlay.Children.Add(dismissLayer);
+        Overlay.Children.Add(panel);
+    }
+
+    private void ShowInlineNotePicker(FrameworkElement iconEl, OverlayTag meta)
+    {
+        var tb = new TextBox
+        {
+            Text            = meta.Note ?? "",
+            Width           = 220,
+            MinHeight       = 60,
+            MaxHeight       = 120,
+            AcceptsReturn   = true,
+            TextWrapping    = TextWrapping.Wrap,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            Foreground      = Brushes.White,
+            Background      = new SolidColorBrush(Color.FromArgb(50, 255, 255, 255)),
+            BorderThickness = new Thickness(0),
+            Padding         = new Thickness(4),
+            FontSize        = 12,
+            CaretBrush      = Brushes.White,
+        };
+
+        Border? panel = null;
+        Border? dismissLayer = null;
+
+        var saveBtn = new Button
+        {
+            Content      = "Save",
+            Margin       = new Thickness(0, 6, 0, 0),
+            Height       = 28,
+            Foreground   = Brushes.White,
+            Background   = new SolidColorBrush(Color.FromRgb(46, 125, 200)),
+            BorderThickness = new Thickness(0),
+            Cursor       = Cursors.Hand,
+        };
+        saveBtn.Click += (_, __) =>
+        {
+            meta.Note = string.IsNullOrWhiteSpace(tb.Text) ? null : tb.Text.Trim();
+            if (iconEl is Grid g)
+                UpdateNoteVisibilityAndText(g, meta.Note);
+            SaveOwnOverlayToJson();
+            UploadOwnOverlayToTeam();
+            RemoveInlinePanel(panel!, dismissLayer!);
+        };
+
+        var container = new StackPanel();
+        container.Children.Add(new TextBlock
+        {
+            Text       = "Note",
+            Foreground = new SolidColorBrush(Color.FromArgb(180, 255, 255, 255)),
+            FontSize   = 10,
+            Margin     = new Thickness(0, 0, 0, 4)
+        });
+        container.Children.Add(tb);
+        container.Children.Add(saveBtn);
+
+        (panel, dismissLayer) = CreateInlinePanel(iconEl, container);
+        // Clicking the dismiss layer saves & closes
+        dismissLayer.MouseLeftButtonDown += (_, __) =>
+        {
+            meta.Note = string.IsNullOrWhiteSpace(tb.Text) ? null : tb.Text.Trim();
+            if (iconEl is Grid g)
+                UpdateNoteVisibilityAndText(g, meta.Note);
+            SaveOwnOverlayToJson();
+            UploadOwnOverlayToTeam();
+            RemoveInlinePanel(panel, dismissLayer);
+        };
+
+        Overlay.Children.Add(dismissLayer);
+        Overlay.Children.Add(panel);
+
+        // Focus the textbox after layout
+        panel.Loaded += (_, __) => tb.Focus();
     }
 
     private void ShowBaseContextMenu(FrameworkElement baseImg, OverlayTag meta)
