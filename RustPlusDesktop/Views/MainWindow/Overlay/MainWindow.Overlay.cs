@@ -63,6 +63,21 @@ private bool _overlayToolsVisible = false;
     private CancellationTokenSource? _overlaySyncCts;
     private const int OverlaySyncDebounceMs = 800;
 
+    private class TeammatePollState
+    {
+        public ulong SteamId { get; init; }
+        public long LastUpdatedUnix { get; set; } = 0;
+        public int ConsecutiveUnchangedCount { get; set; } = 0;
+        public int SecondsUntilNextPoll { get; set; } = 0;
+        public DateTime LastChangeTime { get; set; } = DateTime.UtcNow;
+        public bool IsPaused { get; set; } = false;
+    }
+
+    private readonly Dictionary<ulong, TeammatePollState> _teammatePollStates = new();
+    private readonly HashSet<ulong> _steamIdsWithOverlays = new();
+    private int _pulseStep = 0;
+
+
 
 
 
@@ -78,20 +93,25 @@ private bool _overlayToolsVisible = false;
             if (tm.SteamId == 0)
                 continue;
 
+            bool isSubbed = _visibleOverlayOwners.Contains(tm.SteamId);
+            bool hasOverlay = tm.SteamId == _mySteamId || _steamIdsWithOverlays.Contains(tm.SteamId);
+
             // Button mit Avatar als Inhalt
             var btn = new Button
             {
                 Width = 32,
                 Height = 32,
                 Margin = new Thickness(4, 0, 4, 0),
-                ToolTip = tm.Name,    // Steam-Name als Tooltip
+                ToolTip = tm.Name + (!hasOverlay ? " (No cloud overlay available)" : ""),
                 Tag = tm.SteamId,
                 Padding = new Thickness(0),
-                BorderThickness = new Thickness(_visibleOverlayOwners.Contains(tm.SteamId) ? 2 : 1),
-                BorderBrush = _visibleOverlayOwners.Contains(tm.SteamId)
+                BorderThickness = new Thickness(isSubbed ? 3 : 1),
+                BorderBrush = isSubbed
                                 ? Brushes.LimeGreen
                                 : Brushes.Gray,
-                Background = Brushes.Transparent
+                Background = Brushes.Transparent,
+                IsEnabled = hasOverlay,
+                Opacity = hasOverlay ? 1.0 : 0.4
             };
 
             btn.Click += OverlayTeamButton_Click;
@@ -137,6 +157,7 @@ private bool _overlayToolsVisible = false;
             AppendLog($"[overlay/ui] {steamId} currently visible -> hiding");
 
             _visibleOverlayOwners.Remove(steamId);
+            _teammatePollStates.Remove(steamId);
 
             if (_playerOverlayElements.TryGetValue(steamId, out var listToHide))
             {
@@ -150,13 +171,38 @@ private bool _overlayToolsVisible = false;
                 StopOverlayPollTimer();
 
             RebuildOverlayTeamBar();
+            UpdateSubscriptionDock();
             return;
         }
 
         // ----- FALL 2: Spieler ist nicht sichtbar -> wir wollen ihn einblenden
         AppendLog($"[overlay/ui] {steamId} currently NOT visible -> showing / (re)loading if needed");
 
+        if (steamId != _mySteamId)
+        {
+            int subCount = _visibleOverlayOwners.Count(id => id != _mySteamId);
+            if (subCount >= 5)
+            {
+                AppendLog("[overlay/subscription] Maximum of 5 active subscriptions reached. Please unsubscribe from another player first.");
+                MessageBox.Show("Maximum of 5 active teammate subscriptions reached. Please unsubscribe from someone else first.", "Subscription Limit", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+        }
+
         _visibleOverlayOwners.Add(steamId);
+
+        if (!_teammatePollStates.TryGetValue(steamId, out var st))
+        {
+            st = new TeammatePollState { SteamId = steamId, SecondsUntilNextPoll = 0 };
+            _teammatePollStates[steamId] = st;
+        }
+        else
+        {
+            st.IsPaused = false;
+            st.SecondsUntilNextPoll = 0;
+            st.ConsecutiveUnchangedCount = 0;
+            st.LastChangeTime = DateTime.UtcNow;
+        }
 
         // Start live-poll timer when a teammate (not ourselves) becomes visible
         if (steamId != _mySteamId)
@@ -221,7 +267,9 @@ private bool _overlayToolsVisible = false;
         }
 
         RebuildOverlayTeamBar();
+        UpdateSubscriptionDock();
     }
+
 
     private void LoadOverlayForPlayerFromJson(ulong steamId)
     {
@@ -952,12 +1000,18 @@ private bool _overlayToolsVisible = false;
         else
         {
             RebuildOverlayTeamBar();
+            _ = Task.Run(async () =>
+            {
+                await FetchSteamIdsWithOverlaysAsync();
+                Dispatcher.Invoke(() => RebuildOverlayTeamBar());
+            });
             UpdateToolButtonHighlights();
             UpdateOptionsPanelVisibility();
 
             BtnToggleOverlayTools.Background = new SolidColorBrush(Color.FromArgb(50, 0, 150, 255));
             BtnToggleOverlayTools.BorderBrush = new SolidColorBrush(Colors.DodgerBlue);
         }
+
     }
 
     private void ToolDrawButton_Click(object sender, RoutedEventArgs e)
@@ -2482,30 +2536,159 @@ private bool _overlayToolsVisible = false;
         return false;
     }
 
-    /// <summary>Starts the 3-second live-polling timer for visible teammate overlays.</summary>
+    /// <summary>Starts the 1-second live-polling timer for visible teammate overlays.</summary>
     private void StartOverlayPollTimer()
     {
         if (_overlayPollTimer != null) return; // already running
 
         _overlayPollTimer = new System.Windows.Threading.DispatcherTimer
         {
-            // 3-second interval: frequent enough to feel live, not so fast it spams logs/API
-            Interval = TimeSpan.FromSeconds(3)
+            Interval = TimeSpan.FromSeconds(1)
         };
         _overlayPollTimer.Tick += async (_, __) =>
         {
-            // Only poll if Cloud Sync is active and there are visible teammates (not ourselves)
+            // Pulse animation logic in timer tick
+            _pulseStep = (_pulseStep + 1) % 2;
+            double targetBlur = _pulseStep == 0 ? 6 : 14;
+            if (SubscriptionStack != null)
+            {
+                foreach (FrameworkElement child in SubscriptionStack.Children)
+                {
+                    if (child is Grid g && g.Tag is System.Windows.Media.Effects.DropShadowEffect glow)
+                    {
+                        glow.BlurRadius = targetBlur;
+                    }
+                }
+            }
+
             if (!TrackingService.CloudSyncEnabled) return;
+
             var teammates = _visibleOverlayOwners.Where(id => id != _mySteamId).ToList();
+            bool isMePremium = SupabaseAuthManager.IsPremium;
+            bool anyStateUpdated = false;
+
             foreach (var sid in teammates)
             {
-                try { await TryFetchOverlayForPlayerFromServerAsync(sid, silent: true); }
-                catch { /* ignore individual errors */ }
+                if (!_teammatePollStates.TryGetValue(sid, out var state))
+                {
+                    state = new TeammatePollState { SteamId = sid, SecondsUntilNextPoll = 0 };
+                    _teammatePollStates[sid] = state;
+                }
+
+                var tm = TeamMembers.FirstOrDefault(t => t.SteamId == sid);
+                bool isOnline = tm?.IsOnline ?? false;
+
+                if (!isOnline)
+                {
+                    if (!state.IsPaused)
+                    {
+                        state.IsPaused = true;
+                        anyStateUpdated = true;
+                    }
+                    continue;
+                }
+
+                if (state.IsPaused)
+                {
+                    continue;
+                }
+
+                state.SecondsUntilNextPoll--;
+                if (state.SecondsUntilNextPoll <= 0)
+                {
+                    state.SecondsUntilNextPoll = 999; // prevent double triggers
+
+                    try
+                    {
+                        var data = await OverlayDataModule.FetchOverlayFromServerAsync(GetServerKey(), sid);
+                        if (data != null)
+                        {
+                            bool isChanged = data.LastUpdatedUnix != state.LastUpdatedUnix;
+                            state.LastUpdatedUnix = data.LastUpdatedUnix;
+
+                            if (isChanged)
+                            {
+                                state.ConsecutiveUnchangedCount = 0;
+                                state.LastChangeTime = DateTime.UtcNow;
+                                state.IsPaused = false;
+
+                                MaterializeOverlayForPlayer(sid, data, false);
+                                anyStateUpdated = true;
+                            }
+                            else
+                            {
+                                state.ConsecutiveUnchangedCount++;
+                            }
+
+                            int nextIntervalSeconds = 10;
+                            var elapsedSinceChange = DateTime.UtcNow - state.LastChangeTime;
+
+                            if (isMePremium)
+                            {
+                                if (state.ConsecutiveUnchangedCount < 3)
+                                    nextIntervalSeconds = 3;
+                                else if (state.ConsecutiveUnchangedCount == 3)
+                                    nextIntervalSeconds = 10;
+                                else
+                                    nextIntervalSeconds = 30;
+
+                                if (elapsedSinceChange.TotalHours >= 2.0)
+                                {
+                                    nextIntervalSeconds = 60;
+                                }
+                            }
+                            else
+                            {
+                                if (state.ConsecutiveUnchangedCount < 3)
+                                    nextIntervalSeconds = 10;
+                                else if (state.ConsecutiveUnchangedCount == 3)
+                                    nextIntervalSeconds = 30;
+                                else
+                                    nextIntervalSeconds = 60;
+
+                                if (elapsedSinceChange.TotalHours >= 1.0)
+                                {
+                                    state.IsPaused = true;
+                                    anyStateUpdated = true;
+                                    AppendLog($"[overlay/poll] Auto-paused polling for {tm?.Name ?? sid.ToString()} (no changes for 1 hour).");
+                                }
+                            }
+
+                            state.SecondsUntilNextPoll = nextIntervalSeconds;
+                        }
+                        else
+                        {
+                            // Unsubscribe if overlay was deleted / empty
+                            _visibleOverlayOwners.Remove(sid);
+                            _teammatePollStates.Remove(sid);
+                            anyStateUpdated = true;
+                            if (_playerOverlayElements.TryGetValue(sid, out var listToHide))
+                            {
+                                foreach (var fe in listToHide)
+                                    fe.Visibility = Visibility.Collapsed;
+                            }
+                            AppendLog($"[overlay/poll] Unsubscribed from {tm?.Name ?? sid.ToString()}: No overlay found on server.");
+                        }
+                    }
+                    catch
+                    {
+                        state.SecondsUntilNextPoll = 10;
+                    }
+                }
+            }
+
+            if (anyStateUpdated)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    RebuildOverlayTeamBar();
+                    UpdateSubscriptionDock();
+                });
             }
         };
 
         _overlayPollTimer.Start();
-        AppendLog("[overlay/poll] Teammate overlay live-polling started (3s interval).");
+        AppendLog("[overlay/poll] Teammate overlay live-polling started (1s interval).");
     }
 
     /// <summary>Stops the teammate overlay poll timer (call on disconnect or all teammates hidden).</summary>
@@ -2516,6 +2699,240 @@ private bool _overlayToolsVisible = false;
         _overlayPollTimer = null;
         AppendLog("[overlay/poll] Teammate overlay live-polling stopped.");
     }
+
+    private async Task FetchSteamIdsWithOverlaysAsync()
+    {
+        if (SupabaseAuthManager.Client == null) return;
+        try
+        {
+            var serverKey = GetServerKey();
+            var ids = TeamMembers.Select(tm => tm.SteamId.ToString()).ToList();
+            if (ids.Count == 0) return;
+
+            var response = await SupabaseAuthManager.Client
+                .From<MapOverlayModel>()
+                .Filter("server_key", Postgrest.Constants.Operator.Equals, serverKey)
+                .Filter("steam_id", Postgrest.Constants.Operator.In, ids)
+                .Get();
+
+            _steamIdsWithOverlays.Clear();
+            if (response.Models != null)
+            {
+                foreach (var m in response.Models)
+                {
+                    if (ulong.TryParse(m.SteamId, out ulong sid))
+                    {
+                        _steamIdsWithOverlays.Add(sid);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[overlay/db] Error checking who has overlays: " + ex.Message);
+        }
+    }
+
+    private void UpdateSubscriptionDock()
+    {
+        if (SubscriptionDock == null || SubscriptionStack == null) return;
+
+        SubscriptionStack.Children.Clear();
+
+        var activeSubs = _visibleOverlayOwners.Where(id => id != _mySteamId).ToList();
+
+        if (activeSubs.Count == 0)
+        {
+            SubscriptionDock.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        SubscriptionDock.Visibility = Visibility.Visible;
+
+        foreach (var steamId in activeSubs)
+        {
+            var tm = TeamMembers.FirstOrDefault(t => t.SteamId == steamId);
+            if (tm == null) continue;
+
+            // Create a Container Grid for the avatar and its glow
+            var containerGrid = new Grid
+            {
+                Margin = new Thickness(0, 4, 0, 4),
+                Width = 36,
+                Height = 36,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Background = Brushes.Transparent // ensures hit testing works on the whole area
+            };
+
+            // Green pulsing/glow border or effect
+            var border = new Border
+            {
+                Width = 34,
+                Height = 34,
+                CornerRadius = new CornerRadius(17),
+                BorderThickness = new Thickness(2),
+                BorderBrush = Brushes.LimeGreen,
+                Background = Brushes.Transparent
+            };
+
+            // Check if the user is paused or offline
+            bool isPaused = false;
+            if (_teammatePollStates.TryGetValue(steamId, out var state))
+            {
+                isPaused = state.IsPaused;
+            }
+
+            bool isOnline = tm.IsOnline;
+
+            // If offline or paused, change border color and opacity
+            if (!isOnline)
+            {
+                border.BorderBrush = Brushes.Gray;
+                containerGrid.Opacity = 0.5;
+            }
+            else if (isPaused)
+            {
+                border.BorderBrush = Brushes.Orange;
+                containerGrid.Opacity = 0.7;
+            }
+
+            // Add a DropShadowEffect for the pulse/glow
+            var glow = new System.Windows.Media.Effects.DropShadowEffect
+            {
+                Color = !isOnline ? Colors.Gray : (isPaused ? Colors.Orange : Colors.LimeGreen),
+                BlurRadius = 10,
+                ShadowDepth = 0,
+                Opacity = 0.8
+            };
+            border.Effect = glow;
+            containerGrid.Tag = glow; // store for pulsing
+
+            // Avatar Image
+            var img = new Image
+            {
+                Width = 30,
+                Height = 30,
+                Stretch = Stretch.UniformToFill,
+                Source = tm.Avatar ?? GetPlaceholderAvatar(),
+                Clip = new EllipseGeometry(new Point(15, 15), 15, 15)
+            };
+            RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
+
+            // Delete/Trash button overlay
+            var trashBtn = new Button
+            {
+                Width = 24,
+                Height = 24,
+                Padding = new Thickness(0),
+                BorderThickness = new Thickness(0),
+                Background = new SolidColorBrush(Color.FromArgb(180, 200, 30, 30)),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Visibility = Visibility.Collapsed,
+                Cursor = Cursors.Hand
+            };
+            var trashImg = new Image
+            {
+                Width = 14,
+                Height = 14,
+                Stretch = Stretch.UniformToFill,
+                Source = new BitmapImage(new Uri("pack://application:,,,/Assets/icons/trash.png")),
+                SnapsToDevicePixels = true
+            };
+            RenderOptions.SetBitmapScalingMode(trashImg, BitmapScalingMode.HighQuality);
+            trashBtn.Content = trashImg;
+
+            containerGrid.Children.Add(border);
+            containerGrid.Children.Add(img);
+            containerGrid.Children.Add(trashBtn);
+
+            // Hover events to show/hide the trash button
+            containerGrid.MouseEnter += (s, e) =>
+            {
+                trashBtn.Visibility = Visibility.Visible;
+            };
+            containerGrid.MouseLeave += (s, e) =>
+            {
+                trashBtn.Visibility = Visibility.Collapsed;
+            };
+
+            // Left click on avatar triggers refresh if online/paused
+            containerGrid.MouseLeftButtonDown += async (s, e) =>
+            {
+                if (trashBtn.IsMouseOver) return;
+
+                e.Handled = true;
+                if (!isOnline) return;
+
+                AppendLog($"[overlay/poll] Quick-refresh triggered for {tm.Name}.");
+                if (_teammatePollStates.TryGetValue(steamId, out var st))
+                {
+                    st.SecondsUntilNextPoll = 0;
+                    st.IsPaused = false;
+                    st.ConsecutiveUnchangedCount = 0;
+                    st.LastChangeTime = DateTime.UtcNow;
+                }
+                await TryFetchOverlayForPlayerFromServerAsync(steamId);
+                UpdateSubscriptionDock();
+            };
+
+            // Click on trash button unsubscribes
+            trashBtn.Click += (s, e) =>
+            {
+                e.Handled = true;
+                AppendLog($"[overlay/subscription] Unsubscribed from {tm.Name}.");
+                _visibleOverlayOwners.Remove(steamId);
+                _teammatePollStates.Remove(steamId);
+                if (_playerOverlayElements.TryGetValue(steamId, out var listToHide))
+                {
+                    foreach (var fe in listToHide)
+                        fe.Visibility = Visibility.Collapsed;
+                }
+                RebuildOverlayTeamBar();
+                UpdateSubscriptionDock();
+            };
+
+            // Tooltip
+            string statusText = tm.Name;
+            if (!isOnline) statusText += " (Offline - Paused)";
+            else if (isPaused) statusText += " (Subscription Paused - No changes for 1 hour. Click avatar to resume.)";
+            else statusText += " (Active - Click avatar to refresh)";
+            containerGrid.ToolTip = statusText;
+
+            SubscriptionStack.Children.Add(containerGrid);
+        }
+    }
+
+    private void DockEditSubscriptionsButton_Click(object sender, RoutedEventArgs e)
+    {
+        BtnToggleOverlayTools_Click(BtnToggleOverlayTools, new RoutedEventArgs());
+    }
+
+    private async void ToolRefreshOverlayButton_Click(object sender, RoutedEventArgs e)
+    {
+        AppendLog("[overlay/ui] Manually refreshing all visible overlays...");
+
+        // 1. Fetch who has overlays in database to update greying out
+        await FetchSteamIdsWithOverlaysAsync();
+        RebuildOverlayTeamBar();
+
+        // 2. Refresh each subscribed teammate immediately
+        var teammates = _visibleOverlayOwners.Where(id => id != _mySteamId).ToList();
+        foreach (var sid in teammates)
+        {
+            if (_teammatePollStates.TryGetValue(sid, out var st))
+            {
+                st.SecondsUntilNextPoll = 0;
+                st.IsPaused = false;
+                st.ConsecutiveUnchangedCount = 0;
+                st.LastChangeTime = DateTime.UtcNow;
+            }
+            await TryFetchOverlayForPlayerFromServerAsync(sid);
+        }
+
+        UpdateSubscriptionDock();
+    }
+
 
     // --- BASE HOVER, GALLERY, LOUPE, & CONTEXT MENU LOGIC ---
 

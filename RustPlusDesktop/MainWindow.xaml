@@ -4123,6 +4123,35 @@
                                     </ui:Button>
                                 </Grid>
                             </ui:Card>
+
+                            <!--  SUBSCRIPTION DOCK  -->
+                            <ui:Card
+                                x:Name="SubscriptionDock"
+                                Margin="8,6,0,0"
+                                Padding="6"
+                                Background="#AA16181C"
+                                BorderBrush="#40FFFFFF"
+                                BorderThickness="1"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Visibility="Collapsed">
+                                <StackPanel Orientation="Vertical">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="240" HorizontalScrollBarVisibility="Disabled">
+                                        <StackPanel x:Name="SubscriptionStack" Orientation="Vertical" />
+                                    </ScrollViewer>
+                                    <ui:Button
+                                        x:Name="DockEditSubscriptionsButton"
+                                        Margin="0,4,0,0"
+                                        Padding="4"
+                                        Width="36"
+                                        Height="36"
+                                        HorizontalAlignment="Center"
+                                        Click="DockEditSubscriptionsButton_Click"
+                                        ToolTip="Edit Subscriptions (Drawing Overlay)">
+                                        <ui:SymbolIcon Symbol="Edit24" Foreground="White" FontSize="18" />
+                                    </ui:Button>
+                                </StackPanel>
+                            </ui:Card>
                         </StackPanel>
 
 
@@ -5150,7 +5179,6 @@
                                         <Image Source="pack://application:,,,/Assets/icons/trash.png" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Button>
 
-                                    <!--  Upload / Teilen  -->
                                     <Button
                                         x:Name="ToolUploadButton"
                                         Width="32"
@@ -5159,6 +5187,17 @@
                                         Click="ToolUploadButton_Click"
                                         ToolTip="{DynamicResource UploadOverlayToolTip}">
                                         <ui:SymbolIcon Symbol="Cloud24" Foreground="White" FontSize="18" />
+                                    </Button>
+
+                                    <!--  Manual Refresh  -->
+                                    <Button
+                                        x:Name="ToolRefreshOverlayButton"
+                                        Width="32"
+                                        Height="32"
+                                        Margin="2,0"
+                                        Click="ToolRefreshOverlayButton_Click"
+                                        ToolTip="Force Refresh All Subscriptions">
+                                        <ui:SymbolIcon Symbol="ArrowCounterclockwise24" Foreground="White" FontSize="18" />
                                     </Button>
 
                                     <ui:Button
