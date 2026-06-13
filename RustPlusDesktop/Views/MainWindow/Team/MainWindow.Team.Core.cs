@@ -328,6 +328,7 @@ public partial class MainWindow
             var leaderId = team.LeaderSteamId;
             foreach (var m in TeamMembers) m.MissingCount++;
 
+            var avatarTasks = new List<Task>();
             foreach (var m in team.Members)
             {
                 var sid = m.SteamId;
@@ -339,10 +340,14 @@ public partial class MainWindow
                     vm = new TeamMemberVM { SteamId = sid, Abbreviate = _abbreviateNames };
                     TeamMembers.Add(vm);
                     _hasCriticalPresenceChange = true;
-                    _ = LoadAvatarAsync(vm);
-                    if (vm.Avatar == null && CanTryAvatar(sid))
+                }
+
+                if (vm.Avatar == null)
+                {
+                    avatarTasks.Add(LoadAvatarAsync(vm));
+                    if (CanTryAvatar(sid))
                     {
-                        _ = EnsureAvatarAsync(vm);
+                        avatarTasks.Add(EnsureAvatarAsync(vm));
                     }
                 }
 
@@ -432,6 +437,11 @@ public partial class MainWindow
 
             if (ShouldSyncTeamFeatureMasterForCurrentState(cloudPresenceSignature))
                 _ = SyncTeamFeatureMasterAsync();
+
+            if (avatarTasks.Count > 0)
+            {
+                try { await Task.WhenAll(avatarTasks); } catch { }
+            }
         }
         catch (Exception ex)
         {
