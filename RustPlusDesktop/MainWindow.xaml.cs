@@ -3369,7 +3369,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         Dispatcher.Invoke(() =>
         {
-            TxtLog.AppendText(line + Environment.NewLine);
+            string timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+            TxtLog.AppendText($"[{timestamp}] {line}{Environment.NewLine}");
             TxtLog.ScrollToEnd();
         });
     }

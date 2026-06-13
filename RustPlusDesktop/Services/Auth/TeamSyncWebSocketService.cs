@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
@@ -204,10 +206,23 @@ namespace RustPlusDesk.Services.Auth
                     {
                         if (root.TryGetProperty("state", out var stateProp))
                         {
-                            var state = JsonSerializer.Deserialize<RustPlusDesk.Models.TeamFeatureMasterState>(
-                                stateProp.GetRawText(), 
-                                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-                            );
+                            RustPlusDesk.Models.TeamFeatureMasterState? state = null;
+                            if (stateProp.ValueKind == JsonValueKind.Array)
+                            {
+                                var list = JsonSerializer.Deserialize<List<RustPlusDesk.Models.TeamFeatureMasterState>>(
+                                    stateProp.GetRawText(),
+                                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                                );
+                                state = list?.FirstOrDefault();
+                            }
+                            else if (stateProp.ValueKind == JsonValueKind.Object)
+                            {
+                                state = JsonSerializer.Deserialize<RustPlusDesk.Models.TeamFeatureMasterState>(
+                                    stateProp.GetRawText(),
+                                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                                );
+                            }
+
                             AppendLog($"[TeamSyncWS] Master changed event received. Active Master: {state?.MasterSteamId}");
                             await ApplyMasterStateAsync(state);
                         }
