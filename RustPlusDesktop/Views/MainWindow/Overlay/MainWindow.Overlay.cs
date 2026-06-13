@@ -112,8 +112,8 @@ private bool _overlayToolsVisible = false;
                                 ? Brushes.LimeGreen
                                 : Brushes.Gray,
                 Background = Brushes.Transparent,
-                IsEnabled = hasOverlay,
-                Opacity = hasOverlay ? 1.0 : 0.4
+                IsEnabled = true, // Always allow clicking to subscribe/fetch
+                Opacity = hasOverlay ? 1.0 : 0.6
             };
 
             btn.Click += OverlayTeamButton_Click;
