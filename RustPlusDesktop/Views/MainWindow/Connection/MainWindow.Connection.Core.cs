@@ -452,6 +452,19 @@ public partial class MainWindow
             // Wait for core initialization to complete
             await Task.WhenAll(initTasks);
             
+            // Rebuild team bar and subscription dock with loaded team data, and fetch restored teammate overlays
+            await Dispatcher.InvokeAsync(() =>
+            {
+                RebuildOverlayTeamBar();
+                UpdateSubscriptionDock();
+
+                var restoredTeammates = _visibleOverlayOwners.Where(id => id != _mySteamId).ToList();
+                foreach (var sid in restoredTeammates)
+                {
+                    _ = TryFetchOverlayForPlayerFromServerAsync(sid);
+                }
+            });
+            
             // Core data is now loaded (_worldSizeS is available)
             if (TrackingService.AutoLoadShops)
             {
