@@ -59,7 +59,8 @@ namespace RustPlusDesk.Services.Auth
                 var options = new PostgresChangesOptions(
                     "public",
                     "team_feature_presence",
-                    PostgresChangesOptions.ListenType.Updates);
+                    PostgresChangesOptions.ListenType.Updates,
+                    $"steam_id=eq.{steamId}");
                 _presenceChannel.Register(options);
 
                 _presenceChannel.AddPostgresChangeHandler(
@@ -69,7 +70,7 @@ namespace RustPlusDesk.Services.Auth
                         try
                         {
                             var row = change.Model<TeamFeaturePresenceModel>();
-                            if (row == null) return;
+                            if (row == null || row.SteamId != steamId) return;
 
                             string newServerKey = row.ServerKey ?? "";
                             string newTeamKey = row.TeamKey ?? "";
