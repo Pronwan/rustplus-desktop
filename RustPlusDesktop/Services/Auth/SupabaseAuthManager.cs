@@ -202,6 +202,7 @@ namespace RustPlusDesk.Services.Auth
 
                 await RefreshUserProfileAsync();
                 await FetchTierLimitsAsync();
+                TeamSyncWebSocketService.Initialize();
                 AppendLog($"[Supabase] Init complete. IsDiscordAuthenticated={IsDiscordAuthenticated}, IsGuestAuthenticated={IsGuestAuthenticated}, IsPremium={IsPremium}");
             }
             catch (Exception ex)

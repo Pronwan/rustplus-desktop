@@ -170,7 +170,7 @@ public partial class MainWindow
 
     private void UpdateTeamFeatureMasterWatch()
     {
-        if (TeamMembers.Count <= 1 || _isChatFeatureMaster)
+        if (TeamMembers.Count <= 1 || _isChatFeatureMaster || TeamSyncWebSocketService.IsActive)
         {
             StopTeamFeatureMasterWatch();
             return;
@@ -327,7 +327,7 @@ public partial class MainWindow
         }
     }
 
-    private string BuildTeamFeatureKey()
+    public string BuildTeamFeatureKey()
     {
         var ids = TeamMembers
             .Select(t => t.SteamId)
@@ -357,7 +357,7 @@ public partial class MainWindow
             && _declinedMasterUntilUtc > DateTime.UtcNow;
     }
 
-    private void ApplyTeamFeatureMasterState(TeamFeatureMasterState? state, string teamKey)
+    public void ApplyTeamFeatureMasterState(TeamFeatureMasterState? state, string teamKey)
     {
         var previousBlocked = _chatFeaturesBlockedByMaster;
         var previousIsMaster = _isChatFeatureMaster;

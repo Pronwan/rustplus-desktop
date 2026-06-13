@@ -2563,6 +2563,9 @@ private bool _overlayToolsVisible = false;
 
             if (!TrackingService.CloudSyncEnabled) return;
 
+            // Skip HTTP database fetches if WebSocket is active and connected
+            if (TeamSyncWebSocketService.IsActive) return;
+
             var teammates = _visibleOverlayOwners.Where(id => id != _mySteamId).ToList();
             bool isMePremium = SupabaseAuthManager.IsPremium;
             bool anyStateUpdated = false;
@@ -2931,6 +2934,36 @@ private bool _overlayToolsVisible = false;
         }
 
         UpdateSubscriptionDock();
+    }
+
+    public async Task RefreshTeammateOverlayAsync(ulong steamId)
+    {
+        if (!TrackingService.CloudSyncEnabled) return;
+
+        try
+        {
+            await FetchSteamIdsWithOverlaysAsync();
+            
+            if (_teammatePollStates.TryGetValue(steamId, out var state))
+            {
+                state.SecondsUntilNextPoll = 999;
+                state.IsPaused = false;
+                state.ConsecutiveUnchangedCount = 0;
+                state.LastChangeTime = DateTime.UtcNow;
+            }
+            
+            await TryFetchOverlayForPlayerFromServerAsync(steamId);
+
+            Dispatcher.Invoke(() =>
+            {
+                RebuildOverlayTeamBar();
+                UpdateSubscriptionDock();
+            });
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[overlay/websocket/error] Failed to refresh overlay for {steamId}: {ex.Message}");
+        }
     }
 
 
