@@ -493,6 +493,13 @@ public class ServerProfile : INotifyPropertyChanged
         get => _isLogicEngineActive;
         set { if (_isLogicEngineActive != value) { _isLogicEngineActive = value; OnProp(); } }
     }
+
+    private List<ulong> _subscribedTeammateSteamIds = new();
+    public List<ulong> SubscribedTeammateSteamIds
+    {
+        get => _subscribedTeammateSteamIds;
+        set { _subscribedTeammateSteamIds = value ?? new(); OnProp(); }
+    }
 }
 
 

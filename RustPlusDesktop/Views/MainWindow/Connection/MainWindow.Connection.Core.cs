@@ -428,6 +428,22 @@ public partial class MainWindow
 
             ClearUserOverlayElements();
             _visibleOverlayOwners.Add(_mySteamId);
+
+            // Restore saved subscriptions for this server profile
+            if (_vm?.Selected != null)
+            {
+                var savedSubs = _vm.Selected.SubscribedTeammateSteamIds;
+                if (savedSubs != null)
+                {
+                    foreach (var sid in savedSubs)
+                    {
+                        if (sid != _mySteamId)
+                        {
+                            _visibleOverlayOwners.Add(sid);
+                        }
+                    }
+                }
+            }
             // Async init: merge local + cloud overlays intelligently (no wipe risk)
             _ownCloudRestoreReady = false;
             _ = InitOwnOverlayAsync();

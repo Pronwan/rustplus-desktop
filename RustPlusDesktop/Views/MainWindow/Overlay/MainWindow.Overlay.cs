@@ -174,6 +174,7 @@ private bool _overlayToolsVisible = false;
 
             RebuildOverlayTeamBar();
             UpdateSubscriptionDock();
+            UpdateSavedSubscriptionsInProfile();
             return;
         }
 
@@ -270,6 +271,7 @@ private bool _overlayToolsVisible = false;
 
         RebuildOverlayTeamBar();
         UpdateSubscriptionDock();
+        UpdateSavedSubscriptionsInProfile();
     }
 
 
@@ -3130,6 +3132,7 @@ private bool _overlayToolsVisible = false;
                 {
                     RebuildOverlayTeamBar();
                     UpdateSubscriptionDock();
+                    UpdateSavedSubscriptionsInProfile();
                 });
             }
         };
@@ -3178,6 +3181,15 @@ private bool _overlayToolsVisible = false;
         {
             AppendLog("[overlay/db] Error checking who has overlays: " + ex.Message);
         }
+    }
+
+    private void UpdateSavedSubscriptionsInProfile()
+    {
+        if (_vm?.Selected == null) return;
+
+        var currentSubs = _visibleOverlayOwners.Where(id => id != _mySteamId).ToList();
+        _vm.Selected.SubscribedTeammateSteamIds = currentSubs;
+        _vm.Save();
     }
 
     private void UpdateSubscriptionDock()
@@ -3336,6 +3348,7 @@ private bool _overlayToolsVisible = false;
                 }
                 RebuildOverlayTeamBar();
                 UpdateSubscriptionDock();
+                UpdateSavedSubscriptionsInProfile();
             };
 
             // Tooltip

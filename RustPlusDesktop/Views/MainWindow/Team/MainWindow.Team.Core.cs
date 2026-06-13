@@ -378,6 +378,30 @@ public partial class MainWindow
                     _hasCriticalPresenceChange = true;
                 }
 
+            // Cleanup subscriptions of players who left the team on the UI thread
+            var currentTeamIds = TeamMembers.Select(tm => tm.SteamId).ToHashSet();
+            await Dispatcher.InvokeAsync(() =>
+            {
+                var toRemoveSubs = _visibleOverlayOwners.Where(id => id != _mySteamId && !currentTeamIds.Contains(id)).ToList();
+                if (toRemoveSubs.Count > 0)
+                {
+                    foreach (var id in toRemoveSubs)
+                    {
+                        _visibleOverlayOwners.Remove(id);
+                        _teammatePollStates.Remove(id);
+                        if (_playerOverlayElements.TryGetValue(id, out var listToHide))
+                        {
+                            foreach (var fe in listToHide)
+                                Overlay.Children.Remove(fe);
+                            _playerOverlayElements.Remove(id);
+                        }
+                    }
+                    RebuildOverlayTeamBar();
+                    UpdateSubscriptionDock();
+                    UpdateSavedSubscriptionsInProfile();
+                }
+            });
+
             var cloudTeamMembers = TeamMembers.Select(t => new RustPlusDesk.Services.Auth.SupabaseAuthManager.CloudTeamMemberDto
                 {
                     SteamId = t.SteamId.ToString(),
