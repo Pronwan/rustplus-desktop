@@ -3687,6 +3687,9 @@ private bool _overlayToolsVisible = false;
 
             SaveOwnOverlayToJson();
             UploadOwnOverlayToTeam();
+
+            // Reapply the zoom-based scale so the new element looks correct at the current map zoom
+            RefreshUserOverlayIcons();
         }
         catch (Exception ex)
         {
@@ -3789,18 +3792,19 @@ private bool _overlayToolsVisible = false;
     /// adds a transparent full-canvas dismiss layer behind it so a click elsewhere removes it.</summary>
     private (Border panel, Border dismissLayer) CreateInlinePanel(FrameworkElement anchorEl, UIElement content)
     {
-        // Dismiss backdrop
+        // Dismiss backdrop – NOT tagged as OverlayTag so RefreshUserOverlayIcons skips it
         var dismissLayer = new Border
         {
             Background = Brushes.Transparent,
             Width  = Overlay.ActualWidth  > 0 ? Overlay.ActualWidth  : 2000,
             Height = Overlay.ActualHeight > 0 ? Overlay.ActualHeight : 2000,
+            Tag    = "InlinePickerPanel",
         };
         Canvas.SetLeft(dismissLayer, 0);
         Canvas.SetTop(dismissLayer,  0);
         Panel.SetZIndex(dismissLayer, 9990);
 
-        // Panel
+        // Panel – also NOT tagged as OverlayTag
         var panel = new Border
         {
             Background   = new SolidColorBrush(Color.FromArgb(230, 22, 26, 32)),
@@ -3808,6 +3812,7 @@ private bool _overlayToolsVisible = false;
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(10),
             Padding      = new Thickness(10),
+            Tag          = "InlinePickerPanel",
             Effect       = new System.Windows.Media.Effects.DropShadowEffect
             {
                 Color     = Colors.Black,
@@ -3840,8 +3845,18 @@ private bool _overlayToolsVisible = false;
     {
         string[] shapes = { "pin", "dollar", "gun", "home", "loot", "parachute", "rock", "scope", "shield", "skull", "sleep", "zzz" };
 
-        // Build 4-column grid of shape buttons
-        var grid = new System.Windows.Controls.WrapPanel { Orientation = Orientation.Horizontal, Width = 180 };
+        // Section label
+        var header = new Wpf.Ui.Controls.TextBlock
+        {
+            Text        = "Change Icon",
+            FontSize    = 10,
+            FontWeight  = FontWeights.SemiBold,
+            Foreground  = new SolidColorBrush(Color.FromArgb(180, 255, 255, 255)),
+            Margin      = new Thickness(0, 0, 0, 6),
+        };
+
+        // 4-column WrapPanel of rendered marker thumbnails
+        var wrap = new WrapPanel { Orientation = Orientation.Horizontal, Width = 196 };
 
         Border? panel = null;
         Border? dismissLayer = null;
@@ -3849,21 +3864,29 @@ private bool _overlayToolsVisible = false;
         foreach (var sh in shapes)
         {
             string captured = sh;
-            var btn = new Button
+            bool isCurrent = sh == currentShape;
+
+            // Build a real 36×36 marker element (not hit-testable) as thumbnail
+            var thumb = CreateRustMarkerElement($"rust-marker://{sh}/{currentColor}", 36, 36, false, 0, null, null);
+            thumb.IsHitTestVisible = false;
+            thumb.RenderTransform = Transform.Identity; // no zoom scaling on thumbnail
+
+            var btn = new Border
             {
-                Content     = sh[0].ToString().ToUpper() + sh.Substring(1),
-                Width       = 80,
-                Height      = 30,
-                Margin      = new Thickness(2),
-                FontSize    = 11,
-                Background  = currentShape == sh
+                Width           = 46,
+                Height          = 46,
+                Margin          = new Thickness(2),
+                CornerRadius    = new CornerRadius(6),
+                Background      = isCurrent
                     ? new SolidColorBrush(Color.FromArgb(100, 96, 205, 255))
-                    : new SolidColorBrush(Color.FromArgb(60,  255, 255, 255)),
-                Foreground  = Brushes.White,
-                BorderThickness = new Thickness(0),
-                Cursor      = Cursors.Hand,
+                    : new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)),
+                BorderBrush     = isCurrent ? Brushes.White : new SolidColorBrush(Color.FromArgb(60, 255, 255, 255)),
+                BorderThickness = new Thickness(isCurrent ? 2 : 1),
+                Cursor          = Cursors.Hand,
+                ToolTip         = sh[0].ToString().ToUpper() + sh.Substring(1),
+                Child           = new Viewbox { Child = thumb, Margin = new Thickness(4) },
             };
-            btn.Click += (_, __) =>
+            btn.MouseLeftButtonDown += (_, __) =>
             {
                 try
                 {
@@ -3876,10 +3899,14 @@ private bool _overlayToolsVisible = false;
                 catch (Exception ex) { AppendLog("[IconPicker] " + ex.Message); }
                 finally { RemoveInlinePanel(panel!, dismissLayer!); }
             };
-            grid.Children.Add(btn);
+            wrap.Children.Add(btn);
         }
 
-        (panel, dismissLayer) = CreateInlinePanel(iconEl, grid);
+        var container = new StackPanel();
+        container.Children.Add(header);
+        container.Children.Add(wrap);
+
+        (panel, dismissLayer) = CreateInlinePanel(iconEl, container);
         dismissLayer.MouseLeftButtonDown += (_, __) => RemoveInlinePanel(panel, dismissLayer);
 
         Overlay.Children.Add(dismissLayer);
@@ -3888,7 +3915,6 @@ private bool _overlayToolsVisible = false;
 
     private void ShowInlineColorPicker(FrameworkElement iconEl, OverlayTag meta, string currentShape, string currentColor)
     {
-        // Map logical color names to hex swatches for visual pills
         var colorMap = new (string name, Color swatch)[] {
             ("yellow",  Color.FromRgb(255, 214,  51)),
             ("blue",    Color.FromRgb( 41, 128, 255)),
@@ -3899,7 +3925,16 @@ private bool _overlayToolsVisible = false;
             ("cyan",    Color.FromRgb( 20, 210, 210)),
         };
 
-        var stack = new StackPanel { Orientation = Orientation.Horizontal };
+        var header = new Wpf.Ui.Controls.TextBlock
+        {
+            Text       = "Change Color",
+            FontSize   = 10,
+            FontWeight = FontWeights.SemiBold,
+            Foreground = new SolidColorBrush(Color.FromArgb(180, 255, 255, 255)),
+            Margin     = new Thickness(0, 0, 0, 6),
+        };
+
+        var swatchRow = new StackPanel { Orientation = Orientation.Horizontal };
 
         Border? panel = null;
         Border? dismissLayer = null;
@@ -3910,16 +3945,28 @@ private bool _overlayToolsVisible = false;
             bool isCurrent = name == currentColor;
             var pill = new Border
             {
-                Width           = 32,
-                Height          = 32,
-                CornerRadius    = new CornerRadius(16),
+                Width           = 34,
+                Height          = 34,
+                CornerRadius    = new CornerRadius(17),
                 Background      = new SolidColorBrush(swatch),
                 BorderBrush     = isCurrent ? Brushes.White : new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
-                BorderThickness = new Thickness(isCurrent ? 2.5 : 1),
+                BorderThickness = new Thickness(isCurrent ? 3 : 1),
                 Margin          = new Thickness(3),
                 Cursor          = Cursors.Hand,
                 ToolTip         = name[0].ToString().ToUpper() + name.Substring(1),
             };
+            // Show a checkmark on the selected swatch
+            if (isCurrent)
+            {
+                pill.Child = new Wpf.Ui.Controls.SymbolIcon
+                {
+                    Symbol             = Wpf.Ui.Controls.SymbolRegular.Checkmark12,
+                    Foreground         = Brushes.White,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment   = VerticalAlignment.Center,
+                    FontSize           = 14,
+                };
+            }
             pill.MouseLeftButtonDown += (_, __) =>
             {
                 try
@@ -3933,10 +3980,14 @@ private bool _overlayToolsVisible = false;
                 catch (Exception ex) { AppendLog("[ColorPicker] " + ex.Message); }
                 finally { RemoveInlinePanel(panel!, dismissLayer!); }
             };
-            stack.Children.Add(pill);
+            swatchRow.Children.Add(pill);
         }
 
-        (panel, dismissLayer) = CreateInlinePanel(iconEl, stack);
+        var container = new StackPanel();
+        container.Children.Add(header);
+        container.Children.Add(swatchRow);
+
+        (panel, dismissLayer) = CreateInlinePanel(iconEl, container);
         dismissLayer.MouseLeftButtonDown += (_, __) => RemoveInlinePanel(panel, dismissLayer);
 
         Overlay.Children.Add(dismissLayer);
@@ -3945,37 +3996,84 @@ private bool _overlayToolsVisible = false;
 
     private void ShowInlineNotePicker(FrameworkElement iconEl, OverlayTag meta)
     {
+        // Colorable rust-marker icons always-show their note, so keep it short (max 10)
+        // Old base/pin icons use a dialog and have a longer limit
+        bool isColorableMarker = meta.CustomIconPath?.StartsWith("rust-marker://") == true;
+        int maxLen = isColorableMarker ? 10 : 100;
+
+        var header = new Wpf.Ui.Controls.TextBlock
+        {
+            Text       = isColorableMarker ? $"Note (max {maxLen} chars)" : "Note",
+            FontSize   = 10,
+            FontWeight = FontWeights.SemiBold,
+            Foreground = new SolidColorBrush(Color.FromArgb(180, 255, 255, 255)),
+            Margin     = new Thickness(0, 0, 0, 4),
+        };
+
         var tb = new TextBox
         {
             Text            = meta.Note ?? "",
-            Width           = 220,
-            MinHeight       = 60,
-            MaxHeight       = 120,
-            AcceptsReturn   = true,
-            TextWrapping    = TextWrapping.Wrap,
-            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            Width           = 200,
+            MinHeight       = 50,
+            MaxHeight       = 100,
+            MaxLength       = maxLen,
+            AcceptsReturn   = !isColorableMarker, // single-line for short notes
+            TextWrapping    = isColorableMarker ? TextWrapping.NoWrap : TextWrapping.Wrap,
+            VerticalScrollBarVisibility = isColorableMarker ? ScrollBarVisibility.Disabled : ScrollBarVisibility.Auto,
             Foreground      = Brushes.White,
             Background      = new SolidColorBrush(Color.FromArgb(50, 255, 255, 255)),
-            BorderThickness = new Thickness(0),
-            Padding         = new Thickness(4),
+            BorderBrush     = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+            BorderThickness = new Thickness(1),
+            Padding         = new Thickness(6, 4, 6, 4),
             FontSize        = 12,
             CaretBrush      = Brushes.White,
+            SelectionBrush  = new SolidColorBrush(Color.FromArgb(120, 96, 205, 255)),
+        };
+
+        // Character counter for colorable markers
+        var charCounter = new Wpf.Ui.Controls.TextBlock
+        {
+            Text       = $"{tb.Text.Length}/{maxLen}",
+            FontSize   = 9,
+            Foreground = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255)),
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Margin     = new Thickness(0, 2, 0, 0),
+            Visibility = isColorableMarker ? Visibility.Visible : Visibility.Collapsed,
+        };
+        tb.TextChanged += (_, __) =>
+        {
+            charCounter.Text = $"{tb.Text.Length}/{maxLen}";
+            charCounter.Foreground = tb.Text.Length >= maxLen
+                ? new SolidColorBrush(Color.FromRgb(220, 80, 80))
+                : new SolidColorBrush(Color.FromArgb(120, 255, 255, 255));
         };
 
         Border? panel = null;
         Border? dismissLayer = null;
 
+        // Save button with WPF UI icon
+        var saveBtnContent = new StackPanel { Orientation = Orientation.Horizontal };
+        saveBtnContent.Children.Add(new Wpf.Ui.Controls.SymbolIcon
+        {
+            Symbol   = Wpf.Ui.Controls.SymbolRegular.Save16,
+            FontSize = 13,
+            Margin   = new Thickness(0, 0, 5, 0),
+        });
+        saveBtnContent.Children.Add(new System.Windows.Controls.TextBlock { Text = "Save", VerticalAlignment = VerticalAlignment.Center });
+
         var saveBtn = new Button
         {
-            Content      = "Save",
-            Margin       = new Thickness(0, 6, 0, 0),
-            Height       = 28,
+            Content      = saveBtnContent,
+            Margin       = new Thickness(0, 8, 0, 0),
+            Height       = 30,
             Foreground   = Brushes.White,
-            Background   = new SolidColorBrush(Color.FromRgb(46, 125, 200)),
-            BorderThickness = new Thickness(0),
+            Background   = new SolidColorBrush(Color.FromRgb(37, 99, 185)),
+            BorderBrush  = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+            BorderThickness = new Thickness(1),
             Cursor       = Cursors.Hand,
         };
-        saveBtn.Click += (_, __) =>
+
+        Action doSave = () =>
         {
             meta.Note = string.IsNullOrWhiteSpace(tb.Text) ? null : tb.Text.Trim();
             if (iconEl is Grid g)
@@ -3985,34 +4083,33 @@ private bool _overlayToolsVisible = false;
             RemoveInlinePanel(panel!, dismissLayer!);
         };
 
-        var container = new StackPanel();
-        container.Children.Add(new TextBlock
+        saveBtn.Click += (_, __) => doSave();
+
+        // Ctrl+Enter also saves
+        tb.KeyDown += (_, ke) =>
         {
-            Text       = "Note",
-            Foreground = new SolidColorBrush(Color.FromArgb(180, 255, 255, 255)),
-            FontSize   = 10,
-            Margin     = new Thickness(0, 0, 0, 4)
-        });
+            if (ke.Key == Key.Return && (Keyboard.Modifiers & ModifierKeys.Control) != 0)
+            {
+                doSave();
+                ke.Handled = true;
+            }
+        };
+
+        var container = new StackPanel();
+        container.Children.Add(header);
         container.Children.Add(tb);
+        container.Children.Add(charCounter);
         container.Children.Add(saveBtn);
 
         (panel, dismissLayer) = CreateInlinePanel(iconEl, container);
         // Clicking the dismiss layer saves & closes
-        dismissLayer.MouseLeftButtonDown += (_, __) =>
-        {
-            meta.Note = string.IsNullOrWhiteSpace(tb.Text) ? null : tb.Text.Trim();
-            if (iconEl is Grid g)
-                UpdateNoteVisibilityAndText(g, meta.Note);
-            SaveOwnOverlayToJson();
-            UploadOwnOverlayToTeam();
-            RemoveInlinePanel(panel, dismissLayer);
-        };
+        dismissLayer.MouseLeftButtonDown += (_, __) => doSave();
 
         Overlay.Children.Add(dismissLayer);
         Overlay.Children.Add(panel);
 
-        // Focus the textbox after layout
-        panel.Loaded += (_, __) => tb.Focus();
+        // Focus and select-all after layout
+        panel.Loaded += (_, __) => { tb.Focus(); tb.SelectAll(); };
     }
 
     private void ShowBaseContextMenu(FrameworkElement baseImg, OverlayTag meta)
