@@ -228,6 +228,24 @@ namespace RustPlusDesk.Services.Auth
                     }
                     break;
 
+                case "overlay_data":
+                    string? ovSteamId = payload["steam_id"]?.ToString();
+                    if (!string.IsNullOrEmpty(ovSteamId) && ovSteamId != mySteamId)
+                    {
+                        if (ulong.TryParse(ovSteamId, out ulong ovSid))
+                        {
+                            string? ovServerKey = payload["server_key"]?.ToString();
+                            string? ovData = payload["overlay_data"]?.ToString();
+                            string? mkData = payload["marker_data"]?.ToString();
+                            string? dvData = payload["device_data"]?.ToString();
+                            long ovUpdatedAt = payload["updated_at"]?.Value<long>() ?? 0;
+
+                            AppendLog($"[TeamSyncWS] overlay_data inline event for teammate: {ovSid}");
+                            _ = ApplyInlineOverlayAsync(ovSid, ovServerKey, ovData, mkData, dvData, ovUpdatedAt);
+                        }
+                    }
+                    break;
+
                 case "master_changed":
                     var statePayload = payload["state"];
                     if (statePayload != null)
@@ -276,6 +294,23 @@ namespace RustPlusDesk.Services.Auth
                 if (Application.Current.MainWindow is Views.MainWindow mainWin)
                 {
                     await mainWin.RefreshTeammateOverlayAsync(steamId);
+                }
+            });
+        }
+
+        private static async Task ApplyInlineOverlayAsync(ulong steamId, string? serverKey, string? overlayDataJson, string? markerDataJson, string? deviceDataJson, long updatedAt)
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                if (Application.Current.MainWindow is Views.MainWindow mainWin)
+                {
+                    mainWin.ApplyInlineOverlayData(
+                        steamId,
+                        serverKey ?? "",
+                        overlayDataJson ?? "",
+                        markerDataJson,
+                        deviceDataJson,
+                        updatedAt);
                 }
             });
         }

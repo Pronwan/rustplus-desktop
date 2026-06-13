@@ -3409,6 +3409,71 @@ private bool _overlayToolsVisible = false;
         }
     }
 
+    public void ApplyInlineOverlayData(ulong steamId, string serverKey, string overlayDataJson, string? markerDataJson, string? deviceDataJson, long updatedAt)
+    {
+        try
+        {
+            if (serverKey != GetServerKey())
+            {
+                AppendLog($"[overlay/broadcast] Skipping inline overlay for {steamId}: server key mismatch ({serverKey} vs {GetServerKey()})");
+                return;
+            }
+
+            var data = new OverlaySaveData { LastUpdatedUnix = updatedAt };
+
+            if (!string.IsNullOrEmpty(overlayDataJson))
+            {
+                var mapData = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(overlayDataJson);
+                if (mapData != null)
+                {
+                    data.Strokes = mapData.Strokes ?? new();
+                    data.Icons = mapData.Icons ?? new();
+                    data.Texts = mapData.Texts ?? new();
+                    data.Devices = mapData.Devices ?? new();
+                }
+            }
+
+            if (!string.IsNullOrEmpty(markerDataJson))
+            {
+                var baseIcons = System.Text.Json.JsonSerializer.Deserialize<List<SavedIcon>>(markerDataJson);
+                if (baseIcons?.Count > 0)
+                    data.Icons.AddRange(baseIcons);
+            }
+
+            if (!string.IsNullOrEmpty(deviceDataJson))
+            {
+                var devs = System.Text.Json.JsonSerializer.Deserialize<List<ExportedDeviceDto>>(deviceDataJson);
+                if (devs != null)
+                    data.Devices = devs;
+            }
+
+            bool editable = (steamId == _mySteamId);
+            MaterializeOverlayForPlayer(steamId, data, editable);
+
+            OverlayDataModule.SaveLocalOverlay(serverKey, steamId, data);
+
+            if (_teammatePollStates.TryGetValue(steamId, out var state))
+            {
+                state.SecondsUntilNextPoll = 999;
+                state.IsPaused = false;
+                state.ConsecutiveUnchangedCount = 0;
+                state.LastChangeTime = DateTime.UtcNow;
+            }
+
+            Dispatcher.Invoke(() =>
+            {
+                RebuildOverlayTeamBar();
+                UpdateSubscriptionDock();
+            });
+
+            AppendLog($"[overlay/broadcast] Inline overlay applied for {steamId}");
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[overlay/broadcast/error] Failed to apply inline overlay for {steamId}: {ex.Message}");
+        }
+    }
+
 
     // --- BASE HOVER, GALLERY, LOUPE, & CONTEXT MENU LOGIC ---
 
