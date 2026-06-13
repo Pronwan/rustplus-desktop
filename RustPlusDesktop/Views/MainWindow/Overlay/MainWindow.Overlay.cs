@@ -356,6 +356,7 @@ private bool _overlayToolsVisible = false;
             else
             {
                 // For teammates, always trust remote (they painted it)
+                OverlayDataModule.SaveLocalOverlay(GetServerKey(), steamId, remoteData);
                 return true;
             }
         }
@@ -3308,7 +3309,6 @@ private bool _overlayToolsVisible = false;
                 if (trashBtn.IsMouseOver) return;
 
                 e.Handled = true;
-                if (!isOnline) return;
 
                 AppendLog($"[overlay/poll] Quick-refresh triggered for {tm.Name}.");
                 if (_teammatePollStates.TryGetValue(steamId, out var st))
