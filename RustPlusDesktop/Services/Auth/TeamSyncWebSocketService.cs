@@ -1,247 +1,270 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.WebSockets;
-using System.Text;
-using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Newtonsoft.Json.Linq;
 using RustPlusDesk.Helpers;
-using RustPlusDesk.Services.Data;
+using RustPlusDesk.Models;
+using Supabase.Realtime;
+using Supabase.Realtime.Models;
+using Supabase.Realtime.PostgresChanges;
 
 namespace RustPlusDesk.Services.Auth
 {
     public static class TeamSyncWebSocketService
     {
-        private static ClientWebSocket? _webSocket;
-        private static CancellationTokenSource? _cts;
-        private static Task? _loopTask;
-        private static int _reconnectDelaySeconds = 2;
-        private static readonly object LockObj = new();
-        private static System.Threading.Timer? _pingTimer;
+        private static RealtimeChannel? _broadcastChannel;
+        private static RealtimeBroadcast<BaseBroadcast<JObject>>? _broadcast;
+        private static RealtimeChannel? _presenceChannel;
+        private static string _currentServerKey = "";
+        private static string _currentTeamKey = "";
+        private static bool _broadcastSubscribed;
+        private static bool _initialized;
 
-        public static bool IsActive { get; private set; }
+        public static bool IsActive => _broadcastSubscribed;
 
         public static void Initialize()
         {
-            lock (LockObj)
-            {
-                if (_loopTask != null) return; // Already running
-                _cts = new CancellationTokenSource();
-                _loopTask = Task.Run(() => ConnectionLoopAsync(_cts.Token));
-                AppendLog("[TeamSyncWS] Service initialized.");
-            }
+            if (_initialized) return;
+            _initialized = true;
+
+            _ = SubscribeToPresenceAsync();
+            AppendLog("[TeamSyncWS] Service initialized (direct Supabase Realtime).");
         }
 
         public static void Shutdown()
         {
-            lock (LockObj)
-            {
-                if (_loopTask == null) return;
-                _cts?.Cancel();
-                _pingTimer?.Dispose();
-                _pingTimer = null;
-                CloseWebSocketAsync().Wait();
-                _loopTask = null;
-                IsActive = false;
-                AppendLog("[TeamSyncWS] Service shut down.");
-            }
+            _initialized = false;
+            UnsubscribeAll();
+            AppendLog("[TeamSyncWS] Service shut down.");
         }
 
-        private static async Task ConnectionLoopAsync(CancellationToken ct)
+        private static async Task SubscribeToPresenceAsync()
         {
-            while (!ct.IsCancellationRequested)
+            try
             {
-                try
+                var steamId = TrackingService.SteamId64;
+                if (string.IsNullOrWhiteSpace(steamId) || steamId == "0")
                 {
-                    bool shouldBeConnected = SupabaseAuthManager.IsAuthenticated &&
-                                             SupabaseAuthManager.Client?.Auth?.CurrentSession != null;
+                    await Task.Delay(5000);
+                    _ = SubscribeToPresenceAsync();
+                    return;
+                }
 
-                    if (shouldBeConnected && (_webSocket == null || _webSocket.State != WebSocketState.Open))
+                var client = SupabaseAuthManager.Client;
+                if (client?.Realtime == null) return;
+
+                _presenceChannel = client.Realtime.Channel($"user_presence:{steamId}");
+
+                var options = new PostgresChangesOptions(
+                    "public",
+                    "team_feature_presence",
+                    PostgresChangesOptions.ListenType.Updates);
+                _presenceChannel.Register(options);
+
+                _presenceChannel.AddPostgresChangeHandler(
+                    PostgresChangesOptions.ListenType.Updates,
+                    (sender, change) =>
                     {
-                        if (_webSocket == null || _webSocket.State == WebSocketState.Aborted || _webSocket.State == WebSocketState.Closed)
+                        try
                         {
-                            await ConnectAsync(ct);
-                        }
-                    }
-                    else if (!shouldBeConnected && _webSocket != null && _webSocket.State == WebSocketState.Open)
-                    {
-                        await CloseWebSocketAsync();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    AppendLog($"[TeamSyncWS/Error] Connection loop exception: {ex.Message}");
-                }
+                            var row = change.Model<TeamFeaturePresenceModel>();
+                            if (row == null) return;
 
-                await Task.Delay(2000, ct);
-            }
-        }
+                            string newServerKey = row.ServerKey ?? "";
+                            string newTeamKey = row.TeamKey ?? "";
 
-        private static async Task ConnectAsync(CancellationToken ct)
-        {
-            string? token = SupabaseAuthManager.Client?.Auth?.CurrentSession?.AccessToken;
-            if (string.IsNullOrEmpty(token)) return;
-
-            string rawUrl = DataManager.SUPABASE_URL;
-            if (string.IsNullOrEmpty(rawUrl)) return;
-
-            string wsUrl = rawUrl.Replace("https://", "wss://").TrimEnd('/') +
-                            "/functions/v1/team-sync?jwt=" + Uri.EscapeDataString(token) +
-                            "&version=" + Uri.EscapeDataString(VersionHelper.GetClientVersion());
-
-            AppendLog($"[TeamSyncWS] Connecting to {rawUrl.Replace("https://", "wss://").TrimEnd('/')}/functions/v1/team-sync...");
-            
-            try
-            {
-                _webSocket = new ClientWebSocket();
-                _webSocket.Options.SetRequestHeader("x-client-version", VersionHelper.GetClientVersion());
-                
-                using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct, timeoutCts.Token);
-                
-                await _webSocket.ConnectAsync(new Uri(wsUrl), linkedCts.Token);
-                
-                _reconnectDelaySeconds = 2; // Reset backoff on success
-                IsActive = true;
-                AppendLog("[TeamSyncWS] Connected successfully!");
-
-                // Start ping timer every 30 seconds
-                _pingTimer?.Dispose();
-                _pingTimer = new System.Threading.Timer(async _ =>
-                {
-                    await SendPingAsync();
-                }, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
-
-                // Start receiving messages
-                _ = Task.Run(() => ReceiveLoopAsync(_webSocket, ct), ct);
-            }
-            catch (Exception ex)
-            {
-                AppendLog($"[TeamSyncWS/Error] Connection failed: {ex.Message}. Reconnecting in {_reconnectDelaySeconds}s...");
-                IsActive = false;
-                _webSocket?.Dispose();
-                _webSocket = null;
-                
-                // Backoff delay
-                await Task.Delay(TimeSpan.FromSeconds(_reconnectDelaySeconds), ct);
-                _reconnectDelaySeconds = Math.Min(_reconnectDelaySeconds * 2, 30);
-            }
-        }
-
-        private static async Task SendPingAsync()
-        {
-            if (_webSocket == null || _webSocket.State != WebSocketState.Open) return;
-            try
-            {
-                var payload = new { @event = "ping" };
-                string json = JsonSerializer.Serialize(payload);
-                byte[] bytes = Encoding.UTF8.GetBytes(json);
-                await _webSocket.SendAsync(new ArraySegment<byte>(bytes), WebSocketMessageType.Text, true, CancellationToken.None);
-            }
-            catch (Exception ex)
-            {
-                AppendLog($"[TeamSyncWS/Error] Failed to send ping: {ex.Message}");
-            }
-        }
-
-        private static async Task ReceiveLoopAsync(ClientWebSocket ws, CancellationToken ct)
-        {
-            var buffer = new byte[8192];
-            try
-            {
-                while (ws.State == WebSocketState.Open && !ct.IsCancellationRequested)
-                {
-                    var result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), ct);
-                    if (result.MessageType == WebSocketMessageType.Close)
-                    {
-                        AppendLog("[TeamSyncWS] Server requested connection close.");
-                        await CloseWebSocketAsync();
-                        break;
-                    }
-
-                    if (result.MessageType == WebSocketMessageType.Text)
-                    {
-                        string message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                        await HandleMessageAsync(message);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                if (!ct.IsCancellationRequested)
-                {
-                    AppendLog($"[TeamSyncWS/Error] Receive loop error: {ex.Message}");
-                }
-            }
-            finally
-            {
-                IsActive = false;
-            }
-        }
-
-        private static async Task HandleMessageAsync(string json)
-        {
-            try
-            {
-                using var doc = JsonDocument.Parse(json);
-                var root = doc.RootElement;
-                if (root.TryGetProperty("event", out var evProp))
-                {
-                    string ev = evProp.GetString() ?? "";
-                    if (ev == "overlay_changed")
-                    {
-                        if (root.TryGetProperty("steam_id", out var sidProp))
-                        {
-                            string sidStr = sidProp.GetString() ?? "";
-                            if (ulong.TryParse(sidStr, out ulong steamId))
+                            if (!string.IsNullOrEmpty(newServerKey) && !string.IsNullOrEmpty(newTeamKey))
                             {
-                                AppendLog($"[TeamSyncWS] Overlay changed event for teammate: {steamId}");
-                                await RefreshOverlayAsync(steamId);
+                                if (newServerKey != _currentServerKey || newTeamKey != _currentTeamKey)
+                                {
+                                    AppendLog($"[TeamSyncWS] Team changed: {_currentServerKey}/{_currentTeamKey} -> {newServerKey}/{newTeamKey}");
+                                    _currentServerKey = newServerKey;
+                                    _currentTeamKey = newTeamKey;
+                                    _ = SubscribeToBroadcastAsync(newServerKey, newTeamKey);
+                                }
+                                else if (!_broadcastSubscribed)
+                                {
+                                    _ = SubscribeToBroadcastAsync(newServerKey, newTeamKey);
+                                }
                             }
                         }
-                    }
-                    else if (ev == "master_changed")
-                    {
-                        if (root.TryGetProperty("state", out var stateProp))
+                        catch (Exception ex)
                         {
-                            RustPlusDesk.Models.TeamFeatureMasterState? state = null;
-                            if (stateProp.ValueKind == JsonValueKind.Array)
-                            {
-                                var list = JsonSerializer.Deserialize<List<RustPlusDesk.Models.TeamFeatureMasterState>>(
-                                    stateProp.GetRawText(),
-                                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-                                );
-                                state = list?.FirstOrDefault();
-                            }
-                            else if (stateProp.ValueKind == JsonValueKind.Object)
-                            {
-                                state = JsonSerializer.Deserialize<RustPlusDesk.Models.TeamFeatureMasterState>(
-                                    stateProp.GetRawText(),
-                                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-                                );
-                            }
-
-                            AppendLog($"[TeamSyncWS] Master changed event received. Active Master: {state?.MasterSteamId}");
-                            await ApplyMasterStateAsync(state);
+                            AppendLog($"[TeamSyncWS/Error] Presence change handler error: {ex.Message}");
                         }
-                    }
-                    else if (ev == "subscribed")
-                    {
-                        string teamKey = root.TryGetProperty("team_key", out var tk) ? tk.GetString() ?? "" : "";
-                        string serverKey = root.TryGetProperty("server_key", out var sk) ? sk.GetString() ?? "" : "";
-                        AppendLog($"[TeamSyncWS] Subscribed to Realtime channel for team={teamKey} server={serverKey}");
-                    }
-                    else if (ev == "pong")
-                    {
-                        // Ping reply, do nothing
-                    }
-                }
+                    });
+
+                await _presenceChannel.Subscribe();
+                AppendLog($"[TeamSyncWS] Subscribed to presence changes for SteamID: {steamId}");
+
+                _ = TryInitialBroadcastSubscriptionAsync(steamId);
             }
             catch (Exception ex)
             {
-                AppendLog($"[TeamSyncWS/Error] Failed to parse message: {ex.Message}");
+                AppendLog($"[TeamSyncWS/Error] Failed to subscribe to presence: {ex.Message}");
+                await Task.Delay(5000);
+                _ = SubscribeToPresenceAsync();
+            }
+        }
+
+        private static async Task TryInitialBroadcastSubscriptionAsync(string steamId)
+        {
+            try
+            {
+                var client = SupabaseAuthManager.Client;
+                if (client == null) return;
+
+                var response = await client
+                    .From<TeamFeaturePresenceModel>()
+                    .Where(x => x.SteamId == steamId)
+                    .Get();
+
+                var row = response?.Models?.FirstOrDefault();
+                if (row != null &&
+                    !string.IsNullOrEmpty(row.ServerKey) &&
+                    !string.IsNullOrEmpty(row.TeamKey))
+                {
+                    _currentServerKey = row.ServerKey;
+                    _currentTeamKey = row.TeamKey;
+                    await SubscribeToBroadcastAsync(row.ServerKey, row.TeamKey);
+                }
+            }
+            catch
+            {
+                // Not found or RLS blocked - wait for heartbeat-driven presence update
+            }
+        }
+
+        private static async Task SubscribeToBroadcastAsync(string serverKey, string teamKey)
+        {
+            if (string.IsNullOrEmpty(serverKey) || string.IsNullOrEmpty(teamKey)) return;
+
+            UnsubscribeBroadcast();
+
+            try
+            {
+                var client = SupabaseAuthManager.Client;
+                if (client?.Realtime == null) return;
+
+                var channelName = $"team_sync:{serverKey}:{teamKey}";
+                _broadcastChannel = client.Realtime.Channel(channelName);
+
+                _broadcast = _broadcastChannel.Register<BaseBroadcast<JObject>>();
+                _broadcast.AddBroadcastEventHandler((sender, args) =>
+                {
+                    try
+                    {
+                        var message = _broadcast?.Current();
+                        if (message == null) return;
+
+                        HandleBroadcastEvent(message.Event, message.Payload);
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog($"[TeamSyncWS/Error] Broadcast handler error: {ex.Message}");
+                    }
+                });
+
+                await _broadcastChannel.Subscribe();
+                _broadcastSubscribed = true;
+                AppendLog($"[TeamSyncWS] Subscribed to broadcast channel: {channelName}");
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[TeamSyncWS/Error] Failed to subscribe to broadcast: {ex.Message}");
+                _broadcastChannel = null;
+                _broadcast = null;
+                _broadcastSubscribed = false;
+            }
+        }
+
+        private static void UnsubscribeBroadcast()
+        {
+            _broadcastSubscribed = false;
+            if (_broadcastChannel != null)
+            {
+                try { _broadcastChannel.Unsubscribe(); } catch { }
+                _broadcastChannel = null;
+                _broadcast = null;
+            }
+        }
+
+        private static void UnsubscribePresence()
+        {
+            if (_presenceChannel != null)
+            {
+                try { _presenceChannel.Unsubscribe(); } catch { }
+                _presenceChannel = null;
+            }
+        }
+
+        private static void UnsubscribeAll()
+        {
+            UnsubscribeBroadcast();
+            UnsubscribePresence();
+        }
+
+        private static void HandleBroadcastEvent(string? eventName, JObject? payload)
+        {
+            if (string.IsNullOrEmpty(eventName) || payload == null) return;
+
+            var mySteamId = TrackingService.SteamId64;
+
+            switch (eventName)
+            {
+                case "overlay_changed":
+                case "markers_changed":
+                case "devices_changed":
+                    string? senderSteamId = payload["steam_id"]?.ToString();
+                    if (!string.IsNullOrEmpty(senderSteamId) && senderSteamId != mySteamId)
+                    {
+                        if (ulong.TryParse(senderSteamId, out ulong sid))
+                        {
+                            AppendLog($"[TeamSyncWS] {eventName} event for teammate: {sid}");
+                            _ = RefreshOverlayAsync(sid);
+                        }
+                    }
+                    break;
+
+                case "master_changed":
+                    var statePayload = payload["state"];
+                    if (statePayload != null)
+                    {
+                        TeamFeatureMasterState? state = null;
+                        try
+                        {
+                            if (statePayload is JArray arr)
+                            {
+                                state = arr.FirstOrDefault()?.ToObject<TeamFeatureMasterState>();
+                            }
+                            else if (statePayload is JObject obj)
+                            {
+                                state = obj.ToObject<TeamFeatureMasterState>();
+                            }
+                        }
+                        catch { }
+
+                        AppendLog($"[TeamSyncWS] Master changed event. Active Master: {state?.MasterSteamId}");
+                        _ = ApplyMasterStateAsync(state);
+                    }
+                    break;
+
+                case "presence_changed":
+                    string? presenceSteamId = payload["steam_id"]?.ToString();
+                    if (presenceSteamId == mySteamId)
+                    {
+                        string? newServer = payload["server_key"]?.ToString();
+                        string? newTeam = payload["team_key"]?.ToString();
+                        if (!string.IsNullOrEmpty(newServer) && !string.IsNullOrEmpty(newTeam) &&
+                            (newServer != _currentServerKey || newTeam != _currentTeamKey))
+                        {
+                            _currentServerKey = newServer;
+                            _currentTeamKey = newTeam;
+                            _ = SubscribeToBroadcastAsync(newServer, newTeam);
+                        }
+                    }
+                    break;
             }
         }
 
@@ -256,39 +279,15 @@ namespace RustPlusDesk.Services.Auth
             });
         }
 
-        private static async Task ApplyMasterStateAsync(RustPlusDesk.Models.TeamFeatureMasterState? state)
+        private static async Task ApplyMasterStateAsync(TeamFeatureMasterState? state)
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 if (Application.Current.MainWindow is Views.MainWindow mainWin)
                 {
-                    // Call the public method in MainWindow
                     mainWin.ApplyTeamFeatureMasterState(state, mainWin.BuildTeamFeatureKey());
                 }
             });
-        }
-
-        private static async Task CloseWebSocketAsync()
-        {
-            IsActive = false;
-            _pingTimer?.Dispose();
-            _pingTimer = null;
-
-            if (_webSocket != null)
-            {
-                if (_webSocket.State == WebSocketState.Open || _webSocket.State == WebSocketState.CloseReceived)
-                {
-                    try
-                    {
-                        using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
-                        await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Shutting down", timeoutCts.Token);
-                    }
-                    catch { }
-                }
-                _webSocket.Dispose();
-                _webSocket = null;
-                AppendLog("[TeamSyncWS] Connection closed.");
-            }
         }
 
         private static void AppendLog(string msg)
