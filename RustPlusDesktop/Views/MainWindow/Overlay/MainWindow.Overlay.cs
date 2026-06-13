@@ -3642,42 +3642,56 @@ private bool _overlayToolsVisible = false;
 
     private void ReplaceOverlayElement(FrameworkElement oldEl, FrameworkElement newEl)
     {
-        // Copy Canvas position
-        double left = Canvas.GetLeft(oldEl);
-        double top = Canvas.GetTop(oldEl);
-        Canvas.SetLeft(newEl, left);
-        Canvas.SetTop(newEl, top);
-
-        // Copy RenderTransform
-        newEl.RenderTransform = oldEl.RenderTransform;
-
-        // Replace in Overlay Canvas children
-        int index = Overlay.Children.IndexOf(oldEl);
-        if (index != -1)
+        try
         {
-            Overlay.Children[index] = newEl;
-        }
-        else
-        {
-            Overlay.Children.Add(newEl);
-        }
+            // Copy Canvas position
+            double left = Canvas.GetLeft(oldEl);
+            double top = Canvas.GetTop(oldEl);
+            Canvas.SetLeft(newEl, left);
+            Canvas.SetTop(newEl, top);
 
-        // Replace in _playerOverlayElements list
-        if (_playerOverlayElements.TryGetValue(_mySteamId, out var list))
-        {
-            int listIdx = list.IndexOf(oldEl);
-            if (listIdx != -1)
+            // Copy RenderTransform
+            newEl.RenderTransform = oldEl.RenderTransform;
+
+            // Copy BaseSize if present
+            if (oldEl.Tag is OverlayTag oldMeta && newEl.Tag is OverlayTag newMeta)
             {
-                list[listIdx] = newEl;
+                newMeta.BaseSize = oldMeta.BaseSize;
+            }
+
+            // Replace in Overlay Canvas children
+            int index = Overlay.Children.IndexOf(oldEl);
+            if (index != -1)
+            {
+                Overlay.Children.RemoveAt(index);
+                Overlay.Children.Insert(index, newEl);
             }
             else
             {
-                list.Add(newEl);
+                Overlay.Children.Add(newEl);
             }
-        }
 
-        SaveOwnOverlayToJson();
-        UploadOwnOverlayToTeam();
+            // Replace in _playerOverlayElements list
+            if (_playerOverlayElements.TryGetValue(_mySteamId, out var list))
+            {
+                int listIdx = list.IndexOf(oldEl);
+                if (listIdx != -1)
+                {
+                    list[listIdx] = newEl;
+                }
+                else
+                {
+                    list.Add(newEl);
+                }
+            }
+
+            SaveOwnOverlayToJson();
+            UploadOwnOverlayToTeam();
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[ReplaceOverlayElement] error: " + ex.Message);
+        }
     }
 
     private void ShowGenericIconContextMenu(FrameworkElement iconEl, OverlayTag meta)
@@ -3739,9 +3753,24 @@ private bool _overlayToolsVisible = false;
                 string targetShape = sh;
                 shapeItem.Click += (s, e) =>
                 {
-                    string newPath = $"rust-marker://{targetShape}/{color}";
-                    var newEl = CreateRustMarkerElement(newPath, iconEl.Width, iconEl.Height, true, _mySteamId, meta.Note, meta.Screenshots);
-                    ReplaceOverlayElement(iconEl, newEl);
+                    var capturedEl = iconEl;
+                    string capturedPath = $"rust-marker://{targetShape}/{color}";
+                    double w = !double.IsNaN(capturedEl.Width) ? capturedEl.Width : (_activeIconSize > 0 ? _activeIconSize : 32);
+                    double h = !double.IsNaN(capturedEl.Height) ? capturedEl.Height : (_activeIconSize > 0 ? _activeIconSize : 32);
+                    string capturedNote = meta.Note;
+                    var capturedScreenshots = meta.Screenshots;
+                    Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, new Action(() =>
+                    {
+                        try
+                        {
+                            var newEl = CreateRustMarkerElement(capturedPath, w, h, true, _mySteamId, capturedNote, capturedScreenshots);
+                            ReplaceOverlayElement(capturedEl, newEl);
+                        }
+                        catch (Exception ex)
+                        {
+                            AppendLog("[ChangeIcon] error: " + ex.Message);
+                        }
+                    }));
                 };
                 miChangeIcon.Items.Add(shapeItem);
             }
@@ -3755,9 +3784,24 @@ private bool _overlayToolsVisible = false;
                 string targetColor = co;
                 colorItem.Click += (s, e) =>
                 {
-                    string newPath = $"rust-marker://{shape}/{targetColor}";
-                    var newEl = CreateRustMarkerElement(newPath, iconEl.Width, iconEl.Height, true, _mySteamId, meta.Note, meta.Screenshots);
-                    ReplaceOverlayElement(iconEl, newEl);
+                    var capturedEl = iconEl;
+                    string capturedPath = $"rust-marker://{shape}/{targetColor}";
+                    double w = !double.IsNaN(capturedEl.Width) ? capturedEl.Width : (_activeIconSize > 0 ? _activeIconSize : 32);
+                    double h = !double.IsNaN(capturedEl.Height) ? capturedEl.Height : (_activeIconSize > 0 ? _activeIconSize : 32);
+                    string capturedNote = meta.Note;
+                    var capturedScreenshots = meta.Screenshots;
+                    Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, new Action(() =>
+                    {
+                        try
+                        {
+                            var newEl = CreateRustMarkerElement(capturedPath, w, h, true, _mySteamId, capturedNote, capturedScreenshots);
+                            ReplaceOverlayElement(capturedEl, newEl);
+                        }
+                        catch (Exception ex)
+                        {
+                            AppendLog("[ChangeColor] error: " + ex.Message);
+                        }
+                    }));
                 };
                 miChangeColor.Items.Add(colorItem);
             }
