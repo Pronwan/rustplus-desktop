@@ -59,7 +59,7 @@
                          Padding="8,6"
                          AcceptsReturn="False" 
                          TextWrapping="NoWrap" 
-                         MaxLength="10"
+                         MaxLength="100"
                          FontSize="13"
                          Height="36"
                          VerticalContentAlignment="Center"/>
