@@ -204,6 +204,17 @@ namespace RustPlusDesk.Services.Auth
                 await FetchTierLimitsAsync();
                 TeamSyncWebSocketService.Initialize();
                 AppendLog($"[Supabase] Init complete. IsDiscordAuthenticated={IsDiscordAuthenticated}, IsGuestAuthenticated={IsGuestAuthenticated}, IsPremium={IsPremium}");
+
+                // Sync Discord roles on every launch when a Discord session is active,
+                // not just after a fresh OAuth login.
+                if (IsDiscordAuthenticated)
+                {
+                    _ = Task.Run(async () =>
+                    {
+                        try { await SyncDiscordRolesAsync(); }
+                        catch (Exception ex) { AppendLog($"[Supabase] Background role sync error: {ex.Message}"); }
+                    });
+                }
             }
             catch (Exception ex)
             {
