@@ -822,6 +822,7 @@ private bool _overlayToolsVisible = false;
                 if (dlg.ShowDialog() == true && !string.IsNullOrEmpty(dlg.Base64Result))
                 {
                     baseMeta.Screenshots.Add(dlg.Base64Result);
+                    if (elementToPlace is Grid g) UpdateScreenshotIndicator(g, baseMeta.Screenshots);
                     SaveOwnOverlayToJson();
                     UploadOwnOverlayToTeam();
                 }
@@ -2129,6 +2130,54 @@ private bool _overlayToolsVisible = false;
         }
     }
 
+    private void UpdateScreenshotIndicator(Grid container, List<string>? screenshots)
+    {
+        bool hasScreenshots = screenshots != null && screenshots.Count > 0;
+
+        var existingBadge = container.Children.OfType<Border>().FirstOrDefault(b => (b.Tag as string) == "SSBadge");
+        if (!hasScreenshots)
+        {
+            if (existingBadge != null)
+                container.Children.Remove(existingBadge);
+            return;
+        }
+
+        string countText = screenshots!.Count > 99 ? "99+" : screenshots.Count.ToString();
+
+        if (existingBadge != null)
+        {
+            var existingTb = existingBadge.Child as TextBlock;
+            if (existingTb != null)
+                existingTb.Text = countText;
+        }
+        else
+        {
+            var textBlock = new TextBlock
+            {
+                Text = countText,
+                Foreground = Brushes.White,
+                FontSize = 9,
+                FontWeight = FontWeights.Bold,
+                TextAlignment = TextAlignment.Center,
+                IsHitTestVisible = false
+            };
+            var badge = new Border
+            {
+                Tag = "SSBadge",
+                Background = new SolidColorBrush(Color.FromArgb(200, 180, 40, 40)),
+                CornerRadius = new CornerRadius(9),
+                Width = 18,
+                Height = 18,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(0, -6, -6, 0),
+                Child = textBlock,
+                IsHitTestVisible = false
+            };
+            container.Children.Add(badge);
+        }
+    }
+
     private FrameworkElement CreateRustMarkerElement(string iconPath, double width, double height, bool isHitTestVisible, ulong ownerSteamId, string? note, List<string>? screenshots)
     {
         try
@@ -2657,6 +2706,11 @@ private bool _overlayToolsVisible = false;
                 if (!string.IsNullOrWhiteSpace(icon.Note))
                 {
                     UpdateNoteVisibilityAndText(grid, icon.Note);
+                }
+
+                if (isBase)
+                {
+                    UpdateScreenshotIndicator(grid, icon.Screenshots);
                 }
 
                 elementToPlace = grid;
@@ -4170,6 +4224,7 @@ private bool _overlayToolsVisible = false;
             miDelScreen.Click += (s, e) =>
             {
                 meta.Screenshots.RemoveAt(index);
+                if (baseImg is Grid g2) UpdateScreenshotIndicator(g2, meta.Screenshots);
                 if (_activeBaseHoverAnchor == baseImg && BaseHoverPopup != null)
                     BaseHoverPopup.Visibility = Visibility.Collapsed;
                 if (_activeGalleryAnchor == baseImg && BaseGalleryPopup != null)
@@ -4189,6 +4244,7 @@ private bool _overlayToolsVisible = false;
                 if (dlg.ShowDialog() == true && !string.IsNullOrEmpty(dlg.Base64Result))
                 {
                     meta.Screenshots.Add(dlg.Base64Result);
+                    if (baseImg is Grid g3) UpdateScreenshotIndicator(g3, meta.Screenshots);
                     SaveOwnOverlayToJson();
                     UploadOwnOverlayToTeam();
                 }
