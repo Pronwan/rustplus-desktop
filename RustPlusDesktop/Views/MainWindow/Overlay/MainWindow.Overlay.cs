@@ -772,6 +772,7 @@ private bool _overlayToolsVisible = false;
             {
                 Width = _activeIconSize,
                 Height = _activeIconSize,
+                Background = Brushes.Transparent,
                 RenderTransformOrigin = new Point(0.5, 0.5),
                 IsHitTestVisible = true,
                 Tag = new OverlayTag
@@ -2068,9 +2069,14 @@ private bool _overlayToolsVisible = false;
 
     private void UpdateNoteVisibilityAndText(Grid container, string? note)
     {
-        if (note != null && note.Length > 10)
+        bool isBase = container.Tag is OverlayTag tag &&
+                      tag.CustomIconPath != null &&
+                      (tag.CustomIconPath.Contains("base1.png") || tag.CustomIconPath.Contains("base2.png"));
+        int maxLen = isBase ? 100 : 10;
+
+        if (note != null && note.Length > maxLen)
         {
-            note = note.Substring(0, 10);
+            note = note.Substring(0, maxLen);
         }
 
         var noteBorder = container.Children.OfType<Border>().FirstOrDefault(b => (b.Tag as string) == "NoteBorder");
@@ -2152,6 +2158,7 @@ private bool _overlayToolsVisible = false;
             {
                 Width = width,
                 Height = height,
+                Background = Brushes.Transparent,
                 RenderTransformOrigin = new Point(0.5, 0.5),
                 IsHitTestVisible = isHitTestVisible,
                 Tag = new OverlayTag
@@ -2619,6 +2626,7 @@ private bool _overlayToolsVisible = false;
                 {
                     Width = icon.Width,
                     Height = icon.Height,
+                    Background = Brushes.Transparent,
                     RenderTransformOrigin = new Point(0.5, 0.5),
                     IsHitTestVisible = editableIfMine || isBase,
                     Opacity = editableIfMine ? 1.0 : 0.8,
