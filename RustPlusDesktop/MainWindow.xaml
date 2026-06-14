@@ -1236,7 +1236,7 @@
                                                 <Style.Resources>
                                                     <!-- Nullify default highlight brushes so our card layout handles highlights -->
                                                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
-                                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{DynamicResource TextPrimary}" />
+                                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#F2F2F2" />
                                                     <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
                                                 </Style.Resources>
                                             </Style>
