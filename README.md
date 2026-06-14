@@ -51,6 +51,40 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# Rust+ Desktop Update — v6.3.1 :rocket:**
+This update introduces a powerful new automation engine, optimized map controls, and massive optimizations to data usage and performance. 
+
+:Warning: **NOTE:** **It's a mandatory update for cloud features because we changed overlay from polling to subscribing / streaming on demand.**
+
+**:brain: 1. Smart Logic Engine (Beta) :control_knobs:**
+The highlight of this update! Easily build your own automated workflows:
+
+- IFTTT-Style Rule Builder: Construct rules using an intuitive logic editor with custom delays and conditional actions.
+- Triggers: Activate rules via Smart Alarms, Smart Switches, or custom Chat Commands (e.g., !raid), which sync automatically with your Chat Settings overlay.
+- Logical Gating: Subsequent steps in a rule function as gating conditions. Execution only continues if the condition (like checking device availability/state) is met. :bulb: 
+
+**Pro-Tip:** This allows you to use unpowered Smart Switches as conditional inputs for your automation flow!
+__Future Roadmap:__ Upcoming updates will feature even more triggers, advanced conditions, and cloud sharing to easily distribute rules within your team!
+
+**:map: 2. Teammate Overlay Subscriptions & Left Dock :busts_in_silhouette:**
+Managing your team's live map views is now easier than ever:
+
+The new Subscription Dock is placed on the left side of the map sidebar.
+- Visual Feeds: Pulse-glow indicators show active teammate map subscriptions.
+- Quick Interactions: Updates will come via Live-Feed, Screenshots for Bases are now correctly shared and you can  subscribe to up to 5 Teammates at a time. 
+- Hover Subscription Dock to quickly unsubscribe, and access the map drawing overlay mode.
+
+**:chart_with_downwards_trend: 3. Adaptive Polling & Egress Optimization :zap:**
+Massive traffic reduction for both the client and servers:
+
+- Replaced static 3-second polling with an intelligent back-off strategy and Live Feeds
+
+**:camera_with_flash: 4. Base Screenshot Indicators & Permission Fixes :european_castle:**
+Improved base management on the map overlay:
+
+- Screenshot Indicators: Bases on the map overlay that have screenshots attached now feature small visual indicators, allowing you to instantly identify which bases have uploaded references at a glance.
+- Permissions Fix: Fixed a permission bug that was preventing team members from viewing screenshots uploaded to bases by their teammates.
+
 # ⚙️ **RUST+ DESKTOP UPDATE — VERSION v6.3.0** ⚙️
 
 A new update is here! This release brings long-awaited live camera & turret controls directly to your desktop, modernizes smart device management, and ensures maximum layout flexibility for all screen resolutions.
