@@ -360,6 +360,7 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
             {
                 RemoveDeviceAndChildrenFromHotkeys(dev);
                 RemoveDeviceFromHierarchy(_vm.Selected.Devices, dev);
+                _vm.Selected.NotifyFlatDevicesChanged();
                 _vm.NotifyDevicesChanged();
                 _vm.Save();
                 AppendLog($"Device #{dev.EntityId} removed.");

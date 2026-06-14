@@ -99,7 +99,7 @@
                                          <!-- Trigger Details -->
                                          <!-- If Alarm -->
                                          <ComboBox x:Name="CmbTriggerDeviceAlarm" Width="200" Margin="0,0,8,4"
-                                                   ItemsSource="{Binding DataContext.Selected.Devices, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource DeviceFilterConverter}, ConverterParameter=SmartAlarm}"
+                                                   ItemsSource="{Binding DataContext.Selected.FlatDevices, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource DeviceFilterConverter}, ConverterParameter=SmartAlarm}"
                                                    SelectedValue="{Binding TriggerEntityId, Mode=TwoWay}"
                                                    SelectedValuePath="EntityId" DisplayMemberPath="DisplayName">
                                              <ComboBox.Style>
@@ -116,7 +116,7 @@
 
                                          <!-- If Switch -->
                                          <ComboBox x:Name="CmbTriggerDeviceSwitch" Width="200" Margin="0,0,8,4"
-                                                   ItemsSource="{Binding DataContext.Selected.Devices, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource DeviceFilterConverter}, ConverterParameter=SmartSwitch}"
+                                                   ItemsSource="{Binding DataContext.Selected.FlatDevices, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource DeviceFilterConverter}, ConverterParameter=SmartSwitch}"
                                                    SelectedValue="{Binding TriggerEntityId, Mode=TwoWay}"
                                                    SelectedValuePath="EntityId" DisplayMemberPath="DisplayName">
                                              <ComboBox.Style>
@@ -199,7 +199,7 @@
                                          </ComboBox>
  
                                          <ComboBox x:Name="CmbConditionDevice" Width="200" Margin="0,0,8,4"
-                                                   ItemsSource="{Binding DataContext.Selected.Devices, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource DeviceFilterConverter}, ConverterParameter=SmartSwitch}"
+                                                   ItemsSource="{Binding DataContext.Selected.FlatDevices, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource DeviceFilterConverter}, ConverterParameter=SmartSwitch}"
                                                    SelectedValue="{Binding ConditionDeviceEntityId, Mode=TwoWay}"
                                                    SelectedValuePath="EntityId" DisplayMemberPath="DisplayName">
                                              <ComboBox.Style>
@@ -294,7 +294,7 @@
                                                                     </StackPanel.Style>
                                                                     <!-- Switches or Group Selector -->
                                                                     <ComboBox x:Name="CmbToggleDevice" Width="150" Margin="0,0,4,0"
-                                                                              ItemsSource="{Binding DataContext.Selected.Devices, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                              ItemsSource="{Binding DataContext.Selected.FlatDevices, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                               SelectedValue="{Binding TargetEntityId, Mode=TwoWay}"
                                                                               SelectedValuePath="EntityId" DisplayMemberPath="DisplayName"/>
                                                                     <ui:TextBox Text="{Binding TargetGroupName, Mode=TwoWay}" Width="100" Margin="0,0,4,0" PlaceholderText="or Group Name"/>
@@ -327,7 +327,7 @@
                                                                         </Style>
                                                                     </StackPanel.Style>
                                                                     <ComboBox x:Name="CmbAvailabilityDevice" Width="150" Margin="0,0,4,0"
-                                                                              ItemsSource="{Binding DataContext.Selected.Devices, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                              ItemsSource="{Binding DataContext.Selected.FlatDevices, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                               SelectedValue="{Binding TargetEntityId, Mode=TwoWay}"
                                                                               SelectedValuePath="EntityId" DisplayMemberPath="DisplayName"/>
                                                                     <ComboBox SelectedValue="{Binding ConditionOperator, Mode=TwoWay}" SelectedValuePath="Tag" Width="120">
@@ -372,7 +372,7 @@
                                                                                 
                                                                                 <ui:TextBox Text="{Binding WaitSeconds, Mode=TwoWay}" Width="50" PlaceholderText="Secs" Visibility="Visible"/>
                                                                                 <ComboBox SelectedValue="{Binding TargetEntityId, Mode=TwoWay}" Width="120" Margin="4,0,4,0"
-                                                                                          ItemsSource="{Binding DataContext.Selected.Devices, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                                          ItemsSource="{Binding DataContext.Selected.FlatDevices, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                                           SelectedValuePath="EntityId" DisplayMemberPath="DisplayName" x:Name="CmbNestedToggleDevice"/>
                                                                                 <ComboBox SelectedValue="{Binding ToggleState, Mode=TwoWay}" SelectedValuePath="Tag" Width="90">
                                                                                     <ComboBoxItem Content="Toggle" Tag="{x:Null}"/>

@@ -86,6 +86,7 @@ public class ServerProfile : INotifyPropertyChanged
     private void Devices_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         NotifySmartSwitchesChanged();
+        NotifyFlatDevicesChanged();
     }
 
     public void GroupDevices(System.Collections.Generic.IEnumerable<SmartDevice> toRemove, SmartDevice newGroup)
@@ -499,6 +500,36 @@ public class ServerProfile : INotifyPropertyChanged
     {
         get => _subscribedTeammateSteamIds;
         set { _subscribedTeammateSteamIds = value ?? new(); OnProp(); }
+    }
+
+    [JsonIgnore]
+    public List<SmartDevice> FlatDevices
+    {
+        get
+        {
+            var result = new List<SmartDevice>();
+            FlattenDevicesRecursive(_devices, result);
+            return result;
+        }
+    }
+
+    private void FlattenDevicesRecursive(IEnumerable<SmartDevice> source, List<SmartDevice> dest)
+    {
+        if (source == null) return;
+        foreach (var d in source)
+        {
+            if (d == null) continue;
+            dest.Add(d);
+            if (d.Children != null)
+            {
+                FlattenDevicesRecursive(d.Children, dest);
+            }
+        }
+    }
+
+    public void NotifyFlatDevicesChanged()
+    {
+        OnProp(nameof(FlatDevices));
     }
 }
 
