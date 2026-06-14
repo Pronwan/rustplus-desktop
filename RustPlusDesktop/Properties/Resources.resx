@@ -1186,6 +1186,18 @@ Download and install now?</value>
   <data name="OilRigCommand" xml:space="preserve">
     <value>Oil Rig:</value>
   </data>
+  <data name="ShopCommand" xml:space="preserve">
+    <value>Shop Search:</value>
+  </data>
+  <data name="SmallOilRigCommand" xml:space="preserve">
+    <value>Small Oil Rig:</value>
+  </data>
+  <data name="LargeOilRigCommand" xml:space="preserve">
+    <value>Large Oil Rig:</value>
+  </data>
+  <data name="PlayerPositionCommand" xml:space="preserve">
+    <value>Player Position:</value>
+  </data>
   <data name="PatrolHeliCommand" xml:space="preserve">
     <value>Patrol Heli:</value>
   </data>
@@ -1197,6 +1209,9 @@ Download and install now?</value>
   </data>
   <data name="CommandDelay" xml:space="preserve">
     <value>Command Delay:</value>
+  </data>
+  <data name="AfkThreshold" xml:space="preserve">
+    <value>AFK after (min):</value>
   </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>
@@ -1502,10 +1517,10 @@ Download and install now?</value>
     <value>Deep Sea is up</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
-    <value>New shop {0} [{1}]: {2}</value>
+    <value>:vending.machine: New shop {0} [{1}]: {2}</value>
   </data>
   <data name="AlertSuspiciousShop" xml:space="preserve">
-    <value>Suspicious shop {0} [{1}] was online {2}s, sold {3}</value>
+    <value>:vending.machine: Suspicious shop {0} [{1}] was online {2}s, sold {3}</value>
   </data>
   <data name="AlertCargoSpawned" xml:space="preserve">
     <value>Cargo Ship spawned {0}</value>
@@ -1541,10 +1556,34 @@ Download and install now?</value>
     <value>{0} went offline</value>
   </data>
   <data name="AlertPlayerDied" xml:space="preserve">
-    <value>{0} died @ {1}</value>
+    <value>:skull: {0} died @ {1}</value>
   </data>
   <data name="AlertPlayerRespawned" xml:space="preserve">
     <value>{0} respawned @ {1}</value>
+  </data>
+  <data name="AlertPlayerJoinedTeam" xml:space="preserve">
+    <value>:wave: {0} joined the team</value>
+  </data>
+  <data name="AlertPlayerLeftTeam" xml:space="preserve">
+    <value>:wave: {0} left the team</value>
+  </data>
+  <data name="AlertPlayerAfk" xml:space="preserve">
+    <value>{0} is now AFK (idle {1})</value>
+  </data>
+  <data name="AlertPlayerAfkBack" xml:space="preserve">
+    <value>{0} is back (was AFK for {1})</value>
+  </data>
+  <data name="AlertPlayerAfkBackName" xml:space="preserve">
+    <value>Player Back From AFK</value>
+  </data>
+  <data name="AlertPlayerAfkBackDesc" xml:space="preserve">
+    <value>Sent when a team member returns after being AFK.</value>
+  </data>
+  <data name="AlertPlayerAfkBackVars" xml:space="preserve">
+    <value>{0}: Player Name, {1}: AFK duration</value>
+  </data>
+  <data name="AlertPlayerOfflineDuration" xml:space="preserve">
+    <value>(was offline {0})</value>
   </data>
   <data name="AlertTrackingOnline" xml:space="preserve">
     <value>[Tracking] {0}{1} is now ONLINE</value>
@@ -1565,7 +1604,7 @@ Download and install now?</value>
     <value>Shop</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
-    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) for {6} {7}</value>
+    <value>:vending.machine: {0} [{1}] {2} x{3} {4} (Stock {5}) for {6} {7}</value>
   </data>
   <data name="ListCommandsCommand" xml:space="preserve">
     <value>List Chat Commands</value>
@@ -2583,6 +2622,27 @@ Are you sure you want to continue?</value>
   <data name="ChatCmdNoOneAfk" xml:space="preserve">
     <value>No one is AFK.</value>
   </data>
+  <data name="ChatCmdShopUsage" xml:space="preserve">
+    <value>Usage: {0} &lt;item name&gt; — searches the map's shops for an item.</value>
+  </data>
+  <data name="ChatCmdShopNoShopsLoaded" xml:space="preserve">
+    <value>No shop data loaded yet. Enable shop polling on the map first.</value>
+  </data>
+  <data name="ChatCmdShopNoMatch" xml:space="preserve">
+    <value>No shops are selling '{0}'.</value>
+  </data>
+  <data name="ChatCmdPosUsage" xml:space="preserve">
+    <value>Usage: {0} &lt;player name&gt;</value>
+  </data>
+  <data name="ChatCmdPosNotFound" xml:space="preserve">
+    <value>No teammate matching '{0}'.</value>
+  </data>
+  <data name="ChatCmdPosResponse" xml:space="preserve">
+    <value>{0} is at {1}</value>
+  </data>
+  <data name="ChatCmdPosNoLocation" xml:space="preserve">
+    <value>No location known for {0}.</value>
+  </data>
   <data name="AlertPlayerAfkName" xml:space="preserve">
     <value>Player AFK</value>
   </data>
@@ -2591,5 +2651,23 @@ Are you sure you want to continue?</value>
   </data>
   <data name="AlertPlayerAfkVars" xml:space="preserve">
     <value>{0}: Player Name, {1}: Time</value>
+  </data>
+  <data name="AlertPlayerJoinedTeamName" xml:space="preserve">
+    <value>Player Joined Team</value>
+  </data>
+  <data name="AlertPlayerJoinedTeamDesc" xml:space="preserve">
+    <value>Sent when a new player joins your team.</value>
+  </data>
+  <data name="AlertPlayerJoinedTeamVars" xml:space="preserve">
+    <value>{0}: Player Name</value>
+  </data>
+  <data name="AlertPlayerLeftTeamName" xml:space="preserve">
+    <value>Player Left Team</value>
+  </data>
+  <data name="AlertPlayerLeftTeamDesc" xml:space="preserve">
+    <value>Sent when a player leaves your team.</value>
+  </data>
+  <data name="AlertPlayerLeftTeamVars" xml:space="preserve">
+    <value>{0}: Player Name</value>
   </data>
 </root>

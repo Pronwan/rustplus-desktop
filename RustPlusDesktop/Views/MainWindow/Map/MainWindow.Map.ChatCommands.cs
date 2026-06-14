@@ -42,15 +42,7 @@ public partial class MainWindow
 
     private async Task SendChatCommandResponseAsync(string text)
     {
-        var profile = _vm.Selected;
-        if (profile != null)
-        {
-            int delayMs = (int)(profile.ChatResponseDelaySeconds * 1000);
-            if (delayMs > 0)
-            {
-                await Task.Delay(delayMs);
-            }
-        }
+        // respond instantly (no pre-send delay)
         await SendTeamChatSafeAsync(text, bypassChatAlertMasterBlock: true);
     }
 
@@ -94,8 +86,12 @@ public partial class MainWindow
             if (!string.IsNullOrWhiteSpace(profile.CmdDeepSea)) standardCmds.Add(prefix + profile.CmdDeepSea);
             if (!string.IsNullOrWhiteSpace(profile.CmdCargo)) standardCmds.Add(prefix + profile.CmdCargo);
             if (!string.IsNullOrWhiteSpace(profile.CmdOilRig)) standardCmds.Add(prefix + profile.CmdOilRig);
+            if (!string.IsNullOrWhiteSpace(profile.CmdSmall)) standardCmds.Add(prefix + profile.CmdSmall);
+            if (!string.IsNullOrWhiteSpace(profile.CmdLarge)) standardCmds.Add(prefix + profile.CmdLarge);
+            if (!string.IsNullOrWhiteSpace(profile.CmdPos)) standardCmds.Add(prefix + profile.CmdPos);
             if (!string.IsNullOrWhiteSpace(profile.CmdHeli)) standardCmds.Add(prefix + profile.CmdHeli);
             if (!string.IsNullOrWhiteSpace(profile.CmdVendor)) standardCmds.Add(prefix + profile.CmdVendor);
+            if (!string.IsNullOrWhiteSpace(profile.CmdShop)) standardCmds.Add(prefix + profile.CmdShop);
             if (!string.IsNullOrWhiteSpace(profile.CmdUpkeepDetail)) standardCmds.Add(prefix + profile.CmdUpkeepDetail);
             if (!string.IsNullOrWhiteSpace(profile.CmdAfk)) standardCmds.Add(prefix + profile.CmdAfk);
 
@@ -171,6 +167,26 @@ public partial class MainWindow
             return;
         }
 
+        // Command: Shop Search (e.g. "!shop rifle")
+        if (!string.IsNullOrWhiteSpace(profile.CmdShop))
+        {
+            var shopCmd = profile.CmdShop.ToLowerInvariant();
+            if (cmd == shopCmd)
+            {
+                var usage = Properties.Resources.ResourceManager.GetString("ChatCmdShopUsage")
+                            ?? "Usage: {0} <item name> — searches the map's shops for an item.";
+                _ = SendChatCommandResponseAsync(string.Format(usage, prefix + shopCmd));
+                AppendLog($"[ChatCommand] Shop (no query) executed by {m.Author}");
+                return;
+            }
+            if (cmd.StartsWith(shopCmd + " "))
+            {
+                var query = cmd.Substring(shopCmd.Length + 1).Trim();
+                await ProcessShopSearchCommand(query, m.Author);
+                return;
+            }
+        }
+
         // Command: AFK
         if (!string.IsNullOrWhiteSpace(profile.CmdAfk) && cmd == profile.CmdAfk.ToLowerInvariant())
         {
@@ -198,6 +214,8 @@ public partial class MainWindow
         }
 
         // Command: Promote
+        // No leader check needed: if the app's account isn't the team leader, Rust+ just
+        // ignores the request (nothing happens), so we keep this simple.
         if (cmd == profile.CmdPromote.ToLowerInvariant())
         {
             _ = real.PromoteToLeaderAsync(m.SteamId);
@@ -293,34 +311,49 @@ public partial class MainWindow
             return;
         }
 
-        // Command: Oil Rig
+        // Command: Oil Rig (both rigs)
         if (cmd == profile.CmdOilRig.ToLowerInvariant())
         {
-            var parts = new List<string>();
-            foreach (var rigName in new[] { "Small Oil Rig", "Large Oil Rig" })
-            {
-                var timeLeft = _monumentWatcher.GetActiveEventTimeLeft(rigName);
-                if (timeLeft.HasValue)
-                {
-                    parts.Add(string.Format(Properties.Resources.ChatCmdOilRigCrateIn, rigName, (int)timeLeft.Value.TotalMinutes, timeLeft.Value.Seconds));
-                }
-                else
-                {
-                    var lastTrig = _monumentWatcher.GetLastTriggered(rigName);
-                    if (lastTrig.HasValue)
-                    {
-                        var ago = DateTime.UtcNow - lastTrig.Value;
-                        parts.Add(string.Format(Properties.Resources.ChatCmdOilRigLastCalledAgo, rigName, (int)ago.TotalMinutes));
-                    }
-                    else
-                    {
-                        parts.Add(string.Format(Properties.Resources.ChatCmdOilRigNotCalled, rigName));
-                    }
-                }
-            }
+            var parts = new[] { "Small Oil Rig", "Large Oil Rig" }.Select(BuildSingleRigStatus).ToList();
             _ = SendChatCommandResponseAsync(string.Join(" | ", parts));
             AppendLog($"[ChatCommand] OilRig executed by {m.Author}");
             return;
+        }
+
+        // Command: Small Oil Rig
+        if (!string.IsNullOrWhiteSpace(profile.CmdSmall) && cmd == profile.CmdSmall.ToLowerInvariant())
+        {
+            _ = SendChatCommandResponseAsync(BuildSingleRigStatus("Small Oil Rig"));
+            AppendLog($"[ChatCommand] Small Oil Rig executed by {m.Author}");
+            return;
+        }
+
+        // Command: Large Oil Rig
+        if (!string.IsNullOrWhiteSpace(profile.CmdLarge) && cmd == profile.CmdLarge.ToLowerInvariant())
+        {
+            _ = SendChatCommandResponseAsync(BuildSingleRigStatus("Large Oil Rig"));
+            AppendLog($"[ChatCommand] Large Oil Rig executed by {m.Author}");
+            return;
+        }
+
+        // Command: Player Position (e.g. "!pos john")
+        if (!string.IsNullOrWhiteSpace(profile.CmdPos))
+        {
+            var posCmd = profile.CmdPos.ToLowerInvariant();
+            if (cmd == posCmd)
+            {
+                var usage = Properties.Resources.ResourceManager.GetString("ChatCmdPosUsage")
+                            ?? "Usage: {0} <player name>";
+                _ = SendChatCommandResponseAsync(string.Format(usage, prefix + posCmd));
+                AppendLog($"[ChatCommand] Pos (no name) executed by {m.Author}");
+                return;
+            }
+            if (cmd.StartsWith(posCmd + " "))
+            {
+                var who = cmd.Substring(posCmd.Length + 1).Trim();
+                ProcessPlayerPosCommand(who, m.Author);
+                return;
+            }
         }
 
         // Command: Patrol Heli
@@ -692,6 +725,130 @@ public partial class MainWindow
             }
             AppendLog($"[ChatCommand] Multi-Upkeep for cmd={cmd} executed by {m.Author}");
             return;
+        }
+    }
+
+    private async Task ProcessShopSearchCommand(string query, string author)
+    {
+        if (string.IsNullOrWhiteSpace(query)) return;
+
+        var shops = GetLastShopsList();
+        if (shops == null || shops.Count == 0)
+        {
+            var noShops = Properties.Resources.ResourceManager.GetString("ChatCmdShopNoShopsLoaded")
+                          ?? "No shop data loaded yet. Enable shop polling on the map first.";
+            _ = SendChatCommandResponseAsync(noShops);
+            AppendLog($"[ChatCommand] Shop '{query}' requested by {author} but no shops loaded");
+            return;
+        }
+
+        // collect matching sell orders
+        var matches = new List<(string Grid, string Line, int Stock, double UnitPrice)>();
+        foreach (var s in shops)
+        {
+            if (s.Orders == null) continue;
+            foreach (var o in s.Orders)
+            {
+                string itemName = ResolveItemName(o.ItemId, o.ItemShortName);
+                bool nameHit = itemName.Contains(query, StringComparison.OrdinalIgnoreCase)
+                               || (o.ItemShortName != null && o.ItemShortName.Contains(query, StringComparison.OrdinalIgnoreCase));
+                if (!nameHit) continue;
+
+                string grid = GetGridLabel(s);
+                string currName = ResolveItemName(o.CurrencyItemId, o.CurrencyShortName);
+                string qtyPart = o.Quantity > 1 ? $"x{o.Quantity} " : "";
+                string stockPart = o.Stock <= 0 ? " (out)" : $" ({o.Stock} left)";
+                string line = $"{grid}: {qtyPart}{itemName} → {o.CurrencyAmount} {currName}{stockPart}";
+                double unitPrice = (double)o.CurrencyAmount / Math.Max(1, o.Quantity);
+                matches.Add((grid, line, o.Stock, unitPrice));
+            }
+        }
+
+        if (matches.Count == 0)
+        {
+            var none = Properties.Resources.ResourceManager.GetString("ChatCmdShopNoMatch")
+                       ?? "No shops are selling '{0}'.";
+            _ = SendChatCommandResponseAsync(string.Format(none, query));
+            AppendLog($"[ChatCommand] Shop '{query}' by {author}: no matches");
+            return;
+        }
+
+        // in-stock first, then cheapest per unit
+        var ordered = matches
+            .OrderByDescending(x => x.Stock > 0)
+            .ThenBy(x => x.UnitPrice)
+            .Select(x => x.Line)
+            .ToList();
+
+        // one message per command to avoid API flooding; pack best results into ~128 chars
+        var sb = new System.Text.StringBuilder();
+        int shown = 0;
+        foreach (var line in ordered)
+        {
+            string piece = sb.Length == 0 ? line : " | " + line;
+            if (sb.Length + piece.Length > 120 && sb.Length > 0) break;
+            sb.Append(piece);
+            shown++;
+        }
+        int omitted = matches.Count - shown;
+        if (omitted > 0) sb.Append($" (+{omitted})");
+
+        await SendChatCommandResponseAsync(sb.ToString());
+        AppendLog($"[ChatCommand] Shop '{query}' by {author}: {matches.Count} match(es), showed {shown} in 1 msg");
+    }
+
+    // single oil rig status line
+    private string BuildSingleRigStatus(string rigName)
+    {
+        var timeLeft = _monumentWatcher.GetActiveEventTimeLeft(rigName);
+        if (timeLeft.HasValue)
+            return string.Format(Properties.Resources.ChatCmdOilRigCrateIn, rigName, (int)timeLeft.Value.TotalMinutes, timeLeft.Value.Seconds);
+
+        var lastTrig = _monumentWatcher.GetLastTriggered(rigName);
+        if (lastTrig.HasValue)
+        {
+            var ago = DateTime.UtcNow - lastTrig.Value;
+            return string.Format(Properties.Resources.ChatCmdOilRigLastCalledAgo, rigName, (int)ago.TotalMinutes);
+        }
+        return string.Format(Properties.Resources.ChatCmdOilRigNotCalled, rigName);
+    }
+
+    private void ProcessPlayerPosCommand(string who, string author)
+    {
+        if (string.IsNullOrWhiteSpace(who)) return;
+
+        // match teammate by name (exact first, then partial)
+        var member = TeamMembers.FirstOrDefault(t => string.Equals(t.Name, who, StringComparison.OrdinalIgnoreCase))
+                     ?? TeamMembers.FirstOrDefault(t => !string.IsNullOrEmpty(t.Name) && t.Name.Contains(who, StringComparison.OrdinalIgnoreCase));
+
+        if (member == null)
+        {
+            var notFound = Properties.Resources.ResourceManager.GetString("ChatCmdPosNotFound")
+                           ?? "No teammate matching '{0}'.";
+            _ = SendChatCommandResponseAsync(string.Format(notFound, who));
+            AppendLog($"[ChatCommand] Pos '{who}' by {author}: no match");
+            return;
+        }
+
+        double? px = member.X, py = member.Y;
+        if ((!px.HasValue || !py.HasValue) && TryResolvePosFromDynMarkers(member.SteamId, out var dx, out var dy))
+        {
+            px = dx;
+            py = dy;
+        }
+
+        var dispName = GetDisplayPlayerName(member.Name);
+        if (px.HasValue && py.HasValue)
+        {
+            var resp = Properties.Resources.ResourceManager.GetString("ChatCmdPosResponse") ?? "{0} is at {1}";
+            _ = SendChatCommandResponseAsync(string.Format(resp, dispName, GetGridLabel(px.Value, py.Value)));
+            AppendLog($"[ChatCommand] Pos '{who}' by {author}: {member.Name} located");
+        }
+        else
+        {
+            var noLoc = Properties.Resources.ResourceManager.GetString("ChatCmdPosNoLocation") ?? "No location known for {0}.";
+            _ = SendChatCommandResponseAsync(string.Format(noLoc, dispName));
+            AppendLog($"[ChatCommand] Pos '{who}' by {author}: {member.Name} no location");
         }
     }
 

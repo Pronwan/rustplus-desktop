@@ -94,8 +94,19 @@ public partial class MainWindow
     }
 
     // ====== CORE SENDING ======
-    
+
     private readonly HashSet<string> _recentAutomatedMessages = new();
+
+    // strip leading emoji/shortcodes so Rust's emoji-converted echo still confirms
+    private static readonly System.Text.RegularExpressions.Regex _leadingEmojiOrShortcode =
+        new(@"^(?:\s|:[A-Za-z0-9_+\-]+:|[\p{So}\p{Sk}\p{Cs}\uFE0F\u200D])+",
+            System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    private static string NormalizeChatTextForConfirm(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return string.Empty;
+        return _leadingEmojiOrShortcode.Replace(text.Trim(), "").Trim();
+    }
 
     private async Task SendTeamChatSafeAsync(string text, bool bypassChatAlertMasterBlock = false, bool skipDiscordChatForwarding = false)
     {
@@ -149,8 +160,8 @@ public partial class MainWindow
 
         AppendLog($"[Chat] Sending: {text}");
         
-        // Füge die Nachricht zu unseren ausstehenden Bestätigungen hinzu
-        string trackKey = $"{text.Trim()}_{DateTime.UtcNow:HHmmss}";
+        // Füge die Nachricht zu unseren ausstehenden Bestätigungen hinzu (normalized for emoji echo)
+        string trackKey = $"{NormalizeChatTextForConfirm(text)}_{DateTime.UtcNow:HHmmss}";
         lock (_pendingChatConfirms) { _pendingChatConfirms.Add(trackKey); }
 
         try
@@ -221,7 +232,8 @@ public partial class MainWindow
     {
         lock (_pendingChatConfirms)
         {
-            var match = _pendingChatConfirms.FirstOrDefault(k => k.StartsWith(m.Text.Trim() + "_"));
+            var echoKey = NormalizeChatTextForConfirm(m.Text);
+            var match = _pendingChatConfirms.FirstOrDefault(k => k.StartsWith(echoKey + "_"));
             if (match != null)
             {
                 _pendingChatConfirms.Remove(match);

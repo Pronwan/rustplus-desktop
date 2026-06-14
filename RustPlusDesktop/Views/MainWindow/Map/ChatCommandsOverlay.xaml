@@ -66,6 +66,22 @@
                                 </ComboBox>
                             </Grid>
                         </Grid>
+                        <Grid Margin="0,10,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{DynamicResource AfkThreshold}" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                            <ComboBox Grid.Column="1" SelectedValue="{Binding AfkThresholdMinutes}" SelectedValuePath="Content" Width="70" HorizontalContentAlignment="Center" VerticalAlignment="Center">
+                                <ComboBoxItem Content="2" />
+                                <ComboBoxItem Content="3" />
+                                <ComboBoxItem Content="5" />
+                                <ComboBoxItem Content="10" />
+                                <ComboBoxItem Content="15" />
+                                <ComboBoxItem Content="20" />
+                                <ComboBoxItem Content="30" />
+                            </ComboBox>
+                        </Grid>
                     </StackPanel>
                     <Border x:Name="ChatCommandsMasterWarning"
                             Visibility="Collapsed"
@@ -91,6 +107,10 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                              <Grid.RowDefinitions>
+                                 <RowDefinition Height="Auto" />
+                                 <RowDefinition Height="Auto" />
+                                 <RowDefinition Height="Auto" />
+                                 <RowDefinition Height="Auto" />
                                  <RowDefinition Height="Auto" />
                                  <RowDefinition Height="Auto" />
                                  <RowDefinition Height="Auto" />
@@ -154,10 +174,30 @@
                              <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
                              <ui:TextBox Grid.Row="9" Grid.Column="2" Text="{Binding CmdAfk}" Margin="0,4" VerticalAlignment="Center" />
 
-                             <!-- List Commands -->
-                             <TextBlock Grid.Row="10" Text="{DynamicResource ListCommandsCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                             <!-- Shop Search -->
+                             <TextBlock Grid.Row="10" Text="{DynamicResource ShopCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
                              <TextBlock Grid.Row="10" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
-                             <ui:TextBox Grid.Row="10" Grid.Column="2" Text="{Binding CmdList}" Margin="0,4" VerticalAlignment="Center" />
+                             <ui:TextBox Grid.Row="10" Grid.Column="2" Text="{Binding CmdShop}" Margin="0,4" VerticalAlignment="Center" />
+
+                             <!-- Small Oil Rig -->
+                             <TextBlock Grid.Row="11" Text="{DynamicResource SmallOilRigCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                             <TextBlock Grid.Row="11" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                             <ui:TextBox Grid.Row="11" Grid.Column="2" Text="{Binding CmdSmall}" Margin="0,4" VerticalAlignment="Center" />
+
+                             <!-- Large Oil Rig -->
+                             <TextBlock Grid.Row="12" Text="{DynamicResource LargeOilRigCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                             <TextBlock Grid.Row="12" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                             <ui:TextBox Grid.Row="12" Grid.Column="2" Text="{Binding CmdLarge}" Margin="0,4" VerticalAlignment="Center" />
+
+                             <!-- Player Position -->
+                             <TextBlock Grid.Row="13" Text="{DynamicResource PlayerPositionCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                             <TextBlock Grid.Row="13" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                             <ui:TextBox Grid.Row="13" Grid.Column="2" Text="{Binding CmdPos}" Margin="0,4" VerticalAlignment="Center" />
+
+                             <!-- List Commands -->
+                             <TextBlock Grid.Row="14" Text="{DynamicResource ListCommandsCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                             <TextBlock Grid.Row="14" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                             <ui:TextBox Grid.Row="14" Grid.Column="2" Text="{Binding CmdList}" Margin="0,4" VerticalAlignment="Center" />
                          </Grid>
                      </Border>
 
