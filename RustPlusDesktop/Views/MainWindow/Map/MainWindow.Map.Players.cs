@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using RustPlusDesk.Services;
 using Path = System.Windows.Shapes.Path;
@@ -566,6 +567,9 @@ public partial class MainWindow
         foreach (var fe in _deathPins.Values)
             ApplyCurrentOverlayScale(fe);
 
+        foreach (var fe in _teamNotesEls.Values)
+            ApplyCurrentOverlayScale(fe);
+
         RefreshShopIconScales();
     }
 
@@ -998,5 +1002,412 @@ public partial class MainWindow
         _playerMarkerScale = TrackingService.MapPlayerIconScale;
         if (SliderPlayerIconSize != null) SliderPlayerIconSize.Value = _playerMarkerScale;
         RefreshAllOverlayScales();
+    }
+
+    private static string GetMapNoteIcon(int type)
+    {
+        return type switch
+        {
+            0 => "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_scope.png", // Waypoint
+            1 => "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_dollar.png", // Dollar
+            2 => "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_home.png", // Home
+            3 => "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_parachute.png", // Parachute
+            4 => "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_scope.png", // Sight/Scope
+            5 => "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_shield.png", // Shield
+            6 => "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_skull.png", // Skull
+            7 => "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_sleep.png", // Bed
+            8 => "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_zzz.png", // Sleep / Zzz
+            9 => "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_gun.png", // Gun
+            10 => "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_rock.png", // Rock
+            11 => "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_loot.png", // Chest/Loot
+            _ => "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_scope.png"
+        };
+    }
+
+    private static string GetMapNoteName(int type)
+    {
+        return type switch
+        {
+            0 => "Waypoint",
+            1 => "Shop",
+            2 => "Home",
+            3 => "Parachute",
+            4 => "Scope",
+            5 => "Shield",
+            6 => "Skull",
+            7 => "Bed",
+            8 => "Zzz",
+            9 => "Gun",
+            10 => "Rock",
+            11 => "Loot",
+            _ => "Marker"
+        };
+    }
+
+    private static Brush GetNoteColorBrush(int colorIndex)
+    {
+        Color color = colorIndex switch
+        {
+            0 => Color.FromRgb(0xCD, 0xD0, 0x54), // Gold
+            1 => Color.FromRgb(0x2F, 0x71, 0xC4), // Blue
+            2 => Color.FromRgb(0x76, 0xA7, 0x39), // Green
+            3 => Color.FromRgb(0xBD, 0x38, 0x38), // Red
+            4 => Color.FromRgb(0xB6, 0x5C, 0xC4), // Purple
+            5 => Color.FromRgb(0x06, 0xED, 0xC2), // Teal/Cyan
+            _ => Color.FromRgb(0xCD, 0xD0, 0x54)  // Default Gold
+        };
+        var brush = new SolidColorBrush(color);
+        brush.Freeze();
+        return brush;
+    }
+
+    private static Brush GetNoteDarkColorBrush(int colorIndex)
+    {
+        Color color = colorIndex switch
+        {
+            0 => Color.FromRgb(0x45, 0x45, 0x19), // Dark Yellow
+            1 => Color.FromRgb(0x11, 0x24, 0x3F), // Dark Blue
+            2 => Color.FromRgb(0x24, 0x34, 0x10), // Dark Green
+            3 => Color.FromRgb(0x3B, 0x12, 0x0F), // Dark Red
+            4 => Color.FromRgb(0x37, 0x1B, 0x3B), // Dark Purple
+            5 => Color.FromRgb(0x09, 0x4B, 0x3B), // Dark Teal/Green
+            _ => Color.FromRgb(0x45, 0x45, 0x19)  // Default Dark Yellow
+        };
+        var brush = new SolidColorBrush(color);
+        brush.Freeze();
+        return brush;
+    }
+
+    private bool ShouldShowNote(RustPlusClientReal.TeamInfo.MapNote note, ulong ownerSteamId, RustPlusClientReal.TeamInfo team)
+    {
+        // Always hide Type 0 notes (waypoints / death markers)
+        if (note.Type == 0)
+        {
+            return false;
+        }
+
+        // Check if this is a death marker from the API (which can come as Type 0/1 but matches a known death location of this owner)
+        if (ownerSteamId != 0)
+        {
+            var owner = TeamMembers.FirstOrDefault(t => t.SteamId == ownerSteamId);
+            if (owner != null)
+            {
+                // 1. Check if it matches the current owner's corpse position if they are currently dead
+                if (owner.IsDead && owner.X.HasValue && owner.Y.HasValue)
+                {
+                    double dx = owner.X.Value - note.X;
+                    double dy = owner.Y.Value - note.Y;
+                    double distSq = dx * dx + dy * dy;
+                    if (distSq < 25.0) // within 5 meters threshold
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // 2. Check if it matches any saved death marker of the owner
+            if (_vm?.Selected?.DeathMarkers != null)
+            {
+                foreach (var dm in _vm.Selected.DeathMarkers)
+                {
+                    if (dm.SteamId == ownerSteamId)
+                    {
+                        double dx = dm.X - note.X;
+                        double dy = dm.Y - note.Y;
+                        double distSq = dx * dx + dy * dy;
+                        if (distSq < 25.0) // within 5 meters threshold
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Filter out death markers and other game-generated notes from in-game map notes.
+        // Type 0 is Waypoint, Type 1 is player custom notes. Type >= 2 are game-generated notes (Death/POI/Missions).
+        // Icon == 6 is the Skull icon, which is used for death markers.
+        // Also match labels like "Death" or localized equivalents.
+        if (note.Type >= 2 || note.Icon == 6)
+        {
+            return false;
+        }
+
+        string? label = note.Label;
+        if (!string.IsNullOrWhiteSpace(label))
+        {
+            string trimmedLabel = label.Trim();
+            if (trimmedLabel.IndexOf("Death", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return false;
+            }
+            try
+            {
+                string? localizedDeath = Properties.Resources.Death;
+                if (!string.IsNullOrEmpty(localizedDeath) && trimmedLabel.IndexOf(localizedDeath.Trim(), StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return false;
+                }
+            }
+            catch { }
+        }
+
+        // Filter based on the owner's ShowMarkers flag
+        if (ownerSteamId != 0)
+        {
+            var owner = TeamMembers.FirstOrDefault(t => t.SteamId == ownerSteamId);
+            if (owner != null)
+            {
+                return owner.ShowMarkers;
+            }
+        }
+
+        return true;
+    }
+
+    private FrameworkElement BuildTeamNoteMarker(int noteType, int iconType, int colorIndex, string label, ulong ownerSteamId, bool isLeader)
+    {
+        var stackPanel = new StackPanel
+        {
+            Width = 200,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Tag = new PlayerMarkerTag
+            {
+                Radius = 14.0,
+                ScaleExp = 0.85,
+                ScaleBaseMult = 1.0,
+                ScaleTarget = null,
+                ScaleCenterX = 100.0,
+                ScaleCenterY = 14.0
+            }
+        };
+
+        var grid = new Grid
+        {
+            Width = 28,
+            Height = 28,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+
+        if (noteType == 0 || iconType == 0) // Waypoint (Pin) or Custom Note with default pin icon
+        {
+            try
+            {
+                var bgBrush = GetNoteColorBrush(colorIndex);
+                var pinBg = new Border
+                {
+                    Width = 28,
+                    Height = 28,
+                    Background = bgBrush,
+                    OpacityMask = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmappinbg.png")))
+                    {
+                        Stretch = Stretch.Uniform
+                    }
+                };
+                grid.Children.Add(pinBg);
+            }
+            catch { }
+
+            string fgUri = isLeader 
+                ? "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmappinfgleader.png"
+                : "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmappinfg.png";
+            try
+            {
+                var fg = MakeIcon(fgUri, 28);
+                grid.Children.Add(fg);
+            }
+            catch { }
+        }
+        else // Custom note with icon
+        {
+            try
+            {
+                var bgBrush = GetNoteDarkColorBrush(colorIndex);
+                var ellipse = new Ellipse
+                {
+                    Width = 24,
+                    Height = 24,
+                    Fill = bgBrush,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+                grid.Children.Add(ellipse);
+            }
+            catch { }
+
+            string iconUri = GetMapNoteIcon(iconType);
+            try
+            {
+                var icon = MakeIcon(iconUri, 28);
+                grid.Children.Add(icon);
+            }
+            catch { }
+
+            string fgUri = isLeader 
+                ? "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmapforegroundleader.png"
+                : "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmapforeground.png";
+            try
+            {
+                var fgBrush = GetNoteColorBrush(colorIndex);
+                var fg = new Border
+                {
+                    Width = 28,
+                    Height = 28,
+                    Background = fgBrush,
+                    OpacityMask = new ImageBrush(new BitmapImage(new Uri(fgUri)))
+                    {
+                        Stretch = Stretch.Uniform
+                    }
+                };
+                grid.Children.Add(fg);
+            }
+            catch { }
+        }
+
+        // Creator Avatar Badge Indicator
+        if (ownerSteamId != 0)
+        {
+            var avatarImg = GetTeamAvatar(ownerSteamId);
+            if (avatarImg != null)
+            {
+                var avatarGrid = new Grid
+                {
+                    Width = 14,
+                    Height = 14,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Bottom,
+                    Margin = new Thickness(0, 0, -3, -3)
+                };
+
+                var bgEllipse = new Ellipse
+                {
+                    Fill = Brushes.Black,
+                    Width = 14,
+                    Height = 14
+                };
+                avatarGrid.Children.Add(bgEllipse);
+
+                var imgBrush = new ImageBrush(avatarImg)
+                {
+                    Stretch = Stretch.UniformToFill
+                };
+
+                var avatarEllipse = new Ellipse
+                {
+                    Width = 12,
+                    Height = 12,
+                    Fill = imgBrush,
+                    Stroke = Brushes.White,
+                    StrokeThickness = 1,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+                avatarGrid.Children.Add(avatarEllipse);
+                grid.Children.Add(avatarGrid);
+            }
+        }
+
+        stackPanel.Children.Add(grid);
+
+        if (!string.IsNullOrWhiteSpace(label))
+        {
+            var labelBorder = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(170, 0, 0, 0)),
+                CornerRadius = new CornerRadius(3),
+                Padding = new Thickness(4, 2, 4, 2),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, 4, 0, 0),
+                Effect = new System.Windows.Media.Effects.DropShadowEffect
+                {
+                    Color = Colors.Black,
+                    Direction = 315,
+                    ShadowDepth = 1,
+                    BlurRadius = 2,
+                    Opacity = 0.8
+                }
+            };
+
+            var labelText = new TextBlock
+            {
+                Text = label,
+                Foreground = Brushes.White,
+                FontSize = 9,
+                FontWeight = FontWeights.SemiBold,
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+
+            labelBorder.Child = labelText;
+            stackPanel.Children.Add(labelBorder);
+        }
+
+        string tooltip = (isLeader ? "Leader " : "Team ") + GetMapNoteName(iconType);
+        if (!string.IsNullOrWhiteSpace(label))
+        {
+            tooltip += ": " + label;
+        }
+        ToolTipService.SetToolTip(stackPanel, tooltip);
+
+        ApplyCurrentOverlayScale(stackPanel);
+        return stackPanel;
+    }
+
+    public void RedrawTeamMapNotes(RustPlusClientReal.TeamInfo team)
+    {
+        ClearTeamMapNotes();
+
+        if (team == null || Overlay == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0) return;
+
+        if (team.LeaderMapNotes != null)
+        {
+            for (int i = 0; i < team.LeaderMapNotes.Count; i++)
+            {
+                var note = team.LeaderMapNotes[i];
+                ulong ownerSteamId = team.LeaderSteamId;
+                if (!ShouldShowNote(note, ownerSteamId, team)) continue;
+
+                var el = BuildTeamNoteMarker(note.Type, note.Icon, note.Color, note.Label, ownerSteamId, isLeader: true);
+                var key = $"leader_{i}";
+                _teamNotesEls[key] = el;
+                Overlay.Children.Add(el);
+                Panel.SetZIndex(el, 908);
+
+                var p = WorldToImagePx(note.X, note.Y);
+                Canvas.SetLeft(el, p.X - 100.0);
+                Canvas.SetTop(el, p.Y - 14.0);
+            }
+        }
+
+        if (team.MapNotes != null)
+        {
+            for (int i = 0; i < team.MapNotes.Count; i++)
+            {
+                var note = team.MapNotes[i];
+                ulong ownerSteamId = _mySteamId;
+                if (!ShouldShowNote(note, ownerSteamId, team)) continue;
+
+                var el = BuildTeamNoteMarker(note.Type, note.Icon, note.Color, note.Label, ownerSteamId, isLeader: false);
+                var key = $"member_{i}";
+                _teamNotesEls[key] = el;
+                Overlay.Children.Add(el);
+                Panel.SetZIndex(el, 907);
+
+                var p = WorldToImagePx(note.X, note.Y);
+                Canvas.SetLeft(el, p.X - 100.0);
+                Canvas.SetTop(el, p.Y - 14.0);
+            }
+        }
+    }
+
+    public void ClearTeamMapNotes()
+    {
+        if (Overlay != null)
+        {
+            foreach (var el in _teamNotesEls.Values)
+            {
+                Overlay.Children.Remove(el);
+            }
+        }
+        _teamNotesEls.Clear();
     }
 }

@@ -281,6 +281,13 @@ public partial class MainWindow
             get => _avatar;
             set { if (_avatar == value) return; _avatar = value; OnChanged(nameof(Avatar)); }
         }
+
+        private bool _showMarkers = true;
+        public bool ShowMarkers
+        {
+            get => _showMarkers;
+            set { if (_showMarkers == value) return; _showMarkers = value; OnChanged(nameof(ShowMarkers)); }
+        }
     }
 
     private readonly Dictionary<ulong, (double x, double y, string name)> _lastPlayersBySid = new();
@@ -337,6 +344,7 @@ public partial class MainWindow
 
         _lastCloudPresenceSignature = null;
         ResetTeamFeatureMasterSyncState();
+        Dispatcher.Invoke(() => ClearTeamMapNotes());
     }
 
     private void AfkTimer_Tick(object? sender, EventArgs e)
@@ -446,6 +454,8 @@ public partial class MainWindow
             var team = await _real.GetTeamInfoAsync();
             if (team is null) return;
 
+            _lastTeamInfo = team;
+
             var leaderId = team.LeaderSteamId;
             foreach (var m in TeamMembers) m.MissingCount++;
 
@@ -465,9 +475,15 @@ public partial class MainWindow
                 if (vm == null)
                 {
                     vm = new TeamMemberVM { SteamId = sid, Abbreviate = _abbreviateNames };
+                    vm.PropertyChanged += TeamMember_PropertyChanged;
                     TeamMembers.Add(vm);
                     _hasCriticalPresenceChange = true;
                     if (sid != _mySteamId) joinedThisPass.Add(vm);
+                }
+                else
+                {
+                    vm.PropertyChanged -= TeamMember_PropertyChanged;
+                    vm.PropertyChanged += TeamMember_PropertyChanged;
                 }
 
                 if (vm.Avatar == null)
@@ -512,6 +528,7 @@ public partial class MainWindow
                 {
                     var left = TeamMembers[i];
                     if (left.SteamId != _mySteamId) leftThisPass.Add(left);
+                    left.PropertyChanged -= TeamMember_PropertyChanged;
                     TeamMembers.RemoveAt(i);
                     _hasCriticalPresenceChange = true;
                 }
@@ -584,6 +601,11 @@ public partial class MainWindow
             {
                 try { await Task.WhenAll(avatarTasks); } catch { }
             }
+
+            await Dispatcher.InvokeAsync(() =>
+            {
+                RedrawTeamMapNotes(team);
+            });
         }
         catch (Exception ex)
         {
@@ -1034,6 +1056,30 @@ public partial class MainWindow
         }
         catch
         {
+        }
+    }
+
+    private void TeamMember_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(TeamMemberVM.ShowMarkers) || e.PropertyName == nameof(TeamMemberVM.Avatar))
+        {
+            if (_lastTeamInfo != null)
+            {
+                Dispatcher.Invoke(() => RedrawTeamMapNotes(_lastTeamInfo));
+            }
+            if (_lastMarkers != null)
+            {
+                Dispatcher.Invoke(() => UpdateDynUI(_lastMarkers));
+            }
+        }
+    }
+
+    private void TeamCheckBox_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (sender is System.Windows.Controls.CheckBox chk && chk.DataContext is TeamMemberVM vm)
+        {
+            vm.ShowMarkers = !vm.ShowMarkers;
+            e.Handled = true;
         }
     }
 }

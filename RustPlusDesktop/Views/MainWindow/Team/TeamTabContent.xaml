@@ -51,10 +51,12 @@
                     <Border Style="{StaticResource Card}">
                         <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="56" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Grid Width="44" Height="44">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding ShowMarkers}" VerticalAlignment="Center" Margin="4,0,8,0" Cursor="Hand" ToolTip="Show markers on map" />
+                            <Grid Grid.Column="1" Width="44" Height="44">
                                 <Image
                                     ClipToBounds="True"
                                     RenderOptions.BitmapScalingMode="HighQuality"
@@ -92,7 +94,7 @@
                                     VerticalAlignment="Center"
                                     Visibility="{Binding IsAfk, Converter={StaticResource Vis}}" />
                             </Grid>
-                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                            <StackPanel Grid.Column="2" Margin="10,0,0,0">
                                 <TextBlock FontSize="14" FontWeight="SemiBold">
                                     <TextBlock.Text>
                                         <Binding Path="DisplayName" />
