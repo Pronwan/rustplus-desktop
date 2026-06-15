@@ -364,6 +364,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
         _vm.IsInitializing = true;
+        Services.EventStateService.Load(); // restore persisted event states from a previous run/crash
         InitializeComponent();
         
         PlayersTab?.SetMainWindow(this);
@@ -715,11 +716,13 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _monumentWatcher.OnOilRigTriggered += (s, data) =>
         {
-            if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
             string timeStr = data.Duration >= 800 ? "~15m" : "~12:30m";
             string rigName = data.Name == "Small Oil Rig" ? Properties.Resources.SmallOilRig :
                              data.Name == "Large Oil Rig" ? Properties.Resources.LargeOilRig :
                              data.Name;
+            // crash-safe log regardless of the announce toggle
+            RecordEvent(data.Name, "CRATE-CALLED", $"crate in {timeStr}");
+            if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
             Dispatcher.InvokeAsync(async () =>
             {
                 var msg = AlertTemplateService.GetFormattedAlert("AlertOilRigTriggered", rigName, timeStr);

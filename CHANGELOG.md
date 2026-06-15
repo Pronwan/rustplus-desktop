@@ -11,10 +11,10 @@ This PR adds a few team-chat commands and presence announcements, and fixes a co
 - **`!pos <name>`** — reports a teammate's current grid (exact-then-partial name match).
 - **Team presence announcements** (gated by the existing "Chat Announce" master toggle):
   - Teammate **joined** / **left** the team.
-  - Teammate went **AFK** — message now includes how long they've been idle (e.g. "X is now AFK (idle 5m)"). Announced for **anyone in the team, including yourself**.
-  - Teammate **back from AFK** — new announcement reporting how long they were AFK (e.g. "X is back (was AFK for 12m)").
+  - Teammate went **AFK** — e.g. "X is now AFK for more than 5m". Announced for **anyone in the team, including yourself**.
+  - Teammate **back from AFK** — e.g. "X came back from AFK, was AFK for 12m".
   - Teammate **came online** — message now appends how long they were offline (e.g. "X came online @ G12 (was offline 2h 5m)").
-  - Teammate **died** — message now appends how long they were alive (e.g. ":skull: X died @ G12 was alive for 1h 25m"). The clock starts on respawn, survives going offline/online (sleeping ≠ dying), and is tracked regardless of the announce toggle.
+  - Teammate **died** — message now appends how long they were alive (e.g. ":skull: X is dead @ G12, was alive for 1h 25m"). The clock starts on respawn, survives going offline/online (sleeping ≠ dying), and is tracked regardless of the announce toggle.
   - Smart handling of **your own** team switches:
     - You join someone else's team → announces **only you** once (not every existing member).
     - People join **your** team (you're leader) → announces each.
@@ -23,6 +23,9 @@ This PR adds a few team-chat commands and presence announcements, and fixes a co
 - **Configurable AFK threshold** — new per-server setting (default 5 min, range 1–60) replacing the hardcoded value, with a selector in the Chat Commands panel.
 - Config rows for the new commands in the Chat Commands panel; join/leave/AFK (and back-from-AFK) templates are editable in the Custom Alerts window.
 - In-game emoji shortcodes on alerts: `:skull:` (death), `:wave:` (join/leave), `:vending.machine:` (shop alerts).
+- **Persistent event logs** (under `%LOCALAPPDATA%\RustPlusDesk\logs\`, written regardless of the Chat Alerts toggle so the record survives an app crash):
+  - `timeline.log` — append-only, crash-safe history of every event (offline/online, AFK/back, death/respawn, oil-rig crate, cargo, heli, vendor, deep sea), one timestamped line each.
+  - `events.json` — latest state per event type (keyed per server, overwritten as new events arrive) and **loaded on startup**. On reconnect it rehydrates the "X ago" timers for cargo/heli/vendor/deep sea so those `!` commands still answer correctly after a restart.
 
 ## Fixed
 - **AFK announcements never fired for your own account** — the AFK alert was hard-skipped for the local player (`SteamId == _mySteamId`), so going AFK yourself produced no message. Now any team member (you included) is announced when Chat Alerts is on, matching how death/online alerts already behave.

@@ -1553,7 +1553,7 @@ Download and install now?</value>
     <value>{0} went offline</value>
   </data>
   <data name="AlertPlayerDied" xml:space="preserve">
-    <value>:skull: {0} died @ {1}</value>
+    <value>:skull: {0} is dead @ {1}</value>
   </data>
   <data name="AlertPlayerRespawned" xml:space="preserve">
     <value>{0} respawned @ {1}</value>
@@ -1565,10 +1565,10 @@ Download and install now?</value>
     <value>:wave: {0} left the team</value>
   </data>
   <data name="AlertPlayerAfk" xml:space="preserve">
-    <value>{0} is now AFK (idle {1})</value>
+    <value>{0} is now AFK for more than {1}</value>
   </data>
   <data name="AlertPlayerAfkBack" xml:space="preserve">
-    <value>{0} is back (was AFK for {1})</value>
+    <value>{0} came back from AFK, was AFK for {1}</value>
   </data>
   <data name="AlertPlayerAfkBackName" xml:space="preserve">
     <value>Player Back From AFK</value>
@@ -1583,7 +1583,7 @@ Download and install now?</value>
     <value>(was offline {0})</value>
   </data>
   <data name="AlertPlayerAliveDuration" xml:space="preserve">
-    <value>was alive for {0}</value>
+    <value>, was alive for {0}</value>
   </data>
   <data name="AlertTrackingOnline" xml:space="preserve">
     <value>[Tracking] {0}{1} is now ONLINE</value>

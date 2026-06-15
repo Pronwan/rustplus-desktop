@@ -48,6 +48,7 @@ public partial class MainWindow
                     _deepSeaSpawnTime = DateTime.UtcNow;
                     _deepSeaDespawnTime = null;
                     _deepSeaMidEvent = false;
+                    RecordEvent("Deep Sea", "UP");
                     string dir = GetDeepSeaDirection(deepSeaShop.X, deepSeaShop.Y);
                     if (_announceSpawns && TrackingService.AnnounceDeepSea)
                     {
@@ -74,6 +75,7 @@ public partial class MainWindow
             {
                 // Genuine despawn witnessed while shop tracking was running
                 _deepSeaDespawnTime = DateTime.UtcNow;
+                RecordEvent("Deep Sea", "ENDED");
                 AppendLog("[DEEPSEA] Despawn detected.");
             }
             else

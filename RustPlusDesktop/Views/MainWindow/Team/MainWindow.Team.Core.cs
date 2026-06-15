@@ -21,6 +21,77 @@ public partial class MainWindow
     private System.Windows.Threading.DispatcherTimer? _afkTimer;
     public ObservableCollection<TeamMemberVM> TeamMembers { get; } = new();
 
+    // Crash-safe timeline log: appended (and flushed) immediately on every offline/online/AFK,
+    // death, and world event (oil rig, etc.) so the history survives an app crash. Lives next to
+    // the other app data at %LOCALAPPDATA%\RustPlusDesk\logs\timeline.log.
+    private static readonly string _timelineLogPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "RustPlusDesk", "logs", "timeline.log");
+    private static readonly object _timelineLogLock = new();
+
+    // Records an event to BOTH stores: append-only history (timeline.log) and the latest-state
+    // snapshot (events.json, overwritten per key and reloaded on startup).
+    // subject/key = player name or monument/event name; eventType = OFFLINE/ONLINE/AFK/DIED/CRATE-CALLED/...
+    private void RecordEvent(string subject, string eventType, string detail = "")
+    {
+        LogTimelineEvent(subject, eventType, detail);
+        // latest-state snapshot is keyed per-server so different servers don't clobber each other
+        string server = _vm?.Selected?.Name ?? "?";
+        Services.EventStateService.Record($"{server}{subject}", eventType, detail);
+    }
+
+    // Rehydrate the world-event "last ended" timestamps for the connected server from the
+    // persisted snapshot, so !cargo/!heli/!vendor/!deepsea "X ago" still work after a restart.
+    private void RestoreEventStateFromSnapshot()
+    {
+        try
+        {
+            string server = _vm?.Selected?.Name ?? "?";
+            string prefix = $"{server}";
+            foreach (var kv in Services.EventStateService.Snapshot())
+            {
+                if (!kv.Key.StartsWith(prefix, StringComparison.Ordinal)) continue;
+                string subject = kv.Key.Substring(prefix.Length);
+                var e = kv.Value;
+                switch (subject)
+                {
+                    case "Cargo Ship" when e.State == "LEFT":
+                        _cargoLastDespawnUtc ??= e.TimeUtc; break;
+                    case "Patrol Heli" when e.State is "LEFT" or "SHOT-DOWN":
+                        if (!_heliLastEventUtc.HasValue) { _heliLastEventUtc = e.TimeUtc; _heliLastEventWasCrash = e.State == "SHOT-DOWN"; }
+                        break;
+                    case "Travelling Vendor" when e.State == "LEFT":
+                        _vendorDespawnTime ??= e.TimeUtc; break;
+                    case "Deep Sea" when e.State == "ENDED":
+                        _deepSeaDespawnTime ??= e.TimeUtc; break;
+                }
+            }
+        }
+        catch (Exception ex) { AppendLog($"[TimelineLog] restore failed: {ex.Message}"); }
+    }
+
+    private void LogTimelineEvent(string subject, string eventType, string detail = "")
+    {
+        try
+        {
+            var dir = Path.GetDirectoryName(_timelineLogPath);
+            if (dir != null) Directory.CreateDirectory(dir);
+
+            string server = _vm?.Selected?.Name ?? "?";
+            string detailPart = string.IsNullOrEmpty(detail) ? "" : "\t" + detail;
+            string line = $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}Z\t[{server}]\t{subject}\t{eventType}{detailPart}{Environment.NewLine}";
+
+            lock (_timelineLogLock)
+            {
+                File.AppendAllText(_timelineLogPath, line);
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[TimelineLog] write failed: {ex.Message}");
+        }
+    }
+
     private readonly Dictionary<ulong, ImageSource> _avatarCache = new();
     private RustPlusClientReal? _real => _rust as RustPlusClientReal;
 
@@ -227,6 +298,7 @@ public partial class MainWindow
     {
         if (_teamTimer != null) return;
         _teamRosterInitialized = false; // re-baseline roster
+        RestoreEventStateFromSnapshot(); // rehydrate world-event "last X ago" timers for this server
         _teamTimer = new System.Windows.Threading.DispatcherTimer
         {
             Interval = TimeSpan.FromSeconds(5)
@@ -275,6 +347,13 @@ public partial class MainWindow
         {
             // true only on transition into AFK
             bool becameAfk = m.UpdateAfkState(now, afkThreshold);
+            bool cameBack = m.AfkReturnDuration.HasValue && m.IsOnline;
+
+            // Crash-safe log first, regardless of whether chat alerts are enabled.
+            if (becameAfk)
+                RecordEvent(m.Name, "AFK", $"idle {FormatAgo(now - m.LastMoveTime)}");
+            else if (cameBack)
+                RecordEvent(m.Name, "AFK-BACK", $"was AFK {FormatAgo(m.AfkReturnDuration!.Value)}");
 
             if (!_announceSpawns)
             {
@@ -599,6 +678,13 @@ public partial class MainWindow
         {
             if (prev.online != now.online)
             {
+                // Crash-safe log first, regardless of whether chat alerts are enabled.
+                string logGrid = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : "?";
+                string logDetail = $"@ {logGrid}";
+                if (now.online && vm.OfflineSince.HasValue)
+                    logDetail += $", was offline {FormatAgo(DateTime.UtcNow - vm.OfflineSince.Value)}";
+                RecordEvent(vm.Name, now.online ? "ONLINE" : "OFFLINE", logDetail);
+
                 if (_announceSpawns)
                 {
                     bool shouldAnnounce = now.online ? TrackingService.AnnouncePlayerOnline : TrackingService.AnnouncePlayerOffline;
@@ -640,6 +726,13 @@ public partial class MainWindow
                     py = dy;
                 }
 
+                // Crash-safe log first, regardless of whether chat alerts are enabled.
+                string deathGrid = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : "?";
+                string deathDetail = $"@ {deathGrid}";
+                if (now.dead && vm.AliveSince.HasValue)
+                    deathDetail += $", alive for {FormatAgo(DateTime.UtcNow - vm.AliveSince.Value)}";
+                RecordEvent(vm.Name, now.dead ? "DIED" : "RESPAWNED", deathDetail);
+
                 if (_announceSpawns)
                 {
                     bool isSelf = vm.SteamId == _mySteamId;
@@ -660,10 +753,11 @@ public partial class MainWindow
                         {
                             txt = AlertTemplateService.GetFormattedAlert("AlertPlayerDied", dispName, where);
                             // tack on how long they were alive, if we tracked their spawn
+                            // (the template already includes its own leading ", ")
                             if (vm.AliveSince.HasValue)
                             {
                                 var suffix = AlertTemplateService.GetFormattedAlert("AlertPlayerAliveDuration", FormatAgo(DateTime.UtcNow - vm.AliveSince.Value));
-                                if (!string.IsNullOrWhiteSpace(suffix)) txt += " " + suffix;
+                                if (!string.IsNullOrWhiteSpace(suffix)) txt += suffix;
                             }
                         }
                         else
