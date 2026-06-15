@@ -247,11 +247,6 @@ public partial class MainWindow
                     msg = Properties.Resources.ChatCmdDeepSeaActiveMidEvent;
                 }
             }
-            else if (_shopTimer == null)
-            {
-                // Deep Sea is only observable via shop polling; without it we can't claim it's gone
-                msg = Properties.Resources.ChatCmdDeepSeaNeedsShopPolling;
-            }
             else if (_deepSeaDespawnTime.HasValue)
             {
                 var ago = DateTime.UtcNow - _deepSeaDespawnTime.Value;

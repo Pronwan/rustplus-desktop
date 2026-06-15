@@ -32,6 +32,7 @@ public partial class MainWindow
         // 2) Timer stoppen
         try { _statusTimer?.Stop(); } catch { }
         try { _shopTimer?.Stop(); _shopTimer = null; } catch { }
+        try { StopDeepSeaAutoPoll(); } catch { }
         try { _storageTimer?.Stop(); _storageTimer = null; } catch { }
         try { Dispatcher.Invoke(() => ChkShops.IsChecked = false); } catch { }
 

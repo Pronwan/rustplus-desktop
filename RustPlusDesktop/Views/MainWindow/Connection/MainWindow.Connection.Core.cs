@@ -289,6 +289,7 @@ public partial class MainWindow
                 // Soft connect exists: Reset UI/polling states but do NOT call HardResetAsync (which disconnects)
                 _shopTimer?.Stop();
                 _shopTimer = null;
+                StopDeepSeaAutoPoll();
                 StopDynPolling();
                 StopTeamPolling();
                 TeamMembers.Clear();
@@ -507,6 +508,7 @@ public partial class MainWindow
             _statusTimer.Start();
 
             StartTeamPolling();
+            StartDeepSeaAutoPoll(); // auto-detect Deep Sea without needing the Shops layer enabled
             if (_overlayToolsVisible)
             {
                 RebuildOverlayTeamBar();
