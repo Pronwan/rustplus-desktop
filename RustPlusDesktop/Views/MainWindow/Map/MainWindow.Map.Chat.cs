@@ -119,25 +119,12 @@ public partial class MainWindow
         }
         if (!bypassChatAlertMasterBlock && !CanSendAutomatedTeamChat()) return;
 
-        // Discord Webhook Integration (Free Tier)
+        // Discord Webhook Integration (Free Tier) — routed through a rate-limited queue
+        // so bursts of alerts never flood the webhook or trip Discord's 429 limiter.
         if (!bypassChatAlertMasterBlock && _vm?.Selected?.DiscordWebhookChatAlertsEnabled == true && _vm.IsCloudConnected && !string.IsNullOrWhiteSpace(_vm.Selected.DiscordWebhookChatAlertsUrl))
         {
-            _ = Task.Run(async () => 
-            {
-                try
-                {
-                    string serverName = _vm.Selected.Name ?? "Rust Server";
-                    var payload = new { content = $"**[{serverName}]** {text}", tts = _vm.Selected.DiscordWebhookChatAlertsTts };
-                    var json = System.Text.Json.JsonSerializer.Serialize(payload);
-                    using var content = new System.Net.Http.StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                    using var client = new System.Net.Http.HttpClient();
-                    await client.PostAsync(_vm.Selected.DiscordWebhookChatAlertsUrl, content);
-                }
-                catch (Exception ex)
-                {
-                    AppendLog($"[Discord] Webhook send failed: {ex.Message}");
-                }
-            });
+            string serverName = _vm.Selected.Name ?? "Rust Server";
+            EnqueueDiscordWebhook(_vm.Selected.DiscordWebhookChatAlertsUrl, serverName, text, _vm.Selected.DiscordWebhookChatAlertsTts);
         }
 
         // Thread-safe wrapper für Hintergrund-Alerts
@@ -146,6 +133,72 @@ public partial class MainWindow
             await SendTeamChatReliableAsync(text);
         }
         catch { /* ignore background errors */ }
+    }
+
+    // ====== DISCORD WEBHOOK QUEUE (rate-limited) ======
+    // One shared client (avoids socket exhaustion), one in-flight POST at a time, a minimum
+    // gap between posts, and honoring Discord's 429 Retry-After so we never get rate-limited.
+    private static readonly System.Net.Http.HttpClient _discordHttp =
+        new() { Timeout = TimeSpan.FromSeconds(15) };
+    private readonly SemaphoreSlim _discordGate = new(1, 1);
+    private DateTime _discordNextAllowedUtc = DateTime.MinValue;
+    private const int DiscordMinGapMs = 1500; // ~40/min ceiling, comfortably under Discord's limit
+
+    private void EnqueueDiscordWebhook(string url, string serverName, string text, bool tts)
+    {
+        _ = Task.Run(async () =>
+        {
+            await _discordGate.WaitAsync();
+            try
+            {
+                // proactive spacing so a burst of alerts never stacks up at Discord
+                var now = DateTime.UtcNow;
+                if (now < _discordNextAllowedUtc)
+                    await Task.Delay(_discordNextAllowedUtc - now);
+
+                var payload = new { content = $"**[{serverName}]** {text}", tts };
+                var json = JsonSerializer.Serialize(payload);
+
+                // try send; on a 429, wait the requested time and retry once
+                for (int attempt = 0; attempt < 2; attempt++)
+                {
+                    using var content = new System.Net.Http.StringContent(
+                        json, System.Text.Encoding.UTF8, "application/json");
+                    using var resp = await _discordHttp.PostAsync(url, content);
+
+                    if ((int)resp.StatusCode == 429)
+                    {
+                        double retrySec = 1.0;
+                        if (resp.Headers.RetryAfter?.Delta is TimeSpan d) retrySec = d.TotalSeconds;
+                        else
+                        {
+                            try
+                            {
+                                var body = await resp.Content.ReadAsStringAsync();
+                                using var doc = System.Text.Json.JsonDocument.Parse(body);
+                                if (doc.RootElement.TryGetProperty("retry_after", out var ra))
+                                    retrySec = ra.GetDouble();
+                            }
+                            catch { /* fall back to 1s */ }
+                        }
+                        AppendLog($"[Discord] Rate limited, retrying after {retrySec:0.##}s");
+                        await Task.Delay(TimeSpan.FromSeconds(Math.Min(Math.Max(retrySec, 0.5) + 0.25, 15)));
+                        continue;
+                    }
+                    break;
+                }
+
+                _discordNextAllowedUtc = DateTime.UtcNow.AddMilliseconds(DiscordMinGapMs);
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Discord] Webhook send failed: {ex.Message}");
+            }
+            finally
+            {
+                _discordGate.Release();
+            }
+        });
     }
 
     private async Task<bool> SendTeamChatReliableAsync(string text)

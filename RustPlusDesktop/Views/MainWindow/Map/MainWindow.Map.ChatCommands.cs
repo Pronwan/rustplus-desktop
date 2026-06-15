@@ -199,15 +199,17 @@ public partial class MainWindow
             else
             {
                 var now = DateTime.UtcNow;
-                var parts = afkMembers.Select(t => 
+                var parts = afkMembers.Select(t =>
                 {
                     var elapsed = now - t.LastMoveTime;
                     int totalSecs = (int)elapsed.TotalSeconds;
                     int mins = totalSecs / 60;
                     int secs = totalSecs % 60;
-                    return $"{t.Name} - {mins}:{secs:D2}";
+                    return $"{GetDisplayPlayerName(t.Name)} - {mins}:{secs:D2}";
                 }).ToList();
-                _ = SendChatCommandResponseAsync("AFK: " + string.Join(" | ", parts));
+                string afkMsg = "AFK: " + string.Join(" | ", parts);
+                if (afkMsg.Length > 128) afkMsg = afkMsg.Substring(0, 125) + "...";
+                _ = SendChatCommandResponseAsync(afkMsg);
             }
             AppendLog($"[ChatCommand] AFK executed by {m.Author}");
             return;
@@ -743,7 +745,7 @@ public partial class MainWindow
         }
 
         // collect matching sell orders
-        var matches = new List<(string Grid, string Line, int Stock, double UnitPrice)>();
+        var matches = new List<(string Grid, string ItemName, int Price, string Curr, int Qty, int Stock, double UnitPrice, bool IsScrap)>();
         foreach (var s in shops)
         {
             if (s.Orders == null) continue;
@@ -756,11 +758,10 @@ public partial class MainWindow
 
                 string grid = GetGridLabel(s);
                 string currName = ResolveItemName(o.CurrencyItemId, o.CurrencyShortName);
-                string qtyPart = o.Quantity > 1 ? $"x{o.Quantity} " : "";
-                string stockPart = o.Stock <= 0 ? " (out)" : $" ({o.Stock} left)";
-                string line = $"{grid}: {qtyPart}{itemName} → {o.CurrencyAmount} {currName}{stockPart}";
+                bool isScrap = string.Equals(o.CurrencyShortName, "scrap", StringComparison.OrdinalIgnoreCase)
+                               || currName.Contains("scrap", StringComparison.OrdinalIgnoreCase);
                 double unitPrice = (double)o.CurrencyAmount / Math.Max(1, o.Quantity);
-                matches.Add((grid, line, o.Stock, unitPrice));
+                matches.Add((grid, itemName, o.CurrencyAmount, currName, o.Quantity, o.Stock, unitPrice, isScrap));
             }
         }
 
@@ -773,28 +774,37 @@ public partial class MainWindow
             return;
         }
 
-        // in-stock first, then cheapest per unit
+        // Drop odd barter trades (e.g. "Bone Fragments for 1 LR-300 Assault Rifle") when
+        // real Scrap prices exist — they otherwise rank as "cheapest" since 1 < 25 across
+        // different currencies. Keep barter only if nothing is priced in Scrap.
+        if (matches.Any(x => x.IsScrap))
+            matches = matches.Where(x => x.IsScrap).ToList();
+
+        // best first: in-stock, then cheapest per unit
         var ordered = matches
             .OrderByDescending(x => x.Stock > 0)
             .ThenBy(x => x.UnitPrice)
-            .Select(x => x.Line)
             .ToList();
 
-        // one message per command to avoid API flooding; pack best results into ~128 chars
-        var sb = new System.Text.StringBuilder();
-        int shown = 0;
-        foreach (var line in ordered)
-        {
-            string piece = sb.Length == 0 ? line : " | " + line;
-            if (sb.Length + piece.Length > 120 && sb.Length > 0) break;
-            sb.Append(piece);
-            shown++;
-        }
-        int omitted = matches.Count - shown;
-        if (omitted > 0) sb.Append($" (+{omitted})");
+        // Send the top 3 as separate messages (spaced out so we never flood the API).
+        const int MaxMessages = 3;
+        var top = ordered.Take(MaxMessages).ToList();
+        int omitted = ordered.Count - top.Count;
+        int delayMs = (int)(Math.Max(2.0, _vm.Selected?.ChatResponseDelaySeconds ?? 2.0) * 1000);
 
-        await SendChatCommandResponseAsync(sb.ToString());
-        AppendLog($"[ChatCommand] Shop '{query}' by {author}: {matches.Count} match(es), showed {shown} in 1 msg");
+        for (int i = 0; i < top.Count; i++)
+        {
+            var x = top[i];
+            string qtyPart = x.Qty > 1 ? $"x{x.Qty} " : "";
+            string stockPart = x.Stock <= 0 ? " (out)" : $" ({x.Stock} left)";
+            string suffix = (i == top.Count - 1 && omitted > 0) ? $" (+{omitted} more)" : "";
+            string line = $"{x.Grid}: {qtyPart}{x.ItemName} → {x.Price} {x.Curr}{stockPart}{suffix}";
+            if (line.Length > 128) line = line.Substring(0, 128);
+
+            if (i > 0) await Task.Delay(delayMs);
+            await SendChatCommandResponseAsync(line);
+        }
+        AppendLog($"[ChatCommand] Shop '{query}' by {author}: {ordered.Count} match(es), sent {top.Count} msg(s)");
     }
 
     // single oil rig status line

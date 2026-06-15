@@ -274,9 +274,9 @@ public partial class MainWindow
             // true only on transition into AFK
             bool becameAfk = m.UpdateAfkState(now, afkThreshold);
 
-            if (!_announceSpawns || m.SteamId == _mySteamId)
+            if (!_announceSpawns)
             {
-                m.AfkReturnDuration = null; // never announce for self / when announce is off
+                m.AfkReturnDuration = null; // announcements disabled — nothing to send
                 continue;
             }
 
@@ -592,34 +592,37 @@ public partial class MainWindow
     {
         try
         {
-            if (prev.online != now.online && _announceSpawns)
+            if (prev.online != now.online)
             {
-                bool isSelf = vm.SteamId == _mySteamId;
-                bool shouldAnnounce = now.online ? TrackingService.AnnouncePlayerOnline : TrackingService.AnnouncePlayerOffline;
-
-                if (shouldAnnounce)
+                if (_announceSpawns)
                 {
-                    var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : Properties.Resources.Unknown;
-                    var dispName = GetDisplayPlayerName(vm.Name);
-                    string txt;
-                    if (now.online)
+                    bool shouldAnnounce = now.online ? TrackingService.AnnouncePlayerOnline : TrackingService.AnnouncePlayerOffline;
+
+                    if (shouldAnnounce)
                     {
-                        txt = AlertTemplateService.GetFormattedAlert("AlertPlayerOnlineWithPos", dispName, where);
-                        // tack on how long they were offline, if we tracked it
-                        if (vm.OfflineSince.HasValue)
+                        var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : Properties.Resources.Unknown;
+                        var dispName = GetDisplayPlayerName(vm.Name);
+                        string txt;
+                        if (now.online)
                         {
-                            var suffix = AlertTemplateService.GetFormattedAlert("AlertPlayerOfflineDuration", FormatAgo(DateTime.UtcNow - vm.OfflineSince.Value));
-                            if (!string.IsNullOrWhiteSpace(suffix)) txt += " " + suffix;
+                            txt = AlertTemplateService.GetFormattedAlert("AlertPlayerOnlineWithPos", dispName, where);
+                            // tack on how long they were offline, if we tracked it
+                            if (vm.OfflineSince.HasValue)
+                            {
+                                var suffix = AlertTemplateService.GetFormattedAlert("AlertPlayerOfflineDuration", FormatAgo(DateTime.UtcNow - vm.OfflineSince.Value));
+                                if (!string.IsNullOrWhiteSpace(suffix)) txt += " " + suffix;
+                            }
                         }
+                        else
+                        {
+                            txt = AlertTemplateService.GetFormattedAlert("AlertPlayerOffline", dispName);
+                        }
+                        await SendTeamChatSafeAsync(txt);
                     }
-                    else
-                    {
-                        txt = AlertTemplateService.GetFormattedAlert("AlertPlayerOffline", dispName);
-                    }
-                    await SendTeamChatSafeAsync(txt);
                 }
 
-                // remember when they went offline so we can report the gap on return
+                // Track offline timing regardless of the announce setting, so the duration is
+                // correct even if alerts were toggled on only after the player went offline.
                 vm.OfflineSince = now.online ? (DateTime?)null : DateTime.UtcNow;
             }
 
