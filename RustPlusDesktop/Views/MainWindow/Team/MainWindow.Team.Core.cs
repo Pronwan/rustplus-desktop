@@ -138,6 +138,8 @@ public partial class MainWindow
         public TimeSpan? AfkReturnDuration { get; set; }
         // Set when the player goes offline; used to report how long they were gone when they come back.
         public DateTime? OfflineSince { get; set; }
+        // Set when the player (re)spawns alive; used to report how long they were alive when they die.
+        public DateTime? AliveSince { get; set; }
 
         public void SetPosition(double? x, double? y)
         {
@@ -406,6 +408,9 @@ public partial class MainWindow
                 vm.IsLeader = leaderId != 0 && sid == leaderId;
                 vm.IsOnline = m.Online;
                 vm.IsDead = m.Dead;
+                // Best-effort seed for players already alive when first seen (no spawn event to
+                // anchor to). Real respawns reset this accurately in AnnouncePresenceChangeAsync.
+                if (!m.Dead && !vm.AliveSince.HasValue) vm.AliveSince = DateTime.UtcNow;
                 vm.SetPosition(m.X, m.Y);
 
                 var now = (m.Online, m.Dead);
@@ -650,10 +655,28 @@ public partial class MainWindow
                     {
                         var where = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : Properties.Resources.Unknown;
                         var dispName = GetDisplayPlayerName(vm.Name);
-                        var txt = now.dead ? AlertTemplateService.GetFormattedAlert("AlertPlayerDied", dispName, where) : AlertTemplateService.GetFormattedAlert("AlertPlayerRespawned", dispName, where);
+                        string txt;
+                        if (now.dead)
+                        {
+                            txt = AlertTemplateService.GetFormattedAlert("AlertPlayerDied", dispName, where);
+                            // tack on how long they were alive, if we tracked their spawn
+                            if (vm.AliveSince.HasValue)
+                            {
+                                var suffix = AlertTemplateService.GetFormattedAlert("AlertPlayerAliveDuration", FormatAgo(DateTime.UtcNow - vm.AliveSince.Value));
+                                if (!string.IsNullOrWhiteSpace(suffix)) txt += " " + suffix;
+                            }
+                        }
+                        else
+                        {
+                            txt = AlertTemplateService.GetFormattedAlert("AlertPlayerRespawned", dispName, where);
+                        }
                         await SendTeamChatSafeAsync(txt);
                     }
                 }
+
+                // Track alive time independently of the announce setting: reset the clock on
+                // respawn, clear it on death (read above before clearing).
+                vm.AliveSince = now.dead ? (DateTime?)null : DateTime.UtcNow;
 
                 if (now.dead && px.HasValue && py.HasValue)
                 {

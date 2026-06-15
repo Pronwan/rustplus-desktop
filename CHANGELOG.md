@@ -14,6 +14,7 @@ This PR adds a few team-chat commands and presence announcements, and fixes a co
   - Teammate went **AFK** — message now includes how long they've been idle (e.g. "X is now AFK (idle 5m)"). Announced for **anyone in the team, including yourself**.
   - Teammate **back from AFK** — new announcement reporting how long they were AFK (e.g. "X is back (was AFK for 12m)").
   - Teammate **came online** — message now appends how long they were offline (e.g. "X came online @ G12 (was offline 2h 5m)").
+  - Teammate **died** — message now appends how long they were alive (e.g. ":skull: X died @ G12 was alive for 1h 25m"). The clock starts on respawn, survives going offline/online (sleeping ≠ dying), and is tracked regardless of the announce toggle.
   - Smart handling of **your own** team switches:
     - You join someone else's team → announces **only you** once (not every existing member).
     - People join **your** team (you're leader) → announces each.

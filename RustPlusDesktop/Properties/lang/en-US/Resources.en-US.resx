@@ -1582,6 +1582,9 @@ Download and install now?</value>
   <data name="AlertPlayerOfflineDuration" xml:space="preserve">
     <value>(was offline {0})</value>
   </data>
+  <data name="AlertPlayerAliveDuration" xml:space="preserve">
+    <value>was alive for {0}</value>
+  </data>
   <data name="AlertTrackingOnline" xml:space="preserve">
     <value>[Tracking] {0}{1} is now ONLINE</value>
   </data>
