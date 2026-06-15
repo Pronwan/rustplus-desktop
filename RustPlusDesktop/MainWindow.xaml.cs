@@ -3397,6 +3397,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     // death pins per player
     private readonly Dictionary<Guid, FrameworkElement> _deathPins = new();
 
+    // team map notes / markers from Rust+ API
+    private readonly Dictionary<string, FrameworkElement> _teamNotesEls = new();
+    private RustPlusClientReal.TeamInfo? _lastTeamInfo;
+
 
 
     private void Monuments_Checked(object sender, RoutedEventArgs e)
