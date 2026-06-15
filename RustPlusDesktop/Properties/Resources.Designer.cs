@@ -454,6 +454,8 @@ namespace RustPlusDesk.Properties {
         public static string ChatCmdDeepSeaActiveMidEvent => GetString("ChatCmdDeepSeaActiveMidEvent");
         public static string ChatCmdDeepSeaEndedMinutesAgo => GetString("ChatCmdDeepSeaEndedMinutesAgo");
         public static string ChatCmdDeepSeaStatusUnknown => GetString("ChatCmdDeepSeaStatusUnknown");
+        public static string ChatCmdDeepSeaNeedsShopPolling => GetString("ChatCmdDeepSeaNeedsShopPolling");
+        public static string ChatCmdEventNotSeenLong => GetString("ChatCmdEventNotSeenLong");
         public static string ChatCmdCargoNotActive => GetString("ChatCmdCargoNotActive");
         public static string ChatCmdCargoDockedDeparts => GetString("ChatCmdCargoDockedDeparts");
         public static string ChatCmdCargoDockedPreparingDepart => GetString("ChatCmdCargoDockedPreparingDepart");

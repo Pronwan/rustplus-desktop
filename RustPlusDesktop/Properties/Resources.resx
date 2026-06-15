@@ -1342,6 +1342,12 @@ Download and install now?</value>
   <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
     <value>Deep Sea event status unknown (not seen this session).</value>
   </data>
+  <data name="ChatCmdDeepSeaNeedsShopPolling" xml:space="preserve">
+    <value>Deep Sea status unknown — enable Shops on the map to track it.</value>
+  </data>
+  <data name="ChatCmdEventNotSeenLong" xml:space="preserve">
+    <value>Haven't seen {0} in a while.</value>
+  </data>
   <data name="ChatCmdCargoNotActive" xml:space="preserve">
     <value>Cargo Ship not active.</value>
   </data>

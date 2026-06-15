@@ -201,15 +201,32 @@ public partial class MainWindow
         });
     }
 
+    // Global outgoing-send throttle: a minimum gap between ANY two team-chat sends so bursts of
+    // alerts/commands never hammer the Rust+ API (which burns its rate-limit tokens and can get the
+    // player kicked). An isolated message still goes out immediately; only back-to-back sends wait.
+    private readonly SemaphoreSlim _globalSendGate = new(1, 1);
+    private DateTime _lastGlobalSendUtc = DateTime.MinValue;
+    private const int GlobalSendMinGapMs = 1500;
+
     private async Task<bool> SendTeamChatReliableAsync(string text)
     {
         if (_rust is not RustPlusClientReal real) return false;
-        
+
         if (text == null)
         {
             AppendLog("[Chat] Fail to send: text is null");
             return false;
         }
+
+        // enforce the global minimum gap between sends
+        await _globalSendGate.WaitAsync();
+        try
+        {
+            int waitGap = GlobalSendMinGapMs - (int)(DateTime.UtcNow - _lastGlobalSendUtc).TotalMilliseconds;
+            if (waitGap > 0) await Task.Delay(waitGap);
+            _lastGlobalSendUtc = DateTime.UtcNow;
+        }
+        finally { _globalSendGate.Release(); }
 
         AppendLog($"[Chat] Sending: {text}");
         

@@ -26,6 +26,10 @@ This PR adds a few team-chat commands and presence announcements, and fixes a co
 - **Persistent event logs** (under `%LOCALAPPDATA%\RustPlusDesk\logs\`, written regardless of the Chat Alerts toggle so the record survives an app crash):
   - `timeline.log` — append-only, crash-safe history of every event (offline/online, AFK/back, death/respawn, oil-rig crate, cargo, heli, vendor, deep sea), one timestamped line each.
   - `events.json` — latest state per event type (keyed per server, overwritten as new events arrive) and **loaded on startup**. On reconnect it rehydrates the "X ago" timers for cargo/heli/vendor/deep sea so those `!` commands still answer correctly after a restart.
+  - **Map-wipe & staleness guards on restore**: persisted states from before the server's last wipe (`RustMapsWipeTime`) are ignored, and anything older than ~15h is dropped. Past that age the `!cargo`/`!heli`/`!vendor`/`!deepsea` replies say "Haven't seen X in a while" instead of a misleading "28h ago".
+  - `!deepsea` now replies "enable Shops on the map to track it" when shop polling is off, instead of blindly reporting it as not up.
+- **Global outgoing-send throttle** — a minimum 1.5s gap between any two team-chat sends so bursts of alerts/commands never hammer the Rust+ API (isolated messages still send instantly; only back-to-back ones wait).
+- **Alarm spam cooldown** — if a Smart Alarm fires more than 3 times in a row (each within 2 min of the last), its team-chat **and** Discord raid alerts are muted for 10 minutes (per-alarm). Popup/audio still fire; only the broadcasts are suppressed, so a raid/decay loop can't flood chat.
 
 ## Fixed
 - **AFK announcements never fired for your own account** — the AFK alert was hard-skipped for the local player (`SteamId == _mySteamId`), so going AFK yourself produced no message. Now any team member (you included) is announced when Chat Alerts is on, matching how death/online alerts already behave.

@@ -53,6 +53,12 @@ public partial class MainWindow
                 if (!kv.Key.StartsWith(prefix, StringComparison.Ordinal)) continue;
                 string subject = kv.Key.Substring(prefix.Length);
                 var e = kv.Value;
+                // If the map wiped while we were closed, persisted states are from the previous
+                // wipe and must be ignored (RustMapsWipeTime is our best wipe signal). Also drop
+                // anything too old to still be meaningful.
+                var wipe = _vm?.Selected?.RustMapsWipeTime;
+                if (wipe.HasValue && e.TimeUtc < wipe.Value) continue;
+                if ((DateTime.UtcNow - e.TimeUtc).TotalHours > 15.0) continue;
                 switch (subject)
                 {
                     case "Cargo Ship" when e.State == "LEFT":

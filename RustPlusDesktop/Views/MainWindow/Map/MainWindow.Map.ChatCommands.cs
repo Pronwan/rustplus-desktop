@@ -40,6 +40,11 @@ public partial class MainWindow
     private DateTime _lastChatCommandTime = DateTime.MinValue;
     private const int ChatCommandCooldownSeconds = 2; // 2s cooldown for system stability
 
+    // Above this age a "last seen X ago" is no longer meaningful (e.g. a state restored from a
+    // previous session after a long shutdown) — commands show a vague "haven't seen it" instead
+    // of a misleading "28h ago".
+    private const double EventStaleHours = 15.0;
+
     private async Task SendChatCommandResponseAsync(string text)
     {
         // respond instantly (no pre-send delay)
@@ -242,10 +247,17 @@ public partial class MainWindow
                     msg = Properties.Resources.ChatCmdDeepSeaActiveMidEvent;
                 }
             }
+            else if (_shopTimer == null)
+            {
+                // Deep Sea is only observable via shop polling; without it we can't claim it's gone
+                msg = Properties.Resources.ChatCmdDeepSeaNeedsShopPolling;
+            }
             else if (_deepSeaDespawnTime.HasValue)
             {
                 var ago = DateTime.UtcNow - _deepSeaDespawnTime.Value;
-                msg = string.Format(Properties.Resources.ChatCmdDeepSeaEndedMinutesAgo, (int)ago.TotalMinutes);
+                msg = ago.TotalHours > EventStaleHours
+                    ? string.Format(Properties.Resources.ChatCmdEventNotSeenLong, "Deep Sea")
+                    : string.Format(Properties.Resources.ChatCmdDeepSeaEndedMinutesAgo, (int)ago.TotalMinutes);
             }
             else
             {
@@ -306,7 +318,9 @@ public partial class MainWindow
             else if (_cargoLastDespawnUtc.HasValue)
             {
                 var ago = DateTime.UtcNow - _cargoLastDespawnUtc.Value;
-                msg = string.Format(Properties.Resources.ChatCmdCargoDespawnedMinutesAgo, (int)ago.TotalMinutes);
+                msg = ago.TotalHours > EventStaleHours
+                    ? string.Format(Properties.Resources.ChatCmdEventNotSeenLong, "Cargo")
+                    : string.Format(Properties.Resources.ChatCmdCargoDespawnedMinutesAgo, (int)ago.TotalMinutes);
             }
             _ = SendChatCommandResponseAsync(msg);
             AppendLog($"[ChatCommand] Cargo executed by {m.Author}");
@@ -378,8 +392,15 @@ public partial class MainWindow
             else if (_heliLastEventUtc.HasValue)
             {
                 var ago = DateTime.UtcNow - _heliLastEventUtc.Value;
-                string reason = _heliLastEventWasCrash ? Properties.Resources.ChatCmdHeliReasonShotDown : Properties.Resources.ChatCmdHeliReasonLeftMap;
-                msg = string.Format(Properties.Resources.ChatCmdHeliNotActiveAgo, reason, FormatAgo(ago));
+                if (ago.TotalHours > EventStaleHours)
+                {
+                    msg = string.Format(Properties.Resources.ChatCmdEventNotSeenLong, "Patrol Heli");
+                }
+                else
+                {
+                    string reason = _heliLastEventWasCrash ? Properties.Resources.ChatCmdHeliReasonShotDown : Properties.Resources.ChatCmdHeliReasonLeftMap;
+                    msg = string.Format(Properties.Resources.ChatCmdHeliNotActiveAgo, reason, FormatAgo(ago));
+                }
             }
             else
             {
@@ -410,7 +431,9 @@ public partial class MainWindow
             else if (_vendorDespawnTime.HasValue)
             {
                 var ago = DateTime.UtcNow - _vendorDespawnTime.Value;
-                msg = string.Format(Properties.Resources.ChatCmdVendorDespawnedAgo, FormatAgo(ago));
+                msg = ago.TotalHours > EventStaleHours
+                    ? string.Format(Properties.Resources.ChatCmdEventNotSeenLong, "Travelling Vendor")
+                    : string.Format(Properties.Resources.ChatCmdVendorDespawnedAgo, FormatAgo(ago));
             }
             else
             {
