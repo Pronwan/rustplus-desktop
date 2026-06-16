@@ -2068,6 +2068,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private readonly Dictionary<uint, (string Title, string Message)> _alarmMetadataCache = new();
     private readonly Dictionary<string, (uint Id, DateTime Time)> _lastSeenIdPerServer = new();
     private readonly List<string> _alarmHistoryDedup = new();
+    private readonly Dictionary<string, DateTime> _lastGenericAlarmPerServer = new();
 
     private void ShowAlarmPopup(AlarmNotification n, string source = "FCM")
     {
@@ -2222,6 +2223,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 }
                 return;
             }
+            // Cross-path dedup: WS alarm arriving after a generic FCM alarm for same server
+            if (source == "WS" && _lastGenericAlarmPerServer.TryGetValue(cleanSrv, out var genTime) && (now - genTime).TotalSeconds < 5)
+            {
+                _lastAlarmProcessed[key] = now;
+                AppendLog($"[alarm/debug] ({source}) Cross-path dedup: WS alarm follows generic FCM alarm for server '{cleanSrv}'");
+                return;
+            }
+
             _lastAlarmProcessed[key] = now;
             _lastAnyAlarmTime = now; // Merken, dass IRGENDEIN Alarm kam
         }
@@ -2243,6 +2252,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 return;
             }
             _lastAnyAlarmTime = now;
+            if (!string.IsNullOrEmpty(cleanSrv))
+                _lastGenericAlarmPerServer[cleanSrv] = now;
         }
 
         // 4) Play Audio (Respects settings if device is identified, otherwise plays default)
