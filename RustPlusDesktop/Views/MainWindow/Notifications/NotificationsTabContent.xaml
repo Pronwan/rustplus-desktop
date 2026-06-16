@@ -65,7 +65,6 @@
                     <RadioButton x:Name="RadAll" Content="All" IsChecked="True" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
                     <RadioButton x:Name="RadAlarms" Content="Alarms" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
                     <RadioButton x:Name="RadDeaths" Content="Deaths" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
-                    <RadioButton x:Name="RadChats" Content="Chats" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
                 </WrapPanel>
 
                 <!-- Row 2: Search + Bulk Actions -->

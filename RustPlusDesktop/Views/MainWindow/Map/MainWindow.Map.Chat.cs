@@ -277,20 +277,6 @@ public partial class MainWindow
 
         if (!isHistorical)
         {
-            var notif = new RustPlusNotification(
-                type: "Chat",
-                title: $"Chat: {m.Author}",
-                message: m.Text,
-                serverIp: _vm?.Selected?.Host,
-                serverPort: _vm?.Selected?.Port,
-                serverName: _vm?.Selected?.Name
-            )
-            {
-                ChatAuthor = m.Author,
-                Timestamp = m.Timestamp
-            };
-            NotificationCenterService.AddNotification(notif);
-
             Dispatcher.InvokeAsync(() => AddIncomingChatMessage(m.Author, m.Text, m.Timestamp.ToLocalTime(), m.SteamId, autoScroll: true));
             if (!isCommand)
             {

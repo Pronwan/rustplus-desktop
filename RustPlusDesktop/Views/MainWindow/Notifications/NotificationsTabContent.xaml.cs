@@ -62,11 +62,6 @@ namespace RustPlusDesk.Views
             {
                 return string.Equals(notif.Type, "Death", StringComparison.OrdinalIgnoreCase);
             }
-            if (RadChats.IsChecked == true)
-            {
-                return string.Equals(notif.Type, "Chat", StringComparison.OrdinalIgnoreCase) || 
-                       string.Equals(notif.Type, "Pairing", StringComparison.OrdinalIgnoreCase);
-            }
 
             return true;
         }

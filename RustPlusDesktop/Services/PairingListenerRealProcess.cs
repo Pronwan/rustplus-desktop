@@ -534,7 +534,7 @@ namespace RustPlusDesk.Services
                     }
                 }
             }
-            else if (s.Contains("key: 'body'") || s.Contains("key: 'gcm.notification.body'"))
+            else if (s.Contains("key: 'body'") || s.Contains("key: 'gcm.notification.body'") || (s.Contains("value: '{\"") && !mSingle.Success))
             {
                 // Start of a multiline value block
                 _collectingJson = true;
@@ -726,6 +726,34 @@ namespace RustPlusDesk.Services
                                 name ?? "-",
                                 (entityName ?? "Alarm") + (entityId.HasValue ? $"#{entityId}" : ""),
                                 entityId,
+                                buffered,
+                                host,
+                                port
+                            ));
+                            _pendingAlarm = null; _pendingAlarmMsg = null; _pendingAlarmMsgTs = null;
+                        }
+                        return;
+                    }
+
+                    // === ALARM-Body (Raid Alarm ohne expliziten Type) ===
+                    if (string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(host))
+                    {
+                        _pendingAlarm = (name, "Raid Alarm", null, host, port);
+
+                        if (!string.IsNullOrEmpty(host))
+                        {
+                            _lastParsedIp = host;
+                            _lastParsedPort = port;
+                        }
+
+                        if (_pendingAlarmMsg is string buffered)
+                        {
+                            var ts = (_pendingAlarmMsgTs ?? DateTime.Now);
+                            AlarmReceived?.Invoke(this, new AlarmNotification(
+                                ts,
+                                name ?? "-",
+                                "Raid Alarm",
+                                null,
                                 buffered,
                                 host,
                                 port

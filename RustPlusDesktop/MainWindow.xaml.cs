@@ -2384,20 +2384,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void HandleFcmChatReceived(TeamChatMessage c)
     {
-        // Add to Notification Center!
-        var notif = new RustPlusNotification(
-            type: "Chat",
-            title: $"Chat: {c.Author}",
-            message: c.Text,
-            serverIp: c.Ip,
-            serverPort: c.Port
-        )
-        {
-            ChatAuthor = c.Author,
-            Timestamp = c.Timestamp
-        };
-        NotificationCenterService.AddNotification(notif);
-
         // Also add it to the chat UI if the server is current!
         if (_vm.Selected != null && _vm.Selected.Host == c.Ip && _vm.Selected.Port == c.Port)
         {
