@@ -106,6 +106,14 @@ namespace RustPlusDesk.Services
 
             lock (LockObj)
             {
+                // Persistent de-duplication by FCM message id so stopping/restarting the listener
+                // does not re-add the same push notification.
+                if (!string.IsNullOrEmpty(notification.FcmNotificationId) &&
+                    Notifications.Any(n => n.FcmNotificationId == notification.FcmNotificationId))
+                {
+                    return;
+                }
+
                 // De-duplication check: if a notification with same Type, Message, Server name/IP
                 // is already in the list within 4 seconds, skip it to prevent double alerts (FCM + WS bounce).
                 var duplicate = Notifications.FirstOrDefault(n =>

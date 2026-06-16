@@ -252,13 +252,16 @@
                                     <TextBlock Text="{Binding Title}" 
                                                FontSize="13" 
                                                FontWeight="Bold" 
-                                               Foreground="White" />
+                                               Foreground="White"
+                                               TextTrimming="None"
+                                               TextWrapping="Wrap" />
                                     
                                     <!-- Message body -->
                                     <TextBlock Text="{Binding Message}" 
                                                FontSize="11" 
                                                Foreground="#8C96A8" 
                                                Margin="0,3,0,0" 
+                                               TextTrimming="None"
                                                TextWrapping="Wrap"/>
                                 </StackPanel>
 

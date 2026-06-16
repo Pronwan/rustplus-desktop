@@ -2190,9 +2190,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
 
         // Add to Notification Center
+        // Prefer the original FCM title (e.g. "HV Rockets Raid wake up") over the generic device name.
         var notif = new RustPlusNotification(
             type: "Alarm",
-            title: string.IsNullOrEmpty(n.DeviceName) ? "Alarm" : n.DeviceName,
+            title: !string.IsNullOrWhiteSpace(n.Title) ? n.Title : (string.IsNullOrEmpty(n.DeviceName) ? "Alarm" : n.DeviceName),
             message: n.Message,
             serverIp: n.Ip,
             serverPort: n.Port,
@@ -2200,7 +2201,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         )
         {
             EntityId = n.EntityId,
-            Timestamp = n.Timestamp
+            Timestamp = n.Timestamp,
+            FcmNotificationId = n.FcmNotificationId
         };
         NotificationCenterService.AddNotification(notif);
 

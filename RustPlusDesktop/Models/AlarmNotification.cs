@@ -15,6 +15,8 @@ namespace RustPlusDesk.Models;
         uint? EntityId,
         string Message,
         string? Ip = null,
-        int? Port = null
+        int? Port = null,
+        string? Title = null,
+        string? FcmNotificationId = null
     );
 

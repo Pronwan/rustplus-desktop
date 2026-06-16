@@ -30,6 +30,7 @@ namespace RustPlusDesk.Services
         // key/value-Zeilen (z.B. { key: 'gcm.notification.body', value: 'Your base is under attack!' })
         private static readonly Regex KvLine = new(@"\{\s*key:\s*'(?<k>[^']+)'\s*,\s*value:\s*(?:'|""|`)(?<v>.*?)(?:'|""|`)\s*\}", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex DeathTitleRegex = new(@"^(?:You were killed by|Du wurdest getötet von)\s+(?<attacker>.+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex TopLevelId = new(@"^\s*(?<type>id|persistentId):\s*[""'](?<id>[^""']+)[""']", RegexOptions.Compiled);
         public event EventHandler<AlarmNotification>? AlarmReceived;
         public event EventHandler<OfflineDeathNotification>? OfflineDeathReceived;
         
@@ -54,6 +55,12 @@ namespace RustPlusDesk.Services
         private (string? server, string? entityName, uint? entityId, string? host, int? port)? _pendingAlarm;
         private string? _pendingAlarmMsg;
         private DateTime? _pendingAlarmMsgTs;
+        private string? _pendingAlarmTitle;
+        private string? _pendingFcmId;
+
+        // Alarm notifications are buffered until the FCM persistentId is parsed so we can
+        // de-duplicate the same push across app restarts (the top-level id changes per delivery).
+        private (DateTime ts, string server, string deviceName, uint? entityId, string message, string? ip, int? port, string? title)? _bufferedAlarm;
 
         private string? _pendingDeathIp;
         private int? _pendingDeathPort;
@@ -214,13 +221,30 @@ namespace RustPlusDesk.Services
         private bool _collectingJson = false;
         private int _braceDepth = 0;
 
-        // Hilfsroutine zum Auslösen + Loggen der „schönen“ Einzeile
+        // Buffers an alarm until the FCM persistentId is parsed, then fires it.
+        private void BufferAlarm(DateTime ts, string server, string deviceName, uint? entityId, string message, string? ip, int? port, string? title)
+        {
+            _bufferedAlarm = (ts, server, deviceName, entityId, message, ip, port, title);
+        }
+
+        private void FlushBufferedAlarm()
+        {
+            if (!_bufferedAlarm.HasValue) return;
+            var (ts, server, deviceName, entityId, message, ip, port, title) = _bufferedAlarm.Value;
+            _bufferedAlarm = null;
+            var alarm = new AlarmNotification(ts, server, deviceName, entityId, message, ip, port, title, _pendingFcmId);
+            AlarmReceived?.Invoke(this, alarm);
+            _log($"[{ts:HH:mm:ss}] Alarm | {server} | {deviceName}#{(entityId?.ToString() ?? "?")} | \"{message}\"");
+            _pendingAlarmTitle = null;
+            _pendingFcmId = null;
+        }
+
+        // Hilfsroutine zum Auslösen + Loggen der „schönen" Einzeile
         private void FireAlarm(string? server, string? deviceName, uint? entityId, string message, DateTime ts)
         {
             var srv = server ?? "-";
             var dev = (deviceName ?? "Alarm");
-            var alarm = new AlarmNotification(ts, srv, dev, entityId, message, _lastParsedIp, _lastParsedPort);
-            AlarmReceived?.Invoke(this, alarm);
+            BufferAlarm(ts, srv, dev, entityId, message, _lastParsedIp, _lastParsedPort, _pendingAlarmTitle);
             _log($"[{ts:HH:mm:ss}] Alarm | {srv} | {dev}#{(entityId?.ToString() ?? "?")} | \"{message}\"");
         }
 
@@ -376,6 +400,33 @@ namespace RustPlusDesk.Services
 
             var s = Ansi.Replace(line, "").Trim();
 
+            // New FCM notification starts – flush any buffered alarm with what we have,
+            // then reset per-message context so title/id do not leak into the next push.
+            if (s.IndexOf("Notification Received", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                FlushBufferedAlarm();
+                _pendingAlarmTitle = null;
+                _pendingFcmId = null;
+            }
+
+            // Top-level FCM message id (preferred: persistentId, fallback: id).
+            // Alarms are buffered until persistentId is available so we can dedup across restarts.
+            var topId = TopLevelId.Match(s);
+            if (topId.Success)
+            {
+                _pendingFcmId = topId.Groups["id"].Value;
+                if (topId.Groups["type"].Value.Equals("persistentId", StringComparison.OrdinalIgnoreCase))
+                {
+                    FlushBufferedAlarm();
+                }
+            }
+
+            // End of FCM notification object – flush any alarm that did not have a persistentId.
+            if (s.Trim() == "}")
+            {
+                FlushBufferedAlarm();
+            }
+
             // Status-Marker des CLI
             if (s.IndexOf("Listening for FCM Notifications", StringComparison.OrdinalIgnoreCase) >= 0)
                 Listening?.Invoke(this, EventArgs.Empty);
@@ -507,6 +558,9 @@ namespace RustPlusDesk.Services
                         _log($"[FCM/debug] Matched death attacker: {_pendingDeathAttacker}");
                         return;
                     }
+
+                    // Capture FCM title for upcoming alarm context (parsed before alarm body/message).
+                    _pendingAlarmTitle = v;
                 }
 
                 // Offline-Tod: Abfangen des Servers (Body)
@@ -624,15 +678,16 @@ namespace RustPlusDesk.Services
                 if (_pendingAlarm is { } ctx)
                 {
                     // sofort feuern (wir haben jetzt body + message)
-                    AlarmReceived?.Invoke(this, new AlarmNotification(
+                    BufferAlarm(
                         _pendingAlarmMsgTs ?? DateTime.Now,
                         ctx.server ?? "-",
                         (ctx.entityName ?? "Alarm") + (ctx.entityId.HasValue ? $"#{ctx.entityId}" : ""),
                         ctx.entityId,
                         _pendingAlarmMsg ?? "",
                         ctx.host,
-                        ctx.port
-                    ));
+                        ctx.port,
+                        _pendingAlarmTitle
+                    );
                     _pendingAlarm = null; _pendingAlarmMsg = null; _pendingAlarmMsgTs = null;
                 }
                 return; // message verarbeitet
@@ -721,15 +776,16 @@ namespace RustPlusDesk.Services
                         if (_pendingAlarmMsg is string buffered)
                         {
                             var ts = (_pendingAlarmMsgTs ?? DateTime.Now);
-                            AlarmReceived?.Invoke(this, new AlarmNotification(
+                            BufferAlarm(
                                 ts,
                                 name ?? "-",
                                 (entityName ?? "Alarm") + (entityId.HasValue ? $"#{entityId}" : ""),
                                 entityId,
                                 buffered,
                                 host,
-                                port
-                            ));
+                                port,
+                                _pendingAlarmTitle
+                            );
                             _pendingAlarm = null; _pendingAlarmMsg = null; _pendingAlarmMsgTs = null;
                         }
                         return;
@@ -749,15 +805,16 @@ namespace RustPlusDesk.Services
                         if (_pendingAlarmMsg is string buffered)
                         {
                             var ts = (_pendingAlarmMsgTs ?? DateTime.Now);
-                            AlarmReceived?.Invoke(this, new AlarmNotification(
+                            BufferAlarm(
                                 ts,
                                 name ?? "-",
                                 "Raid Alarm",
                                 null,
                                 buffered,
                                 host,
-                                port
-                            ));
+                                port,
+                                _pendingAlarmTitle
+                            );
                             _pendingAlarm = null; _pendingAlarmMsg = null; _pendingAlarmMsgTs = null;
                         }
                         return;

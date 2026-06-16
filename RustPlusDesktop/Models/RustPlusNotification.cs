@@ -20,6 +20,9 @@ namespace RustPlusDesk.Models
         public string? AttackerName { get; set; }
         public string? ChatAuthor { get; set; }
 
+        // FCM message id used for persistent de-duplication across listener restarts
+        public string? FcmNotificationId { get; set; }
+
         public RustPlusNotification() { }
 
         public RustPlusNotification(string type, string title, string message, string? serverIp = null, int? serverPort = null, string? serverName = null)
