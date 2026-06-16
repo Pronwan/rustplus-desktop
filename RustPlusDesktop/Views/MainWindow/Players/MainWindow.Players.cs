@@ -969,14 +969,52 @@ public partial class MainWindow
         var onlineStack = new StackPanel { Margin = new Thickness(8) };
         onlineScroll.Content = onlineStack;
 
-        var onlineTab = new TabItem { Header = "Online", Content = onlineScroll };
+        var onlineTab = new TabItem { Content = onlineScroll };
+        if (Application.Current.TryFindResource("PrettyTabItem") is Style prettyTabItemStyle)
+        {
+            onlineTab.Style = prettyTabItemStyle;
+        }
+
+        var onlineHeaderPanel = new StackPanel { Orientation = Orientation.Horizontal };
+        var onlineIcon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.PeopleCommunity24)
+        {
+            Margin = new Thickness(0, 0, 6, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            FontSize = 14
+        };
+        var onlineForegroundBinding = new System.Windows.Data.Binding("Foreground") { Source = onlineTab };
+        onlineIcon.SetBinding(Control.ForegroundProperty, onlineForegroundBinding);
+
+        var onlineText = new TextBlock { Text = "Online", VerticalAlignment = VerticalAlignment.Center };
+        onlineHeaderPanel.Children.Add(onlineIcon);
+        onlineHeaderPanel.Children.Add(onlineText);
+        onlineTab.Header = onlineHeaderPanel;
 
         // === Tracked Tab ===
         var trackedScroll = new ScrollViewer { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
         var trackedStack = new StackPanel { Margin = new Thickness(8) };
         trackedScroll.Content = trackedStack;
 
-        var trackedTab = new TabItem { Header = "Tracked", Content = trackedScroll };
+        var trackedTab = new TabItem { Content = trackedScroll };
+        if (Application.Current.TryFindResource("PrettyTabItem") is Style)
+        {
+            trackedTab.Style = (Style)Application.Current.FindResource("PrettyTabItem");
+        }
+
+        var trackedHeaderPanel = new StackPanel { Orientation = Orientation.Horizontal };
+        var trackedIcon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Radar20)
+        {
+            Margin = new Thickness(0, 0, 6, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            FontSize = 14
+        };
+        var trackedForegroundBinding = new System.Windows.Data.Binding("Foreground") { Source = trackedTab };
+        trackedIcon.SetBinding(Control.ForegroundProperty, trackedForegroundBinding);
+
+        var trackedText = new TextBlock { Text = "Tracked", VerticalAlignment = VerticalAlignment.Center };
+        trackedHeaderPanel.Children.Add(trackedIcon);
+        trackedHeaderPanel.Children.Add(trackedText);
+        trackedTab.Header = trackedHeaderPanel;
 
         tabControl.Items.Add(onlineTab);
         tabControl.Items.Add(trackedTab);

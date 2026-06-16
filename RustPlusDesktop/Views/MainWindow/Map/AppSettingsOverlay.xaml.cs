@@ -119,6 +119,12 @@ namespace RustPlusDesk.Views
             ChkOfflineDeathSoundLoop.IsChecked = TrackingService.OfflineDeathSoundLoopEnabled;
             ChkOfflineDeathDiscord.IsChecked = TrackingService.OfflineDeathDiscordEnabled;
 
+            // Notification Center Settings
+            ChkNotificationsToast.IsChecked = TrackingService.NotificationsToastEnabled;
+            ChkNotificationsSounds.IsChecked = TrackingService.NotificationsSoundsEnabled;
+            SliderNotificationsRetention.Value = TrackingService.NotificationsRetentionDays;
+            PopulateMutedServers();
+
 
             // Auth connection state
             bool isDiscord = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated;
@@ -270,6 +276,12 @@ namespace RustPlusDesk.Views
             TrackingService.OfflineDeathAlertsEnabled = ChkOfflineDeathAlerts.IsChecked == true;
             TrackingService.OfflineDeathSoundLoopEnabled = ChkOfflineDeathSoundLoop.IsChecked == true;
             TrackingService.OfflineDeathDiscordEnabled = ChkOfflineDeathDiscord.IsChecked == true;
+
+            // Notification Center Settings
+            TrackingService.NotificationsToastEnabled = ChkNotificationsToast.IsChecked == true;
+            TrackingService.NotificationsSoundsEnabled = ChkNotificationsSounds.IsChecked == true;
+            TrackingService.NotificationsRetentionDays = (int)SliderNotificationsRetention.Value;
+            PopulateMutedServers();
 
             ParentWindow?.ApplySettings();
             ParentWindow?.UpdateCloudSyncUI();
@@ -848,6 +860,69 @@ namespace RustPlusDesk.Views
             if (ParentWindow == null) return;
             var win = new Windows.OfflineDeathsHistoryWindow { Owner = ParentWindow };
             win.ShowDialog();
+        }
+
+        private void PopulateMutedServers()
+        {
+            if (PnlMutedServers == null) return;
+            PnlMutedServers.Children.Clear();
+
+            var muted = TrackingService.MutedNotificationServers;
+            if (muted == null || muted.Count == 0)
+            {
+                PnlMutedServers.Children.Add(new TextBlock
+                {
+                    Text = "No servers muted",
+                    Foreground = System.Windows.Media.Brushes.Gray,
+                    FontSize = 11,
+                    FontStyle = FontStyles.Italic,
+                    Margin = new Thickness(4)
+                });
+                return;
+            }
+
+            foreach (var serverKey in muted)
+            {
+                var grid = new Grid { Margin = new Thickness(0, 2, 0, 2) };
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+                var txt = new TextBlock
+                {
+                    Text = serverKey,
+                    Foreground = System.Windows.Media.Brushes.White,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    FontSize = 11
+                };
+                Grid.SetColumn(txt, 0);
+                grid.Children.Add(txt);
+
+                var btn = new Button
+                {
+                    Content = "Unmute",
+                    Height = 20,
+                    Padding = new Thickness(6, 1, 6, 1),
+                    FontSize = 10,
+                    Tag = serverKey,
+                    Style = FindResource("GhostButton") as Style
+                };
+                btn.Click += (s, e) =>
+                {
+                    if (s is Button b && b.Tag is string key)
+                    {
+                        var parts = key.Split(':');
+                        if (parts.Length == 2 && int.TryParse(parts[1], out int port))
+                        {
+                            TrackingService.UnmuteServer(parts[0], port);
+                            PopulateMutedServers();
+                        }
+                    }
+                };
+                Grid.SetColumn(btn, 1);
+                grid.Children.Add(btn);
+
+                PnlMutedServers.Children.Add(grid);
+            }
         }
     }
 }

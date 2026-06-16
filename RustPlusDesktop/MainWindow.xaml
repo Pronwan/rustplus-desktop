@@ -1095,7 +1095,7 @@
                 <TabItem Style="{StaticResource PrettyTabItem}">
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock VerticalAlignment="Center" Text="🔌 " />
+                            <ui:SymbolIcon Symbol="Connector24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
                             <TextBlock VerticalAlignment="Center" Text="{DynamicResource DevicesTab}" />
                         </StackPanel>
                     </TabItem.Header>
@@ -2125,7 +2125,7 @@
                             Style="{StaticResource PrettyTabItem}">
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock VerticalAlignment="Center" Text="👥 " />
+                                    <ui:SymbolIcon Symbol="People24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
                                     <TextBlock VerticalAlignment="Center" Text="{DynamicResource TeamTab}" />
                                 </StackPanel>
                             </TabItem.Header>
@@ -2442,7 +2442,7 @@
                         <TabItem Style="{StaticResource PrettyTabItem}">
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock VerticalAlignment="Center" Text="🎥 " />
+                                    <ui:SymbolIcon Symbol="Video24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
                                     <TextBlock VerticalAlignment="Center" Text="{DynamicResource CamerasTab}" />
                                 </StackPanel>
                             </TabItem.Header>
@@ -2506,11 +2506,50 @@
                         <TabItem Style="{StaticResource PrettyTabItem}">
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock VerticalAlignment="Center" Text="🌍 " />
+                                    <ui:SymbolIcon Symbol="Globe24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
                                     <TextBlock VerticalAlignment="Center" Text="{DynamicResource PlayersTab}" />
                                 </StackPanel>
                             </TabItem.Header>
                             <views:PlayersTabContent x:Name="PlayersTab" x:FieldModifier="public" />
+                        </TabItem>
+
+                        <!--  ===== NOTIFICATIONS =====  -->
+                        <TabItem Style="{StaticResource PrettyTabItem}" x:Name="NotificationsTab">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Alert24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
+                                    <TextBlock VerticalAlignment="Center" Text="Notifications" />
+                                    
+                                    <!-- Red Badge for Unread Count -->
+                                    <Border x:Name="NotificationsBadge"
+                                            Background="#EF5350"
+                                            CornerRadius="7"
+                                            Padding="4,1,4,1"
+                                            Margin="5,0,0,0"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding ViewModel.UnreadNotificationsCount, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                   FontSize="9"
+                                                   FontWeight="Bold"
+                                                   Foreground="White"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"/>
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ViewModel.UnreadNotificationsCount, RelativeSource={RelativeSource AncestorType=Window}}" Value="0">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding ViewModel.UnreadNotificationsCount, RelativeSource={RelativeSource AncestorType=Window}}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
+                                </StackPanel>
+                            </TabItem.Header>
+                            <views:NotificationsTabContent x:Name="NotificationsTabControl" />
                         </TabItem>
                     </TabControl>
 

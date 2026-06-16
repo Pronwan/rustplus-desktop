@@ -51,9 +51,16 @@ namespace RustPlusDesk.Services
 
         // Kontext für eine anstehende Alarm-Zeile
 
-        private (string? server, string? entityName, uint? entityId)? _pendingAlarm;
+        private (string? server, string? entityName, uint? entityId, string? host, int? port)? _pendingAlarm;
         private string? _pendingAlarmMsg;
         private DateTime? _pendingAlarmMsgTs;
+
+        private string? _pendingDeathIp;
+        private int? _pendingDeathPort;
+        private string? _pendingChatIp;
+        private int? _pendingChatPort;
+        private string? _lastParsedIp;
+        private int? _lastParsedPort;
 
         private bool _chatBundleOpen;
         private string? _pendingChatMsg;
@@ -81,11 +88,15 @@ namespace RustPlusDesk.Services
         {
             if (!_chatBundleOpen || string.IsNullOrEmpty(_pendingChatMsg)) return;
             var author = string.IsNullOrWhiteSpace(_pendingChatTitle) ? "Team" : _pendingChatTitle!;
+            var ip = _pendingChatIp ?? _lastParsedIp;
+            var port = _pendingChatPort ?? _lastParsedPort;
             ChatReceived?.Invoke(this,
-                 new TeamChatMessage(_pendingChatTs ?? DateTime.Now, author, 0, _pendingChatMsg!));
+                 new TeamChatMessage(_pendingChatTs ?? DateTime.Now, author, 0, _pendingChatMsg!, ip, port));
             _pendingChatMsg = null;
             _pendingChatTitle = null;
             _pendingChatTs = null;
+            _pendingChatIp = null;
+            _pendingChatPort = null;
         }
 
 
@@ -208,7 +219,7 @@ namespace RustPlusDesk.Services
         {
             var srv = server ?? "-";
             var dev = (deviceName ?? "Alarm");
-            var alarm = new AlarmNotification(ts, srv, dev, entityId, message);
+            var alarm = new AlarmNotification(ts, srv, dev, entityId, message, _lastParsedIp, _lastParsedPort);
             AlarmReceived?.Invoke(this, alarm);
             _log($"[{ts:HH:mm:ss}] Alarm | {srv} | {dev}#{(entityId?.ToString() ?? "?")} | \"{message}\"");
         }
@@ -218,13 +229,17 @@ namespace RustPlusDesk.Services
             if (string.IsNullOrEmpty(_pendingDeathAttacker) || string.IsNullOrEmpty(_pendingDeathServer)) return;
 
             var timestamp = _pendingDeathTs ?? DateTime.Now;
-            var death = new OfflineDeathNotification(timestamp, _pendingDeathServer, _pendingDeathAttacker);
+            var ip = _pendingDeathIp ?? _lastParsedIp;
+            var port = _pendingDeathPort ?? _lastParsedPort;
+            var death = new OfflineDeathNotification(timestamp, _pendingDeathServer, _pendingDeathAttacker, ip, port);
             OfflineDeathReceived?.Invoke(this, death);
             _log($"[{timestamp:HH:mm:ss}] Offline Death | Server: {_pendingDeathServer} | Attacker: {_pendingDeathAttacker}");
 
             _pendingDeathAttacker = null;
             _pendingDeathServer = null;
             _pendingDeathTs = null;
+            _pendingDeathIp = null;
+            _pendingDeathPort = null;
         }
 
         public Task StopAsync()
@@ -426,6 +441,45 @@ namespace RustPlusDesk.Services
                 var k = kv.Groups["k"].Value;
                 var v = kv.Groups["v"].Value;
 
+                // IP und Port extrahieren
+                if (k.Equals("ip", StringComparison.OrdinalIgnoreCase) || k.Equals("gcm.notification.ip", StringComparison.OrdinalIgnoreCase))
+                {
+                    _lastParsedIp = v;
+                    if (_chatBundleOpen)
+                    {
+                        _pendingChatIp = v;
+                    }
+                    else if (!string.IsNullOrEmpty(_pendingDeathAttacker))
+                    {
+                        _pendingDeathIp = v;
+                    }
+                    else if (_pendingAlarm.HasValue)
+                    {
+                        var cur = _pendingAlarm.Value;
+                        _pendingAlarm = (cur.server, cur.entityName, cur.entityId, v, cur.port);
+                    }
+                }
+                else if (k.Equals("port", StringComparison.OrdinalIgnoreCase) || k.Equals("gcm.notification.port", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (int.TryParse(v, out var portVal))
+                    {
+                        _lastParsedPort = portVal;
+                        if (_chatBundleOpen)
+                        {
+                            _pendingChatPort = portVal;
+                        }
+                        else if (!string.IsNullOrEmpty(_pendingDeathAttacker))
+                        {
+                            _pendingDeathPort = portVal;
+                        }
+                        else if (_pendingAlarm.HasValue)
+                        {
+                            var cur = _pendingAlarm.Value;
+                            _pendingAlarm = (cur.server, cur.entityName, cur.entityId, cur.host, portVal);
+                        }
+                    }
+                }
+
                 // Kanal: chat ↔︎ Bundle beginnen/enden
                 if (k.Equals("gcm.notification.android_channel_id", StringComparison.OrdinalIgnoreCase) ||
                     k.Equals("channelId", StringComparison.OrdinalIgnoreCase))
@@ -437,6 +491,8 @@ namespace RustPlusDesk.Services
                         _pendingChatTitle = null;
                         _pendingChatTs = null;
                     }
+                    _lastParsedIp = null;
+                    _lastParsedPort = null;
                 }
 
                 // Offline-Tod: Abfangen des Titels
@@ -519,22 +575,31 @@ namespace RustPlusDesk.Services
                 var root = doc.RootElement;
 
                 var type = GetJsonString(root, "type");
+                var ip = GetJsonString(root, "ip");
+                var portStr = GetJsonString(root, "port");
+                int? port = null;
+                if (int.TryParse(portStr, out var p)) port = p;
+
                 if (string.Equals(type, "chat", StringComparison.OrdinalIgnoreCase))
                 {
                     var author = GetJsonString(root, "name") ?? GetJsonString(root, "username") ?? "Team";
                     var text = GetJsonString(root, "message") ?? _pendingChatMsg ?? "";
                     ChatReceived?.Invoke(this,
-                        new TeamChatMessage(DateTime.Now, author, 0, text));
+                        new TeamChatMessage(DateTime.Now, author, 0, text, ip ?? _pendingChatIp ?? _lastParsedIp, port ?? _pendingChatPort ?? _lastParsedPort));
                     _pendingChatMsg = null; _pendingChatTitle = null; _pendingChatTs = null;
+                    _pendingChatIp = null; _pendingChatPort = null;
                 }
                 else if (string.Equals(type, "death", StringComparison.OrdinalIgnoreCase))
                 {
                     // If FCM body contains a JSON death payload, let's extract the server name from it
                     var serverName = GetJsonString(root, "name");
-                    _log($"[FCM/debug] Parsed death JSON: server='{serverName}', attacker='{_pendingDeathAttacker}'");
-                    if (!string.IsNullOrEmpty(serverName) && !string.IsNullOrEmpty(_pendingDeathAttacker))
+                    _log($"[FCM/debug] Parsed death JSON: server='{serverName}', attacker='{_pendingDeathAttacker}', ip='{ip}', port='{port}'");
+                    if (!string.IsNullOrEmpty(ip)) _pendingDeathIp = ip;
+                    if (port.HasValue) _pendingDeathPort = port;
+                    if (!string.IsNullOrEmpty(serverName)) _pendingDeathServer = serverName;
+
+                    if (!string.IsNullOrEmpty(_pendingDeathServer) && !string.IsNullOrEmpty(_pendingDeathAttacker))
                     {
-                        _pendingDeathServer = serverName;
                         TryFlushOfflineDeath();
                     }
                 }
@@ -564,7 +629,9 @@ namespace RustPlusDesk.Services
                         ctx.server ?? "-",
                         (ctx.entityName ?? "Alarm") + (ctx.entityId.HasValue ? $"#{ctx.entityId}" : ""),
                         ctx.entityId,
-                        _pendingAlarmMsg ?? ""
+                        _pendingAlarmMsg ?? "",
+                        ctx.host,
+                        ctx.port
                     ));
                     _pendingAlarm = null; _pendingAlarmMsg = null; _pendingAlarmMsgTs = null;
                 }
@@ -649,7 +716,7 @@ namespace RustPlusDesk.Services
                     // === ALARM-Body → Kontext puffern und ggf. sofort feuern ===
                     if (string.Equals(type, "alarm", StringComparison.OrdinalIgnoreCase))
                     {
-                        _pendingAlarm = (name, entityName, entityId);
+                        _pendingAlarm = (name, entityName, entityId, host, port);
 
                         if (_pendingAlarmMsg is string buffered)
                         {
@@ -659,7 +726,9 @@ namespace RustPlusDesk.Services
                                 name ?? "-",
                                 (entityName ?? "Alarm") + (entityId.HasValue ? $"#{entityId}" : ""),
                                 entityId,
-                                buffered
+                                buffered,
+                                host,
+                                port
                             ));
                             _pendingAlarm = null; _pendingAlarmMsg = null; _pendingAlarmMsgTs = null;
                         }

@@ -131,6 +131,12 @@ public class TrackingSettings
     public bool OfflineDeathSoundLoopEnabled { get; set; } = false;
     public bool OfflineDeathDiscordEnabled { get; set; } = false;
     public List<OfflineDeathNotification> OfflineDeathHistory { get; set; } = new();
+    
+    // Notifications Center Settings
+    public bool NotificationsToastEnabled { get; set; } = true;
+    public bool NotificationsSoundsEnabled { get; set; } = true;
+    public int NotificationsRetentionDays { get; set; } = 30;
+    public List<string> MutedNotificationServers { get; set; } = new();
 }
 
 
@@ -1615,5 +1621,52 @@ public static class TrackingService
             _settings.OfflineDeathHistory.Clear();
         }
         SaveDB();
+    }
+
+    public static bool NotificationsToastEnabled
+    {
+        get => _settings.NotificationsToastEnabled;
+        set { _settings.NotificationsToastEnabled = value; SaveDB(); }
+    }
+
+    public static bool NotificationsSoundsEnabled
+    {
+        get => _settings.NotificationsSoundsEnabled;
+        set { _settings.NotificationsSoundsEnabled = value; SaveDB(); }
+    }
+
+    public static int NotificationsRetentionDays
+    {
+        get => _settings.NotificationsRetentionDays <= 0 ? 30 : _settings.NotificationsRetentionDays;
+        set { _settings.NotificationsRetentionDays = value; SaveDB(); }
+    }
+
+    public static List<string> MutedNotificationServers
+    {
+        get
+        {
+            if (_settings.MutedNotificationServers == null) _settings.MutedNotificationServers = new();
+            return _settings.MutedNotificationServers;
+        }
+    }
+
+    public static void MuteServer(string host, int port)
+    {
+        var key = $"{host}:{port}";
+        if (_settings.MutedNotificationServers == null) _settings.MutedNotificationServers = new();
+        if (!_settings.MutedNotificationServers.Contains(key))
+        {
+            _settings.MutedNotificationServers.Add(key);
+            SaveDB();
+        }
+    }
+
+    public static void UnmuteServer(string host, int port)
+    {
+        var key = $"{host}:{port}";
+        if (_settings.MutedNotificationServers != null && _settings.MutedNotificationServers.Remove(key))
+        {
+            SaveDB();
+        }
     }
 }
