@@ -1052,38 +1052,6 @@
                             </StackPanel>
                         </Border>
 
-                        <!--  Serverdaten (rechtsbündig, gleiche Zeile)  -->
-                        <StackPanel
-                            Grid.Column="2"
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal">
-                            <TextBlock Text="{DynamicResource Players}" />
-                            <TextBlock
-                                Margin="4,0,0,0"
-                                FontWeight="SemiBold"
-                                Text="{Binding ServerPlayers}" />
-
-                    <Button
-                        x:Name="BtnShowOnline"
-                        Width="18"
-                        Height="18"
-                        Margin="4,0,0,0"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Click="BtnShowOnline_Click"
-                        Content="&#x25BC;"
-                        Foreground="White"
-                        ToolTip="{DynamicResource ShowOnlinePlayers}" />
-
-                    <TextBlock Margin="6,0,0,0" VerticalAlignment="Center">
-                        <Run Text=" | " />
-                        <Run Text="{DynamicResource Queue}" />
-                    </TextBlock>
-                    <TextBlock
-                        Margin="4,0,0,0"
-                        FontWeight="SemiBold"
-                        Text="{Binding ServerQueue}" />
-                </StackPanel>
                     </Grid>
 
                     <!--  CENTER: TabControl füllt den Rest, mit Mindesthöhe  -->
@@ -3911,6 +3879,73 @@
                                                     </Style>
                                                 </TextBlock.Style>
                                             </TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ui:Card>
+
+                                <!--  SERVER STATUS OVERLAY  -->
+                                <ui:Card
+                                    x:Name="ServerStatusOverlay"
+                                    Margin="0,6,0,0"
+                                    Padding="8,4"
+                                    Background="#AA16181C"
+                                    BorderBrush="#40FFFFFF"
+                                    BorderThickness="1"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top">
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                FontSize="14"
+                                                Foreground="#8D98A8"
+                                                Symbol="People20" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="11"
+                                                Foreground="#8D98A8"
+                                                Text="{DynamicResource Players}" />
+                                            <TextBlock
+                                                Margin="6,0,4,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                FontWeight="SemiBold"
+                                                Foreground="White"
+                                                Text="{Binding ServerPlayers}" />
+                                            <Button
+                                                x:Name="BtnShowOnline"
+                                                Width="18"
+                                                Height="18"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Click="BtnShowOnline_Click"
+                                                Content="&#x25BC;"
+                                                FontSize="10"
+                                                Foreground="White"
+                                                ToolTip="{DynamicResource ShowOnlinePlayers}" />
+                                        </StackPanel>
+
+                                        <StackPanel
+                                            Margin="0,2,0,0"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                FontSize="14"
+                                                Foreground="#8D98A8"
+                                                Symbol="Hourglass20" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="11"
+                                                Foreground="#8D98A8"
+                                                Text="{DynamicResource Queue}" />
+                                            <TextBlock
+                                                Margin="6,0,0,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                FontWeight="SemiBold"
+                                                Foreground="White"
+                                                Text="{Binding ServerQueue}" />
                                         </StackPanel>
                                     </StackPanel>
                                 </ui:Card>
