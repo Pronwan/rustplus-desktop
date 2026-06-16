@@ -381,6 +381,9 @@ public partial class MainWindow
                 
                 state.SeenAtEdge = distFromCenter > (half * 0.85);
 
+                // crash-safe log regardless of the announce toggle
+                RecordEvent("Cargo Ship", "SPAWNED", $"@ {GetGridLabel(m.X, m.Y)}");
+
                 if (_announceSpawns && TrackingService.AnnounceCargo)
                 {
                     string grid = GetGridLabel(m.X, m.Y);
@@ -571,6 +574,7 @@ public partial class MainWindow
             if ((now - state.LastSeen).TotalSeconds > 60)
             {
                 _cargoLastDespawnUtc = now;
+                RecordEvent("Cargo Ship", "LEFT");
                 AppendLog($"[cargo] Despawn detected – last seen {(now - state.LastSeen).TotalSeconds:F0}s ago.");
 
                 if (state.FirstSeen.HasValue && state.HarborCount >= 1 && state.SeenAtEdge) 
@@ -1385,6 +1389,7 @@ public partial class MainWindow
                             {
                                 _heliSpawnTime = DateTime.UtcNow;
                                 _heliMidEvent = false;
+                                RecordEvent("Patrol Heli", "SPAWNED", $"@ {GetGridLabel(m.X, m.Y)}");
                             }
                         }
                         else if (m.Type == 6) // Travelling Vendor
@@ -1400,6 +1405,7 @@ public partial class MainWindow
                                 _vendorSpawnTime = DateTime.UtcNow;
                                 _vendorMidEvent = false;
                                 _vendorDespawnTime = null;
+                                RecordEvent("Travelling Vendor", "SPAWNED", $"@ {GetGridLabel(m.X, m.Y)}");
                             }
                         }
 
@@ -1684,6 +1690,8 @@ public partial class MainWindow
                     _heliLastEventWasCrash = crashed;
                     _heliSpawnTime = null;
                     _heliMidEvent = false;
+                    RecordEvent("Patrol Heli", crashed ? "SHOT-DOWN" : "LEFT",
+                        crashed ? $"@ {GetGridLabel(state.LastRealX, state.LastRealY)}" : "");
 
                     if (crashed)
                     {
@@ -1710,6 +1718,7 @@ public partial class MainWindow
                     _vendorDespawnTime = DateTime.UtcNow;
                     _vendorSpawnTime = null;
                     _vendorMidEvent = false;
+                    RecordEvent("Travelling Vendor", "LEFT");
                     AppendLog("[Vendor] Travelling Vendor despawned or left the map area.");
                 }
 

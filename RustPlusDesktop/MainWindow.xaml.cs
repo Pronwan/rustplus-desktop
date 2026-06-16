@@ -365,6 +365,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
         _vm.IsInitializing = true;
+        Services.EventStateService.Load(); // restore persisted event states from a previous run/crash
         InitializeComponent();
         MainTabs.SelectionChanged += MainTabs_SelectionChanged;
         
@@ -721,11 +722,13 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _monumentWatcher.OnOilRigTriggered += (s, data) =>
         {
-            if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
             string timeStr = data.Duration >= 800 ? "~15m" : "~12:30m";
             string rigName = data.Name == "Small Oil Rig" ? Properties.Resources.SmallOilRig :
                              data.Name == "Large Oil Rig" ? Properties.Resources.LargeOilRig :
                              data.Name;
+            // crash-safe log regardless of the announce toggle
+            RecordEvent(data.Name, "CRATE-CALLED", $"crate in {timeStr}");
+            if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
             Dispatcher.InvokeAsync(async () =>
             {
                 var msg = AlertTemplateService.GetFormattedAlert("AlertOilRigTriggered", rigName, timeStr);
@@ -2065,6 +2068,38 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private readonly ObservableCollection<AlarmNotification> _alarmFeed = new();
     private readonly Dictionary<string, DateTime> _lastAlarmProcessed = new();
     private DateTime _lastAnyAlarmTime = DateTime.MinValue; // Globaler Marker fÃ¼r Fuzzy-Dedup
+
+    // Per-alarm spam guard: if an alarm fires more than 3 times in a row (each within the window
+    // of the last), its alerts are muted for 10 minutes so a raid/decay loop can't flood chat.
+    private sealed class AlarmSpamState { public DateTime LastTrigger; public int Streak; public DateTime CooldownUntil; }
+    private readonly Dictionary<string, AlarmSpamState> _alarmSpam = new();
+    private const int AlarmSpamThreshold = 3;
+    private static readonly TimeSpan AlarmSpamWindow = TimeSpan.FromMinutes(2);
+    private static readonly TimeSpan AlarmSpamCooldown = TimeSpan.FromMinutes(10);
+
+    private bool IsAlarmSpamSuppressed(string key, DateTime now)
+    {
+        if (!_alarmSpam.TryGetValue(key, out var st)) { st = new AlarmSpamState(); _alarmSpam[key] = st; }
+
+        // already cooling down -> stay muted
+        if (now < st.CooldownUntil) return true;
+
+        // count consecutive triggers that arrive within the window of the previous one
+        if (st.LastTrigger != default && (now - st.LastTrigger) <= AlarmSpamWindow)
+            st.Streak++;
+        else
+            st.Streak = 1;
+        st.LastTrigger = now;
+
+        if (st.Streak > AlarmSpamThreshold)
+        {
+            st.CooldownUntil = now + AlarmSpamCooldown;
+            st.Streak = 0;
+            AppendLog($"[alarm] '{key}' fired >{AlarmSpamThreshold}x in a row — muting its alerts for {AlarmSpamCooldown.TotalMinutes:0} min");
+            return true; // mute the one that tripped the cooldown too
+        }
+        return false;
+    }
     private readonly Dictionary<uint, (string Title, string Message)> _alarmMetadataCache = new();
     private readonly Dictionary<string, (uint Id, DateTime Time)> _lastSeenIdPerServer = new();
     private readonly List<string> _alarmHistoryDedup = new();
@@ -2254,15 +2289,25 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var raidOwnerSteamId = !string.IsNullOrWhiteSpace(_vm.SteamId64)
             ? _vm.SteamId64
             : alarmProfile?.SteamId64 ?? "";
-        _ = DiscordBotListenerService.Instance.SendRaidNotificationAsync(
-            raidServerKey,
-            raidOwnerSteamId,
-            $"\uD83D\uDEA8 **{dev?.PureName ?? n.DeviceName ?? "Smart Alarm"}**: {n.Message}");
+
+        // Spam guard: if this alarm fires >3 times in a row it gets muted for 10 min so a
+        // raid/decay loop can't flood team chat + Discord (and burn API tokens).
+        string alarmSpamKey = n.EntityId.HasValue ? $"ID:{n.EntityId.Value}" : (n.DeviceName ?? "alarm");
+        bool alarmSpamMuted = IsAlarmSpamSuppressed(alarmSpamKey, now);
+
+        if (!alarmSpamMuted)
+        {
+            _ = DiscordBotListenerService.Instance.SendRaidNotificationAsync(
+                raidServerKey,
+                raidOwnerSteamId,
+                $"\uD83D\uDEA8 **{dev?.PureName ?? n.DeviceName ?? "Smart Alarm"}**: {n.Message}");
+        }
 
         // Send smart alert to team chat if setting and master switch are enabled
         if (_vm.Selected?.IsFullConnected == true
             && TrackingService.AnnounceSmartAlerts
-            && _announceSpawns)
+            && _announceSpawns
+            && !alarmSpamMuted)
         {
             string alarmName = dev?.PureName ?? (!string.IsNullOrEmpty(n.DeviceName) ? n.DeviceName : "Smart Alarm");
             _ = SendTeamChatSafeAsync(AlertTemplateService.GetFormattedAlert("AlertAlarmTriggered", alarmName), false, true);

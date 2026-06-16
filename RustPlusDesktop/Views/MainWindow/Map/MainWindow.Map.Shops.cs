@@ -48,10 +48,11 @@ public partial class MainWindow
                     _deepSeaSpawnTime = DateTime.UtcNow;
                     _deepSeaDespawnTime = null;
                     _deepSeaMidEvent = false;
+                    RecordEvent("Deep Sea", "UP");
                     string dir = GetDeepSeaDirection(deepSeaShop.X, deepSeaShop.Y);
                     if (_announceSpawns && TrackingService.AnnounceDeepSea)
                     {
-                        var msg = AlertTemplateService.GetAlertTemplate("AlertDeepSeaUp");
+                        var msg = $"{AlertTemplateService.GetAlertTemplate("AlertDeepSeaUp")} ({dir})";
                         _ = SendTeamChatSafeAsync(msg, false, true);
                         _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event:** {msg}");
                     }
@@ -74,6 +75,7 @@ public partial class MainWindow
             {
                 // Genuine despawn witnessed while shop tracking was running
                 _deepSeaDespawnTime = DateTime.UtcNow;
+                RecordEvent("Deep Sea", "ENDED");
                 AppendLog("[DEEPSEA] Despawn detected.");
             }
             else
@@ -89,15 +91,11 @@ public partial class MainWindow
 
     private string GetDeepSeaDirection(double x, double y)
     {
-        double size = _worldSizeS > 0 ? _worldSizeS : 4500;
-        double margin = 200;
-
-        if (y < margin) return "North";
-        if (y > size - margin) return "South";
-        if (x < margin) return "West";
-        if (x > size - margin) return "East";
-
-        return TryGetGridRef(x, y, out var g) ? g : "Unknown";
+        // The Deep Sea NPC shop always spawns off the WEST edge of the map (its X is negative,
+        // outside the playable grid). The real in-game approach direction can't be read from the
+        // API, and the old edge-based N/S/E/W guess was wrong because it tested Y first and could
+        // report "North"/"South". So we report the only thing that's actually reliable: West.
+        return "West";
     }
 
     private static void PrefetchShopIcons(IEnumerable<RustPlusClientReal.ShopMarker> shops)
@@ -254,6 +252,48 @@ public partial class MainWindow
         {
             Interlocked.Exchange(ref _shopPollLock, 0);
         }
+    }
+
+    // ===== Background Deep Sea auto-detection =====
+    // Deep Sea is only observable via the shop list, but we don't want to force the user to enable
+    // the (heavier) Shops layer just to track it. This gentle background poll fetches the shop list
+    // on a slow cadence purely to detect Deep Sea (no marker rendering, no new-shop alerts). It backs
+    // off entirely while full shop polling is active (that already covers Deep Sea) or under API load.
+    private DispatcherTimer? _deepSeaPollTimer;
+
+    private void StartDeepSeaAutoPoll()
+    {
+        if (_deepSeaPollTimer != null) return;
+        _deepSeaPollTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(60) };
+        _deepSeaPollTimer.Tick += async (_, __) => await PollDeepSeaOnceAsync();
+        _deepSeaPollTimer.Start();
+        _ = PollDeepSeaOnceAsync(); // check soon after connect, don't wait a full minute
+    }
+
+    private void StopDeepSeaAutoPoll()
+    {
+        _deepSeaPollTimer?.Stop();
+        _deepSeaPollTimer = null;
+    }
+
+    private async Task PollDeepSeaOnceAsync()
+    {
+        if (_rust is not RustPlusClientReal real) return;
+        if (_shopTimer != null) return; // full shop polling already tracks Deep Sea
+        if (Interlocked.CompareExchange(ref _shopPollLock, 1, 0) != 0) return;
+        try
+        {
+            if (IsApiUnderPressure) return;
+            var shops = await real.GetVendingShopsAsync();
+            if (shops == null) return;
+            _lastShops = shops;                       // keep cache fresh so !shop works too
+            // CheckDeepSeaEvent before flipping _firstShopPollDone, so a Deep Sea that's already up
+            // on our first poll is treated as "connected mid-event", not a fresh spawn to announce.
+            CheckDeepSeaEvent(shops);
+            if (shops.Count > 0) _firstShopPollDone = true;
+        }
+        catch { }
+        finally { Interlocked.Exchange(ref _shopPollLock, 0); }
     }
 
     private async Task DetectNewShopsAsync(IReadOnlyList<RustPlusClientReal.ShopMarker> shops)

@@ -259,6 +259,34 @@ public class ServerProfile : INotifyPropertyChanged
         set { _cmdUpkeepDetail = ValidateCommand(value, "upkeepdetail"); OnProp(); }
     }
 
+    private string _cmdShop = "shop";
+    public string CmdShop
+    {
+        get => _cmdShop;
+        set { _cmdShop = ValidateCommand(value, "shop"); OnProp(); }
+    }
+
+    private string _cmdSmall = "small";
+    public string CmdSmall
+    {
+        get => _cmdSmall;
+        set { _cmdSmall = ValidateCommand(value, "small"); OnProp(); }
+    }
+
+    private string _cmdLarge = "large";
+    public string CmdLarge
+    {
+        get => _cmdLarge;
+        set { _cmdLarge = ValidateCommand(value, "large"); OnProp(); }
+    }
+
+    private string _cmdPos = "pos";
+    public string CmdPos
+    {
+        get => _cmdPos;
+        set { _cmdPos = ValidateCommand(value, "pos"); OnProp(); }
+    }
+
     private int _chatCommandDelaySeconds = 2;
     public int ChatCommandDelaySeconds
     {
@@ -271,6 +299,13 @@ public class ServerProfile : INotifyPropertyChanged
     {
         get => _chatResponseDelaySeconds;
         set { if (value >= 0.0 && value <= 5.0) { _chatResponseDelaySeconds = value; OnProp(); } }
+    }
+
+    private int _afkThresholdMinutes = 5;
+    public int AfkThresholdMinutes
+    {
+        get => _afkThresholdMinutes;
+        set { if (value >= 1 && value <= 60) { _afkThresholdMinutes = value; OnProp(); } }
     }
 
     private ObservableCollection<ChatCommandMapping> _switchCommandMappings = new();

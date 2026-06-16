@@ -51,6 +51,10 @@ namespace RustPlusDesk.Views.Windows
                 "AlertPlayerOffline",
                 "AlertPlayerDied",
                 "AlertPlayerRespawned",
+                "AlertPlayerJoinedTeam",
+                "AlertPlayerLeftTeam",
+                "AlertPlayerAfk",
+                "AlertPlayerAfkBack",
                 "AlertTrackingOnline",
                 "AlertTrackingOffline",
                 "AlertTrackingRenamed"

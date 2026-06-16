@@ -21,6 +21,83 @@ public partial class MainWindow
     private System.Windows.Threading.DispatcherTimer? _afkTimer;
     public ObservableCollection<TeamMemberVM> TeamMembers { get; } = new();
 
+    // Crash-safe timeline log: appended (and flushed) immediately on every offline/online/AFK,
+    // death, and world event (oil rig, etc.) so the history survives an app crash. Lives next to
+    // the other app data at %LOCALAPPDATA%\RustPlusDesk\logs\timeline.log.
+    private static readonly string _timelineLogPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "RustPlusDesk", "logs", "timeline.log");
+    private static readonly object _timelineLogLock = new();
+
+    // Records an event to BOTH stores: append-only history (timeline.log) and the latest-state
+    // snapshot (events.json, overwritten per key and reloaded on startup).
+    // subject/key = player name or monument/event name; eventType = OFFLINE/ONLINE/AFK/DIED/CRATE-CALLED/...
+    private void RecordEvent(string subject, string eventType, string detail = "")
+    {
+        LogTimelineEvent(subject, eventType, detail);
+        // latest-state snapshot is keyed per-server so different servers don't clobber each other
+        string server = _vm?.Selected?.Name ?? "?";
+        Services.EventStateService.Record($"{server}{subject}", eventType, detail);
+    }
+
+    // Rehydrate the world-event "last ended" timestamps for the connected server from the
+    // persisted snapshot, so !cargo/!heli/!vendor/!deepsea "X ago" still work after a restart.
+    private void RestoreEventStateFromSnapshot()
+    {
+        try
+        {
+            string server = _vm?.Selected?.Name ?? "?";
+            string prefix = $"{server}";
+            foreach (var kv in Services.EventStateService.Snapshot())
+            {
+                if (!kv.Key.StartsWith(prefix, StringComparison.Ordinal)) continue;
+                string subject = kv.Key.Substring(prefix.Length);
+                var e = kv.Value;
+                // If the map wiped while we were closed, persisted states are from the previous
+                // wipe and must be ignored (RustMapsWipeTime is our best wipe signal). Also drop
+                // anything too old to still be meaningful.
+                var wipe = _vm?.Selected?.RustMapsWipeTime;
+                if (wipe.HasValue && e.TimeUtc < wipe.Value) continue;
+                if ((DateTime.UtcNow - e.TimeUtc).TotalHours > 15.0) continue;
+                switch (subject)
+                {
+                    case "Cargo Ship" when e.State == "LEFT":
+                        _cargoLastDespawnUtc ??= e.TimeUtc; break;
+                    case "Patrol Heli" when e.State is "LEFT" or "SHOT-DOWN":
+                        if (!_heliLastEventUtc.HasValue) { _heliLastEventUtc = e.TimeUtc; _heliLastEventWasCrash = e.State == "SHOT-DOWN"; }
+                        break;
+                    case "Travelling Vendor" when e.State == "LEFT":
+                        _vendorDespawnTime ??= e.TimeUtc; break;
+                    case "Deep Sea" when e.State == "ENDED":
+                        _deepSeaDespawnTime ??= e.TimeUtc; break;
+                }
+            }
+        }
+        catch (Exception ex) { AppendLog($"[TimelineLog] restore failed: {ex.Message}"); }
+    }
+
+    private void LogTimelineEvent(string subject, string eventType, string detail = "")
+    {
+        try
+        {
+            var dir = Path.GetDirectoryName(_timelineLogPath);
+            if (dir != null) Directory.CreateDirectory(dir);
+
+            string server = _vm?.Selected?.Name ?? "?";
+            string detailPart = string.IsNullOrEmpty(detail) ? "" : "\t" + detail;
+            string line = $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}Z\t[{server}]\t{subject}\t{eventType}{detailPart}{Environment.NewLine}";
+
+            lock (_timelineLogLock)
+            {
+                File.AppendAllText(_timelineLogPath, line);
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[TimelineLog] write failed: {ex.Message}");
+        }
+    }
+
     private readonly Dictionary<ulong, ImageSource> _avatarCache = new();
     private RustPlusClientReal? _real => _rust as RustPlusClientReal;
 
@@ -134,6 +211,13 @@ public partial class MainWindow
             set { if (_afkText == value) return; _afkText = value; OnChanged(nameof(AfkText)); }
         }
 
+        // Set when the player moves after being AFK (= how long they were idle). Consumed by AfkTimer to announce the return.
+        public TimeSpan? AfkReturnDuration { get; set; }
+        // Set when the player goes offline; used to report how long they were gone when they come back.
+        public DateTime? OfflineSince { get; set; }
+        // Set when the player (re)spawns alive; used to report how long they were alive when they die.
+        public DateTime? AliveSince { get; set; }
+
         public void SetPosition(double? x, double? y)
         {
             if (x == null || y == null)
@@ -149,6 +233,13 @@ public partial class MainWindow
                 double dist = Math.Sqrt(dx * dx + dy * dy);
                 if (dist > 0.05)
                 {
+                    if (_isAfk)
+                    {
+                        // they're back — remember how long they were idle so we can announce it
+                        AfkReturnDuration = DateTime.UtcNow - _lastMoveTime;
+                        IsAfk = false;
+                        AfkText = string.Empty;
+                    }
                     _lastMoveTime = DateTime.UtcNow;
                 }
             }
@@ -160,18 +251,19 @@ public partial class MainWindow
             Y = y;
         }
 
-        public bool UpdateAfkState(DateTime now)
+        public bool UpdateAfkState(DateTime now, int thresholdMinutes = 5)
         {
             if (!IsOnline || IsDead)
             {
                 _lastMoveTime = now;
                 IsAfk = false;
                 AfkText = string.Empty;
+                AfkReturnDuration = null; // don't announce an AFK return if they went offline/died
                 return false;
             }
 
             var elapsed = now - _lastMoveTime;
-            if (elapsed.TotalMinutes >= 5)
+            if (elapsed.TotalMinutes >= thresholdMinutes)
             {
                 bool becameAfk = !_isAfk;
                 IsAfk = true;
@@ -210,6 +302,7 @@ public partial class MainWindow
 
     private readonly Dictionary<ulong, string> _steamNames = new();
     private DateTime _lastTeamRefresh = DateTime.MinValue;
+    private bool _teamRosterInitialized; // skip announcing the initial roster as joins
     private string? _lastCloudPresenceSignature;
     private DateTime _lastPresenceUploadTime = DateTime.MinValue;
     private bool _hasCriticalPresenceChange;
@@ -217,6 +310,8 @@ public partial class MainWindow
     private void StartTeamPolling()
     {
         if (_teamTimer != null) return;
+        _teamRosterInitialized = false; // re-baseline roster
+        RestoreEventStateFromSnapshot(); // rehydrate world-event "last X ago" timers for this server
         _teamTimer = new System.Windows.Threading.DispatcherTimer
         {
             Interval = TimeSpan.FromSeconds(5)
@@ -261,9 +356,41 @@ public partial class MainWindow
     private void AfkTimer_Tick(object? sender, EventArgs e)
     {
         var now = DateTime.UtcNow;
+        int afkThreshold = _vm?.Selected?.AfkThresholdMinutes ?? 5;
         foreach (var m in TeamMembers)
         {
-            m.UpdateAfkState(now);
+            // true only on transition into AFK
+            bool becameAfk = m.UpdateAfkState(now, afkThreshold);
+            bool cameBack = m.AfkReturnDuration.HasValue && m.IsOnline;
+
+            // Crash-safe log first, regardless of whether chat alerts are enabled.
+            if (becameAfk)
+                RecordEvent(m.Name, "AFK", $"idle {FormatAgo(now - m.LastMoveTime)}");
+            else if (cameBack)
+                RecordEvent(m.Name, "AFK-BACK", $"was AFK {FormatAgo(m.AfkReturnDuration!.Value)}");
+
+            if (!_announceSpawns)
+            {
+                m.AfkReturnDuration = null; // announcements disabled — nothing to send
+                continue;
+            }
+
+            var dispName = GetDisplayPlayerName(m.Name);
+            if (becameAfk)
+            {
+                // just went AFK — include how long they've been idle (≈ the threshold)
+                var txt = AlertTemplateService.GetFormattedAlert("AlertPlayerAfk", dispName, FormatAgo(now - m.LastMoveTime));
+                if (!string.IsNullOrWhiteSpace(txt))
+                    _ = SendTeamChatSafeAsync(txt);
+            }
+            else if (m.AfkReturnDuration.HasValue && m.IsOnline)
+            {
+                // came back — report how long they were AFK
+                var txt = AlertTemplateService.GetFormattedAlert("AlertPlayerAfkBack", dispName, FormatAgo(m.AfkReturnDuration.Value));
+                if (!string.IsNullOrWhiteSpace(txt))
+                    _ = SendTeamChatSafeAsync(txt);
+                m.AfkReturnDuration = null;
+            }
         }
     }
 
@@ -338,6 +465,12 @@ public partial class MainWindow
             var leaderId = team.LeaderSteamId;
             foreach (var m in TeamMembers) m.MissingCount++;
 
+            // track this pass's roster delta so we can tell a single teammate change
+            // apart from YOU switching teams (mass change)
+            int prevTeammateCount = TeamMembers.Count(t => t.SteamId != _mySteamId);
+            var joinedThisPass = new List<TeamMemberVM>();
+            var leftThisPass = new List<TeamMemberVM>();
+
             var avatarTasks = new List<Task>();
             foreach (var m in team.Members)
             {
@@ -351,6 +484,7 @@ public partial class MainWindow
                     vm.PropertyChanged += TeamMember_PropertyChanged;
                     TeamMembers.Add(vm);
                     _hasCriticalPresenceChange = true;
+                    if (sid != _mySteamId) joinedThisPass.Add(vm);
                 }
                 else
                 {
@@ -375,6 +509,9 @@ public partial class MainWindow
                 vm.IsLeader = leaderId != 0 && sid == leaderId;
                 vm.IsOnline = m.Online;
                 vm.IsDead = m.Dead;
+                // Best-effort seed for players already alive when first seen (no spawn event to
+                // anchor to). Real respawns reset this accurately in AnnouncePresenceChangeAsync.
+                if (!m.Dead && !vm.AliveSince.HasValue) vm.AliveSince = DateTime.UtcNow;
                 vm.SetPosition(m.X, m.Y);
 
                 var now = (m.Online, m.Dead);
@@ -395,10 +532,21 @@ public partial class MainWindow
             for (int i = TeamMembers.Count - 1; i >= 0; i--)
                 if (TeamMembers[i].MissingCount > 2)
                 {
-                    TeamMembers[i].PropertyChanged -= TeamMember_PropertyChanged;
+                    var left = TeamMembers[i];
+                    if (left.SteamId != _mySteamId) leftThisPass.Add(left);
+                    left.PropertyChanged -= TeamMember_PropertyChanged;
                     TeamMembers.RemoveAt(i);
                     _hasCriticalPresenceChange = true;
                 }
+
+            int curTeammateCount = TeamMembers.Count(t => t.SteamId != _mySteamId);
+
+            // Announce join/leave (spaced out to avoid API flood); handle YOUR own team-switches specially.
+            if (_teamRosterInitialized && _announceSpawns)
+                _ = AnnounceRosterDelta(joinedThisPass, leftThisPass, prevTeammateCount, curTeammateCount, leaderId);
+
+            // baseline set; later passes announce joins/leaves
+            _teamRosterInitialized = true;
 
             // Cleanup subscriptions of players who left the team on the UI thread
             var currentTeamIds = TeamMembers.Select(tm => tm.SteamId).ToHashSet();
@@ -502,22 +650,99 @@ public partial class MainWindow
         return $"{serverKey ?? ""}#{serverName ?? ""}#{team}";
     }
 
+    // Announces team join/leave, distinguishing YOUR own team-switches from normal teammate changes,
+    // and spaces messages out so we never burst the Rust+ API (which can get the player kicked).
+    private async Task AnnounceRosterDelta(List<TeamMemberVM> joined, List<TeamMemberVM> left,
+                                          int prevTeammateCount, int curTeammateCount, ulong leaderId)
+    {
+        const int gapMs = 2500; // spacing between consecutive chat messages
+
+        // Build all messages first (sync), then send with delays.
+        var messages = new List<string>();
+
+        // ----- JOINS -----
+        if (joined.Count > 0)
+        {
+            bool iAmLeader = leaderId != 0 && leaderId == _mySteamId;
+            if (!iAmLeader && prevTeammateCount == 0)
+            {
+                // I went from solo to being in someone else's team => I joined them.
+                // Announce only me once, not every member who was already there.
+                var meName = GetDisplayPlayerName(TeamMembers.FirstOrDefault(t => t.SteamId == _mySteamId)?.Name ?? "");
+                var txt = AlertTemplateService.GetFormattedAlert("AlertPlayerJoinedTeam", meName);
+                if (!string.IsNullOrWhiteSpace(txt)) messages.Add(txt);
+            }
+            else
+            {
+                // It's my team (I'm leader) or a teammate joined the team I'm already in => announce each.
+                foreach (var vm in joined)
+                {
+                    var txt = AlertTemplateService.GetFormattedAlert("AlertPlayerJoinedTeam", GetDisplayPlayerName(vm.Name));
+                    if (!string.IsNullOrWhiteSpace(txt)) messages.Add(txt);
+                }
+            }
+        }
+
+        // ----- LEAVES ----- (suppress entirely if the roster collapsed to just me: I left / team dissolved)
+        if (left.Count > 0 && curTeammateCount >= 1)
+        {
+            foreach (var vm in left)
+            {
+                var txt = AlertTemplateService.GetFormattedAlert("AlertPlayerLeftTeam", GetDisplayPlayerName(vm.Name));
+                if (!string.IsNullOrWhiteSpace(txt)) messages.Add(txt);
+            }
+        }
+
+        for (int i = 0; i < messages.Count; i++)
+        {
+            if (i > 0) await Task.Delay(gapMs);
+            await SendTeamChatSafeAsync(messages[i]);
+        }
+    }
+
     private async Task AnnouncePresenceChangeAsync(TeamMemberVM vm, (bool online, bool dead) prev, (bool online, bool dead) now)
     {
         try
         {
-            if (prev.online != now.online && _announceSpawns)
+            if (prev.online != now.online)
             {
-                bool isSelf = vm.SteamId == _mySteamId;
-                bool shouldAnnounce = now.online ? TrackingService.AnnouncePlayerOnline : TrackingService.AnnouncePlayerOffline;
+                // Crash-safe log first, regardless of whether chat alerts are enabled.
+                string logGrid = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : "?";
+                string logDetail = $"@ {logGrid}";
+                if (now.online && vm.OfflineSince.HasValue)
+                    logDetail += $", was offline {FormatAgo(DateTime.UtcNow - vm.OfflineSince.Value)}";
+                RecordEvent(vm.Name, now.online ? "ONLINE" : "OFFLINE", logDetail);
 
-                if (shouldAnnounce)
+                if (_announceSpawns)
                 {
-                    var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : Properties.Resources.Unknown;
-                    var dispName = GetDisplayPlayerName(vm.Name);
-                    var txt = now.online ? AlertTemplateService.GetFormattedAlert("AlertPlayerOnlineWithPos", dispName, where) : AlertTemplateService.GetFormattedAlert("AlertPlayerOffline", dispName);
-                    await SendTeamChatSafeAsync(txt);
+                    bool shouldAnnounce = now.online ? TrackingService.AnnouncePlayerOnline : TrackingService.AnnouncePlayerOffline;
+
+                    if (shouldAnnounce)
+                    {
+                        var where = (vm.X.HasValue && vm.Y.HasValue) ? GetGridLabel(vm.X.Value, vm.Y.Value) : Properties.Resources.Unknown;
+                        var dispName = GetDisplayPlayerName(vm.Name);
+                        string txt;
+                        if (now.online)
+                        {
+                            txt = AlertTemplateService.GetFormattedAlert("AlertPlayerOnlineWithPos", dispName, where);
+                            // tack on how long they were offline, if we tracked it
+                            if (vm.OfflineSince.HasValue)
+                            {
+                                var suffix = AlertTemplateService.GetFormattedAlert("AlertPlayerOfflineDuration", FormatAgo(DateTime.UtcNow - vm.OfflineSince.Value));
+                                if (!string.IsNullOrWhiteSpace(suffix)) txt += " " + suffix;
+                            }
+                        }
+                        else
+                        {
+                            txt = AlertTemplateService.GetFormattedAlert("AlertPlayerOffline", dispName);
+                        }
+                        await SendTeamChatSafeAsync(txt);
+                    }
                 }
+
+                // Track offline timing regardless of the announce setting, so the duration is
+                // correct even if alerts were toggled on only after the player went offline.
+                vm.OfflineSince = now.online ? (DateTime?)null : DateTime.UtcNow;
             }
 
             if (prev.dead != now.dead)
@@ -528,6 +753,13 @@ public partial class MainWindow
                     px = dx;
                     py = dy;
                 }
+
+                // Crash-safe log first, regardless of whether chat alerts are enabled.
+                string deathGrid = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : "?";
+                string deathDetail = $"@ {deathGrid}";
+                if (now.dead && vm.AliveSince.HasValue)
+                    deathDetail += $", alive for {FormatAgo(DateTime.UtcNow - vm.AliveSince.Value)}";
+                RecordEvent(vm.Name, now.dead ? "DIED" : "RESPAWNED", deathDetail);
 
                 if (_announceSpawns)
                 {
@@ -544,10 +776,29 @@ public partial class MainWindow
                     {
                         var where = (px.HasValue && py.HasValue) ? GetGridLabel(px.Value, py.Value) : Properties.Resources.Unknown;
                         var dispName = GetDisplayPlayerName(vm.Name);
-                        var txt = now.dead ? AlertTemplateService.GetFormattedAlert("AlertPlayerDied", dispName, where) : AlertTemplateService.GetFormattedAlert("AlertPlayerRespawned", dispName, where);
+                        string txt;
+                        if (now.dead)
+                        {
+                            txt = AlertTemplateService.GetFormattedAlert("AlertPlayerDied", dispName, where);
+                            // tack on how long they were alive, if we tracked their spawn
+                            // (the template already includes its own leading ", ")
+                            if (vm.AliveSince.HasValue)
+                            {
+                                var suffix = AlertTemplateService.GetFormattedAlert("AlertPlayerAliveDuration", FormatAgo(DateTime.UtcNow - vm.AliveSince.Value));
+                                if (!string.IsNullOrWhiteSpace(suffix)) txt += suffix;
+                            }
+                        }
+                        else
+                        {
+                            txt = AlertTemplateService.GetFormattedAlert("AlertPlayerRespawned", dispName, where);
+                        }
                         await SendTeamChatSafeAsync(txt);
                     }
                 }
+
+                // Track alive time independently of the announce setting: reset the clock on
+                // respawn, clear it on death (read above before clearing).
+                vm.AliveSince = now.dead ? (DateTime?)null : DateTime.UtcNow;
 
                 if (now.dead && px.HasValue && py.HasValue)
                 {
