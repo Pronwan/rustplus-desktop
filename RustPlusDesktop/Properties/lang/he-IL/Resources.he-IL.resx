@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
@@ -1869,6 +1869,28 @@
   <data name="KilledBy" xml:space="preserve">
     <value>נהרג על ידי</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>חפש ובחר סמל פריט עבור מכשיר זה.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>שנה סמל מכשיר</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>חפש ובחר סמל פריט עבור כלל זה.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>שנה סמל כלל</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>אפס לסמל ברירת המחדל</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>כלל</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>חפש סמלים (למשל: צריח, מפסק)...</value>
+  </data>
+
 </root>
 
 

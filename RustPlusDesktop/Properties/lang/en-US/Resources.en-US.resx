@@ -2433,4 +2433,26 @@ Are you sure you want to continue?</value>
   <data name="AlertPlayerAfkVars" xml:space="preserve">
     <value>{0}: Player Name, {1}: Time</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Search and select an item icon for this device.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Change Device Icon</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Search and select an item icon for this rule.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Change Rule Icon</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Reset to Default Icon</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Rule</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Search icons (e.g. turret, switch)...</value>
+  </data>
+
 </root>

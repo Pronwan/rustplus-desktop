@@ -2625,4 +2625,26 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   <data name="AlertPlayerAfkVars" xml:space="preserve">
     <value>{0}: Spielername, {1}: Zeit</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Suchen und wählen Sie ein Gegenstandssymbol für dieses Gerät aus.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Gerätesymbol ändern</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Suchen und wählen Sie ein Gegenstandssymbol für diese Regel aus.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Regelsymbol ändern</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Auf Standardsymbol zurücksetzen</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Regel</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Symbole suchen (z. B. Geschützturm, Schalter)...</value>
+  </data>
+
 </root>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
@@ -1824,6 +1824,28 @@ Tem certeza de que deseja continuar?</value>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: alternado para {1} (acionado por {2})</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Pesquise e selecione um ícone de item para este dispositivo.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Alterar ícone do dispositivo</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Pesquise e selecione um ícone de item para esta regra.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Alterar ícone da regra</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Redefinir para o ícone padrão</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Regra</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Pesquisar ícones (ex.: torreta, interruptor)...</value>
+  </data>
+
 </root>
 
 

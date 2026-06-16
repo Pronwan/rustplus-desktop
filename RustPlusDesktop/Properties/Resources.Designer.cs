@@ -701,6 +701,13 @@ namespace RustPlusDesk.Properties {
         public static string ClearLog => GetString("ClearLog");
         public static string NoOfflineDeathsRecorded => GetString("NoOfflineDeathsRecorded");
         public static string KilledBy => GetString("KilledBy");
+        public static string ChangeDeviceIconTitle => GetString("ChangeDeviceIconTitle");
+        public static string ChangeDeviceIconSubtitle => GetString("ChangeDeviceIconSubtitle");
+        public static string ChangeRuleIconTitle => GetString("ChangeRuleIconTitle");
+        public static string ChangeRuleIconSubtitle => GetString("ChangeRuleIconSubtitle");
+        public static string SearchIconsPlaceholder => GetString("SearchIconsPlaceholder");
+        public static string ResetToDefaultIcon => GetString("ResetToDefaultIcon");
+        public static string Rule => GetString("Rule");
     }
 }
 

@@ -2322,4 +2322,26 @@
   <data name="AlertPlayerAfkVars" xml:space="preserve">
     <value>{0}: Имя игрока, {1}: Время</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Найдите и выберите значок предмета для этого устройства.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Изменить значок устройства</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Найдите и выберите значок предмета для этого правила.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Изменить значок правила</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Сбросить на значок по умолчанию</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Правило</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Поиск значков (например, турель, выключатель)...</value>
+  </data>
+
 </root>

@@ -2571,4 +2571,26 @@
   <data name="AlertPlayerAfkVars" xml:space="preserve">
     <value>{0}: 玩家名称, {1}: 时间</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>搜索并选择此设备的物品图标。</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>更改设备图标</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>搜索并选择此规则的物品图标。</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>更改规则图标</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>重置为默认图标</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>规则</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>搜索图标（例如：炮塔、开关）...</value>
+  </data>
+
 </root>
