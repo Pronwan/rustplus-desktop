@@ -1106,8 +1106,9 @@
                             HorizontalAlignment="Right"
                             DockPanel.Dock="Bottom"
                             Orientation="Horizontal">
-                            <Button
+                            <ui:Button
                                 x:Name="BtnHotkeys"
+                                Appearance="Secondary"
                                 MinWidth="135"
                                 Height="36"
                                 Margin="0,0,5,0"
@@ -1117,14 +1118,14 @@
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="Keyboard24" 
                                                    Margin="0,0,6,0" 
-                                                   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ui:Button}}"
                                                    VerticalAlignment="Center"/>
                                     <TextBlock x:Name="TxtBtnHotkeys" 
                                                Text="{DynamicResource Hotkeys}" 
-                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ui:Button}}"
                                                VerticalAlignment="Center"/>
                                 </StackPanel>
-                            </Button>
+                            </ui:Button>
 
                             <ui:Button
                                 x:Name="BtnPremiumInfoDevices"
@@ -1339,6 +1340,25 @@
                                                                 <ColumnDefinition Width="*" SharedSizeGroup="ColAlias" />
                                                                 <ColumnDefinition Width="Auto" SharedSizeGroup="ColToggle" />
                                                             </Grid.ColumnDefinitions>
+                                                            <!-- Selection Indicator Line -->
+                                                            <Border x:Name="SelectedLine" 
+                                                                    Grid.ColumnSpan="3"
+                                                                    Width="3" 
+                                                                    HorizontalAlignment="Left" 
+                                                                    Background="{DynamicResource Accent}" 
+                                                                    CornerRadius="1.5" 
+                                                                    Margin="-12,-8,0,-8">
+                                                                <Border.Style>
+                                                                    <Style TargetType="Border">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsSelected}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Border.Style>
+                                                            </Border>
 
                                                             <!--  Spalte 1: Icon  -->
                                                             <Border Grid.Column="0"
@@ -1644,127 +1664,75 @@
                                                             </StackPanel>
 
                                                             <!--  Spalte 3: Toggle NUR für SmartSwitch  -->
-                                                            <ToggleButton
-                                                                Grid.Column="2"
-                                                                Width="60"
-                                                                Height="22"
-                                                                Margin="8,0,0,0"
-                                                                VerticalAlignment="Center"
-                                                                IsChecked="{Binding IsOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                                                <ToggleButton.Style>
-                                                                    <Style TargetType="ToggleButton">
-                                                                        <Setter Property="Template">
-                                                                            <Setter.Value>
-                                                                                <ControlTemplate TargetType="ToggleButton">
-                                                                                    <Border
-                                                                                        x:Name="Bd"
-                                                                                        Padding="2"
-                                                                                        Background="{TemplateBinding Background}"
-                                                                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                                                                        BorderThickness="1"
-                                                                                        CornerRadius="11">
-                                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                                    </Border>
-                                                                                </ControlTemplate>
-                                                                            </Setter.Value>
-                                                                        </Setter>
-                                                                        <EventSetter Event="Checked" Handler="DeviceToggle_Checked" />
-                                                                        <EventSetter Event="Unchecked" Handler="DeviceToggle_Unchecked" />
-
-                                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                                        <Setter Property="Foreground" Value="#A0AEC0" />
-                                                                        <Setter Property="Background" Value="#2A3240" />
-                                                                        <Setter Property="BorderBrush" Value="#1EFFFFFF" />
-                                                                        <Setter Property="Content" Value="OFF" />
-                                                                        <Setter Property="FontSize" Value="10" />
-                                                                        <Setter Property="FontWeight" Value="SemiBold" />
-                                                                        <Setter Property="Cursor" Value="Hand" />
-
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
-                                                                                <Setter Property="Visibility" Value="Visible" />
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                                <Setter Property="IsEnabled" Value="False" />
-                                                                                <Setter Property="Opacity" Value="0.4" />
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding IsToggleBusy}" Value="True">
-                                                                                <Setter Property="IsEnabled" Value="False" />
-                                                                                <Setter Property="Opacity" Value="0.6" />
-                                                                            </DataTrigger>
-                                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                                <Setter Property="Background" Value="#353E4F" />
-                                                                            </Trigger>
-                                                                            <Trigger Property="IsChecked" Value="True">
-                                                                                <Setter Property="Background" Value="#2B7A4E" />
-                                                                                <Setter Property="BorderBrush" Value="#332B7A4E" />
-                                                                                <Setter Property="Foreground" Value="White" />
-                                                                                <Setter Property="Content" Value="ON" />
-                                                                            </Trigger>
-                                                                            <MultiTrigger>
-                                                                                <MultiTrigger.Conditions>
-                                                                                    <Condition Property="IsChecked" Value="True" />
-                                                                                    <Condition Property="IsMouseOver" Value="True" />
-                                                                                </MultiTrigger.Conditions>
-                                                                                <Setter Property="Background" Value="#358F5C" />
-                                                                            </MultiTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </ToggleButton.Style>
-                                                            </ToggleButton>
+                                                            <ui:ToggleSwitch
+                                                                 Grid.Column="2"
+                                                                 Margin="8,0,0,0"
+                                                                 VerticalAlignment="Center"
+                                                                 IsChecked="{Binding IsOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                 Checked="DeviceToggle_Checked"
+                                                                 Unchecked="DeviceToggle_Unchecked">
+                                                                 <ui:ToggleSwitch.Style>
+                                                                     <Style TargetType="ui:ToggleSwitch" BasedOn="{StaticResource {x:Type ui:ToggleSwitch}}">
+                                                                         <Setter Property="Visibility" Value="Collapsed" />
+                                                                         <Style.Triggers>
+                                                                             <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
+                                                                                 <Setter Property="Visibility" Value="Visible" />
+                                                                             </DataTrigger>
+                                                                             <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                                 <Setter Property="IsEnabled" Value="False" />
+                                                                                 <Setter Property="Opacity" Value="0.4" />
+                                                                             </DataTrigger>
+                                                                             <DataTrigger Binding="{Binding IsToggleBusy}" Value="True">
+                                                                                 <Setter Property="IsEnabled" Value="False" />
+                                                                                 <Setter Property="Opacity" Value="0.6" />
+                                                                             </DataTrigger>
+                                                                         </Style.Triggers>
+                                                                     </Style>
+                                                                 </ui:ToggleSwitch.Style>
+                                                             </ui:ToggleSwitch>
 
                                                             <!--  Spalte 3: Toggle NUR für Gruppen  -->
-                                                            <Button
-                                                                Grid.Column="2"
-                                                                Width="60"
-                                                                Height="22"
-                                                                Margin="8,0,0,0"
-                                                                VerticalAlignment="Center"
-                                                                Click="GroupToggle_Click"
-                                                                Content="{DynamicResource Toggle}"
-                                                                Tag="{Binding}">
-                                                                <Button.Style>
-                                                                    <Style TargetType="Button">
-                                                                        <Setter Property="Template">
-                                                                            <Setter.Value>
-                                                                                <ControlTemplate TargetType="Button">
-                                                                                    <Border
-                                                                                        x:Name="Bd"
-                                                                                        Padding="2"
-                                                                                        Background="{TemplateBinding Background}"
-                                                                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                                                                        BorderThickness="1"
-                                                                                        CornerRadius="11">
-                                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                                    </Border>
-                                                                                </ControlTemplate>
-                                                                            </Setter.Value>
-                                                                        </Setter>
-                                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                                        <Setter Property="Foreground" Value="White" />
-                                                                        <Setter Property="Background" Value="#D97706" />
-                                                                        <Setter Property="BorderBrush" Value="#1EFFFFFF" />
-                                                                        <Setter Property="FontSize" Value="10" />
-                                                                        <Setter Property="FontWeight" Value="SemiBold" />
-                                                                        <Setter Property="Cursor" Value="Hand" />
-                                                                        <Style.Triggers>
-                                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                                <Setter Property="Background" Value="#F59E0B" />
-                                                                            </Trigger>
-                                                                            <Trigger Property="IsPressed" Value="True">
-                                                                                <Setter Property="Background" Value="#B45309" />
-                                                                            </Trigger>
-                                                                            <MultiDataTrigger>
-                                                                                <MultiDataTrigger.Conditions>
-                                                                                    <Condition Binding="{Binding IsGroup}" Value="True" />
-                                                                                    <Condition Binding="{Binding HasGroupSwitches}" Value="True" />
-                                                                                </MultiDataTrigger.Conditions>
-                                                                                <Setter Property="Visibility" Value="Visible" />
-                                                                            </MultiDataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </Button.Style>
-                                                            </Button>
+                                                            <ui:Button
+                                                                 Grid.Column="2"
+                                                                 Width="60"
+                                                                 Height="22"
+                                                                 Margin="8,0,0,0"
+                                                                 VerticalAlignment="Center"
+                                                                 Click="GroupToggle_Click"
+                                                                 Content="{DynamicResource Toggle}"
+                                                                 Tag="{Binding}">
+                                                                 <ui:Button.Style>
+                                                                     <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                                                         <Setter Property="Visibility" Value="Collapsed" />
+                                                                         <Setter Property="Foreground" Value="White" />
+                                                                         <Setter Property="Background" Value="#D97706" />
+                                                                         <Setter Property="BorderBrush" Value="#D97706" />
+                                                                         <Setter Property="CornerRadius" Value="11" />
+                                                                         <Setter Property="FontSize" Value="10" />
+                                                                         <Setter Property="FontWeight" Value="SemiBold" />
+                                                                         <Setter Property="Cursor" Value="Hand" />
+                                                                         <Style.Triggers>
+                                                                             <Trigger Property="IsMouseOver" Value="True">
+                                                                                 <Setter Property="Background" Value="#F59E0B" />
+                                                                                 <Setter Property="BorderBrush" Value="#F59E0B" />
+                                                                                 <Setter Property="Foreground" Value="White" />
+                                                                             </Trigger>
+                                                                             <Trigger Property="IsPressed" Value="True">
+                                                                                 <Setter Property="Background" Value="#B45309" />
+                                                                                 <Setter Property="BorderBrush" Value="#B45309" />
+                                                                                 <Setter Property="Foreground" Value="White" />
+                                                                             </Trigger>
+                                                                             <MultiDataTrigger>
+                                                                                 <MultiDataTrigger.Conditions>
+                                                                                     <Condition Binding="{Binding IsGroup}" Value="True" />
+                                                                                     <Condition Binding="{Binding HasGroupSwitches}" Value="True" />
+                                                                                 </MultiDataTrigger.Conditions>
+                                                                                 <Setter Property="Visibility" Value="Visible" />
+                                                                             </MultiDataTrigger>
+                                                                         </Style.Triggers>
+                                                                     </Style>
+                                                                 </ui:Button.Style>
+                                                             </ui:Button>
 
                                                             <!--  Spalte 3: Toggles NUR für SmartAlarm  -->
                                                             <StackPanel
@@ -1795,7 +1763,7 @@
                                                                     ToolTip="{DynamicResource PopupWindow}"
                                                                     IsChecked="{Binding PopupEnabled, Mode=TwoWay}"
                                                                     Style="{StaticResource DeviceActionCheckBox}">
-                                                                    <Image Source="pack://application:,,,/Assets/icons/Popup.png" Width="16" Height="16" Stretch="Uniform"/>
+                                                                    <ui:SymbolIcon Symbol="WindowNew20" FontSize="16" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=CheckBox}}"/>
                                                                 </CheckBox>
 
                                                                 <CheckBox
@@ -1812,14 +1780,14 @@
                                                                             </Style.Triggers>
                                                                         </Style>
                                                                     </CheckBox.Style>
-                                                                    <Image Source="pack://application:,,,/Assets/icons/PiP.png" Width="16" Height="16" Stretch="Uniform"/>
+                                                                    <ui:SymbolIcon Symbol="PictureInPicture20" FontSize="16" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=CheckBox}}"/>
                                                                 </CheckBox>
 
                                                                 <CheckBox
                                                                     ToolTip="{DynamicResource AudioAlert}"
                                                                     IsChecked="{Binding AudioEnabled, Mode=TwoWay}"
                                                                     Style="{StaticResource DeviceActionCheckBox}">
-                                                                    <ui:SymbolIcon Symbol="Speaker224" FontSize="16"/>
+                                                                    <ui:SymbolIcon Symbol="Speaker224" FontSize="16" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=CheckBox}}"/>
                                                                     <CheckBox.ContextMenu>
                                                                         <ContextMenu Style="{StaticResource DarkContextMenu}">
                                                                             <MenuItem
@@ -1861,7 +1829,7 @@
                                                                 Padding="6,2"
                                                                 VerticalAlignment="Center"
                                                                 Background="{Binding Storage, Converter={StaticResource UpkeepBackgroundConverter}}"
-                                                                BorderBrush="#1EFFFFFF"
+                                                                BorderBrush="{Binding Background, RelativeSource={RelativeSource Self}}"
                                                                 BorderThickness="1"
                                                                 CornerRadius="6"
                                                                 PreviewMouseWheel="StorPill_PreviewMouseWheel"
@@ -2084,17 +2052,17 @@
                                         <Border
                                             Padding="32,24"
                                             HorizontalAlignment="Center"
-                                            Background="#101217"
-                                            BorderBrush="#1C202A"
-                                            BorderThickness="1"
-                                            CornerRadius="16">
+                                            Background="{DynamicResource Surface}"
+                                             BorderBrush="{DynamicResource CardBorder}"
+                                             BorderThickness="1"
+                                             CornerRadius="12">
                                             <StackPanel>
-                                                <TextBlock
-                                                    Margin="0,0,0,12"
-                                                    HorizontalAlignment="Center"
-                                                    FontSize="36"
-                                                    Opacity="0.8"
-                                                    Text="📡" />
+                                                <ui:SymbolIcon
+                                                     Symbol="Connector24"
+                                                     FontSize="44"
+                                                     Foreground="{DynamicResource TextSubtle}"
+                                                     HorizontalAlignment="Center"
+                                                     Margin="0,0,0,12" />
                                                 <TextBlock
                                                     Margin="0,0,0,6"
                                                     HorizontalAlignment="Center"
