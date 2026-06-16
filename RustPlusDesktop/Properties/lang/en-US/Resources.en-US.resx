@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -2455,4 +2455,7 @@ Are you sure you want to continue?</value>
     <value>Search icons (e.g. turret, switch)...</value>
   </data>
 
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} days</value>
+  </data>
 </root>

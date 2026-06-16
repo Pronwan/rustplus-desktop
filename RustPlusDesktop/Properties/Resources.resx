@@ -2340,6 +2340,73 @@ Are you sure you want to continue?</value>
   <data name="OpenOfflineDeathsLog" xml:space="preserve">
     <value>Open Offline Deaths Log</value>
   </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>Notification Center</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>Show Toast Notifications</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>Play Sound Alerts</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>Retention Period</value>
+  </data>
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} days</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>Muted Servers</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>No servers muted</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>Unmute</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>Filter:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>Alarms</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>Deaths</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>Search message...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>Mark read</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>No notifications here</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>You're all caught up!</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>Are you sure you want to clear all notification history?</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>Clear History</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>Could not find a paired server profile for {0}:{1}.
+Please pair this server first.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>Server Not Found</value>
+  </data>
   <data name="OfflineDeathLogTitle" xml:space="preserve">
     <value>Offline Death Log</value>
   </data>

@@ -61,10 +61,10 @@
             <StackPanel>
                 <!-- Row 1: Filters -->
                 <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
-                    <TextBlock Text="Filter:" VerticalAlignment="Center" Foreground="#8C96A8" FontSize="11" Margin="4,0,8,0" FontWeight="SemiBold"/>
-                    <RadioButton x:Name="RadAll" Content="All" IsChecked="True" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
-                    <RadioButton x:Name="RadAlarms" Content="Alarms" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
-                    <RadioButton x:Name="RadDeaths" Content="Deaths" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
+                    <TextBlock Text="{DynamicResource NotificationsFilter}" VerticalAlignment="Center" Foreground="#8C96A8" FontSize="11" Margin="4,0,8,0" FontWeight="SemiBold"/>
+                    <RadioButton x:Name="RadAll" Content="{DynamicResource NotificationsAll}" IsChecked="True" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
+                    <RadioButton x:Name="RadAlarms" Content="{DynamicResource NotificationsAlarms}" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
+                    <RadioButton x:Name="RadDeaths" Content="{DynamicResource NotificationsDeaths}" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
                 </WrapPanel>
 
                 <!-- Row 2: Search + Bulk Actions -->
@@ -76,7 +76,7 @@
 
                     <ui:TextBox x:Name="TxtSearch" 
                                 Margin="0,0,8,0" 
-                                PlaceholderText="Search message..." 
+                                PlaceholderText="{DynamicResource SearchNotificationsPlaceholder}" 
                                 TextChanged="TxtSearch_TextChanged"
                                 Icon="{ui:SymbolIcon Symbol=Search24}"
                                 VerticalAlignment="Center"
@@ -84,13 +84,13 @@
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <ui:Button Click="BtnMarkAllRead_Click" 
-                                   Content="Mark read" 
+                                   Content="{DynamicResource MarkAllAsRead}" 
                                    Appearance="Secondary"
                                    Icon="{ui:SymbolIcon Symbol=MailRead24}"
                                    Height="28" 
                                    FontSize="11"/>
                         <ui:Button Click="BtnClearHistory_Click" 
-                                   Content="Clear" 
+                                   Content="{DynamicResource ClearNotifications}" 
                                    Appearance="Secondary"
                                    Icon="{ui:SymbolIcon Symbol=Delete24}"
                                    Height="28" 
@@ -109,12 +109,12 @@
                         HorizontalAlignment="Center"
                         Visibility="Collapsed">
                 <ui:SymbolIcon Symbol="Mail24" FontSize="48" Foreground="#8C96A8" Margin="0,0,0,12"/>
-                <TextBlock Text="No notifications here" 
+                <TextBlock Text="{DynamicResource NoNotificationsTitle}" 
                            FontSize="16" 
                            FontWeight="SemiBold" 
                            Foreground="White" 
                            HorizontalAlignment="Center"/>
-                <TextBlock Text="You're all caught up!" 
+                <TextBlock Text="{DynamicResource NoNotificationsSubtitle}" 
                            FontSize="12" 
                            Foreground="#8C96A8" 
                            Margin="0,4,0,0" 

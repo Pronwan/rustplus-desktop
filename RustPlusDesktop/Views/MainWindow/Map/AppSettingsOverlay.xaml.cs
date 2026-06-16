@@ -123,6 +123,7 @@ namespace RustPlusDesk.Views
             ChkNotificationsToast.IsChecked = TrackingService.NotificationsToastEnabled;
             ChkNotificationsSounds.IsChecked = TrackingService.NotificationsSoundsEnabled;
             SliderNotificationsRetention.Value = TrackingService.NotificationsRetentionDays;
+            TxtRetentionDays.Text = string.Format(T("NotificationRetentionDays", "{0} days"), (int)SliderNotificationsRetention.Value);
             PopulateMutedServers();
 
 
@@ -281,6 +282,7 @@ namespace RustPlusDesk.Views
             TrackingService.NotificationsToastEnabled = ChkNotificationsToast.IsChecked == true;
             TrackingService.NotificationsSoundsEnabled = ChkNotificationsSounds.IsChecked == true;
             TrackingService.NotificationsRetentionDays = (int)SliderNotificationsRetention.Value;
+            TxtRetentionDays.Text = string.Format(T("NotificationRetentionDays", "{0} days"), (int)SliderNotificationsRetention.Value);
             PopulateMutedServers();
 
             ParentWindow?.ApplySettings();

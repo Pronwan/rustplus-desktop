@@ -113,7 +113,7 @@ namespace RustPlusDesk.Views
 
         private void BtnClearHistory_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to clear all notification history?", "Clear History", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBox.Show(Properties.Resources.ClearNotificationsConfirm, Properties.Resources.ClearNotificationsConfirmTitle, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 NotificationCenterService.ClearHistory();
             }
@@ -149,7 +149,7 @@ namespace RustPlusDesk.Views
                 }
                 else
                 {
-                    MessageBox.Show($"Could not find a paired server profile for {notif.ServerIp}:{notif.ServerPort}.\nPlease pair this server first.", "Server Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(string.Format(Properties.Resources.ServerNotFoundMessage, notif.ServerIp, notif.ServerPort.Value), Properties.Resources.ServerNotFoundTitle, MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
         }
