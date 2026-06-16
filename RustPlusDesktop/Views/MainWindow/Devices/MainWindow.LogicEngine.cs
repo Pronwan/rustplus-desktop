@@ -29,6 +29,13 @@ namespace RustPlusDesk.Views
             }
         }
 
+        // Stop the currently running Logic Engine rule
+        public void StopLogicEngineExecution()
+        {
+            LogicEngineRuntimeService.Instance.RequestStop();
+            AppendLog("[LogicEngine] Stop requested. Current rule will abort after the current operation.");
+        }
+
         // Trigger hooks for FCM/WebSocket device updates
         public void TriggerLogicEngineOnDeviceEvent(uint entityId, bool isOn)
         {
@@ -127,19 +134,47 @@ namespace RustPlusDesk.Views
 
         private async Task EnqueueRuleExecutionAsync(LogicRule rule)
         {
+            var runtime = LogicEngineRuntimeService.Instance;
             AppendLog($"[LogicEngine] Rule '{rule.Name}' triggered. Enqueuing...");
-            
+
+            // Track the rule in the pending queue so the UI can show what is waiting
+            runtime.PendingRules.Add(rule.Name);
+
             // Wait to execute sequentially
             await _logicEngineSemaphore.WaitAsync();
             try
             {
+                runtime.PendingRules.Remove(rule.Name);
+
                 if (_chatFeaturesBlockedByMaster)
                 {
                     AppendLog($"[LogicEngine] Rule '{rule.Name}' execution aborted: Blocked by active Chat Master: {_chatFeatureMasterName}");
                     return;
                 }
-                
-                await RunRuleStepsAsync(rule);
+
+                using var cts = new CancellationTokenSource();
+                runtime.CurrentCancellation = cts;
+                runtime.IsRunning = true;
+                runtime.CurrentRuleName = rule.Name;
+                runtime.CurrentStepNumber = 0;
+                runtime.CurrentStepType = null;
+
+                try
+                {
+                    await RunRuleStepsAsync(rule, cts.Token);
+                }
+                finally
+                {
+                    runtime.IsRunning = false;
+                    runtime.CurrentRuleName = null;
+                    runtime.CurrentStepNumber = 0;
+                    runtime.CurrentStepType = null;
+                    runtime.CurrentCancellation = null;
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                AppendLog($"[LogicEngine] Rule '{rule.Name}' execution was stopped.");
             }
             catch (Exception ex)
             {
@@ -152,32 +187,37 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private async Task RunRuleStepsAsync(LogicRule rule)
+        private async Task RunRuleStepsAsync(LogicRule rule, CancellationToken cancellationToken)
         {
+            var runtime = LogicEngineRuntimeService.Instance;
             AppendLog($"[LogicEngine] Starting execution of rule '{rule.Name}'...");
             int stepNum = 0;
             foreach (var step in rule.Steps)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 stepNum++;
+                runtime.CurrentStepNumber = stepNum;
+                runtime.CurrentStepType = step.StepType;
                 AppendLog($"[LogicEngine] Running step {stepNum} ({step.StepType}) for rule '{rule.Name}'...");
 
                 // Strict Cooldown/Mutex check: if manual action is already running, wait.
                 while (_globalToggleBusy || _refreshAllBusy == 1)
                 {
-                    await Task.Delay(500);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    await Task.Delay(500, cancellationToken);
                 }
 
                 if (step.StepType == "Wait")
                 {
-                    await Task.Delay(step.WaitSeconds * 1000);
+                    await Task.Delay(step.WaitSeconds * 1000, cancellationToken);
                 }
                 else if (step.StepType == "Toggle")
                 {
-                    await ExecuteToggleStepAsync(step);
+                    await ExecuteToggleStepAsync(step, cancellationToken);
                 }
                 else if (step.StepType == "CheckAvailability")
                 {
-                    bool conditionMet = await ExecuteCheckAvailabilityStepAsync(step, rule);
+                    bool conditionMet = await ExecuteCheckAvailabilityStepAsync(step, rule, cancellationToken);
                     if (!conditionMet)
                     {
                         AppendLog($"[LogicEngine] Gating condition failed for rule '{rule.Name}'. Aborting rule execution.");
@@ -188,10 +228,12 @@ namespace RustPlusDesk.Views
             AppendLog($"[LogicEngine] Completed execution of rule '{rule.Name}'.");
         }
 
-        private async Task ExecuteToggleStepAsync(LogicStep step)
+        private async Task ExecuteToggleStepAsync(LogicStep step, CancellationToken cancellationToken)
         {
             var profile = _vm?.Selected;
             if (profile == null) return;
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (!string.IsNullOrEmpty(step.TargetGroupName))
             {
@@ -216,12 +258,14 @@ namespace RustPlusDesk.Views
                 {
                     foreach (var sw in switches)
                     {
+                        cancellationToken.ThrowIfCancellationRequested();
                         if (sw.IsOn == targetOn) continue;
-                        
-                        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+
+                        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                        cts.CancelAfter(TimeSpan.FromSeconds(5));
                         await _rust.ToggleSmartSwitchAsync(sw.EntityId, targetOn, cts.Token);
                         sw.IsOn = targetOn;
-                        await Task.Delay(800); // Wait between toggle calls
+                        await Task.Delay(800, cancellationToken); // Wait between toggle calls
                     }
                 }
                 finally
@@ -244,10 +288,11 @@ namespace RustPlusDesk.Views
                 _logicEngineRunningAction = true;
                 try
                 {
-                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                    using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                    cts.CancelAfter(TimeSpan.FromSeconds(5));
                     await _rust.ToggleSmartSwitchAsync(dev.EntityId, targetOn, cts.Token);
                     dev.IsOn = targetOn;
-                    await Task.Delay(800);
+                    await Task.Delay(800, cancellationToken);
                 }
                 finally
                 {
@@ -256,21 +301,25 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private async Task<bool> ExecuteCheckAvailabilityStepAsync(LogicStep step, LogicRule rule)
+        private async Task<bool> ExecuteCheckAvailabilityStepAsync(LogicStep step, LogicRule rule, CancellationToken cancellationToken)
         {
             var profile = _vm?.Selected;
             if (profile == null) return false;
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             // Wait until manual refresh finishes if busy, then run a single refresh
             while (_refreshAllBusy == 1)
             {
-                await Task.Delay(500);
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(500, cancellationToken);
             }
 
             // Set Action Mutex
             _logicEngineRunningAction = true;
             try
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 AppendLog("[LogicEngine] Refreshing device availability states...");
                 await RefreshAllDevicesStatusAsync();
             }
@@ -278,6 +327,8 @@ namespace RustPlusDesk.Views
             {
                 _logicEngineRunningAction = false;
             }
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             bool conditionMet = false;
 
@@ -344,18 +395,20 @@ namespace RustPlusDesk.Views
                 AppendLog($"[LogicEngine] Availability condition '{step.ConditionOperator}' met. Executing conditional steps...");
                 foreach (var condStep in step.ConditionalSteps)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                     while (_globalToggleBusy || _refreshAllBusy == 1)
                     {
-                        await Task.Delay(500);
+                        cancellationToken.ThrowIfCancellationRequested();
+                        await Task.Delay(500, cancellationToken);
                     }
 
                     if (condStep.StepType == "Wait")
                     {
-                        await Task.Delay(condStep.WaitSeconds * 1000);
+                        await Task.Delay(condStep.WaitSeconds * 1000, cancellationToken);
                     }
                     else if (condStep.StepType == "Toggle")
                     {
-                        await ExecuteToggleStepAsync(condStep);
+                        await ExecuteToggleStepAsync(condStep, cancellationToken);
                     }
                 }
             }
