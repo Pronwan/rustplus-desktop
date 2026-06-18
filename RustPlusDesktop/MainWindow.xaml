@@ -1331,12 +1331,12 @@
                                                             <!--  Spalte 1: Icon  -->
                                                             <Border Grid.Column="0"
                                                                     x:Name="IconBorder"
-                                                                    Width="38"
-                                                                    Height="38"
-                                                                    Background="#14FFFFFF"
+                                                                    Width="44"
+                                                                    Height="44"
+                                                                    Background="#35FFFFFF"
                                                                     CornerRadius="8"
                                                                     Padding="0"
-                                                                    Margin="0,0,10,0"
+                                                                    Margin="0,0,6,0"
                                                                     VerticalAlignment="Center"
                                                                     Cursor="Hand"
                                                                     ToolTip="Change Icon"
@@ -1344,8 +1344,8 @@
                                                                 <Grid>
                                                                     <Image
                                                                         x:Name="DeviceIconImg"
-                                                                        Width="24"
-                                                                        Height="24"
+                                                                        Width="34"
+                                                                        Height="34"
                                                                         HorizontalAlignment="Center"
                                                                         VerticalAlignment="Center"
                                                                         RenderOptions.BitmapScalingMode="HighQuality">
