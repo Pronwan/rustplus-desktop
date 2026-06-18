@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using RustPlusDesk.Models;
+using ShopSearchCtrl = RustPlusDesk.Views.ShopSearchControl;
 
 namespace RustPlusDesk.Views.Windows
 {
@@ -13,18 +15,71 @@ namespace RustPlusDesk.Views.Windows
         public bool IsResetClicked { get; private set; }
         public bool IsSaved { get; private set; }
 
-        public ChangeDeviceIconDialog(int? currentIconId, string? currentIconShortName)
+        private readonly string _contextKey;
+
+        public ChangeDeviceIconDialog(int? currentIconId, string? currentIconShortName, string contextKey = "Device")
         {
             InitializeComponent();
             SelectedIconId = currentIconId;
             SelectedIconShortName = currentIconShortName;
             IsResetClicked = false;
             IsSaved = false;
-            
+            _contextKey = string.IsNullOrWhiteSpace(contextKey) ? "Device" : contextKey;
+
+            LoadLocalizedStrings();
+
             Loaded += (s, e) =>
             {
                 TxtSearch.Focus();
+                PreselectCurrentIcon(currentIconId);
             };
+        }
+
+        private static string GetString(string key, string fallback)
+            => RustPlusDesk.Properties.Resources.ResourceManager.GetString(key) ?? fallback;
+
+        private void LoadLocalizedStrings()
+        {
+            string contextLabel = GetString(_contextKey, _contextKey);
+            string title = GetString($"Change{_contextKey}IconTitle", $"Change {contextLabel} Icon");
+            string subtitle = GetString($"Change{_contextKey}IconSubtitle", $"Search and select an item icon for this {contextLabel.ToLowerInvariant()}.");
+
+            TxtTitle.Text = title;
+            TxtSubtitle.Text = subtitle;
+            Title = title;
+
+            TxtSearch.PlaceholderText = GetString("SearchIconsPlaceholder", "Search icons (e.g. turret, switch)...");
+            BtnReset.Content = GetString("ResetToDefaultIcon", "Reset to Default Icon");
+            BtnSave.Content = RustPlusDesk.Properties.Resources.Save;
+            BtnCancel.Content = RustPlusDesk.Properties.Resources.Cancel;
+        }
+
+        private void PreselectCurrentIcon(int? currentIconId)
+        {
+            if (!currentIconId.HasValue)
+                return;
+
+            try
+            {
+                if (RustPlusDesk.Views.MainWindow.sItemsById.TryGetValue(currentIconId.Value, out var itemInfo))
+                {
+                    var currentItem = new ShopSearchCtrl.AutocompleteItem
+                    {
+                        Id = itemInfo.Id,
+                        Display = itemInfo.Display,
+                        ShortName = itemInfo.ShortName,
+                        Icon = RustPlusDesk.Views.MainWindow.ResolveItemIcon(itemInfo.Id, itemInfo.ShortName, 32)
+                    };
+
+                    var list = new List<ShopSearchCtrl.AutocompleteItem> { currentItem };
+                    LstItems.ItemsSource = list;
+                    LstItems.SelectedItem = currentItem;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ChangeIconDialog] Preselect error: {ex.Message}");
+            }
         }
 
         private void TxtSearch_TextChanged(object sender, TextChangedEventArgs e)

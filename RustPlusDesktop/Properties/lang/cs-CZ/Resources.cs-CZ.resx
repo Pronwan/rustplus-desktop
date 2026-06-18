@@ -1824,6 +1824,31 @@ Jste si jisti, že chcete pokračovat?</value>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: přepnuto na {1} (spustil {2})</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Vyhledejte a vyberte ikonu předmětu pro toto zařízení.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Změnit ikonu zařízení</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Vyhledejte a vyberte ikonu předmětu pro toto pravidlo.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Změnit ikonu pravidla</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Obnovit výchozí ikonu</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Pravidlo</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Hledat ikony (např. věž, přepínač)...</value>
+  </data>
+
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} dní</value>
+  </data>
 </root>
 
 

@@ -257,7 +257,7 @@ public partial class MainWindow
         }
     }
 
-    private async Task<bool> PerformConnectAsync(bool silent, bool showBusy = true)
+    internal async Task<bool> PerformConnectAsync(bool silent, bool showBusy = true)
     {
         _ownCloudRestoreReady = false;
 

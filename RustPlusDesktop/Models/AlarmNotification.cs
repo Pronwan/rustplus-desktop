@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +13,10 @@ namespace RustPlusDesk.Models;
         string Server,
         string DeviceName,
         uint? EntityId,
-        string Message
+        string Message,
+        string? Ip = null,
+        int? Port = null,
+        string? Title = null,
+        string? FcmNotificationId = null
     );
 

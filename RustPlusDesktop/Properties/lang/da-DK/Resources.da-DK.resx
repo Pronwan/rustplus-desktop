@@ -1824,6 +1824,31 @@ Er du sikker på, at du vil fortsætte?</value>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: slået {1} (udløst af {2})</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Søg og vælg et genstandsikon for denne enhed.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Skift enhedsikon</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Søg og vælg et genstandsikon for denne regel.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Skift regelikon</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Nulstil til standardikon</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Regel</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Søg ikoner (f.eks. tårn, kontakt)...</value>
+  </data>
+
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} dage</value>
+  </data>
 </root>
 
 

@@ -44,7 +44,13 @@
                 </Grid>
             </ControlTemplate>
         </TabControl.Template>
-        <TabItem Header="{DynamicResource OnlineTab}" Style="{StaticResource PrettyTabItem}">
+        <TabItem Style="{StaticResource PrettyTabItem}">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="PeopleCommunity24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
+                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource OnlineTab}" />
+                </StackPanel>
+            </TabItem.Header>
             <Border
                 Padding="12"
                 Background="{DynamicResource ControlFillColorDefaultBrush}"
@@ -221,7 +227,13 @@
                 </Grid>
             </Border>
         </TabItem>
-        <TabItem Header="{DynamicResource TrackedTab}" Style="{StaticResource PrettyTabItem}">
+        <TabItem Style="{StaticResource PrettyTabItem}">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="Radar20" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
+                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource TrackedTab}" />
+                </StackPanel>
+            </TabItem.Header>
             <Border
                 Padding="12"
                 Background="{DynamicResource ControlFillColorDefaultBrush}"

@@ -188,6 +188,51 @@
                     </StackPanel>
                 </Border>
 
+                <!-- Notification Center Section -->
+                <TextBlock Text="{DynamicResource NotificationCenterSettings}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <!-- Enable Toast Notifications -->
+                        <CheckBox x:Name="ChkNotificationsToast" 
+                                  Content="{DynamicResource ShowToastNotifications}" 
+                                  Margin="0,0,0,10" 
+                                  Style="{StaticResource DotCheckBox}"
+                                  Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
+
+                        <!-- Enable Notification Sounds -->
+                        <CheckBox x:Name="ChkNotificationsSounds" 
+                                  Content="{DynamicResource PlaySoundAlerts}" 
+                                  Margin="0,0,0,10" 
+                                  Style="{StaticResource DotCheckBox}"
+                                  Checked="OnSettingChanged" Unchecked="OnSettingChanged"/>
+
+                        <!-- Notification Retention Period -->
+                        <Grid Margin="0,4,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{DynamicResource NotificationRetentionPeriod}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Margin="4,0,10,0" FontSize="12"/>
+                            <Slider Grid.Column="1" x:Name="SliderNotificationsRetention" 
+                                    Minimum="1" Maximum="90" Value="30" 
+                                    TickFrequency="1" IsSnapToTickEnabled="True"
+                                    ValueChanged="OnSettingChanged"
+                                    VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="2" x:Name="TxtRetentionDays"
+                                       VerticalAlignment="Center" Margin="10,0,0,0" Foreground="{DynamicResource TextPrimary}" FontSize="12" Width="60"/>
+                        </Grid>
+
+                        <!-- Muted Servers -->
+                        <TextBlock Text="{DynamicResource MutedServers}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Margin="4,6,0,4"/>
+                        <Border BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" Background="#141E2D" MinHeight="60" MaxHeight="120" Margin="4,0,4,0">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <StackPanel x:Name="PnlMutedServers" Margin="6" />
+                            </ScrollViewer>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
                 <!-- Map Section -->
                 <TextBlock Text="{DynamicResource MapSettings}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
                 <Border Style="{StaticResource Card}" Margin="0,0,0,16">

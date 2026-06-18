@@ -1824,6 +1824,31 @@ Weet je zeker dat je wilt doorgaan?</value>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: {1} gezet (geactiveerd door {2})</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Zoek en selecteer een itempictogram voor dit apparaat.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Apparaatpictogram wijzigen</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Zoek en selecteer een itempictogram voor deze regel.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Regelpictogram wijzigen</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Herstellen naar standaardpictogram</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Regel</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Pictogrammen zoeken (bijv. geschutskoepel, schakelaar)...</value>
+  </data>
+
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} dagen</value>
+  </data>
 </root>
 
 

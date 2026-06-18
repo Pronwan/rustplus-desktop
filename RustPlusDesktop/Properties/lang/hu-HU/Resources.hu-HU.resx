@@ -1824,6 +1824,31 @@ Biztos, hogy folytatni szeretné?</value>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: {1} kapcsolva (kiváltotta: {2})</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Keressen és válasszon ki egy tárgy ikont ehhez az eszközhöz.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Eszköz ikon módosítása</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Keressen és válasszon ki egy tárgy ikont ehhez a szabályhoz.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Szabály ikon módosítása</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Visszaállítás az alapértelmezett ikonra</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Szabály</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Ikonok keresése (pl. torony, kapcsoló)...</value>
+  </data>
+
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} nap</value>
+  </data>
 </root>
 
 

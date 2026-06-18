@@ -1585,7 +1585,19 @@ public partial class MainWindow
                     }
                     else pmtTimer.TimerContainer.Visibility = Visibility.Collapsed;
                 }
-                if (isPlayer) el.Visibility = _showPlayers ? Visibility.Visible : Visibility.Collapsed;
+                if (isPlayer)
+                {
+                    bool showThisPlayer = _showPlayers;
+                    if (showThisPlayer)
+                    {
+                        var member = TeamMembers.FirstOrDefault(t => t.SteamId == m.SteamId);
+                        if (member != null && !member.ShowMarkers)
+                        {
+                            showThisPlayer = false;
+                        }
+                    }
+                    el.Visibility = showThisPlayer ? Visibility.Visible : Visibility.Collapsed;
+                }
 
                 // Update Crate Timer (Type 150 or Type 9)
                 if ((m.Type == 150 || m.Type == 9) && el.Tag is PlayerMarkerTag pmtCrate && pmtCrate.TimerText != null && pmtCrate.TimerContainer != null)

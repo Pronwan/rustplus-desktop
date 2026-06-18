@@ -1824,6 +1824,31 @@
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: {1} に切り替え ({2} がトリガー)</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>このデバイスのアイテムアイコンを検索して選択してください。</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>デバイスアイコンの変更</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>このルールのアイテムアイコンを検索して選択してください。</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>ルールアイコンの変更</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>デフォルトアイコンにリセット</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>ルール</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>アイコンを検索（例：タレット、スイッチ）...</value>
+  </data>
+
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} 日</value>
+  </data>
 </root>
 
 

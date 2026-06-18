@@ -31,10 +31,10 @@
                     <RowDefinition Height="Auto"/> <!-- Action buttons -->
                 </Grid.RowDefinitions>
                 
-                <!-- Header -->
+                 <!-- Header -->
                 <StackPanel Grid.Row="0" Margin="0,0,0,12">
-                    <TextBlock Text="Change Device Icon" FontSize="18" FontWeight="SemiBold" Foreground="White"/>
-                    <TextBlock Text="Search and select an item icon for this device." FontSize="11" Foreground="#88FFFFFF" Margin="0,2,0,0"/>
+                    <TextBlock x:Name="TxtTitle" FontSize="18" FontWeight="SemiBold" Foreground="White"/>
+                    <TextBlock x:Name="TxtSubtitle" FontSize="11" Foreground="#88FFFFFF" Margin="0,2,0,0"/>
                 </StackPanel>
                 
                 <!-- Search Box -->
@@ -84,8 +84,9 @@
                                                 <Setter TargetName="Bd" Property="BorderBrush" Value="#1EFFFFFF" />
                                             </Trigger>
                                             <Trigger Property="IsSelected" Value="True">
-                                                <Setter TargetName="Bd" Property="Background" Value="#1F60CDFF" />
-                                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}" />
+                                                <Setter TargetName="Bd" Property="Background" Value="#3360CDFF" />
+                                                <Setter TargetName="Bd" Property="BorderBrush" Value="#FF60CDFF" />
+                                                <Setter TargetName="Bd" Property="BorderThickness" Value="1" />
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
@@ -127,7 +128,7 @@
                     </Grid.ColumnDefinitions>
                     
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
-                        <ui:Button Content="Cancel" Appearance="Secondary" Margin="0,0,8,0" Width="80" Click="BtnCancel_Click"/>
+                        <ui:Button x:Name="BtnCancel" Content="Cancel" Appearance="Secondary" Margin="0,0,8,0" Width="80" Click="BtnCancel_Click"/>
                         <ui:Button x:Name="BtnSave" Content="Save" Appearance="Primary" Width="80" Click="BtnSave_Click"/>
                     </StackPanel>
                 </Grid>

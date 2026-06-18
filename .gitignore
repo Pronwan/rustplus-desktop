@@ -9,7 +9,7 @@
 /graphify-out/
 # Publish-Output (dotnet publish)
 **/publish/
-
+.antigravitycli
 # NuGet / Paketmanager
 *.nupkg
 **/packages/

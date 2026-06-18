@@ -1824,6 +1824,31 @@ Devam etmek istediğinizden emin misiniz?</value>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: {1} durumuna alındı ({2} tarafından tetiklendi)</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Bu cihaz için bir öğe simgesi arayın ve seçin.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Cihaz Simgesini Değiştir</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Bu kural için bir öğe simgesi arayın ve seçin.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Kural Simgesini Değiştir</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Varsayılan Simgesine Sıfırla</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Kural</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Simgeleri ara (ör. taret, anahtar)...</value>
+  </data>
+
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} gün</value>
+  </data>
 </root>
 
 

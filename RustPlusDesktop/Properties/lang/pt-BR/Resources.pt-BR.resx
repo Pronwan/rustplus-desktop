@@ -1824,6 +1824,31 @@ Tem certeza de que deseja continuar?</value>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: alternado para {1} (acionado por {2})</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Pesquise e selecione um ícone de item para este dispositivo.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Alterar ícone do dispositivo</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Pesquise e selecione um ícone de item para esta regra.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Alterar ícone da regra</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Redefinir para o ícone padrão</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Regra</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Pesquisar ícones (ex.: torreta, interruptor)...</value>
+  </data>
+
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} dias</value>
+  </data>
 </root>
 
 

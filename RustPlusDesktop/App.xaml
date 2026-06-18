@@ -352,43 +352,59 @@
             <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
             <Setter Property="Padding" Value="14,8"/>
             <Setter Property="Margin" Value="0"/>
-            <!-- kein Abstand zwischen Reitern -->
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
-                        <Border x:Name="TabHeader"
-                     Background="#11151B"
-                     BorderBrush="{StaticResource CardBorderBrush}"
-                     BorderThickness="1,1,1,0"  
-                         CornerRadius="10,10,0,0"
-                         
-                         Padding="12,6"
-                     SnapsToDevicePixels="True">
-                            <ContentPresenter ContentSource="Header"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"/>
-                        </Border>
+                        <Grid Background="Transparent" SnapsToDevicePixels="True">
+                            <Border x:Name="TabHeader"
+                                    Padding="{TemplateBinding Padding}"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    CornerRadius="4"
+                                    Margin="0,0,0,2">
+                                <ContentPresenter ContentSource="Header"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  RecognizesAccessKey="True"/>
+                            </Border>
+                            <!-- Bottom Accent Indicator -->
+                            <Border x:Name="SelectedIndicator"
+                                    Height="3"
+                                    VerticalAlignment="Bottom"
+                                    Background="{DynamicResource Accent}"
+                                    Visibility="Collapsed"
+                                    CornerRadius="1.5" />
+                        </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="TabHeader" Property="Background" Value="#151A22"/>
+                                <Setter TargetName="TabHeader" Property="Background" Value="#0FFFFFFF"/>
+                                <Setter Property="Foreground" Value="White" />
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter Property="Panel.ZIndex" Value="1"/>
-
-                                <Setter TargetName="TabHeader" Property="Margin" Value="0,0,0,-1"/>
-                                <Setter TargetName="TabHeader" Property="Background" Value="{StaticResource CardBrush}"/>
-                                <Setter TargetName="TabHeader" Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
                                 <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                                <Setter TargetName="SelectedIndicator" Property="Visibility" Value="Visible" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.6"/>
+                                <Setter Property="Opacity" Value="0.55"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Implicit Styles for TabControl and TabItem to apply the clean Fluent aesthetic globally -->
+        <Style TargetType="TabControl">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <Style TargetType="TabItem" BasedOn="{StaticResource PrettyTabItem}" />
 
         <!-- Sekundär-Button (unten im Tab) -->
         <Style x:Key="GhostButton" TargetType="Button">

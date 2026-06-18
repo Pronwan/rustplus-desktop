@@ -697,10 +697,39 @@ namespace RustPlusDesk.Properties {
         public static string LoopAlertSound => GetString("LoopAlertSound");
         public static string SendToDiscordRaidAlerts => GetString("SendToDiscordRaidAlerts");
         public static string OpenOfflineDeathsLog => GetString("OpenOfflineDeathsLog");
+        public static string NotificationsTab => GetString("NotificationsTab");
+        public static string NotificationCenterSettings => GetString("NotificationCenterSettings");
+        public static string ShowToastNotifications => GetString("ShowToastNotifications");
+        public static string PlaySoundAlerts => GetString("PlaySoundAlerts");
+        public static string NotificationRetentionPeriod => GetString("NotificationRetentionPeriod");
+        public static string NotificationRetentionDays => GetString("NotificationRetentionDays");
+        public static string MutedServers => GetString("MutedServers");
+        public static string NoServersMuted => GetString("NoServersMuted");
+        public static string UnmuteServer => GetString("UnmuteServer");
+        public static string NotificationsFilter => GetString("NotificationsFilter");
+        public static string NotificationsAll => GetString("NotificationsAll");
+        public static string NotificationsAlarms => GetString("NotificationsAlarms");
+        public static string NotificationsDeaths => GetString("NotificationsDeaths");
+        public static string SearchNotificationsPlaceholder => GetString("SearchNotificationsPlaceholder");
+        public static string MarkAllAsRead => GetString("MarkAllAsRead");
+        public static string ClearNotifications => GetString("ClearNotifications");
+        public static string NoNotificationsTitle => GetString("NoNotificationsTitle");
+        public static string NoNotificationsSubtitle => GetString("NoNotificationsSubtitle");
+        public static string ClearNotificationsConfirm => GetString("ClearNotificationsConfirm");
+        public static string ClearNotificationsConfirmTitle => GetString("ClearNotificationsConfirmTitle");
+        public static string ServerNotFoundMessage => GetString("ServerNotFoundMessage");
+        public static string ServerNotFoundTitle => GetString("ServerNotFoundTitle");
         public static string OfflineDeathLogTitle => GetString("OfflineDeathLogTitle");
         public static string ClearLog => GetString("ClearLog");
         public static string NoOfflineDeathsRecorded => GetString("NoOfflineDeathsRecorded");
         public static string KilledBy => GetString("KilledBy");
+        public static string ChangeDeviceIconTitle => GetString("ChangeDeviceIconTitle");
+        public static string ChangeDeviceIconSubtitle => GetString("ChangeDeviceIconSubtitle");
+        public static string ChangeRuleIconTitle => GetString("ChangeRuleIconTitle");
+        public static string ChangeRuleIconSubtitle => GetString("ChangeRuleIconSubtitle");
+        public static string SearchIconsPlaceholder => GetString("SearchIconsPlaceholder");
+        public static string ResetToDefaultIcon => GetString("ResetToDefaultIcon");
+        public static string Rule => GetString("Rule");
     }
 }
 

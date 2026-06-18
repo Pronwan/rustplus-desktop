@@ -58,6 +58,7 @@ namespace RustPlusDesk.Views;
 public partial class MainWindow : WpfUi.FluentWindow
 {
     private readonly MainViewModel _vm = new();
+    internal MainViewModel ViewModel => _vm;
     private bool _chatOpenedForCommandsOnly = false;
     private readonly UpdateService _updateService = new();
 
@@ -365,6 +366,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _vm.IsInitializing = true;
         InitializeComponent();
+        MainTabs.SelectionChanged += MainTabs_SelectionChanged;
         
         PlayersTab?.SetMainWindow(this);
         
@@ -584,12 +586,16 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _pairing.Paired += Pairing_Paired;
 
-        // EINMALIG auf AlarmReceived hören:
+        // EINMALIG auf AlarmReceived/Death/Chat/Pairing hören:
         if (_pairing is PairingListenerRealProcess pr)
         {
             pr.AlarmReceived += (_, a) => Dispatcher.Invoke(() => ShowAlarmPopup(a));
             pr.OfflineDeathReceived += (_, d) => Dispatcher.Invoke(() => HandleOfflineDeath(d));
+            pr.ChatReceived += (_, c) => Dispatcher.Invoke(() => HandleFcmChatReceived(c));
         }
+
+        NotificationCenterService.NotificationAdded -= OnNotificationAdded;
+        NotificationCenterService.NotificationAdded += OnNotificationAdded;
 
         // Status Ã¢â€ â€™ UI
         _pairing.Listening += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
@@ -2062,6 +2068,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private readonly Dictionary<uint, (string Title, string Message)> _alarmMetadataCache = new();
     private readonly Dictionary<string, (uint Id, DateTime Time)> _lastSeenIdPerServer = new();
     private readonly List<string> _alarmHistoryDedup = new();
+    private readonly Dictionary<string, DateTime> _lastGenericAlarmPerServer = new();
 
     private void ShowAlarmPopup(AlarmNotification n, string source = "FCM")
     {
@@ -2183,6 +2190,23 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             n = n with { DeviceName = dev.PureName };
         }
 
+        // Add to Notification Center
+        // Prefer the original FCM title (e.g. "HV Rockets Raid wake up") over the generic device name.
+        var notif = new RustPlusNotification(
+            type: "Alarm",
+            title: !string.IsNullOrWhiteSpace(n.Title) ? n.Title : (string.IsNullOrEmpty(n.DeviceName) ? "Alarm" : n.DeviceName),
+            message: n.Message,
+            serverIp: n.Ip,
+            serverPort: n.Port,
+            serverName: n.Server
+        )
+        {
+            EntityId = n.EntityId,
+            Timestamp = n.Timestamp,
+            FcmNotificationId = n.FcmNotificationId
+        };
+        NotificationCenterService.AddNotification(notif);
+
         if (n.EntityId.HasValue)
         {
             // Dedup primÃ¤r Ã¼ber ID (ignoriere Server-Namensunterschiede wie ANSI-Farben)
@@ -2199,6 +2223,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 }
                 return;
             }
+            // Cross-path dedup: WS alarm arriving after a generic FCM alarm for same server
+            if (source == "WS" && _lastGenericAlarmPerServer.TryGetValue(cleanSrv, out var genTime) && (now - genTime).TotalSeconds < 5)
+            {
+                _lastAlarmProcessed[key] = now;
+                AppendLog($"[alarm/debug] ({source}) Cross-path dedup: WS alarm follows generic FCM alarm for server '{cleanSrv}'");
+                return;
+            }
+
             _lastAlarmProcessed[key] = now;
             _lastAnyAlarmTime = now; // Merken, dass IRGENDEIN Alarm kam
         }
@@ -2220,6 +2252,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 return;
             }
             _lastAnyAlarmTime = now;
+            if (!string.IsNullOrEmpty(cleanSrv))
+                _lastGenericAlarmPerServer[cleanSrv] = now;
         }
 
         // 4) Play Audio (Respects settings if device is identified, otherwise plays default)
@@ -2296,6 +2330,88 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _alarmWin.Add(n);
     }
 
+    private System.Media.SoundPlayer? _notificationSoundPlayer;
+
+    private void PlayNotificationSound(string resourceName)
+    {
+        try
+        {
+            if (_notificationSoundPlayer == null)
+            {
+                var resource = Application.GetResourceStream(new Uri($"pack://application:,,,/Assets/{resourceName}"));
+                if (resource != null)
+                {
+                    _notificationSoundPlayer = new System.Media.SoundPlayer(resource.Stream);
+                    _notificationSoundPlayer.Load();
+                }
+                else
+                {
+                    var baseDir = AppContext.BaseDirectory;
+                    var path = System.IO.Path.Combine(baseDir, "Assets", resourceName);
+                    if (!System.IO.File.Exists(path))
+                        path = System.IO.Path.Combine(baseDir, resourceName);
+                    
+                    if (System.IO.File.Exists(path))
+                    {
+                        _notificationSoundPlayer = new System.Media.SoundPlayer(path);
+                        _notificationSoundPlayer.Load();
+                    }
+                }
+            }
+            _notificationSoundPlayer?.Play();
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[NotificationSound] Failed to play sound: {ex.Message}");
+        }
+    }
+
+    private void OnNotificationAdded(object? sender, RustPlusNotification notif)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            // Play sound if enabled in settings
+            if (TrackingService.NotificationsSoundsEnabled)
+            {
+                if (notif.Type == "Chat")
+                {
+                    PlayNotificationSound("icq-message.wav");
+                }
+            }
+
+            // Show Toast/Snackbar if enabled
+            if (TrackingService.NotificationsToastEnabled)
+            {
+                var appearance = notif.Type switch
+                {
+                    "Alarm" => WpfUi.ControlAppearance.Danger,
+                    "Death" => WpfUi.ControlAppearance.Caution,
+                    "Chat" => WpfUi.ControlAppearance.Info,
+                    "Pairing" => WpfUi.ControlAppearance.Success,
+                    _ => WpfUi.ControlAppearance.Info
+                };
+                ShowInfoSnackbar(notif.Title, notif.Message, appearance);
+            }
+        });
+    }
+
+    private void HandleFcmChatReceived(TeamChatMessage c)
+    {
+        // Also add it to the chat UI if the server is current!
+        if (_vm.Selected != null && _vm.Selected.Host == c.Ip && _vm.Selected.Port == c.Port)
+        {
+            AppendChatIfNew(c, isHistorical: false);
+        }
+    }
+
+    private void MainTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.Source == MainTabs && MainTabs.SelectedItem == NotificationsTab)
+        {
+            NotificationCenterService.MarkAllAsRead();
+        }
+    }
+
     private void HandleOfflineDeath(OfflineDeathNotification d)
     {
         if (!TrackingService.OfflineDeathAlertsEnabled) return;
@@ -2304,6 +2420,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         // Save to local history
         TrackingService.AddOfflineDeath(d);
+
+        // Add to Notification Center
+        var notif = new RustPlusNotification(
+            type: "Death",
+            title: "Offline Death",
+            message: $"You were killed by {d.AttackerName} on {d.ServerName}",
+            serverIp: d.Ip,
+            serverPort: d.Port,
+            serverName: d.ServerName
+        )
+        {
+            AttackerName = d.AttackerName,
+            Timestamp = d.Timestamp
+        };
+        NotificationCenterService.AddNotification(notif);
 
         // Play Offline Death sound
         try
@@ -2843,6 +2974,25 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         Dispatcher.Invoke(() =>
         {
+            // Add to Notification Center!
+            var pairedMsg = e.EntityId.HasValue 
+                ? $"Paired device: {e.EntityName ?? "Smart Device"} (ID: {e.EntityId.Value}, Type: {e.EntityType ?? "Unknown"})"
+                : $"Paired server: {e.ServerName ?? e.Host}:{e.Port}";
+            var notif = new RustPlusNotification(
+                type: "Pairing",
+                title: "Pairing Successful",
+                message: pairedMsg,
+                serverIp: e.Host,
+                serverPort: e.Port,
+                serverName: e.ServerName
+            )
+            {
+                EntityId = e.EntityId,
+                EntityName = e.EntityName,
+                Timestamp = DateTime.Now
+            };
+            NotificationCenterService.AddNotification(notif);
+
             var keyHost = (e.Host ?? "").Trim();
             var keyPort = e.Port;
             // PREFER the SteamID from the pairing payload if it exists. 
@@ -3396,6 +3546,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     // death pins per player
     private readonly Dictionary<Guid, FrameworkElement> _deathPins = new();
+
+    // team map notes / markers from Rust+ API
+    private readonly Dictionary<string, FrameworkElement> _teamNotesEls = new();
+    private RustPlusClientReal.TeamInfo? _lastTeamInfo;
 
 
 

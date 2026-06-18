@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -2546,5 +2546,30 @@
   </data>
   <data name="AlertPlayerAfkVars" xml:space="preserve">
     <value>{0}: اسم اللاعب، {1}: الوقت</value>
+  </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>ابحث عن أيقونة عنصر لهذا الجهاز وحددها.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>تغيير أيقونة الجهاز</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>ابحث عن أيقونة عنصر لهذه القاعدة وحددها.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>تغيير أيقونة القاعدة</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>إعادة التعيين إلى الأيقونة الافتراضية</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>قاعدة</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>البحث في الأيقونات (مثل: برج، مفتاح)...</value>
+  </data>
+
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} يومًا</value>
   </data>
 </root>

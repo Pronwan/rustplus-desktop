@@ -1824,6 +1824,31 @@
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: {1} 전환됨 ({2}님이 실행)</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>이 기기의 아이템 아이콘을 검색하고 선택하세요.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>기기 아이콘 변경</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>이 규칙의 아이템 아이콘을 검색하고 선택하세요.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>규칙 아이콘 변경</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>기본 아이콘으로 재설정</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>규칙</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>아이콘 검색 (예: 터렛, 스위치)...</value>
+  </data>
+
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0}일</value>
+  </data>
 </root>
 
 
