@@ -66,10 +66,12 @@
 	  <None Remove="Assets\icons\airfield.png" />
 	  <None Remove="Assets\icons\animat-Icons\chinook_animate.png" />
 	  <None Remove="Assets\icons\animat-Icons\chinook_map_body.png" />
+	  <None Remove="Assets\icons\anvil-rock.png" />
 	  <None Remove="Assets\icons\arcticresearch.png" />
 	  <None Remove="Assets\icons\banditcamp.png" />
 	  <None Remove="Assets\icons\barn.png" />
 	  <None Remove="Assets\icons\blocked.png" />
+	  <None Remove="Assets\icons\cabins - Kopie.png" />
 	  <None Remove="Assets\icons\cabins.png" />
 	  <None Remove="Assets\icons\cargo.png" />
 	  <None Remove="Assets\icons\cave.png" />
@@ -87,9 +89,12 @@
 	  <None Remove="Assets\icons\fishingvillage.png" />
 	  <None Remove="Assets\icons\fishingvillagelarge.png" />
 	  <None Remove="Assets\icons\gasstation.png" />
+	  <None Remove="Assets\icons\godrock.png" />
 	  <None Remove="Assets\icons\harbour.png" />
 	  <None Remove="Assets\icons\harbour2.png" />
 	  <None Remove="Assets\icons\hqmquarry.png" />
+	  <None Remove="Assets\icons\iceberg.png" />
+	  <None Remove="Assets\icons\ice_lake.png" />
 	  <None Remove="Assets\icons\jungle.png" />
 	  <None Remove="Assets\icons\junkyard.png" />
 	  <None Remove="Assets\icons\largeoilrig.png" />
@@ -226,6 +231,8 @@
 	<ItemGroup>
 	  <Resource Include="Assets\icons\animat-Icons\chinook_animate.png" />
 	  <Resource Include="Assets\icons\animat-Icons\chinook_map_body.png" />
+	  <Resource Include="Assets\icons\anvil-rock.png" />
+	  <Resource Include="Assets\icons\cabins - Kopie.png" />
 	  <Resource Include="Assets\icons\cloud-download.png" />
 	  <Resource Include="Assets\icons\cloud-upload.png" />
 	  <Resource Include="Assets\icons\crate3.png" />
@@ -233,6 +240,9 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
+	  <Resource Include="Assets\icons\godrock.png" />
+	  <Resource Include="Assets\icons\iceberg.png" />
+	  <Resource Include="Assets\icons\ice_lake.png" />
 	  <Resource Include="Assets\icons\pen.png">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>
