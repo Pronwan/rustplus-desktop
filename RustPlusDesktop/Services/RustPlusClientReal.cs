@@ -5084,6 +5084,24 @@ rp.connect();
         return new EntityProbeResult(false, null, null);
     }
 
+    public async Task<RustPlusApi.Data.ServerInfo?> GetServerInfoAsync(CancellationToken ct = default)
+    {
+        if (_api == null) return null;
+        try
+        {
+            var res = await _api.GetInfoAsync();
+            if (res != null && res.IsSuccess)
+            {
+                return res.Data;
+            }
+        }
+        catch (Exception ex)
+        {
+            _log($"[GetServerInfoAsync] Error: {ex.Message}");
+        }
+        return null;
+    }
+
     public async Task PrimeSubscriptionsAsync(IEnumerable<uint> entityIds, CancellationToken ct = default)
     {
         HookEventsIfNeeded();

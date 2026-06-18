@@ -5769,6 +5769,14 @@
                 </Border>
             </Grid>
 
+            <!-- Server Info Backdrop Overlay -->
+            <Grid x:Name="ServerInfoBackdrop"
+                  Grid.ColumnSpan="3"
+                  Background="#990D0E11"
+                  Visibility="Collapsed"
+                  Panel.ZIndex="9990"
+                  MouseLeftButtonDown="ServerInfoBackdrop_MouseLeftButtonDown" />
+
             <!--  Wpf.Ui: WinUI 3 Snackbar presenter (toast notifications)  -->
             <ui:SnackbarPresenter
                 x:Name="RootSnackbar"
