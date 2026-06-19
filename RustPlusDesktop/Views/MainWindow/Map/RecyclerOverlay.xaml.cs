@@ -21,11 +21,11 @@ namespace RustPlusDesk.Views
 
         private List<RecyclerItemViewModel> _allRecyclerItems = new();
 
-        // Chunked loading — render first 30 instantly, rest in background chunks
-        private const int  InitialChunk  = 30;
-        private const int  ChunkSize     = 30;
-        private Queue<RecyclerItemViewModel> _pendingItems = new();
-        private System.Windows.Threading.DispatcherTimer _loadTimer;
+        // Infinite scroll state
+        private List<RecyclerItemViewModel> _filteredItems = new();
+        private int  _loadedCount  = 0;
+        private bool _isAppending  = false;   // prevents re-entrant appends
+        private const int PageSize = 30;
 
         public RecyclerOverlay()
         {
@@ -149,14 +149,10 @@ namespace RustPlusDesk.Views
         {
             if (_allRecyclerItems == null) return;
 
-            // Stop any in-progress chunk loading
-            _loadTimer?.Stop();
-            _pendingItems.Clear();
-
             string filterText       = SearchTextBox?.Text ?? "";
             string selectedCategory = CategoryComboBox?.SelectedItem as string ?? "All Categories";
 
-            var matched = _allRecyclerItems.Where(item =>
+            _filteredItems = _allRecyclerItems.Where(item =>
             {
                 bool matchesSearch = string.IsNullOrEmpty(filterText) ||
                                      item.DisplayName.Contains(filterText, StringComparison.OrdinalIgnoreCase) ||
@@ -166,41 +162,48 @@ namespace RustPlusDesk.Views
                 return matchesSearch && matchesCategory;
             }).ToList();
 
+            // Reset to first page
             Items.Clear();
+            _loadedCount = 0;
+            AppendNextPage();               // show first 30 immediately
             InputsScrollViewer?.ScrollToTop();
+        }
 
-            // Load first chunk immediately so UI appears instantly
-            int firstBatch = Math.Min(InitialChunk, matched.Count);
-            for (int i = 0; i < firstBatch; i++)
-                Items.Add(matched[i]);
+        /// <summary>
+        /// Appends the next <see cref="PageSize"/> items from the filtered list.
+        /// Safe to call from any scroll event — guarded against re-entry.
+        /// </summary>
+        private void AppendNextPage()
+        {
+            if (_isAppending) return;
+            if (_loadedCount >= _filteredItems.Count) return;
 
-            // Queue the remaining items for deferred loading
-            for (int i = firstBatch; i < matched.Count; i++)
-                _pendingItems.Enqueue(matched[i]);
-
-            if (_pendingItems.Count > 0)
+            _isAppending = true;
+            try
             {
-                _loadTimer = new System.Windows.Threading.DispatcherTimer
-                {
-                    Interval = TimeSpan.FromMilliseconds(16) // ~1 frame
-                };
-                _loadTimer.Tick += (s, e) => ProcessNextChunk();
-                _loadTimer.Start();
+                int end = Math.Min(_loadedCount + PageSize, _filteredItems.Count);
+                for (int i = _loadedCount; i < end; i++)
+                    Items.Add(_filteredItems[i]);
+                _loadedCount = end;
+            }
+            finally
+            {
+                _isAppending = false;
             }
         }
 
-        /// <summary>Loads the next <see cref="ChunkSize"/> pending items on each timer tick.</summary>
-        private void ProcessNextChunk()
+        private void InputsScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            int loaded = 0;
-            while (_pendingItems.Count > 0 && loaded < ChunkSize)
-            {
-                Items.Add(_pendingItems.Dequeue());
-                loaded++;
-            }
+            // e.VerticalChange > 0  =>  user scrolled DOWN  (not a content-resize event)
+            // Ignore upward scroll, filter resets, and content additions
+            if (e.VerticalChange <= 0) return;
 
-            if (_pendingItems.Count == 0)
-                _loadTimer?.Stop();
+            if (sender is ScrollViewer sv &&
+                sv.ScrollableHeight > 0 &&
+                sv.VerticalOffset >= sv.ScrollableHeight - 200)
+            {
+                AppendNextPage();
+            }
         }
 
         private void LoadItems()
