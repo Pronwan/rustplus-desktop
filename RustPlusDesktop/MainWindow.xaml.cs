@@ -366,6 +366,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _vm.IsInitializing = true;
         InitializeComponent();
+        FlushPendingLogs();
         MainTabs.SelectionChanged += MainTabs_SelectionChanged;
         
         PlayersTab?.SetMainWindow(this);
@@ -3526,13 +3527,45 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsPairingBusy = false;
         }
     }
+    private static readonly List<string> sPendingLogs = new();
+    public static event Action? IconsUpdated;
+
+    public void FlushPendingLogs()
+    {
+        if (TxtLog == null) return;
+        lock (sPendingLogs)
+        {
+            if (sPendingLogs.Count > 0)
+            {
+                foreach (var pl in sPendingLogs)
+                {
+                    TxtLog.AppendText(pl + Environment.NewLine);
+                }
+                sPendingLogs.Clear();
+                TxtLog.ScrollToEnd();
+            }
+        }
+    }
+
     public void AppendLog(string line)
     {
         Dispatcher.Invoke(() =>
         {
             string timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
-            TxtLog.AppendText($"[{timestamp}] {line}{Environment.NewLine}");
-            TxtLog.ScrollToEnd();
+            string formatted = $"[{timestamp}] {line}";
+            if (TxtLog == null)
+            {
+                lock (sPendingLogs)
+                {
+                    sPendingLogs.Add(formatted);
+                }
+            }
+            else
+            {
+                FlushPendingLogs();
+                TxtLog.AppendText(formatted + Environment.NewLine);
+                TxtLog.ScrollToEnd();
+            }
         });
     }
 
@@ -3925,6 +3958,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (deltaFinish > 0)
                 {
                     mw._vm.IconsDownloaded++;
+                    IconsUpdated?.Invoke();
                     if (mw._vm.IconsDownloaded == mw._vm.IconsTotal && mw._vm.IconsTotal > 0)
                     {
                         mw.AppendLog($"[icon-download] All icons downloaded ({mw._vm.IconsDownloaded}/{mw._vm.IconsTotal})");

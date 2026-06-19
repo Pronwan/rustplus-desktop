@@ -168,6 +168,7 @@
 	  <None Remove="Assets\icons\watertreatment.png" />
 	  <None Remove="Assets\icons\waterwell.png" />
 	  <None Remove="Assets\Data\rust-item-list.json" />
+	  <None Remove="Assets\Data\recycler-items.json" />
 	  <None Remove="Assets\icons\discord.png" />
 	  <None Remove="Assets\icq-message.wav" />
 	  <None Remove="Assets\Images\5.3.0\LoopAudio_StopLogic.png" />
@@ -310,6 +311,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
+    <Content Include="Assets\Data\recycler-items.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
     <Resource Include="Assets\icons\airfield.png" />
     <Resource Include="Assets\Fonts\PermanentMarker.ttf" />
     <Resource Include="Assets\icons\arcticresearch.png" />
@@ -384,6 +389,7 @@
     <Resource Include="Assets\icons\watertreatment.png" />
     <Resource Include="Assets\icons\waterwell.png" />
     <Resource Include="Assets\Data\rust-item-list.json" />
+    <Resource Include="Assets\Data\recycler-items.json" />
     <Resource Include="Assets\icons\discord.png" />
     <Resource Include="Assets\icq-message.wav" />
     <Resource Include="Assets\Images\5.3.0\LoopAudio_StopLogic.png" />
