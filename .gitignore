@@ -88,3 +88,7 @@ env
 **/*.fbx
 **/*.glb
 **/*.gltf
+# Allow runtime folder executables and bin directories
+!RustPlusDesktop/runtime/**/*.exe
+!RustPlusDesktop/runtime/**/bin/
+!RustPlusDesktop/runtime/**/bin/**
