@@ -2588,4 +2588,10 @@
 • تظهر الآن علامات الفريق داخل اللعبة على الخريطة 2D
 • أيقونات مخصصة للأجهزة الذكية</value>
   </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>إعدادات الخريطة 3D</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>يحذف جميع بيانات الخريطة ثلاثية الأبعاد التي تم تنزيلها والبيانات المخبأة لتحرير مساحة على القرص</value>
+  </data>
 </root>

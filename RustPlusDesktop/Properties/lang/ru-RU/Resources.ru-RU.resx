@@ -2507,4 +2507,10 @@
 • Внутриигровые маркеры команд теперь отображаются на 2D-карте
 • Пользовательские иконки для умных устройств</value>
   </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>Настройки 3D карты</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Удаляет все загруженные данные 3D-карты и кэшированные данные для освобождения места на диске</value>
+  </data>
 </root>

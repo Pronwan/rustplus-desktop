@@ -2612,4 +2612,10 @@
 • 游戏内团队标记现在显示在2D地图上
 • 智能设备的自定义图标</value>
   </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3D地图设置</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>删除所有下载的3D地图边界和缓存数据以释放磁盘空间</value>
+  </data>
 </root>

@@ -563,40 +563,26 @@ public partial class MainWindow : WpfUi.FluentWindow
                         TrackingService.UploadConsentGiven = dlg.CloudSyncAccepted;
                         _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(dlg.CloudSyncAccepted);
                     }
-                    
-                    if (!TrackingService.SuppressVersion7Notice)
-                    {
-                        var dlg7 = new Views.Windows.Version7NoticeWindow { Owner = this };
-                        dlg7.ShowDialog();
-                        if (dlg7.DontShowAgain)
-                        {
-                            TrackingService.SuppressVersion7Notice = true;
-                        }
-                    }
-
-                    TrackingService.LastSeenVersion = AppVersion;
-                }, System.Windows.Threading.DispatcherPriority.Loaded);
-            }
-            else if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "6.9.9"))
-            {
-                Dispatcher.InvokeAsync(() =>
-                {
-                    if (!TrackingService.SuppressVersion7Notice)
-                    {
-                        var dlg7 = new Views.Windows.Version7NoticeWindow { Owner = this };
-                        dlg7.ShowDialog();
-                        if (dlg7.DontShowAgain)
-                        {
-                            TrackingService.SuppressVersion7Notice = true;
-                        }
-                    }
                     TrackingService.LastSeenVersion = AppVersion;
                 }, System.Windows.Threading.DispatcherPriority.Loaded);
             }
             else
             {
-                // Kommt von einer neueren/gleichen Version: Einfach Version updaten ohne Popup
+                // Kommt von einer neueren/gleichen Version: Einfach Version updaten
                 TrackingService.LastSeenVersion = AppVersion;
+            }
+
+            if (!TrackingService.SuppressVersion7Notice)
+            {
+                Dispatcher.InvokeAsync(() =>
+                {
+                    var dlg7 = new Views.Windows.Version7NoticeWindow { Owner = this };
+                    dlg7.ShowDialog();
+                    if (dlg7.DontShowAgain)
+                    {
+                        TrackingService.SuppressVersion7Notice = true;
+                    }
+                }, System.Windows.Threading.DispatcherPriority.Loaded);
             }
         }
 

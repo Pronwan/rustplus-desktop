@@ -2697,4 +2697,10 @@ Please pair this server first.</value>
 • Ingame Team Markers are now shown on the 2D-Map
 • Custom Icons for Smart Devices</value>
   </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3D Map Settings</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Deletes all downloaded 3D map bounds and cached data to free up disk space</value>
+  </data>
 </root>

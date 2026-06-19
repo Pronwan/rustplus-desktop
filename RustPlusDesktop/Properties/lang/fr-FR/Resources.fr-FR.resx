@@ -2606,4 +2606,10 @@ Télécharger et installer maintenant ?</value>
 • Les marqueurs d'équipe en jeu sont maintenant affichés sur la carte 2D
 • Icônes personnalisées pour les appareils intelligents</value>
   </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>Paramètres de la carte 3D</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Supprime toutes les données de la carte 3D téléchargées et les données mises en cache pour libérer de l'espace disque</value>
+  </data>
 </root>

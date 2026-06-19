@@ -2666,4 +2666,10 @@ Bist du sicher, dass du fortfahren möchtest?</value>
 • Ingame Team Marker werden jetzt auch auf der 2D-Map angezeigt
 • Custom Icons für Smart Devices</value>
   </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3D Map Einstellungen</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Löscht alle heruntergeladenen 3D-Map-Daten und den Cache, um Speicherplatz freizugeben</value>
+  </data>
 </root>
